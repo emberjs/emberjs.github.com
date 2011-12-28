@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Ember.js - Documentation</title>
+<link rel=stylesheet href="/styles/documentation.css" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-27675533-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+	<link type="text/css" rel="stylesheet" href="/styles/shCoreRDark.css"/>
+</head>
+
+<body>
+<div id="wrap">
+<div id="about">
+	<div id="logo">&nbsp;</div>
+	<p>
+    Ember is a JavaScript framework for creating ambitious web applications
+	</p>
+  <a class="button" href="https://github.com/downloads/emberjs/ember.js/ember-0.9.3.min.js">download</a>
+  <small>35k min + gzip | <a href="https://github.com/downloads/emberjs/ember.js/ember-0.9.3.js">debug build</a></small>
+
+	<a class="button" href="https://github.com/downloads/emberjs/starter-kit/starter-kit.0.9.3.zip">starter kit</a>
+	<ul id="nav">
+		<li class="active"><a href="index.html">docs</a></li>
+		<li><a href="/examples/">examples</a></li>
+	</ul>
+</div>
+<div id="github">
+  <a href="https://github.com/emberjs/ember.js"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/e6bef7a091f5f3138b8cd40bc3e114258dd68ddf/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub"></a>
+</div>
+<div id="content">
+  <div class="section">
+  <h2>Introduction</h2>
+
+<h3>What is Ember.js?</h3>
+
+<p>Ember is a JavaScript framework for creating ambitious web applications
+by eliminating boilerplate and providing a standard application
+architecture.</p>
+
+<h4>Eliminate Boilerplate</h4>
+
+<p>There are some tasks that are common to every web application. For example,
+taking data from the server, rendering it to the screen, then updating that
+information when it changes.</p>
+
+<p>Since the tools provided to do this by the browser are quite primitive, you
+end up writing the same code over and over. Ember.js provides tools that let
+you focus on your app instead of writing the same code you&#39;ve written a hundred
+times.</p>
+
+<p>Because we&#39;ve built dozens of applications ourselves, we&#39;ve gone beyond the
+obvious low-level event-driven abstractions, eliminating much of the
+boilerplate associated with propagating changes throughout your application,
+and especially into the DOM itself.</p>
+
+<p>To help manage changes in the view, Ember.js comes with a templating engine
+that will automatically update the DOM when the underlying objects change.</p>
+
+<p>For a simple example, consider this template of a Person:</p>
+
+<pre class="brush: xml">
+{{person.name}} is {{person.age}}.
+</pre>
+
+<p>As with any templating system, when the template is initially rendered, it
+will reflect the current state of the person. To avoid boilerplate, though,
+Ember.js will also update the DOM automatically for you if the person&#39;s name
+or age changes.</p>
+
+<p>You specify your template once, and Ember.js makes sure it&#39;s always up to date.</p>
+
+<h4>Provides Architecture</h4>
+
+<p>Since web applications evolved from web pages, which were nothing more than
+static documents, browsers give you just enough rope to hang yourself with.</p>
+
+<p>Ember makes it easy to divide your application into models, views, and controllers,
+which improves testability, makes code more modular, and helps new developers
+on the project quickly understand how everything fits together. The days of
+callback spaghetti are over.</p>
+
+<p>Ember also supplies built-in support for state management, so you&#39;ll have
+a way to describe how your application moves through various nested states
+(like signed-out, signed-in, viewing-post, and viewing-comment) out of the box.</p>
+
+<h3>How is Ember.js Different from Server-Side Frameworks?</h3>
+
+<p>Traditional web applications make the user to download a new page every time
+they interact with the server. This means that every interaction is never faster
+than the latency between you and the user, and usually slower. Using AJAX to
+replace only parts of the page helps somewhat, but still requires a roundtrip to
+your server every time your UI needs to update. And if multiple parts of the
+page need to update all at once, most developers just resort to loading the page
+over again, since keeping everything in sync is tricky.</p>
+
+<p>Ember.js, like some other modern JavaScript frameworks, works a little differently.
+Instead of the majority of your application&#39;s logic living on the server, an
+Ember.js application downloads everything it needs to run in the initial page
+load. That means that while your user is using your app, she never has to load
+a new page and your UI responds quickly to their interaction.</p>
+
+<p>One advantage of this architecture is that your web application uses the same
+REST API as your native apps or third-party clients. Back-end developers can
+focus on building a fast, reliable, and secure API server, and don&#39;t have to be
+front-end experts, too.</p>
+
+<h3>Ember.js at a Glance</h3>
+
+<p>These are the three features that make Ember a joy to use:</p>
+
+<ol>
+<li>Bindings</li>
+<li>Computed properties</li>
+<li>Auto-updating templates</li>
+</ol>
+
+<h4>Bindings</h4>
+
+<p>Use bindings to keep properties between two different objects in sync. You just
+declare a binding once, and Ember will make sure changes get propagated in either
+direction.</p>
+
+<p>Here&#39;s how you create a binding between two objects:</p>
+
+<pre class="brush: js;">
+MyApp.president = Ember.Object.create({
+  name: "Barack Obama"
+});
+
+MyApp.country = Ember.Object.create({
+  // Ending a property with 'Binding' tells Ember to
+  // create a binding to the presidentName property.
+  presidentNameBinding: 'MyApp.president.name'
+});
+
+MyApp.country.get('presidentName');
+// "Barack Obama"
+</pre>
+
+<p>Bindings allow you to architect your application using the MVC (Model-View-Controller)
+pattern, then rest easy knowing that data will always flow correctly from layer to layer.</p>
+
+<h4>Computed Properties</h4>
+
+<p>Computed properties allow you to treat a function like a property:</p>
+
+<pre class="brush: js;">
+MyApp.president = Ember.Object.create({
+  firstName: "Barack",
+  lastName: "Obama",
+
+  fullName: function() {
+    return this.get('firstName') + ' ' + this.get('lastName');
+  
+  // Call this flag to mark the function as a property
+  }.property()
+});
+
+MyApp.president.get('fullName');
+// "Barack Obama"
+</pre>
+
+<p>Computed properties are useful because they can work with bindings, just
+like any other property.</p>
+
+<p>Many computed properties have dependencies on other properties. For example, in the above
+example, the <code>fullName</code> property depends on <code>firstName</code> and <code>lastName</code> to determine its value.
+You can tell Ember about these dependencies like this:</p>
+
+<pre class="brush: js;">
+MyApp.president = Ember.Object.create({
+  firstName: "Barack",
+  lastName: "Obama",
+
+  fullName: function() {
+    return this.get('firstName') + ' ' + this.get('lastName');
+
+  // Tell Ember that this computed property depends on firstName
+  // and lastName
+  }.property('firstName', 'lastName')
+});
+</pre>
+
+<p>Make sure you list these dependencies so Ember knows when to update bindings that connect
+to a computed property.</p>
+
+<h3>Auto-updating Templates</h3>
+
+<p>Ember uses Handlebars, a semantic templating library. To take data from your JavaScript application
+and put it into the DOM, create a <code>&lt;script&gt;</code> tag and put it into your HTML, wherever you&#39;d like the
+value to appear:</p>
+
+<pre class="brush: xml">
+&lt;script type="text/x-handlebars">
+  The President of the United States is {{MyApp.president.fullName}}.
+&lt;/script>
+</pre>
+
+<p>Here&#39;s the best part: templates are bindings-aware. That means that if you ever change the value of
+the property that you told us to display, we&#39;ll update it for you automatically. And because you&#39;ve
+specified dependencies, changes to <em>those</em> properties are reflected as well.</p>
+
+<p>Hopefully you can see how all three of these powerful tools work together: start with some primitive
+properties, then start building up more sophisticated properties and their dependencies using computed
+properties. Once you&#39;ve described the data, you only have to say how it gets displayed once, and Ember
+takes care of the rest. It doesn&#39;t matter how the underlying data changes, whether from an XHR request
+or the user performing an action; your user interface always stays up-to-date. This eliminates entire
+categories of edge cases that developers struggle with every day.</p>
+
+</div>
+<div class="section">
+  <h2>Creating a Namespace</h2>
+
+<p>Every Ember app should have an instance of <code>Ember.Application</code>. This object
+will serve as the globally-accessible namespace for all of the other classes
+and instances in your app. Additionally, it sets up event listeners on the page
+so that your views receive events when users interact with your user interface
+(which you&#39;ll learn about later.)</p>
+
+<p>Here&#39;s an example of an application:</p>
+
+<pre class="brush: js;">
+window.App = Ember.Application.create();
+</pre>
+
+<p>You can call your namespace whatever you&#39;d like, but it must begin
+with a capital letter in order for bindings to find it.</p>
+
+<p>If you are embedding an Ember application into an existing site, you can
+have event listeners set up for a specific element by providing a <code>rootElement</code> property:</p>
+
+<pre class="brush: js; highlight: 2;">
+window.App = Ember.Application.create({
+  rootElement: '#sidebar'
+});
+</pre>
+
+</div>
+<div class="section">
+  <h2>The Ember Object Model</h2>
+
+<p>Ember enhances the simple JavaScript object model to support bindings
+and observers, as well as to support a more powerful mixin-based
+approach to code sharing.</p>
+
+<p>At its most basic, you create a new Ember class by using the <code>extend</code>
+method on <code>Ember.Object</code>.</p>
+
+<pre class="brush: js;">
+Person = Ember.Object.extend({
+  say: function(thing) {
+    alert(thing);
+ }
+});
+</pre>
+
+<p>Once you have built a new class, you can create new instances of the
+class by using the <code>create</code> method. Any properties defined on the class
+will be available to instances.</p>
+
+<pre class="brush: js;">
+var person = Person.create();
+person.say("Hello") // alerts "Hello"
+</pre>
+
+<p>When creating an instance, you can also add additional properties to the
+class by passing in an object.</p>
+
+<pre class="brush: js;">
+var tom = Person.create({
+  name: "Tom Dale",
+
+  helloWorld: function() {
+    this.say("Hi my name is " + this.get('name'));
+  }
+});
+
+tom.helloWorld() // alerts "Hi my name is Tom Dale"
+</pre>
+
+<p>Because of Ember&#39;s support for bindings and observers, you will always
+access properties using the <code>get</code> method, and set properties using the
+<code>set</code> method.</p>
+
+<p>When creating a new instance of an object, you can also override any
+properties or methods defined on the class. For instance, in this case,
+you could override the <code>say</code> method from the <code>Person</code> class.</p>
+
+<pre class="brush: js; highlight: [4,5,6,7,8];">
+var yehuda = Person.create({
+  name: "Yehuda Katz",
+
+  say: function(thing) {
+    var name = this.get('name');
+
+    this._super(name + " says: " + thing);
+  }
+});
+</pre>
+
+<p>You can use the <code>_super</code> method on the object (<code>super</code> is a reserved
+word in JavaScript) to call the original method you overrode.</p>
+
+<h3>Subclassing Classes</h3>
+
+<p>You can also create subclasses of classes you create by using the
+<code>extend</code> method. In fact, when we created a new class above by calling
+<code>extend</code> on <code>Ember.Object</code>, we were <strong>subclassing</strong> <code>Ember.Object</code>.</p>
+
+<pre class="brush: js;">
+var LoudPerson = Person.extend({
+  say: function(thing) {
+    this._super(thing.toUpperCase());
+  }
+});
+</pre>
+
+<p>When subclassing, you can use <code>this._super</code> to invoke methods you are
+overriding.</p>
+
+<h3>Reopening Classes</h3>
+
+<p>You don&#39;t need to define a class all at once. You can reopen a class and
+define new properties using the <code>reopenClass</code> method.</p>
+
+<pre class="brush: js; highlight: 1">
+Person.reopenClass({
+  isPerson: true
+});
+
+Person.create().get('isPerson') // true
+</pre>
+
+<p>When using <code>reopenClass</code>, you can also override existing methods and
+call <code>this._super</code>.</p>
+
+<pre class="brush: js; highlight: [3,4,5];">
+Person.reopenClass({
+  // override `say` to add an ! at the end
+  say: function(thing) {
+    this._super(thing + "!");
+  }
+});
+</pre>
+
+<h3>Computed Properties (Getters)</h3>
+
+<p>Often, you will want a property that is computed based on other
+properties. Ember&#39;s object model allows you to define computed
+properties easily in a normal class definition.</p>
+
+<pre class="brush: js; highlight: [6,7,8,9,10,11];">
+Person = Ember.Object.extend({
+  // these will be supplied by `create`
+  firstName: null,
+  lastName: null,
+
+  fullName: function() {
+    var firstName = this.get('firstName');
+    var lastName = this.get('lastName');
+
+   return firstName + ' ' + lastName;
+  }.property('firstName', 'lastName')
+});
+
+var tom = Person.create({
+  firstName: "Tom",
+  lastName: "Dale"
+});
+
+tom.get('fullName') // "Tom Dale"
+</pre>
+
+<p>If you aren&#39;t using Ember&#39;s prototype extensions, you can use a slightly
+more verbose version, wrapping the function in a call to <code>Ember.computed</code>:</p>
+
+<pre class="brush: js; highlight: [6,11];">
+Person = Ember.Object.extend({
+  // these will be supplied by `create`
+  firstName: null,
+  lastName: null,
+
+  fullName: Ember.computed(function() {
+    var firstName = this.get('firstName');
+    var lastName = this.get('lastName');
+
+    return firstName + ' ' + lastName;
+  }).property('firstName', 'lastName')
+});
+</pre>
+
+<p>The <code>property</code> method defines the function as a computed property, and
+defines its dependencies. Those dependencies will come into play later
+when we discuss bindings and observers.</p>
+
+<p>When subclassing a class or creating a new instance, you can override
+any computed properties.</p>
+
+<h3>Computed Properties (Setters)</h3>
+
+<p>You can also define what Ember should do when setting a computed
+property. If you try to set a computed property, it will be invoked with
+the key and value you want to set it to.</p>
+
+<pre class="brush: js; highlight: [8,15,16,17,18,19,20,21,22];">
+Person = Ember.Object.extend({
+  // these will be supplied by `create`
+  firstName: null,
+  lastName: null,
+
+  fullName: Ember.computed(function(key, value) {
+    // getter
+    if (arguments.length === 1) {
+      var firstName = this.get('firstName');
+      var lastName = this.get('lastName');
+
+      return firstName + ' ' + lastName;
+
+    // setter
+    } else {
+      var name = value.split(" ");
+
+      this.set('firstName', name[0]);
+      this.set('lastName', name[1]);
+
+      return value;
+    }
+  }).property('firstName', 'lastName')
+});
+
+var person = Person.create();
+person.set('fullName', "Peter Wagenet");
+person.get('firstName') // Peter
+person.get('lastName') // Wagenet
+</pre>
+
+<p>Ember will call the computed property for both setters and getters, and
+you can check the number of arguments to determine whether it is being called
+as a getter or a setter.</p>
+
+<h3>Observers</h3>
+
+<p>Ember supports observing any property, including computed properties.
+You can set up an observer on an object by using the <code>addObserver</code>
+method.</p>
+
+<pre class="brush: js; highlight: [19,20,21];">
+Person = Ember.Object.extend({
+  // these will be supplied by `create`
+  firstName: null,
+  lastName: null,
+
+  fullName: Ember.computed(function() {
+    var firstName = this.get('firstName');
+    var lastName = this.get('lastName');
+
+    return firstName + ' ' + lastName;
+  }).property('firstName', 'lastName')
+});
+
+var person = Person.create({
+  firstName: "Yehuda",
+  lastName: "Katz"
+});
+
+person.addObserver('fullName', function() {
+  // deal with the change
+});
+
+person.set('firstName', "Brohuda"); // observer will fire
+</pre>
+
+<p>Because the <code>fullName</code> computed property depends on <code>firstName</code>,
+updating <code>firstName</code> will fire observers on <code>fullName</code> as well.</p>
+
+<p>Because observers are so common, Ember provides a way to define
+observers inline in class definitions.</p>
+
+<pre class="brush: js; highlight: 4;">
+Person.reopenClass({
+  fullNameChanged: function() {
+    // this is an inline version of .addObserver
+  }.observes('fullName')
+});
+</pre>
+
+<p>You can define inline observers by using the <code>Ember.observer</code> method if you
+are using Ember without prototype extensions:</p>
+
+<pre class="brush: js; highlight: [2,4];">
+Person.reopenClass({
+  fullNameChanged: Ember.observer(function() {
+    // this is an inline version of .addObserver
+  }, 'fullName')
+});
+</pre>
+
+<h3>Bindings</h3>
+
+<p>A binding creates a link between two properties such that when one changes, the
+other one is updated to the new value automatically. Bindings can connect
+properties on the same object, or across two different objects. Unlike most other
+frameworks that include some sort of binding implementation, bindings in
+Ember.js can be used with any object, not just between views and models.</p>
+
+<p>The easiest way to create a two-way binding is by creating a new property
+with the string <code>Binding</code> at the end, then specifying a path from the global scope:</p>
+
+<pre class="brush: js; highlight: 6;">
+App.wife = Ember.Object.create({
+  householdIncome: 80000
+});
+
+App.husband = Ember.Object.create({
+  householdIncomeBinding: 'App.wife.householdIncome'
+});
+
+App.husband.get('householdIncome'); // 80000
+
+// Someone gets raise.
+App.husband.set('householdIncome', 90000);
+App.wife.get('householdIncome'); // 90000
+</pre>
+
+<p>Note that bindings don&#39;t update immediately. Ember waits until all of your
+application code has finished running before synchronizing changes, so you can
+change a bound property as many times as you&#39;d like without worrying about the
+overhead of syncing bindings when values are transient.</p>
+
+<h4>One-Way Bindings</h4>
+
+<p>A one-way binding only propagates changes in one direction. Usually, one-way
+bindings are just a performance optimization and you can safely use
+the more concise two-way binding syntax (as, of course, two-way bindings are
+de facto one-way bindings if you only ever change one side).</p>
+
+<pre class="brush: js; highlight: 6;">
+App.user = Ember.Object.create({
+  fullName: "Kara Gates"
+});
+
+App.userView = Ember.View.create({
+  userNameBinding: Ember.Binding.oneWay('App.user.fullName')
+});
+
+// Changing the name of the user object changes
+// the value on the view.
+App.user.set('fullName', "Krang Gates");
+// App.userView.fullName will become "Krang Gates"
+
+// ...but changes to the view don't make it back to
+// the object.
+App.userView.set('fullName', "Truckasaurus Gates");
+App.user.get('fullName'); // "Krang Gates"
+</pre>
+
+<h3>What Do I Use When?</h3>
+
+<p>Sometimes new users are confused about when to use computed properties,
+bindings and observers. Here are some guidelines to help:</p>
+
+<ol>
+<li><p>Use <em>computed properties</em> to build a new property by synthesizing other
+properties. Computed properties should not contain application behavior, and
+should generally not cause any side-effects when called. Except in rare cases,
+multiple calls to the same computed property should always return the same
+value (unless the properties it depends on have changed, of course.)</p></li>
+<li><p><em>Observers</em> should contain behavior that reacts to changes in another
+property. Observers are especially useful when you need to perform some
+behavior after a binding has finished synchronizing.</p></li>
+<li><p><em>Bindings</em> are most often used to ensure objects in two different layers
+are always in sync. For example, you bind your views to your controller using
+Handlebars. You may often bind between two objects in the same layer. For
+example, you might have an <code>App.selectedContactController</code> that binds to the
+<code>selectedContact</code> property of <code>App.contactsController</code>.</p></li>
+</ol>
+
+</div>
+<div class="section">
+  <h2>Describing Your UI with Handlebars</h2>
+
+<h3>Handlebars</h3>
+
+<p>Ember comes bundled with <a href="http://www.handlebarsjs.com">Handlebars</a>, a semantic templating language. These templates look like regular HTML, with embedded expressions.</p>
+
+<p>You should store your Handlebars templates inside your application&#39;s HTML file. At runtime, Ember will compile these templates so they are available for you to use in your views.</p>
+
+<p>To immediately insert a template into your document, place it inside a <code>&lt;script&gt;</code> tag within your <code>&lt;body&gt;</code> tag:</p>
+
+<pre class="brush: xml;">
+&lt;html>
+  &lt;body>
+    &lt;script type="text/x-handlebars">
+      Hello, <b>{{MyApp.name}}</b>
+    &lt;/script>
+  &lt;/body>
+&lt;/html>
+</pre>
+
+<p>To make a template available to be used later, give the <code>&lt;script&gt;</code> tag a <code>data-template-name</code> attribute:</p>
+
+<pre class="brush: xml; highlight: 3;">
+&lt;html>
+  &lt;head>
+    &lt;script type="text/x-handlebars" data-template-name="say-hello">
+      Hello, <b>{{MyApp.name}}</b>
+    &lt;/script>
+  &lt;/head>
+&lt;/html>
+</pre>
+
+<h3>Ember.View</h3>
+
+<p>You can use <code>Ember.View</code> to render a Handlebars template and insert it into the DOM.</p>
+
+<p>To tell the view which template to use, set its <code>templateName</code> property. For example, if I had a <code>&lt;script&gt;</code> tag like this:</p>
+
+<pre class="brush: xml;">
+&lt;html>
+  &lt;head>
+    &lt;script type="text/x-handlebars" data-template-name="say-hello">
+      Hello, <b>{{name}}</b>
+    &lt;/script>
+  &lt;/head>
+&lt;/html>
+</pre>
+
+<p>I would set the <code>templateName</code> property to <code>&quot;say-hello&quot;</code>.</p>
+
+<pre class="brush: js; highlight: 2;">
+var view = Ember.View.create({
+  templateName: 'say-hello',
+  name: "Bob"
+});
+</pre>
+
+<p>Note: For the remainder of the guide, the <code>templateName</code> property will be omitted from most examples. You can assume that if we show a code sample that includes an Ember.View and a Handlebars template, the view has been configured to display that template via the <code>templateName</code> property.</p>
+
+<p>You can append views to the document by calling <code>appendTo</code>:</p>
+
+<pre class="brush: js;">
+  view.appendTo('#container');
+</pre>
+
+<p>As a shorthand, you can append a view to the document body by calling <code>append</code>:</p>
+
+<pre class="brush: js;">
+  view.append();
+</pre>
+
+<p>To remove a view from the document, call <code>remove</code>:</p>
+
+<pre class="brush: js;">
+  view.remove();
+</pre>
+
+<h3>Handlebars Basics</h3>
+
+<p>As you&#39;ve already seen, you can print the value of a property by enclosing it in a Handlebars expression, or a series of braces, like this:</p>
+
+<pre class="brush: xml;">
+My new car is {{color}}.
+</pre>
+
+<p>This will look up and print the View&#39;s <code>color</code> property. For example, if your view looks like this:</p>
+
+<pre class="brush: js;">
+App.CarView = Ember.View.extend({
+  color: 'blue'
+});
+</pre>
+
+<p>Your view would appear in the browser like this:</p>
+
+<pre class="brush: xml;">
+My new car is blue.
+</pre>
+
+<p>You can also specify global paths:</p>
+
+<pre class="brush: xml;">
+My new car is {{App.carController.color}}.
+</pre>
+
+<p>(Ember determines whether a path is global or relative to the view by checking whether the first letter is capitalized,
+which is why your <code>Ember.Application</code> instance should start with a capital letter.)</p>
+
+<p>All of the features described in this guide are <strong>bindings aware</strong>. That means that if the values used by your templates ever change, your HTML will be updated automatically. It&#39;s like magic.</p>
+
+<p>In order to know which part of your HTML to update when an underlying property changes, Handlebars will insert marker elements with a unique ID. If you look at your application while it&#39;s running, you might notice these extra elements:</p>
+
+<pre class="brush: xml;">
+My new car is &lt;script id="metamorph-0-start" type="text/x-placeholder"></script>blue&lt;script id="metamorph-0-end" type="text/x-placeholder"></script></span>.
+</pre>
+
+<p>Because all Handlebars expressions are wrapped in these markers, make sure each HTML tag stays inside the same block. For example, you shouldn&#39;t do this:</p>
+
+<pre class="brush: xml;">
+<!-- Don't do it! -->
+&lt;div {{#if isUrgent}}class="urgent"{{/if}}>
+</pre>
+
+<p>If you want to avoid your property output getting wrapped in these markers, use the <code>unbound</code> helper:</p>
+
+<pre class="brush: xml;">
+My new car is {{unbound color}}.
+</pre>
+
+<p>Your output will be free of markers, but be careful, because the output won&#39;t be automatically updated!</p>
+
+<pre class="brush: xml;">
+My new car is blue.
+</pre>
+
+<h3>{{#if}}, {{else}}, and {{#unless}}</h3>
+
+<p>Sometimes you may only want to display part of your template if a property
+exists. For example, let&#39;s say we have a view with a <code>person</code> property that
+contains an object with <code>firstName</code> and <code>lastName</code> fields:</p>
+
+<pre class="brush: js; highlight: [3,4];">
+App.SayHelloView = Ember.View.extend({
+  person: Ember.Object.create({
+    firstName: "Joy",
+    lastName: "Clojure"
+  })
+});
+</pre>
+
+<p>In order to display part of the template only if the <code>person</code> object exists, we
+can use the <code>{{#if}}</code> helper to conditionally render a block:</p>
+
+<pre class="brush: xml;">
+{{#if person}}
+  Welcome back, <b>{{person.firstName}} {{person.lastName}}</b>!
+{{/if}}
+</pre>
+
+<p>Handlebars will not render the block if the argument passed evaluates to
+<code>false</code>, <code>undefined</code>, <code>null</code> or <code>[]</code> (i.e., any &quot;falsy&quot; value).</p>
+
+<p>If the expression evaluates to falsy, we can also display an alternate template
+using <code>{{else}}</code>:</p>
+
+<pre class="brush: xml; highlight: 3;">
+{{#if person}}
+  Welcome back, <b>{{person.firstName}} {{person.lastName}}</b>!
+{{else}}
+  Please log in.
+{{/if}}
+</pre>
+
+<p>To only render a block if a value is falsy, use <code>{{#unless}}</code>:</p>
+
+<pre class="brush: xml;">
+{{#unless hasPaid}}
+  You owe: ${{total}}
+{{/unless}}
+</pre>
+
+<p><code>{{#if}}</code> and <code>{{#unless}}</code> are examples of block expressions. These allow you
+to invoke a helper with a portion of your template. Block expressions look like
+normal expressions except that they contain a hash (#) before the helper name,
+and require a closing expression.</p>
+
+<h3>{{#with}}</h3>
+
+<p>Sometimes you may want to invoke a section of your template with a context
+different than the Ember.View. For example, we can clean up the above template by
+using the <code>{{#with}}</code> helper:</p>
+
+<pre class="brush: xml;">
+{{#with person}}
+  Welcome back, <b>{{firstName}} {{lastName}}</b>!
+{{/with}}
+</pre>
+
+<p><code>{{#with}}</code> changes the <em>context</em> of the block you pass to it. The context
+is the object on which properties are looked up. By default, the context is the
+Ember.View to which the template belongs.</p>
+
+<h3>Binding Element Attributes with {{bindAttr}}</h3>
+
+<p>In addition to text, you may also want your templates to dictate the attributes
+of your HTML elements. For example, imagine a view that contains a URL:</p>
+
+<pre class="brush: js;">
+App.LogoView = Ember.View.extend({
+  logoUrl: 'http://www.mycorp.com/images/logo.png'
+});
+</pre>
+
+<p>The best way to display the URL as an image in Handlebars is like this:</p>
+
+<pre class="brush: xml;">
+<div id="logo">
+  &lt;img {{bindAttr src="logoUrl"}} alt="Logo">
+</div>
+</pre>
+
+<p>This generates the following HTML:</p>
+
+<pre class="brush: xml;">
+<div id="logo">
+  &lt;img src="http://www.mycorp.com/images/logo.png" alt="Logo">
+</div>
+</pre>
+
+<p>If you use <code>{{bindAttr}}</code> with a Boolean value, it will add or remove the specified attribute. For example, given this Ember view:</p>
+
+<pre class="brush: js;">
+App.InputView = Ember.View.extend({
+  isSelected: true
+});
+</pre>
+
+<p>And this template:</p>
+
+<pre class="brush: xml;">
+&lt;input type="checkbox" {{bindAttr checked="isSelected"}}>
+</pre>
+
+<p>Handlebars will produce the following HTML element:</p>
+
+<pre class="brush: xml;">
+&lt;input type="checkbox" checked>
+</pre>
+
+<h3>Binding Class Names with {{bindAttr}}</h3>
+
+<p>The <code>class</code> attribute can be bound like any other attribute, but it also has some additional special behavior. The default behavior works like you&#39;d expect:</p>
+
+<pre class="brush: js;">
+App.AlertView = Ember.View.extend({
+  priority: "p4",
+  isUrgent: true
+});
+</pre>
+
+<pre class="brush: xml;">
+&lt;div {{bindAttr class="priority"}}>
+  Warning!
+&lt;/div>
+</pre>
+
+<p>This template will emit the following HTML:</p>
+
+<pre class="brush: xml;">
+<div class="p4">
+  Warning!
+</div>
+</pre>
+
+<p>If the value to which you bind is a Boolean, however, the dasherized version of that property will be applied as a class:</p>
+
+<pre class="brush: xml;">
+&lt;div {{bindAttr class="isUrgent"}}>
+  Warning!
+&lt;/div>
+</pre>
+
+<p>This emits the following HTML:</p>
+
+<pre class="brush: xml;">
+&lt;div class="is-urgent">
+  Warning!
+&lt;/div>
+</pre>
+
+<p>Unlike other attributes, you can also bind multiple classes:</p>
+
+<pre class="brush: js;">
+&lt;div {{bindAttr class="isUrgent priority"}}>
+  Warning!
+&lt;/div>
+</pre>
+
+<p>You can also specify an alternate class name to use, instead of just
+dasherizing.</p>
+
+<pre class="brush: js;">
+&lt;div {{bindAttr class="isUrgent:urgent"}}>
+  Warning!
+&lt;/div>
+</pre>
+
+<p>In this case, if the <code>isUrgent</code> property is true, the <code>urgent</code> class
+will be added. If it is false, the <code>urgent</code> class will be removed.</p>
+
+<h3>Building a View Hierarchy</h3>
+
+<p>So far, we&#39;ve discussed writing templates for a single view. However, as your application grows, you will often want to create a hierarchy of views to encapsulate different areas on the page. Each view is responsible for handling events and maintaining the properties needed to display it.</p>
+
+<h3>{{view}}</h3>
+
+<p>To add a child view to a parent, use the <code>{{view}}</code> helper, which takes a path to a view class.</p>
+
+<pre class="brush: js;">
+// Define parent view
+App.UserView = Ember.View.extend({
+  templateName: 'user',
+
+  firstName: "Albert",
+  lastName: "Hofmann"
+});
+
+// Define child view
+App.InfoView = Ember.View.extend({
+  templateName: 'info',
+
+  posts: 25,
+  hobbies: "Riding bicycles"
+});
+</pre>
+
+<pre class="brush: xml;">
+User: {{firstName}} {{lastName}}
+{{view App.InfoView}}
+</pre>
+
+<pre class="brush: xml;">
+<b>Posts:</b> {{posts}}
+<br>
+<b>Hobbies:</b> {{hobbies}}
+</pre>
+
+<p>If we were to create an instance of <code>App.UserView</code> and render it, we would get
+a DOM representation like this:</p>
+
+<pre class="brush: xml;">
+User: Albert Hofmann
+<div>
+  <b>Posts:</b> 25
+  <br>
+  <b>Hobbies:</b> Riding bicycles
+</div>
+</pre>
+
+<h4>Relative Paths</h4>
+
+<p>Instead of specifying an absolute path, you can also specify which view class
+to use relative to the parent view. For example, we could nest the above view
+hierarchy like this:</p>
+
+<pre class="brush: js;">
+App.UserView = Ember.View.extend({
+  templateName: 'user',
+
+  firstName: "Albert",
+  lastName: "Hofmann",
+
+  infoView: Ember.View.extend({
+    templateName: 'info',
+
+    posts: 25,
+    hobbies: "Riding bicycles"
+  })
+});
+</pre>
+
+<pre class="brush: xml;">
+User: {{firstName}} {{lastName}}
+{{view infoView}}
+</pre>
+
+<p>When nesting a view class like this, make sure to use a lowercase
+letter, as Ember will interpret a property with a capital letter as a
+global property.</p>
+
+<h3>Setting Child View Templates</h3>
+
+<p>If you&#39;d like to specify the template your child views use inline in
+the main template, you can use the block form of the <code>{{view}}</code> helper.
+We might rewrite the above example like this:</p>
+
+<pre class="brush: js;">
+App.UserView = Ember.View.extend({
+  templateName: 'user',
+
+  firstName: "Albert",
+  lastName: "Hofmann"
+});
+
+App.InfoView = Ember.View.extend({
+  posts: 25,
+  hobbies: "Riding bicycles"
+});
+</pre>
+
+<pre class="brush: xml; highlight: 2;">
+User: {{firstName}} {{lastName}}
+{{#view App.InfoView}}
+  <b>Posts:</b> {{posts}}
+  <br>
+  <b>Hobbies:</b> {{hobbies}}
+{{/view}}
+</pre>
+
+<p>When you do this, it may be helpful to think of it as assigning views to
+portions of the page. This allows you to encapsulate event handling for just
+that part of the page.</p>
+
+<h3>Setting Up Bindings</h3>
+
+<p>So far in our examples, we have been setting static values directly on the
+views. But to best implement an MVC architecture, we should actually be binding
+the properties of our views to the controller layer.</p>
+
+<p>Let&#39;s set up a controller to represent our user data:</p>
+
+<pre class="brush: js;">
+App.userController = Ember.Object.create({
+  content: Ember.Object.create({
+    firstName: "Albert",
+    lastName: "Hofmann",
+    posts: 25,
+    hobbies: "Riding bicycles"
+  })
+});
+</pre>
+
+<p>Now let&#39;s update <code>App.UserView</code> to bind to <code>App.userController</code>:</p>
+
+<pre class="brush: js;">
+App.UserView = Ember.View.extend({
+  templateName: 'user',
+
+  firstNameBinding: 'App.userController.content.firstName',
+  lastNameBinding: 'App.userController.content.lastName'
+});
+</pre>
+
+<p>When we only have a few bindings to configure, like with <code>App.InfoView</code>, it is
+sometimes useful to be able to declare those bindings in the template. You can
+do that by passing additional arguments to the <code>{{#view}}</code> helper. If all
+you&#39;re doing is configuring bindings, this often allows you to bypass having to
+create a new subclass.</p>
+
+<pre class="brush: xml; highlight: [2,3];">
+User: {{firstName}} {{lastName}}
+{{#view App.InfoView postsBinding="App.userController.content.posts"
+        hobbiesBinding="App.userController.content.hobbies"}}
+  <b>Posts:</b> {{posts}}
+  <br>
+  <b>Hobbies:</b> {{hobbies}}
+{{/view}}
+</pre>
+
+<p>NOTE: You can actually pass <strong>any</strong> property as a parameter to {{view}}, not
+just bindings. However, if you are doing anything other than setting up
+bindings, it is generally a good idea to create a new subclass.</p>
+
+<h3>Modifying a View&#39;s HTML</h3>
+
+<p>When you append a view, it creates a new HTML element that holds its content.
+If your view has any child views, they will also be displayed as child nodes
+of the parent&#39;s HTML element.</p>
+
+<p>By default, new instances of <code>Ember.View</code> create a <code>&lt;div&gt;</code> element. You can
+override this by passing a <code>tagName</code> parameter:</p>
+
+<pre class="brush: xml;">
+{{view App.InfoView tagName="span"}}
+</pre>
+
+<p>You can also assign an ID attribute to the view&#39;s HTML element by passing an <code>id</code> parameter:</p>
+
+<pre class="brush: xml;">
+{{view App.InfoView id="info-view"}}
+</pre>
+
+<p>This makes it easy to style using CSS ID selectors:</p>
+
+<pre class="brush: css;">
+/** Give the view a red background. **/
+#info-view {
+  background-color: red;
+}
+</pre>
+
+<p>You can assign class names similarly:</p>
+
+<pre class="brush: xml;">
+{{view App.InfoView class="info urgent"}}
+</pre>
+
+<p>You can bind class names to a property of the view by using <code>classBinding</code> instead of <code>class</code>. The same behavior as described in <code>bindAttr</code> applies:</p>
+
+<pre class="brush: js;">
+App.AlertView = Ember.View.extend({
+  priority: "p4",
+  isUrgent: true
+});
+</pre>
+
+<pre class="brush: xml;">
+{{view App.AlertView classBinding="isUrgent priority"}}
+</pre>
+
+<p>This yields a view wrapper that will look something like this:</p>
+
+<pre class="brush: xml;">
+&lt;div id="sc420" class="sc-view is-urgent p4"&gt;&lt;/div&gt;
+</pre>
+
+<h3>Displaying a List of Items</h3>
+
+<p>If you need to enumerate over a list of objects, use Handlebar&#39;s <code>{{#each}}</code> helper:</p>
+
+<pre class="brush: js;">
+App.PeopleView = Ember.View.extend({
+  people: [ { name: 'Yehuda' },
+            { name: 'Tom' } ]
+});
+</pre>
+
+<pre class="brush: xml;">
+&lt;ul>
+  {{#each people}}
+    <li>Hello, {{name}}!</li>
+  {{/each}}
+&lt;/ul>
+</pre>
+
+<p>This will print a list like this:</p>
+
+<pre class="brush: xml;">
+&lt;ul>
+  &lt;li&gt;Hello, Yehuda!&lt;/li>
+  &lt;li&gt;Hello, Tom!&lt;/li>
+&lt;/ul>
+</pre>
+
+<p>If you want to create a view for every item in a list, you can bind a property of the view to
+the current context. For example, this example creates a view for every item in a list and sets
+the <code>content</code> property to that item:</p>
+
+<pre class="brush: xml;">
+{{#each App.peopleController}}
+  {{#view App.PersonView contentBinding="this"}}
+    {{content.firstName}} {{content.lastName}}
+  {{/view}}
+{{/each}}
+</pre>
+
+<h3>Writing Custom Helpers</h3>
+
+<p>Sometimes, you may use the same HTML in your application multiple times. In those case, you can register a custom helper that can be invoked from any Handlebars template.</p>
+
+<p>For example, imagine you are frequently wrapping certain values in a <code>&lt;span&gt;</code> tag with a custom class. You can register a helper from your JavaScript like this:</p>
+
+<pre class="brush: js;">
+Handlebars.registerHelper('highlight', function(property) {
+  var value = Ember.getPath(this, property);
+  return new Handlebars.SafeString('<span class="highlight">'+value+'</span>');
+});
+</pre>
+
+<p>If you return HTML from a helper, and you don&#39;t want it to be escaped,
+make sure to return a new <code>SafeString</code>.</p>
+
+<p>Anywhere in your Handlebars templates, you can now invoke this helper:</p>
+
+<pre class="brush: xml;">
+{{highlight name}}
+</pre>
+
+<p>and it will output the following:</p>
+
+<pre class="brush: xml;">
+<span class="highlight">Peter</span>
+</pre>
+
+<p>NOTE: Parameters to helper functions are passed as names, not their current values. This allows you to optionally set up observers on the values. To get the current value of the parameter, use Ember.getPath, as shown above.</p>
+
+</div>
+<div class="section">
+  <h2>Views In-Depth</h2>
+
+<p>Now that you&#39;re familiar with using Handlebars, let&#39;s go more in-depth on
+how to both handle events, and customize views to your needs.</p>
+
+<h3>Handling Events</h3>
+
+<p>Instead of having to register event listeners on elements you&#39;d like to
+respond to, simply implement the name of the event you want to respond to
+as a method on your view.</p>
+
+<p>For example, imagine we have a template like this:</p>
+
+<pre class="brush: xml;">
+{{#view App.ClickableView}}
+This is a clickable area!
+{{/view}}
+</pre>
+
+<p>Let&#39;s implement App.ClickableView such that when it is
+clicked, an alert is displayed:</p>
+
+<pre class="brush: js;">
+App.ClickableView = Ember.View.extend({
+  click: function(evt) {
+    alert("ClickableView was clicked!");
+  }
+});
+</pre>
+
+<p>Events bubble up from the target view to each parent view in
+succession, until the root view is reached. At any point you can stop propagation by returning <code>false</code>:</p>
+
+<pre class="brush: js; highlight: 3;">
+doubleClick: function(evt) {
+  alert("Double clicked!");
+  return false;
+}
+</pre>
+
+<h3>Hierarchy</h3>
+
+<p>You can construct hierarchies of views arbitrarily deep. A view can access its parent view by retrieving
+the <code>parentView</code> property, and can access an array of its child views via the <code>childViews</code> property.</p>
+
+<p>Note that both of these values are read-only. If you want to manually manage views in JavaScript (instead of creating them
+using the {{view}} helper in Handlebars), see the Ember.ContainerView documentation below.</p>
+
+<h3>Manually Managed Views with Ember.ContainerView</h3>
+
+<p>Usually, views create their child views by using the <code>{{view}}</code> helper. Sometimes it is useful to manually manage a view&#39;s
+child views. If you create an instance of <code>Ember.ContainerView</code>, the <code>childViews</code> array is editable. Views that you add
+are rendered to the page, and views that you remove are removed from the DOM.</p>
+
+<pre class="brush: js;">
+var container = Ember.ContainerView.create();
+container.append();
+
+var coolView = App.CoolView.create(),
+    childViews = container.get('childViews');
+
+childViews.pushObject(coolView);
+</pre>
+
+<p>As a shorthand, you can specify the child views as properties and the child views as a list of keys. When the
+container view is created, these views will be instantiated and added to the child views array:</p>
+
+<pre class="brush: js;">
+var container = Ember.ContainerView.create({
+  childViews: ['firstView', 'secondView'],
+  
+  firstView: App.FirstView,
+  secondView: App.SecondView
+});
+</pre>
+
+<h3>Render Pipeline</h3>
+
+<p>Before your views are turned into DOM elements, they first exist as a string representation. As views render, they turn
+each of their child views into strings and concatenate them together.</p>
+
+<p>If you&#39;d like to use something other than Handlebars, you can override a view&#39;s <code>render</code> method to return a custom
+string of HTML.</p>
+
+<pre class="brush: js;">
+App.CoolView = Ember.View.create({
+  render: function() {
+    return "<b>This view is so cool!</b>";
+  }
+});
+</pre>
+
+<p>This makes it easy to support template engines other than Handlebars; though do note that if you override rendering,
+values will not update automatically. Any updates will be your responsibility.</p>
+
+<h3>Customizing the HTML Element</h3>
+
+<p>A view is represented by a single DOM element on the page. You can change what kind of element is created by
+changing the <code>tagName</code> property.</p>
+
+<pre class="brush: js;">
+App.MyView = Ember.View.extend({
+  tagName: 'span'
+});
+</pre>
+
+<p>You can also specify which class names are applied to the view by setting its <code>classNames</code> property to an array of strings:</p>
+
+<pre class="brush: js;">
+App.MyView = Ember.View.extend({
+  classNames: ['my-view']
+});
+</pre>
+
+<p>If you want class names to be determined by the state of properties on the view, you can use class name bindings. If you bind to
+a Boolean property, the class name will be added or removed depending on the value:</p>
+
+<pre class="brush: js;">
+App.MyView = Ember.View.extend({
+  classNameBindings: ['isUrgent'],
+  isUrgent: true
+});
+</pre>
+
+<p>This would render a view like this:</p>
+
+<pre class="brush: xml;">
+&lt;div class="ember-view is-urgent">
+</pre>
+
+<p>If isUrgent is changed to false, then the <code>is-urgent</code> class name will be removed.</p>
+
+<p>By default, the name of the Boolean property is dasherized. You can customize the class name
+applied by delimiting it with a colon:</p>
+
+<pre class="brush: js;">
+App.MyView = Ember.View.extend({
+  classNameBindings: ['isUrgent:urgent'],
+  isUrgent: true
+});
+</pre>
+
+<p>This would render this HTML:</p>
+
+<pre class="brush: xml;">
+&lt;div class="ember-view urgent">
+</pre>
+
+<p>If the bound value is a string, that value will be added as a class name without
+modification.</p>
+
+</div>
+<div class="section">
+  <h2>The Ember Enumerable API</h2>
+
+<h3>What Are Enumerables?</h3>
+
+<p>In Ember, an Enumerable is any object that contains a number of child objects, and which allows you to work with those children using the Enumerable interface. The most basic Enumerable is the built-in JavaScript Array.</p>
+
+<p>For instance, all Enumerables support the standard <code>forEach</code> method:</p>
+
+<pre class="brush: js;">
+[1,2,3].forEach(function(item) {
+  console.log(item);
+});
+</pre>
+
+<p>In general, Enumerable methods, like <code>forEach</code>, take an optional second parameter, which will become the value of <code>this</code> in the callback function:</p>
+
+<pre class="brush: js;">
+var array = [1,2,3];
+
+array.forEach(function(item) {
+  console.log(item, this.indexOf(item));
+}, array)
+</pre>
+
+<p>Among other reasons, you will find this useful when using another Enumerable method as a callback to <code>forEach</code>:</p>
+
+<pre class="brush: js;">
+var array = [1,2,3];
+
+array.forEach(array.removeObject, array);
+</pre>
+
+<p>NOTE: This second parameter helps work around a limitation of JavaScript which sets the value of <code>this</code> to <code>window</code> in methods used this way.</p>
+
+<h3>Enumerables in Ember</h3>
+
+<p>In general, Ember objects that represent lists implement the Enumerable interface. Some examples:</p>
+
+<ul>
+<li><em>Array</em>: Ember extends the native JavaScript Array with the Enumerable interface.</li>
+<li><em>ArrayProxy</em>: A construct that wraps a native Array and adds additional functionality for the view layer.</li>
+<li><em>Set</em>: An object that can quickly answer whether it includes an object.</li>
+</ul>
+
+<h3>The Enumerable Interface</h3>
+
+<h4>Parameters</h4>
+
+<p>The callbacks to Enumerable methods take three arguments:</p>
+
+<ul>
+<li><em>item</em>: the item for the current iteration.</li>
+<li><em>index</em>: an Integer, counting up from 0.</li>
+<li><em>self</em>: the Enumerable itself.</li>
+</ul>
+
+<h4>Enumeration</h4>
+
+<p>To enumerate all the values of an enumerable object, use the <code>forEach</code> method:</p>
+
+<pre class="brush: js;">
+enumerable.forEach(function(item, index, self) {
+  console.log(item);
+});
+</pre>
+
+<p>To invoke some method on each element of an enumerable object, use the <code>invoke</code> method:</p>
+
+<pre class="brush: js;">
+Person = Ember.Object.extend({
+  sayHello: function() {
+    console.log("Hello from " + this.get('name'));
+  }
+});
+
+var people = [
+  Person.create({ name: "Juan" }),
+  Person.create({ name: "Charles" }),
+  Person.create({ name: "Majd" })
+]
+
+people.invoke('sayHello');
+
+// Hello from Juan
+// Hello from Charles
+// Hello from Majd
+</pre>
+
+<h4>First and Last</h4>
+
+<p>You can get the first or last object from an Enumerable by getting <code>firstObject</code> or <code>lastObject</code>.</p>
+
+<pre class="brush: js;">
+[1,2,3].get('firstObject') // 1
+[1,2,3].get('lastObject')  // 3
+</pre>
+
+<h4>Converting to Array</h4>
+
+<p>This one is simple. To convert an Enumerable into an Array, simply call its <code>toArray</code> method.</p>
+
+<h4>Transforming</h4>
+
+<p>You can transform an Enumerable into a derived Array by using the <code>map</code> method:</p>
+
+<pre class="brush: js;">
+['Goodbye', 'cruel', 'world'].map(function(item, index, self) {
+  return item + "!";
+});
+
+// returns ["Goodbye!", "cruel!", "world!"]
+</pre>
+
+<h4>Setting and Getting on Each Object</h4>
+
+<p>A very common use of <code>forEach</code> and <code>map</code> is to get (or set) a property on each element. You can use the <code>getEach</code> and <code>setEach</code> methods to accomplish these goals.</p>
+
+<pre class="brush: js;">
+var arr = [Ember.Object.create(), Ember.Object.create()];
+
+// we now have an Array containing two Ember.Objects
+
+arr.setEach('name', 'unknown');
+arr.getEach('name') // ['unknown', 'unknown']
+</pre>
+
+<h4>Filtering</h4>
+
+<p>Another common task to perform on an Enumerable is to take the Enumerable as input, and return an Array after sorting or filtering it based on some criteria.</p>
+
+<p>For arbitrary filtering, use the (you guessed it) <code>filter</code> method. The filter method expects the callback to return <code>true</code> if Ember should include it in the final Array, and <code>false</code> or <code>undefined</code> if Ember should not.</p>
+
+<pre class="brush: js;">
+var arr = [1,2,3,4,5];
+
+arr.filter(function(item, index, self) {
+  if (item &lt; 4) { return true; }
+})
+
+// returns [1,2,3]
+</pre>
+
+<p>When working with a collection of Ember objects, you will often want to filter a set of objects based upon the value of some property. The <code>filterProperty</code> method provides a shortcut.</p>
+
+<pre class="brush: js;">
+Todo = Ember.Object.extend({
+  title: null,
+  isDone: false
+});
+
+todos = [
+  Todo.create({ title: 'Write code', isDone: true }),
+  Todo.create({ title: 'Go to sleep' })
+];
+
+todos.filterProperty('isDone', true);
+
+// returns an Array containing just the first item
+</pre>
+
+<p>If you want to return just the first matched value, rather than an Array containing all of the matched values, you can use <code>find</code> and <code>findProperty</code>, which work just like <code>filter</code> and <code>filterProperty</code>, but return only one item.</p>
+
+<h4>Sorting</h4>
+
+<p>You can sort an Enumerable based on the value of some property or list of properties using <code>sortProperty</code>. If you pass in multiple properties, Ember will sort items with the same value for the first property by the value of the second parameter, and so on.</p>
+
+<pre class="brush: js;">
+var todos = [
+  Todo.create({ title: 'Write code', isDone: true }),
+  Todo.create({ title: 'Go to sleep' }),
+  Todo.create({ title: 'Eat lunch', isDone: true })
+];
+
+todos.sortProperty('isDone', 'title');
+
+// returns an Array containing
+// * Go to sleep
+// * Eat lunch
+// * Write code
+</pre>
+
+<p>Internally, the <code>sortProperty</code> method uses <code>Ember.compare</code>, which uses Ember&#39;s comparable semantics. You can override the default comparison behavior for a custom object by using the <code>Ember.Comparable</code> mixin.</p>
+
+<h4>Aggregate Information (All or Any)</h4>
+
+<p>If you want to find out whether every item in an Enumerable matches some condition, you can use the <code>every</code> method:</p>
+
+<pre class="brush: js;">
+Person = Ember.Object.extend({
+  name: null,
+  isHappy: false
+});
+
+var people = [
+  Person.create({ name: 'Yehuda', isHappy: true }),
+  Person.create({ name: 'Majd', isHappy: false })
+];
+
+people.every(function(person, index, self) {
+  if(person.get('isHappy')) { return true; }
+});
+
+// returns false
+</pre>
+
+<p>If you want to find out whether at least one item in an Enumerable matches some conditions, you can use the <code>some</code> method:</p>
+
+<pre class="brush: js;">
+people.some(function(person, index, self) {
+  if(person.get('isHappy')) { return true; }
+});
+
+// returns true
+</pre>
+
+<p>Just like the filtering methods, the <code>every</code> and <code>some</code> methods have analogous <code>everyProperty</code> and <code>someProperty</code> methods.</p>
+
+<pre class="brush: js;">
+people.everyProperty('isHappy', true) // false
+people.someProperty('isHappy', true)  // true
+</pre>
+
+</div>
+
+</div>
+<script type="text/javascript" src="/scripts/shCore.js"></script>
+<script type="text/javascript" src="/scripts/shBrushJScript.js"></script>
+<script type="text/javascript" src="/scripts/shBrushXml.js"></script>
+<script type="text/javascript" src="/scripts/shBrushCss.js"></script>
+<script type="text/javascript">
+  SyntaxHighlighter.defaults.toolbar = false;
+  SyntaxHighlighter.all();
+</script>
+</body>
+</html>
