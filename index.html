@@ -332,21 +332,21 @@ overriding.</p>
 <h3>Reopening Classes</h3>
 
 <p>You don&#39;t need to define a class all at once. You can reopen a class and
-define new properties using the <code>reopenClass</code> method.</p>
+define new properties using the <code>reopen</code> method.</p>
 
 <pre class="brush: js; highlight: 1">
-Person.reopenClass({
+Person.reopen({
   isPerson: true
 });
 
 Person.create().get('isPerson') // true
 </pre>
 
-<p>When using <code>reopenClass</code>, you can also override existing methods and
+<p>When using <code>reopen</code>, you can also override existing methods and
 call <code>this._super</code>.</p>
 
 <pre class="brush: js; highlight: [3,4,5];">
-Person.reopenClass({
+Person.reopen({
   // override `say` to add an ! at the end
   say: function(thing) {
     this._super(thing + "!");
@@ -488,7 +488,7 @@ updating <code>firstName</code> will fire observers on <code>fullName</code> as 
 observers inline in class definitions.</p>
 
 <pre class="brush: js; highlight: 4;">
-Person.reopenClass({
+Person.reopen({
   fullNameChanged: function() {
     // this is an inline version of .addObserver
   }.observes('fullName')
@@ -499,7 +499,7 @@ Person.reopenClass({
 are using Ember without prototype extensions:</p>
 
 <pre class="brush: js; highlight: [2,4];">
-Person.reopenClass({
+Person.reopen({
   fullNameChanged: Ember.observer(function() {
     // this is an inline version of .addObserver
   }, 'fullName')
@@ -1500,27 +1500,6 @@ todos.filterProperty('isDone', true);
 </pre>
 
 <p>If you want to return just the first matched value, rather than an Array containing all of the matched values, you can use <code>find</code> and <code>findProperty</code>, which work just like <code>filter</code> and <code>filterProperty</code>, but return only one item.</p>
-
-<h4>Sorting</h4>
-
-<p>You can sort an Enumerable based on the value of some property or list of properties using <code>sortProperty</code>. If you pass in multiple properties, Ember will sort items with the same value for the first property by the value of the second parameter, and so on.</p>
-
-<pre class="brush: js;">
-var todos = [
-  Todo.create({ title: 'Write code', isDone: true }),
-  Todo.create({ title: 'Go to sleep' }),
-  Todo.create({ title: 'Eat lunch', isDone: true })
-];
-
-todos.sortProperty('isDone', 'title');
-
-// returns an Array containing
-// * Go to sleep
-// * Eat lunch
-// * Write code
-</pre>
-
-<p>Internally, the <code>sortProperty</code> method uses <code>Ember.compare</code>, which uses Ember&#39;s comparable semantics. You can override the default comparison behavior for a custom object by using the <code>Ember.Comparable</code> mixin.</p>
 
 <h4>Aggregate Information (All or Any)</h4>
 
