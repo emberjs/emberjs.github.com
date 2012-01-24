@@ -42,15 +42,15 @@
       <a href="https://github.com/emberjs/ember.js"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/e6bef7a091f5f3138b8cd40bc3e114258dd68ddf/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub"></a>
     </div>
     <div class="download">
-      <a href="https://github.com/downloads/emberjs/ember.js/ember-0.9.3.min.js">
+      <a href="https://github.com/downloads/emberjs/ember.js/ember-0.9.4.min.js">
         <img src="/images/download_button.png">
       </a>
-      <div class="info">35k min+gzip |
-        <a class="debug" href="https://github.com/downloads/emberjs/ember.js/ember-0.9.3.js">
+      <div class="info">37k min+gzip |
+        <a class="debug" href="https://github.com/downloads/emberjs/ember.js/ember-0.9.4.js">
           debug build
         </a>
       </div>
-      <a class="starter-kit" href="https://github.com/downloads/emberjs/starter-kit/starter-kit.0.9.3.zip">
+      <a class="starter-kit" href="https://github.com/downloads/emberjs/starter-kit/starter-kit.0.9.4.zip">
         <img src="/images/download_starter_kit_button.png">
       </a>
     </div>
@@ -326,11 +326,11 @@ word in JavaScript) to call the original method you overrode.</p>
 <p>When subclassing, you can use <code>this._super</code> to invoke methods you are
 overriding.</p>
 
-<h3 id="toc_14">Reopening Classes</h3>
+<h3 id="toc_14">Reopening Classes and Instances</h3>
 
 <p>You don&#39;t need to define a class all at once. You can reopen a class and
-define new properties using the <code>reopenClass</code> method.</p>
-<div class="highlight"><pre><span class="nx">Person</span><span class="p">.</span><span class="nx">reopenClass</span><span class="p">({</span>
+define new properties using the <code>reopen</code> method.</p>
+<div class="highlight"><pre><span class="nx">Person</span><span class="p">.</span><span class="nx">reopen</span><span class="p">({</span>
   <span class="nx">isPerson</span><span class="o">:</span> <span class="kc">true</span>
 <span class="p">});</span>
 
@@ -338,14 +338,26 @@ define new properties using the <code>reopenClass</code> method.</p>
 </pre>
 </div>
 
-<p>When using <code>reopenClass</code>, you can also override existing methods and
+<p>When using <code>reopen</code>, you can also override existing methods and
 call <code>this._super</code>.</p>
-<div class="highlight"><pre><span class="nx">Person</span><span class="p">.</span><span class="nx">reopenClass</span><span class="p">({</span>
+<div class="highlight"><pre><span class="nx">Person</span><span class="p">.</span><span class="nx">reopen</span><span class="p">({</span>
   <span class="c1">// override `say` to add an ! at the end</span>
   <span class="nx">say</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">thing</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">_super</span><span class="p">(</span><span class="nx">thing</span> <span class="o">+</span> <span class="s2">&quot;!&quot;</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">});</span>
+</pre>
+</div>
+
+<p>As you can see, <code>reopen</code> is used to add properties and methods to an instance.
+But when you need to create class method or add the properties to the class itself you can use <code>reopenClass</code>.</p>
+<div class="highlight"><pre><span class="nx">Person</span><span class="p">.</span><span class="nx">reopenClass</span><span class="p">({</span>
+  <span class="nx">createMan</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">Person</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span><span class="nx">isMan</span><span class="o">:</span> <span class="kc">true</span><span class="p">})</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">Person</span><span class="p">.</span><span class="nx">createMan</span><span class="p">().</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;isMan&#39;</span><span class="p">)</span> <span class="c1">// true</span>
 </pre>
 </div>
 
@@ -477,7 +489,7 @@ updating <code>firstName</code> will fire observers on <code>fullName</code> as 
 
 <p>Because observers are so common, Ember provides a way to define
 observers inline in class definitions.</p>
-<div class="highlight"><pre><span class="nx">Person</span><span class="p">.</span><span class="nx">reopenClass</span><span class="p">({</span>
+<div class="highlight"><pre><span class="nx">Person</span><span class="p">.</span><span class="nx">reopen</span><span class="p">({</span>
   <span class="nx">fullNameChanged</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="c1">// this is an inline version of .addObserver</span>
   <span class="p">}.</span><span class="nx">observes</span><span class="p">(</span><span class="s1">&#39;fullName&#39;</span><span class="p">)</span>
@@ -487,7 +499,7 @@ observers inline in class definitions.</p>
 
 <p>You can define inline observers by using the <code>Ember.observer</code> method if you
 are using Ember without prototype extensions:</p>
-<div class="highlight"><pre><span class="nx">Person</span><span class="p">.</span><span class="nx">reopenClass</span><span class="p">({</span>
+<div class="highlight"><pre><span class="nx">Person</span><span class="p">.</span><span class="nx">reopen</span><span class="p">({</span>
   <span class="nx">fullNameChanged</span><span class="o">:</span> <span class="nx">Ember</span><span class="p">.</span><span class="nx">observer</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="c1">// this is an inline version of .addObserver</span>
   <span class="p">},</span> <span class="s1">&#39;fullName&#39;</span><span class="p">)</span>
@@ -1170,23 +1182,10 @@ clicked, an alert is displayed:</p>
 </div>
 
 <p>Events bubble up from the target view to each parent view in
-succession, until the root view is reached. At any point you can stop propagation by returning <code>false</code>:</p>
-<div class="highlight"><pre><span class="nx">doubleClick</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">evt</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;Double clicked!&quot;</span><span class="p">);</span>
-  <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
-<span class="p">}</span>
-</pre>
-</div>
-
-<h3 id="toc_40">Hierarchy</h3>
-
-<p>You can construct hierarchies of views arbitrarily deep. A view can access its parent view by retrieving
-the <code>parentView</code> property, and can access an array of its child views via the <code>childViews</code> property.</p>
-
-<p>Note that both of these values are read-only. If you want to manually manage views in JavaScript (instead of creating them
+succession, until the root viewth of these values are read-only. If you want to manually manage views in JavaScript (instead of creating them
 using the {{view}} helper in Handlebars), see the Ember.ContainerView documentation below.</p>
 
-<h3 id="toc_41">Manually Managed Views with Ember.ContainerView</h3>
+<h3 id="toc_40">Manually Managed Views with Ember.ContainerView</h3>
 
 <p>Usually, views create their child views by using the <code>{{view}}</code> helper. Sometimes it is useful to manually manage a view&#39;s
 child views. If you create an instance of <code>Ember.ContainerView</code>, the <code>childViews</code> array is editable. Views that you add
@@ -1212,7 +1211,7 @@ container view is created, these views will be instantiated and added to the chi
 </pre>
 </div>
 
-<h3 id="toc_42">Render Pipeline</h3>
+<h3 id="toc_41">Render Pipeline</h3>
 
 <p>Before your views are turned into DOM elements, they first exist as a string representation. As views render, they turn
 each of their child views into strings and concatenate them together.</p>
@@ -1230,7 +1229,7 @@ string of HTML.</p>
 <p>This makes it easy to support template engines other than Handlebars; though do note that if you override rendering,
 values will not update automatically. Any updates will be your responsibility.</p>
 
-<h3 id="toc_43">Customizing the HTML Element</h3>
+<h3 id="toc_42">Customizing the HTML Element</h3>
 
 <p>A view is represented by a single DOM element on the page. You can change what kind of element is created by
 changing the <code>tagName</code> property.</p>
@@ -1279,6 +1278,17 @@ applied by delimiting it with a colon:</p>
 
 <p>If the bound value is a string, that value will be added as a class name without
 modification.</p>
+
+<h3 id="toc_43">Attribute Bindings on a View</h3>
+
+<p>You can bind attributes to the DOM element that represents a view by using <code>attributeBindings</code>:</p>
+<div class="highlight"><pre><span class="nx">App</span><span class="p">.</span><span class="nx">MyView</span> <span class="o">=</span> <span class="nx">Ember</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+  <span class="nx">tagName</span><span class="o">:</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span>
+  <span class="nx">attributeBindings</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;href&#39;</span><span class="p">],</span>
+  <span class="nx">href</span><span class="o">:</span> <span class="s2">&quot;http://emberjs.com&quot;</span>
+<span class="p">});</span>
+</pre>
+</div>
 
 </div>
 <div class="section" id="enumerables">
@@ -1434,27 +1444,7 @@ modification.</p>
 
 <p>If you want to return just the first matched value, rather than an Array containing all of the matched values, you can use <code>find</code> and <code>findProperty</code>, which work just like <code>filter</code> and <code>filterProperty</code>, but return only one item.</p>
 
-<h4 id="toc_55">Sorting</h4>
-
-<p>You can sort an Enumerable based on the value of some property or list of properties using <code>sortProperty</code>. If you pass in multiple properties, Ember will sort items with the same value for the first property by the value of the second parameter, and so on.</p>
-<div class="highlight"><pre><span class="kd">var</span> <span class="nx">todos</span> <span class="o">=</span> <span class="p">[</span>
-  <span class="nx">Todo</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span> <span class="nx">title</span><span class="o">:</span> <span class="s1">&#39;Write code&#39;</span><span class="p">,</span> <span class="nx">isDone</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}),</span>
-  <span class="nx">Todo</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span> <span class="nx">title</span><span class="o">:</span> <span class="s1">&#39;Go to sleep&#39;</span> <span class="p">}),</span>
-  <span class="nx">Todo</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span> <span class="nx">title</span><span class="o">:</span> <span class="s1">&#39;Eat lunch&#39;</span><span class="p">,</span> <span class="nx">isDone</span><span class="o">:</span> <span class="kc">true</span> <span class="p">})</span>
-<span class="p">];</span>
-
-<span class="nx">todos</span><span class="p">.</span><span class="nx">sortProperty</span><span class="p">(</span><span class="s1">&#39;isDone&#39;</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">);</span>
-
-<span class="c1">// returns an Array containing</span>
-<span class="c1">// * Go to sleep</span>
-<span class="c1">// * Eat lunch</span>
-<span class="c1">// * Write code</span>
-</pre>
-</div>
-
-<p>Internally, the <code>sortProperty</code> method uses <code>Ember.compare</code>, which uses Ember&#39;s comparable semantics. You can override the default comparison behavior for a custom object by using the <code>Ember.Comparable</code> mixin.</p>
-
-<h4 id="toc_56">Aggregate Information (All or Any)</h4>
+<h4 id="toc_55">Aggregate Information (All or Any)</h4>
 
 <p>If you want to find out whether every item in an Enumerable matches some condition, you can use the <code>every</code> method:</p>
 <div class="highlight"><pre><span class="nx">Person</span> <span class="o">=</span> <span class="nx">Ember</span><span class="p">.</span><span class="nb">Object</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
