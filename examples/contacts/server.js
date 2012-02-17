@@ -1,5 +1,6 @@
 var express = require('express'),
-    connect = require('connect');
+    connect = require('connect'),
+    util    = require('util');
 
 var app = express.createServer(
   connect.logger(),
@@ -65,3 +66,4 @@ app.get('/contacts.json', function(req, res) {
 });
 
 app.listen(3000);
+util.log("Listening on port 3000");
