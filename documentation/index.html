@@ -1025,19 +1025,18 @@ will be added. If it is false, the <code>urgent</code> class will be removed.</p
 </pre>
 </div>
 
-<p>The view&#39;s event handler can optionally accept an <code>eventObject</code>:</p>
-<div class="highlight"><pre><span class="nx">App</span><span class="p">.</span><span class="nx">ShowView</span> <span class="o">=</span> <span class="nx">Ember</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
-  <span class="nx">templateName</span><span class="o">:</span> <span class="s1">&#39;show&#39;</span><span class="p">,</span>
+<p>The action handler can optionally accept a jQuery event object, which will be extended to include <code>view</code> and <code>context</code> properties. These properties can be useful when targeting a different view with your action. For instance:</p>
+<div class="highlight"><pre><span class="nx">App</span><span class="p">.</span><span class="nx">ListingView</span> <span class="o">=</span> <span class="nx">Ember</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+  <span class="nx">templateName</span><span class="o">:</span> <span class="s1">&#39;listing&#39;</span><span class="p">,</span>
 
   <span class="nx">edit</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;isEditing&#39;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+    <span class="nx">event</span><span class="p">.</span><span class="nx">view</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;isEditing&#39;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">});</span>
 </pre>
 </div>
 
-<p>The template discussed above will produce an HTML element like this:</p>
+<p>Any of the templates discussed above will produce an HTML element like this:</p>
 <div class="highlight"><pre><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">data-ember-action=</span><span class="s">&quot;3&quot;</span><span class="nt">&gt;</span>Edit<span class="nt">&lt;/a&gt;</span>
 </pre>
 </div>
