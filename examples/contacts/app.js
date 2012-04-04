@@ -1,4 +1,4 @@
-App = SC.Application.create();
+App = Ember.Application.create();
 
 /*
 
@@ -11,7 +11,7 @@ var names = ["Adam", "Bert", "Charlie", "Dave", "Ernie", "Frances",
   "Peter", "Quentin", "Rachel", "Stan", "Tom", "Uma", "Veronica", "Wilson",
   "Xander", "Yehuda", "Zora"];
 
-App.Contact = SC.Object.extend({
+App.Contact = Ember.Object.extend({
   firstName: '',
   lastName: '',
 
@@ -37,7 +37,7 @@ App.Contact = SC.Object.extend({
 
 */
 
-App.contactsController = SC.ArrayController.create({
+App.contactsController = Ember.ArrayController.create({
   // The array of Contact objects that backs the array controller.
   content: [],
 
@@ -141,11 +141,11 @@ App.contactsController = SC.ArrayController.create({
 
 App.contactsController.loadContacts();
 
-App.selectedContactController = SC.Object.create({
+App.selectedContactController = Ember.Object.create({
   content: null
 });
 
-App.DeleteNumberView = SC.View.extend({
+App.DeleteNumberView = Ember.View.extend({
   classNames: ['delete-number-view'],
   click: function() {
     var phoneNumber = this.get('content');
@@ -159,7 +159,7 @@ App.DeleteNumberView = SC.View.extend({
   }
 });
 
-App.EditField = SC.View.extend({
+App.EditField = Ember.View.extend({
   tagName: 'span',
   templateName: 'edit-field',
 
@@ -193,27 +193,27 @@ App.EditField = SC.View.extend({
   }
 });
 
-App.TextField = SC.TextField.extend({
+App.TextField = Ember.TextField.extend({
   didInsertElement: function() {
     this.$().focus();
   }
 });
 
-SC.Handlebars.registerHelper('editable', function(path, options) {
+Ember.Handlebars.registerHelper('editable', function(path, options) {
   options.hash.valueBinding = path;
-  return SC.Handlebars.helpers.view.call(this, App.EditField, options);
+  return Ember.Handlebars.helpers.view.call(this, App.EditField, options);
 });
 
-SC.Handlebars.registerHelper('button', function(options) {
+Ember.Handlebars.registerHelper('button', function(options) {
   var hash = options.hash;
 
   if (!hash.target) {
     hash.target = "App.contactsController";
   }
-  return SC.Handlebars.helpers.view.call(this, SC.Button, options);
+  return Ember.Handlebars.helpers.view.call(this, Ember.Button, options);
 });
 
-App.ContactListView = SC.View.extend({
+App.ContactListView = Ember.View.extend({
   classNameBindings: ['isSelected'],
 
   click: function() {
@@ -234,7 +234,7 @@ App.ContactListView = SC.View.extend({
   }.property('App.selectedContactController.content')
 });
 
-App.CardView = SC.View.extend({
+App.CardView = Ember.View.extend({
   contentBinding: 'App.selectedContactController.content',
   classNames: ['card'],
 

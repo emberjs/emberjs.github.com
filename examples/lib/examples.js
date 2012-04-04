@@ -1,5 +1,5 @@
-Examples = SC.Application.create();
-Examples.SelectPopupView = SC.View.extend({
+Examples = Ember.Application.create();
+Examples.SelectPopupView = Ember.View.extend({
   didInsertElement: function() {
     this.change();
   },
@@ -12,7 +12,7 @@ Examples.SelectPopupView = SC.View.extend({
   }
 });
 
-Examples.exampleController = SC.Object.create({
+Examples.exampleController = Ember.Object.create({
   example: '',
 
   exampleDidChange: function() {
@@ -49,8 +49,8 @@ Examples.exampleController = SC.Object.create({
 
     $.ajax('/examples/'+example+'/template.handlebars', {
       success: function(template) {
-        var view = iframeWindow.SC.View.create({
-          template: iframeWindow.SC.Handlebars.compile(template)
+        var view = iframeWindow.Ember.View.create({
+          template: iframeWindow.Ember.Handlebars.compile(template)
         });
         view.append();
       }
