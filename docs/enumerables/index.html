@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Ember.js - </title>
+    <meta charset="utf-8">
+    <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-27675533-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+
+    <script type="text/javascript">
+      $(function() {
+        $('#logo').on('click', function(evt) {
+          if (evt.shiftKey) {
+            $('#content-wrapper').toggleClass('grid');
+            return false;
+          }
+        });
+
+        var backToTop = $('#back-to-top');
+        var doc = $(document);
+        var offset = backToTop.offset();
+        var marginTop = 90;
+        var showing = false;
+
+        if (backToTop.length) {
+          backToTop.on('click', function(evt) {
+            $('html,body').animate({scrollTop: 0}, 200);
+            return false;
+          });
+
+          doc.on('scroll', function() {
+            if (!showing && doc.scrollTop() > offset.top+200) {
+              showing = true;
+              backToTop.css({
+                opacity: 1,
+                position: 'fixed',
+                top: 20,
+                left: offset.left
+              });
+            } else if (showing && doc.scrollTop() <= offset.top+200) {
+              showing = false;
+              backToTop.css({
+                opacity: 0
+              });
+            }
+          });
+        }
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="header">
+      <div id="wrapper">
+        <a id="logo" href="/">&nbsp;</a>
+        <ul id="nav">
+          <li><a href="/about">about</a></li>
+          <li><a href="/documentation">docs</a></li>
+		  <li><a href="/guides">guides</a></li>
+          <li><a href="/community">community</a></li>
+          <li><a href="http://docs.emberjs.com">api</a></li>
+        </ul>
+        <div id="github">
+          <a href="https://github.com/emberjs/ember.js"><img src="/images/fork-us.png">Fork Us!</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="content-wrapper">
+      
+      <div id="content" >
+        <h2 id='toc_the-ember-enumerable-api'>The Ember Enumerable API</h2><h3 id='toc_what-are-enumerables'>What Are Enumerables?</h3>
+<p>In Ember, an Enumerable is any object that contains a number of child objects, and which allows you to work with those children using the Enumerable interface. The most basic Enumerable is the built-in JavaScript Array.</p>
+
+<p>For instance, all Enumerables support the standard <code>forEach</code> method:</p>
+<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>[<span class="integer">1</span>,<span class="integer">2</span>,<span class="integer">3</span>].forEach(<span class="keyword">function</span>(item) {
+  console.log(item);
+});</pre></td>
+</tr></table>
+</div>
+<p>In general, Enumerable methods, like <code>forEach</code>, take an optional second parameter, which will become the value of <code>this</code> in the callback function:</p>
+<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> array = [<span class="integer">1</span>,<span class="integer">2</span>,<span class="integer">3</span>];
+array.forEach(<span class="keyword">function</span>(item) {
+  console.log(item, <span class="local-variable">this</span>.indexOf(item));
+}, array)</pre></td>
+</tr></table>
+</div>
+<p>Among other reasons, you will find this useful when using another Enumerable method as a callback to <code>forEach</code>:</p>
+<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> array = [<span class="integer">1</span>,<span class="integer">2</span>,<span class="integer">3</span>];
+array.forEach(array.removeObject, array);</pre></td>
+</tr></table>
+</div>
+<p>NOTE: This second parameter helps work around a limitation of JavaScript which sets the value of <code>this</code> to <code>window</code> in methods used this way.</p>
+<h3 id='toc_enumerables-in-ember'>Enumerables in Ember</h3>
+<p>In general, Ember objects that represent lists implement the Enumerable interface. Some examples:</p>
+
+<ul>
+<li><em>Array</em>: Ember extends the native JavaScript Array with the Enumerable interface.</li>
+<li><em>ArrayProxy</em>: A construct that wraps a native Array and adds additional functionality for the view layer.</li>
+<li><em>Set</em>: An object that can quickly answer whether it includes an object.</li>
+</ul>
+<h3 id='toc_the-enumerable-interface'>The Enumerable Interface</h3><h4 id='toc_parameters'>Parameters</h4>
+<p>The callbacks to Enumerable methods take three arguments:</p>
+
+<ul>
+<li><em>item</em>: the item for the current iteration.</li>
+<li><em>index</em>: an Integer, counting up from 0.</li>
+<li><em>self</em>: the Enumerable itself.</li>
+</ul>
+<h4 id='toc_enumeration'>Enumeration</h4>
+<p>To enumerate all the values of an enumerable object, use the <code>forEach</code> method:</p>
+<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>enumerable.forEach(<span class="keyword">function</span>(item, index, self) {
+  console.log(item);
+});</pre></td>
+</tr></table>
+</div>
+<p>To invoke some method on each element of an enumerable object, use the <code>invoke</code> method:</p>
+<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+</pre></td>
+  <td class="code"><pre>Person = Ember.Object.extend({
+  <span class="function">sayHello</span>: <span class="keyword">function</span>() {
+    console.log(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello from </span><span class="delimiter">&quot;</span></span> + <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>));
+  }
+});
+<span class="keyword">var</span> people = [
+  Person.create({ <span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Juan</span><span class="delimiter">&quot;</span></span> }),
+  Person.create({ <span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Charles</span><span class="delimiter">&quot;</span></span> }),
+  Person.create({ <span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Majd</span><span class="delimiter">&quot;</span></span> })
+]
+people.invoke(<span class="string"><span class="delimiter">'</span><span class="content">sayHello</span><span class="delimiter">'</span></span>);
+<span class="comment">// Hello from Juan</span>
+<span class="comment">// Hello from Charles</span>
+<span class="comment">// Hello from Majd</span></pre></td>
+</tr></table>
+</div><h4 id='toc_first-and-last'>First and Last</h4>
+<p>You can get the first or last object from an Enumerable by getting <code>firstObject</code> or <code>lastObject</code>.</p>
+<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+</pre></td>
+  <td class="code"><pre>[<span class="integer">1</span>,<span class="integer">2</span>,<span class="integer">3</span>].get(<span class="string"><span class="delimiter">'</span><span class="content">firstObject</span><span class="delimiter">'</span></span>) <span class="comment">// 1</span>
+[<span class="integer">1</span>,<span class="integer">2</span>,<span class="integer">3</span>].get(<span class="string"><span class="delimiter">'</span><span class="content">lastObject</span><span class="delimiter">'</span></span>)  <span class="comment">// 3</span></pre></td>
+</tr></table>
+</div><h4 id='toc_converting-to-array'>Converting to Array</h4>
+<p>This one is simple. To convert an Enumerable into an Array, simply call its <code>toArray</code> method.</p>
+<h4 id='toc_transforming'>Transforming</h4>
+<p>You can transform an Enumerable into a derived Array by using the <code>map</code> method:</p>
+<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>[<span class="string"><span class="delimiter">'</span><span class="content">Goodbye</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">cruel</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">world</span><span class="delimiter">'</span></span>].map(<span class="keyword">function</span>(item, index, self) {
+  <span class="keyword">return</span> item + <span class="string"><span class="delimiter">&quot;</span><span class="content">!</span><span class="delimiter">&quot;</span></span>;
+});
+<span class="comment">// returns [&quot;Goodbye!&quot;, &quot;cruel!&quot;, &quot;world!&quot;]</span></pre></td>
+</tr></table>
+</div><h4 id='toc_setting-and-getting-on-each-object'>Setting and Getting on Each Object</h4>
+<p>A very common use of <code>forEach</code> and <code>map</code> is to get (or set) a property on each element. You can use the <code>getEach</code> and <code>setEach</code> methods to accomplish these goals.</p>
+<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> arr = [Ember.Object.create(), Ember.Object.create()];
+<span class="comment">// we now have an Array containing two Ember.Objects</span>
+arr.setEach(<span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">unknown</span><span class="delimiter">'</span></span>);
+arr.getEach(<span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>) <span class="comment">// ['unknown', 'unknown']</span></pre></td>
+</tr></table>
+</div><h4 id='toc_filtering'>Filtering</h4>
+<p>Another common task to perform on an Enumerable is to take the Enumerable as input, and return an Array after filtering it based on some criteria.</p>
+
+<p>For arbitrary filtering, use the (you guessed it) <code>filter</code> method. The filter method expects the callback to return <code>true</code> if Ember should include it in the final Array, and <code>false</code> or <code>undefined</code> if Ember should not.</p>
+<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> arr = [<span class="integer">1</span>,<span class="integer">2</span>,<span class="integer">3</span>,<span class="integer">4</span>,<span class="integer">5</span>];
+arr.filter(<span class="keyword">function</span>(item, index, self) {
+  <span class="keyword">if</span> (item &lt; <span class="integer">4</span>) { <span class="keyword">return</span> <span class="predefined-constant">true</span>; }
+})
+<span class="comment">// returns [1,2,3]</span></pre></td>
+</tr></table>
+</div>
+<p>When working with a collection of Ember objects, you will often want to filter a set of objects based upon the value of some property. The <code>filterProperty</code> method provides a shortcut.</p>
+<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre>Todo = Ember.Object.extend({
+  <span class="key">title</span>: <span class="predefined-constant">null</span>,
+  <span class="key">isDone</span>: <span class="predefined-constant">false</span>
+});
+todos = [
+  Todo.create({ <span class="key">title</span>: <span class="string"><span class="delimiter">'</span><span class="content">Write code</span><span class="delimiter">'</span></span>, <span class="key">isDone</span>: <span class="predefined-constant">true</span> }),
+  Todo.create({ <span class="key">title</span>: <span class="string"><span class="delimiter">'</span><span class="content">Go to sleep</span><span class="delimiter">'</span></span> })
+];
+todos.filterProperty(<span class="string"><span class="delimiter">'</span><span class="content">isDone</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
+<span class="comment">// returns an Array containing just the first item</span></pre></td>
+</tr></table>
+</div>
+<p>If you want to return just the first matched value, rather than an Array containing all of the matched values, you can use <code>find</code> and <code>findProperty</code>, which work just like <code>filter</code> and <code>filterProperty</code>, but return only one item.</p>
+<h4 id='toc_aggregate-information-all-or-any'>Aggregate Information (All or Any)</h4>
+<p>If you want to find out whether every item in an Enumerable matches some condition, you can use the <code>every</code> method:</p>
+<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre>Person = Ember.Object.extend({
+  <span class="key">name</span>: <span class="predefined-constant">null</span>,
+  <span class="key">isHappy</span>: <span class="predefined-constant">false</span>
+});
+<span class="keyword">var</span> people = [
+  Person.create({ <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Yehuda</span><span class="delimiter">'</span></span>, <span class="key">isHappy</span>: <span class="predefined-constant">true</span> }),
+  Person.create({ <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Majd</span><span class="delimiter">'</span></span>, <span class="key">isHappy</span>: <span class="predefined-constant">false</span> })
+];
+people.every(<span class="keyword">function</span>(person, index, self) {
+  <span class="keyword">if</span>(person.get(<span class="string"><span class="delimiter">'</span><span class="content">isHappy</span><span class="delimiter">'</span></span>)) { <span class="keyword">return</span> <span class="predefined-constant">true</span>; }
+});
+<span class="comment">// returns false</span></pre></td>
+</tr></table>
+</div>
+<p>If you want to find out whether at least one item in an Enumerable matches some conditions, you can use the <code>some</code> method:</p>
+<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>people.some(<span class="keyword">function</span>(person, index, self) {
+  <span class="keyword">if</span>(person.get(<span class="string"><span class="delimiter">'</span><span class="content">isHappy</span><span class="delimiter">'</span></span>)) { <span class="keyword">return</span> <span class="predefined-constant">true</span>; }
+});
+<span class="comment">// returns true</span></pre></td>
+</tr></table>
+</div>
+<p>Just like the filtering methods, the <code>every</code> and <code>some</code> methods have analogous <code>everyProperty</code> and <code>someProperty</code> methods.</p>
+<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+</pre></td>
+  <td class="code"><pre>people.everyProperty(<span class="string"><span class="delimiter">'</span><span class="content">isHappy</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>) <span class="comment">// false</span>
+people.someProperty(<span class="string"><span class="delimiter">'</span><span class="content">isHappy</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>)  <span class="comment">// true</span></pre></td>
+</tr></table>
+</div>
+      </div>
+    </div>
+
+    <div id="footer">
+      <div class="info">
+        <div class="links"><a href="http://twitter.com/emberjs">Twitter</a> <a href="https://github.com/emberjs/ember.js">GitHub</a></div>
+        <div class="copyright">Copyright 2012 Tilde Inc.</div>
+        <div class="credit">Design by <a href="http://www.heropixel.com">HeroPixel</a></div>
+      </div>
+    </div>
+  </body>
+</html>
+
