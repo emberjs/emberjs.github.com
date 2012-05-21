@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Ember.js - About</title>
+    <meta charset="utf-8">
+    <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-27675533-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+
+    <script type="text/javascript">
+      $(function() {
+        $('#logo').on('click', function(evt) {
+          if (evt.shiftKey) {
+            $('#content-wrapper').toggleClass('grid');
+            return false;
+          }
+        });
+
+        var backToTop = $('#back-to-top');
+        var doc = $(document);
+        var offset = backToTop.offset();
+        var marginTop = 90;
+        var showing = false;
+
+        if (backToTop.length) {
+          backToTop.on('click', function(evt) {
+            $('html,body').animate({scrollTop: 0}, 200);
+            return false;
+          });
+
+          doc.on('scroll', function() {
+            if (!showing && doc.scrollTop() > offset.top+200) {
+              showing = true;
+              backToTop.css({
+                opacity: 1,
+                position: 'fixed',
+                top: 20,
+                left: offset.left
+              });
+            } else if (showing && doc.scrollTop() <= offset.top+200) {
+              showing = false;
+              backToTop.css({
+                opacity: 0
+              });
+            }
+          });
+        }
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="header">
+      <div id="wrapper">
+        <a id="logo" href="/">&nbsp;</a>
+        <ul id="nav">
+          <li class="active"><a href="/about">about</a></li>
+          <li><a href="/documentation">docs</a></li>
+		  <li><a href="/guides">guides</a></li>
+          <li><a href="/community">community</a></li>
+          <li><a href="http://docs.emberjs.com">api</a></li>
+        </ul>
+        <div id="github">
+          <a href="https://github.com/emberjs/ember.js"><img src="/images/fork-us.png">Fork Us!</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="content-wrapper">
+      
+      <div id="content" >
+        <img class="about-header-text" src="/images/about/header-text.png" alt="A framework for creating ambitious web applications.">
+<div id="download">
+  <div id="download-ember">
+    <a class="orange button" href="https://github.com/downloads/emberjs/ember.js/ember-0.9.8.min.js">
+      Download Ember 0.9.8
+    </a>
+    <div class="info">42k min+gzip |
+      <a class="debug" href="https://github.com/downloads/emberjs/ember.js/ember-0.9.8.js">
+        debug build
+      </a>
+    </div>
+  </div>
+  <div id="download-starter-kit">
+    <a class="black button" href="https://github.com/downloads/emberjs/starter-kit/starter-kit.0.9.8.zip">
+		Get the Starter Kit
+    </a>
+  </div>
+</div>
+	
+<div class="features section">
+  <h2>More Productive Out of the Box.</h2>
+  <div class="feature">
+    <img src="/images/about/ember-handlebars-sm.png" alt="Handlebars">
+    <p>Write dramatically less code with Handlebars templates that update automatically when the underlying data changes.</p>
+  </div>
+  <div class="feature">
+    <img src="/images/about/ember-structure-sm.png" alt="Structure">
+    <p>Don't waste time making trivial choices. Ember.js incorporates common idioms so you can focus on what makes your app special, not reinventing the wheel.</p>
+  </div>
+  <div class="feature">
+    <img src="/images/about/ember-productivity-sm.png" alt="Productivity">
+    <p>Ember.js is built for productivity. Designed with developer ergonomics in mind, its friendly APIs help you get your job done&mdash;fast.</p>
+  </div>
+  <div class="clearfix"></div>
+</div> 
+
+<div class="getting-started section">
+  <h2>Getting Started with Ember.js is Easy.</h2>
+
+<div class="highlight left javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre>App.Person = DS.Model.extend({
+  <span class="key">firstName</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">lastName</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="function">fullName</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>) +
+           <span class="string"><span class="delimiter">&quot;</span><span class="content"> </span><span class="delimiter">&quot;</span></span> + <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
+});
+ 
+App.peopleController = Em.ArrayController.create({
+  <span class="key">content</span>: App.Person.findAll()
+});</pre></td>
+</tr></table>
+</div>
+
+  <div class="highlight right html"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;h1&gt;</span>People<span class="tag">&lt;/h1&gt;</span>
+ 
+<span class="tag">&lt;ul&gt;</span>
+{{#each controller}}
+  <span class="tag">&lt;li&gt;</span>Hello, <span class="tag">&lt;b&gt;</span>{{fullName}}<span class="tag">&lt;/b&gt;</span>!
+{{/each}}
+<span class="tag">&lt;/ul&gt;</span>
+ 
+ 
+ 
+ 
+ </pre></td>
+</tr></table>
+</div>
+
+</div>
+
+<div class="users section">
+  <h2>Who's Using Ember.js?</h2>
+  <div class="user">
+    <img src="/images/about/livingsocial.png">
+  </div>
+  <div class="user">
+    <img src="/images/about/square.png">
+  </div>
+  <div class="user">
+    <img src="/images/about/tilde.png">
+  </div>
+  <div class="user">
+    <img src="/images/about/zendesk.png">
+  </div>
+</div>
+
+<!--
+<div class="samples section">
+  <h2>Check Out Our Sample Applications.</h2>
+  <div class="sample">
+    <img src="/images/about/contacts-thumbnail.jpg">
+    <div class="info">
+      <div class="name">Contacts</div>
+      <div class="actions">
+        <div class="orange small-button">Launch</div>
+        <div class="black small-button">Source</div>
+      </div>
+    </div>
+  </div>
+  <div class="sample">
+    <img src="/images/about/contacts-thumbnail.jpg">
+    <div class="info">
+      <div class="name">Contacts</div>
+      <div class="actions">
+        <div class="orange small-button">Launch</div>
+        <div class="black small-button">Source</div>
+      </div>
+    </div>
+  </div>
+  <div class="sample">
+    <img src="/images/about/contacts-thumbnail.jpg">
+    <div class="info">
+      <div class="name">Contacts</div>
+      <div class="actions">
+        <div class="orange small-button">Launch</div>
+        <div class="black small-button">Source</div>
+      </div>
+    </div>
+  </div>
+  <div class="sample">
+    <img src="/images/about/contacts-thumbnail.jpg">
+    <div class="info">
+      <div class="name">Contacts</div>
+      <div class="actions">
+        <div class="orange small-button">Launch</div>
+        <div class="black small-button">Source</div>
+      </div>
+    </div>
+  </div>
+</div>
+-->
+
+      </div>
+    </div>
+
+    <div id="footer">
+      <div class="info">
+        <div class="links"><a href="http://twitter.com/emberjs">Twitter</a> <a href="https://github.com/emberjs/ember.js">GitHub</a></div>
+        <div class="copyright">Copyright 2012 Tilde Inc.</div>
+        <div class="credit">Design by <a href="http://www.heropixel.com">HeroPixel</a></div>
+      </div>
+    </div>
+  </body>
+</html>
+

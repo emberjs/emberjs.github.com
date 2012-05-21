@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Ember.js - Guides</title>
+    <meta charset="utf-8">
+    <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-27675533-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+
+    <script type="text/javascript">
+      $(function() {
+        $('#logo').on('click', function(evt) {
+          if (evt.shiftKey) {
+            $('#content-wrapper').toggleClass('grid');
+            return false;
+          }
+        });
+
+        var backToTop = $('#back-to-top');
+        var doc = $(document);
+        var offset = backToTop.offset();
+        var marginTop = 90;
+        var showing = false;
+
+        if (backToTop.length) {
+          backToTop.on('click', function(evt) {
+            $('html,body').animate({scrollTop: 0}, 200);
+            return false;
+          });
+
+          doc.on('scroll', function() {
+            if (!showing && doc.scrollTop() > offset.top+200) {
+              showing = true;
+              backToTop.css({
+                opacity: 1,
+                position: 'fixed',
+                top: 20,
+                left: offset.left
+              });
+            } else if (showing && doc.scrollTop() <= offset.top+200) {
+              showing = false;
+              backToTop.css({
+                opacity: 0
+              });
+            }
+          });
+        }
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="header">
+      <div id="wrapper">
+        <a id="logo" href="/">&nbsp;</a>
+        <ul id="nav">
+          <li><a href="/about">about</a></li>
+          <li><a href="/documentation">docs</a></li>
+		  <li class="active"><a href="/guides">guides</a></li>
+          <li><a href="/community">community</a></li>
+          <li><a href="http://docs.emberjs.com">api</a></li>
+        </ul>
+        <div id="github">
+          <a href="https://github.com/emberjs/ember.js"><img src="/images/fork-us.png">Fork Us!</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="content-wrapper">
+      
+        <div id="sidebar">
+            <ol><li class="level-1"><a href="#toc_ember-js-mvc">Ember.js MVC</a></li><li class="level-3"><a href="#toc_mvc-basics">MVC Basics</a></li><li class="level-3"><a href="#toc_ember-js-implementation">Ember.js Implementation</a></li><li class="level-3"><a href="#toc_differences-from-ruby-on-rails">Differences from Ruby on Rails</a></li></ol>
+
+          <div id="back-to-top"><a href="#">&#11014; Back to Top</a></div>
+        </div>
+      
+      <div id="content" class="has-sidebar">
+        
+<div class="guide">
+  <h1 id='toc_ember-js-mvc'>Ember.js MVC</h1>
+<p>The Ember.js framework uses a model-view-controller (MVC) pattern of application architecture. Many other frameworks and platforms also use this pattern, so you may have heard of it before. Although the concepts are consistent across platforms, the implementation can vary heavily. Therefore, it is important to understand how Ember.js&#39; MVC implementation differs from what you may be familiar to.</p>
+<h3 id='toc_mvc-basics'>MVC Basics</h3>
+<p>The purpose of the MVC pattern is to separate key concerns so that they can more easily be tested, maintained, and re-used.</p>
+
+<p>The <em>model</em> is where most application data is kept. Models are generally specificed in advance, using a schema or some other type of template in order to formalize and optimze the data&#39;s storage and retrieval. It is often implemented in the form of a data type, class, or database table. An example of a model would be a <code>User</code>, which is made of up a <code>username</code> and <code>password</code> string fields. Many user objects can be created and stored, and they are usually not responsible for any application logic.</p>
+
+<p>The <em>view</em> describes the presentation of various application components – usually parts of the <em>model</em>. Views are how a user sees and interacts with an application. They can be subject to whatever styling is possible in the given system, and hold no permanent state. There are many markup languages (HTML/CSS) and templating languages (Handlebars) with which views can be written. An example of a view would be a User edit page template that contained the code which handles the creation and styling of label and editing fields.</p>
+
+<p>The <em>controller</em> acts as the link between <em>models</em> and <em>views</em>. It provides the business logic of the application, recieving input from the views and performing CRUD operations on the models. A controller would manage taking the user name and password from a view object, comparing them to a model object, and replacing the current view with the next to show a logged in state (or perhaps something else.)</p>
+<h3 id='toc_ember-js-implementation'>Ember.js Implementation</h3>
+<p>Ember provides various objects to lay foundations for easily implementing MVC functionality.</p>
+
+<p>DS.Model lets you describe your application&#39;s data structure, including relationships, </p>
+
+<p>Ember.View encasulates templates of HTML, letting you write reusable and maintable views for your application.</p>
+
+<p>Ember.ArrayController makes it easy to manage lists of objects, with convenience methods for iterating through the contents.</p>
+
+<p>Ember.js also adds a new peice of important architecture: A state manager which can mediate between the views, controllers, and data store. It can act as a map of your application and handle transitions as a user moves through it.</p>
+
+<p>All of these objects descend from Ember.Object, which provide great features like binding support, observers, computed properties, and subclassing.</p>
+<h3 id='toc_differences-from-ruby-on-rails'>Differences from Ruby on Rails</h3>
+<p>A common misconception about Ember.js&#39; MVC implementation is that it must be similar to that of Ruby on Rails. This is incorrect. </p>
+
+<p>The reason for this difference is due to Ruby on Rails being a server-side framework, where as Ember is a client-side framework.[1]</p>
+
+<p>Ember runs in the browser, so it can detect and respond to browser events such as mouse clicks, finger taps, scrolling, key presses, etc. The view objects that recieve these events can then send them to controller objects, which can work with the data model to save changes. Everything happens client-side, in the browser, and ember-data takes care sending and receiving appropirate data to and from the server API.</p>
+
+<figure>
+  <img alt="Ember.js MVC Diagram" src="/images/ember_mvc/embermvc.png">
+</figure>
+
+<p>Rails, on the otherhand, runs on the server. As such, it can only comminicate with the client through HTTP requests. Rather than recieve direct user events, the server takes HTTP requests as input (GET /, POST /user/1, etc.), reads the route and maps it to a controller action. The controller then interacts with the model and the view templates to contruct response (usually in the form of an HTML document) to send back over HTTP. The user is always interacting with what is basically a flat page, assembled on demand for them based on their requests.</p>
+
+<figure>
+  <img alt="Rails MVC Diagram" src="/images/ember_mvc/railsmvc.png">
+</figure>
+
+<p>It is important to keep this difference in mind when architecting your applications. </p>
+
+<p>[1] Alought it is possible to use Ember.js server-side, that is beyond the scope of this guide.</p>
+	
+</div>
+
+      </div>
+    </div>
+
+    <div id="footer">
+      <div class="info">
+        <div class="links"><a href="http://twitter.com/emberjs">Twitter</a> <a href="https://github.com/emberjs/ember.js">GitHub</a></div>
+        <div class="copyright">Copyright 2012 Tilde Inc.</div>
+        <div class="credit">Design by <a href="http://www.heropixel.com">HeroPixel</a></div>
+      </div>
+    </div>
+  </body>
+</html>
+
