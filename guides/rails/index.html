@@ -340,7 +340,7 @@ rm -rf app/views/comments</pre></td>
 </tr></table>
 </div>
 <p>This is where we define the Ember.js object which manages the view. We simply provide it with a <code>templateName</code> property, which points to our handlebars template, and a <code>controller</code> property, which manages the view. Here&#39;s the template that defines what the index view looks like. Make yours look like the following:</p>
-<div class="highlight html"><div class="ribbon"></div><table class="CodeRay"><tr>
+<div class="highlight handlebars"><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
@@ -360,57 +360,57 @@ rm -rf app/views/comments</pre></td>
 17
 18
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;h1&gt;</span>My Photoblog<span class="tag">&lt;/h1&gt;</span>
+  <td class="code"><pre>&lt;h1&gt;My Photoblog&lt;/h1&gt;
 {{#each controller}}
   {{#view contentBinding=&quot;this&quot;}}
-    <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">photo</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-      <span class="tag">&lt;h2&gt;</span>{{content.title}}<span class="tag">&lt;/h2&gt;</span>
-      <span class="tag">&lt;img</span> <span class="error">{</span><span class="error">{</span><span class="attribute-name">bindAttr</span> <span class="error">=</span><span class="error">&quot;</span><span class="attribute-name">content.url</span><span class="error">&quot;</span><span class="error">}</span><span class="error">}</span><span class="tag">&gt;</span>
-      <span class="tag">&lt;br&gt;</span>
+    &lt;div class=&quot;photo&quot;&gt;
+      &lt;h2&gt;{{content.title}}&lt;/h2&gt;
+      &lt;img {{bindAttr src=&quot;content.url&quot;}}&gt;
+      &lt;br&gt;
       {{#if content.comments.length}}
-        <span class="tag">&lt;h3&gt;</span>Comments<span class="tag">&lt;/h3&gt;</span>
-        <span class="tag">&lt;ul&gt;</span>
+        &lt;h3&gt;Comments&lt;/h3&gt;
+        &lt;ul&gt;
           {{#each content.comments}}
-            <span class="tag">&lt;li&gt;</span>{{text}}<span class="tag">&lt;/li&gt;</span>
+            &lt;li&gt;{{text}}&lt;/li&gt;
           {{/each}}
-        <span class="tag">&lt;/ul&gt;</span>
+        &lt;/ul&gt;
       {{/if}}
-    <span class="tag">&lt;/div&gt;</span>
+    &lt;/div&gt;
   {{/view}}
 {{/each}}</pre></td>
 </tr></table>
 </div>
 <p>Let&#39;s go break this down and explain what&#39;s gong on.</p>
-<div class="highlight html"><div class="ribbon"></div><table class="CodeRay"><tr>
+<div class="highlight handlebars"><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;h1&gt;</span>My Photoblog<span class="tag">&lt;/h1&gt;</span>
+  <td class="code"><pre>&lt;h1&gt;My Photoblog&lt;/h1&gt;
 {{#each controller}}</pre></td>
 </tr></table>
 </div>
 <p>Our view has a controller, the Photoblog.photosController, which will create in the next step. This is an Ember.ArrayController, so it implements the Ember.Enumerable interface. This means that we can loop over it&#39;s contents (each element of the array) using the <code>#each</code> Handlerbars experssion.</p>
-<div class="highlight html"><div class="ribbon"></div><table class="CodeRay"><tr>
+<div class="highlight handlebars"><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
 </pre></td>
   <td class="code"><pre>{{#view contentBinding=&quot;this&quot;}}</pre></td>
 </tr></table>
 </div>
 <p>For each photo managed by the photosController, we will create a subview with the following contents, and have its <code>content</code> property be bound to the photo object.</p>
-<div class="highlight html"><div class="ribbon"></div><table class="CodeRay"><tr>
+<div class="highlight handlebars"><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
 4
 </pre></td>
-  <td class="code"><pre>    <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">photo</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-      <span class="tag">&lt;h2&gt;</span>{{content.title}}<span class="tag">&lt;/h2&gt;</span>
-      <span class="tag">&lt;img</span> <span class="error">{</span><span class="error">{</span><span class="attribute-name">bindAttr</span> <span class="error">=</span><span class="error">&quot;</span><span class="attribute-name">content.url</span><span class="error">&quot;</span><span class="error">}</span><span class="error">}</span><span class="tag">&gt;</span>
-      <span class="tag">&lt;br&gt;</span></pre></td>
+  <td class="code"><pre>    &lt;div class=&quot;photo&quot;&gt;
+      &lt;h2&gt;{{content.title}}&lt;/h2&gt;
+      &lt;img {{bindAttr src=&quot;content.url&quot;}}&gt;
+      &lt;br&gt;</pre></td>
 </tr></table>
 </div>
 <p>Here, we reference our photo to get its title, and user bindAttr to set the <code>&lt;img&gt;</code> tag&#39;s <code>src</code> attribute to the photo&#39;s url.</p>
-<div class="highlight html"><div class="ribbon"></div><table class="CodeRay"><tr>
+<div class="highlight handlebars"><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
@@ -421,17 +421,17 @@ rm -rf app/views/comments</pre></td>
 8
 </pre></td>
   <td class="code"><pre>      {{#if content.comments.length}}
-        <span class="tag">&lt;h3&gt;</span>Comments<span class="tag">&lt;/h3&gt;</span>
-        <span class="tag">&lt;ul&gt;</span>
+        &lt;h3&gt;Comments&lt;/h3&gt;
+        &lt;ul&gt;
           {{#each content.comments}}
-            <span class="tag">&lt;li&gt;</span>{{text}}<span class="tag">&lt;/li&gt;</span>
+            &lt;li&gt;{{text}}&lt;/li&gt;
           {{/each}}
-        <span class="tag">&lt;/ul&gt;</span>
+        &lt;/ul&gt;
       {{/if}}</pre></td>
 </tr></table>
 </div>
 <p>Next, we see if there are any comments on the photo. If there are, we create a section and list for comments, and iterate through them. Note that in this <code>{{#each}}</code> expression, we aren&#39;t binding the comment object to the content property, so the context is automatically set to it. We create a new <code>&lt;li&gt;</code> for each comment with the comments text, and close out our <code>{{#each}}</code> iteration, list, and {{#if}}.</p>
-<div class="highlight html"><div class="ribbon"></div><table class="CodeRay"><tr>
+<div class="highlight handlebars"><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 </pre></td>
@@ -505,27 +505,27 @@ rm -rf app/views/comments</pre></td>
 </tr></table>
 </div>
 <p>Modify the template for the create view at <code>app/assets/javascripts/templates/photos/create.handlebars</code> to look like this:</p>
-<div class="highlight html"><div class="ribbon"></div><table class="CodeRay"><tr>
+<div class="highlight handlebars"><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;h1&gt;</span>Add a New Photo<span class="tag">&lt;/h1&gt;</span>
+  <td class="code"><pre>&lt;h1&gt;Add a New Photo&lt;/h1&gt;
 {{template &quot;photos/_form&quot;}}</pre></td>
 </tr></table>
 </div>
 <p>We use the handlebars expression <code>template</code> to refer to another template we&#39;d like to load, in this case, the _form template. This should be very familiar to rails users. You&#39;ll see why this is important later.</p>
 
 <p>Let&#39;s create the <code>_form</code> template in <code>app/assets/javascripts/templates/photos/_form.handlebars</code>. It will include only the form elements for our photo, like so:</p>
-<div class="highlight html"><div class="ribbon"></div><table class="CodeRay"><tr>
+<div class="highlight handlebars"><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
 4
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;label</span> <span class="attribute-name">for</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">title-field</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Title:<span class="tag">&lt;/label&gt;</span>{{view Ember.TextField id=&quot;title-field&quot; valueBinding=&quot;controller.content.title&quot;}}
-<span class="tag">&lt;label</span> <span class="attribute-name">for</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">url-field</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>URL:<span class="tag">&lt;/label&gt;</span>{{view Ember.TextField id=&quot;url-field&quot; valueBinding=&quot;controller.content.url&quot;}}
-<span class="tag">&lt;button</span> <span class="error">{</span><span class="error">{</span><span class="attribute-name">action</span>  <span class="attribute-name">target</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Photoblog.stateManager</span><span class="delimiter">&quot;</span></span><span class="error">}</span><span class="error">}</span><span class="tag">&gt;</span>Save<span class="tag">&lt;/button&gt;</span>
-<span class="tag">&lt;button</span> <span class="error">{</span><span class="error">{</span><span class="attribute-name">action</span>  <span class="attribute-name">target</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Photoblog.stateManager</span><span class="delimiter">&quot;</span></span><span class="error">}</span><span class="error">}</span><span class="tag">&gt;</span>Cancel<span class="tag">&lt;/button&gt;</span></pre></td>
+  <td class="code"><pre>&lt;label for=&quot;title-field&quot;&gt;Title:&lt;/label&gt;{{view Ember.TextField id=&quot;title-field&quot; valueBinding=&quot;controller.content.title&quot;}}
+&lt;label for=&quot;url-field&quot;&gt;URL:&lt;/label&gt;{{view Ember.TextField id=&quot;url-field&quot; valueBinding=&quot;controller.content.url&quot;}}
+&lt;button {{action save target=&quot;Photoblog.stateManager&quot;}}&gt;Save&lt;/button&gt;
+&lt;button {{action cancel target=&quot;Photoblog.stateManager&quot;}}&gt;Cancel&lt;/button&gt;</pre></td>
 </tr></table>
 </div>
 <p>We create two Ember.TextField views, and we bind the value property (which will be the text in the text field) to that of our controllers&#39; contents&#39; title and url objects, repesctively. The controller is is the PhotoController, which we created above. Its content will be a photo object.</p>
@@ -659,10 +659,10 @@ rm -rf app/views/comments</pre></td>
 <p>Now we define the <code>save</code> and <code>cancel</code> actions we referenced in our create view template earlier. Both of them get the current transaction, and the save action calls <code>commit()</code> where as the cancel action calls <code>rollback()</code>. <code>commit()</code> saves our photo object to the data store, which takes care of making the API request to save the data on our backend for us. <code>rollback()</code> undos any changes made in the transaction. Both actions then tell the manager to go back to the index state.</p>
 
 <p>Finally, we will add a button to the index template, at the very bottom, which tells our state manager to show the create view.</p>
-<div class="highlight html"><div class="ribbon"></div><table class="CodeRay"><tr>
+<div class="highlight handlebars"><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;button</span> <span class="error">{</span><span class="error">{</span><span class="attribute-name">action</span>  <span class="attribute-name">target</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Photoblog.stateManager</span><span class="delimiter">&quot;</span></span><span class="error">}</span><span class="error">}</span><span class="tag">&gt;</span>Add Photo<span class="tag">&lt;/button&gt;</span></pre></td>
+  <td class="code"><pre>&lt;button {{action showCreate target=&quot;Photoblog.stateManager&quot;}}&gt;Add Photo&lt;/button&gt;</pre></td>
 </tr></table>
 </div>
 <p>With all of this in place, ensure your server is running, and reload the index page. You should see a button at the bottom which takes you to our new create view and lets you add photos!</p>
@@ -683,11 +683,11 @@ rm -rf app/views/comments</pre></td>
 </tr></table>
 </div>
 <p>Now, we&#39;ll add the template for it at <code>app/assets/javascripts/templates/photos/edit.handlebars</code>.</p>
-<div class="highlight html"><div class="ribbon"></div><table class="CodeRay"><tr>
+<div class="highlight handlebars"><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;h1&gt;</span>Edit a Photo<span class="tag">&lt;/h1&gt;</span>
+  <td class="code"><pre>&lt;h1&gt;Edit a Photo&lt;/h1&gt;
 {{template &quot;templates/photos/_form&quot;}}</pre></td>
 </tr></table>
 </div>
@@ -756,10 +756,10 @@ rm -rf app/views/comments</pre></td>
 <p>Ensure that you add a comma to the previous <code>showCreate</code>. In this action, we&#39;re grabbing the photo from the event context and setting it to the content of our <code>photoController</code>.</p>
 
 <p>Lastly, lets add an edit button to each photo on the page. Below the <code>&lt;img&gt;</code> tag, add the following button, which targets our state manager&#39;s new <code>showEdit</code> action.</p>
-<div class="highlight html"><div class="ribbon"></div><table class="CodeRay"><tr>
+<div class="highlight handlebars"><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">#</span><span class="delimiter">&quot;</span></span> <span class="error">{</span><span class="error">{</span><span class="attribute-name">action</span>  <span class="attribute-name">target</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Photoblog.stateManager</span><span class="delimiter">&quot;</span></span><span class="error">}</span><span class="error">}</span><span class="tag">&gt;</span>Edit Photo<span class="tag">&lt;/a&gt;</span></pre></td>
+  <td class="code"><pre>&lt;a href=&quot;#&quot; {{action showEdit target=&quot;Photoblog.stateManager&quot;}}&gt;Edit Photo&lt;/a&gt;</pre></td>
 </tr></table>
 </div>
 <p>Reload the page. There should now be an &quot;Edit Photo&quot; link below each photo that will take you to our new Edit Photo view.</p>

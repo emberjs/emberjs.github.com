@@ -267,32 +267,6 @@ properties easily in a normal class definition.</p>
 tom.get(<span class="string"><span class="delimiter">'</span><span class="content">fullName</span><span class="delimiter">'</span></span>) <span class="comment">// &quot;Tom Dale&quot;</span></pre></td>
 </tr></table>
 </div>
-<p>If you aren&#39;t using Ember&#39;s prototype extensions, you can use a slightly
-more verbose version, wrapping the function in a call to <code>Ember.computed</code>:</p>
-<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-</pre></td>
-  <td class="code"><pre>Person = Ember.Object.extend({
-  <span class="comment">// these will be supplied by `create`</span>
-  <span class="key">firstName</span>: <span class="predefined-constant">null</span>,
-  <span class="key">lastName</span>: <span class="predefined-constant">null</span>,
-  <span class="key">fullName</span>: Ember.computed(<span class="keyword">function</span>() {
-    <span class="keyword">var</span> firstName = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>);
-    <span class="keyword">var</span> lastName = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
-    <span class="keyword">return</span> firstName + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + lastName;
-  }).property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
-});</pre></td>
-</tr></table>
-</div>
 <p>The <code>property</code> method defines the function as a computed property, and
 defines its dependencies. Those dependencies will come into play later
 when we discuss bindings and observers.</p>
@@ -332,7 +306,7 @@ the key and value you want to set it to.</p>
   <span class="comment">// these will be supplied by `create`</span>
   <span class="key">firstName</span>: <span class="predefined-constant">null</span>,
   <span class="key">lastName</span>: <span class="predefined-constant">null</span>,
-  <span class="key">fullName</span>: Ember.computed(<span class="keyword">function</span>(key, value) {
+  <span class="function">fullName</span>: <span class="keyword">function</span>(key, value) {
     <span class="comment">// getter</span>
     <span class="keyword">if</span> (<span class="local-variable">arguments</span>.length === <span class="integer">1</span>) {
       <span class="keyword">var</span> firstName = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>);
@@ -345,7 +319,7 @@ the key and value you want to set it to.</p>
       <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, name[<span class="integer">1</span>]);
       <span class="keyword">return</span> value;
     }
-  }).property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
 });
 <span class="keyword">var</span> person = Person.create();
 person.set(<span class="string"><span class="delimiter">'</span><span class="content">fullName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Peter Wagenet</span><span class="delimiter">&quot;</span></span>);
@@ -384,11 +358,11 @@ method.</p>
   <span class="comment">// these will be supplied by `create`</span>
   <span class="key">firstName</span>: <span class="predefined-constant">null</span>,
   <span class="key">lastName</span>: <span class="predefined-constant">null</span>,
-  <span class="key">fullName</span>: Ember.computed(<span class="keyword">function</span>() {
+  <span class="function">fullName</span>: <span class="keyword">function</span>() {
     <span class="keyword">var</span> firstName = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>);
     <span class="keyword">var</span> lastName = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
     <span class="keyword">return</span> firstName + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + lastName;
-  }).property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
 });
 <span class="keyword">var</span> person = Person.create({
   <span class="key">firstName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Yehuda</span><span class="delimiter">&quot;</span></span>,
@@ -435,7 +409,7 @@ are using Ember without prototype extensions:</p>
 });</pre></td>
 </tr></table>
 </div><h4 id='toc_changes-in-arrays'>Changes in Arrays</h4>
-<p>Often, you may have a computed property that relies on all of the items in an 
+<p>Often, you may have a computed property that relies on all of the items in an
 array to determine its value. For example, you may want to count all of the
 todo items in a controller to determine how many of them are completed.</p>
 
@@ -496,7 +470,7 @@ automatically:</p>
 9
 </pre></td>
   <td class="code"><pre><span class="keyword">var</span> todos = App.todosController.get(<span class="string"><span class="delimiter">'</span><span class="content">todos</span><span class="delimiter">'</span></span>);
-<span class="keyword">var</span> todo = todos.objectAt(<span class="integer">1</span>);
+<span class="keyword">var</span> todo = todos.objectAt(<span class="integer">0</span>);
 todo.set(<span class="string"><span class="delimiter">'</span><span class="content">isDone</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
 App.todosController.get(<span class="string"><span class="delimiter">'</span><span class="content">remaining</span><span class="delimiter">'</span></span>);
 <span class="comment">// 0</span>
