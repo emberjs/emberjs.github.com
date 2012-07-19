@@ -12,7 +12,8 @@ run "rm public/index.html"
 # Install required gems
 gem "active_model_serializers"
 gem_group :assets do
-  gem "ember-rails", github: "emberjs/ember-rails"
+  gem "ember-rails", path: "~/Code/ember-rails"
+  #gem "ember-rails", github: "emberjs/ember-rails"
 end
 
 run "bundle install"
