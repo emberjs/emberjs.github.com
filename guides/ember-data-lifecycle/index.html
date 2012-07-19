@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Ember.js - </title>
+    <title>Ember.js - Guides</title>
     <meta charset="utf-8">
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
@@ -79,8 +79,16 @@
 
     <div id="content-wrapper">
       
-      <div id="content" >
-        <h1 id='toc_ember-data-record-lifecycle'>Ember Data Record Lifecycle</h1>
+        <div id="sidebar">
+            <ol><li class="level-1"><a href="#toc_ember-data-record-lifecycle">Ember Data Record Lifecycle</a></li><li class="level-2"><a href="#toc_step-1-finding-a-record">Step 1: Finding a Record</a></li><li class="level-2"><a href="#toc_step-2-adapter-loads-data-into-the-store">Step 2: Adapter Loads Data Into the Store</a></li><li class="level-2"><a href="#toc_step-3-getting-an-attribute">Step 3: Getting an Attribute</a></li><li class="level-2"><a href="#toc_step-4-materialization">Step 4: Materialization</a></li><li class="level-2"><a href="#toc_identity-map">Identity Map</a></li><li class="level-2"><a href="#toc_practical-note">Practical Note</a></li></ol>
+
+          <div id="back-to-top"><a href="#">&#11014; Back to Top</a></div>
+        </div>
+      
+      <div id="content" class="has-sidebar">
+        
+<div class="guide">
+  <h1 id='toc_ember-data-record-lifecycle'>Ember Data Record Lifecycle</h1>
 <p>The goal of this guide is to walk you through the lifecycle of an Ember
 Data record.</p>
 
@@ -154,10 +162,10 @@ notify the record that the data hash is available.</p>
 <p>In response to the notification, the app will typically request some
 attribute. In this case, imagine that the <code>Person</code> was represented by
 the following template:</p>
-<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
+<div class="highlight handlebars"><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;p&gt;</span>{{name}}<span class="tag">&lt;/p&gt;</span></pre></td>
+  <td class="code"><pre>&lt;p&gt;{{name}}&lt;/p&gt;</pre></td>
 </tr></table>
 </div>
 <p>When the template renders, it will register an observer on the
@@ -230,6 +238,39 @@ ID will return the same object.</p>
 
 <p>This feature is known as an &quot;identity map&quot;, because it guarantees
 JavaScript <em>identity</em> for objects representing the same backend data.</p>
+<h2 id='toc_practical-note'>Practical Note</h2>
+<p>In the example above, we used a template that rendered the <code>Person</code>
+object directly. As a result, we got partially loaded output that
+automatically filled in as the data loaded.</p>
+
+<p>You may want this behavior in some cases, but in most cases, your
+template would look something like this:</p>
+<div class="highlight handlebars"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>{{#if isLoaded}}
+  &lt;p&gt;{{name}}&lt;/p&gt;
+{{else}}
+  &lt;img src=&quot;/images/spinner.gif&quot;&gt;
+{{/if}}</pre></td>
+</tr></table>
+</div>
+<p>When the adapter loads the backend-provided hash into the store, the
+store moves the record into the loaded state, which changes its
+<code>isLoaded</code> flag to true.</p>
+
+<p>That will notify an observer set up by the template that <code>isLoaded</code> has
+changed, which will cause the template to render the first branch
+(containing <code>&lt;p&gt;{{name}}&lt;/p&gt;</code>) instead of the spinner.</p>
+
+<p>When it renders that branch, the template will trigger the same
+<code>get(&#39;name&#39;)</code> that caused materialization in the above example.</p>
+	
+</div>
 
       </div>
     </div>
