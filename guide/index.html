@@ -6,6 +6,7 @@
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
     <script type="text/javascript">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-27675533-1']);
@@ -56,8 +57,12 @@
             }
           });
         }
+
+        $('.bx-wrapper, .bx-window').width(940);
       });
     </script>
+
+    
   </head>
 
   <body>
@@ -67,9 +72,10 @@
         <ul id="nav">
           <li><a href="/about">about</a></li>
           <li><a href="/documentation">docs</a></li>
-		  <li><a href="/guides">guides</a></li>
-          <li><a href="/community">community</a></li>
+          <li><a href="/guides">guides</a></li>
           <li><a href="http://docs.emberjs.com">api</a></li>
+          <li><a href="/community">community</a></li>
+          <li><a href="/blog">blog</a></li>
         </ul>
         <div id="github">
           <a href="https://github.com/emberjs/ember.js"><img src="/images/fork-us.png">Fork Us!</a>
@@ -79,330 +85,45 @@
 
     <div id="content-wrapper">
       
+      
         <div id="sidebar">
-            <ol><li class="level-1"><a href="#toc_the-ember-js-view-layer">The Ember.js View Layer</a></li><li class="level-2"><a href="#toc_what-problems-does-it-solve">What problems does it solve?</a></li><li class="level-3"><a href="#toc_child-views">Child Views</a></li><li class="level-3"><a href="#toc_event-delegation">Event Delegation</a></li><li class="level-3"><a href="#toc_the-rendering-pipeline">The Rendering Pipeline</a></li><li class="level-2"><a href="#toc_the-view-hierarchy">The View Hierarchy</a></li><li class="level-3"><a href="#toc_parent-and-child-views">Parent and Child Views</a></li><li class="level-3"><a href="#toc_lifecycle-hooks">Lifecycle Hooks</a></li><li class="level-3"><a href="#toc_virtual-views">Virtual Views</a></li><li class="level-3"><a href="#toc_event-bubbling">Event Bubbling</a></li><li class="level-3"><a href="#toc_adding-new-events">Adding New Events</a></li><li class="level-2"><a href="#toc_templated-views">Templated Views</a></li><li class="level-2"><a href="#toc_container-views">Container Views</a></li><li class="level-2"><a href="#toc_template-scopes">Template Scopes</a></li><li class="level-3"><a href="#toc_view-scope">View Scope</a></li><li class="level-2"><a href="#toc_template-variables">Template Variables</a></li><li class="level-3"><a href="#toc_other-variables">Other Variables</a></li><li class="level-3"><a href="#toc_accessing-template-variables-from-views">Accessing Template Variables from Views</a></li></ol>
+            <ol><li class="level-1"><a href="#toc_managing-asynchrony-in-ember">Managing Asynchrony in Ember</a></li><li class="level-2"><a href="#toc_without-ember">Without Ember</a></li><li class="level-2"><a href="#toc_ember-s-approach">Ember's Approach</a></li><li class="level-2"><a href="#toc_benefits">Benefits</a></li><li class="level-2"><a href="#toc_side-effect-callbacks">Side-Effect Callbacks</a></li><li class="level-2"><a href="#toc_observers">Observers</a></li></ol>
 
           <div id="back-to-top"><a href="#">&#11014; Back to Top</a></div>
         </div>
       
       <div id="content" class="has-sidebar">
         
-<div class="guide">
-  <h1 id='toc_the-ember-js-view-layer'>The Ember.js View Layer</h1>
-<p>This guide goes into extreme detail about the Ember.js view layer. It is
-intended for an experienced Ember developer, and includes details that
-are unnecessary for getting started with Ember.</p>
+<article class="guide">
+  <h1 id='toc_managing-asynchrony-in-ember'>Managing Asynchrony in Ember</h1>
+<p>Many Ember concepts, like bindings and computed properties, are designed
+to help manage asynchronous behavior.</p>
+<h2 id='toc_without-ember'>Without Ember</h2>
+<p>We&#39;ll start by taking a look at ways to manage asynchronous behavior
+using jQuery or event-based MVC frameworks.</p>
 
-<p>Ember.js has a sophisticated system for creating, managing and rendering a hierarchy of views that connect to the browser&#39;s DOM. Views are responsible for responding to user events, like clicks, drags, and scrolls, as well as updating the contents of the DOM when the data underlying the view changes.</p>
-
-<p>View hierarchies are usually created by evaluating a Handlebars template. As the template is evaluated, child views are added. As the templates for <em>those</em> child views are evaluated, they may have child views added, and so on, until an entire hierarchy is created.</p>
-
-<p>Even if you do not explicitly create child views from your Handlebars templates, Ember.js internally uses the view system to update bound values. For example, every Handlebars expression <code>{{value}}</code> creates a view behind-the-scenes that knows how to update the bound value if it changes.</p>
-
-<p>You can also dynamically make changes to the view hierarchy at application runtime using the <code>Ember.ContainerView</code> class. Rather than being template-driven, a container view exposes an array of child view instances that can be manually managed.</p>
-
-<p>Views and templates work in tandem to provide a robust system for creating whatever user interface you dream up. End users should be isolated from the complexities of things like timing issues while rendering and event propagation. Application developers should be able to describe their UI once, as a string of Handlebars markup, and then carry on with their application without having to worry about making sure that it remains up-to-date.</p>
-<h2 id='toc_what-problems-does-it-solve'>What problems does it solve?</h2><h3 id='toc_child-views'>Child Views</h3>
-<p>In a typical client-side application, views may represent elements nested inside of each other in the DOM. In the naïve solution to this problem, separate view objects represent each DOM element, and ad-hoc references help the various view object keep track of the views conceptually nested inside of them.</p>
-
-<p>Here is a simple example, representing one main app view, a collection nested inside of it, and individual items nested inside of the collection.</p>
-
-<figure>
-  <img src="/images/view-guide/view-hierarchy-simple.png">
-</figure>
-
-<p>This system works well at first glance, but imagine that we want to open Joe&#39;s Lamprey Shack at 8am instead of 9am. In this situation, we will want to re-render the App View. Because the developer needed to build up the references to the children on an ad-hoc basis, this re-rendering process has several problems.</p>
-
-<p>In order to re-render the App View, the App View must also manually re-render the child views and re-insert them into App View&#39;s element. If implemented perfectly, this process works well, but it relies upon a perfect, ad hoc implementation of a view hierarchy. If any single view fails to implement this precisely, the entire re-render will fail.</p>
-
-<p>In order to avoid these problems, Ember&#39;s view hierarchy has the concept of child views baked in.</p>
-
-<figure>
-  <img src="/images/view-guide/view-hierarchy-ember.png">
-</figure>
-
-<p>When the App View re-renders, Ember is responsible for re-rendering and inserting the child views, not application code. This also means that Ember can perform any memory management for you, such as cleaning up observers and bindings.</p>
-
-<p>Not only does this eliminate quite a bit of boilerplate code, but it eliminates the possibility that an imperfectly implemented view hierarchy will cause unexpected failures.</p>
-<h3 id='toc_event-delegation'>Event Delegation</h3>
-<p>In the past, web developers have added event listeners to individual elements in order to know when the user interacts with them. For example, you might have a <code>&lt;div&gt;</code> element on which you register a function that gets called when the user clicks it.</p>
-
-<p>However, this approach often does not scale when dealing with large numbers of interactive elements. For example, imagine a <code>&lt;ul&gt;</code> with 100 <code>&lt;li&gt;</code>s in it, with a delete button next to each item. Since the behavior is the same for all of these items, it would be inefficient to create 100 event listeners, one for each delete button.</p>
-
-<figure>
-  <img src="/images/view-guide/undelegated.png">
-</figure>
-
-<p>To solve this problem, developers discovered a technique called &quot;event delegation&quot;. Instead of registering a listener on each element in question, you can register a single listener for the containing element and use <code>event.target</code> to identify which element the user clicked on.</p>
-
-<figure>
-  <img src="/images/view-guide/delegated.png">
-</figure>
-
-<p>Implementing this is a bit tricky, because some events (like <code>focus</code>, <code>blur</code> and <code>change</code>) don&#39;t bubble. Fortunately, jQuery has solved this problem thoroughly; using jQuery&#39;s <code>on</code> method reliably works for all native browser events.</p>
-
-<p>Other JavaScript frameworks tackle this problem in one of two ways. In the first approach, they ask you to implement the naïve solution yourself, creating a separate view for each element. When you create the view, it sets up an event listener on the view&#39;s element. If you had a list of 500 items, you would create 500 views and each would set up a listener on its own element.</p>
-
-<p>In the second approach, the framework builds in event delegation at the view level. When creating a view, you can supply a list of events to delegate and a method to call when the event occurs. This leaves identifying the context of the click (for example, which item in the list) to the method receiving the event.</p>
-
-<p>You are now faced with an uncomfortable choice: create a new view for each item and lose the benefits of event delegation, or create a single view for all of the items and have to store information about the underlying JavaScript object in the DOM.</p>
-
-<p>In order to solve this problem, Ember delegates all events to the application&#39;s root element (usually the document <code>body</code>) using jQuery. When an event occurs, Ember identifies the nearest view that handles the event and invokes its event handler. This means that you can create views to hold a JavaScript context, but still get the benefit of event delegation.</p>
-
-<p>Further, because Ember registers only one event for the entire Ember application, creating new views never requires setting up event listeners, making re-renders efficient and less error-prone. When a view has child views, this also means that there is no need to manually undelegate views that the re-render process replaces.</p>
-<h3 id='toc_the-rendering-pipeline'>The Rendering Pipeline</h3>
-<p>Most web applications specify their user interface using the markup of a particular templating language. For Ember.js, we&#39;ve done the work to make templates written using the Handlebars templating language automatically update when the values used inside of them are changed.</p>
-
-<p>While the process of displaying a template is automatic for developers, under the hood there are a series of steps that must be taken to go from the original template to the final, live DOM representation that the user sees.</p>
-
-<p>This is the approximate lifecycle of an Ember view:</p>
-
-<figure>
-  <img src="/images/view-guide/view-lifecycle-ember.png">
-</figure>
-<h4 id='toc_1-template-compilation'>1. Template Compilation</h4>
-<p>The application&#39;s templates are loaded over the network or as part of the application payload in string form. When the application loads, it sends the template string to Handlebars to be compiled into a function. Once compiled, the template function is saved, and can be used by multiple views repeatedly, each time they need to re-render.</p>
-
-<p>This step may be omitted in applications where the templates are pre-compiled on the server. In those cases, the template is transferred not as the original, human-readable template string but as the compiled code.</p>
-
-<p>Because Ember is responsible for template compilation, you don&#39;t have to do any additional work to ensure that compiled templates are reused.</p>
-<h4 id='toc_2-string-concatenation'>2. String Concatenation</h4>
-<p>A view&#39;s rendering process is kickstarted when the application calls <code>append</code> or <code>appendTo</code> on the view. Calling <code>append</code> or <code>appendTo</code> <strong>schedules</strong> the view to be rendered and inserted later. This allows any deferred logic in your application (such as binding synchronization) to happen before rendering the element.</p>
-
-<p>To begin the rendering process, Ember creates a <code>RenderBuffer</code> and gives it to the view to append its contents to. During this process, a view can create and render child views. When it does so, the parent view creates and assigns a <code>RenderBuffer</code> for the child, and links it to the parent&#39;s <code>RenderBuffer</code>.</p>
-
-<p>Ember flushes the binding synchronization queue before rendering each view. By syncing bindings before rendering each view, Ember guarantees that it will not render stale data it needs to replace right away.</p>
-
-<p>Once the main view has finished rendering, the render process has created a tree of views (the &quot;view hierarchy&quot;), linked to a tree of buffers. By walking down the tree of buffers and converting them into Strings, we have a String that we can insert into the DOM.</p>
-
-<p>Here is a simple example:</p>
-
-<figure>
-  <img src="/images/view-guide/render-buffer.png">
-</figure>
-
-<p>In addition to children (Strings and other <code>RenderBuffer</code>s), a <code>RenderBuffer</code> also encapsulates the element&#39;s tag name, id, classes, style, and other attributes. This makes it possible for the render process to modify one of these properties (style, for example), even after its child Strings have rendered. Because many of these properties are controlled via bindings (e.g. using <code>bindAttr</code>), this makes the process robust and transparent.</p>
-<h4 id='toc_3-element-creation-and-insertion'>3. Element Creation and Insertion</h4>
-<p>At the end of the rendering process, the root view asks the <code>RenderBuffer</code> for its element. The <code>RenderBuffer</code> takes its completed string and uses jQuery to convert it into an element. The view assigns that element to its <code>element</code> property and places it into the correct place in the DOM (the location specified in <code>appendTo</code> or the application&#39;s root element if the application used <code>append</code>).</p>
-
-<p>While the parent view assigns its element directly, each child views looks up its element lazily. It does this by looking for an element whose <code>id</code> matches its <code>elementId</code> property. Unless explicitly provided, the rendering process generates an <code>elementId</code> property and assigns its value to the view&#39;s <code>RenderBuffer</code>, which allows the view to find its element as needed.</p>
-<h4 id='toc_4-re-rendering'>4. Re-Rendering</h4>
-<p>After the view inserts itself into the DOM, either Ember or the application may want to re-render the view. They can trigger a re-render by calling the <code>rerender</code> method on a view.</p>
-
-<p>Rerendering will repeat steps 2 and 3 above, with two exceptions:</p>
-
-<ul>
-<li>Instead of inserting the element into an explicitly specified location, <code>rerender</code> replaces the existing element with the new element.</li>
-<li>In addition to rendering a new element, it also removes the old element and destroys its children. This allows Ember to automatically handle unregistering appropriate bindings and observers when re-rendering a view. This makes observers on a path more viable, because the process of registering and unregistering all of the nested observers is automatic.</li>
-</ul>
-
-<p>The most common cause of a view re-render is when the value bound to a Handlebars expression (<code>{{foo}}</code>) changes. Internally, Ember creates a simple view for each expression, and registers an observer on the path. When the path changes, Ember updates the area of the DOM with the new value.</p>
-
-<p>Another common case is an <code>{{#if}}</code> or <code>{{#with}}</code> block. When rendering a template, Ember creates a virtual view for these block helpers. These virtual views do not appear in the publicly available view hierarchy (when getting <code>parentView</code> and <code>childViews</code> from a view), but they exist to enable consistent re-rendering.</p>
-
-<p>When the path passed to an <code>{{#if}}</code> or <code>{{#with}}</code> changes, Ember automatically re-renders the virtual view, which will replace its contents, and importantly, destroy all child views to free up their memory.</p>
-
-<p>In addition to these cases, the application may sometimes want to explicitly re-render a view (usually a <code>ContainerView</code>, see below). In this case, the application can call <code>rerender</code> directly, and Ember will queue up a re-rendering job, with the same semantics.</p>
-
-<p>The process looks something like:</p>
-
-<figure>
-  <img src="/images/view-guide/re-render.png">
-</figure>
-<h2 id='toc_the-view-hierarchy'>The View Hierarchy</h2><h3 id='toc_parent-and-child-views'>Parent and Child Views</h3>
-<p>As Ember renders a templated view, it will generate a view hierarchy. Let&#39;s assume we have a template <code>form</code>.</p>
-<div class="highlight handlebars"><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-</pre></td>
-  <td class="code"><pre>{{view App.Search placeholder=&quot;Search&quot;}}
-{{#view Ember.Button}}Go!{{/view}}</pre></td>
-</tr></table>
-</div>
-<p>And we insert it into the DOM like this:</p>
-<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre><span class="keyword">var</span> view = Ember.View.create({
-  <span class="key">templateName</span>: <span class="string"><span class="delimiter">'</span><span class="content">form</span><span class="delimiter">'</span></span>
-}).append();</pre></td>
-</tr></table>
-</div>
-<p>This will create a small view hierarchy that looks like this:</p>
-
-<figure>
-  <img src="/images/view-guide/simple-view-hierarchy.png">
-</figure>
-
-<p>You can move around in the view hierarchy using the <code>parentView</code> and <code>childViews</code> properties.</p>
-<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-</pre></td>
-  <td class="code"><pre><span class="keyword">var</span> children = view.get(<span class="string"><span class="delimiter">'</span><span class="content">childViews</span><span class="delimiter">'</span></span>) <span class="comment">// [ &lt;App.Search&gt;, &lt;Ember.Button&gt; ]</span>
-children.objectAt(<span class="integer">0</span>).get(<span class="string"><span class="delimiter">'</span><span class="content">parentView</span><span class="delimiter">'</span></span>) <span class="comment">// view</span></pre></td>
-</tr></table>
-</div>
-<p>One common use of the <code>parentView</code> method is inside of an instance of a child view.</p>
+<p>Let&#39;s use the most common asynchronous behavior in a web application,
+making an Ajax request, as an example. The browser APIs for making Ajax
+request provide an asynchronous API. jQuery&#39;s wrapper does as well:</p>
 <div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
 4
-5
 </pre></td>
-  <td class="code"><pre>App.Search = Ember.View.extend({
-  <span class="function">didInsertElement</span>: <span class="keyword">function</span>() {
-    <span class="comment">// this.get('parentView') in here references `view`</span>
-  }
-})</pre></td>
-</tr></table>
-</div><h3 id='toc_lifecycle-hooks'>Lifecycle Hooks</h3>
-<p>In order to make it easy to take action at different points during your view&#39;s lifecycle, there are several hooks you can implement.</p>
-
-<ul>
-<li><code>willInsertElement</code>: This hook is called after the view has been rendered but before it has been inserted into the DOM. It does not provide access to the view&#39;s <code>element</code>.</li>
-<li><code>didInsertElement</code>: This hook is called immediately after the view has been inserted into the DOM. It provides access to the view&#39;s <code>element</code> and is most useful for integration with an external library. Any explicit DOM setup code should be limited to this hook.</li>
-<li><code>willDestroyElement</code>: This hook is called immediately before the element is removed from the DOM. This is your opportunity to tear down any external state associated with the DOM node. Like <code>didInsertElement</code>, it is most useful for integration with external libraries.</li>
-<li><code>willRerender</code>: This hook is called immediately before a view is re-rendered. This is useful if you want to perform some teardown immediately before a view is re-rendered.</li>
-<li><code>becameVisible</code>: This hook is called after a view&#39;s <code>isVisible</code> property, or one of its ancestor&#39;s <code>isVisible</code> property, changes to true and the associated element becomes visible. Note that this hook is only reliable if all visibility is routed through the <code>isVisible</code> property.</li>
-<li><code>becameHidden</code>: This hook is called after a view&#39;s <code>isVisible</code> property, or one of its ancestor&#39;s <code>isVisible</code> property, changes to false and the associated element becomes hidden. Note that this hook is only reliable if all visibility is routed through the <code>isVisible</code> property.</li>
-</ul>
-
-<p>Apps can implement these hooks by defining a method by the hook&#39;s name on the view. Alternatively, it is possible to register a listener for the hook on a view:</p>
-<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre>view.on(<span class="string"><span class="delimiter">'</span><span class="content">willRerender</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
-  <span class="comment">// do something with view</span>
-});</pre></td>
-</tr></table>
-</div><h3 id='toc_virtual-views'>Virtual Views</h3>
-<p>As described above, Handlebars creates views in the view hierarchy to
-represent bound values. Every time you use a Handlebars expression,
-whether it&#39;s a simple value or a block helper like <code>{{#with}}</code> or
-<code>{{#if}}</code>, Handlebars creates a new view.</p>
-
-<p>Because Ember uses these views for internal bookkeeping only,
-they are hidden from the view&#39;s public <code>parentView</code> and <code>childViews</code>
-API. The public view hierarchy reflects only views created using the
-<code>{{view}}</code> helper or through <code>ContainerView</code> (see below).</p>
-
-<p>For example, consider the following Handlebars template:</p>
-<div class="highlight "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-</pre></td>
-  <td class="code"><pre>&lt;h1&gt;Joe's Lamprey Shack&lt;/h1&gt;
-{{controller.restaurantHours}}
-{{#view App.FDAContactForm}}
-  If you are experiencing discomfort from eating at Joe's Lamprey Shack,
-please use the form below to submit a complaint to the FDA.
-  {{#if controller.allowComplaints}}
-    {{view Ember.TextArea valueBinding=&quot;controller.complaint&quot;}}
-    &lt;button {{action submitComplaint}}&gt;Submit&lt;/button&gt;
-  {{/if}}
-{{/view}}</pre></td>
-</tr></table>
-</div>
-<p>Rendering this template would create a hierarchy like this:</p>
-
-<figure>
-  <img src="/images/view-guide/public-view-hierarchy.png">
-</figure>
-
-<p>Behind the scenes, Ember tracks additional virtual views for the
-Handlebars expressions:</p>
-
-<figure>
-  <img src="/images/view-guide/virtual-view-hierarchy.png">
-</figure>
-
-<p>From inside of the <code>TextArea</code>, the <code>parentView</code> would point to the
-<code>FDAContactForm</code> and the <code>FDAContactForm</code>&#39;s <code>childViews</code> would be an
-array of the single <code>TextArea</code> view.</p>
-
-<p>You can see the internal view hierarchy by asking for the <code>_parentView</code>
-or <code>_childViews</code>, which will include virtual views:</p>
-<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre><span class="keyword">var</span> _childViews = view.get(<span class="string"><span class="delimiter">'</span><span class="content">_childViews</span><span class="delimiter">'</span></span>);
-console.log(_childViews.objectAt(<span class="integer">0</span>).toString());
-<span class="comment">//&gt; &lt;Ember._HandlebarsBoundView:ember1234&gt;</span></pre></td>
-</tr></table>
-</div>
-<p><strong>Warning!</strong> You may not rely on these internal APIs in application code.
-They may change at any time and have no public contract. The return
-value may not be observable or bindable. It may not be an Ember object.
-If you feel the need to use them, please contact us so we can expose a better 
-public API for your use-case.</p>
-
-<p>Bottom line: This API is like XML. If you think you have a use for it,
-you may not yet understand the problem enough. Reconsider!</p>
-<h3 id='toc_event-bubbling'>Event Bubbling</h3>
-<p>One responsibility of views is to respond to primitive user events
-and translate them into events that have semantic meaning for your
-application.</p>
-
-<p>For example, a delete button translates the primitive <code>click</code> event into
-the application-specific &quot;remove this item from an array.&quot;</p>
-
-<p>In order to respond to user events, create a new view subclass that
-implements that event as a method:</p>
-<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>App.DeleteButton = Ember.View.create({
-  <span class="function">click</span>: <span class="keyword">function</span>(event) {
-    <span class="keyword">var</span> stateManager = <span class="local-variable">this</span>.getPath(<span class="string"><span class="delimiter">'</span><span class="content">controller.stateManager</span><span class="delimiter">'</span></span>);
-    <span class="keyword">var</span> item = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">content</span><span class="delimiter">'</span></span>);
-    stateManager.send(<span class="string"><span class="delimiter">'</span><span class="content">deleteItem</span><span class="delimiter">'</span></span>, item);
-  }
+  <td class="code"><pre>jQuery.getJSON(<span class="string"><span class="delimiter">'</span><span class="content">/posts/1</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(post) {
+  <span class="predefined">$</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">#post</span><span class="delimiter">&quot;</span></span>).html(<span class="string"><span class="delimiter">&quot;</span><span class="content">&lt;h1&gt;</span><span class="delimiter">&quot;</span></span> + post.title + <span class="string"><span class="delimiter">&quot;</span><span class="content">&lt;/h1&gt;</span><span class="delimiter">&quot;</span></span> +
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">&lt;div&gt;</span><span class="delimiter">&quot;</span></span> + post.body + <span class="string"><span class="delimiter">&quot;</span><span class="content">&lt;/div&gt;</span><span class="delimiter">&quot;</span></span>);
 });</pre></td>
 </tr></table>
 </div>
-<p>When you create a new <code>Ember.Application</code> instance, it registers an event
-handler for each native browser event using jQuery&#39;s event delegation
-API. When the user triggers an event, the application&#39;s event dispatcher
-will find the view nearest to the event target that implements the
-event.</p>
+<p>In a raw jQuery application, you would use this callback to make
+whatever changes you needed to make to the DOM.</p>
 
-<p>A view implements an event by defining a method corresponding to the
-event name. When the event name is made up of multiple words (like
-<code>mouseup</code>) the method name should be the camelized form of the event
-name (<code>mouseUp</code>).</p>
-
-<p>Events will bubble up the view hierarchy until the event reaches the
-root view. An event handler can stop propagation using the same
-techniques as normal jQuery event handlers:</p>
-
-<ul>
-<li><code>return false</code> from the method</li>
-<li><code>event.stopPropagation</code></li>
-</ul>
-
-<p>For example, imagine you defined the following view classes:</p>
+<p>When using an event-based MVC framework, you move the logic out of the
+callback and into model and view objects. This improves things, but
+doesn&#39;t get rid of the need to explicitly deal with asynchronous
+callbacks:</p>
 <div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
@@ -420,221 +141,62 @@ techniques as normal jQuery event handlers:</p>
 14
 15
 16
+17
+18
+19
+<strong>20</strong>
+21
+22
+23
+24
+25
+26
+27
 </pre></td>
-  <td class="code"><pre>App.GrandparentView = Ember.View.extend({
-  <span class="function">click</span>: <span class="keyword">function</span>() {
-    console.log(<span class="string"><span class="delimiter">'</span><span class="content">Grandparent!</span><span class="delimiter">'</span></span>);
+  <td class="code"><pre>Post = Model.extend({
+  <span class="function">author</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> [<span class="local-variable">this</span>.salutation, <span class="local-variable">this</span>.name].join(<span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span>)
+  },
+  <span class="function">toJSON</span>: <span class="keyword">function</span>() {
+    <span class="keyword">var</span> json = Model.prototype.toJSON.call(<span class="local-variable">this</span>);
+    json.author = <span class="local-variable">this</span>.author();
+    <span class="keyword">return</span> json;
   }
 });
-App.ParentView = Ember.View.extend({
-  <span class="function">click</span>: <span class="keyword">function</span>() {
-    console.log(<span class="string"><span class="delimiter">'</span><span class="content">Parent!</span><span class="delimiter">'</span></span>);
-    <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+PostView = View.extend({
+  <span class="function">init</span>: <span class="keyword">function</span>(model) {
+    model.bind(<span class="string"><span class="delimiter">'</span><span class="content">change</span><span class="delimiter">'</span></span>, <span class="local-variable">this</span>.render, <span class="local-variable">this</span>);
+  },
+  <span class="key">template</span>: _.template(<span class="string"><span class="delimiter">&quot;</span><span class="content">&lt;h1&gt;&lt;%= title %&gt;&lt;/h1&gt;&lt;h2&gt;&lt;%= author %&gt;&lt;/h2&gt;&lt;div&gt;&lt;%= body %&gt;&lt;/div&gt;</span><span class="delimiter">&quot;</span></span>),
+  <span class="function">render</span>: <span class="keyword">function</span>() {
+    jQuery(<span class="local-variable">this</span>.element).html(<span class="local-variable">this</span>.template(<span class="local-variable">this</span>.model.toJSON());
+    <span class="keyword">return</span> <span class="local-variable">this</span>;
   }
 });
-App.ChildView = Ember.View.extend({
-  <span class="function">click</span>: <span class="keyword">function</span>() {
-    console.log(<span class="string"><span class="delimiter">'</span><span class="content">Child!</span><span class="delimiter">'</span></span>);
-  }
+<span class="keyword">var</span> post = Post.create();
+<span class="keyword">var</span> postView = PostView.create({ <span class="key">model</span>: post });
+jQuery(<span class="string"><span class="delimiter">'</span><span class="content">#posts</span><span class="delimiter">'</span></span>).append(postView.render().el);
+jQuery.getJSON(<span class="string"><span class="delimiter">'</span><span class="content">/posts/1</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(json) {
+  <span class="comment">// set all of the JSON properties on the model</span>
+  post.set(json);
 });</pre></td>
 </tr></table>
 </div>
-<p>And here&#39;s the Handlebars template that uses them:</p>
-<div class="highlight "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>{{#view App.GrandparentView}}
-  {{#view App.ParentView}}
-    {{#view App.ChildView}}
-      &lt;h1&gt;Click me!&lt;/h1&gt;
-    {{/view}}
-  {{/view}}
-{{/view}}</pre></td>
-</tr></table>
-</div>
-<p>If you clicked on the <code>&lt;h1&gt;</code>, you&#39;d see the following output in your
-browser&#39;s console:</p>
-<div class="highlight "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-</pre></td>
-  <td class="code"><pre>Child!
-Parent!</pre></td>
-</tr></table>
-</div>
-<p>You can see that Ember invokes the handler on the child-most view that
-received the event. The event continues to bubble to the <code>ParentView</code>,
-but does not reach the <code>GrandparentView</code> because <code>ParentView</code> returns
-false from its event handler.</p>
+<p>This example doesn&#39;t use any particular JavaScript library, but its
+approach is typical of event-driven MVC frameworks. It helps organize
+the asynchronous events, but asynchronous behavior is still the core
+programming model.</p>
+<h2 id='toc_ember-s-approach'>Ember&#39;s Approach</h2>
+<p>In general, Ember&#39;s goal is to eliminate explicit forms of asynchronous
+behavior. As we&#39;ll see later, this gives Ember the ability to coalesce
+multiple events that have the same result.</p>
 
-<p>You can use normal event bubbling techniques to implement familiar
-patterns. For example, you could implement a <code>FormView</code> that defines a
-<code>submit</code> method. Because the browser triggers the <code>submit</code> event when
-the user hits enter in a text field, defining a <code>submit</code> method on the
-form view will &quot;just work&quot;.</p>
-<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>App.FormView = Ember.View.extend({
-  <span class="key">tagName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">form</span><span class="delimiter">&quot;</span></span>,
-  <span class="function">submit</span>: <span class="keyword">function</span>(event) {
-    <span class="comment">// will be invoked whenever the user triggers</span>
-    <span class="comment">// the browser's `submit` method</span>
-  }
-});</pre></td>
-</tr></table>
-</div><div class="highlight "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre>{{#view App.FormView}}
-  {{view Ember.TextFieldView valueBinding=&quot;controller.firstName&quot;}}
-  {{view Ember.TextFieldView valueBinding=&quot;controller.lastName&quot;}}
-  &lt;button type=&quot;submit&quot;&gt;Done&lt;/button&gt;
-{{/view}}</pre></td>
-</tr></table>
-</div><h3 id='toc_adding-new-events'>Adding New Events</h3>
-<p>Ember comes with built-in support for the following native browser
-events:</p>
+<p>It also provides a higher level of abstraction, eliminating the need to
+manually register and unregister event listeners to perform most common
+tasks.</p>
 
-<table class="figure">
-  <thead>
-    <tr><th>Event Name</th><th>Method Name</th></tr>
-  </thead>
-  <tbody>
-    <tr><td>touchstart</td><td>touchStart</td></tr>
-    <tr><td>touchmove</td><td>touchMove</td></tr>
-    <tr><td>touchend</td><td>touchEnd</td></tr>
-    <tr><td>touchcancel</td><td>touchCancel</td></tr>
-    <tr><td>keydown</td><td>keyDown</td></tr>
-    <tr><td>keyup</td><td>keyUp</td></tr>
-    <tr><td>keypress</td><td>keyPress</td></tr>
-    <tr><td>mousedown</td><td>mouseDown</td></tr>
-    <tr><td>mouseup</td><td>mouseUp</td></tr>
-    <tr><td>contextmenu</td><td>contextMenu</td></tr>
-    <tr><td>click</td><td>click</td></tr>
-    <tr><td>dblclick</td><td>doubleClick</td></tr>
-    <tr><td>mousemove</td><td>mouseMove</td></tr>
-  </tbody>
-</table>
-
-<table class="figure">
-  <thead>
-    <tr><th>Event Name</th><th>Method Name</th></tr>
-  </thead>
-  <tbody>
-    <tr><td>focusin</td><td>focusIn</td></tr>
-    <tr><td>focusout</td><td>focusOut</td></tr>
-    <tr><td>mouseenter</td><td>mouseEnter</td></tr>
-    <tr><td>mouseleave</td><td>mouseLeave</td></tr>
-    <tr><td>submit</td><td>submit</td></tr>
-    <tr><td>change</td><td>change</td></tr>
-    <tr><td>dragstart</td><td>dragStart</td></tr>
-    <tr><td>drag</td><td>drag</td></tr>
-    <tr><td>dragenter</td><td>dragEnter</td></tr>
-    <tr><td>dragleave</td><td>dragLeave</td></tr>
-    <tr><td>dragover</td><td>dragOver</td></tr>
-    <tr><td>drop</td><td>drop</td></tr>
-    <tr><td>dragend</td><td>dragEnd</td></tr>
-  </tbody>
-</table>
-
-<p>You can add additional events to the event dispatcher when you create a
-new application:</p>
-<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>App = Ember.Application.create({
-  <span class="key">customEvents</span>: {
-    <span class="comment">// add support for the loadedmetadata media</span>
-    <span class="comment">// player event</span>
-    <span class="key"><span class="delimiter">'</span><span class="content">loadedmetadata</span><span class="delimiter">'</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">loadedMetadata</span><span class="delimiter">&quot;</span></span>
-  }
-});</pre></td>
-</tr></table>
-</div>
-<p>In order for this to work for a custom event, the HTML5 spec must define
-the event as &quot;bubbling&quot;, or jQuery must have provided an event
-delegation shim for the event.</p>
-<h2 id='toc_templated-views'>Templated Views</h2>
-<p>As you&#39;ve seen so far in this guide, the majority of views that you will
-use in your application are backed by a template. When using templates,
-you do not need to programmatically create your view hierarchy because
-the template creates it for you.</p>
-
-<p>While rendering, the view&#39;s template can append views to its child views
-array. Internally, the template&#39;s <code>{{view}}</code> helper calls the view&#39;s
-<code>appendChild</code> method.</p>
-
-<p>Calling <code>appendChild</code> does two things:</p>
-
-<ol>
-<li>Adds the child view to the <code>childViews</code> array.</li>
-<li>Immediately renders the child view and adds it to the parent&#39;s render
-buffer.</li>
-</ol>
-
-<figure>
-  <img src="/images/view-guide/template-appendChild-interaction.png">
-</figure>
-
-<p>You may not call <code>appendChild</code> on a view after it has left the rendering
-state. A template renders &quot;mixed content&quot; (both views and plain text) so
-the parent view does not know exactly where to insert the new child view
-once the rendering process has completed.</p>
-
-<p>In the example above, imagine trying to insert a new view inside of
-the parent view&#39;s <code>childViews</code> array. Should it go immediately
-after the closing <code>&lt;/div&gt;</code> of <code>App.MyView</code>? Or should it go after the
-closing <code>&lt;/div&gt;</code> of the entire view? There is no good answer that will
-always be correct.</p>
-
-<p>Because of this ambiguity, the only way to create a view hierarchy using
-templates is via the <code>{{view}}</code> helper, which always inserts views
-in the right place relative to any plain text.</p>
-
-<p>While this works for most situations, occasionally you may want to have
-direct, programmatic control of a view&#39;s children. In that case, you can
-use <code>Ember.ContainerView</code>, which explicitly exposes a public API for
-doing so.</p>
-<h2 id='toc_container-views'>Container Views</h2>
-<p>Container views contain no plain text. They are composed entirely of
-their child views (which may themselves be template-backed).</p>
-
-<p><code>ContainerView</code> exposes two public APIs for changing its contents:</p>
-
-<ol>
-<li>A writable <code>childViews</code> array into which you can insert <code>Ember.View</code>
-instances.</li>
-<li>A <code>currentView</code> property that, when set, inserts the new value into
-the child views array. If there was a previous value of
-<code>currentView</code>, it is removed from the <code>childViews</code> array.</li>
-</ol>
-
-<p>Here is an example of using the <code>childViews</code> API to create a view that
-starts with a hypothetical <code>DescriptionView</code> and can add a new button at
-any time by calling the <code>addButton</code> method:</p>
+<p>You would normally use ember-data for this example, but let&#39;s see how
+you would model the above example using jQuery for Ajax in Ember.</p>
 <div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
@@ -650,27 +212,124 @@ any time by calling the <code>addButton</code> method:</p>
 12
 13
 14
+15
+16
+17
+18
 </pre></td>
-  <td class="code"><pre>App.ToolbarView = Ember.ContainerView.create({
-  <span class="function">init</span>: <span class="keyword">function</span>() {
-    <span class="keyword">var</span> childViews = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">childViews</span><span class="delimiter">'</span></span>);
-    <span class="keyword">var</span> descriptionView = App.DescriptionView.create();
-    childViews.pushObject(descriptionView);
-    <span class="local-variable">this</span>.addButton();
-    <span class="keyword">return</span> <span class="local-variable">this</span>._super();
-  },
-  <span class="function">addButton</span>: <span class="keyword">function</span>() {
-    <span class="keyword">var</span> childViews = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">childViews</span><span class="delimiter">'</span></span>);
-    <span class="keyword">var</span> button = Ember.ButtonView.create();
-    childViews.pushObject(button);
-  }
+  <td class="code"><pre>App.Post = Ember.Object.extend({
+});
+App.PostController = Ember.ObjectController.extend({
+  <span class="function">author</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> [<span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">salutation</span><span class="delimiter">'</span></span>), <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>)].join(<span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span>);
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">salutation</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>)
+});
+App.PostView = Ember.View.extend({
+  <span class="comment">// the controller is the initial context for the template</span>
+  <span class="key">controller</span>: <span class="predefined-constant">null</span>,
+  <span class="key">template</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">&quot;</span><span class="content">&lt;h1&gt;{{title}}&lt;/h1&gt;&lt;h2&gt;{{author}}&lt;/h2&gt;&lt;div&gt;{{body}}&lt;/div&gt;</span><span class="delimiter">&quot;</span></span>)
+});
+<span class="keyword">var</span> post = App.Post.create();
+<span class="keyword">var</span> postController = App.PostController.create({ <span class="key">content</span>: post });
+App.PostView.create({ <span class="key">controller</span>: postController }).appendTo(<span class="string"><span class="delimiter">'</span><span class="content">body</span><span class="delimiter">'</span></span>);
+jQuery.getJSON(<span class="string"><span class="delimiter">&quot;</span><span class="content">/posts/1</span><span class="delimiter">&quot;</span></span>, <span class="keyword">function</span>(json) {
+  post.setProperties(json);
 });</pre></td>
 </tr></table>
 </div>
-<p>As you can see in the example above, we initialize the <code>ContainerView</code>
-with two views, and can add additional views during runtime. There is a
-convenient shorthand for doing this view setup without having to
-override the <code>init</code> method:</p>
+<p>In contrast to the above examples, the Ember approach eliminates the
+need to explicitly register an observer when the <code>post</code>&#39;s properties
+change.</p>
+
+<p>The <code>{{title}}</code>, <code>{{author}}</code> and <code>{{body}}</code> template elements are bound
+to those properties on the <code>PostController</code>. When the <code>PostController</code>&#39;s
+content changes, it automatically propagates those changes to the DOM.</p>
+
+<p>Using a computed property for <code>author</code> eliminated the need to explicitly
+invoke the computation in a callback when the underlying property
+changed.</p>
+
+<p>Instead, Ember&#39;s binding system automatically follows the trail from the
+<code>salutation</code> and <code>name</code> set in the <code>getJSON</code> callback to the computed
+property in the <code>PostController</code> and all the way into the DOM.</p>
+<h2 id='toc_benefits'>Benefits</h2>
+<p>Because Ember is usually responsible for propagating changes, it can
+guarantee that a single change is only propagated one time in response
+to each user event.</p>
+
+<p>Let&#39;s take another look at the <code>author</code> computed property.</p>
+<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.PostController = Ember.ObjectController.extend({
+  <span class="function">author</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> [<span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">salutation</span><span class="delimiter">'</span></span>), <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>)].join(<span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span>);
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">salutation</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>)
+});</pre></td>
+</tr></table>
+</div>
+<p>Because we have specified that it depends on both <code>salutation</code> and
+<code>name</code>, changes to either of those two dependencies will invalidate the
+property, which will trigger an update to the <code>{{author}}</code> property in
+the DOM.</p>
+
+<p>Imagine that in response to a user event, I do something like this:</p>
+<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+</pre></td>
+  <td class="code"><pre>post.set(<span class="string"><span class="delimiter">'</span><span class="content">salutation</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Mrs.</span><span class="delimiter">&quot;</span></span>);
+post.set(<span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Katz</span><span class="delimiter">&quot;</span></span>);</pre></td>
+</tr></table>
+</div>
+<p>You might imagine that these changes will cause the computed property to
+be invalidated twice, causing two updates to the DOM. And in fact, that
+is exactly what would happen when using an event-driven framework.</p>
+
+<p>In Ember, the computed property will only recompute once, and the DOM
+will only update once.</p>
+
+<p>How?</p>
+
+<p>When you make a change to a property in Ember, it does not immediately
+propagate that change. Instead, it invalidates any dependent properties
+immediately, but queues the actual change to happen later.</p>
+
+<p>Changing both the <code>salutation</code> and <code>name</code> properties invalidates the
+<code>author</code> property twice, but the queue is smart enough to coalesce those
+changes.</p>
+
+<p>Once all of the event handlers for the current user event have finished,
+Ember flushes the queue, propagating the changes downward. In this case,
+that means that the invalidated <code>author</code> property will invalidate the
+<code>{{author}}</code> in the DOM, which will make a single request to recompute
+the information and update itself once.</p>
+
+<p><strong>This mechanism is fundamental to Ember.</strong> In Ember, you should always
+assume that the side-effects of a change you make will happen later. By
+making that assumption, you allow Ember to coalesce repetitions of the
+same side-effect into a single call.</p>
+
+<p>In general, the goal of evented systems is to decouple the data
+manipulation from the side effects produced by listeners, so you
+shouldn&#39;t assume synchronous side effects even in a more event-focused
+system. The fact that side effects don&#39;t propagate immediately in Ember
+eliminates the temptation to cheat and accidentally couple code together
+that should be separate.</p>
+<h2 id='toc_side-effect-callbacks'>Side-Effect Callbacks</h2>
+<p>Since you can&#39;t rely on synchronous side-effects, you may be wondering
+how to make sure that certain actions happen at the right time.</p>
+
+<p>For example, imagine that you have a view that contains a button, and
+you want to use jQuery UI to style the button. Since a view&#39;s <code>append</code>
+method, like everything else in Ember, defers its side-effects, how can
+you execute the jQuery UI code at the right time.</p>
+
+<p>The answer is lifecycle callbacks.</p>
 <div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
@@ -683,146 +342,104 @@ override the <code>init</code> method:</p>
 9
 <strong>10</strong>
 </pre></td>
-  <td class="code"><pre>App.ToolbarView = Ember.ContainerView.create({
-  <span class="key">childViews</span>: [<span class="string"><span class="delimiter">'</span><span class="content">descriptionView</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">buttonView</span><span class="delimiter">'</span></span>],
-  <span class="key">descriptionView</span>: App.DescriptionView,
-  <span class="key">buttonView</span>: Ember.ButtonView,
-  <span class="function">addButton</span>: <span class="keyword">function</span>() {
-    <span class="keyword">var</span> childViews = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">childViews</span><span class="delimiter">'</span></span>);
-    <span class="keyword">var</span> button = Ember.ButtonView.create();
-    childViews.pushObject(button);
+  <td class="code"><pre>App.Button = Ember.View.extend({
+  <span class="key">tagName</span>: <span class="string"><span class="delimiter">'</span><span class="content">button</span><span class="delimiter">'</span></span>,
+  <span class="key">template</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">&quot;</span><span class="content">{{view.title}}</span><span class="delimiter">&quot;</span></span>),
+  <span class="function">didInsertElement</span>: <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.<span class="predefined">$</span>().button();
   }
+});
+<span class="keyword">var</span> button = App.Button.create({
+  <span class="key">title</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Hi jQuery UI!</span><span class="delimiter">&quot;</span></span>
+}).appendTo(<span class="string"><span class="delimiter">'</span><span class="content">#something</span><span class="delimiter">'</span></span>);</pre></td>
+</tr></table>
+</div>
+<p>In this case, as soon as the button actually appears in the DOM, Ember
+will trigger the <code>didInsertElement</code> callback, and you can do whatever
+work you want.</p>
+
+<p>The lifecycle callbacks approach has several benefits, even if we didn&#39;t
+have to worry about deferred insertion.</p>
+
+<p>First, relying on synchronous insertion means leaving it up to the
+caller of <code>appendTo</code> to trigger any behavior that needs to run
+immediately after appending. As your application grows, you may find
+that you create the same view in many places, and now need to worry
+about that concern everywhere.</p>
+
+<p>The lifecycle callback eliminates the coupling between the code that
+instantiates the view and its post-append behavior. In general, we find
+that making it impossible to rely on synchronous side-effects leads to
+better design in general.</p>
+
+<p>Second, because everything about the lifecycle of a view is inside the
+view itself, it is very easy for Ember to re-render parts of the DOM
+on-demand.</p>
+
+<p>For example, if this button was inside of an <code>{{#if}}</code> block, and Ember
+needed to switch from the main branch to the <code>else</code> section, Ember can
+easily instantiate the view and call the lifecycle callbacks.</p>
+
+<p>Because Ember forces you to define a fully-defined view, it can take
+control of creating and inserting views in appropriate situations.</p>
+
+<p>This also means that all of the code for working with the DOM is in a
+few sanctioned parts of your application, so Ember has more freedom in
+the parts of the render process outside of these callbacks.</p>
+<h2 id='toc_observers'>Observers</h2>
+<p>In some rare cases, you will want to perform certain behavior after a
+property&#39;s changes have propagated. As in the previous section, Ember
+provides a mechanism to hook into the property change notifications.</p>
+
+<p>Let&#39;s go back to our salutation example.</p>
+<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.PostController = Ember.ObjectController.extend({
+  <span class="function">author</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> [<span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">salutation</span><span class="delimiter">'</span></span>), <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>)].join(<span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span>);
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">salutation</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>)
 });</pre></td>
 </tr></table>
 </div>
-<p>As you can see above, when using this shorthand, you specify the
-<code>childViews</code> as an array of strings. At initialization time, each of the
-strings is used as a key to look up a view instance or class. That view
-is automatically instantiated, if necessary, and added to the
-<code>childViews</code> array.</p>
-
-<figure>
-  <img src="/images/view-guide/container-view-shorthand.png">
-</figure>
-<h2 id='toc_template-scopes'>Template Scopes</h2>
-<p>Standard Handlebars templates have the concept of a <em>context</em>--the
-object from which expressions will be looked up.</p>
-
-<p>Some helpers, like <code>{{#with}}</code>, change the context inside their block.
-Others, like <code>{{#if}}</code>, preserve the context. These are called
-&quot;context-preserving helpers.&quot;</p>
-
-<p>When a Handlebars template in an Ember app uses an expression
-(<code>{{#if foo.bar}}</code>), Ember will automatically set up an
-observer for that path on the current context.</p>
-
-<p>If the object referenced by the path changes, Ember will automatically
-re-render the block with the appropriate context. In the case of a
-context-preserving helper, Ember will re-use the original context when
-re-rendering the block. Otherwise, Ember will use the new value of the
-path as the context.</p>
-<div class="highlight "><div class="ribbon"></div><table class="CodeRay"><tr>
+<p>If we want to be notified when the author changes, we can register an
+observer. Let&#39;s say that the view object wants to be notified:</p>
+<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
 4
 5
 6
+7
 </pre></td>
-  <td class="code"><pre>{{#if controller.isAuthenticated}}
-  &lt;h1&gt;Welcome {{controller.name}}&lt;/h1&gt;
-{{/if}}
-{{#with controller.user}}
-  &lt;p&gt;You have {{notificationCount}} notifications.&lt;/p&gt;
-{{/with}}</pre></td>
-</tr></table>
-</div>
-<p>In the above template, when the <code>isAuthenticated</code> property changes from
-false to true, Ember will render the block, using the original outer
-scope as its context.</p>
-
-<p>The <code>{{#with}}</code> helper changes the context of its block to the <code>user</code>
-property on the current controller. When the <code>user</code> property changes,
-Ember re-renders the block, using the new value of <code>controller.user</code> as
-its context.</p>
-<h3 id='toc_view-scope'>View Scope</h3>
-<p>In addition to the Handlebars context, templates in Ember also have the
-notion of the current view. No matter what the current context is, the
-<code>view</code> property always references the closest view.</p>
-
-<p>Note that the <code>view</code> property never references the internal views
-created for block expressions like <code>{{#if}}</code>. This allows you to
-differentiate between Handlebars contexts, which always work the way
-they do in vanilla Handlebars, and the view hierarchy.</p>
-
-<p>Because <code>view</code> points to an <code>Ember.View</code> instance, you can access any
-properties on the view by using an expression like <code>view.propertyName</code>.
-You can get access to a view&#39;s parent using <code>view.parentView</code>.</p>
-
-<p>For example, imagine you had a view with the following properties:</p>
-<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-4
-</pre></td>
-  <td class="code"><pre>App.MenuItemView = Ember.View.create({
-  <span class="key">templateName</span>: <span class="string"><span class="delimiter">'</span><span class="content">menu_item_view</span><span class="delimiter">'</span></span>,
-  <span class="key">bulletText</span>: <span class="string"><span class="delimiter">'</span><span class="content">*</span><span class="delimiter">'</span></span>
+  <td class="code"><pre>App.PostView = Ember.View.extend({
+  <span class="key">controller</span>: <span class="predefined-constant">null</span>,
+  <span class="key">template</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">&quot;</span><span class="content">&lt;h1&gt;{{title}}&lt;/h1&gt;&lt;h2&gt;{{author}}&lt;/h2&gt;&lt;div&gt;{{body}}&lt;/div&gt;</span><span class="delimiter">&quot;</span></span>),
+  <span class="function">authorDidChange</span>: <span class="keyword">function</span>() {
+    alert(<span class="string"><span class="delimiter">&quot;</span><span class="content">New author name: </span><span class="delimiter">&quot;</span></span> + <span class="local-variable">this</span>.getPath(<span class="string"><span class="delimiter">'</span><span class="content">controller.author</span><span class="delimiter">'</span></span>));
+  }.observes(<span class="string"><span class="delimiter">'</span><span class="content">controller.author</span><span class="delimiter">'</span></span>)
 });</pre></td>
 </tr></table>
 </div>
-<p>…and the following template:</p>
-<div class="highlight "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre>{{#with controller}}
-  {{view.bulletText}} {{name}}
-{{/with}}</pre></td>
-</tr></table>
-</div>
-<p>Even though the Handlebars context has changed to the current
-controller, you can still access the view&#39;s <code>bulletText</code> by referencing
-<code>view.bulletText</code>.</p>
-<h2 id='toc_template-variables'>Template Variables</h2>
-<p>So far in this guide, we&#39;ve been handwaving around the use of the
-<code>controller</code> property in our Handlebars templates. Where does it come
-from?</p>
+<p>Ember triggers observers after it successfully propagates the change. In
+this case, that means that Ember will only call the <code>authorDidChange</code>
+callback once in response to each user event, even if both of <code>salutation</code>
+and <code>name</code> changed.</p>
 
-<p>Handlebars contexts in Ember can inherit variables from their parent
-contexts. Before Ember looks up a variable in the current context, it
-first checks in its template variables. As a template creates new
-Handlebars scope, they automatically inherit the variables from their
-parent scope.</p>
+<p>This gives you the benefits of executing code after the property has
+changed, without forcing all property changes to be synchronous. This
+basically means that if you need to do some manual work in response to a
+change in a computed property, you get the same coalescing benefits as
+Ember&#39;s binding system.</p>
 
-<p>Ember defines these <code>view</code> and <code>controller</code> variables, so they are
-always found first when an expression uses the <code>view</code> or <code>controller</code>
-names.</p>
-
-<p>As described above, Ember sets the <code>view</code> variable on the Handlebars
-context whenever a template uses the <code>{{#view}}</code> helper. Initially,
-Ember sets the <code>view</code> variable to the view rendering the template.</p>
-
-<p>Ember sets the <code>controller</code> variable on the Handlebars context whenever
-a rendered view has a <code>controller</code> property. If a view has no
-<code>controller</code> property, it inherits the <code>controller</code> variable from the
-most recent view with one.</p>
-<h3 id='toc_other-variables'>Other Variables</h3>
-<p>Handlebars helpers in Ember may also specify variables. For example, the
-<code>{{#with controller.person as tom}}</code> form specifies a <code>tom</code> variable
-that descendent scopes can access. Even if a child context has a <code>tom</code>
-property, the <code>tom</code> variable will supersede it.</p>
-
-<p>This form has one major benefit: it allows you to shorten long paths
-without losing access to the parent scope.</p>
-
-<p>It is especially important in the <code>{{#each}}</code> helper, which provides a
-<code>{{#each person in people}}</code> form. In this form, descendent context have
-access to the <code>person</code> variable, but remain in the same scope as where
-the template invoked the <code>each</code>.</p>
-<div class="highlight "><div class="ribbon"></div><table class="CodeRay"><tr>
+<p>Finally, you can also register observers manually, outside of an object
+definition:</p>
+<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
@@ -833,34 +450,64 @@ the template invoked the <code>each</code>.</p>
 8
 9
 </pre></td>
-  <td class="code"><pre>{{#with controller.preferences}}
-  &lt;h1&gt;Title&lt;/h1&gt;
-  &lt;ul&gt;
-  {{#each controller.people as person}}
-    {{! prefix here is controller.preferences.prefix }}
-    &lt;li&gt;{{prefix}}: {{person.fullName}}&lt;/li&gt;
-  {{/each}}
-  &lt;ul&gt;
-{{/with}}</pre></td>
+  <td class="code"><pre>App.PostView = Ember.View.extend({
+  <span class="key">controller</span>: <span class="predefined-constant">null</span>,
+  <span class="key">template</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">&quot;</span><span class="content">&lt;h1&gt;{{title}}&lt;/h1&gt;&lt;h2&gt;{{author}}&lt;/h2&gt;&lt;div&gt;{{body}}&lt;/div&gt;</span><span class="delimiter">&quot;</span></span>),
+  <span class="function">didInsertElement</span>: <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.addObserver(<span class="string"><span class="delimiter">'</span><span class="content">controller.name</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+      alert(<span class="string"><span class="delimiter">&quot;</span><span class="content">New author name: </span><span class="delimiter">&quot;</span></span> + <span class="local-variable">this</span>.getPath(<span class="string"><span class="delimiter">'</span><span class="content">controller.author</span><span class="delimiter">'</span></span>));
+    });
+  }
+});</pre></td>
 </tr></table>
 </div>
-<p>Note that these variables inherit through <code>ContainerView</code>s, even though
-they are not part of the Handlebars context hierarchy.</p>
-<h3 id='toc_accessing-template-variables-from-views'>Accessing Template Variables from Views</h3>
-<p>In most cases, you will need to access these template variables from
-inside your templates. In some unusual cases, you may want to access the
-variables in-scope from your view&#39;s JavaScript code.</p>
+<p>However, when you use the object definition syntax, Ember will
+automatically tear down the observers when the object is destroyed. For
+example, if an <code>{{#if}}</code> statement changes from truthy to falsy, Ember
+destroys all of the views defined inside the block. As part of that
+process, Ember also disconnects all bindings and inline observers.</p>
 
-<p>You can do this by accessing the view&#39;s <code>templateVariables</code> property,
-which will return a JavaScript object containing the variables that were
-in scope when the view was rendered. <code>ContainerView</code>s also have access
-to this property, which references the template variables in the most
-recent template-backed view.</p>
-
-<p>At present, you may not observe or bind a path containing
-<code>templateVariables</code>.</p>
-	
+<p>If you define an observer manually, you need to make sure you remove it.
+In general, you will want to remove observers in the opposite callback
+to when you created it. In this case, you will want to remove the
+callback in <code>willDestroyElement</code>.</p>
+<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre>App.PostView = Ember.View.extend({
+  <span class="key">controller</span>: <span class="predefined-constant">null</span>,
+  <span class="key">template</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">&quot;</span><span class="content">&lt;h1&gt;{{title}}&lt;/h1&gt;&lt;h2&gt;{{author}}&lt;/h2&gt;&lt;div&gt;{{body}}&lt;/div&gt;</span><span class="delimiter">&quot;</span></span>),
+  <span class="function">didInsertElement</span>: <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.addObserver(<span class="string"><span class="delimiter">'</span><span class="content">controller.name</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+      alert(<span class="string"><span class="delimiter">&quot;</span><span class="content">New author name: </span><span class="delimiter">&quot;</span></span> + <span class="local-variable">this</span>.getPath(<span class="string"><span class="delimiter">'</span><span class="content">controller.author</span><span class="delimiter">'</span></span>));
+    });
+  },
+  <span class="function">willDestroyElement</span>: <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.removeObserver(<span class="string"><span class="delimiter">'</span><span class="content">controller.name</span><span class="delimiter">'</span></span>);
+  }
+});</pre></td>
+</tr></table>
 </div>
+<p>If you added the observer in the <code>init</code> method, you would want to tear
+it down in the <code>willDestroy</code> callback.</p>
+
+<p>In general, you will very rarely want to register a manual observer in
+this way. Because of the memory management guarantees, we strongly
+recommend that you define your observers as part of the object
+definition if possible.</p>
+	
+</article>
 
       </div>
     </div>

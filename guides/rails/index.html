@@ -6,6 +6,7 @@
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
     <script type="text/javascript">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-27675533-1']);
@@ -56,8 +57,12 @@
             }
           });
         }
+
+        $('.bx-wrapper, .bx-window').width(940);
       });
     </script>
+
+    
   </head>
 
   <body>
@@ -67,9 +72,10 @@
         <ul id="nav">
           <li><a href="/about">about</a></li>
           <li><a href="/documentation">docs</a></li>
-		  <li class="active"><a href="/guides">guides</a></li>
-          <li><a href="/community">community</a></li>
+          <li class="active"><a href="/guides">guides</a></li>
           <li><a href="http://docs.emberjs.com">api</a></li>
+          <li><a href="/community">community</a></li>
+          <li><a href="/blog">blog</a></li>
         </ul>
         <div id="github">
           <a href="https://github.com/emberjs/ember.js"><img src="/images/fork-us.png">Fork Us!</a>
@@ -78,6 +84,7 @@
     </div>
 
     <div id="content-wrapper">
+      
       
       <div id="content" >
         <h1 id='toc_this-guide-is-not-yet-functional-or-complete'>THIS GUIDE IS NOT YET FUNCTIONAL OR COMPLETE</h1><h1 id='toc_please-do-not-use'>PLEASE DO NOT USE</h1><h2 id='toc_getting-started-with-ember-js-and-ruby-on-rails'>Getting Started with Ember.js and Ruby on Rails</h2>
@@ -362,15 +369,15 @@ rm -rf app/views/comments</pre></td>
 </pre></td>
   <td class="code"><pre>&lt;h1&gt;My Photoblog&lt;/h1&gt;
 {{#each controller}}
-  {{#view contentBinding=&quot;this&quot;}}
+  {{#view}}
     &lt;div class=&quot;photo&quot;&gt;
-      &lt;h2&gt;{{content.title}}&lt;/h2&gt;
-      &lt;img {{bindAttr src=&quot;content.url&quot;}}&gt;
+      &lt;h2&gt;{{title}}&lt;/h2&gt;
+      &lt;img {{bindAttr src=&quot;url&quot;}}&gt;
       &lt;br&gt;
-      {{#if content.comments.length}}
+      {{#if comments.length}}
         &lt;h3&gt;Comments&lt;/h3&gt;
         &lt;ul&gt;
-          {{#each content.comments}}
+          {{#each comments}}
             &lt;li&gt;{{text}}&lt;/li&gt;
           {{/each}}
         &lt;/ul&gt;
@@ -393,10 +400,10 @@ rm -rf app/views/comments</pre></td>
 <div class="highlight handlebars"><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
 </pre></td>
-  <td class="code"><pre>{{#view contentBinding=&quot;this&quot;}}</pre></td>
+  <td class="code"><pre>{{#view}}</pre></td>
 </tr></table>
 </div>
-<p>For each photo managed by the photosController, we will create a subview with the following contents, and have its <code>content</code> property be bound to the photo object.</p>
+<p>For each photo managed by the photosController, we will create a subview with the following contents. The <code>{{#view}}</code> helper doesn&#39;t change context, so it&#39;s not necessary to set any bindings.</p>
 <div class="highlight handlebars"><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
@@ -404,8 +411,8 @@ rm -rf app/views/comments</pre></td>
 4
 </pre></td>
   <td class="code"><pre>    &lt;div class=&quot;photo&quot;&gt;
-      &lt;h2&gt;{{content.title}}&lt;/h2&gt;
-      &lt;img {{bindAttr src=&quot;content.url&quot;}}&gt;
+      &lt;h2&gt;{{title}}&lt;/h2&gt;
+      &lt;img {{bindAttr src=&quot;url&quot;}}&gt;
       &lt;br&gt;</pre></td>
 </tr></table>
 </div>
@@ -420,10 +427,10 @@ rm -rf app/views/comments</pre></td>
 7
 8
 </pre></td>
-  <td class="code"><pre>      {{#if content.comments.length}}
+  <td class="code"><pre>      {{#if comments.length}}
         &lt;h3&gt;Comments&lt;/h3&gt;
         &lt;ul&gt;
-          {{#each content.comments}}
+          {{#each comments}}
             &lt;li&gt;{{text}}&lt;/li&gt;
           {{/each}}
         &lt;/ul&gt;

@@ -6,6 +6,7 @@
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
     <script type="text/javascript">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-27675533-1']);
@@ -56,8 +57,27 @@
             }
           });
         }
+
+        $('.bx-wrapper, .bx-window').width(940);
       });
     </script>
+
+      <script type="text/javascript">
+    $(function() {
+      $('#slider').bxSlider({
+        displaySlideQty: 4,
+        moveSlideQty: 4,
+        auto: true,
+        pager: true,
+        speed: 700,
+        pause: 5000
+      });
+
+      // Hack to force proper sizing
+      $('.bx-wrapper, .bx-window').css('width', 940);
+    });
+  </script>
+
   </head>
 
   <body>
@@ -67,9 +87,10 @@
         <ul id="nav">
           <li class="active"><a href="/about">about</a></li>
           <li><a href="/documentation">docs</a></li>
-		  <li><a href="/guides">guides</a></li>
-          <li><a href="/community">community</a></li>
+          <li><a href="/guides">guides</a></li>
           <li><a href="http://docs.emberjs.com">api</a></li>
+          <li><a href="/community">community</a></li>
+          <li><a href="/blog">blog</a></li>
         </ul>
         <div id="github">
           <a href="https://github.com/emberjs/ember.js"><img src="/images/fork-us.png">Fork Us!</a>
@@ -79,26 +100,28 @@
 
     <div id="content-wrapper">
       
+      
       <div id="content" >
-        <img class="about-header-text" src="/images/about/header-text.png" alt="A framework for creating ambitious web applications.">
+        
+<img class="about-header-text" src="/images/about/header-text.png" alt="A framework for creating ambitious web applications.">
 <div id="download">
   <div id="download-ember">
-    <a class="orange button" href="https://github.com/downloads/emberjs/ember.js/ember-0.9.8.1.min.js">
-      Download Ember 0.9.8.1
+    <a class="orange button" href="https://github.com/downloads/emberjs/ember.js/ember-1.0.pre.min.js">
+      Download Ember 1.0.pre
     </a>
-    <div class="info">42k min+gzip |
-      <a class="debug" href="https://github.com/downloads/emberjs/ember.js/ember-0.9.8.1.js">
+    <div class="info">37k min+gzip |
+      <a class="debug" href="https://github.com/downloads/emberjs/ember.js/ember-1.0.pre.js">
         debug build
       </a>
     </div>
   </div>
   <div id="download-starter-kit">
-    <a class="black button" href="https://github.com/downloads/emberjs/starter-kit/starter-kit.0.9.8.1.zip">
+    <a class="black button" href="https://github.com/downloads/emberjs/starter-kit/starter-kit.1.0.pre.zip">
 		Get the Starter Kit
     </a>
   </div>
 </div>
-	
+
 <div class="features section">
   <h2>More Productive Out of the Box.</h2>
   <div class="feature">
@@ -113,8 +136,7 @@
     <img src="/images/about/ember-productivity-sm.png" alt="Productivity">
     <p>Ember.js is built for productivity. Designed with developer ergonomics in mind, its friendly APIs help you get your job done&mdash;fast.</p>
   </div>
-  <div class="clearfix"></div>
-</div> 
+</div>
 
 <div class="getting-started section">
   <h2>Getting Started with Ember.js is Easy.</h2>
@@ -131,7 +153,6 @@
 9
 <strong>10</strong>
 11
-12
 </pre></td>
   <td class="code"><pre>App.Person = DS.Model.extend({
   <span class="key">firstName</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
@@ -141,7 +162,6 @@
            <span class="string"><span class="delimiter">&quot;</span><span class="content"> </span><span class="delimiter">&quot;</span></span> + <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
   }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
 });
- 
 App.peopleController = Em.ArrayController.create({
   <span class="key">content</span>: App.Person.findAll()
 });</pre></td>
@@ -156,23 +176,13 @@ App.peopleController = Em.ArrayController.create({
 5
 6
 7
-8
-9
-<strong>10</strong>
-11
-12
 </pre></td>
   <td class="code"><pre><span class="tag">&lt;h1&gt;</span>People<span class="tag">&lt;/h1&gt;</span>
- 
 <span class="tag">&lt;ul&gt;</span>
 {{#each peopleController}}
-  <span class="tag">&lt;li&gt;</span>Hello, <span class="tag">&lt;b&gt;</span>{{fullName}}<span class="tag">&lt;/b&gt;</span>!
+  <span class="tag">&lt;li&gt;</span>Hello, <span class="tag">&lt;b&gt;</span>{{fullName}}<span class="tag">&lt;/b&gt;</span>!<span class="tag">&lt;/li&gt;</span>
 {{/each}}
 <span class="tag">&lt;/ul&gt;</span>
- 
- 
- 
- 
  </pre></td>
 </tr></table>
 </div>
@@ -180,36 +190,57 @@ App.peopleController = Em.ArrayController.create({
 </div>
 
 <div class="users section">
-	<h2>Who's Using Ember.js?</h2>
-	<div class="user">
-		<a href="http://livingsocial.com/">
-			<img src="/images/about/livingsocial.png">
-		</a>
-	</div>
-	<div class="user">
-		<a href="http://squareup.com">
-			<img src="/images/about/square.png">
-		</a>
-	</div>
-	<div class="user">
-		<a href="http://tilde.io">
-			<img src="/images/about/tilde.png">
-		</a>
-	</div>
-	<div class="user">
-		<a href="http://www.zendesk.com/">
-			<img src="/images/about/zendesk.png">
-		</a>
-	</div>
-	
-	<div id="listed">
-		<p>
-			Is your team using Ember.js?
-		</p>
-		<a class="orange button" href="mailto:hello@emberjs.com">
-	    	GET LISTED
-	    </a>
-	</div>
+  <h2>Who's Using Ember.js?</h2>
+
+  <div class="surround">
+    <ul id="slider">
+      <li class="user">
+        <a href="http://livingsocial.com/">
+          <img src="/images/about/livingsocial.png">
+        </a>
+      </li>
+      <li class="user">
+        <a href="http://squareup.com">
+          <img src="/images/about/square.png">
+        </a>
+      </li>
+      <li class="user">
+        <a href="http://tilde.io">
+          <img src="/images/about/tilde.png">
+        </a>
+      </li>
+      <li class="user">
+        <a href="http://www.zendesk.com/">
+          <img src="/images/about/zendesk.png">
+        </a>
+      </li>
+      <li class="user">
+        <a href="http://www.benefitcloud.com/">
+          <img src="/images/about/benefitcloud.png">
+        </a>
+      </li>
+      <li class="user">
+        <a href="https://www.yapp.us/">
+          <img src="/images/about/yapp.png">
+        </a>
+      </li>
+      <li class="user">
+        <a href="http://www.mhelabs.com/">
+          <img src="/images/about/mhelabs.png">
+        </a>
+      </li>
+      <li class="user empty"></li>
+    </ul>
+  </div>
+
+  <div id="listed">
+    <p>
+      Is your team using Ember.js?
+    </p>
+    <a class="orange button" href="mailto:hello@emberjs.com">
+        GET LISTED
+      </a>
+  </div>
 </div>
 
 

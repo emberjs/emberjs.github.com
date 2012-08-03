@@ -6,6 +6,7 @@
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
     <script type="text/javascript">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-27675533-1']);
@@ -56,8 +57,12 @@
             }
           });
         }
+
+        $('.bx-wrapper, .bx-window').width(940);
       });
     </script>
+
+    
   </head>
 
   <body>
@@ -67,9 +72,10 @@
         <ul id="nav">
           <li><a href="/about">about</a></li>
           <li><a href="/documentation">docs</a></li>
-		  <li><a href="/guides">guides</a></li>
-          <li><a href="/community">community</a></li>
+          <li><a href="/guides">guides</a></li>
           <li><a href="http://docs.emberjs.com">api</a></li>
+          <li><a href="/community">community</a></li>
+          <li><a href="/blog">blog</a></li>
         </ul>
         <div id="github">
           <a href="https://github.com/emberjs/ember.js"><img src="/images/fork-us.png">Fork Us!</a>
@@ -78,6 +84,7 @@
     </div>
 
     <div id="content-wrapper">
+      
       
       <div id="content" >
         <h2 id='toc_views-in-depth'>Views In-Depth</h2>
@@ -241,9 +248,74 @@ applied by delimiting it with a colon:</p>
   <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view urgent</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span></pre></td>
 </tr></table>
 </div>
+<p>Besides the custom class name for the value being <code>true</code>, you can also specify a class name which is used when the value is <code>false</code>:</p>
+<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>App.MyView = Ember.View.extend({
+  <span class="key">classNameBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">isEnabled:enabled:disabled</span><span class="delimiter">'</span></span>],
+  <span class="key">isEnabled</span>: <span class="predefined-constant">false</span>
+});</pre></td>
+</tr></table>
+</div>
+<p>This would render this HTML:</p>
+<div class="highlight html"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view disabled</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span></pre></td>
+</tr></table>
+</div>
+<p>You can also specify to only add a class when the property is <code>false</code> by declaring <code>classNameBindings</code> like this:</p>
+<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>App.MyView = Ember.View.extend({
+  <span class="key">classNameBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">isEnabled::disabled</span><span class="delimiter">'</span></span>],
+  <span class="key">isEnabled</span>: <span class="predefined-constant">false</span>
+});</pre></td>
+</tr></table>
+</div>
+<p>This would render this HTML:</p>
+<div class="highlight html"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view disabled</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span></pre></td>
+</tr></table>
+</div>
+<p>If the <code>isEnabled</code> property is set to <code>true</code>, no class name is added:</p>
+<div class="highlight html"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span></pre></td>
+</tr></table>
+</div>
 <p>If the bound value is a string, that value will be added as a class name without
-modification.</p>
-<h3 id='toc_attribute-bindings-on-a-view'>Attribute Bindings on a View</h3>
+modification:</p>
+<div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>App.MyView = Ember.View.extend({
+  <span class="key">classNameBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">priority</span><span class="delimiter">'</span></span>],
+  <span class="key">priority</span>: <span class="string"><span class="delimiter">'</span><span class="content">highestPriority</span><span class="delimiter">'</span></span>
+});</pre></td>
+</tr></table>
+</div>
+<p>This would render this HTML:</p>
+<div class="highlight html"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view highestPriority</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span></pre></td>
+</tr></table>
+</div><h3 id='toc_attribute-bindings-on-a-view'>Attribute Bindings on a View</h3>
 <p>You can bind attributes to the DOM element that represents a view by using <code>attributeBindings</code>:</p>
 <div class="highlight javascript"><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1

@@ -6,6 +6,7 @@
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
     <script type="text/javascript">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-27675533-1']);
@@ -56,8 +57,12 @@
             }
           });
         }
+
+        $('.bx-wrapper, .bx-window').width(940);
       });
     </script>
+
+    
   </head>
 
   <body>
@@ -67,9 +72,10 @@
         <ul id="nav">
           <li><a href="/about">about</a></li>
           <li><a href="/documentation">docs</a></li>
-		  <li><a href="/guides">guides</a></li>
-          <li><a href="/community">community</a></li>
+          <li><a href="/guides">guides</a></li>
           <li><a href="http://docs.emberjs.com">api</a></li>
+          <li><a href="/community">community</a></li>
+          <li><a href="/blog">blog</a></li>
         </ul>
         <div id="github">
           <a href="https://github.com/emberjs/ember.js"><img src="/images/fork-us.png">Fork Us!</a>
@@ -78,6 +84,7 @@
     </div>
 
     <div id="content-wrapper">
+      
       
       <div id="content" >
         <h2 id='toc_describing-your-ui-with-handlebars'>Describing Your UI with Handlebars</h2><h3 id='toc_handlebars'>Handlebars</h3>
@@ -475,6 +482,32 @@ dasherizing.</p>
 </div>
 <p>In this case, if the <code>isUrgent</code> property is true, the <code>urgent</code> class
 will be added. If it is false, the <code>urgent</code> class will be removed.</p>
+
+<p>You can also specify a class name which shall be used when the property is <code>false</code>:</p>
+<div class="highlight handlebars"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>&lt;div {{bindAttr class=&quot;isEnabled:enabled:disabled&quot;}}&gt;
+  Warning!
+&lt;/div&gt;</pre></td>
+</tr></table>
+</div>
+<p>In this case, if the <code>isEnabled</code> property is true, the <code>enabled</code> class will be added. If the property is false, the class <code>disabled</code> will be added.</p>
+
+<p>This syntax allows the shorthand for only adding a class when a property is <code>false</code>, so this:</p>
+<div class="highlight handlebars"><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>&lt;div {{bindAttr class=&quot;isEnabled::disabled&quot;}}&gt;
+  Warning!
+&lt;/div&gt;</pre></td>
+</tr></table>
+</div>
+<p>Will add the class <code>disabled</code> when <code>isEnabled</code> is <code>false</code> and add no class if <code>isEnabled</code> is <code>true</code>.</p>
 <h3 id='toc_handling-events-with-action'>Handling Events with {{action}}</h3>
 <p>Use the <code>{{action}}</code> helper to attach a handler in your view class to an event triggered on an element.</p>
 
@@ -662,9 +695,9 @@ App.InfoView = Ember.View.extend({
 </pre></td>
   <td class="code"><pre>User: {{firstName}} {{lastName}}
 {{#view App.InfoView}}
-  &lt;b&gt;Posts:&lt;/b&gt; {{posts}}
+  &lt;b&gt;Posts:&lt;/b&gt; {{view.posts}}
   &lt;br&gt;
-  &lt;b&gt;Hobbies:&lt;/b&gt; {{hobbies}}
+  &lt;b&gt;Hobbies:&lt;/b&gt; {{view.hobbies}}
 {{/view}}</pre></td>
 </tr></table>
 </div>
@@ -729,9 +762,9 @@ create a new subclass.</p>
   <td class="code"><pre>User: {{firstName}} {{lastName}}
 {{#view App.UserView postsBinding=&quot;App.userController.content.posts&quot;
         hobbiesBinding=&quot;App.userController.content.hobbies&quot;}}
-  &lt;b&gt;Posts:&lt;/b&gt; {{posts}}
+  &lt;b&gt;Posts:&lt;/b&gt; {{view.posts}}
   &lt;br&gt;
-  &lt;b&gt;Hobbies:&lt;/b&gt; {{hobbies}}
+  &lt;b&gt;Hobbies:&lt;/b&gt; {{view.hobbies}}
 {{/view}}</pre></td>
 </tr></table>
 </div>
@@ -842,9 +875,8 @@ override this by passing a <code>tagName</code> parameter:</p>
 <span class="tag">&lt;/ul&gt;</span></pre></td>
 </tr></table>
 </div>
-<p>If you want to create a view for every item in a list, you can bind a property of the view to
-the current context. For example, this example creates a view for every item in a list and sets
-the <code>content</code> property to that item:</p>
+<p>If you want to create a view for every item in a list, just set it up as
+follows:</p>
 <div class="highlight handlebars"><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
@@ -853,8 +885,8 @@ the <code>content</code> property to that item:</p>
 5
 </pre></td>
   <td class="code"><pre>{{#each App.peopleController}}
-  {{#view App.PersonView contentBinding=&quot;this&quot;}}
-    {{content.firstName}} {{content.lastName}}
+  {{#view App.PersonView}}
+    {{firstName}} {{lastName}}
   {{/view}}
 {{/each}}</pre></td>
 </tr></table>
@@ -868,8 +900,8 @@ the <code>content</code> property to that item:</p>
 3
 4
 </pre></td>
-  <td class="code"><pre>Handlebars.registerHelper(<span class="string"><span class="delimiter">'</span><span class="content">highlight</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(property) {
-  <span class="keyword">var</span> value = Ember.getPath(<span class="local-variable">this</span>, property);
+  <td class="code"><pre>Handlebars.registerHelper(<span class="string"><span class="delimiter">'</span><span class="content">highlight</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(property, options) {
+  <span class="keyword">var</span> value = Ember.Handlebars.getPath(<span class="local-variable">this</span>, property, options);
   <span class="keyword">return</span> <span class="keyword">new</span> Handlebars.SafeString(<span class="string"><span class="delimiter">'</span><span class="content">&lt;span class=&quot;highlight&quot;&gt;</span><span class="delimiter">'</span></span>+value+<span class="string"><span class="delimiter">'</span><span class="content">&lt;/span&gt;</span><span class="delimiter">'</span></span>);
 });</pre></td>
 </tr></table>

@@ -6,6 +6,7 @@
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
     <script type="text/javascript">
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-27675533-1']);
@@ -56,8 +57,12 @@
             }
           });
         }
+
+        $('.bx-wrapper, .bx-window').width(940);
       });
     </script>
+
+    
   </head>
 
   <body>
@@ -67,9 +72,10 @@
         <ul id="nav">
           <li><a href="/about">about</a></li>
           <li><a href="/documentation">docs</a></li>
-		  <li class="active"><a href="/guides">guides</a></li>
-          <li><a href="/community">community</a></li>
+          <li class="active"><a href="/guides">guides</a></li>
           <li><a href="http://docs.emberjs.com">api</a></li>
+          <li><a href="/community">community</a></li>
+          <li><a href="/blog">blog</a></li>
         </ul>
         <div id="github">
           <a href="https://github.com/emberjs/ember.js"><img src="/images/fork-us.png">Fork Us!</a>
@@ -79,6 +85,7 @@
 
     <div id="content-wrapper">
       
+      
         <div id="sidebar">
             <ol><li class="level-1"><a href="#toc_ember-application-structure">Ember Application Structure</a></li><li class="level-2"><a href="#toc_routing">Routing</a></li><li class="level-2"><a href="#toc_how-it-works">How it Works</a></li><li class="level-3"><a href="#toc_templates-controllers-and-views">Templates, Controllers, and Views</a></li><li class="level-3"><a href="#toc_the-router">The Router</a></li><li class="level-2"><a href="#toc_transitions-and-urls">Transitions and URLs</a></li><li class="level-2"><a href="#toc_nesting">Nesting</a></li><li class="level-2"><a href="#toc_asynchrony">Asynchrony</a></li></ol>
 
@@ -87,7 +94,7 @@
       
       <div id="content" class="has-sidebar">
         
-<div class="guide">
+<article class="guide">
   <h1 id='toc_ember-application-structure'>Ember Application Structure</h1>
 <p>On a high-level, you structure an Ember application by designing a series of nested routes that correspond to nested application state. This guide will first cover the high-level concepts, and then walk you through an example.</p>
 <h2 id='toc_routing'>Routing</h2>
@@ -236,15 +243,15 @@ through its states in response to user action.</p>
 14
 </pre></td>
   <td class="code"><pre>App.Router = Ember.Router.extend({
-  <span class="key">root</span>: Ember.State.extend({
-    <span class="key">index</span>: Ember.State.extend({
+  <span class="key">root</span>: Ember.Route.extend({
+    <span class="key">index</span>: Ember.Route.extend({
       <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>,
       <span class="key">redirectsTo</span>: <span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>
     }),
-    <span class="key">posts</span>: Ember.State.extend({
+    <span class="key">posts</span>: Ember.Route.extend({
       <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/posts</span><span class="delimiter">'</span></span>
     }),
-    <span class="key">post</span>: Ember.State.extend({
+    <span class="key">post</span>: Ember.Route.extend({
       <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/posts/:post_id</span><span class="delimiter">'</span></span>
     })
   })
@@ -282,18 +289,18 @@ callback.</p>
 17
 </pre></td>
   <td class="code"><pre>App.Router = Ember.Router.extend({
-  <span class="key">root</span>: Ember.State.extend({
-    <span class="key">index</span>: Ember.State.extend({
+  <span class="key">root</span>: Ember.Route.extend({
+    <span class="key">index</span>: Ember.Route.extend({
       <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>,
       <span class="key">redirectsTo</span>: <span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>
     }),
-    <span class="key">posts</span>: Ember.State.extend({
+    <span class="key">posts</span>: Ember.Route.extend({
       <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/posts</span><span class="delimiter">'</span></span>,
       <span class="function">connectOutlets</span>: <span class="keyword">function</span>(router) {
         router.get(<span class="string"><span class="delimiter">'</span><span class="content">applicationController</span><span class="delimiter">'</span></span>).connectOutlet(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>, App.Post.find());
       }
     }),
-    <span class="key">post</span>: Ember.State.extend({
+    <span class="key">post</span>: Ember.Route.extend({
       <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/posts/:post_id</span><span class="delimiter">'</span></span>
     })
   })
@@ -327,9 +334,9 @@ transition.</p>
 6
 7
 </pre></td>
-  <td class="code"><pre>posts: Ember.State.extend({
+  <td class="code"><pre>posts: Ember.Route.extend({
   <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/posts</span><span class="delimiter">'</span></span>,
-  <span class="key">showPost</span>: Ember.State.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>),
+  <span class="key">showPost</span>: Ember.Route.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>),
   <span class="function">connectOutlets</span>: <span class="keyword">function</span>(router) {
     router.get(<span class="string"><span class="delimiter">'</span><span class="content">applicationController</span><span class="delimiter">'</span></span>).connectOutlet(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>, App.Post.find());
   }
@@ -367,7 +374,7 @@ specified as the context to the <code>{{action}}</code> helper.</p>
 5
 6
 </pre></td>
-  <td class="code"><pre>post: Ember.State.extend({
+  <td class="code"><pre>post: Ember.Route.extend({
   <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/posts/:post_id</span><span class="delimiter">'</span></span>,
   <span class="function">connectOutlets</span>: <span class="keyword">function</span>(router, post) {
     router.get(<span class="string"><span class="delimiter">'</span><span class="content">applicationController</span><span class="delimiter">'</span></span>).connectOutlet(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, post);
@@ -435,26 +442,26 @@ will look very similar.</p>
 25
 26
 </pre></td>
-  <td class="code"><pre>post: Ember.State.extend({
+  <td class="code"><pre>post: Ember.Route.extend({
   <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/posts/:post_id</span><span class="delimiter">'</span></span>,
   <span class="function">connectOutlets</span>: <span class="keyword">function</span>(router, post) {
     router.get(<span class="string"><span class="delimiter">'</span><span class="content">applicationController</span><span class="delimiter">'</span></span>).connectOutlet(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, post);
   },
-  <span class="key">index</span>: Ember.State.extend({
+  <span class="key">index</span>: Ember.Route.extend({
     <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>,
     <span class="key">redirectsTo</span>: <span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>
   }),
-  <span class="key">comments</span>: Ember.State.extend({
+  <span class="key">comments</span>: Ember.Route.extend({
     <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/comments</span><span class="delimiter">'</span></span>,
-    <span class="key">showTrackbacks</span>: Ember.State.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">trackbacks</span><span class="delimiter">'</span></span>),
+    <span class="key">showTrackbacks</span>: Ember.Route.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">trackbacks</span><span class="delimiter">'</span></span>),
     <span class="function">connectOutlets</span>: <span class="keyword">function</span>(router) {
       <span class="keyword">var</span> postController = router.get(<span class="string"><span class="delimiter">'</span><span class="content">postController</span><span class="delimiter">'</span></span>);
       postController.connectOutlet(<span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>, postController.get(<span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>));
     }
   }),
-  <span class="key">trackbacks</span>: Ember.State.extend({
+  <span class="key">trackbacks</span>: Ember.Route.extend({
     <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/trackbacks</span><span class="delimiter">'</span></span>,
-    <span class="key">showComments</span>: Ember.State.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>),
+    <span class="key">showComments</span>: Ember.Route.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>),
     <span class="function">connectOutlets</span>: <span class="keyword">function</span>(router) {
       <span class="keyword">var</span> postController = router.get(<span class="string"><span class="delimiter">'</span><span class="content">postController</span><span class="delimiter">'</span></span>);
       postController.connectOutlet(<span class="string"><span class="delimiter">'</span><span class="content">trackbacks</span><span class="delimiter">'</span></span>, postController.get(<span class="string"><span class="delimiter">'</span><span class="content">trackbacks</span><span class="delimiter">'</span></span>));
@@ -583,7 +590,7 @@ server-provided data, it also sets the <code>isLoaded</code> property. Because a
 template constructs, including <code>#if</code> automatically update the DOM if the
 underlying property changes, this will &quot;just work&quot;.</p>
 	
-</div>
+</article>
 
       </div>
     </div>
