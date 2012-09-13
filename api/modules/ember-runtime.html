@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ember.js - ember-runtime</title>
+    <link rel="shortcut icon" href="/images/favicon.png" />
+    <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
+
+    <script type="text/javascript">
+      $(function() {
+        $('#logo').on('click', function(evt) {
+          if (evt.shiftKey) {
+            $('#content-wrapper').toggleClass('grid');
+            return false;
+          }
+        });
+
+        var backToTop = $('#back-to-top');
+        var doc = $(document);
+        var offset = backToTop.offset();
+        var marginTop = 90;
+        var showing = false;
+
+        if (backToTop.length) {
+          backToTop.on('click', function(evt) {
+            $('html,body').animate({scrollTop: 0}, 200);
+            return false;
+          });
+
+          doc.on('scroll', function() {
+            if (!showing && doc.scrollTop() > offset.top+200) {
+              showing = true;
+              backToTop.css({
+                opacity: 1,
+                position: 'fixed',
+                top: 20,
+                left: offset.left
+              });
+            } else if (showing && doc.scrollTop() <= offset.top+200) {
+              showing = false;
+              backToTop.css({
+                opacity: 0
+              });
+            }
+          });
+        }
+
+        $('.bx-wrapper, .bx-window').width(940);
+      });
+    </script>
+
+    
+    <script>
+      $(function() {
+        // Type toggling
+        function toggleType() {
+          var type = this.getAttribute('data-type');
+          $('.'+type).toggle(this.checked);
+        }
+
+        $('#api-options input').each(toggleType);
+        $('#api-options input').on('change', toggleType);
+
+        // Tabs
+        $('.tabs .pane').hide();
+        $('.tabs .pane:first').show();
+        $('.tabs ul li:first').addClass('active');
+
+        function showPane($tabs, href) {
+          var $ul = $tabs.find('> ul'),
+              $tab = $ul.find('a[href='+href+']'),
+              $pane = $(href);
+
+          $ul.find('li').removeClass('active');
+          $tab.parent().addClass('active');
+          $tabs.find('.pane').hide();
+
+          $pane.show();
+        }
+
+        $('.tabs > ul li a').click(function(){
+          var $el = $(this),
+              $tabs = $el.parents('.tabs'),
+              href = $el.attr('href');
+
+          showPane($tabs, href);
+
+          return false;
+        });
+
+        // Auto tab
+        function checkHash() {
+          var hash = window.location.hash;
+          if (hash) {
+            var $el = $(hash);
+            if ($el.length > 0 && !$el.is(':visible')) {
+              showPane($el.parents('.tabs'), '#'+$el.parents('.pane').attr('id'));
+              $("html, body").scrollTop($el.offset().top);
+            }
+          }
+        }
+
+        $(window).on('hashchange', checkHash);
+        checkHash();
+      });
+    </script>
+  
+  </head>
+
+  <body class="api api_modules api_modules_ember-runtime">
+    <div id="header">
+      <div id="wrapper">
+        <a id="logo" href="/">&nbsp;</a>
+        <ul id="nav">
+          <li><a href="/about">about</a></li>
+          <li><a href="/documentation">docs</a></li>
+          <li><a href="/guides">guides</a></li>
+          <li class="active"><a href="/api">api</a></li>
+          <li><a href="/community">community</a></li>
+          <li><a href="/blog">blog</a></li>
+        </ul>
+        <div id="github">
+          <a href="https://github.com/emberjs/ember.js"><img src="/images/fork-us.png">Fork Us!</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="content-wrapper">
+      
+      
+        <div id="sidebar">
+          
+    <h3>SHA: <a href="https://github.com/emberjs/ember.js/commit/83542a6">83542a6</a></h3>
+
+    <p><strong>Note:</strong> For 1.0.pre, see the <a href="http://docs.emberjs.com">old docs site</a>.</p>
+
+    <h2>Modules</h2>
+    <ul>
+    
+      <li><a href="/api/modules/ember.html">ember</a></li>
+    
+      <li><a href="/api/modules/ember-application.html">ember-application</a></li>
+    
+      <li><a href="/api/modules/ember-debug.html">ember-debug</a></li>
+    
+      <li><a href="/api/modules/ember-handlebars.html">ember-handlebars</a></li>
+    
+      <li><a href="/api/modules/ember-metal.html">ember-metal</a></li>
+    
+      <li><a href="/api/modules/ember-routing.html">ember-routing</a></li>
+    
+      <li><a href="/api/modules/ember-runtime.html">ember-runtime</a></li>
+    
+      <li><a href="/api/modules/ember-states.html">ember-states</a></li>
+    
+      <li><a href="/api/modules/ember-views.html">ember-views</a></li>
+    
+    </ul>
+
+    <h2>Namespaces</h2>
+    <ul>
+    
+      <li class=""><a href="/api/classes/Ember.html">Ember</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Location.html">Ember.Location</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.String.html">Ember.String</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.platform.html">Ember.platform</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.run.html">Ember.run</a></li>
+    
+    </ul>
+
+    <h2>Classes</h2>
+    <ul>
+    
+      <li class=""><a href="/api/classes/Ember.Application.html">Ember.Application</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Array.html">Ember.Array</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ArrayController.html">Ember.ArrayController</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ArrayProxy.html">Ember.ArrayProxy</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Binding.html">Ember.Binding</a></li>
+    
+      <li class="deprecated"><a href="/api/classes/Ember.Button.html">Ember.Button</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Checkbox.html">Ember.Checkbox</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.CollectionView.html">Ember.CollectionView</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Comparable.html">Ember.Comparable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ComputedProperty.html">Ember.ComputedProperty</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ContainerView.html">Ember.ContainerView</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Controller.html">Ember.Controller</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ControllerMixin.html">Ember.ControllerMixin</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Copyable.html">Ember.Copyable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.CoreObject.html">Ember.CoreObject</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.Descriptor.html">Ember.Descriptor</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.EachProxy.html">Ember.EachProxy</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Enumerable.html">Ember.Enumerable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Error.html">Ember.Error</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.EventDispatcher.html">Ember.EventDispatcher</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Evented.html">Ember.Evented</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Freezable.html">Ember.Freezable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Handlebars.html">Ember.Handlebars</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.Handlebars.Compiler.html">Ember.Handlebars.Compiler</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.Handlebars.JavaScriptCompiler.html">Ember.Handlebars.JavaScriptCompiler</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Handlebars.helpers.html">Ember.Handlebars.helpers</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.HashLocation.html">Ember.HashLocation</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.HistoryLocation.html">Ember.HistoryLocation</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Logger.html">Ember.Logger</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.Map.html">Ember.Map</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.MapWithDefault.html">Ember.MapWithDefault</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Mixin.html">Ember.Mixin</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.MutableArray.html">Ember.MutableArray</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.MutableEnumerable.html">Ember.MutableEnumerable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Namespace.html">Ember.Namespace</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.NativeArray.html">Ember.NativeArray</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.NoneLocation.html">Ember.NoneLocation</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Object.html">Ember.Object</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ObjectController.html">Ember.ObjectController</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ObjectProxy.html">Ember.ObjectProxy</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Observable.html">Ember.Observable</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.OrderedSet.html">Ember.OrderedSet</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.RenderBuffer.html">Ember.RenderBuffer</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Routable.html">Ember.Routable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Route.html">Ember.Route</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Router.html">Ember.Router</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.RunLoop.html">Ember.RunLoop</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Select.html">Ember.Select</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Set.html">Ember.Set</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.SortableMixin.html">Ember.SortableMixin</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.State.html">Ember.State</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.StateManager.html">Ember.StateManager</a></li>
+    
+      <li class="deprecated"><a href="/api/classes/Ember.TabContainerView.html">Ember.TabContainerView</a></li>
+    
+      <li class="deprecated"><a href="/api/classes/Ember.TabPaneView.html">Ember.TabPaneView</a></li>
+    
+      <li class="deprecated"><a href="/api/classes/Ember.TabView.html">Ember.TabView</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.TargetActionSupport.html">Ember.TargetActionSupport</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.TextArea.html">Ember.TextArea</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.TextField.html">Ember.TextField</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.TextSupport.html">Ember.TextSupport</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.View.html">Ember.View</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember._HandlebarsBoundView.html">Ember._HandlebarsBoundView</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember._Metamorph.html">Ember._Metamorph</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember._MetamorphView.html">Ember._MetamorphView</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember._RouteMatcher.html">Ember._RouteMatcher</a></li>
+    
+      <li class=""><a href="/api/classes/Function.html">Function</a></li>
+    
+      <li class=""><a href="/api/classes/String.html">String</a></li>
+    
+      <li class="private"><a href="/api/classes/Transition.html">Transition</a></li>
+    
+    </ul>
+  
+          <div id="back-to-top"><a href="#">&#11014; Back to Top</a></div>
+        </div>
+      
+      <div id="content" class="has-sidebar">
+          
+
+  
+
+  <div id="api-options">
+    Show:
+
+    <label>
+      <input type="checkbox" data-type="inherited" checked>
+      Inherited
+    </label>
+
+    <label>
+      <input type="checkbox" data-type="protected">
+      Protected
+    </label>
+
+    <label>
+      <input type="checkbox" data-type="private">
+      Private
+    </label>
+
+    <label>
+      <input type="checkbox" data-type="deprecated">
+      Deprecated
+    </label>
+  </div>
+
+  <h1>ember-runtime Module</h1>
+
+  <p>Parent: <a href="/api/modules/ember.html">ember</a></p>
+
+  <p>Requires: <a href="/api/modules/ember-metal.html">ember-metal</a></p>
+
+<p><p>Ember Runtime</p>
+</p>
+
+
+  
+  <h2>Classes and Namespaces</h2>
+  <ul>
+  
+    <li class=""><a href="/api/classes/Ember.Application.html">Ember.Application</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.String.html">Ember.String</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.ArrayController.html">Ember.ArrayController</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.Controller.html">Ember.Controller</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.ObjectController.html">Ember.ObjectController</a></li>
+  
+    <li class=""><a href="/api/classes/Function.html">Function</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.Array.html">Ember.Array</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.Comparable.html">Ember.Comparable</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.Copyable.html">Ember.Copyable</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.Enumerable.html">Ember.Enumerable</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.Evented.html">Ember.Evented</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.Freezable.html">Ember.Freezable</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.MutableArray.html">Ember.MutableArray</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.MutableEnumerable.html">Ember.MutableEnumerable</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.Observable.html">Ember.Observable</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.SortableMixin.html">Ember.SortableMixin</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.TargetActionSupport.html">Ember.TargetActionSupport</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.ArrayProxy.html">Ember.ArrayProxy</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.CoreObject.html">Ember.CoreObject</a></li>
+  
+    <li class="private"><a href="/api/classes/Ember.EachProxy.html">Ember.EachProxy</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.Namespace.html">Ember.Namespace</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.NativeArray.html">Ember.NativeArray</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.Object.html">Ember.Object</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.ObjectProxy.html">Ember.ObjectProxy</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.Set.html">Ember.Set</a></li>
+  
+    <li class=""><a href="/api/classes/Ember.Error.html">Ember.Error</a></li>
+  
+  </ul>
+
+
+      </div>
+    </div>
+
+    <div id="footer">
+      <div class="info">
+        <div class="links"><a href="http://twitter.com/emberjs">Twitter</a> &bull; <a href="https://github.com/emberjs/ember.js">GitHub</a></div>
+        <div class="copyright">Copyright 2012 <a href="http://tilde.io">Tilde Inc.</a></div>
+        <div class="credit">Design by <a href="http://www.heropixel.com">HeroPixel</a></div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-27675533-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </body>
+</html>

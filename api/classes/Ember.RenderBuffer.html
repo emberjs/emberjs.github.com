@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ember.js - Ember.RenderBuffer</title>
+    <link rel="shortcut icon" href="/images/favicon.png" />
+    <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
+
+    <script type="text/javascript">
+      $(function() {
+        $('#logo').on('click', function(evt) {
+          if (evt.shiftKey) {
+            $('#content-wrapper').toggleClass('grid');
+            return false;
+          }
+        });
+
+        var backToTop = $('#back-to-top');
+        var doc = $(document);
+        var offset = backToTop.offset();
+        var marginTop = 90;
+        var showing = false;
+
+        if (backToTop.length) {
+          backToTop.on('click', function(evt) {
+            $('html,body').animate({scrollTop: 0}, 200);
+            return false;
+          });
+
+          doc.on('scroll', function() {
+            if (!showing && doc.scrollTop() > offset.top+200) {
+              showing = true;
+              backToTop.css({
+                opacity: 1,
+                position: 'fixed',
+                top: 20,
+                left: offset.left
+              });
+            } else if (showing && doc.scrollTop() <= offset.top+200) {
+              showing = false;
+              backToTop.css({
+                opacity: 0
+              });
+            }
+          });
+        }
+
+        $('.bx-wrapper, .bx-window').width(940);
+      });
+    </script>
+
+    
+    <script>
+      $(function() {
+        // Type toggling
+        function toggleType() {
+          var type = this.getAttribute('data-type');
+          $('.'+type).toggle(this.checked);
+        }
+
+        $('#api-options input').each(toggleType);
+        $('#api-options input').on('change', toggleType);
+
+        // Tabs
+        $('.tabs .pane').hide();
+        $('.tabs .pane:first').show();
+        $('.tabs ul li:first').addClass('active');
+
+        function showPane($tabs, href) {
+          var $ul = $tabs.find('> ul'),
+              $tab = $ul.find('a[href='+href+']'),
+              $pane = $(href);
+
+          $ul.find('li').removeClass('active');
+          $tab.parent().addClass('active');
+          $tabs.find('.pane').hide();
+
+          $pane.show();
+        }
+
+        $('.tabs > ul li a').click(function(){
+          var $el = $(this),
+              $tabs = $el.parents('.tabs'),
+              href = $el.attr('href');
+
+          showPane($tabs, href);
+
+          return false;
+        });
+
+        // Auto tab
+        function checkHash() {
+          var hash = window.location.hash;
+          if (hash) {
+            var $el = $(hash);
+            if ($el.length > 0 && !$el.is(':visible')) {
+              showPane($el.parents('.tabs'), '#'+$el.parents('.pane').attr('id'));
+              $("html, body").scrollTop($el.offset().top);
+            }
+          }
+        }
+
+        $(window).on('hashchange', checkHash);
+        checkHash();
+      });
+    </script>
+  
+  </head>
+
+  <body class="api api_classes api_classes_Ember">
+    <div id="header">
+      <div id="wrapper">
+        <a id="logo" href="/">&nbsp;</a>
+        <ul id="nav">
+          <li><a href="/about">about</a></li>
+          <li><a href="/documentation">docs</a></li>
+          <li><a href="/guides">guides</a></li>
+          <li class="active"><a href="/api">api</a></li>
+          <li><a href="/community">community</a></li>
+          <li><a href="/blog">blog</a></li>
+        </ul>
+        <div id="github">
+          <a href="https://github.com/emberjs/ember.js"><img src="/images/fork-us.png">Fork Us!</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="content-wrapper">
+      
+      
+        <div id="sidebar">
+          
+    <h3>SHA: <a href="https://github.com/emberjs/ember.js/commit/83542a6">83542a6</a></h3>
+
+    <p><strong>Note:</strong> For 1.0.pre, see the <a href="http://docs.emberjs.com">old docs site</a>.</p>
+
+    <h2>Modules</h2>
+    <ul>
+    
+      <li><a href="/api/modules/ember.html">ember</a></li>
+    
+      <li><a href="/api/modules/ember-application.html">ember-application</a></li>
+    
+      <li><a href="/api/modules/ember-debug.html">ember-debug</a></li>
+    
+      <li><a href="/api/modules/ember-handlebars.html">ember-handlebars</a></li>
+    
+      <li><a href="/api/modules/ember-metal.html">ember-metal</a></li>
+    
+      <li><a href="/api/modules/ember-routing.html">ember-routing</a></li>
+    
+      <li><a href="/api/modules/ember-runtime.html">ember-runtime</a></li>
+    
+      <li><a href="/api/modules/ember-states.html">ember-states</a></li>
+    
+      <li><a href="/api/modules/ember-views.html">ember-views</a></li>
+    
+    </ul>
+
+    <h2>Namespaces</h2>
+    <ul>
+    
+      <li class=""><a href="/api/classes/Ember.html">Ember</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Location.html">Ember.Location</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.String.html">Ember.String</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.platform.html">Ember.platform</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.run.html">Ember.run</a></li>
+    
+    </ul>
+
+    <h2>Classes</h2>
+    <ul>
+    
+      <li class=""><a href="/api/classes/Ember.Application.html">Ember.Application</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Array.html">Ember.Array</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ArrayController.html">Ember.ArrayController</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ArrayProxy.html">Ember.ArrayProxy</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Binding.html">Ember.Binding</a></li>
+    
+      <li class="deprecated"><a href="/api/classes/Ember.Button.html">Ember.Button</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Checkbox.html">Ember.Checkbox</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.CollectionView.html">Ember.CollectionView</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Comparable.html">Ember.Comparable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ComputedProperty.html">Ember.ComputedProperty</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ContainerView.html">Ember.ContainerView</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Controller.html">Ember.Controller</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ControllerMixin.html">Ember.ControllerMixin</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Copyable.html">Ember.Copyable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.CoreObject.html">Ember.CoreObject</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.Descriptor.html">Ember.Descriptor</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.EachProxy.html">Ember.EachProxy</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Enumerable.html">Ember.Enumerable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Error.html">Ember.Error</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.EventDispatcher.html">Ember.EventDispatcher</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Evented.html">Ember.Evented</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Freezable.html">Ember.Freezable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Handlebars.html">Ember.Handlebars</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.Handlebars.Compiler.html">Ember.Handlebars.Compiler</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.Handlebars.JavaScriptCompiler.html">Ember.Handlebars.JavaScriptCompiler</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Handlebars.helpers.html">Ember.Handlebars.helpers</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.HashLocation.html">Ember.HashLocation</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.HistoryLocation.html">Ember.HistoryLocation</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Logger.html">Ember.Logger</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.Map.html">Ember.Map</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.MapWithDefault.html">Ember.MapWithDefault</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Mixin.html">Ember.Mixin</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.MutableArray.html">Ember.MutableArray</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.MutableEnumerable.html">Ember.MutableEnumerable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Namespace.html">Ember.Namespace</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.NativeArray.html">Ember.NativeArray</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.NoneLocation.html">Ember.NoneLocation</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Object.html">Ember.Object</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ObjectController.html">Ember.ObjectController</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ObjectProxy.html">Ember.ObjectProxy</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Observable.html">Ember.Observable</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.OrderedSet.html">Ember.OrderedSet</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.RenderBuffer.html">Ember.RenderBuffer</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Routable.html">Ember.Routable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Route.html">Ember.Route</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Router.html">Ember.Router</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.RunLoop.html">Ember.RunLoop</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Select.html">Ember.Select</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Set.html">Ember.Set</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.SortableMixin.html">Ember.SortableMixin</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.State.html">Ember.State</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.StateManager.html">Ember.StateManager</a></li>
+    
+      <li class="deprecated"><a href="/api/classes/Ember.TabContainerView.html">Ember.TabContainerView</a></li>
+    
+      <li class="deprecated"><a href="/api/classes/Ember.TabPaneView.html">Ember.TabPaneView</a></li>
+    
+      <li class="deprecated"><a href="/api/classes/Ember.TabView.html">Ember.TabView</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.TargetActionSupport.html">Ember.TargetActionSupport</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.TextArea.html">Ember.TextArea</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.TextField.html">Ember.TextField</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.TextSupport.html">Ember.TextSupport</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.View.html">Ember.View</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember._HandlebarsBoundView.html">Ember._HandlebarsBoundView</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember._Metamorph.html">Ember._Metamorph</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember._MetamorphView.html">Ember._MetamorphView</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember._RouteMatcher.html">Ember._RouteMatcher</a></li>
+    
+      <li class=""><a href="/api/classes/Function.html">Function</a></li>
+    
+      <li class=""><a href="/api/classes/String.html">String</a></li>
+    
+      <li class="private"><a href="/api/classes/Transition.html">Transition</a></li>
+    
+    </ul>
+  
+          <div id="back-to-top"><a href="#">&#11014; Back to Top</a></div>
+        </div>
+      
+      <div id="content" class="has-sidebar">
+          
+
+  
+
+  <div id="api-options">
+    Show:
+
+    <label>
+      <input type="checkbox" data-type="inherited" checked>
+      Inherited
+    </label>
+
+    <label>
+      <input type="checkbox" data-type="protected">
+      Protected
+    </label>
+
+    <label>
+      <input type="checkbox" data-type="private">
+      Private
+    </label>
+
+    <label>
+      <input type="checkbox" data-type="deprecated">
+      Deprecated
+    </label>
+  </div>
+
+  <h1>Ember.RenderBuffer Class</h1>
+
+
+<div class="class-info">
+  
+
+  
+
+  
+    <p>Defined in: <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/system/render_buffer.js#L27">packages/ember-views/lib/system/render_buffer.js:27</a></p>
+  
+
+  
+    <p>Module: <a href="/api/modules/ember-views.html">ember-views</a></p>
+  
+</div>
+
+  <div class="description">
+    <p>Ember.RenderBuffer gathers information regarding the a view and generates the
+final representation. Ember.RenderBuffer will generate HTML which can be pushed
+to the DOM.</p>
+
+  </div>
+
+
+
+<div class="tabs">
+  <ul>
+    <li><a href="#index">Index</a></li>
+    
+      <li><a href="#methods">Methods</a></li>
+    
+      <li><a href="#properties">Properties</a></li>
+    
+  </ul>
+
+  <div class="pane" id="index">
+    
+      <h2>Methods</h2>
+      <ul class="index-list">
+        
+          <li class="method ">
+            <a href="#method_push">push</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_addClass">addClass</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_id">id</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_attr">attr</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_removeAttr">removeAttr</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_style">style</a>
+          </li>
+        
+          <li class="method private">
+            <a href="#method_newBuffer">newBuffer</a>
+          </li>
+        
+          <li class="method private">
+            <a href="#method_replaceWithBuffer">replaceWithBuffer</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_begin">begin</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_prepend">prepend</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_replaceWith">replaceWith</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_insertAfter">insertAfter</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_end">end</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_element">element</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_string">string</a>
+          </li>
+        
+      </ul>
+    
+      <h2>Properties</h2>
+      <ul class="index-list">
+        
+          <li class="property ">
+            <a href="#property_elementClasses">elementClasses</a>
+          </li>
+        
+          <li class="property ">
+            <a href="#property_elementId">elementId</a>
+          </li>
+        
+          <li class="property ">
+            <a href="#property_elementAttributes">elementAttributes</a>
+          </li>
+        
+          <li class="property ">
+            <a href="#property_elementTag">elementTag</a>
+          </li>
+        
+          <li class="property ">
+            <a href="#property_elementStyle">elementStyle</a>
+          </li>
+        
+          <li class="property ">
+            <a href="#property_parentBuffer">parentBuffer</a>
+          </li>
+        
+      </ul>
+    
+  </div>
+
+  <div class="pane" id="methods">
+    
+      <div id="method_push" class="method ">
+  <h3 class="name"><code>push</code></h3>
+
+  <span class="args">
+    (string)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/system/render_buffer.js#L125">packages/ember-views/lib/system/render_buffer.js:125</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Adds a string of HTML to the RenderBuffer.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>string</strong> String<br>
+            HTML to push into the buffer
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_addClass" class="method ">
+  <h3 class="name"><code>addClass</code></h3>
+
+  <span class="args">
+    (className)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/system/render_buffer.js#L137">packages/ember-views/lib/system/render_buffer.js:137</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Adds a class to the buffer, which will be rendered to the class attribute.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>className</strong> String<br>
+            Class name to add to the buffer
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_id" class="method ">
+  <h3 class="name"><code>id</code></h3>
+
+  <span class="args">
+    (id)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/system/render_buffer.js#L152">packages/ember-views/lib/system/render_buffer.js:152</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Sets the elementID to be used for the element.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>id</strong> String<br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_attr" class="method ">
+  <h3 class="name"><code>attr</code></h3>
+
+  <span class="args">
+    (name, value)
+  </span>
+
+  <span class="type">Ember.RenderBuffer|String</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/system/render_buffer.js#L167">packages/ember-views/lib/system/render_buffer.js:167</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Adds an attribute which will be rendered to the element.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>name</strong> String<br>
+            The name of the attribute
+          </li>
+        
+          <li>
+            <strong>value</strong> String<br>
+            The value to add to the attribute
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Ember.RenderBuffer|String: this or the current attribute value
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_removeAttr" class="method ">
+  <h3 class="name"><code>removeAttr</code></h3>
+
+  <span class="args">
+    (name)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/system/render_buffer.js#L188">packages/ember-views/lib/system/render_buffer.js:188</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Remove an attribute from the list of attributes to render.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>name</strong> String<br>
+            The name of the attribute
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_style" class="method ">
+  <h3 class="name"><code>style</code></h3>
+
+  <span class="args">
+    (name, value)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/system/render_buffer.js#L202">packages/ember-views/lib/system/render_buffer.js:202</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Adds a style to the style attribute which will be rendered to the element.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>name</strong> String<br>
+            Name of the style
+          </li>
+        
+          <li>
+            <strong>value</strong> String<br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_newBuffer" class="method private">
+  <h3 class="name"><code>newBuffer</code></h3>
+
+  <span class="args">
+    (tagName, parent, fn, other)
+  </span>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/system/render_buffer.js#L217">packages/ember-views/lib/system/render_buffer.js:217</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>tagName</strong> String<br>
+            Tag name to use for the child buffer's element
+          </li>
+        
+          <li>
+            <strong>parent</strong> Ember._RenderBuffer<br>
+            The parent render buffer that this
+  buffer should be appended to.
+          </li>
+        
+          <li>
+            <strong>fn</strong> Function<br>
+            A callback to invoke with the newly created buffer.
+          </li>
+        
+          <li>
+            <strong>other</strong> Object<br>
+            Additional properties to add to the newly created
+  buffer.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_replaceWithBuffer" class="method private">
+  <h3 class="name"><code>replaceWithBuffer</code></h3>
+
+  <span class="args">
+    (buffer)
+  </span>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/system/render_buffer.js#L245">packages/ember-views/lib/system/render_buffer.js:245</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>buffer</strong> Ember._RenderBuffer<br>
+            The buffer to insert in place of
+  the existing buffer.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_begin" class="method ">
+  <h3 class="name"><code>begin</code></h3>
+
+  <span class="args">
+    (tagName)
+  </span>
+
+  <span class="type">Ember.RenderBuffer</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/system/render_buffer.js#L271">packages/ember-views/lib/system/render_buffer.js:271</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Creates a new Ember.RenderBuffer object with the provided tagName as
+the element tag and with its parentBuffer property set to the current
+Ember.RenderBuffer.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>tagName</strong> String<br>
+            Tag name to use for the child buffer's element
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Ember.RenderBuffer: A new RenderBuffer object
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_prepend" class="method ">
+  <h3 class="name"><code>prepend</code></h3>
+
+  <span class="args">
+    (tagName)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/system/render_buffer.js#L286">packages/ember-views/lib/system/render_buffer.js:286</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Prepend a new child buffer to the current render buffer.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>tagName</strong> String<br>
+            Tag name to use for the child buffer's element
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_replaceWith" class="method ">
+  <h3 class="name"><code>replaceWith</code></h3>
+
+  <span class="args">
+    (tagName)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/system/render_buffer.js#L298">packages/ember-views/lib/system/render_buffer.js:298</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Replace the current buffer with a new render buffer.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>tagName</strong> String<br>
+            Tag name to use for the new buffer's element
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_insertAfter" class="method ">
+  <h3 class="name"><code>insertAfter</code></h3>
+
+  <span class="args">
+    (tagName)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/system/render_buffer.js#L312">packages/ember-views/lib/system/render_buffer.js:312</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Insert a new render buffer after the current render buffer.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>tagName</strong> String<br>
+            Tag name to use for the new buffer's element
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_end" class="method ">
+  <h3 class="name"><code>end</code></h3>
+
+
+  <span class="type">Ember.RenderBuffer</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/system/render_buffer.js#L328">packages/ember-views/lib/system/render_buffer.js:328</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Closes the current buffer and adds its content to the parentBuffer.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Ember.RenderBuffer: The parentBuffer, if one exists. Otherwise, this
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_element" class="method ">
+  <h3 class="name"><code>element</code></h3>
+
+
+  <span class="type">DOMElement</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/system/render_buffer.js#L343">packages/ember-views/lib/system/render_buffer.js:343</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      DOMElement: The element corresponding to the generated HTML
+  of this buffer
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_string" class="method ">
+  <h3 class="name"><code>string</code></h3>
+
+
+  <span class="type">String</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/system/render_buffer.js#L352">packages/ember-views/lib/system/render_buffer.js:352</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Generates the HTML content for this buffer.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      String: The generated HTMl
+    </div>
+  
+
+</div>
+
+    
+  </div>
+  <div class="pane" id="properties">
+    
+      <div id="property_elementClasses" class="property ">
+  <h3 class="name"><code>elementClasses</code></h3>
+
+
+
+  <span class="type">Array</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/system/render_buffer.js#L46">packages/ember-views/lib/system/render_buffer.js:46</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>/**
+    Array of class-names which will be applied in the class=&quot;&quot; attribute
+  You should not maintain this array yourself, rather, you should use
+    the addClass() method of Ember.RenderBuffer.</p>
+
+    </div>
+  
+
+  
+    <p><strong>Default:</strong> []</p>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_elementId" class="property ">
+  <h3 class="name"><code>elementId</code></h3>
+
+
+
+  <span class="type">String</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/system/render_buffer.js#L60">packages/ember-views/lib/system/render_buffer.js:60</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>The id in of the element, to be applied in the id=&quot;&quot; attribute</p>
+
+<p>You should not set this property yourself, rather, you should use
+the id() method of Ember.RenderBuffer.</p>
+
+    </div>
+  
+
+  
+    <p><strong>Default:</strong> null</p>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_elementAttributes" class="property ">
+  <h3 class="name"><code>elementAttributes</code></h3>
+
+
+
+  <span class="type">Hash</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/system/render_buffer.js#L72">packages/ember-views/lib/system/render_buffer.js:72</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>A hash keyed on the name of the attribute and whose value will be
+applied to that attribute. For example, if you wanted to apply a
+data-view=&quot;Foo.bar&quot; property to an element, you would set the
+elementAttributes hash to {&#39;data-view&#39;:&#39;Foo.bar&#39;}</p>
+
+<p>You should not maintain this hash yourself, rather, you should use
+the attr() method of Ember.RenderBuffer.</p>
+
+    </div>
+  
+
+  
+    <p><strong>Default:</strong> {}</p>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_elementTag" class="property ">
+  <h3 class="name"><code>elementTag</code></h3>
+
+
+
+  <span class="type">String</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/system/render_buffer.js#L87">packages/ember-views/lib/system/render_buffer.js:87</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>The tagname of the element an instance of Ember.RenderBuffer represents.</p>
+
+<p>Usually, this gets set as the first parameter to Ember.RenderBuffer. For
+example, if you wanted to create a <code>p</code> tag, then you would call</p>
+
+<p>Ember.RenderBuffer(&#39;p&#39;)</p>
+
+    </div>
+  
+
+  
+    <p><strong>Default:</strong> null</p>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_elementStyle" class="property ">
+  <h3 class="name"><code>elementStyle</code></h3>
+
+
+
+  <span class="type">Hash</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/system/render_buffer.js#L101">packages/ember-views/lib/system/render_buffer.js:101</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>A hash keyed on the name of the style attribute and whose value will
+be applied to that attribute. For example, if you wanted to apply a
+background-color:black;&quot; style to an element, you would set the
+elementStyle hash to {&#39;background-color&#39;:&#39;black&#39;}</p>
+
+<p>You should not maintain this hash yourself, rather, you should use
+the style() method of Ember.RenderBuffer.</p>
+
+    </div>
+  
+
+  
+    <p><strong>Default:</strong> {}</p>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_parentBuffer" class="property ">
+  <h3 class="name"><code>parentBuffer</code></h3>
+
+
+
+  <span class="type">Ember._RenderBuffer</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/system/render_buffer.js#L116">packages/ember-views/lib/system/render_buffer.js:116</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Nested RenderBuffers will set this to their parent RenderBuffer
+instance.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+  </div>
+</div>
+
+
+
+      </div>
+    </div>
+
+    <div id="footer">
+      <div class="info">
+        <div class="links"><a href="http://twitter.com/emberjs">Twitter</a> &bull; <a href="https://github.com/emberjs/ember.js">GitHub</a></div>
+        <div class="copyright">Copyright 2012 <a href="http://tilde.io">Tilde Inc.</a></div>
+        <div class="credit">Design by <a href="http://www.heropixel.com">HeroPixel</a></div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-27675533-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </body>
+</html>

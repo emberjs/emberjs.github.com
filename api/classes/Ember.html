@@ -1,0 +1,5984 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ember.js - Ember</title>
+    <link rel="shortcut icon" href="/images/favicon.png" />
+    <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
+
+    <script type="text/javascript">
+      $(function() {
+        $('#logo').on('click', function(evt) {
+          if (evt.shiftKey) {
+            $('#content-wrapper').toggleClass('grid');
+            return false;
+          }
+        });
+
+        var backToTop = $('#back-to-top');
+        var doc = $(document);
+        var offset = backToTop.offset();
+        var marginTop = 90;
+        var showing = false;
+
+        if (backToTop.length) {
+          backToTop.on('click', function(evt) {
+            $('html,body').animate({scrollTop: 0}, 200);
+            return false;
+          });
+
+          doc.on('scroll', function() {
+            if (!showing && doc.scrollTop() > offset.top+200) {
+              showing = true;
+              backToTop.css({
+                opacity: 1,
+                position: 'fixed',
+                top: 20,
+                left: offset.left
+              });
+            } else if (showing && doc.scrollTop() <= offset.top+200) {
+              showing = false;
+              backToTop.css({
+                opacity: 0
+              });
+            }
+          });
+        }
+
+        $('.bx-wrapper, .bx-window').width(940);
+      });
+    </script>
+
+    
+    <script>
+      $(function() {
+        // Type toggling
+        function toggleType() {
+          var type = this.getAttribute('data-type');
+          $('.'+type).toggle(this.checked);
+        }
+
+        $('#api-options input').each(toggleType);
+        $('#api-options input').on('change', toggleType);
+
+        // Tabs
+        $('.tabs .pane').hide();
+        $('.tabs .pane:first').show();
+        $('.tabs ul li:first').addClass('active');
+
+        function showPane($tabs, href) {
+          var $ul = $tabs.find('> ul'),
+              $tab = $ul.find('a[href='+href+']'),
+              $pane = $(href);
+
+          $ul.find('li').removeClass('active');
+          $tab.parent().addClass('active');
+          $tabs.find('.pane').hide();
+
+          $pane.show();
+        }
+
+        $('.tabs > ul li a').click(function(){
+          var $el = $(this),
+              $tabs = $el.parents('.tabs'),
+              href = $el.attr('href');
+
+          showPane($tabs, href);
+
+          return false;
+        });
+
+        // Auto tab
+        function checkHash() {
+          var hash = window.location.hash;
+          if (hash) {
+            var $el = $(hash);
+            if ($el.length > 0 && !$el.is(':visible')) {
+              showPane($el.parents('.tabs'), '#'+$el.parents('.pane').attr('id'));
+              $("html, body").scrollTop($el.offset().top);
+            }
+          }
+        }
+
+        $(window).on('hashchange', checkHash);
+        checkHash();
+      });
+    </script>
+  
+  </head>
+
+  <body class="api api_classes api_classes_Ember">
+    <div id="header">
+      <div id="wrapper">
+        <a id="logo" href="/">&nbsp;</a>
+        <ul id="nav">
+          <li><a href="/about">about</a></li>
+          <li><a href="/documentation">docs</a></li>
+          <li><a href="/guides">guides</a></li>
+          <li class="active"><a href="/api">api</a></li>
+          <li><a href="/community">community</a></li>
+          <li><a href="/blog">blog</a></li>
+        </ul>
+        <div id="github">
+          <a href="https://github.com/emberjs/ember.js"><img src="/images/fork-us.png">Fork Us!</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="content-wrapper">
+      
+      
+        <div id="sidebar">
+          
+    <h3>SHA: <a href="https://github.com/emberjs/ember.js/commit/83542a6">83542a6</a></h3>
+
+    <p><strong>Note:</strong> For 1.0.pre, see the <a href="http://docs.emberjs.com">old docs site</a>.</p>
+
+    <h2>Modules</h2>
+    <ul>
+    
+      <li><a href="/api/modules/ember.html">ember</a></li>
+    
+      <li><a href="/api/modules/ember-application.html">ember-application</a></li>
+    
+      <li><a href="/api/modules/ember-debug.html">ember-debug</a></li>
+    
+      <li><a href="/api/modules/ember-handlebars.html">ember-handlebars</a></li>
+    
+      <li><a href="/api/modules/ember-metal.html">ember-metal</a></li>
+    
+      <li><a href="/api/modules/ember-routing.html">ember-routing</a></li>
+    
+      <li><a href="/api/modules/ember-runtime.html">ember-runtime</a></li>
+    
+      <li><a href="/api/modules/ember-states.html">ember-states</a></li>
+    
+      <li><a href="/api/modules/ember-views.html">ember-views</a></li>
+    
+    </ul>
+
+    <h2>Namespaces</h2>
+    <ul>
+    
+      <li class=""><a href="/api/classes/Ember.html">Ember</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Location.html">Ember.Location</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.String.html">Ember.String</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.platform.html">Ember.platform</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.run.html">Ember.run</a></li>
+    
+    </ul>
+
+    <h2>Classes</h2>
+    <ul>
+    
+      <li class=""><a href="/api/classes/Ember.Application.html">Ember.Application</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Array.html">Ember.Array</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ArrayController.html">Ember.ArrayController</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ArrayProxy.html">Ember.ArrayProxy</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Binding.html">Ember.Binding</a></li>
+    
+      <li class="deprecated"><a href="/api/classes/Ember.Button.html">Ember.Button</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Checkbox.html">Ember.Checkbox</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.CollectionView.html">Ember.CollectionView</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Comparable.html">Ember.Comparable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ComputedProperty.html">Ember.ComputedProperty</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ContainerView.html">Ember.ContainerView</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Controller.html">Ember.Controller</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ControllerMixin.html">Ember.ControllerMixin</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Copyable.html">Ember.Copyable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.CoreObject.html">Ember.CoreObject</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.Descriptor.html">Ember.Descriptor</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.EachProxy.html">Ember.EachProxy</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Enumerable.html">Ember.Enumerable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Error.html">Ember.Error</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.EventDispatcher.html">Ember.EventDispatcher</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Evented.html">Ember.Evented</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Freezable.html">Ember.Freezable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Handlebars.html">Ember.Handlebars</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.Handlebars.Compiler.html">Ember.Handlebars.Compiler</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.Handlebars.JavaScriptCompiler.html">Ember.Handlebars.JavaScriptCompiler</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Handlebars.helpers.html">Ember.Handlebars.helpers</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.HashLocation.html">Ember.HashLocation</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.HistoryLocation.html">Ember.HistoryLocation</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Logger.html">Ember.Logger</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.Map.html">Ember.Map</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.MapWithDefault.html">Ember.MapWithDefault</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Mixin.html">Ember.Mixin</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.MutableArray.html">Ember.MutableArray</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.MutableEnumerable.html">Ember.MutableEnumerable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Namespace.html">Ember.Namespace</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.NativeArray.html">Ember.NativeArray</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.NoneLocation.html">Ember.NoneLocation</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Object.html">Ember.Object</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ObjectController.html">Ember.ObjectController</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ObjectProxy.html">Ember.ObjectProxy</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Observable.html">Ember.Observable</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.OrderedSet.html">Ember.OrderedSet</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.RenderBuffer.html">Ember.RenderBuffer</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Routable.html">Ember.Routable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Route.html">Ember.Route</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Router.html">Ember.Router</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.RunLoop.html">Ember.RunLoop</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Select.html">Ember.Select</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Set.html">Ember.Set</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.SortableMixin.html">Ember.SortableMixin</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.State.html">Ember.State</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.StateManager.html">Ember.StateManager</a></li>
+    
+      <li class="deprecated"><a href="/api/classes/Ember.TabContainerView.html">Ember.TabContainerView</a></li>
+    
+      <li class="deprecated"><a href="/api/classes/Ember.TabPaneView.html">Ember.TabPaneView</a></li>
+    
+      <li class="deprecated"><a href="/api/classes/Ember.TabView.html">Ember.TabView</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.TargetActionSupport.html">Ember.TargetActionSupport</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.TextArea.html">Ember.TextArea</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.TextField.html">Ember.TextField</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.TextSupport.html">Ember.TextSupport</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.View.html">Ember.View</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember._HandlebarsBoundView.html">Ember._HandlebarsBoundView</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember._Metamorph.html">Ember._Metamorph</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember._MetamorphView.html">Ember._MetamorphView</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember._RouteMatcher.html">Ember._RouteMatcher</a></li>
+    
+      <li class=""><a href="/api/classes/Function.html">Function</a></li>
+    
+      <li class=""><a href="/api/classes/String.html">String</a></li>
+    
+      <li class="private"><a href="/api/classes/Transition.html">Transition</a></li>
+    
+    </ul>
+  
+          <div id="back-to-top"><a href="#">&#11014; Back to Top</a></div>
+        </div>
+      
+      <div id="content" class="has-sidebar">
+          
+
+  
+
+  <div id="api-options">
+    Show:
+
+    <label>
+      <input type="checkbox" data-type="inherited" checked>
+      Inherited
+    </label>
+
+    <label>
+      <input type="checkbox" data-type="protected">
+      Protected
+    </label>
+
+    <label>
+      <input type="checkbox" data-type="private">
+      Private
+    </label>
+
+    <label>
+      <input type="checkbox" data-type="deprecated">
+      Deprecated
+    </label>
+  </div>
+
+  <h1>Ember Namespace</h1>
+
+
+<div class="class-info">
+  
+
+  
+
+  
+    <p>Defined in: <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/core.js#L8">packages/ember-metal/lib/core.js:8</a></p>
+  
+
+  
+    <p>Module: <a href="/api/modules/ember-metal.html">ember-metal</a></p>
+  
+</div>
+
+  <div class="description">
+    <p>All Ember methods and functions are defined inside of this namespace.
+You generally should not add new properties to this namespace as it may be
+overwritten by future versions of Ember.</p>
+
+<p>You can also use the shorthand &quot;Em&quot; instead of &quot;Ember&quot;.</p>
+
+<p>Ember-Runtime is a framework that provides core functions for
+Ember including cross-platform functions, support for property
+observing and objects. Its focus is on small size and performance. You can
+use this in place of or along-side other cross-platform libraries such as
+jQuery.</p>
+
+<p>The core Runtime framework is based on the jQuery API with a number of
+performance optimizations.</p>
+
+  </div>
+
+
+
+<div class="tabs">
+  <ul>
+    <li><a href="#index">Index</a></li>
+    
+      <li><a href="#methods">Methods</a></li>
+    
+      <li><a href="#properties">Properties</a></li>
+    
+      <li><a href="#events">Events</a></li>
+    
+  </ul>
+
+  <div class="pane" id="index">
+    
+      <h2>Methods</h2>
+      <ul class="index-list">
+        
+          <li class="method ">
+            <a href="#method_assert">assert</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_warn">warn</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_deprecate">deprecate</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_deprecateFunc">deprecateFunc</a>
+          </li>
+        
+          <li class="method private">
+            <a href="#method_normalizePath">normalizePath</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_get">get</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_set">set</a>
+          </li>
+        
+          <li class="method private">
+            <a href="#method_normalizeTuple">normalizeTuple</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_trySet">trySet</a>
+          </li>
+        
+          <li class="method private">
+            <a href="#method_isGlobalPath">isGlobalPath</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_bind">bind</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_oneWay">oneWay</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_computed">computed</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_cacheFor">cacheFor</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_computed_not">computed.not</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_computed_empty">computed.empty</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_computed_bool">computed.bool</a>
+          </li>
+        
+          <li class="method private">
+            <a href="#method_K">K</a>
+          </li>
+        
+          <li class="method private">
+            <a href="#method_handleErrors">handleErrors</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_addListener">addListener</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_removeListener">removeListener</a>
+          </li>
+        
+          <li class="method private">
+            <a href="#method_suspendListener">suspendListener</a>
+          </li>
+        
+          <li class="method private">
+            <a href="#method_watchedEvents">watchedEvents</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_sendEvent">sendEvent</a>
+          </li>
+        
+          <li class="method private">
+            <a href="#method_deferEvent">deferEvent</a>
+          </li>
+        
+          <li class="method private">
+            <a href="#method_hasListeners">hasListeners</a>
+          </li>
+        
+          <li class="method private">
+            <a href="#method_listenersFor">listenersFor</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_mixin">mixin</a>
+          </li>
+        
+          <li class="method private">
+            <a href="#method_identifyNamespaces">identifyNamespaces</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_required">required</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_alias">alias</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_observer">observer</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_immediateObserver">immediateObserver</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_beforeObserver">beforeObserver</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_create">create</a>
+          </li>
+        
+          <li class="method private">
+            <a href="#method_defineProperty">defineProperty</a>
+          </li>
+        
+          <li class="method private">
+            <a href="#method_generateGuid">generateGuid</a>
+          </li>
+        
+          <li class="method private">
+            <a href="#method_guidFor">guidFor</a>
+          </li>
+        
+          <li class="method private">
+            <a href="#method_meta">meta</a>
+          </li>
+        
+          <li class="method private">
+            <a href="#method_metaPath">metaPath</a>
+          </li>
+        
+          <li class="method private">
+            <a href="#method_wrap">wrap</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_isArray">isArray</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_makeArray">makeArray</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_canInvoke">canInvoke</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_tryInvoke">tryInvoke</a>
+          </li>
+        
+          <li class="method private">
+            <a href="#method_watch">watch</a>
+          </li>
+        
+          <li class="method private">
+            <a href="#method_rewatch">rewatch</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_propertyWillChange">propertyWillChange</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_propertyDidChange">propertyDidChange</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_destroy">destroy</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_onLoad">onLoad</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_runLoadHooks">runLoadHooks</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_A">A</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_typeOf">typeOf</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_none">none</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_empty">empty</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_compare">compare</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_copy">copy</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_inspect">inspect</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_isEqual">isEqual</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_keys">keys</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method__">$</a>
+          </li>
+        
+      </ul>
+    
+      <h2>Properties</h2>
+      <ul class="index-list">
+        
+          <li class="property ">
+            <a href="#property_LOG_BINDINGS">LOG_BINDINGS</a>
+          </li>
+        
+          <li class="property ">
+            <a href="#property_VERSION">VERSION</a>
+          </li>
+        
+          <li class="property ">
+            <a href="#property_ENV">ENV</a>
+          </li>
+        
+          <li class="property ">
+            <a href="#property_EXTEND_PROTOTYPES">EXTEND_PROTOTYPES</a>
+          </li>
+        
+          <li class="property ">
+            <a href="#property_LOG_STACKTRACE_ON_DEPRECATION">LOG_STACKTRACE_ON_DEPRECATION</a>
+          </li>
+        
+          <li class="property ">
+            <a href="#property_SHIM_ES5">SHIM_ES5</a>
+          </li>
+        
+          <li class="property ">
+            <a href="#property_CP_DEFAULT_CACHEABLE">CP_DEFAULT_CACHEABLE</a>
+          </li>
+        
+          <li class="property ">
+            <a href="#property_VIEW_PRESERVES_CONTEXT">VIEW_PRESERVES_CONTEXT</a>
+          </li>
+        
+          <li class="property private">
+            <a href="#property_GUID_KEY">GUID_KEY</a>
+          </li>
+        
+          <li class="property private">
+            <a href="#property_META_KEY">META_KEY</a>
+          </li>
+        
+          <li class="property ">
+            <a href="#property_STRINGS">STRINGS</a>
+          </li>
+        
+          <li class="property ">
+            <a href="#property_TEMPLATES">TEMPLATES</a>
+          </li>
+        
+      </ul>
+    
+      <h2>Events</h2>
+      <ul class="index-list">
+        
+          <li class="event ">
+            <a href="#event_onerror">onerror</a>
+          </li>
+        
+      </ul>
+    
+  </div>
+
+  <div class="pane" id="methods">
+    
+      <div id="method_assert" class="method ">
+  <h3 class="name"><code>assert</code></h3>
+
+  <span class="args">
+    (desc, test)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-debug/lib/main.js#L28">packages/ember-debug/lib/main.js:28</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Define an assertion that will throw an exception if the condition is not
+met.  Ember build tools will remove any calls to Ember.assert() when
+doing a production build. Example:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="comment">// Test for truthiness</span>
+Ember.assert(<span class="string"><span class="delimiter">'</span><span class="content">Must pass a valid object</span><span class="delimiter">'</span></span>, obj);
+<span class="comment">// Fail unconditionally</span>
+Ember.assert(<span class="string"><span class="delimiter">'</span><span class="content">This code path should never be run</span><span class="delimiter">'</span></span>)</pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>desc</strong> String<br>
+            A description of the assertion.  This will become
+  the text of the Error thrown if the assertion fails.
+          </li>
+        
+          <li>
+            <strong>test</strong> Boolean<br>
+            Must be truthy for the assertion to pass. If
+  falsy, an exception will be thrown.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_warn" class="method ">
+  <h3 class="name"><code>warn</code></h3>
+
+  <span class="args">
+    (message, test)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-debug/lib/main.js#L50">packages/ember-debug/lib/main.js:50</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Display a warning with the provided message. Ember build tools will
+remove any calls to Ember.warn() when doing a production build.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>message</strong> String<br>
+            A warning to display.
+          </li>
+        
+          <li>
+            <strong>test</strong> Boolean<br>
+            An optional boolean. If falsy, the warning
+  will be displayed.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_deprecate" class="method ">
+  <h3 class="name"><code>deprecate</code></h3>
+
+  <span class="args">
+    (message, test)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-debug/lib/main.js#L66">packages/ember-debug/lib/main.js:66</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Display a deprecation warning with the provided message and a stack trace
+(Chrome and Firefox only). Ember build tools will remove any calls to
+Ember.deprecate() when doing a production build.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>message</strong> String<br>
+            A description of the deprecation.
+          </li>
+        
+          <li>
+            <strong>test</strong> Boolean<br>
+            An optional boolean. If falsy, the deprecation
+  will be displayed.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_deprecateFunc" class="method ">
+  <h3 class="name"><code>deprecateFunc</code></h3>
+
+  <span class="args">
+    (message, func)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-debug/lib/main.js#L112">packages/ember-debug/lib/main.js:112</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Display a deprecation warning with the provided message and a stack trace
+(Chrome and Firefox only) when the wrapped method is called.</p>
+
+<p>Ember build tools will not remove calls to Ember.deprecateFunc(), though
+no warnings will be shown in production.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>message</strong> String<br>
+            A description of the deprecation.
+          </li>
+        
+          <li>
+            <strong>func</strong> Function<br>
+            The function to be deprecated.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_normalizePath" class="method private">
+  <h3 class="name"><code>normalizePath</code></h3>
+
+  <span class="args">
+    (root, path, data)
+  </span>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-handlebars/lib/ext.js#L156">packages/ember-handlebars/lib/ext.js:156</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>root</strong> Object<br>
+            
+          </li>
+        
+          <li>
+            <strong>path</strong> String<br>
+            
+          </li>
+        
+          <li>
+            <strong>data</strong> Hash<br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_get" class="method ">
+  <h3 class="name"><code>get</code></h3>
+
+  <span class="args">
+    (obj, keyName)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/accessors.js#L25">packages/ember-metal/lib/accessors.js:25</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Gets the value of a property on an object.  If the property is computed,
+the function will be invoked.  If the property is not defined but the
+object implements the unknownProperty() method then that will be invoked.</p>
+
+<p>If you plan to run on IE8 and older browsers then you should use this
+method anytime you want to retrieve a property on an object that you don&#39;t
+know for sure is private.  (My convention only properties beginning with
+an underscore &#39;_&#39; are considered private.)</p>
+
+<p>On all newer browsers, you only need to use this method to retrieve
+properties if the property might not be defined on the object and you want
+to respect the unknownProperty() handler.  Otherwise you can ignore this
+method.</p>
+
+<p>Note that if the obj itself is null, this method will simply return
+undefined.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> Object<br>
+            The object to retrieve from.
+          </li>
+        
+          <li>
+            <strong>keyName</strong> String<br>
+            The property key to retrieve
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Object: the property value or null.
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_set" class="method ">
+  <h3 class="name"><code>set</code></h3>
+
+  <span class="args">
+    (obj, keyName, value)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/accessors.js#L85">packages/ember-metal/lib/accessors.js:85</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Sets the value of a property on an object, respecting computed properties
+and notifying observers and other listeners of the change.  If the
+property is not defined but the object implements the unknownProperty()
+method then that will be invoked as well.</p>
+
+<p>If you plan to run on IE8 and older browsers then you should use this
+method anytime you want to set a property on an object that you don&#39;t
+know for sure is private.  (My convention only properties beginning with
+an underscore &#39;_&#39; are considered private.)</p>
+
+<p>On all newer browsers, you only need to use this method to set
+properties if the property might not be defined on the object and you want
+to respect the unknownProperty() handler.  Otherwise you can ignore this
+method.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> Object<br>
+            The object to modify.
+          </li>
+        
+          <li>
+            <strong>keyName</strong> String<br>
+            The property key to set
+          </li>
+        
+          <li>
+            <strong>value</strong> Object<br>
+            The value to set
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Object: the passed value.
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_normalizeTuple" class="method private">
+  <h3 class="name"><code>normalizeTuple</code></h3>
+
+  <span class="args">
+    (target, path)
+  </span>
+
+  <span class="type">Array</span>
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/accessors.js#L242">packages/ember-metal/lib/accessors.js:242</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>target</strong> Object<br>
+            The current target.  May be null.
+          </li>
+        
+          <li>
+            <strong>path</strong> String<br>
+            A path on the target or a global property path.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Array: a temporary array with the normalized target/path pair.
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_trySet" class="method ">
+  <h3 class="name"><code>trySet</code></h3>
+
+  <span class="args">
+    (obj, keyName, value)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/accessors.js#L274">packages/ember-metal/lib/accessors.js:274</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Error-tolerant form of Ember.set. Will not blow up if any part of the
+chain is undefined, null, or destroyed.</p>
+
+<p>This is primarily used when syncing bindings, which may try to update after
+an object has been destroyed.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> Object<br>
+            The object to modify.
+          </li>
+        
+          <li>
+            <strong>keyName</strong> String<br>
+            The property key to set
+          </li>
+        
+          <li>
+            <strong>value</strong> Object<br>
+            The value to set
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_isGlobalPath" class="method private">
+  <h3 class="name"><code>isGlobalPath</code></h3>
+
+  <span class="args">
+    (path)
+  </span>
+
+  <span class="type"></span>
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/accessors.js#L292">packages/ember-metal/lib/accessors.js:292</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Returns true if the provided path is global (e.g., &quot;MyApp.fooController.bar&quot;)
+instead of local (&quot;foo.bar.baz&quot;).</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>path</strong> String<br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      : Boolean
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_bind" class="method ">
+  <h3 class="name"><code>bind</code></h3>
+
+  <span class="args">
+    (obj, to, from)
+  </span>
+
+  <span class="type">Ember.Binding</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/binding.js#L411">packages/ember-metal/lib/binding.js:411</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Global helper method to create a new binding.  Just pass the root object
+along with a to and from path to create and connect the binding.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> Object<br>
+            The root object of the transform.
+          </li>
+        
+          <li>
+            <strong>to</strong> String<br>
+            The path to the 'to' side of the binding.
+  Must be relative to obj.
+          </li>
+        
+          <li>
+            <strong>from</strong> String<br>
+            The path to the 'from' side of the binding.
+  Must be relative to obj or a global path.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Ember.Binding: binding instance
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_oneWay" class="method ">
+  <h3 class="name"><code>oneWay</code></h3>
+
+  <span class="args">
+    (obj, to, from)
+  </span>
+
+  <span class="type">Ember.Binding</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/binding.js#L431">packages/ember-metal/lib/binding.js:431</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> Object<br>
+            The root object of the transform.
+          </li>
+        
+          <li>
+            <strong>to</strong> String<br>
+            The path to the 'to' side of the binding.
+  Must be relative to obj.
+          </li>
+        
+          <li>
+            <strong>from</strong> String<br>
+            The path to the 'from' side of the binding.
+  Must be relative to obj or a global path.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Ember.Binding: binding instance
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_computed" class="method ">
+  <h3 class="name"><code>computed</code></h3>
+
+  <span class="args">
+    (func)
+  </span>
+
+  <span class="type">Ember.ComputedProperty</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/computed.js#L343">packages/ember-metal/lib/computed.js:343</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>This helper returns a new property descriptor that wraps the passed
+computed property function.  You can use this helper to define properties
+with mixins or via Ember.defineProperty().</p>
+
+<p>The function you pass will be used to both get and set property values.
+The function should accept two parameters, key and value.  If value is not
+undefined you should set the value first.  In either case return the
+current value of the property.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>func</strong> Function<br>
+            The computed property function.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Ember.ComputedProperty: property descriptor instance
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_cacheFor" class="method ">
+  <h3 class="name"><code>cacheFor</code></h3>
+
+  <span class="args">
+    (obj, key)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/computed.js#L375">packages/ember-metal/lib/computed.js:375</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Returns the cached value for a property, if one exists.
+This can be useful for peeking at the value of a computed
+property that is generated lazily, without accidentally causing
+it to be created.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> Object<br>
+            the object whose property you want to check
+          </li>
+        
+          <li>
+            <strong>key</strong> String<br>
+            the name of the property whose cached value you want
+                    to return
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_computed_not" class="method ">
+  <h3 class="name"><code>computed.not</code></h3>
+
+  <span class="args">
+    (dependentKey)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/computed.js#L395">packages/ember-metal/lib/computed.js:395</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>dependentKey</strong> String<br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_computed_empty" class="method ">
+  <h3 class="name"><code>computed.empty</code></h3>
+
+  <span class="args">
+    (dependentKey)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/computed.js#L406">packages/ember-metal/lib/computed.js:406</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>dependentKey</strong> String<br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_computed_bool" class="method ">
+  <h3 class="name"><code>computed.bool</code></h3>
+
+  <span class="args">
+    (dependentKey)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/computed.js#L418">packages/ember-metal/lib/computed.js:418</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>dependentKey</strong> String<br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_K" class="method private">
+  <h3 class="name"><code>K</code></h3>
+
+
+  <span class="type">Object</span>
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/core.js#L159">packages/ember-metal/lib/core.js:159</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Empty function.  Useful for some operations.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Object: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_handleErrors" class="method private">
+  <h3 class="name"><code>handleErrors</code></h3>
+
+  <span class="args">
+    (func, context)
+  </span>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/core.js#L216">packages/ember-metal/lib/core.js:216</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>func</strong> Function<br>
+            
+          </li>
+        
+          <li>
+            <strong>context</strong> <br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_addListener" class="method ">
+  <h3 class="name"><code>addListener</code></h3>
+
+  <span class="args">
+    (obj, eventName, targetOrMethod, method)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/events.js#L95">packages/ember-metal/lib/events.js:95</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Add an event listener</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> <br>
+            
+          </li>
+        
+          <li>
+            <strong>eventName</strong> String<br>
+            
+          </li>
+        
+          <li>
+            <strong>targetOrMethod</strong> Object|Function<br>
+            A target object or a function
+          </li>
+        
+          <li>
+            <strong>method</strong> Function|String<br>
+            A function or the name of a function to be called on `target`
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_removeListener" class="method ">
+  <h3 class="name"><code>removeListener</code></h3>
+
+  <span class="args">
+    (obj, eventName, targetOrMethod, method)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/events.js#L125">packages/ember-metal/lib/events.js:125</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Remove an event listener</p>
+
+<p>Arguments should match those passed to {{#crossLink &quot;Ember/addListener&quot;}}{{/crossLink}}</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> <br>
+            
+          </li>
+        
+          <li>
+            <strong>eventName</strong> String<br>
+            
+          </li>
+        
+          <li>
+            <strong>targetOrMethod</strong> Object|Function<br>
+            A target object or a function
+          </li>
+        
+          <li>
+            <strong>method</strong> Function|String<br>
+            A function or the name of a function to be called on `target`
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_suspendListener" class="method private">
+  <h3 class="name"><code>suspendListener</code></h3>
+
+  <span class="args">
+    (obj, eventName, targetOrMethod, method, callback)
+  </span>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        Inherited from
+        <a href="/api/classes/Ember.html#method_suspendListener">Ember</a>
+        
+          but overwritten in
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/events.js#L193">packages/ember-metal/lib/events.js:193</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> <br>
+            
+          </li>
+        
+          <li>
+            <strong>eventName</strong> Array<br>
+            Array of event names
+          </li>
+        
+          <li>
+            <strong>targetOrMethod</strong> Object|Function<br>
+            A target object or a function
+          </li>
+        
+          <li>
+            <strong>method</strong> Function|String<br>
+            A function or the name of a function to be called on `target`
+          </li>
+        
+          <li>
+            <strong>callback</strong> Function<br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_watchedEvents" class="method private">
+  <h3 class="name"><code>watchedEvents</code></h3>
+
+  <span class="args">
+    (obj)
+  </span>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/events.js#L242">packages/ember-metal/lib/events.js:242</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> <br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_sendEvent" class="method ">
+  <h3 class="name"><code>sendEvent</code></h3>
+
+  <span class="args">
+    (obj, eventName, params)
+  </span>
+
+  <span class="type"></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/events.js#L264">packages/ember-metal/lib/events.js:264</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> <br>
+            
+          </li>
+        
+          <li>
+            <strong>eventName</strong> String<br>
+            
+          </li>
+        
+          <li>
+            <strong>params</strong> Array<br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      : true
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_deferEvent" class="method private">
+  <h3 class="name"><code>deferEvent</code></h3>
+
+  <span class="args">
+    (obj, eventName, params)
+  </span>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/events.js#L282">packages/ember-metal/lib/events.js:282</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> <br>
+            
+          </li>
+        
+          <li>
+            <strong>eventName</strong> String<br>
+            
+          </li>
+        
+          <li>
+            <strong>params</strong> Array<br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_hasListeners" class="method private">
+  <h3 class="name"><code>hasListeners</code></h3>
+
+  <span class="args">
+    (obj, eventName)
+  </span>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/events.js#L309">packages/ember-metal/lib/events.js:309</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> <br>
+            
+          </li>
+        
+          <li>
+            <strong>eventName</strong> String<br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_listenersFor" class="method private">
+  <h3 class="name"><code>listenersFor</code></h3>
+
+  <span class="args">
+    (obj, eventName)
+  </span>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/events.js#L328">packages/ember-metal/lib/events.js:328</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> <br>
+            
+          </li>
+        
+          <li>
+            <strong>eventName</strong> String<br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_mixin" class="method ">
+  <h3 class="name"><code>mixin</code></h3>
+
+  <span class="args">
+    (obj, mixins)
+  </span>
+
+  <span class="type"></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/mixin.js#L285">packages/ember-metal/lib/mixin.js:285</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> <br>
+            
+          </li>
+        
+          <li>
+            <strong>mixins</strong> <br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      : obj
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_identifyNamespaces" class="method private">
+  <h3 class="name"><code>identifyNamespaces</code></h3>
+
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/mixin.js#L507">packages/ember-metal/lib/mixin.js:507</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="method_required" class="method ">
+  <h3 class="name"><code>required</code></h3>
+
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/mixin.js#L578">packages/ember-metal/lib/mixin.js:578</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Denotes a required property for a mixin</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="method_alias" class="method ">
+  <h3 class="name"><code>alias</code></h3>
+
+  <span class="args">
+    (methodName)
+  </span>
+
+  <span class="type">Ember.Descriptor</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/mixin.js#L593">packages/ember-metal/lib/mixin.js:593</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Makes a property or method available via an additional name.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+</pre></td>
+  <td class="code"><pre>App.PaintSample = Ember.Object.extend({
+  <span class="key">color</span>: <span class="string"><span class="delimiter">'</span><span class="content">red</span><span class="delimiter">'</span></span>,
+  <span class="key">colour</span>: Ember.alias(<span class="string"><span class="delimiter">'</span><span class="content">color</span><span class="delimiter">'</span></span>),
+  <span class="function">name</span>: <span class="keyword">function</span>(){
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Zed</span><span class="delimiter">&quot;</span></span>;
+  },
+  <span class="key">moniker</span>: Ember.alias(<span class="string"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>)
+});
+<span class="keyword">var</span> paintSample = App.PaintSample.create()
+paintSample.get(<span class="string"><span class="delimiter">'</span><span class="content">colour</span><span class="delimiter">'</span></span>); <span class="comment">//=&gt; 'red'</span>
+paintSample.moniker(); <span class="comment">//=&gt; 'Zed'</span></pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>methodName</strong> String<br>
+            name of the method or property to alias
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Ember.Descriptor: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_observer" class="method ">
+  <h3 class="name"><code>observer</code></h3>
+
+  <span class="args">
+    (func, propertyNames)
+  </span>
+
+  <span class="type"></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/mixin.js#L621">packages/ember-metal/lib/mixin.js:621</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>func</strong> Function<br>
+            
+          </li>
+        
+          <li>
+            <strong>propertyNames</strong> String<br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      : func
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_immediateObserver" class="method ">
+  <h3 class="name"><code>immediateObserver</code></h3>
+
+  <span class="args">
+    (func, propertyNames)
+  </span>
+
+  <span class="type"></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/mixin.js#L636">packages/ember-metal/lib/mixin.js:636</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>func</strong> Function<br>
+            
+          </li>
+        
+          <li>
+            <strong>propertyNames</strong> String<br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      : func
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_beforeObserver" class="method ">
+  <h3 class="name"><code>beforeObserver</code></h3>
+
+  <span class="args">
+    (func, propertyNames)
+  </span>
+
+  <span class="type"></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/mixin.js#L652">packages/ember-metal/lib/mixin.js:652</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>func</strong> Function<br>
+            
+          </li>
+        
+          <li>
+            <strong>propertyNames</strong> String<br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      : func
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_create" class="method ">
+  <h3 class="name"><code>create</code></h3>
+
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/platform.js#L19">packages/ember-metal/lib/platform.js:19</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Identical to Object.create().  Implements if not available natively.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="method_defineProperty" class="method private">
+  <h3 class="name"><code>defineProperty</code></h3>
+
+  <span class="args">
+    (obj, keyName, desc, data)
+  </span>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/properties.js#L40">packages/ember-metal/lib/properties.js:40</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> Object<br>
+            the object to define this property on. This may be a prototype.
+          </li>
+        
+          <li>
+            <strong>keyName</strong> String<br>
+            the name of the property
+          </li>
+        
+          <li>
+            <strong>desc</strong> Ember.Descriptor<br>
+            an instance of Ember.Descriptor (typically a
+  computed property) or an ES5 descriptor.
+  You must provide this or `data` but not both.
+          </li>
+        
+          <li>
+            <strong>data</strong> Anything<br>
+            something other than a descriptor, that will
+  become the explicit value of this property.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_generateGuid" class="method private">
+  <h3 class="name"><code>generateGuid</code></h3>
+
+  <span class="args">
+    (obj, prefix)
+  </span>
+
+  <span class="type">String</span>
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/utils.js#L42">packages/ember-metal/lib/utils.js:42</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> Object<br>
+            Object the guid will be used for.  If passed in, the guid will
+  be saved on the object and reused whenever you pass the same object
+  again.
+
+  If no object is passed, just generate a new guid.
+          </li>
+        
+          <li>
+            <strong>prefix</strong> String<br>
+            Prefix to place in front of the guid.  Useful when you want to
+  separate the guid into separate namespaces.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      String: the guid
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_guidFor" class="method private">
+  <h3 class="name"><code>guidFor</code></h3>
+
+  <span class="args">
+    (obj)
+  </span>
+
+  <span class="type">String</span>
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/utils.js#L72">packages/ember-metal/lib/utils.js:72</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> Object<br>
+            any object, string, number, Element, or primitive
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      String: the unique guid for this instance.
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_meta" class="method private">
+  <h3 class="name"><code>meta</code></h3>
+
+  <span class="args">
+    (obj, writable)
+  </span>
+
+  <span class="type">Hash</span>
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/utils.js#L174">packages/ember-metal/lib/utils.js:174</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Retrieves the meta hash for an object.  If &#39;writable&#39; is true ensures the
+hash is writable for this object as well.</p>
+
+<p>The meta object contains information about computed property descriptors as
+well as any watched properties and other information.  You generally will
+not access this information directly but instead work with higher level
+methods that manipulate this hash indirectly.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> Object<br>
+            The object to retrieve meta for
+          </li>
+        
+          <li>
+            <strong>writable</strong> Boolean<br>
+            Pass false if you do not intend to modify
+  the meta hash, allowing the method to avoid making an unnecessary copy.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Hash: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_metaPath" class="method private">
+  <h3 class="name"><code>metaPath</code></h3>
+
+  <span class="args">
+    (obj, path, writable)
+  </span>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/utils.js#L238">packages/ember-metal/lib/utils.js:238</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> Object<br>
+            The object whose meta we are examining
+          </li>
+        
+          <li>
+            <strong>path</strong> Array<br>
+            An array of keys to walk down
+          </li>
+        
+          <li>
+            <strong>writable</strong> Boolean<br>
+            whether or not to create a new meta
+  (or meta property) if one does not already exist or if it's
+  shared with its constructor
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_wrap" class="method private">
+  <h3 class="name"><code>wrap</code></h3>
+
+  <span class="args">
+    (func, superFunc)
+  </span>
+
+  <span class="type">Function</span>
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/utils.js#L292">packages/ember-metal/lib/utils.js:292</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>func</strong> Function<br>
+            The function to call
+          </li>
+        
+          <li>
+            <strong>superFunc</strong> Function<br>
+            The super function.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Function: wrapped function.
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_isArray" class="method ">
+  <h3 class="name"><code>isArray</code></h3>
+
+  <span class="args">
+    (obj)
+  </span>
+
+  <span class="type">Boolean</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/utils.js#L321">packages/ember-metal/lib/utils.js:321</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Returns true if the passed object is an array or Array-like.</p>
+
+<p>Ember Array Protocol:</p>
+
+<ul>
+<li>the object has an objectAt property</li>
+<li>the object is a native Array</li>
+<li>the object is an Object, and has a length property</li>
+</ul>
+
+<p>Unlike Ember.typeOf this method returns true even if the passed object is
+not formally array but appears to be array-like (i.e. implements Ember.Array)</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>Ember.isArray(); <span class="comment">// false</span>
+Ember.isArray([]); <span class="comment">// true</span>
+Ember.isArray( Ember.ArrayProxy.create({ <span class="key">content</span>: [] }) ); <span class="comment">// true</span></pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> Object<br>
+            The object to test
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Boolean: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_makeArray" class="method ">
+  <h3 class="name"><code>makeArray</code></h3>
+
+  <span class="args">
+    (obj)
+  </span>
+
+  <span class="type">Array</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/utils.js#L350">packages/ember-metal/lib/utils.js:350</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Forces the passed object to be part of an array.  If the object is already
+an array or array-like, returns the object.  Otherwise adds the object to
+an array.  If obj is null or undefined, returns an empty array.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>Ember.makeArray();          =&gt; []
+Ember.makeArray(<span class="predefined-constant">null</span>);      =&gt; []
+Ember.makeArray(<span class="predefined-constant">undefined</span>); =&gt; []
+Ember.makeArray(<span class="string"><span class="delimiter">'</span><span class="content">lindsay</span><span class="delimiter">'</span></span>); =&gt; [<span class="string"><span class="delimiter">'</span><span class="content">lindsay</span><span class="delimiter">'</span></span>]
+Ember.makeArray([<span class="integer">1</span>,<span class="integer">2</span>,<span class="integer">42</span>]);  =&gt; [<span class="integer">1</span>,<span class="integer">2</span>,<span class="integer">42</span>]
+<span class="keyword">var</span> controller = Ember.ArrayProxy.create({ <span class="key">content</span>: [] });
+Ember.makeArray(controller) === controller;   =&gt; <span class="predefined-constant">true</span></pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> Object<br>
+            the object
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Array: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_canInvoke" class="method ">
+  <h3 class="name"><code>canInvoke</code></h3>
+
+  <span class="args">
+    (obj, methodName)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/utils.js#L378">packages/ember-metal/lib/utils.js:378</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Checks to see if the <code>methodName</code> exists on the <code>obj</code>.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> Object<br>
+            The object to check for the method
+          </li>
+        
+          <li>
+            <strong>methodName</strong> String<br>
+            The method name to check for
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_tryInvoke" class="method ">
+  <h3 class="name"><code>tryInvoke</code></h3>
+
+  <span class="args">
+    (obj, methodName, args)
+  </span>
+
+  <span class="type">Anything</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/utils.js#L388">packages/ember-metal/lib/utils.js:388</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Checks to see if the <code>methodName</code> exists on the <code>obj</code>,
+and if it does, invokes it with the arguments passed.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> Object<br>
+            The object to check for the method
+          </li>
+        
+          <li>
+            <strong>methodName</strong> String<br>
+            The method name to check for
+          </li>
+        
+          <li>
+            <strong>args</strong> Array<br>
+            The arguments to pass to the method
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Anything: the return value of the invoked method or undefined if it cannot be invoked
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_watch" class="method private">
+  <h3 class="name"><code>watch</code></h3>
+
+  <span class="args">
+    (obj, keyName)
+  </span>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/watching.js#L403">packages/ember-metal/lib/watching.js:403</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> <br>
+            
+          </li>
+        
+          <li>
+            <strong>keyName</strong> String<br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_rewatch" class="method private">
+  <h3 class="name"><code>rewatch</code></h3>
+
+  <span class="args">
+    (obj)
+  </span>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/watching.js#L502">packages/ember-metal/lib/watching.js:502</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> <br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_propertyWillChange" class="method ">
+  <h3 class="name"><code>propertyWillChange</code></h3>
+
+  <span class="args">
+    (obj, keyName)
+  </span>
+
+  <span class="type">Void</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/watching.js#L543">packages/ember-metal/lib/watching.js:543</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>This function is called just before an object property is about to change.
+It will notify any before observers and prepare caches among other things.</p>
+
+<p>Normally you will not need to call this method directly but if for some
+reason you can&#39;t directly watch a property you can invoke this method
+manually along with <code>Ember.propertyDidChange()</code> which you should call just
+after the property value changes.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> Object<br>
+            The object with the property that will change
+          </li>
+        
+          <li>
+            <strong>keyName</strong> String<br>
+            The property key (or path) that will change.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Void: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_propertyDidChange" class="method ">
+  <h3 class="name"><code>propertyDidChange</code></h3>
+
+  <span class="args">
+    (obj, keyName)
+  </span>
+
+  <span class="type">Void</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/watching.js#L574">packages/ember-metal/lib/watching.js:574</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>This function is called just after an object property has changed.
+It will notify any observers and clear caches among other things.</p>
+
+<p>Normally you will not need to call this method directly but if for some
+reason you can&#39;t directly watch a property you can invoke this method
+manually along with <code>Ember.propertyWilLChange()</code> which you should call just
+before the property value changes.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> Object<br>
+            The object with the property that will change
+          </li>
+        
+          <li>
+            <strong>keyName</strong> String<br>
+            The property key (or path) that will change.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Void: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_destroy" class="method ">
+  <h3 class="name"><code>destroy</code></h3>
+
+  <span class="args">
+    (obj)
+  </span>
+
+  <span class="type">Void</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/watching.js#L610">packages/ember-metal/lib/watching.js:610</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Tears down the meta on an object so that it can be garbage collected.
+Multiple calls will have no effect.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> Object<br>
+            the object to destroy
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Void: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_onLoad" class="method ">
+  <h3 class="name"><code>onLoad</code></h3>
+
+  <span class="args">
+    (name, callback)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/system/lazy_load.js#L9">packages/ember-runtime/lib/system/lazy_load.js:9</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>name</strong> String<br>
+            name of hook
+          </li>
+        
+          <li>
+            <strong>callback</strong> Function<br>
+            callback to be called
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_runLoadHooks" class="method ">
+  <h3 class="name"><code>runLoadHooks</code></h3>
+
+  <span class="args">
+    (name, object)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/system/lazy_load.js#L26">packages/ember-runtime/lib/system/lazy_load.js:26</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>name</strong> String<br>
+            name of hook
+          </li>
+        
+          <li>
+            <strong>object</strong> Object<br>
+            object to pass to callbacks
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_A" class="method ">
+  <h3 class="name"><code>A</code></h3>
+
+
+  <span class="type">Ember.NativeArray</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/system/native_array.js#L122">packages/ember-runtime/lib/system/native_array.js:122</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Creates an Ember.NativeArray from an Array like object.
+Does not modify the original object.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Ember.NativeArray: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_typeOf" class="method ">
+  <h3 class="name"><code>typeOf</code></h3>
+
+  <span class="args">
+    (item)
+  </span>
+
+  <span class="type">String</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/core.js#L24">packages/ember-runtime/lib/core.js:24</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Returns a consistent type for the passed item.</p>
+
+<p>Use this instead of the built-in <code>typeof</code> to get the type of an item.
+It will return the same result across all browsers and includes a bit
+more detail.  Here is what will be returned:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+</pre></td>
+  <td class="code"><pre>| Return Value  | Meaning                                              |
+|---------------|------------------------------------------------------|
+| <span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>      | String primitive                                     |
+| <span class="string"><span class="delimiter">'</span><span class="content">number</span><span class="delimiter">'</span></span>      | Number primitive                                     |
+| <span class="string"><span class="delimiter">'</span><span class="content">boolean</span><span class="delimiter">'</span></span>     | Boolean primitive                                    |
+| <span class="string"><span class="delimiter">'</span><span class="content">null</span><span class="delimiter">'</span></span>        | Null value                                           |
+| <span class="string"><span class="delimiter">'</span><span class="content">undefined</span><span class="delimiter">'</span></span>   | Undefined value                                      |
+| <span class="string"><span class="delimiter">'</span><span class="content">function</span><span class="delimiter">'</span></span>    | A <span class="keyword">function</span>                                           |
+| <span class="string"><span class="delimiter">'</span><span class="content">array</span><span class="delimiter">'</span></span>       | An instance of Array                                 |
+| <span class="string"><span class="delimiter">'</span><span class="content">class</span><span class="delimiter">'</span></span>       | A Ember <span class="reserved">class</span> (created using Ember.Object.extend())  |
+| <span class="string"><span class="delimiter">'</span><span class="content">instance</span><span class="delimiter">'</span></span>    | A Ember object instance                              |
+| <span class="string"><span class="delimiter">'</span><span class="content">error</span><span class="delimiter">'</span></span>       | An instance of the Error object                      |
+| <span class="string"><span class="delimiter">'</span><span class="content">object</span><span class="delimiter">'</span></span>      | A JavaScript object not inheriting from Ember.Object |</pre></td>
+</tr></table>
+</div>
+<p>Examples:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+</pre></td>
+  <td class="code"><pre>Ember.typeOf();                      =&gt; <span class="string"><span class="delimiter">'</span><span class="content">undefined</span><span class="delimiter">'</span></span>
+Ember.typeOf(<span class="predefined-constant">null</span>);                  =&gt; <span class="string"><span class="delimiter">'</span><span class="content">null</span><span class="delimiter">'</span></span>
+Ember.typeOf(<span class="predefined-constant">undefined</span>);             =&gt; <span class="string"><span class="delimiter">'</span><span class="content">undefined</span><span class="delimiter">'</span></span>
+Ember.typeOf(<span class="string"><span class="delimiter">'</span><span class="content">michael</span><span class="delimiter">'</span></span>);             =&gt; <span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>
+Ember.typeOf(<span class="integer">101</span>);                   =&gt; <span class="string"><span class="delimiter">'</span><span class="content">number</span><span class="delimiter">'</span></span>
+Ember.typeOf(<span class="predefined-constant">true</span>);                  =&gt; <span class="string"><span class="delimiter">'</span><span class="content">boolean</span><span class="delimiter">'</span></span>
+Ember.typeOf(Ember.makeArray);       =&gt; <span class="string"><span class="delimiter">'</span><span class="content">function</span><span class="delimiter">'</span></span>
+Ember.typeOf([<span class="integer">1</span>,<span class="integer">2</span>,<span class="integer">90</span>]);              =&gt; <span class="string"><span class="delimiter">'</span><span class="content">array</span><span class="delimiter">'</span></span>
+Ember.typeOf(Ember.Object.extend()); =&gt; <span class="string"><span class="delimiter">'</span><span class="content">class</span><span class="delimiter">'</span></span>
+Ember.typeOf(Ember.Object.create()); =&gt; <span class="string"><span class="delimiter">'</span><span class="content">instance</span><span class="delimiter">'</span></span>
+Ember.typeOf(<span class="keyword">new</span> Error(<span class="string"><span class="delimiter">'</span><span class="content">teamocil</span><span class="delimiter">'</span></span>)); =&gt; <span class="string"><span class="delimiter">'</span><span class="content">error</span><span class="delimiter">'</span></span>
+<span class="comment">// &quot;normal&quot; JavaScript object</span>
+Ember.typeOf({<span class="key">a</span>: <span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span>});              =&gt; <span class="string"><span class="delimiter">'</span><span class="content">object</span><span class="delimiter">'</span></span></pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>item</strong> Object<br>
+            the item to check
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      String: the type
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_none" class="method ">
+  <h3 class="name"><code>none</code></h3>
+
+  <span class="args">
+    (obj)
+  </span>
+
+  <span class="type">Boolean</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/core.js#L83">packages/ember-runtime/lib/core.js:83</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Returns true if the passed value is null or undefined.  This avoids errors
+from JSLint complaining about use of ==, which can be technically
+confusing.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre>Ember.none();             =&gt; <span class="predefined-constant">true</span>
+Ember.none(<span class="predefined-constant">null</span>);         =&gt; <span class="predefined-constant">true</span>
+Ember.none(<span class="predefined-constant">undefined</span>);    =&gt; <span class="predefined-constant">true</span>
+Ember.none(<span class="string"><span class="delimiter">'</span><span class="delimiter">'</span></span>);           =&gt; <span class="predefined-constant">false</span>
+Ember.none([]);           =&gt; <span class="predefined-constant">false</span>
+Ember.none(<span class="keyword">function</span>(){}); =&gt; <span class="predefined-constant">false</span></pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> Object<br>
+            Value to test
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Boolean: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_empty" class="method ">
+  <h3 class="name"><code>empty</code></h3>
+
+  <span class="args">
+    (obj)
+  </span>
+
+  <span class="type">Boolean</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/core.js#L104">packages/ember-runtime/lib/core.js:104</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Verifies that a value is null or an empty string | array | function.</p>
+
+<p>Constrains the rules on <code>Ember.none</code> by returning false for empty
+string and empty arrays.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>Ember.empty();               =&gt; <span class="predefined-constant">true</span>
+Ember.empty(<span class="predefined-constant">null</span>);           =&gt; <span class="predefined-constant">true</span>
+Ember.empty(<span class="predefined-constant">undefined</span>);      =&gt; <span class="predefined-constant">true</span>
+Ember.empty(<span class="string"><span class="delimiter">'</span><span class="delimiter">'</span></span>);             =&gt; <span class="predefined-constant">true</span>
+Ember.empty([]);             =&gt; <span class="predefined-constant">true</span>
+Ember.empty(<span class="string"><span class="delimiter">'</span><span class="content">tobias fünke</span><span class="delimiter">'</span></span>); =&gt; <span class="predefined-constant">false</span>
+Ember.empty([<span class="integer">0</span>,<span class="integer">1</span>,<span class="integer">2</span>]);        =&gt; <span class="predefined-constant">false</span></pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> Object<br>
+            Value to test
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Boolean: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_compare" class="method ">
+  <h3 class="name"><code>compare</code></h3>
+
+  <span class="args">
+    (v, w)
+  </span>
+
+  <span class="type">Number</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/core.js#L127">packages/ember-runtime/lib/core.js:127</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>This will compare two javascript values of possibly different types.
+It will tell you which one is greater than the other by returning:</p>
+
+<ul>
+<li>-1 if the first is smaller than the second,</li>
+<li>0 if both are equal,</li>
+<li>1 if the first is greater than the second.</li>
+</ul>
+
+<p>The order is calculated based on Ember.ORDER_DEFINITION, if types are different.
+In case they have the same type an appropriate comparison for this type is made.</p>
+
+<p>Ember.compare(&#39;hello&#39;, &#39;hello&#39;);  =&gt; 0
+   Ember.compare(&#39;abc&#39;, &#39;dfg&#39;);      =&gt; -1
+   Ember.compare(2, 1);              =&gt; 1</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>v</strong> Object<br>
+            First value to compare
+          </li>
+        
+          <li>
+            <strong>w</strong> Object<br>
+            Second value to compare
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Number: -1 if v < w, 0 if v = w and 1 if v > w.
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_copy" class="method ">
+  <h3 class="name"><code>copy</code></h3>
+
+  <span class="args">
+    (object, deep)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/core.js#L274">packages/ember-runtime/lib/core.js:274</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Creates a clone of the passed object. This function can take just about
+any type of object and create a clone of it, including primitive values
+(which are not actually cloned because they are immutable).</p>
+
+<p>If the passed object implements the clone() method, then this function
+will simply call that method and return the result.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>object</strong> Object<br>
+            The object to clone
+          </li>
+        
+          <li>
+            <strong>deep</strong> Boolean<br>
+            If true, a deep copy of the object is made
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Object: The cloned object
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_inspect" class="method ">
+  <h3 class="name"><code>inspect</code></h3>
+
+  <span class="args">
+    (obj)
+  </span>
+
+  <span class="type">String</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/core.js#L295">packages/ember-runtime/lib/core.js:295</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Convenience method to inspect an object. This method will attempt to
+convert the object into a useful string description.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> Object<br>
+            The object you want to inspect.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      String: A description of the object
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_isEqual" class="method ">
+  <h3 class="name"><code>isEqual</code></h3>
+
+  <span class="args">
+    (a, b)
+  </span>
+
+  <span class="type">Boolean</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/core.js#L317">packages/ember-runtime/lib/core.js:317</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Compares two objects, returning true if they are logically equal.  This is
+a deeper comparison than a simple triple equal. For sets it will compare the
+internal objects.  For any other object that implements <code>isEqual()</code> it will 
+respect that method.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>Ember.isEqual(<span class="string"><span class="delimiter">'</span><span class="content">hello</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">hello</span><span class="delimiter">'</span></span>);  =&gt; <span class="predefined-constant">true</span>
+Ember.isEqual(<span class="integer">1</span>, <span class="integer">2</span>);              =&gt; <span class="predefined-constant">false</span>
+Ember.isEqual([<span class="integer">4</span>,<span class="integer">2</span>], [<span class="integer">4</span>,<span class="integer">2</span>]);      =&gt; <span class="predefined-constant">false</span></pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>a</strong> Object<br>
+            first object to compare
+          </li>
+        
+          <li>
+            <strong>b</strong> Object<br>
+            second object to compare
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Boolean: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_keys" class="method ">
+  <h3 class="name"><code>keys</code></h3>
+
+  <span class="args">
+    (obj)
+  </span>
+
+  <span class="type">Array</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/core.js#L353">packages/ember-runtime/lib/core.js:353</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Returns all of the keys defined on an object or hash. This is useful
+when inspecting objects for debugging.  On browsers that support it, this
+uses the native Object.keys implementation.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> Object<br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Array: Array containing keys of obj
+    </div>
+  
+
+</div>
+
+    
+      <div id="method__" class="method ">
+  <h3 class="name"><code>$</code></h3>
+
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/core.js#L8">packages/ember-views/lib/core.js:8</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Alias for jQuery</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+  </div>
+  <div class="pane" id="properties">
+    
+      <div id="property_LOG_BINDINGS" class="property ">
+  <h3 class="name"><code>LOG_BINDINGS</code></h3>
+
+
+
+  <span class="type">Boolean</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/binding.js#L16">packages/ember-metal/lib/binding.js:16</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Debug parameter you can turn on. This will log all bindings that fire to
+the console. This should be disabled in production code. Note that you
+can also enable this from the console or temporarily.</p>
+
+    </div>
+  
+
+  
+    <p><strong>Default:</strong> false</p>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_VERSION" class="property ">
+  <h3 class="name"><code>VERSION</code></h3>
+
+
+
+  <span class="type">String</span>
+
+
+
+  <span class="flag final">constant</span>
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/core.js#L47">packages/ember-metal/lib/core.js:47</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+    <p><strong>Default:</strong> '1.0.pre'</p>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_ENV" class="property ">
+  <h3 class="name"><code>ENV</code></h3>
+
+
+
+  <span class="type">Hash</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/core.js#L55">packages/ember-metal/lib/core.js:55</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Standard environmental variables.  You can define these in a global <code>ENV</code>
+variable before loading Ember to control various configuration
+settings.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_EXTEND_PROTOTYPES" class="property ">
+  <h3 class="name"><code>EXTEND_PROTOTYPES</code></h3>
+
+
+
+  <span class="type">Boolean</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/core.js#L71">packages/ember-metal/lib/core.js:71</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Determines whether Ember should enhances some built-in object
+prototypes to provide a more friendly API.  If enabled, a few methods
+will be added to Function, String, and Array.  Object.prototype will not be
+enhanced, which is the one that causes most troubles for people.</p>
+
+<p>In general we recommend leaving this option set to true since it rarely
+conflicts with other code.  If you need to turn it off however, you can
+define an ENV.EXTEND_PROTOTYPES config to disable it.</p>
+
+    </div>
+  
+
+  
+    <p><strong>Default:</strong> true</p>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_LOG_STACKTRACE_ON_DEPRECATION" class="property ">
+  <h3 class="name"><code>LOG_STACKTRACE_ON_DEPRECATION</code></h3>
+
+
+
+  <span class="type">Boolean</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/core.js#L87">packages/ember-metal/lib/core.js:87</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Determines whether Ember logs a full stack trace during deprecation warnings</p>
+
+    </div>
+  
+
+  
+    <p><strong>Default:</strong> true</p>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_SHIM_ES5" class="property ">
+  <h3 class="name"><code>SHIM_ES5</code></h3>
+
+
+
+  <span class="type">Boolean</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/core.js#L96">packages/ember-metal/lib/core.js:96</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Determines whether Ember should add ECMAScript 5 shims to older browsers.</p>
+
+    </div>
+  
+
+  
+    <p><strong>Default:</strong> Ember.EXTEND_PROTOTYPES</p>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_CP_DEFAULT_CACHEABLE" class="property ">
+  <h3 class="name"><code>CP_DEFAULT_CACHEABLE</code></h3>
+
+
+
+  <span class="type">Boolean</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/core.js#L106">packages/ember-metal/lib/core.js:106</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Determines whether computed properties are cacheable by default.
+This option will be removed for the 1.1 release.</p>
+
+<p>When caching is enabled by default, you can use <code>volatile()</code> to disable
+caching on individual computed properties.</p>
+
+    </div>
+  
+
+  
+    <p><strong>Default:</strong> true</p>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_VIEW_PRESERVES_CONTEXT" class="property ">
+  <h3 class="name"><code>VIEW_PRESERVES_CONTEXT</code></h3>
+
+
+
+  <span class="type">Boolean</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/core.js#L119">packages/ember-metal/lib/core.js:119</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Determines whether views render their templates using themselves
+as the context, or whether it is inherited from the parent. This option
+will be removed in the 1.1 release.</p>
+
+<p>If you need to update your application to use the new context rules, simply
+prefix property access with <code>view.</code>:</p>
+
+<p>Before:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre>{{#each App.photosController}}
+  Photo Title: {{title}}
+  {{#view App.InfoView contentBinding=&quot;this&quot;}}
+    {{content.date}}
+    {{content.cameraType}}
+    {{otherViewProperty}}
+  {{/view}}
+{{/each}}</pre></td>
+</tr></table>
+</div>
+<p>After:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre>{{#each App.photosController}}
+  Photo Title: {{title}}
+  {{#view App.InfoView}}
+    {{date}}
+    {{cameraType}}
+    {{view.otherViewProperty}}
+  {{/view}}
+{{/each}}</pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+    <p><strong>Default:</strong> true</p>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_GUID_KEY" class="property private">
+  <h3 class="name"><code>GUID_KEY</code></h3>
+
+
+
+  <span class="type">String</span>
+
+
+  <span class="flag private">private</span>
+
+  <span class="flag final">constant</span>
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/utils.js#L18">packages/ember-metal/lib/utils.js:18</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_META_KEY" class="property private">
+  <h3 class="name"><code>META_KEY</code></h3>
+
+
+
+  <span class="type">String</span>
+
+
+  <span class="flag private">private</span>
+
+  <span class="flag final">constant</span>
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/utils.js#L134">packages/ember-metal/lib/utils.js:134</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>The key used to store meta information on object for property observing.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_STRINGS" class="property ">
+  <h3 class="name"><code>STRINGS</code></h3>
+
+
+
+  <span class="type">Hash</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/system/string.js#L13">packages/ember-runtime/lib/system/string.js:13</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Defines the hash of localized strings for the current language.  Used by
+the <code>Ember.String.loc()</code> helper.  To localize, add string values to this
+hash.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_TEMPLATES" class="property ">
+  <h3 class="name"><code>TEMPLATES</code></h3>
+
+
+
+  <span class="type">Hash</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-views/lib/views/view.js#L32">packages/ember-views/lib/views/view.js:32</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Global hash of shared templates. This will automatically be populated
+by the build tools so that you can store your Handlebars templates in
+separate files that get loaded into JavaScript at buildtime.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+  </div>
+  <div class="pane" id="events">
+    
+      <div id="event_onerror" class="event ">
+  <h3 class="name"><code>onerror</code></h3>
+
+  <span class="args">
+    (error)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/core.js#L206">packages/ember-metal/lib/core.js:206</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>A function may be assigned to <code>Ember.onerror</code> to be called when Ember internals encounter an error.
+This is useful for specialized error handling and reporting code.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>error</strong> Exception<br>
+            the error object
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+  </div>
+</div>
+
+
+
+      </div>
+    </div>
+
+    <div id="footer">
+      <div class="info">
+        <div class="links"><a href="http://twitter.com/emberjs">Twitter</a> &bull; <a href="https://github.com/emberjs/ember.js">GitHub</a></div>
+        <div class="copyright">Copyright 2012 <a href="http://tilde.io">Tilde Inc.</a></div>
+        <div class="credit">Design by <a href="http://www.heropixel.com">HeroPixel</a></div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-27675533-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </body>
+</html>

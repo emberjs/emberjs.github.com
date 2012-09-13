@@ -1,0 +1,4636 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ember.js - Ember.Router</title>
+    <link rel="shortcut icon" href="/images/favicon.png" />
+    <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
+
+    <script type="text/javascript">
+      $(function() {
+        $('#logo').on('click', function(evt) {
+          if (evt.shiftKey) {
+            $('#content-wrapper').toggleClass('grid');
+            return false;
+          }
+        });
+
+        var backToTop = $('#back-to-top');
+        var doc = $(document);
+        var offset = backToTop.offset();
+        var marginTop = 90;
+        var showing = false;
+
+        if (backToTop.length) {
+          backToTop.on('click', function(evt) {
+            $('html,body').animate({scrollTop: 0}, 200);
+            return false;
+          });
+
+          doc.on('scroll', function() {
+            if (!showing && doc.scrollTop() > offset.top+200) {
+              showing = true;
+              backToTop.css({
+                opacity: 1,
+                position: 'fixed',
+                top: 20,
+                left: offset.left
+              });
+            } else if (showing && doc.scrollTop() <= offset.top+200) {
+              showing = false;
+              backToTop.css({
+                opacity: 0
+              });
+            }
+          });
+        }
+
+        $('.bx-wrapper, .bx-window').width(940);
+      });
+    </script>
+
+    
+    <script>
+      $(function() {
+        // Type toggling
+        function toggleType() {
+          var type = this.getAttribute('data-type');
+          $('.'+type).toggle(this.checked);
+        }
+
+        $('#api-options input').each(toggleType);
+        $('#api-options input').on('change', toggleType);
+
+        // Tabs
+        $('.tabs .pane').hide();
+        $('.tabs .pane:first').show();
+        $('.tabs ul li:first').addClass('active');
+
+        function showPane($tabs, href) {
+          var $ul = $tabs.find('> ul'),
+              $tab = $ul.find('a[href='+href+']'),
+              $pane = $(href);
+
+          $ul.find('li').removeClass('active');
+          $tab.parent().addClass('active');
+          $tabs.find('.pane').hide();
+
+          $pane.show();
+        }
+
+        $('.tabs > ul li a').click(function(){
+          var $el = $(this),
+              $tabs = $el.parents('.tabs'),
+              href = $el.attr('href');
+
+          showPane($tabs, href);
+
+          return false;
+        });
+
+        // Auto tab
+        function checkHash() {
+          var hash = window.location.hash;
+          if (hash) {
+            var $el = $(hash);
+            if ($el.length > 0 && !$el.is(':visible')) {
+              showPane($el.parents('.tabs'), '#'+$el.parents('.pane').attr('id'));
+              $("html, body").scrollTop($el.offset().top);
+            }
+          }
+        }
+
+        $(window).on('hashchange', checkHash);
+        checkHash();
+      });
+    </script>
+  
+  </head>
+
+  <body class="api api_classes api_classes_Ember">
+    <div id="header">
+      <div id="wrapper">
+        <a id="logo" href="/">&nbsp;</a>
+        <ul id="nav">
+          <li><a href="/about">about</a></li>
+          <li><a href="/documentation">docs</a></li>
+          <li><a href="/guides">guides</a></li>
+          <li class="active"><a href="/api">api</a></li>
+          <li><a href="/community">community</a></li>
+          <li><a href="/blog">blog</a></li>
+        </ul>
+        <div id="github">
+          <a href="https://github.com/emberjs/ember.js"><img src="/images/fork-us.png">Fork Us!</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="content-wrapper">
+      
+      
+        <div id="sidebar">
+          
+    <h3>SHA: <a href="https://github.com/emberjs/ember.js/commit/83542a6">83542a6</a></h3>
+
+    <p><strong>Note:</strong> For 1.0.pre, see the <a href="http://docs.emberjs.com">old docs site</a>.</p>
+
+    <h2>Modules</h2>
+    <ul>
+    
+      <li><a href="/api/modules/ember.html">ember</a></li>
+    
+      <li><a href="/api/modules/ember-application.html">ember-application</a></li>
+    
+      <li><a href="/api/modules/ember-debug.html">ember-debug</a></li>
+    
+      <li><a href="/api/modules/ember-handlebars.html">ember-handlebars</a></li>
+    
+      <li><a href="/api/modules/ember-metal.html">ember-metal</a></li>
+    
+      <li><a href="/api/modules/ember-routing.html">ember-routing</a></li>
+    
+      <li><a href="/api/modules/ember-runtime.html">ember-runtime</a></li>
+    
+      <li><a href="/api/modules/ember-states.html">ember-states</a></li>
+    
+      <li><a href="/api/modules/ember-views.html">ember-views</a></li>
+    
+    </ul>
+
+    <h2>Namespaces</h2>
+    <ul>
+    
+      <li class=""><a href="/api/classes/Ember.html">Ember</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Location.html">Ember.Location</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.String.html">Ember.String</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.platform.html">Ember.platform</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.run.html">Ember.run</a></li>
+    
+    </ul>
+
+    <h2>Classes</h2>
+    <ul>
+    
+      <li class=""><a href="/api/classes/Ember.Application.html">Ember.Application</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Array.html">Ember.Array</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ArrayController.html">Ember.ArrayController</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ArrayProxy.html">Ember.ArrayProxy</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Binding.html">Ember.Binding</a></li>
+    
+      <li class="deprecated"><a href="/api/classes/Ember.Button.html">Ember.Button</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Checkbox.html">Ember.Checkbox</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.CollectionView.html">Ember.CollectionView</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Comparable.html">Ember.Comparable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ComputedProperty.html">Ember.ComputedProperty</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ContainerView.html">Ember.ContainerView</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Controller.html">Ember.Controller</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ControllerMixin.html">Ember.ControllerMixin</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Copyable.html">Ember.Copyable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.CoreObject.html">Ember.CoreObject</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.Descriptor.html">Ember.Descriptor</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.EachProxy.html">Ember.EachProxy</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Enumerable.html">Ember.Enumerable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Error.html">Ember.Error</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.EventDispatcher.html">Ember.EventDispatcher</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Evented.html">Ember.Evented</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Freezable.html">Ember.Freezable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Handlebars.html">Ember.Handlebars</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.Handlebars.Compiler.html">Ember.Handlebars.Compiler</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.Handlebars.JavaScriptCompiler.html">Ember.Handlebars.JavaScriptCompiler</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Handlebars.helpers.html">Ember.Handlebars.helpers</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.HashLocation.html">Ember.HashLocation</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.HistoryLocation.html">Ember.HistoryLocation</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Logger.html">Ember.Logger</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.Map.html">Ember.Map</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.MapWithDefault.html">Ember.MapWithDefault</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Mixin.html">Ember.Mixin</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.MutableArray.html">Ember.MutableArray</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.MutableEnumerable.html">Ember.MutableEnumerable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Namespace.html">Ember.Namespace</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.NativeArray.html">Ember.NativeArray</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.NoneLocation.html">Ember.NoneLocation</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Object.html">Ember.Object</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ObjectController.html">Ember.ObjectController</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ObjectProxy.html">Ember.ObjectProxy</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Observable.html">Ember.Observable</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.OrderedSet.html">Ember.OrderedSet</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.RenderBuffer.html">Ember.RenderBuffer</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Routable.html">Ember.Routable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Route.html">Ember.Route</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Router.html">Ember.Router</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.RunLoop.html">Ember.RunLoop</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Select.html">Ember.Select</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Set.html">Ember.Set</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.SortableMixin.html">Ember.SortableMixin</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.State.html">Ember.State</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.StateManager.html">Ember.StateManager</a></li>
+    
+      <li class="deprecated"><a href="/api/classes/Ember.TabContainerView.html">Ember.TabContainerView</a></li>
+    
+      <li class="deprecated"><a href="/api/classes/Ember.TabPaneView.html">Ember.TabPaneView</a></li>
+    
+      <li class="deprecated"><a href="/api/classes/Ember.TabView.html">Ember.TabView</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.TargetActionSupport.html">Ember.TargetActionSupport</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.TextArea.html">Ember.TextArea</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.TextField.html">Ember.TextField</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.TextSupport.html">Ember.TextSupport</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.View.html">Ember.View</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember._HandlebarsBoundView.html">Ember._HandlebarsBoundView</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember._Metamorph.html">Ember._Metamorph</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember._MetamorphView.html">Ember._MetamorphView</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember._RouteMatcher.html">Ember._RouteMatcher</a></li>
+    
+      <li class=""><a href="/api/classes/Function.html">Function</a></li>
+    
+      <li class=""><a href="/api/classes/String.html">String</a></li>
+    
+      <li class="private"><a href="/api/classes/Transition.html">Transition</a></li>
+    
+    </ul>
+  
+          <div id="back-to-top"><a href="#">&#11014; Back to Top</a></div>
+        </div>
+      
+      <div id="content" class="has-sidebar">
+          
+
+  
+
+  <div id="api-options">
+    Show:
+
+    <label>
+      <input type="checkbox" data-type="inherited" checked>
+      Inherited
+    </label>
+
+    <label>
+      <input type="checkbox" data-type="protected">
+      Protected
+    </label>
+
+    <label>
+      <input type="checkbox" data-type="private">
+      Private
+    </label>
+
+    <label>
+      <input type="checkbox" data-type="deprecated">
+      Deprecated
+    </label>
+  </div>
+
+  <h1>Ember.Router Class</h1>
+
+
+<div class="class-info">
+  
+    <p>Extends: <a href="/api/classes/Ember.StateManager.html">Ember.StateManager</a></p>
+  
+
+  
+
+  
+    <p>Defined in: <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-routing/lib/router.js#L21">packages/ember-routing/lib/router.js:21</a></p>
+  
+
+  
+    <p>Module: <a href="/api/modules/ember-routing.html">ember-routing</a></p>
+  
+</div>
+
+  <div class="description">
+    <p><code>Ember.Router</code> is the subclass of <code>Ember.StateManager</code> responsible for providing URL-based
+application state detection. The <code>Ember.Router</code> instance of an application detects the browser URL
+at application load time and attempts to match it to a specific application state. Additionally
+the router will update the URL to reflect an application&#39;s state changes over time.</p>
+
+<h2>Adding a Router Instance to Your Application</h2>
+
+<p>An instance of Ember.Router can be associated with an instance of Ember.Application in one of two ways:</p>
+
+<p>You can provide a subclass of Ember.Router as the <code>Router</code> property of your application. An instance
+of this Router class will be instantiated and route detection will be enabled when the application&#39;s
+<code>initialize</code> method is called. The Router instance will be available as the <code>router</code> property
+of the application:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App = Ember.Application.create({
+  <span class="key">Router</span>: Ember.Router.extend({ ... })
+});
+App.initialize();
+App.get(<span class="string"><span class="delimiter">'</span><span class="content">router</span><span class="delimiter">'</span></span>) <span class="comment">// an instance of App.Router</span></pre></td>
+</tr></table>
+</div>
+<p>If you want to define a Router instance elsewhere, you can pass the instance to the application&#39;s
+<code>initialize</code> method:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>App = Ember.Application.create();
+aRouter = Ember.Router.create({ ... });
+App.initialize(aRouter);
+App.get(<span class="string"><span class="delimiter">'</span><span class="content">router</span><span class="delimiter">'</span></span>) <span class="comment">// aRouter</span></pre></td>
+</tr></table>
+</div>
+<h2>Adding Routes to a Router</h2>
+
+<p>The <code>initialState</code> property of Ember.Router instances is named <code>root</code>. The state stored in this
+property must be a subclass of Ember.Route. The <code>root</code> route acts as the container for the
+set of routable states but is not routable itself. It should have states that are also subclasses
+of Ember.Route which each have a <code>route</code> property describing the URL pattern you would like to detect.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+</pre></td>
+  <td class="code"><pre>App = Ember.Application.create({
+  <span class="key">Router</span>: Ember.Router.extend({
+    <span class="key">root</span>: Ember.Route.extend({
+      <span class="key">index</span>: Ember.Route.extend({
+        <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>
+      }),
+      ... additional Ember.Routes ...
+    })
+  })
+});
+App.initialize();</pre></td>
+</tr></table>
+</div>
+<p>When an application loads, Ember will parse the URL and attempt to find an Ember.Route within
+the application&#39;s states that matches. (The example URL-matching below will use the default
+&#39;hash syntax&#39; provided by <code>Ember.HashLocation</code>.)</p>
+
+<p>In the following route structure:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+</pre></td>
+  <td class="code"><pre>App = Ember.Application.create({
+  <span class="key">Router</span>: Ember.Router.extend({
+    <span class="key">root</span>: Ember.Route.extend({
+      <span class="key">aRoute</span>: Ember.Route.extend({
+        <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>
+      }),
+      <span class="key">bRoute</span>: Ember.Route.extend({
+        <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/alphabeta</span><span class="delimiter">'</span></span>
+      })
+    })
+  })
+});
+App.initialize();</pre></td>
+</tr></table>
+</div>
+<p>Loading the page at the URL &#39;#/&#39; will detect the route property of &#39;root.aRoute&#39; (&#39;/&#39;) and
+transition the router first to the state named &#39;root&#39; and then to the substate &#39;aRoute&#39;.</p>
+
+<p>Respectively, loading the page at the URL &#39;#/alphabeta&#39; would detect the route property of
+&#39;root.bRoute&#39; (&#39;/alphabeta&#39;) and transition the router first to the state named &#39;root&#39; and
+then to the substate &#39;bRoute&#39;.</p>
+
+<h2>Adding Nested Routes to a Router</h2>
+
+<p>Routes can contain nested subroutes each with their own <code>route</code> property describing the nested
+portion of the URL they would like to detect and handle. Router, like all instances of StateManager,
+cannot call <code>transitonTo</code> with an intermediary state. To avoid transitioning the Router into an
+intermediary state when detecting URLs, a Route with nested routes must define both a base <code>route</code>
+property for itself and a child Route with a <code>route</code> property of <code>&#39;/&#39;</code> which will be transitioned
+to when the base route is detected in the URL:</p>
+
+<p>Given the following application code:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre></td>
+  <td class="code"><pre>App = Ember.Application.create({
+  <span class="key">Router</span>: Ember.Router.extend({
+    <span class="key">root</span>: Ember.Route.extend({
+      <span class="key">aRoute</span>: Ember.Route.extend({
+        <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/theBaseRouteForThisSet</span><span class="delimiter">'</span></span>,
+        <span class="key">indexSubRoute</span>: Ember.Route.extend({
+          <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>
+        }),
+        <span class="key">subRouteOne</span>: Ember.Route.extend({
+          <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/subroute1</span><span class="delimiter">'</span></span>
+        }),
+        <span class="key">subRouteTwo</span>: Ember.Route.extend({
+          <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/subRoute2</span><span class="delimiter">'</span></span>
+        })
+      })
+    })
+  })
+});
+App.initialize();</pre></td>
+</tr></table>
+</div>
+<p>When the application is loaded at &#39;/theBaseRouteForThisSet&#39; the Router will transition to the route
+at path &#39;root.aRoute&#39; and then transition to state &#39;indexSubRoute&#39;.</p>
+
+<p>When the application is loaded at &#39;/theBaseRouteForThisSet/subRoute1&#39; the Router will transition to
+the route at path &#39;root.aRoute&#39; and then transition to state &#39;subRouteOne&#39;.</p>
+
+<h2>Route Transition Events</h2>
+
+<p>Transitioning between Ember.Route instances (including the transition into the detected
+route when loading the application)  triggers the same transition events as state transitions for
+base <code>Ember.State</code>s. However, the default <code>setup</code> transition event is named <code>connectOutlets</code> on
+Ember.Router instances (see &#39;Changing View Hierarchy in Response To State Change&#39;).</p>
+
+<p>The following route structure when loaded with the URL &quot;#/&quot;</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+</pre></td>
+  <td class="code"><pre>App = Ember.Application.create({
+  <span class="key">Router</span>: Ember.Router.extend({
+    <span class="key">root</span>: Ember.Route.extend({
+      <span class="key">aRoute</span>: Ember.Route.extend({
+        <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>,
+        <span class="function">enter</span>: <span class="keyword">function</span>(router) {
+          console.log(<span class="string"><span class="delimiter">&quot;</span><span class="content">entering root.aRoute from</span><span class="delimiter">&quot;</span></span>, router.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>));
+        },
+        <span class="function">connectOutlets</span>: <span class="keyword">function</span>(router) {
+          console.log(<span class="string"><span class="delimiter">&quot;</span><span class="content">entered root.aRoute, fully transitioned to</span><span class="delimiter">&quot;</span></span>, router.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.path</span><span class="delimiter">'</span></span>));
+        }
+      })
+    })
+  })
+});
+App.initialize();</pre></td>
+</tr></table>
+</div>
+<p>Will result in console output of:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+</pre></td>
+  <td class="code"><pre><span class="string"><span class="delimiter">'</span><span class="content">entering root.aRoute from root</span><span class="delimiter">'</span></span>
+<span class="string"><span class="delimiter">'</span><span class="content">entered root.aRoute, fully transitioned to root.aRoute </span><span class="delimiter">'</span></span></pre></td>
+</tr></table>
+</div>
+<p>Ember.Route has two additional callbacks for handling URL serialization and deserialization. See
+&#39;Serializing/Deserializing URLs&#39;</p>
+
+<h2>Routes With Dynamic Segments</h2>
+
+<p>An Ember.Route&#39;s <code>route</code> property can reference dynamic sections of the URL by prefacing a URL segment
+with the &#39;:&#39; character.  The values of these dynamic segments will be passed as a hash to the
+<code>deserialize</code> method of the matching Route (see &#39;Serializing/Deserializing URLs&#39;).</p>
+
+<h2>Serializing/Deserializing URLs</h2>
+
+<p>Ember.Route has two callbacks for associating a particular object context with a URL: <code>serialize</code>
+for converting an object into a parameters hash to fill dynamic segments of a URL and <code>deserialize</code>
+for converting a hash of dynamic segments from the URL into the appropriate object.</p>
+
+<h3>Deserializing A URL&#39;s Dynamic Segments</h3>
+
+<p>When an application is first loaded or the URL is changed manually (e.g. through the browser&#39;s
+back button) the <code>deserialize</code> method of the URL&#39;s matching Ember.Route will be called with
+the application&#39;s router as its first argument and a hash of the URL&#39;s dynamic segments and values
+as its second argument.</p>
+
+<p>The following route structure when loaded with the URL &quot;#/fixed/thefirstvalue/anotherFixed/thesecondvalue&quot;:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+</pre></td>
+  <td class="code"><pre>App = Ember.Application.create({
+  <span class="key">Router</span>: Ember.Router.extend({
+    <span class="key">root</span>: Ember.Route.extend({
+      <span class="key">aRoute</span>: Ember.Route.extend({
+        <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/fixed/:dynamicSectionA/anotherFixed/:dynamicSectionB</span><span class="delimiter">'</span></span>,
+        <span class="function">deserialize</span>: <span class="keyword">function</span>(router, params) {}
+      })
+    })
+  })
+});
+App.initialize();</pre></td>
+</tr></table>
+</div>
+<p>Will call the &#39;deserialize&#39; method of the Route instance at the path &#39;root.aRoute&#39; with the
+following hash as its second argument:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key">dynamicSectionA</span>: <span class="string"><span class="delimiter">'</span><span class="content">thefirstvalue</span><span class="delimiter">'</span></span>,
+  <span class="key">dynamicSectionB</span>: <span class="string"><span class="delimiter">'</span><span class="content">thesecondvalue</span><span class="delimiter">'</span></span>
+}</pre></td>
+</tr></table>
+</div>
+<p>Within <code>deserialize</code> you should use this information to retrieve or create an appropriate context
+object for the given URL (e.g. by loading from a remote API or accessing the browser&#39;s
+<code>localStorage</code>). This object must be the <code>return</code> value of <code>deserialize</code> and will be
+passed to the Route&#39;s <code>connectOutlets</code> and <code>serialize</code> methods.</p>
+
+<p>When an application&#39;s state is changed from within the application itself, the context provided for
+the transition will be passed and <code>deserialize</code> is not called (see &#39;Transitions Between States&#39;).</p>
+
+<h3>Serializing An Object For URLs with Dynamic Segments</h3>
+
+<p>When transitioning into a Route whose <code>route</code> property contains dynamic segments the Route&#39;s
+<code>serialize</code> method is called with the Route&#39;s router as the first argument and the Route&#39;s
+context as the second argument.  The return value of <code>serialize</code> will be used to populate the
+dynamic segments and should be an object with keys that match the names of the dynamic sections.</p>
+
+<p>Given the following route structure:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+</pre></td>
+  <td class="code"><pre>App = Ember.Application.create({
+  <span class="key">Router</span>: Ember.Router.extend({
+    <span class="key">root</span>: Ember.Route.extend({
+      <span class="key">aRoute</span>: Ember.Route.extend({
+        <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>
+      }),
+      <span class="key">bRoute</span>: Ember.Route.extend({
+        <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/staticSection/:someDynamicSegment</span><span class="delimiter">'</span></span>,
+        <span class="function">serialize</span>: <span class="keyword">function</span>(router, context) {
+          <span class="keyword">return</span> {
+            <span class="key">someDynamicSegment</span>: context.get(<span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>)
+          }
+        }
+      })
+    })
+  })
+});
+App.initialize();</pre></td>
+</tr></table>
+</div>
+<p>Transitioning to &quot;root.bRoute&quot; with a context of <code>Object.create({name: &#39;Yehuda&#39;})</code> will call
+the Route&#39;s <code>serialize</code> method with the context as its second argument and update the URL to
+&#39;#/staticSection/Yehuda&#39;.</p>
+
+<h2>Transitions Between States</h2>
+
+<p>Once a routed application has initialized its state based on the entry URL, subsequent transitions to other
+states will update the URL if the entered Route has a <code>route</code> property. Given the following route structure
+loaded at the URL &#39;#/&#39;:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+</pre></td>
+  <td class="code"><pre>App = Ember.Application.create({
+  <span class="key">Router</span>: Ember.Router.extend({
+    <span class="key">root</span>: Ember.Route.extend({
+      <span class="key">aRoute</span>: Ember.Route.extend({
+        <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>,
+        <span class="key">moveElsewhere</span>: Ember.Route.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">bRoute</span><span class="delimiter">'</span></span>)
+      }),
+      <span class="key">bRoute</span>: Ember.Route.extend({
+        <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/someOtherLocation</span><span class="delimiter">'</span></span>
+      })
+    })
+  })
+});
+App.initialize();</pre></td>
+</tr></table>
+</div>
+<p>And application code:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+</pre></td>
+  <td class="code"><pre>App.get(<span class="string"><span class="delimiter">'</span><span class="content">router</span><span class="delimiter">'</span></span>).send(<span class="string"><span class="delimiter">'</span><span class="content">moveElsewhere</span><span class="delimiter">'</span></span>);</pre></td>
+</tr></table>
+</div>
+<p>Will transition the application&#39;s state to &#39;root.bRoute&#39; and trigger an update of the URL to
+&#39;#/someOtherLocation&#39;.</p>
+
+<p>For URL patterns with dynamic segments a context can be supplied as the second argument to <code>send</code>.
+The router will match dynamic segments names to keys on this object and fill in the URL with the
+supplied values. Given the following state structure loaded at the URL &#39;#/&#39;:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+</pre></td>
+  <td class="code"><pre>App = Ember.Application.create({
+  <span class="key">Router</span>: Ember.Router.extend({
+    <span class="key">root</span>: Ember.Route.extend({
+      <span class="key">aRoute</span>: Ember.Route.extend({
+        <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>,
+        <span class="key">moveElsewhere</span>: Ember.Route.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">bRoute</span><span class="delimiter">'</span></span>)
+      }),
+      <span class="key">bRoute</span>: Ember.Route.extend({
+        <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/a/route/:dynamicSection/:anotherDynamicSection</span><span class="delimiter">'</span></span>,
+        <span class="function">connectOutlets</span>: <span class="keyword">function</span>(router, context) {},
+      })
+    })
+  })
+});
+App.initialize();</pre></td>
+</tr></table>
+</div>
+<p>And application code:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>App.get(<span class="string"><span class="delimiter">'</span><span class="content">router</span><span class="delimiter">'</span></span>).send(<span class="string"><span class="delimiter">'</span><span class="content">moveElsewhere</span><span class="delimiter">'</span></span>, {
+  <span class="key">dynamicSection</span>: <span class="string"><span class="delimiter">'</span><span class="content">42</span><span class="delimiter">'</span></span>,
+  <span class="key">anotherDynamicSection</span>: <span class="string"><span class="delimiter">'</span><span class="content">Life</span><span class="delimiter">'</span></span>
+});</pre></td>
+</tr></table>
+</div>
+<p>Will transition the application&#39;s state to &#39;root.bRoute&#39; and trigger an update of the URL to
+&#39;#/a/route/42/Life&#39;.</p>
+
+<p>The context argument will also be passed as the second argument to the <code>serialize</code> method call.</p>
+
+<h2>Injection of Controller Singletons</h2>
+
+<p>During application initialization Ember will detect properties of the application ending in &#39;Controller&#39;,
+create singleton instances of each class, and assign them as properties on the router.  The property name
+will be the UpperCamel name converted to lowerCamel format. These controller classes should be subclasses
+of Ember.ObjectController, Ember.ArrayController, Ember.Controller, or a custom Ember.Object that includes the
+Ember.ControllerMixin mixin.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App = Ember.Application.create({
+  <span class="key">FooController</span>: Ember.Object.create(Ember.ControllerMixin),
+  <span class="key">Router</span>: Ember.Router.extend({ ... })
+});
+App.get(<span class="string"><span class="delimiter">'</span><span class="content">router.fooController</span><span class="delimiter">'</span></span>); <span class="comment">// instance of App.FooController</span></pre></td>
+</tr></table>
+</div>
+<p>The controller singletons will have their <code>namespace</code> property set to the application and their <code>target</code>
+property set to the application&#39;s router singleton for easy integration with Ember&#39;s user event system.
+See &#39;Changing View Hierarchy in Response To State Change&#39; and &#39;Responding to User-initiated Events.&#39;</p>
+
+<h2>Responding to User-initiated Events</h2>
+
+<p>Controller instances injected into the router at application initialization have their <code>target</code> property
+set to the application&#39;s router instance. These controllers will also be the default <code>context</code> for their
+associated views.  Uses of the <code>{{action}}</code> helper will automatically target the application&#39;s router.</p>
+
+<p>Given the following application entered at the URL &#39;#/&#39;:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+</pre></td>
+  <td class="code"><pre>App = Ember.Application.create({
+  <span class="key">Router</span>: Ember.Router.extend({
+    <span class="key">root</span>: Ember.Route.extend({
+      <span class="key">aRoute</span>: Ember.Route.extend({
+        <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>,
+        <span class="function">anActionOnTheRouter</span>: <span class="keyword">function</span>(router, context) {
+          router.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">anotherState</span><span class="delimiter">'</span></span>, context);
+        }
+      })
+      anotherState: Ember.Route.extend({
+        <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/differentUrl</span><span class="delimiter">'</span></span>,
+        <span class="function">connectOutlets</span>: <span class="keyword">function</span>(router, context) {
+        }
+      })
+    })
+  })
+});
+App.initialize();</pre></td>
+</tr></table>
+</div>
+<p>The following template:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">aView</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="inline">    <span class="tag">&lt;h1&gt;</span><span class="tag">&lt;a</span> <span class="error">{</span><span class="error">{</span><span class="attribute-name">action</span> <span class="attribute-name">anActionOnTheRouter</span><span class="error">}</span><span class="error">}</span><span class="tag">&gt;</span>{{title}}<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/h1&gt;</span></span>
+<span class="tag">&lt;/script&gt;</span></pre></td>
+</tr></table>
+</div>
+<p>Will delegate <code>click</code> events on the rendered <code>h1</code> to the application&#39;s router instance. In this case the
+<code>anActionOnTheRouter</code> method of the state at &#39;root.aRoute&#39; will be called with the view&#39;s controller
+as the context argument. This context will be passed to the <code>connectOutlets</code> as its second argument.</p>
+
+<p>Different <code>context</code> can be supplied from within the <code>{{action}}</code> helper, allowing specific context passing
+between application states:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">photos</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="inline">  {{<span class="error">#</span>each photo <span class="keyword">in</span> controller}}
+    <span class="tag">&lt;h1&gt;</span><span class="tag">&lt;a</span> <span class="error">{</span><span class="error">{</span><span class="attribute-name">action</span> <span class="attribute-name">showPhoto</span> <span class="attribute-name">photo</span><span class="error">}</span><span class="error">}</span><span class="tag">&gt;</span>{{title}}<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/h1&gt;</span>
+  {{<span class="regexp"><span class="delimiter">/</span><span class="content">each}}</span></span></span>
+<span class="tag">&lt;/script&gt;</span></pre></td>
+</tr></table>
+</div>
+<p>See <code>Handlebars.helpers.action</code> for additional usage examples.</p>
+
+<h2>Changing View Hierarchy in Response To State Change</h2>
+
+<p>Changes in application state that change the URL should be accompanied by associated changes in view
+hierarchy.  This can be accomplished by calling &#39;connectOutlet&#39; on the injected controller singletons from
+within the &#39;connectOutlets&#39; event of an Ember.Route:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+</pre></td>
+  <td class="code"><pre>App = Ember.Application.create({
+  <span class="key">OneController</span>: Ember.ObjectController.extend(),
+  <span class="key">OneView</span>: Ember.View.extend(),
+  <span class="key">AnotherController</span>: Ember.ObjectController.extend(),
+  <span class="key">AnotherView</span>: Ember.View.extend(),
+  <span class="key">Router</span>: Ember.Router.extend({
+    <span class="key">root</span>: Ember.Route.extend({
+      <span class="key">aRoute</span>: Ember.Route.extend({
+        <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>,
+        <span class="function">connectOutlets</span>: <span class="keyword">function</span>(router, context) {
+          router.get(<span class="string"><span class="delimiter">'</span><span class="content">oneController</span><span class="delimiter">'</span></span>).connectOutlet(<span class="string"><span class="delimiter">'</span><span class="content">another</span><span class="delimiter">'</span></span>);
+        },
+      })
+    })
+  })
+});
+App.initialize();</pre></td>
+</tr></table>
+</div>
+<p>This will detect the &#39;{{outlet}}&#39; portion of <code>oneController</code>&#39;s view (an instance of <code>App.OneView</code>) and
+fill it with a rendered instance of <code>App.AnotherView</code> whose <code>context</code> will be the single instance of
+<code>App.AnotherController</code> stored on the router in the <code>anotherController</code> property.</p>
+
+<p>For more information about Outlets, see <code>Ember.Handlebars.helpers.outlet</code>. For additional information on
+the <code>connectOutlet</code> method, see <code>Ember.Controller.connectOutlet</code>. For more information on
+controller injections, see <code>Ember.Application#initialize()</code>. For additional information about view context,
+see <code>Ember.View</code>.</p>
+
+  </div>
+
+
+
+<div class="tabs">
+  <ul>
+    <li><a href="#index">Index</a></li>
+    
+      <li><a href="#methods">Methods</a></li>
+    
+      <li><a href="#properties">Properties</a></li>
+    
+      <li><a href="#events">Events</a></li>
+    
+  </ul>
+
+  <div class="pane" id="index">
+    
+      <h2>Methods</h2>
+      <ul class="index-list">
+        
+          <li class="method inherited">
+            <a href="#method_destroy">destroy</a>
+          </li>
+        
+          <li class="method private inherited">
+            <a href="#method__scheduledDestroy">_scheduledDestroy</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_metaForProperty">metaForProperty</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_eachComputedProperty">eachComputedProperty</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_create">create</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_reopen">reopen</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_apply">apply</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_detect">detect</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_get">get</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_getProperties">getProperties</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_set">set</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_setProperties">setProperties</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_beginPropertyChanges">beginPropertyChanges</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_endPropertyChanges">endPropertyChanges</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_propertyWillChange">propertyWillChange</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_propertyDidChange">propertyDidChange</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_notifyPropertyChange">notifyPropertyChange</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_addObserver">addObserver</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_removeObserver">removeObserver</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_hasObserverFor">hasObserverFor</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_unknownProperty">unknownProperty</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_setUnknownProperty">setUnknownProperty</a>
+          </li>
+        
+          <li class="method deprecated inherited">
+            <a href="#method_getPath">getPath</a>
+          </li>
+        
+          <li class="method deprecated inherited">
+            <a href="#method_setPath">setPath</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_getWithDefault">getWithDefault</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_incrementProperty">incrementProperty</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_decrementProperty">decrementProperty</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_toggleProperty">toggleProperty</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_cacheFor">cacheFor</a>
+          </li>
+        
+          <li class="method private inherited">
+            <a href="#method_trigger">trigger</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_transitionTo">transitionTo</a>
+          </li>
+        
+          <li class="method private inherited">
+            <a href="#method_init">init</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_getStateByPath">getStateByPath</a>
+          </li>
+        
+          <li class="method inherited">
+            <a href="#method_findStateByPath">findStateByPath</a>
+          </li>
+        
+      </ul>
+    
+      <h2>Properties</h2>
+      <ul class="index-list">
+        
+          <li class="property inherited">
+            <a href="#property_isDestroyed">isDestroyed</a>
+          </li>
+        
+          <li class="property inherited">
+            <a href="#property_isDestroying">isDestroying</a>
+          </li>
+        
+          <li class="property inherited">
+            <a href="#property_parentState">parentState</a>
+          </li>
+        
+          <li class="property inherited">
+            <a href="#property_name">name</a>
+          </li>
+        
+          <li class="property inherited">
+            <a href="#property_path">path</a>
+          </li>
+        
+          <li class="property inherited">
+            <a href="#property_isLeaf">isLeaf</a>
+          </li>
+        
+          <li class="property inherited">
+            <a href="#property_hasContext">hasContext</a>
+          </li>
+        
+          <li class="property inherited">
+            <a href="#property_currentState">currentState</a>
+          </li>
+        
+          <li class="property inherited">
+            <a href="#property_currentPath">currentPath</a>
+          </li>
+        
+          <li class="property ">
+            <a href="#property_transitionEvent">transitionEvent</a>
+          </li>
+        
+          <li class="property inherited">
+            <a href="#property_errorOnUnhandledEvents">errorOnUnhandledEvents</a>
+          </li>
+        
+          <li class="property ">
+            <a href="#property_initialState">initialState</a>
+          </li>
+        
+          <li class="property ">
+            <a href="#property_location">location</a>
+          </li>
+        
+          <li class="property ">
+            <a href="#property_rootURL">rootURL</a>
+          </li>
+        
+      </ul>
+    
+      <h2>Events</h2>
+      <ul class="index-list">
+        
+          <li class="event inherited">
+            <a href="#event_setup">setup</a>
+          </li>
+        
+          <li class="event inherited">
+            <a href="#event_enter">enter</a>
+          </li>
+        
+          <li class="event inherited">
+            <a href="#event_exit">exit</a>
+          </li>
+        
+      </ul>
+    
+  </div>
+
+  <div class="pane" id="methods">
+    
+      <div id="method_destroy" class="method inherited">
+  <h3 class="name"><code>destroy</code></h3>
+
+
+  <span class="type">Ember.Object</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_destroy">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/system/core_object.js#L114">packages/ember-runtime/lib/system/core_object.js:114</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Destroys an object by setting the isDestroyed flag and removing its
+metadata, which effectively destroys observers and bindings.</p>
+
+<p>If you try to set a property on a destroyed object, an exception will be
+raised.</p>
+
+<p>Note that destruction is scheduled for the end of the run loop and does not
+happen immediately.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Ember.Object: receiver
+    </div>
+  
+
+</div>
+
+    
+      <div id="method__scheduledDestroy" class="method private inherited">
+  <h3 class="name"><code>_scheduledDestroy</code></h3>
+
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method__scheduledDestroy">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/system/core_object.js#L139">packages/ember-runtime/lib/system/core_object.js:139</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="method_metaForProperty" class="method inherited">
+  <h3 class="name"><code>metaForProperty</code></h3>
+
+  <span class="args">
+    (key)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_metaForProperty">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/system/core_object.js#L232">packages/ember-runtime/lib/system/core_object.js:232</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>In some cases, you may want to annotate computed properties with additional
+metadata about how they function or what values they operate on. For example,
+computed property functions may close over variables that are then no longer
+available for introspection.</p>
+
+<p>You can pass a hash of these values to a computed property like this:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="function">person</span>: <span class="keyword">function</span>() {
+  <span class="keyword">var</span> personId = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">personId</span><span class="delimiter">'</span></span>);
+  <span class="keyword">return</span> App.Person.create({ <span class="key">id</span>: personId });
+}.property().meta({ <span class="key">type</span>: App.Person })</pre></td>
+</tr></table>
+</div>
+<p>Once you&#39;ve done this, you can retrieve the values saved to the computed
+property from your class like this:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+</pre></td>
+  <td class="code"><pre>MyClass.metaForProperty(<span class="string"><span class="delimiter">'</span><span class="content">person</span><span class="delimiter">'</span></span>);</pre></td>
+</tr></table>
+</div>
+<p>This will return the original hash that was passed to <code>meta()</code>.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>key</strong> String<br>
+            property name
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_eachComputedProperty" class="method inherited">
+  <h3 class="name"><code>eachComputedProperty</code></h3>
+
+  <span class="args">
+    (callback, binding)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_eachComputedProperty">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/system/core_object.js#L262">packages/ember-runtime/lib/system/core_object.js:262</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Iterate over each computed property for the class, passing its name
+and any associated metadata (see <code>metaForProperty</code>) to the callback.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>callback</strong> Function<br>
+            
+          </li>
+        
+          <li>
+            <strong>binding</strong> Object<br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_create" class="method inherited">
+  <h3 class="name"><code>create</code></h3>
+
+  <span class="args">
+    (arguments)
+  </span>
+
+
+
+
+
+
+  <span class="flag static">static</span>
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_create">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/mixin.js#L338">packages/ember-metal/lib/mixin.js:338</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>arguments</strong> <br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_reopen" class="method inherited">
+  <h3 class="name"><code>reopen</code></h3>
+
+  <span class="args">
+    (arguments)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_reopen">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/mixin.js#L351">packages/ember-metal/lib/mixin.js:351</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>arguments</strong> <br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_apply" class="method inherited">
+  <h3 class="name"><code>apply</code></h3>
+
+  <span class="args">
+    (obj)
+  </span>
+
+  <span class="type"></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_apply">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/mixin.js#L385">packages/ember-metal/lib/mixin.js:385</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> <br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      : applied object
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_detect" class="method inherited">
+  <h3 class="name"><code>detect</code></h3>
+
+  <span class="args">
+    (obj)
+  </span>
+
+  <span class="type">Boolean</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_detect">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/mixin.js#L412">packages/ember-metal/lib/mixin.js:412</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>obj</strong> <br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Boolean: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_get" class="method inherited">
+  <h3 class="name"><code>get</code></h3>
+
+  <span class="args">
+    (key)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_get">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/mixins/observable.js#L75">packages/ember-runtime/lib/mixins/observable.js:75</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Retrieves the value of a property from the object.</p>
+
+<p>This method is usually similar to using object[keyName] or object.keyName,
+however it supports both computed properties and the unknownProperty
+handler.</p>
+
+<p>Because <code>get</code> unifies the syntax for accessing all these kinds
+of properties, it can make many refactorings easier, such as replacing a
+simple property with a computed property, or vice versa.</p>
+
+<h3>Computed Properties</h3>
+
+<p>Computed properties are methods defined with the <code>property</code> modifier
+declared at the end, such as:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>  <span class="function">fullName</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="local-variable">this</span>.getEach(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>).compact().join(<span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span>);
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)</pre></td>
+</tr></table>
+</div>
+<p>When you call <code>get</code> on a computed property, the function will be
+called and the return value will be returned instead of the function
+itself.</p>
+
+<h3>Unknown Properties</h3>
+
+<p>Likewise, if you try to call <code>get</code> on a property whose value is
+undefined, the unknownProperty() method will be called on the object.
+If this method returns any value other than undefined, it will be returned
+instead. This allows you to implement &quot;virtual&quot; properties that are
+not defined upfront.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>key</strong> String<br>
+            The property to retrieve
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Object: The property value or undefined.
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_getProperties" class="method inherited">
+  <h3 class="name"><code>getProperties</code></h3>
+
+  <span class="args">
+    (list)
+  </span>
+
+  <span class="type">Hash</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_getProperties">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/mixins/observable.js#L115">packages/ember-runtime/lib/mixins/observable.js:115</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>To get multiple properties at once, call getProperties
+with a list of strings or an array:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+</pre></td>
+  <td class="code"><pre>  record.getProperties(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">zipCode</span><span class="delimiter">'</span></span>); <span class="comment">// =&gt; { firstName: 'John', lastName: 'Doe', zipCode: '10011' }</span></pre></td>
+</tr></table>
+</div>
+<p>is equivalent to:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+</pre></td>
+  <td class="code"><pre>  record.getProperties([<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">zipCode</span><span class="delimiter">'</span></span>]); <span class="comment">// =&gt; { firstName: 'John', lastName: 'Doe', zipCode: '10011' }</span></pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>list</strong> String...|Array<br>
+            of keys to get
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Hash: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_set" class="method inherited">
+  <h3 class="name"><code>set</code></h3>
+
+  <span class="args">
+    (key, value)
+  </span>
+
+  <span class="type">Ember.Observable</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_set">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/mixins/observable.js#L141">packages/ember-runtime/lib/mixins/observable.js:141</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Sets the provided key or path to the value.</p>
+
+<p>This method is generally very similar to calling object[key] = value or
+object.key = value, except that it provides support for computed
+properties, the unknownProperty() method and property observers.</p>
+
+<h3>Computed Properties</h3>
+
+<p>If you try to set a value on a key that has a computed property handler
+defined (see the get() method for an example), then set() will call
+that method, passing both the value and key instead of simply changing
+the value itself. This is useful for those times when you need to
+implement a property that is composed of one or more member
+properties.</p>
+
+<h3>Unknown Properties</h3>
+
+<p>If you try to set a value on a key that is undefined in the target
+object, then the unknownProperty() handler will be called instead. This
+gives you an opportunity to implement complex &quot;virtual&quot; properties that
+are not predefined on the object. If unknownProperty() returns
+undefined, then set() will simply set the value on the object.</p>
+
+<h3>Property Observers</h3>
+
+<p>In addition to changing the property, set() will also register a
+property change with the object. Unless you have placed this call
+inside of a beginPropertyChanges() and endPropertyChanges(), any &quot;local&quot;
+observers (i.e. observer methods declared on the same object), will be
+called immediately. Any &quot;remote&quot; observers (i.e. observer methods
+declared on another object) will be placed in a queue and called at a
+later time in a coalesced manner.</p>
+
+<h3>Chaining</h3>
+
+<p>In addition to property changes, set() returns the value of the object
+itself so you can do chaining like this:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+</pre></td>
+  <td class="code"><pre>  record.set(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Charles</span><span class="delimiter">'</span></span>).set(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Jolley</span><span class="delimiter">'</span></span>);</pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>key</strong> String<br>
+            The property to set
+          </li>
+        
+          <li>
+            <strong>value</strong> Object<br>
+            The value to set or null.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Ember.Observable: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_setProperties" class="method inherited">
+  <h3 class="name"><code>setProperties</code></h3>
+
+  <span class="args">
+    (hash)
+  </span>
+
+  <span class="type">Ember.Observable</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_setProperties">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/mixins/observable.js#L192">packages/ember-runtime/lib/mixins/observable.js:192</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>To set multiple properties at once, call setProperties
+with a Hash:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+</pre></td>
+  <td class="code"><pre>  record.setProperties({ <span class="key">firstName</span>: <span class="string"><span class="delimiter">'</span><span class="content">Charles</span><span class="delimiter">'</span></span>, <span class="key">lastName</span>: <span class="string"><span class="delimiter">'</span><span class="content">Jolley</span><span class="delimiter">'</span></span> });</pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>hash</strong> Hash<br>
+            the hash of keys and values to set
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Ember.Observable: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_beginPropertyChanges" class="method inherited">
+  <h3 class="name"><code>beginPropertyChanges</code></h3>
+
+
+  <span class="type">Ember.Observable</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_beginPropertyChanges">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/mixins/observable.js#L206">packages/ember-runtime/lib/mixins/observable.js:206</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Begins a grouping of property changes.</p>
+
+<p>You can use this method to group property changes so that notifications
+will not be sent until the changes are finished. If you plan to make a
+large number of changes to an object at one time, you should call this
+method at the beginning of the changes to begin deferring change
+notifications. When you are done making changes, call endPropertyChanges()
+to deliver the deferred change notifications and end deferring.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Ember.Observable: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_endPropertyChanges" class="method inherited">
+  <h3 class="name"><code>endPropertyChanges</code></h3>
+
+
+  <span class="type">Ember.Observable</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_endPropertyChanges">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/mixins/observable.js#L224">packages/ember-runtime/lib/mixins/observable.js:224</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Ends a grouping of property changes.</p>
+
+<p>You can use this method to group property changes so that notifications
+will not be sent until the changes are finished. If you plan to make a
+large number of changes to an object at one time, you should call
+beginPropertyChanges() at the beginning of the changes to defer change
+notifications. When you are done making changes, call this method to
+deliver the deferred change notifications and end deferring.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Ember.Observable: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_propertyWillChange" class="method inherited">
+  <h3 class="name"><code>propertyWillChange</code></h3>
+
+  <span class="args">
+    (key)
+  </span>
+
+  <span class="type">Ember.Observable</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_propertyWillChange">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/mixins/observable.js#L242">packages/ember-runtime/lib/mixins/observable.js:242</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Notify the observer system that a property is about to change.</p>
+
+<p>Sometimes you need to change a value directly or indirectly without
+actually calling get() or set() on it. In this case, you can use this
+method and propertyDidChange() instead. Calling these two methods
+together will notify all observers that the property has potentially
+changed value.</p>
+
+<p>Note that you must always call propertyWillChange and propertyDidChange as
+a pair. If you do not, it may get the property change groups out of order
+and cause notifications to be delivered more often than you would like.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>key</strong> String<br>
+            The property key that is about to change.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Ember.Observable: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_propertyDidChange" class="method inherited">
+  <h3 class="name"><code>propertyDidChange</code></h3>
+
+  <span class="args">
+    (keyName)
+  </span>
+
+  <span class="type">Ember.Observable</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_propertyDidChange">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/mixins/observable.js#L264">packages/ember-runtime/lib/mixins/observable.js:264</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Notify the observer system that a property has just changed.</p>
+
+<p>Sometimes you need to change a value directly or indirectly without
+actually calling get() or set() on it. In this case, you can use this
+method and propertyWillChange() instead. Calling these two methods
+together will notify all observers that the property has potentially
+changed value.</p>
+
+<p>Note that you must always call propertyWillChange and propertyDidChange as
+a pair. If you do not, it may get the property change groups out of order
+and cause notifications to be delivered more often than you would like.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>keyName</strong> String<br>
+            The property key that has just changed.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Ember.Observable: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_notifyPropertyChange" class="method inherited">
+  <h3 class="name"><code>notifyPropertyChange</code></h3>
+
+  <span class="args">
+    (keyName)
+  </span>
+
+  <span class="type">Ember.Observable</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_notifyPropertyChange">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/mixins/observable.js#L286">packages/ember-runtime/lib/mixins/observable.js:286</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Convenience method to call <code>propertyWillChange</code> and <code>propertyDidChange</code> in
+succession.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>keyName</strong> String<br>
+            The property key to be notified about.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Ember.Observable: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_addObserver" class="method inherited">
+  <h3 class="name"><code>addObserver</code></h3>
+
+  <span class="args">
+    (key, target, method)
+  </span>
+
+  <span class="type">Ember.Object</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_addObserver">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/mixins/observable.js#L304">packages/ember-runtime/lib/mixins/observable.js:304</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Adds an observer on a property.</p>
+
+<p>This is the core method used to register an observer for a property.</p>
+
+<p>Once you call this method, anytime the key&#39;s value is set, your observer
+will be notified. Note that the observers are triggered anytime the
+value is set, regardless of whether it has actually changed. Your
+observer should be prepared to handle that.</p>
+
+<p>You can also pass an optional context parameter to this method. The
+context will be passed to your observer method whenever it is triggered.
+Note that if you add the same target/method pair on a key multiple times
+with different context parameters, your observer will only be called once
+with the last context you passed.</p>
+
+<h3>Observer Methods</h3>
+
+<p>Observer methods you pass should generally have the following signature if
+you do not pass a &quot;context&quot; parameter:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+</pre></td>
+  <td class="code"><pre>  <span class="function">fooDidChange</span>: <span class="keyword">function</span>(sender, key, value, rev);</pre></td>
+</tr></table>
+</div>
+<p>The sender is the object that changed. The key is the property that
+changes. The value property is currently reserved and unused. The rev
+is the last property revision of the object when it changed, which you can
+use to detect if the key value has really changed or not.</p>
+
+<p>If you pass a &quot;context&quot; parameter, the context will be passed before the
+revision like so:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+</pre></td>
+  <td class="code"><pre>  <span class="function">fooDidChange</span>: <span class="keyword">function</span>(sender, key, value, context, rev);</pre></td>
+</tr></table>
+</div>
+<p>Usually you will not need the value, context or revision parameters at
+the end. In this case, it is common to write observer methods that take
+only a sender and key value as parameters or, if you aren&#39;t interested in
+any of these values, to write an observer that has no parameters at all.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>key</strong> String<br>
+            The key to observer
+          </li>
+        
+          <li>
+            <strong>target</strong> Object<br>
+            The target object to invoke
+          </li>
+        
+          <li>
+            <strong>method</strong> String|Function<br>
+            The method to invoke.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Ember.Object: self
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_removeObserver" class="method inherited">
+  <h3 class="name"><code>removeObserver</code></h3>
+
+  <span class="args">
+    (key, target, method)
+  </span>
+
+  <span class="type">Ember.Observable</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_removeObserver">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/mixins/observable.js#L352">packages/ember-runtime/lib/mixins/observable.js:352</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Remove an observer you have previously registered on this object. Pass
+the same key, target, and method you passed to addObserver() and your
+target will no longer receive notifications.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>key</strong> String<br>
+            The key to observer
+          </li>
+        
+          <li>
+            <strong>target</strong> Object<br>
+            The target object to invoke
+          </li>
+        
+          <li>
+            <strong>method</strong> String|Function<br>
+            The method to invoke.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Ember.Observable: receiver
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_hasObserverFor" class="method inherited">
+  <h3 class="name"><code>hasObserverFor</code></h3>
+
+  <span class="args">
+    (key)
+  </span>
+
+  <span class="type">Boolean</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_hasObserverFor">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/mixins/observable.js#L367">packages/ember-runtime/lib/mixins/observable.js:367</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Returns true if the object currently has observers registered for a
+particular key. You can use this method to potentially defer performing
+an expensive action until someone begins observing a particular property
+on the object.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>key</strong> String<br>
+            Key to check
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Boolean: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_unknownProperty" class="method inherited">
+  <h3 class="name"><code>unknownProperty</code></h3>
+
+  <span class="args">
+    (key)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_unknownProperty">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/mixins/observable.js#L381">packages/ember-runtime/lib/mixins/observable.js:381</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>This method will be called when a client attempts to get the value of a
+property that has not been defined in one of the typical ways. Override
+this method to create &quot;virtual&quot; properties.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>key</strong> String<br>
+            The name of the unknown property that was requested.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Object: The property value or undefined. Default is undefined.
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_setUnknownProperty" class="method inherited">
+  <h3 class="name"><code>setUnknownProperty</code></h3>
+
+  <span class="args">
+    (key, value)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_setUnknownProperty">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/mixins/observable.js#L394">packages/ember-runtime/lib/mixins/observable.js:394</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>This method will be called when a client attempts to set the value of a
+property that has not been defined in one of the typical ways. Override
+this method to create &quot;virtual&quot; properties.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>key</strong> String<br>
+            The name of the unknown property to be set.
+          </li>
+        
+          <li>
+            <strong>value</strong> Object<br>
+            The value the unknown property is to be set to.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_getPath" class="method deprecated inherited">
+  <h3 class="name"><code>getPath</code></h3>
+
+  <span class="args">
+    (path)
+  </span>
+
+  <span class="type">Object</span>
+
+
+  
+  <span class="flag deprecated">deprecated</span>
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_getPath">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/mixins/observable.js#L408">packages/ember-runtime/lib/mixins/observable.js:408</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>path</strong> String<br>
+            The property path to retrieve
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Object: The property value or undefined.
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_setPath" class="method deprecated inherited">
+  <h3 class="name"><code>setPath</code></h3>
+
+  <span class="args">
+    (path, value)
+  </span>
+
+  <span class="type">Ember.Observable</span>
+
+
+  
+  <span class="flag deprecated">deprecated</span>
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_setPath">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/mixins/observable.js#L419">packages/ember-runtime/lib/mixins/observable.js:419</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>path</strong> String<br>
+            The path to the property that will be set
+          </li>
+        
+          <li>
+            <strong>value</strong> Object<br>
+            The value to set or null.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Ember.Observable: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_getWithDefault" class="method inherited">
+  <h3 class="name"><code>getWithDefault</code></h3>
+
+  <span class="args">
+    (keyName, defaultValue)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_getWithDefault">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/mixins/observable.js#L431">packages/ember-runtime/lib/mixins/observable.js:431</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Retrieves the value of a property, or a default value in the case that the property
+returns undefined.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+</pre></td>
+  <td class="code"><pre>person.getWithDefault(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Doe</span><span class="delimiter">'</span></span>);</pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>keyName</strong> String<br>
+            The name of the property to retrieve
+          </li>
+        
+          <li>
+            <strong>defaultValue</strong> Object<br>
+            The value to return if the property value is undefined
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Object: The property value or the defaultValue.
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_incrementProperty" class="method inherited">
+  <h3 class="name"><code>incrementProperty</code></h3>
+
+  <span class="args">
+    (keyName, increment)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_incrementProperty">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/mixins/observable.js#L446">packages/ember-runtime/lib/mixins/observable.js:446</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Set the value of a property to the current value plus some amount.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+</pre></td>
+  <td class="code"><pre>person.incrementProperty(<span class="string"><span class="delimiter">'</span><span class="content">age</span><span class="delimiter">'</span></span>);
+team.incrementProperty(<span class="string"><span class="delimiter">'</span><span class="content">score</span><span class="delimiter">'</span></span>, <span class="integer">2</span>);</pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>keyName</strong> String<br>
+            The name of the property to increment
+          </li>
+        
+          <li>
+            <strong>increment</strong> Object<br>
+            The amount to increment by. Defaults to 1
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Object: The new property value
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_decrementProperty" class="method inherited">
+  <h3 class="name"><code>decrementProperty</code></h3>
+
+  <span class="args">
+    (keyName, increment)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_decrementProperty">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/mixins/observable.js#L463">packages/ember-runtime/lib/mixins/observable.js:463</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Set the value of a property to the current value minus some amount.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+</pre></td>
+  <td class="code"><pre>player.decrementProperty(<span class="string"><span class="delimiter">'</span><span class="content">lives</span><span class="delimiter">'</span></span>);
+orc.decrementProperty(<span class="string"><span class="delimiter">'</span><span class="content">health</span><span class="delimiter">'</span></span>, <span class="integer">5</span>);</pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>keyName</strong> String<br>
+            The name of the property to decrement
+          </li>
+        
+          <li>
+            <strong>increment</strong> Object<br>
+            The amount to decrement by. Defaults to 1
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Object: The new property value
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_toggleProperty" class="method inherited">
+  <h3 class="name"><code>toggleProperty</code></h3>
+
+  <span class="args">
+    (keyName)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_toggleProperty">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/mixins/observable.js#L480">packages/ember-runtime/lib/mixins/observable.js:480</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Set the value of a boolean property to the opposite of it&#39;s
+current value.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+</pre></td>
+  <td class="code"><pre>starship.toggleProperty(<span class="string"><span class="delimiter">'</span><span class="content">warpDriveEnaged</span><span class="delimiter">'</span></span>);</pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>keyName</strong> String<br>
+            The name of the property to toggle
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Object: The new property value
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_cacheFor" class="method inherited">
+  <h3 class="name"><code>cacheFor</code></h3>
+
+  <span class="args">
+    (keyName)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_cacheFor">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/mixins/observable.js#L495">packages/ember-runtime/lib/mixins/observable.js:495</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Returns the cached value of a computed property, if it exists.
+This allows you to inspect the value of a computed property
+without accidentally invoking it if it is intended to be
+generated lazily.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>keyName</strong> String<br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Object: The cached value of the computed property, if any
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_trigger" class="method private inherited">
+  <h3 class="name"><code>trigger</code></h3>
+
+  <span class="args">
+    (name)
+  </span>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_trigger">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-states/lib/state.js#L52">packages/ember-states/lib/state.js:52</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>name</strong> <br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_transitionTo" class="method inherited">
+  <h3 class="name"><code>transitionTo</code></h3>
+
+  <span class="args">
+    (target)
+  </span>
+
+
+
+
+
+
+  <span class="flag static">static</span>
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_transitionTo">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-states/lib/state.js#L187">packages/ember-states/lib/state.js:187</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>/**
+  Creates an action function for transitioning to the named state while preserving context.
+The following example StateManagers are equivalent:
+    aManager = Ember.StateManager.create({
+        stateOne: Ember.State.create({
+          changeToStateTwo: Ember.State.transitionTo(&#39;stateTwo&#39;)
+        }),
+        stateTwo: Ember.State.create({})
+      })
+    bManager = Ember.StateManager.create({
+        stateOne: Ember.State.create({
+          changeToStateTwo: function(manager, context){
+            manager.transitionTo(&#39;stateTwo&#39;, context)
+          }
+        }),
+        stateTwo: Ember.State.create({})
+      })</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>target</strong> String<br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="method_init" class="method private inherited">
+  <h3 class="name"><code>init</code></h3>
+
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_init">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-states/lib/state_manager.js#L540">packages/ember-states/lib/state_manager.js:540</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="method_getStateByPath" class="method inherited">
+  <h3 class="name"><code>getStateByPath</code></h3>
+
+  <span class="args">
+    (root, path)
+  </span>
+
+  <span class="type">Ember.State</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_getStateByPath">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-states/lib/state_manager.js#L654">packages/ember-states/lib/state_manager.js:654</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Finds a state by its state path.</p>
+
+<p>Example:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>manager = Ember.StateManager.create({
+  <span class="key">root</span>: Ember.State.create({
+    <span class="key">dashboard</span>: Ember.State.create()
+  })
+});
+manager.getStateByPath(manager, <span class="string"><span class="delimiter">&quot;</span><span class="content">root.dashboard</span><span class="delimiter">&quot;</span></span>)
+<span class="comment">// returns the dashboard state</span></pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>root</strong> Ember.State<br>
+            the state to start searching from
+          </li>
+        
+          <li>
+            <strong>path</strong> String<br>
+            the state path to follow
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Ember.State: the state at the end of the path
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_findStateByPath" class="method inherited">
+  <h3 class="name"><code>findStateByPath</code></h3>
+
+  <span class="args">
+    (origin, path)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_findStateByPath">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-states/lib/state_manager.js#L697">packages/ember-states/lib/state_manager.js:697</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>A state stores its child states in its <code>states</code> hash.
+This code takes a path like <code>posts.show</code> and looks
+up <code>origin.states.posts.states.show</code>.</p>
+
+<p>It returns a list of all of the states from the
+origin, which is the list of states to call <code>enter</code>
+on.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>origin</strong> <br>
+            
+          </li>
+        
+          <li>
+            <strong>path</strong> <br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+  </div>
+  <div class="pane" id="properties">
+    
+      <div id="property_isDestroyed" class="property inherited">
+  <h3 class="name"><code>isDestroyed</code></h3>
+
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_isDestroyed">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/system/core_object.js#L102">packages/ember-runtime/lib/system/core_object.js:102</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+    <p><strong>Default:</strong> false</p>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_isDestroying" class="property inherited">
+  <h3 class="name"><code>isDestroying</code></h3>
+
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_isDestroying">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-runtime/lib/system/core_object.js#L108">packages/ember-runtime/lib/system/core_object.js:108</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+
+  
+    <p><strong>Default:</strong> false</p>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_parentState" class="property inherited">
+  <h3 class="name"><code>parentState</code></h3>
+
+
+
+  <span class="type">Ember.State</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_parentState">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-states/lib/state.js#L15">packages/ember-states/lib/state.js:15</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>isState: true,</p>
+
+<p>/**
+  A reference to the parent state.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_name" class="property inherited">
+  <h3 class="name"><code>name</code></h3>
+
+
+
+  <span class="type">String</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_name">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-states/lib/state.js#L27">packages/ember-states/lib/state.js:27</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>The name of this state.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_path" class="property inherited">
+  <h3 class="name"><code>path</code></h3>
+
+
+
+  <span class="type">String</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_path">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-states/lib/state.js#L35">packages/ember-states/lib/state.js:35</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>The full path to this state.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_isLeaf" class="property inherited">
+  <h3 class="name"><code>isLeaf</code></h3>
+
+
+
+  <span class="type">Boolean</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_isLeaf">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-states/lib/state.js#L136">packages/ember-states/lib/state.js:136</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>A Boolean value indicating whether the state is a leaf state
+in the state hierarchy. This is false if the state has child
+states; otherwise it is true.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_hasContext" class="property inherited">
+  <h3 class="name"><code>hasContext</code></h3>
+
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_hasContext">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-states/lib/state.js#L148">packages/ember-states/lib/state.js:148</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>A boolean value indicating whether the state takes a context.
+By default we assume all states take contexts.</p>
+
+    </div>
+  
+
+  
+    <p><strong>Default:</strong> true</p>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_currentState" class="property inherited">
+  <h3 class="name"><code>currentState</code></h3>
+
+
+
+  <span class="type">Ember.State</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_currentState">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-states/lib/state_manager.js#L586">packages/ember-states/lib/state_manager.js:586</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>The current state from among the manager&#39;s possible states. This property should
+not be set directly.  Use <code>transitionTo</code> to move between states by name.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_currentPath" class="property inherited">
+  <h3 class="name"><code>currentPath</code></h3>
+
+
+
+  <span class="type">String</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_currentPath">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-states/lib/state_manager.js#L595">packages/ember-states/lib/state_manager.js:595</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>The path of the current state. Returns a string representation of the current
+state.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_transitionEvent" class="property ">
+  <h3 class="name"><code>transitionEvent</code></h3>
+
+
+
+  <span class="type">String</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        Inherited from
+        <a href="/api/classes/Ember.StateManager.html#method_transitionEvent">Ember.StateManager</a>
+        
+          but overwritten in
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-routing/lib/router.js#L461">packages/ember-routing/lib/router.js:461</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>On router, transitionEvent should be called connectOutlets</p>
+
+    </div>
+  
+
+  
+    <p><strong>Default:</strong> 'connectOutlets'</p>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_errorOnUnhandledEvents" class="property inherited">
+  <h3 class="name"><code>errorOnUnhandledEvents</code></h3>
+
+
+
+  <span class="type">Boolean</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_errorOnUnhandledEvents">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-states/lib/state_manager.js#L615">packages/ember-states/lib/state_manager.js:615</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>If set to true, <code>errorOnUnhandledEvents</code> will cause an exception to be
+raised if you attempt to send an event to a state manager that is not
+handled by the current state or any of its parent states.</p>
+
+    </div>
+  
+
+  
+    <p><strong>Default:</strong> true</p>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_initialState" class="property ">
+  <h3 class="name"><code>initialState</code></h3>
+
+
+
+  <span class="type">String</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-routing/lib/router.js#L425">packages/ember-routing/lib/router.js:425</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>/**</p>
+
+    </div>
+  
+
+  
+    <p><strong>Default:</strong> 'root'</p>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_location" class="property ">
+  <h3 class="name"><code>location</code></h3>
+
+
+
+  <span class="type">String</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-routing/lib/router.js#L434">packages/ember-routing/lib/router.js:434</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>The <code>Ember.Location</code> implementation to be used to manage the application
+URL state. The following values are supported:</p>
+
+<ul>
+<li>&#39;hash&#39;: Uses URL fragment identifiers (like #/blog/1) for routing.</li>
+<li>&#39;history&#39;: Uses the browser&#39;s history.pushstate API for routing. Only works in
+modern browsers with pushstate support.</li>
+<li>&#39;none&#39;: Does not read or set the browser URL, but still allows for
+routing to happen. Useful for testing.</li>
+</ul>
+
+    </div>
+  
+
+  
+    <p><strong>Default:</strong> 'hash'</p>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+      <div id="property_rootURL" class="property ">
+  <h3 class="name"><code>rootURL</code></h3>
+
+
+
+  <span class="type">String</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-routing/lib/router.js#L450">packages/ember-routing/lib/router.js:450</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>This is only used when a history location is used so that applications that
+don&#39;t live at the root of the domain can append paths to their root.</p>
+
+    </div>
+  
+
+  
+    <p><strong>Default:</strong> '/'</p>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+  </div>
+  <div class="pane" id="events">
+    
+      <div id="event_setup" class="event inherited">
+  <h3 class="name"><code>setup</code></h3>
+
+  <span class="args">
+    (manager, context)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_setup">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-states/lib/state.js#L157">packages/ember-states/lib/state.js:157</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>This is the default transition event.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>manager</strong> Ember.StateManager<br>
+            
+          </li>
+        
+          <li>
+            <strong>context</strong> <br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="event_enter" class="event inherited">
+  <h3 class="name"><code>enter</code></h3>
+
+  <span class="args">
+    (manager)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_enter">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-states/lib/state.js#L167">packages/ember-states/lib/state.js:167</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>This event fires when the state is entered.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>manager</strong> Ember.StateManager<br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+      <div id="event_exit" class="event inherited">
+  <h3 class="name"><code>exit</code></h3>
+
+  <span class="args">
+    (manager)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.StateManager.html#method_exit">Ember.StateManager</a>
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-states/lib/state.js#L175">packages/ember-states/lib/state.js:175</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>This event fires when the state is exited.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>manager</strong> Ember.StateManager<br>
+            
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
+  </div>
+</div>
+
+
+
+      </div>
+    </div>
+
+    <div id="footer">
+      <div class="info">
+        <div class="links"><a href="http://twitter.com/emberjs">Twitter</a> &bull; <a href="https://github.com/emberjs/ember.js">GitHub</a></div>
+        <div class="copyright">Copyright 2012 <a href="http://tilde.io">Tilde Inc.</a></div>
+        <div class="credit">Design by <a href="http://www.heropixel.com">HeroPixel</a></div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-27675533-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </body>
+</html>
