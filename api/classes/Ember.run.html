@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ember.js - Ember.run</title>
+    <link rel="shortcut icon" href="/images/favicon.png" />
+    <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
+
+    <script type="text/javascript">
+      $(function() {
+        $('#logo').on('click', function(evt) {
+          if (evt.shiftKey) {
+            $('#content-wrapper').toggleClass('grid');
+            return false;
+          }
+        });
+
+        var backToTop = $('#back-to-top');
+        var doc = $(document);
+        var offset = backToTop.offset();
+        var marginTop = 90;
+        var showing = false;
+
+        if (backToTop.length) {
+          backToTop.on('click', function(evt) {
+            $('html,body').animate({scrollTop: 0}, 200);
+            return false;
+          });
+
+          doc.on('scroll', function() {
+            if (!showing && doc.scrollTop() > offset.top+200) {
+              showing = true;
+              backToTop.css({
+                opacity: 1,
+                position: 'fixed',
+                top: 20,
+                left: offset.left
+              });
+            } else if (showing && doc.scrollTop() <= offset.top+200) {
+              showing = false;
+              backToTop.css({
+                opacity: 0
+              });
+            }
+          });
+        }
+
+        $('.bx-wrapper, .bx-window').width(940);
+      });
+    </script>
+
+    
+    <script>
+      $(function() {
+        // Type toggling
+        function toggleType() {
+          var type = this.getAttribute('data-type');
+          $('.'+type).toggle(this.checked);
+        }
+
+        $('#api-options input').each(toggleType);
+        $('#api-options input').on('change', toggleType);
+
+        // Tabs
+        $('.tabs .pane').hide();
+        $('.tabs .pane:first').show();
+        $('.tabs ul li:first').addClass('active');
+
+        function showPane($tabs, href) {
+          var $ul = $tabs.find('> ul'),
+              $tab = $ul.find('a[href='+href+']'),
+              $pane = $(href);
+
+          $ul.find('li').removeClass('active');
+          $tab.parent().addClass('active');
+          $tabs.find('.pane').hide();
+
+          $pane.show();
+        }
+
+        $('.tabs > ul li a').click(function(){
+          var $el = $(this),
+              $tabs = $el.parents('.tabs'),
+              href = $el.attr('href');
+
+          showPane($tabs, href);
+
+          return false;
+        });
+
+        // Auto tab
+        function checkHash() {
+          var hash = window.location.hash;
+          if (hash) {
+            var $el = $(hash);
+            if ($el.length > 0 && !$el.is(':visible')) {
+              showPane($el.parents('.tabs'), '#'+$el.parents('.pane').attr('id'));
+              $("html, body").scrollTop($el.offset().top);
+            }
+          }
+        }
+
+        $(window).on('hashchange', checkHash);
+        checkHash();
+      });
+    </script>
+  
+  </head>
+
+  <body class="api api_classes api_classes_Ember">
+    <div id="header">
+      <div id="wrapper">
+        <a id="logo" href="/">&nbsp;</a>
+        <ul id="nav">
+          <li><a href="/about">about</a></li>
+          <li><a href="/documentation">docs</a></li>
+          <li><a href="/guides">guides</a></li>
+          <li class="active"><a href="/api">api</a></li>
+          <li><a href="/community">community</a></li>
+          <li><a href="/blog">blog</a></li>
+        </ul>
+        <div id="github">
+          <a href="https://github.com/emberjs/ember.js"><img src="/images/fork-us.png">Fork Us!</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="content-wrapper">
+      
+      
+        <div id="sidebar">
+          
+    <h3>SHA: <a href="https://github.com/emberjs/ember.js/commit/83542a6">83542a6</a></h3>
+
+    <p><strong>Note:</strong> For 1.0.pre, see the <a href="http://docs.emberjs.com">old docs site</a>.</p>
+
+    <h2>Modules</h2>
+    <ul>
+    
+      <li><a href="/api/modules/ember.html">ember</a></li>
+    
+      <li><a href="/api/modules/ember-application.html">ember-application</a></li>
+    
+      <li><a href="/api/modules/ember-debug.html">ember-debug</a></li>
+    
+      <li><a href="/api/modules/ember-handlebars.html">ember-handlebars</a></li>
+    
+      <li><a href="/api/modules/ember-metal.html">ember-metal</a></li>
+    
+      <li><a href="/api/modules/ember-routing.html">ember-routing</a></li>
+    
+      <li><a href="/api/modules/ember-runtime.html">ember-runtime</a></li>
+    
+      <li><a href="/api/modules/ember-states.html">ember-states</a></li>
+    
+      <li><a href="/api/modules/ember-views.html">ember-views</a></li>
+    
+    </ul>
+
+    <h2>Namespaces</h2>
+    <ul>
+    
+      <li class=""><a href="/api/classes/Ember.html">Ember</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Location.html">Ember.Location</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.String.html">Ember.String</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.platform.html">Ember.platform</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.run.html">Ember.run</a></li>
+    
+    </ul>
+
+    <h2>Classes</h2>
+    <ul>
+    
+      <li class=""><a href="/api/classes/Ember.Application.html">Ember.Application</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Array.html">Ember.Array</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ArrayController.html">Ember.ArrayController</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ArrayProxy.html">Ember.ArrayProxy</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Binding.html">Ember.Binding</a></li>
+    
+      <li class="deprecated"><a href="/api/classes/Ember.Button.html">Ember.Button</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Checkbox.html">Ember.Checkbox</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.CollectionView.html">Ember.CollectionView</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Comparable.html">Ember.Comparable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ComputedProperty.html">Ember.ComputedProperty</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ContainerView.html">Ember.ContainerView</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Controller.html">Ember.Controller</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ControllerMixin.html">Ember.ControllerMixin</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Copyable.html">Ember.Copyable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.CoreObject.html">Ember.CoreObject</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.Descriptor.html">Ember.Descriptor</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.EachProxy.html">Ember.EachProxy</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Enumerable.html">Ember.Enumerable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Error.html">Ember.Error</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.EventDispatcher.html">Ember.EventDispatcher</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Evented.html">Ember.Evented</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Freezable.html">Ember.Freezable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Handlebars.html">Ember.Handlebars</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.Handlebars.Compiler.html">Ember.Handlebars.Compiler</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.Handlebars.JavaScriptCompiler.html">Ember.Handlebars.JavaScriptCompiler</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Handlebars.helpers.html">Ember.Handlebars.helpers</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.HashLocation.html">Ember.HashLocation</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.HistoryLocation.html">Ember.HistoryLocation</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Logger.html">Ember.Logger</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.Map.html">Ember.Map</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.MapWithDefault.html">Ember.MapWithDefault</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Mixin.html">Ember.Mixin</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.MutableArray.html">Ember.MutableArray</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.MutableEnumerable.html">Ember.MutableEnumerable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Namespace.html">Ember.Namespace</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.NativeArray.html">Ember.NativeArray</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.NoneLocation.html">Ember.NoneLocation</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Object.html">Ember.Object</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ObjectController.html">Ember.ObjectController</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.ObjectProxy.html">Ember.ObjectProxy</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Observable.html">Ember.Observable</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.OrderedSet.html">Ember.OrderedSet</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.RenderBuffer.html">Ember.RenderBuffer</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Routable.html">Ember.Routable</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Route.html">Ember.Route</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Router.html">Ember.Router</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.RunLoop.html">Ember.RunLoop</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Select.html">Ember.Select</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.Set.html">Ember.Set</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.SortableMixin.html">Ember.SortableMixin</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.State.html">Ember.State</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.StateManager.html">Ember.StateManager</a></li>
+    
+      <li class="deprecated"><a href="/api/classes/Ember.TabContainerView.html">Ember.TabContainerView</a></li>
+    
+      <li class="deprecated"><a href="/api/classes/Ember.TabPaneView.html">Ember.TabPaneView</a></li>
+    
+      <li class="deprecated"><a href="/api/classes/Ember.TabView.html">Ember.TabView</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.TargetActionSupport.html">Ember.TargetActionSupport</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.TextArea.html">Ember.TextArea</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.TextField.html">Ember.TextField</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember.TextSupport.html">Ember.TextSupport</a></li>
+    
+      <li class=""><a href="/api/classes/Ember.View.html">Ember.View</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember._HandlebarsBoundView.html">Ember._HandlebarsBoundView</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember._Metamorph.html">Ember._Metamorph</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember._MetamorphView.html">Ember._MetamorphView</a></li>
+    
+      <li class="private"><a href="/api/classes/Ember._RouteMatcher.html">Ember._RouteMatcher</a></li>
+    
+      <li class=""><a href="/api/classes/Function.html">Function</a></li>
+    
+      <li class=""><a href="/api/classes/String.html">String</a></li>
+    
+      <li class="private"><a href="/api/classes/Transition.html">Transition</a></li>
+    
+    </ul>
+  
+          <div id="back-to-top"><a href="#">&#11014; Back to Top</a></div>
+        </div>
+      
+      <div id="content" class="has-sidebar">
+          
+
+  
+
+  <div id="api-options">
+    Show:
+
+    <label>
+      <input type="checkbox" data-type="inherited" checked>
+      Inherited
+    </label>
+
+    <label>
+      <input type="checkbox" data-type="protected">
+      Protected
+    </label>
+
+    <label>
+      <input type="checkbox" data-type="private">
+      Private
+    </label>
+
+    <label>
+      <input type="checkbox" data-type="deprecated">
+      Deprecated
+    </label>
+  </div>
+
+  <h1>Ember.run Namespace</h1>
+
+
+<div class="class-info">
+  
+
+  
+
+  
+    <p>Defined in: <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/run_loop.js#L189">packages/ember-metal/lib/run_loop.js:189</a></p>
+  
+
+  
+    <p>Module: <a href="/api/modules/ember-metal.html">ember-metal</a></p>
+  
+</div>
+
+  <div class="description">
+    <p>Runs the passed target and method inside of a RunLoop, ensuring any
+deferred actions including bindings and views updates are flushed at the
+end.</p>
+
+<p>Normally you should not need to invoke this method yourself.  However if
+you are implementing raw event handlers when interfacing with other
+libraries or plugins, you should probably wrap all of your code inside this
+call.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>Ember.run(<span class="keyword">function</span>(){
+  <span class="comment">// code to be execute within a RunLoop </span>
+});</pre></td>
+</tr></table>
+</div>
+  </div>
+
+
+
+<div class="tabs">
+  <ul>
+    <li><a href="#index">Index</a></li>
+    
+      <li><a href="#methods">Methods</a></li>
+    
+      <li><a href="#properties">Properties</a></li>
+    
+  </ul>
+
+  <div class="pane" id="index">
+    
+      <h2>Methods</h2>
+      <ul class="index-list">
+        
+          <li class="method ">
+            <a href="#method_autorun">autorun</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_begin">begin</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_cancel">cancel</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_end">end</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_later">later</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_next">next</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_once">once</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_schedule">schedule</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_sync">sync</a>
+          </li>
+        
+      </ul>
+    
+      <h2>Properties</h2>
+      <ul class="index-list">
+        
+          <li class="property ">
+            <a href="#property_queues">queues</a>
+          </li>
+        
+      </ul>
+    
+  </div>
+
+  <div class="pane" id="methods">
+    
+      <div id="method_autorun" class="method ">
+  <h3 class="name"><code>autorun</code></h3>
+
+
+  <span class="type">Ember.RunLoop</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/run_loop.js#L347">packages/ember-metal/lib/run_loop.js:347</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Begins a new RunLoop if necessary and schedules a timer to flush the
+RunLoop at a later time.  This method is used by parts of Ember to
+ensure the RunLoop always finishes.  You normally do not need to call this
+method directly.  Instead use Ember.run().</p>
+
+    </div>
+  
+
+  
+
+  
+    <div class="example">
+      <h4>Example:</h4>
+
+      <div class="example-content">
+        
+          <p>Ember.run.autorun();</p>
+
+        
+      </div>
+    </div>
+  
+
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Ember.RunLoop: the new current RunLoop
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_begin" class="method ">
+  <h3 class="name"><code>begin</code></h3>
+
+
+  <span class="type">Void</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/run_loop.js#L228">packages/ember-metal/lib/run_loop.js:228</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Begins a new RunLoop.  Any deferred actions invoked after the begin will
+be buffered until you invoke a matching call to Ember.run.end().  This is
+an lower-level way to use a RunLoop instead of using Ember.run().</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>Ember.run.begin();
+<span class="comment">// code to be execute within a RunLoop </span>
+Ember.run.end();</pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Void: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_cancel" class="method ">
+  <h3 class="name"><code>cancel</code></h3>
+
+  <span class="args">
+    (timer)
+  </span>
+
+  <span class="type">Void</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/run_loop.js#L587">packages/ember-metal/lib/run_loop.js:587</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Cancels a scheduled item.  Must be a value returned by <code>Ember.run.later()</code>,
+<code>Ember.run.once()</code>, or <code>Ember.run.next()</code>.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> runNext = Ember.run.next(myContext, <span class="keyword">function</span>(){
+  <span class="comment">// will not be executed</span>
+});
+Ember.run.cancel(runNext);
+<span class="keyword">var</span> runLater = Ember.run.later(myContext, <span class="keyword">function</span>(){
+  <span class="comment">// will not be executed</span>
+}, <span class="integer">500</span>);
+Ember.run.cancel(runLater);
+<span class="keyword">var</span> runOnce = Ember.run.once(myContext, <span class="keyword">function</span>(){
+  <span class="comment">// will not be executed</span>
+});
+Ember.run.cancel(runOnce);</pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>timer</strong> Object<br>
+            Timer object to cancel
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Void: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_end" class="method ">
+  <h3 class="name"><code>end</code></h3>
+
+
+  <span class="type">Void</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/run_loop.js#L244">packages/ember-metal/lib/run_loop.js:244</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Ends a RunLoop.  This must be called sometime after you call Ember.run.begin()
+to flush any deferred actions.  This is a lower-level way to use a RunLoop
+instead of using Ember.run().</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>Ember.run.begin();
+<span class="comment">// code to be execute within a RunLoop </span>
+Ember.run.end();</pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Void: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_later" class="method ">
+  <h3 class="name"><code>later</code></h3>
+
+  <span class="args">
+    (target, method, args*, wait!~YUIDOC_LINE~!)
+  </span>
+
+  <span class="type">String</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/run_loop.js#L418">packages/ember-metal/lib/run_loop.js:418</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Invokes the passed target/method and optional arguments after a specified
+period if time.  The last parameter of this method must always be a number
+of milliseconds.</p>
+
+<p>You should use this method whenever you need to run some action after a
+period of time instead of using setTimeout().  This method will ensure that
+items that expire during the same script execution cycle all execute
+together, which is often more efficient than using a real setTimeout.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>Ember.run.later(myContext, <span class="keyword">function</span>(){
+  <span class="comment">// code here will execute within a RunLoop in about 500ms with this == myContext</span>
+}, <span class="integer">500</span>);</pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>target</strong> Object<br>
+            target of method to invoke
+          </li>
+        
+          <li>
+            <strong>method</strong> Function|String<br>
+            The method to invoke.
+  If you pass a string it will be resolved on the
+  target at the time the method is invoked.
+          </li>
+        
+          <li>
+            <strong>args*</strong> Object<br>
+            Optional arguments to pass to the timeout.
+          </li>
+        
+          <li>
+            <strong>wait!~YUIDOC_LINE~!</strong> Number<br>
+            Number of milliseconds to wait.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      String: a string you can use to cancel the timer in
+  {{#crossLink "Ember/run.cancel"}}{{/crossLink}} later.
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_next" class="method ">
+  <h3 class="name"><code>next</code></h3>
+
+  <span class="args">
+    (target, method, args*)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/run_loop.js#L552">packages/ember-metal/lib/run_loop.js:552</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Schedules an item to run after control has been returned to the system.
+This is often equivalent to calling setTimeout(function...,1).</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>Ember.run.next(myContext, <span class="keyword">function</span>(){
+  <span class="comment">// code to be executed in the next RunLoop, which will be scheduled after the current one</span>
+});</pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>target</strong> Object<br>
+            target of method to invoke
+          </li>
+        
+          <li>
+            <strong>method</strong> Function|String<br>
+            The method to invoke.
+  If you pass a string it will be resolved on the
+  target at the time the method is invoked.
+          </li>
+        
+          <li>
+            <strong>args*</strong> Object<br>
+            Optional arguments to pass to the timeout.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Object: timer
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_once" class="method ">
+  <h3 class="name"><code>once</code></h3>
+
+  <span class="args">
+    (target, method, args*)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/run_loop.js#L504">packages/ember-metal/lib/run_loop.js:504</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Schedules an item to run one time during the current RunLoop.  Calling
+this method with the same target/method combination will have no effect.</p>
+
+<p>Note that although you can pass optional arguments these will not be
+considered when looking for duplicates.  New arguments will replace previous
+calls.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre>Ember.run(<span class="keyword">function</span>(){
+  <span class="keyword">var</span> <span class="function">doFoo</span> = <span class="keyword">function</span>() { foo(); }
+  Ember.run.once(myContext, doFoo);
+  Ember.run.once(myContext, doFoo);
+  <span class="comment">// doFoo will only be executed once at the end of the RunLoop</span>
+});</pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>target</strong> Object<br>
+            target of method to invoke
+          </li>
+        
+          <li>
+            <strong>method</strong> Function|String<br>
+            The method to invoke.
+  If you pass a string it will be resolved on the
+  target at the time the method is invoked.
+          </li>
+        
+          <li>
+            <strong>args*</strong> Object<br>
+            Optional arguments to pass to the timeout.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Object: timer
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_schedule" class="method ">
+  <h3 class="name"><code>schedule</code></h3>
+
+  <span class="args">
+    (queue, target, method, arguments*)
+  </span>
+
+  <span class="type">Void</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/run_loop.js#L278">packages/ember-metal/lib/run_loop.js:278</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Adds the passed target/method and any optional arguments to the named
+queue to be executed at the end of the RunLoop.  If you have not already
+started a RunLoop when calling this method one will be started for you
+automatically.</p>
+
+<p>At the end of a RunLoop, any methods scheduled in this way will be invoked.
+Methods will be invoked in an order matching the named queues defined in
+the run.queues property.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+</pre></td>
+  <td class="code"><pre>Ember.run.schedule(<span class="string"><span class="delimiter">'</span><span class="content">timers</span><span class="delimiter">'</span></span>, <span class="local-variable">this</span>, <span class="keyword">function</span>(){
+  <span class="comment">// this will be executed at the end of the RunLoop, when timers are run</span>
+  console.log(<span class="string"><span class="delimiter">&quot;</span><span class="content">scheduled on timers queue</span><span class="delimiter">&quot;</span></span>);
+});
+Ember.run.schedule(<span class="string"><span class="delimiter">'</span><span class="content">sync</span><span class="delimiter">'</span></span>, <span class="local-variable">this</span>, <span class="keyword">function</span>(){
+  <span class="comment">// this will be executed at the end of the RunLoop, when bindings are synced</span>
+  console.log(<span class="string"><span class="delimiter">&quot;</span><span class="content">scheduled on sync queue</span><span class="delimiter">&quot;</span></span>);
+});
+<span class="comment">// Note the functions will be run in order based on the run queues order. Output would be:</span>
+<span class="comment">//   scheduled on sync queue</span>
+<span class="comment">//   scheduled on timers queue</span></pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>queue</strong> String<br>
+            The name of the queue to schedule against.
+  Default queues are 'sync' and 'actions'
+          </li>
+        
+          <li>
+            <strong>target</strong> Object<br>
+            target object to use as the context when invoking a method.
+          </li>
+        
+          <li>
+            <strong>method</strong> String|Function<br>
+            The method to invoke.  If you pass a string it
+  will be resolved on the target object at the time the scheduled item is
+  invoked allowing you to change the target function.
+          </li>
+        
+          <li>
+            <strong>arguments*</strong> Object<br>
+            Optional arguments to be passed to the queued method.
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Void: 
+    </div>
+  
+
+</div>
+
+    
+      <div id="method_sync" class="method ">
+  <h3 class="name"><code>sync</code></h3>
+
+
+  <span class="type">Void</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/run_loop.js#L373">packages/ember-metal/lib/run_loop.js:373</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Immediately flushes any events scheduled in the &#39;sync&#39; queue.  Bindings
+use this queue so this method is a useful way to immediately force all
+bindings in the application to sync.</p>
+
+<p>You should call this method anytime you need any changed state to propagate
+throughout the app immediately without repainting the UI.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+</pre></td>
+  <td class="code"><pre>Ember.run.sync();</pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+
+      Void: 
+    </div>
+  
+
+</div>
+
+    
+  </div>
+  <div class="pane" id="properties">
+    
+      <div id="property_queues" class="property ">
+  <h3 class="name"><code>queues</code></h3>
+
+
+
+  <span class="type">Array</span>
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/run_loop.js#L266">packages/ember-metal/lib/run_loop.js:266</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Array of named queues.  This array determines the order in which queues
+are flushed at the end of the RunLoop.  You can define your own queues by
+simply adding the queue name to this array.  Normally you should not need
+to inspect or modify this property.</p>
+
+    </div>
+  
+
+  
+    <p><strong>Default:</strong> ['sync', 'actions', 'destroy', 'timers']</p>
+  
+
+  
+
+  
+
+  
+
+</div>
+
+    
+  </div>
+</div>
+
+
+
+      </div>
+    </div>
+
+    <div id="footer">
+      <div class="info">
+        <div class="links"><a href="http://twitter.com/emberjs">Twitter</a> &bull; <a href="https://github.com/emberjs/ember.js">GitHub</a></div>
+        <div class="copyright">Copyright 2012 <a href="http://tilde.io">Tilde Inc.</a></div>
+        <div class="credit">Design by <a href="http://www.heropixel.com">HeroPixel</a></div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-27675533-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </body>
+</html>
