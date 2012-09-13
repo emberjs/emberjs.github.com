@@ -386,7 +386,7 @@
           </li>
         
           <li class="method ">
-            <a href="#method_volatile">volatile</a>
+            <a href="#method_meta">meta</a>
           </li>
         
           <li class="method ">
@@ -394,7 +394,7 @@
           </li>
         
           <li class="method ">
-            <a href="#method_meta">meta</a>
+            <a href="#method_volatile">volatile</a>
           </li>
         
       </ul>
@@ -489,9 +489,12 @@ your function until one of the dependent keys changes.</p>
 </div>
 
     
-      <div id="method_volatile" class="method ">
-  <h3 class="name"><code>volatile</code></h3>
+      <div id="method_meta" class="method ">
+  <h3 class="name"><code>meta</code></h3>
 
+  <span class="args">
+    (meta)
+  </span>
 
 
 
@@ -510,7 +513,7 @@ your function until one of the dependent keys changes.</p>
           
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/computed.js#L157">packages/ember-metal/lib/computed.js:157</a>
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/computed.js#L200">packages/ember-metal/lib/computed.js:200</a>
     </p>
 
     
@@ -520,22 +523,29 @@ your function until one of the dependent keys changes.</p>
 
   
     <div class="description">
-      <p>Call on a computed property to set it into non-cached mode.  When in this
-mode the computed property will not automatically cache the return value.</p>
+      <p>In some cases, you may want to annotate computed properties with additional
+metadata about how they function or what values they operate on. For example,
+computed property functions may close over variables that are then no longer
+available for introspection.</p>
+
+<p>You can pass a hash of these values to a computed property like this:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
 4
-5
 </pre></td>
-  <td class="code"><pre>MyApp.outsideService = Ember.Object.create({
-  <span class="function">value</span>: <span class="keyword">function</span>() {
-    <span class="keyword">return</span> OutsideService.getValue();
-  }.property().<span class="reserved">volatile</span>()
-});</pre></td>
+  <td class="code"><pre><span class="function">person</span>: <span class="keyword">function</span>() {
+  <span class="keyword">var</span> personId = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">personId</span><span class="delimiter">'</span></span>);
+  <span class="keyword">return</span> App.Person.create({ <span class="key">id</span>: personId });
+}.property().meta({ <span class="key">type</span>: App.Person })</pre></td>
 </tr></table>
 </div>
+<p>The hash that you pass to the <code>meta()</code> function will be saved on the
+computed property descriptor under the <code>_meta</code> key. Ember runtime
+exposes a public API for retrieving these values from classes,
+via the <code>metaForProperty()</code> function.</p>
+
     </div>
   
 
@@ -543,6 +553,19 @@ mode the computed property will not automatically cache the return value.</p>
 
   
 
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>meta</strong> Hash<br>
+            
+          </li>
+        
+      </ul>
+    </div>
   
 
   
@@ -631,12 +654,9 @@ arguments containing key paths that this computed property depends on.</p>
 </div>
 
     
-      <div id="method_meta" class="method ">
-  <h3 class="name"><code>meta</code></h3>
+      <div id="method_volatile" class="method ">
+  <h3 class="name"><code>volatile</code></h3>
 
-  <span class="args">
-    (meta)
-  </span>
 
 
 
@@ -655,7 +675,7 @@ arguments containing key paths that this computed property depends on.</p>
           
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/computed.js#L200">packages/ember-metal/lib/computed.js:200</a>
+      <a href="https://github.com/emberjs/ember.js/tree/83542a6/packages/ember-metal/lib/computed.js#L157">packages/ember-metal/lib/computed.js:157</a>
     </p>
 
     
@@ -665,29 +685,22 @@ arguments containing key paths that this computed property depends on.</p>
 
   
     <div class="description">
-      <p>In some cases, you may want to annotate computed properties with additional
-metadata about how they function or what values they operate on. For example,
-computed property functions may close over variables that are then no longer
-available for introspection.</p>
-
-<p>You can pass a hash of these values to a computed property like this:</p>
+      <p>Call on a computed property to set it into non-cached mode.  When in this
+mode the computed property will not automatically cache the return value.</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
 4
+5
 </pre></td>
-  <td class="code"><pre><span class="function">person</span>: <span class="keyword">function</span>() {
-  <span class="keyword">var</span> personId = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">personId</span><span class="delimiter">'</span></span>);
-  <span class="keyword">return</span> App.Person.create({ <span class="key">id</span>: personId });
-}.property().meta({ <span class="key">type</span>: App.Person })</pre></td>
+  <td class="code"><pre>MyApp.outsideService = Ember.Object.create({
+  <span class="function">value</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> OutsideService.getValue();
+  }.property().<span class="reserved">volatile</span>()
+});</pre></td>
 </tr></table>
 </div>
-<p>The hash that you pass to the <code>meta()</code> function will be saved on the
-computed property descriptor under the <code>_meta</code> key. Ember runtime
-exposes a public API for retrieving these values from classes,
-via the <code>metaForProperty()</code> function.</p>
-
     </div>
   
 
@@ -695,19 +708,6 @@ via the <code>metaForProperty()</code> function.</p>
 
   
 
-  
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <ul>
-        
-          <li>
-            <strong>meta</strong> Hash<br>
-            
-          </li>
-        
-      </ul>
-    </div>
   
 
   
