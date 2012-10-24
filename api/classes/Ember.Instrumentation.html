@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Ember.Comparable</title>
+    <title>Ember.js - Ember.Instrumentation</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
@@ -352,30 +352,70 @@
     </label>
   </div>
 
-  <h1>Ember.Comparable Class</h1>
+  <h1>Ember.Instrumentation Namespace</h1>
 
 
 <div class="class-info">
   
-    <p>Extends: <a href="/api/classes/Ember.Mixin.html">Ember.Mixin</a></p>
-  
 
   
 
   
-    <p>Defined in: <a href="https://github.com/emberjs/ember.js/tree/4aecc42/packages/ember-runtime/lib/mixins/comparable.js#L9">packages/ember-runtime/lib/mixins/comparable.js:9</a></p>
+    <p>Defined in: <a href="https://github.com/emberjs/ember.js/tree/4aecc42/packages/ember-metal/lib/instrumentation.js#L1">packages/ember-metal/lib/instrumentation.js:1</a></p>
   
 
   
-    <p>Module: <a href="/api/modules/ember-runtime.html">ember-runtime</a></p>
+    <p>Module: <a href="/api/modules/ember-metal.html">ember-metal</a></p>
   
 </div>
 
   <div class="description">
-    <p>Implements some standard methods for comparing objects. Add this mixin to
-any class you create that can compare its instances.</p>
+    <p>The purpose of the Ember Instrumentation module is
+to provide efficient, general-purpose instrumentation
+for Ember.</p>
 
-<p>You should implement the compare() method.</p>
+<p>Subscribe to a listener by using <code>Ember.subscribe</code>:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre>Ember.subscribe(<span class="string"><span class="delimiter">&quot;</span><span class="content">render</span><span class="delimiter">&quot;</span></span>, {
+  <span class="function">before</span>: <span class="keyword">function</span>(name, timestamp, payload) {
+  },
+  <span class="function">after</span>: <span class="keyword">function</span>(name, timestamp, payload) {
+  }
+});</pre></td>
+</tr></table>
+</div>
+<p>If you return a value from the <code>before</code> callback, that same
+value will be passed as a fourth parameter to the <code>after</code>
+callback.</p>
+
+<p>Instrument a block of code by using <code>Ember.instrument</code>:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>Ember.instrument(<span class="string"><span class="delimiter">&quot;</span><span class="content">render.handlebars</span><span class="delimiter">&quot;</span></span>, payload, <span class="keyword">function</span>() {
+  <span class="comment">// rendering logic</span>
+}, binding);</pre></td>
+</tr></table>
+</div>
+<p>Event names passed to <code>Ember.instrument</code> are namespaced
+by periods, from more general to more specific. Subscribers
+can listen for events by whatever level of granularity they
+are interested in.</p>
+
+<p>In the above example, the event is <code>render.handlebars</code>,
+and the subscriber listened for all events beginning with
+<code>render</code>. It would receive callbacks for events named
+<code>render</code>, <code>render.handlebars</code>, <code>render.container</code>, or
+even <code>render.handlebars.layout</code>.</p>
 
   </div>
 
@@ -385,433 +425,12 @@ any class you create that can compare its instances.</p>
   <ul>
     <li><a href="#index">Index</a></li>
     
-      <li><a href="#methods">Methods</a></li>
-    
-      <li><a href="#properties">Properties</a></li>
-    
   </ul>
 
   <div class="pane" id="index">
     
-      <h2>Methods</h2>
-      <ul class="index-list">
-        
-          <li class="method inherited">
-            <a href="#method_apply">apply</a>
-          </li>
-        
-          <li class="method ">
-            <a href="#method_compare">compare</a>
-          </li>
-        
-          <li class="method inherited">
-            <a href="#method_create">create</a>
-          </li>
-        
-          <li class="method inherited">
-            <a href="#method_detect">detect</a>
-          </li>
-        
-          <li class="method inherited">
-            <a href="#method_reopen">reopen</a>
-          </li>
-        
-      </ul>
-    
-      <h2>Properties</h2>
-      <ul class="index-list">
-        
-          <li class="property ">
-            <a href="#property_isComparable">isComparable</a>
-          </li>
-        
-      </ul>
-    
   </div>
 
-  <div class="pane" id="methods">
-    
-      <div id="method_apply" class="method inherited">
-  <h3 class="name"><code>apply</code></h3>
-
-  <span class="args">
-    (obj)
-  </span>
-
-  <span class="type"></span>
-
-
-
-
-
-
-
-
-  <div class="meta">
-    <p>
-      
-        
-          Inherited from
-          <a href="/api/classes/Ember.Mixin.html#method_apply">Ember.Mixin</a>
-        
-      
-      <a href="https://github.com/emberjs/ember.js/tree/4aecc42/packages/ember-metal/lib/mixin.js#L393">packages/ember-metal/lib/mixin.js:393</a>
-    </p>
-
-    
-
-    
-  </div>
-
-  
-
-  
-
-  
-
-  
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <ul>
-        
-          <li>
-            <strong>obj</strong> <br>
-            
-          </li>
-        
-      </ul>
-    </div>
-  
-
-  
-    <div class="return">
-      <h3>Returns:</h3>
-
-      : applied object
-    </div>
-  
-
-</div>
-
-    
-      <div id="method_compare" class="method ">
-  <h3 class="name"><code>compare</code></h3>
-
-  <span class="args">
-    (a, b)
-  </span>
-
-  <span class="type">Integer</span>
-
-
-
-
-
-
-
-
-  <div class="meta">
-    <p>
-      
-        
-          
-            Defined in
-          
-        
-      
-      <a href="https://github.com/emberjs/ember.js/tree/4aecc42/packages/ember-runtime/lib/mixins/comparable.js#L31">packages/ember-runtime/lib/mixins/comparable.js:31</a>
-    </p>
-
-    
-
-    
-  </div>
-
-  
-    <div class="description">
-      <p>Override to return the result of the comparison of the two parameters. The
-compare method should return:</p>
-
-<ul>
-<li><code>-1</code> if <code>a &lt; b</code></li>
-<li><code>0</code> if <code>a == b</code></li>
-<li><code>1</code> if <code>a &gt; b</code></li>
-</ul>
-
-<p>Default implementation raises an exception.</p>
-
-    </div>
-  
-
-  
-
-  
-
-  
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <ul>
-        
-          <li>
-            <strong>a</strong> Object<br>
-            the first object to compare
-          </li>
-        
-          <li>
-            <strong>b</strong> Object<br>
-            the second object to compare
-          </li>
-        
-      </ul>
-    </div>
-  
-
-  
-    <div class="return">
-      <h3>Returns:</h3>
-
-      Integer: the result of the comparison
-    </div>
-  
-
-</div>
-
-    
-      <div id="method_create" class="method inherited">
-  <h3 class="name"><code>create</code></h3>
-
-  <span class="args">
-    (arguments)
-  </span>
-
-
-
-
-
-
-  <span class="flag static">static</span>
-
-
-
-  <div class="meta">
-    <p>
-      
-        
-          Inherited from
-          <a href="/api/classes/Ember.Mixin.html#method_create">Ember.Mixin</a>
-        
-      
-      <a href="https://github.com/emberjs/ember.js/tree/4aecc42/packages/ember-metal/lib/mixin.js#L346">packages/ember-metal/lib/mixin.js:346</a>
-    </p>
-
-    
-
-    
-  </div>
-
-  
-
-  
-
-  
-
-  
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <ul>
-        
-          <li>
-            <strong>arguments</strong> <br>
-            
-          </li>
-        
-      </ul>
-    </div>
-  
-
-  
-
-</div>
-
-    
-      <div id="method_detect" class="method inherited">
-  <h3 class="name"><code>detect</code></h3>
-
-  <span class="args">
-    (obj)
-  </span>
-
-  <span class="type">Boolean</span>
-
-
-
-
-
-
-
-
-  <div class="meta">
-    <p>
-      
-        
-          Inherited from
-          <a href="/api/classes/Ember.Mixin.html#method_detect">Ember.Mixin</a>
-        
-      
-      <a href="https://github.com/emberjs/ember.js/tree/4aecc42/packages/ember-metal/lib/mixin.js#L420">packages/ember-metal/lib/mixin.js:420</a>
-    </p>
-
-    
-
-    
-  </div>
-
-  
-
-  
-
-  
-
-  
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <ul>
-        
-          <li>
-            <strong>obj</strong> <br>
-            
-          </li>
-        
-      </ul>
-    </div>
-  
-
-  
-    <div class="return">
-      <h3>Returns:</h3>
-
-      Boolean: 
-    </div>
-  
-
-</div>
-
-    
-      <div id="method_reopen" class="method inherited">
-  <h3 class="name"><code>reopen</code></h3>
-
-  <span class="args">
-    (arguments)
-  </span>
-
-
-
-
-
-
-
-
-
-  <div class="meta">
-    <p>
-      
-        
-          Inherited from
-          <a href="/api/classes/Ember.Mixin.html#method_reopen">Ember.Mixin</a>
-        
-      
-      <a href="https://github.com/emberjs/ember.js/tree/4aecc42/packages/ember-metal/lib/mixin.js#L359">packages/ember-metal/lib/mixin.js:359</a>
-    </p>
-
-    
-
-    
-  </div>
-
-  
-
-  
-
-  
-
-  
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <ul>
-        
-          <li>
-            <strong>arguments</strong> <br>
-            
-          </li>
-        
-      </ul>
-    </div>
-  
-
-  
-
-</div>
-
-    
-  </div>
-  <div class="pane" id="properties">
-    
-      <div id="property_isComparable" class="property ">
-  <h3 class="name"><code>isComparable</code></h3>
-
-
-
-  <span class="type">Boolean</span>
-
-
-
-
-
-
-
-  <div class="meta">
-    <p>
-      
-        
-          
-            Defined in
-          
-        
-      
-      <a href="https://github.com/emberjs/ember.js/tree/4aecc42/packages/ember-runtime/lib/mixins/comparable.js#L22">packages/ember-runtime/lib/mixins/comparable.js:22</a>
-    </p>
-
-    
-
-    
-  </div>
-
-  
-    <div class="description">
-      <p>walk like a duck. Indicates that the object can be compared.</p>
-
-    </div>
-  
-
-  
-    <p><strong>Default:</strong> true</p>
-  
-
-  
-
-  
-
-  
-
-</div>
-
-    
-  </div>
 </div>
 
 
