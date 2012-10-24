@@ -133,7 +133,7 @@
       
         <div id="sidebar">
           
-    <h3>SHA: <a href="https://github.com/emberjs/ember.js/commit/b45af99">b45af99</a></h3>
+    <h3>SHA: <a href="https://github.com/emberjs/ember.js/commit/b5cee6e">b5cee6e</a></h3>
 
     <p><strong>Note:</strong> For 1.0.pre, see the <a href="http://docs.emberjs.com">old docs site</a>.</p>
 
@@ -363,7 +363,7 @@
   
 
   
-    <p>Defined in: <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/container_view.js#L15">packages/ember-views/lib/views/container_view.js:15</a></p>
+    <p>Defined in: <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/container_view.js#L15">packages/ember-views/lib/views/container_view.js:15</a></p>
   
 
   
@@ -669,6 +669,70 @@ a controller like this:</p>
   <td class="code"><pre>{{view Ember.ContainerView currentViewBinding=&quot;App.appController.view&quot;}}</pre></td>
 </tr></table>
 </div>
+<h2>Use lifecycle hooks</h2>
+
+<p>This is an example of how you could implement reusable currentView view.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+</pre></td>
+  <td class="code"><pre>App.ContainerView = Ember.ContainerView.extend({
+  <span class="function">appendCurrentView</span>: <span class="keyword">function</span>(currentView, callback) {
+    currentView.set(<span class="string"><span class="delimiter">'</span><span class="content">isVisible</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
+    <span class="keyword">if</span> (!<span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">childViews</span><span class="delimiter">'</span></span>).contains(currentView)) {
+      <span class="local-variable">this</span>._super(currentView, callback);
+    } <span class="keyword">else</span> {
+      callback();
+    }
+  },
+  <span class="function">removeCurrentView</span>: <span class="keyword">function</span>(currentView, callback) {
+    <span class="keyword">if</span> (currentView.get(<span class="string"><span class="delimiter">'</span><span class="content">isShared</span><span class="delimiter">'</span></span>)) {
+      currentView.set(<span class="string"><span class="delimiter">'</span><span class="content">isVisible</span><span class="delimiter">'</span></span>, <span class="predefined-constant">false</span>);
+      callback();
+    } <span class="keyword">else</span> {
+      <span class="local-variable">this</span>._super(currentView, callback);
+    }
+  }
+});</pre></td>
+</tr></table>
+</div>
+<p>This is an example of how you could implement animations.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre>App.ContainerView = Ember.ContainerView.extend({
+  <span class="function">presentCurrentView</span>: <span class="keyword">function</span>(currentView, callback) {
+    currentView.<span class="predefined">$</span>().animate({<span class="key">top</span>: <span class="string"><span class="delimiter">'</span><span class="content">0px</span><span class="delimiter">'</span></span>}, callback);
+  },
+  <span class="function">dismissCurrentView</span>: <span class="keyword">function</span>(currentView, callback) {
+    currentView.<span class="predefined">$</span>().animate({<span class="key">top</span>: <span class="string"><span class="delimiter">'</span><span class="content">-100px</span><span class="delimiter">'</span></span>}, callback);
+  }
+});</pre></td>
+</tr></table>
+</div>
   </div>
 
 
@@ -758,6 +822,10 @@ a controller like this:</p>
             <a href="#method_append">append</a>
           </li>
         
+          <li class="method ">
+            <a href="#method_appendCurrentView">appendCurrentView</a>
+          </li>
+        
           <li class="method inherited">
             <a href="#method_appendTo">appendTo</a>
           </li>
@@ -808,6 +876,10 @@ a controller like this:</p>
         
           <li class="method inherited">
             <a href="#method_detect">detect</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_dismissCurrentView">dismissCurrentView</a>
           </li>
         
           <li class="method inherited">
@@ -870,6 +942,10 @@ a controller like this:</p>
             <a href="#method_notifyPropertyChange">notifyPropertyChange</a>
           </li>
         
+          <li class="method ">
+            <a href="#method_presentCurrentView">presentCurrentView</a>
+          </li>
+        
           <li class="method inherited">
             <a href="#method_propertyDidChange">propertyDidChange</a>
           </li>
@@ -888,6 +964,10 @@ a controller like this:</p>
         
           <li class="method inherited">
             <a href="#method_removeChild">removeChild</a>
+          </li>
+        
+          <li class="method ">
+            <a href="#method_removeCurrentView">removeCurrentView</a>
           </li>
         
           <li class="method inherited">
@@ -1036,10 +1116,6 @@ a controller like this:</p>
           </li>
         
           <li class="property inherited">
-            <a href="#property_nearestOfType">nearestOfType</a>
-          </li>
-        
-          <li class="property inherited">
             <a href="#property_nearestWithProperty">nearestWithProperty</a>
           </li>
         
@@ -1118,7 +1194,7 @@ a controller like this:</p>
           <a href="/api/classes/Ember.View.html#method__applyAttributeBindings">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1305">packages/ember-views/lib/views/view.js:1305</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1305">packages/ember-views/lib/views/view.js:1305</a>
     </p>
 
     
@@ -1173,7 +1249,7 @@ a controller like this:</p>
           <a href="/api/classes/Ember.View.html#method__applyClassNameBindings">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1225">packages/ember-views/lib/views/view.js:1225</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1225">packages/ember-views/lib/views/view.js:1225</a>
     </p>
 
     
@@ -1218,7 +1294,7 @@ a controller like this:</p>
           <a href="/api/classes/Ember.View.html#method__classStringForProperty">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1349">packages/ember-views/lib/views/view.js:1349</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1349">packages/ember-views/lib/views/view.js:1349</a>
     </p>
 
     
@@ -1277,7 +1353,7 @@ a controller like this:</p>
           <a href="/api/classes/Ember.View.html#method__classStringForValue">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L2326">packages/ember-views/lib/views/view.js:2326</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L2326">packages/ember-views/lib/views/view.js:2326</a>
     </p>
 
     
@@ -1347,7 +1423,7 @@ a controller like this:</p>
           <a href="/api/classes/Ember.View.html#method__displayPropertyDidChange">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L912">packages/ember-views/lib/views/view.js:912</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L912">packages/ember-views/lib/views/view.js:912</a>
     </p>
 
     
@@ -1389,7 +1465,7 @@ a controller like this:</p>
           <a href="/api/classes/Ember.View.html#method__elementDidChange">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1763">packages/ember-views/lib/views/view.js:1763</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1763">packages/ember-views/lib/views/view.js:1763</a>
     </p>
 
     
@@ -1434,7 +1510,7 @@ a controller like this:</p>
           <a href="/api/classes/Ember.View.html#method__insertElementLater">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1491">packages/ember-views/lib/views/view.js:1491</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1491">packages/ember-views/lib/views/view.js:1491</a>
     </p>
 
     
@@ -1489,7 +1565,7 @@ a controller like this:</p>
           <a href="/api/classes/Ember.View.html#method__isVisibleDidChange">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L2125">packages/ember-views/lib/views/view.js:2125</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L2125">packages/ember-views/lib/views/view.js:2125</a>
     </p>
 
     
@@ -1531,7 +1607,7 @@ a controller like this:</p>
           <a href="/api/classes/Ember.View.html#method__notifyDidInsertElement">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1679">packages/ember-views/lib/views/view.js:1679</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1679">packages/ember-views/lib/views/view.js:1679</a>
     </p>
 
     
@@ -1573,7 +1649,7 @@ a controller like this:</p>
           <a href="/api/classes/Ember.View.html#method__notifyWillClearRender">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1693">packages/ember-views/lib/views/view.js:1693</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1693">packages/ember-views/lib/views/view.js:1693</a>
     </p>
 
     
@@ -1615,7 +1691,7 @@ a controller like this:</p>
           <a href="/api/classes/Ember.View.html#method__notifyWillDestroyElement">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1738">packages/ember-views/lib/views/view.js:1738</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1738">packages/ember-views/lib/views/view.js:1738</a>
     </p>
 
     
@@ -1657,7 +1733,7 @@ a controller like this:</p>
           <a href="/api/classes/Ember.View.html#method__notifyWillInsertElement">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1662">packages/ember-views/lib/views/view.js:1662</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1662">packages/ember-views/lib/views/view.js:1662</a>
     </p>
 
     
@@ -1699,7 +1775,7 @@ a controller like this:</p>
           <a href="/api/classes/Ember.View.html#method__parentViewDidChange">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1070">packages/ember-views/lib/views/view.js:1070</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1070">packages/ember-views/lib/views/view.js:1070</a>
     </p>
 
     
@@ -1742,7 +1818,7 @@ a controller like this:</p>
           <a href="/api/classes/Ember.View.html#method__parsePropertyPath">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L2284">packages/ember-views/lib/views/view.js:2284</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L2284">packages/ember-views/lib/views/view.js:2284</a>
     </p>
 
     
@@ -1784,7 +1860,7 @@ a controller like this:</p>
           <a href="/api/classes/Ember.View.html#method__scheduledDestroy">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/system/core_object.js#L139">packages/ember-runtime/lib/system/core_object.js:139</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/system/core_object.js#L139">packages/ember-runtime/lib/system/core_object.js:139</a>
     </p>
 
     
@@ -1829,7 +1905,7 @@ a controller like this:</p>
           <a href="/api/classes/Ember.View.html#method_addObserver">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/mixins/observable.js#L304">packages/ember-runtime/lib/mixins/observable.js:304</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/mixins/observable.js#L304">packages/ember-runtime/lib/mixins/observable.js:304</a>
     </p>
 
     
@@ -1946,7 +2022,7 @@ any of these values, to write an observer that has no parameters at all.</p>
           <a href="/api/classes/Ember.View.html#method_append">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1524">packages/ember-views/lib/views/view.js:1524</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1524">packages/ember-views/lib/views/view.js:1524</a>
     </p>
 
     
@@ -1984,6 +2060,74 @@ finished synchronizing.</p>
 </div>
 
     
+      <div id="method_appendCurrentView" class="method ">
+  <h3 class="name"><code>appendCurrentView</code></h3>
+
+  <span class="args">
+    (currentView, callback)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/container_view.js#L428">packages/ember-views/lib/views/container_view.js:428</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>This method is responsible for adding view to containerView</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>currentView</strong> Ember.View<br>
+            a view to present
+          </li>
+        
+          <li>
+            <strong>callback</strong> Function<br>
+            the callback called once view is appended
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
       <div id="method_appendTo" class="method inherited">
   <h3 class="name"><code>appendTo</code></h3>
 
@@ -2008,7 +2152,7 @@ finished synchronizing.</p>
           <a href="/api/classes/Ember.View.html#method_appendTo">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1436">packages/ember-views/lib/views/view.js:1436</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1436">packages/ember-views/lib/views/view.js:1436</a>
     </p>
 
     
@@ -2090,7 +2234,7 @@ ancestor element that is associated with an Ember view.</p>
           <a href="/api/classes/Ember.View.html#method_apply">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-metal/lib/mixin.js#L393">packages/ember-metal/lib/mixin.js:393</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-metal/lib/mixin.js#L393">packages/ember-metal/lib/mixin.js:393</a>
     </p>
 
     
@@ -2151,7 +2295,7 @@ ancestor element that is associated with an Ember view.</p>
           <a href="/api/classes/Ember.View.html#method_beginPropertyChanges">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/mixins/observable.js#L206">packages/ember-runtime/lib/mixins/observable.js:206</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/mixins/observable.js#L206">packages/ember-runtime/lib/mixins/observable.js:206</a>
     </p>
 
     
@@ -2214,7 +2358,7 @@ to deliver the deferred change notifications and end deferring.</p>
           <a href="/api/classes/Ember.View.html#method_cacheFor">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/mixins/observable.js#L495">packages/ember-runtime/lib/mixins/observable.js:495</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/mixins/observable.js#L495">packages/ember-runtime/lib/mixins/observable.js:495</a>
     </p>
 
     
@@ -2287,7 +2431,7 @@ generated lazily.</p>
           
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/container_view.js#L333">packages/ember-views/lib/views/container_view.js:333</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/container_view.js#L373">packages/ember-views/lib/views/container_view.js:373</a>
     </p>
 
     
@@ -2361,7 +2505,7 @@ generated lazily.</p>
           
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/container_view.js#L310">packages/ember-views/lib/views/container_view.js:310</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/container_view.js#L350">packages/ember-views/lib/views/container_view.js:350</a>
     </p>
 
     
@@ -2429,7 +2573,7 @@ generated lazily.</p>
           <a href="/api/classes/Ember.View.html#method_create">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-metal/lib/mixin.js#L346">packages/ember-metal/lib/mixin.js:346</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-metal/lib/mixin.js#L346">packages/ember-metal/lib/mixin.js:346</a>
     </p>
 
     
@@ -2487,7 +2631,7 @@ generated lazily.</p>
           <a href="/api/classes/Ember.View.html#method_createChildView">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L2085">packages/ember-views/lib/views/view.js:2085</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L2085">packages/ember-views/lib/views/view.js:2085</a>
     </p>
 
     
@@ -2562,7 +2706,7 @@ act as a child of the parent.</p>
           <a href="/api/classes/Ember.View.html#method_createElement">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1591">packages/ember-views/lib/views/view.js:1591</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1591">packages/ember-views/lib/views/view.js:1591</a>
     </p>
 
     
@@ -2622,7 +2766,7 @@ be called on this view and all of its child views.</p>
           <a href="/api/classes/Ember.View.html#method_decrementProperty">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/mixins/observable.js#L463">packages/ember-runtime/lib/mixins/observable.js:463</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/mixins/observable.js#L463">packages/ember-runtime/lib/mixins/observable.js:463</a>
     </p>
 
     
@@ -2700,7 +2844,7 @@ orc.decrementProperty(<span class="string"><span class="delimiter">'</span><span
           <a href="/api/classes/Ember.View.html#method_destroy">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/system/core_object.js#L114">packages/ember-runtime/lib/system/core_object.js:114</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/system/core_object.js#L114">packages/ember-runtime/lib/system/core_object.js:114</a>
     </p>
 
     
@@ -2760,7 +2904,7 @@ happen immediately.</p>
           <a href="/api/classes/Ember.View.html#method_destroyElement">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1707">packages/ember-views/lib/views/view.js:1707</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1707">packages/ember-views/lib/views/view.js:1707</a>
     </p>
 
     
@@ -2828,7 +2972,7 @@ want to implement the above callbacks when it is run.</p>
           <a href="/api/classes/Ember.View.html#method_detect">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-metal/lib/mixin.js#L420">packages/ember-metal/lib/mixin.js:420</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-metal/lib/mixin.js#L420">packages/ember-metal/lib/mixin.js:420</a>
     </p>
 
     
@@ -2868,6 +3012,76 @@ want to implement the above callbacks when it is run.</p>
 </div>
 
     
+      <div id="method_dismissCurrentView" class="method ">
+  <h3 class="name"><code>dismissCurrentView</code></h3>
+
+  <span class="args">
+    (currentView, callback)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/container_view.js#L443">packages/ember-views/lib/views/container_view.js:443</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>This method is responsible for dismissing a view.
+Default implementation will simply call the callback.
+You can override this method if you want to add an animation for example.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>currentView</strong> Ember.View<br>
+            a view to dismiss
+          </li>
+        
+          <li>
+            <strong>callback</strong> Function<br>
+            the callback called once operation is terminated
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
       <div id="method_eachComputedProperty" class="method inherited">
   <h3 class="name"><code>eachComputedProperty</code></h3>
 
@@ -2891,7 +3105,7 @@ want to implement the above callbacks when it is run.</p>
           <a href="/api/classes/Ember.View.html#method_eachComputedProperty">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/system/core_object.js#L262">packages/ember-runtime/lib/system/core_object.js:262</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/system/core_object.js#L262">packages/ember-runtime/lib/system/core_object.js:262</a>
     </p>
 
     
@@ -2957,7 +3171,7 @@ and any associated metadata (see <code>metaForProperty</code>) to the callback.<
           <a href="/api/classes/Ember.View.html#method_endPropertyChanges">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/mixins/observable.js#L224">packages/ember-runtime/lib/mixins/observable.js:224</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/mixins/observable.js#L224">packages/ember-runtime/lib/mixins/observable.js:224</a>
     </p>
 
     
@@ -3020,7 +3234,7 @@ deliver the deferred change notifications and end deferring.</p>
           <a href="/api/classes/Ember.View.html#method_findElementInParentElement">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1575">packages/ember-views/lib/views/view.js:1575</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1575">packages/ember-views/lib/views/view.js:1575</a>
     </p>
 
     
@@ -3093,7 +3307,7 @@ using a CSS class name instead of an ID.</p>
           <a href="/api/classes/Ember.View.html#method_get">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/mixins/observable.js#L75">packages/ember-runtime/lib/mixins/observable.js:75</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/mixins/observable.js#L75">packages/ember-runtime/lib/mixins/observable.js:75</a>
     </p>
 
     
@@ -3198,7 +3412,7 @@ not defined upfront.</p>
           <a href="/api/classes/Ember.View.html#method_getPath">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/mixins/observable.js#L408">packages/ember-runtime/lib/mixins/observable.js:408</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/mixins/observable.js#L408">packages/ember-runtime/lib/mixins/observable.js:408</a>
     </p>
 
     
@@ -3262,7 +3476,7 @@ not defined upfront.</p>
           <a href="/api/classes/Ember.View.html#method_getProperties">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/mixins/observable.js#L115">packages/ember-runtime/lib/mixins/observable.js:115</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/mixins/observable.js#L115">packages/ember-runtime/lib/mixins/observable.js:115</a>
     </p>
 
     
@@ -3344,7 +3558,7 @@ with a list of strings or an array:</p>
           <a href="/api/classes/Ember.View.html#method_getWithDefault">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/mixins/observable.js#L431">packages/ember-runtime/lib/mixins/observable.js:431</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/mixins/observable.js#L431">packages/ember-runtime/lib/mixins/observable.js:431</a>
     </p>
 
     
@@ -3424,7 +3638,7 @@ returns undefined.</p>
           <a href="/api/classes/Ember.View.html#method_handleEvent">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L2205">packages/ember-views/lib/views/view.js:2205</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L2205">packages/ember-views/lib/views/view.js:2205</a>
     </p>
 
     
@@ -3487,7 +3701,7 @@ returns undefined.</p>
           <a href="/api/classes/Ember.View.html#method_hasObserverFor">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/mixins/observable.js#L367">packages/ember-runtime/lib/mixins/observable.js:367</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/mixins/observable.js#L367">packages/ember-runtime/lib/mixins/observable.js:367</a>
     </p>
 
     
@@ -3559,7 +3773,7 @@ on the object.</p>
           <a href="/api/classes/Ember.View.html#method_incrementProperty">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/mixins/observable.js#L446">packages/ember-runtime/lib/mixins/observable.js:446</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/mixins/observable.js#L446">packages/ember-runtime/lib/mixins/observable.js:446</a>
     </p>
 
     
@@ -3637,7 +3851,7 @@ team.incrementProperty(<span class="string"><span class="delimiter">'</span><spa
           <a href="/api/classes/Ember.View.html#method_init">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1945">packages/ember-views/lib/views/view.js:1945</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1945">packages/ember-views/lib/views/view.js:1945</a>
     </p>
 
     
@@ -3678,7 +3892,7 @@ team.incrementProperty(<span class="string"><span class="delimiter">'</span><spa
           <a href="/api/classes/Ember.View.html#method_invalidateRecursively">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1651">packages/ember-views/lib/views/view.js:1651</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1651">packages/ember-views/lib/views/view.js:1651</a>
     </p>
 
     
@@ -3728,7 +3942,7 @@ team.incrementProperty(<span class="string"><span class="delimiter">'</span><spa
           <a href="/api/classes/Ember.View.html#method_invokeRecursively">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1635">packages/ember-views/lib/views/view.js:1635</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1635">packages/ember-views/lib/views/view.js:1635</a>
     </p>
 
     
@@ -3785,7 +3999,7 @@ team.incrementProperty(<span class="string"><span class="delimiter">'</span><spa
           <a href="/api/classes/Ember.View.html#method_metaForProperty">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/system/core_object.js#L232">packages/ember-runtime/lib/system/core_object.js:232</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/system/core_object.js#L232">packages/ember-runtime/lib/system/core_object.js:232</a>
     </p>
 
     
@@ -3874,7 +4088,7 @@ property from your class like this:</p>
           <a href="/api/classes/Ember.View.html#method_notifyPropertyChange">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/mixins/observable.js#L286">packages/ember-runtime/lib/mixins/observable.js:286</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/mixins/observable.js#L286">packages/ember-runtime/lib/mixins/observable.js:286</a>
     </p>
 
     
@@ -3920,6 +4134,76 @@ succession.</p>
 </div>
 
     
+      <div id="method_presentCurrentView" class="method ">
+  <h3 class="name"><code>presentCurrentView</code></h3>
+
+  <span class="args">
+    (currentView, callback)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/container_view.js#L415">packages/ember-views/lib/views/container_view.js:415</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>This method is responsible for presenting a new view.
+Default implementation will simply call the callback.
+You can override this method if you want to add an animation for example.</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>currentView</strong> Ember.View<br>
+            a view to present
+          </li>
+        
+          <li>
+            <strong>callback</strong> Function<br>
+            the callback called once operation is terminated
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
       <div id="method_propertyDidChange" class="method inherited">
   <h3 class="name"><code>propertyDidChange</code></h3>
 
@@ -3944,7 +4228,7 @@ succession.</p>
           <a href="/api/classes/Ember.View.html#method_propertyDidChange">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/mixins/observable.js#L264">packages/ember-runtime/lib/mixins/observable.js:264</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/mixins/observable.js#L264">packages/ember-runtime/lib/mixins/observable.js:264</a>
     </p>
 
     
@@ -4023,7 +4307,7 @@ and cause notifications to be delivered more often than you would like.</p>
           <a href="/api/classes/Ember.View.html#method_propertyWillChange">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/mixins/observable.js#L242">packages/ember-runtime/lib/mixins/observable.js:242</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/mixins/observable.js#L242">packages/ember-runtime/lib/mixins/observable.js:242</a>
     </p>
 
     
@@ -4099,7 +4383,7 @@ and cause notifications to be delivered more often than you would like.</p>
           <a href="/api/classes/Ember.View.html#method_remove">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1540">packages/ember-views/lib/views/view.js:1540</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1540">packages/ember-views/lib/views/view.js:1540</a>
     </p>
 
     
@@ -4152,7 +4436,7 @@ and cause notifications to be delivered more often than you would like.</p>
           <a href="/api/classes/Ember.View.html#method_removeAllChildren">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L2006">packages/ember-views/lib/views/view.js:2006</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L2006">packages/ember-views/lib/views/view.js:2006</a>
     </p>
 
     
@@ -4208,7 +4492,7 @@ and cause notifications to be delivered more often than you would like.</p>
           <a href="/api/classes/Ember.View.html#method_removeChild">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1980">packages/ember-views/lib/views/view.js:1980</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1980">packages/ember-views/lib/views/view.js:1980</a>
     </p>
 
     
@@ -4253,6 +4537,75 @@ and cause notifications to be delivered more often than you would like.</p>
 </div>
 
     
+      <div id="method_removeCurrentView" class="method ">
+  <h3 class="name"><code>removeCurrentView</code></h3>
+
+  <span class="args">
+    (currentView, callback)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+    <p>
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/container_view.js#L456">packages/ember-views/lib/views/container_view.js:456</a>
+    </p>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>This method is responsible for removing a view from the containerView
+You may want to override it in case you implementing views sharing for example</p>
+
+    </div>
+  
+
+  
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <ul>
+        
+          <li>
+            <strong>currentView</strong> Ember.View<br>
+            a view to present
+          </li>
+        
+          <li>
+            <strong>callback</strong> Function<br>
+            the callback called once view is removed
+          </li>
+        
+      </ul>
+    </div>
+  
+
+  
+
+</div>
+
+    
       <div id="method_removeFromParent" class="method inherited">
   <h3 class="name"><code>removeFromParent</code></h3>
 
@@ -4274,7 +4627,7 @@ and cause notifications to be delivered more often than you would like.</p>
           <a href="/api/classes/Ember.View.html#method_removeFromParent">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L2024">packages/ember-views/lib/views/view.js:2024</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L2024">packages/ember-views/lib/views/view.js:2024</a>
     </p>
 
     
@@ -4331,7 +4684,7 @@ does nothing.</p>
           <a href="/api/classes/Ember.View.html#method_removeObserver">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/mixins/observable.js#L352">packages/ember-runtime/lib/mixins/observable.js:352</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/mixins/observable.js#L352">packages/ember-runtime/lib/mixins/observable.js:352</a>
     </p>
 
     
@@ -4413,7 +4766,7 @@ target will no longer receive notifications.</p>
           but overwritten in
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/container_view.js#L277">packages/ember-views/lib/views/container_view.js:277</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/container_view.js#L317">packages/ember-views/lib/views/container_view.js:317</a>
     </p>
 
     
@@ -4470,7 +4823,7 @@ target will no longer receive notifications.</p>
           <a href="/api/classes/Ember.View.html#method_reopen">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-metal/lib/mixin.js#L359">packages/ember-metal/lib/mixin.js:359</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-metal/lib/mixin.js#L359">packages/ember-metal/lib/mixin.js:359</a>
     </p>
 
     
@@ -4528,7 +4881,7 @@ target will no longer receive notifications.</p>
           <a href="/api/classes/Ember.View.html#method_replaceIn">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1467">packages/ember-views/lib/views/view.js:1467</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1467">packages/ember-views/lib/views/view.js:1467</a>
     </p>
 
     
@@ -4599,7 +4952,7 @@ finished synchronizing</p>
           <a href="/api/classes/Ember.View.html#method_rerender">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1190">packages/ember-views/lib/views/view.js:1190</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1190">packages/ember-views/lib/views/view.js:1190</a>
     </p>
 
     
@@ -4660,7 +5013,7 @@ be slow.</p>
           <a href="/api/classes/Ember.View.html#method_set">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/mixins/observable.js#L141">packages/ember-runtime/lib/mixins/observable.js:141</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/mixins/observable.js#L141">packages/ember-runtime/lib/mixins/observable.js:141</a>
     </p>
 
     
@@ -4777,7 +5130,7 @@ itself so you can do chaining like this:</p>
           <a href="/api/classes/Ember.View.html#method_setPath">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/mixins/observable.js#L419">packages/ember-runtime/lib/mixins/observable.js:419</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/mixins/observable.js#L419">packages/ember-runtime/lib/mixins/observable.js:419</a>
     </p>
 
     
@@ -4846,7 +5199,7 @@ itself so you can do chaining like this:</p>
           <a href="/api/classes/Ember.View.html#method_setProperties">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/mixins/observable.js#L192">packages/ember-runtime/lib/mixins/observable.js:192</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/mixins/observable.js#L192">packages/ember-runtime/lib/mixins/observable.js:192</a>
     </p>
 
     
@@ -4920,7 +5273,7 @@ with a Hash:</p>
           <a href="/api/classes/Ember.View.html#method_setUnknownProperty">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/mixins/observable.js#L394">packages/ember-runtime/lib/mixins/observable.js:394</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/mixins/observable.js#L394">packages/ember-runtime/lib/mixins/observable.js:394</a>
     </p>
 
     
@@ -4990,7 +5343,7 @@ this method to create &quot;virtual&quot; properties.</p>
           <a href="/api/classes/Ember.View.html#method_toggleProperty">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/mixins/observable.js#L480">packages/ember-runtime/lib/mixins/observable.js:480</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/mixins/observable.js#L480">packages/ember-runtime/lib/mixins/observable.js:480</a>
     </p>
 
     
@@ -5065,7 +5418,7 @@ current value.</p>
           <a href="/api/classes/Ember.View.html#method_unknownProperty">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/mixins/observable.js#L381">packages/ember-runtime/lib/mixins/observable.js:381</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/mixins/observable.js#L381">packages/ember-runtime/lib/mixins/observable.js:381</a>
     </p>
 
     
@@ -5134,7 +5487,7 @@ this method to create &quot;virtual&quot; properties.</p>
           but overwritten in
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/container_view.js#L293">packages/ember-views/lib/views/container_view.js:293</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/container_view.js#L333">packages/ember-views/lib/views/container_view.js:333</a>
     </p>
 
     
@@ -5179,7 +5532,7 @@ this method to create &quot;virtual&quot; properties.</p>
           <a href="/api/classes/Ember.View.html#method_$">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1391">packages/ember-views/lib/views/view.js:1391</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1391">packages/ember-views/lib/views/view.js:1391</a>
     </p>
 
     
@@ -5237,7 +5590,7 @@ all of the <code>li</code> elements inside the DOM element of this view.</p>
           <a href="/api/classes/Ember.View.html#method__context">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L874">packages/ember-views/lib/views/view.js:874</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L874">packages/ember-views/lib/views/view.js:874</a>
     </p>
 
     
@@ -5279,7 +5632,7 @@ all of the <code>li</code> elements inside the DOM element of this view.</p>
           <a href="/api/classes/Ember.View.html#method_ariaRole">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1854">packages/ember-views/lib/views/view.js:1854</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1854">packages/ember-views/lib/views/view.js:1854</a>
     </p>
 
     
@@ -5333,7 +5686,7 @@ http://www.w3.org/TR/wai-aria/roles#roles_categorization</p>
           <a href="/api/classes/Ember.View.html#method_attributeBindings">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1917">packages/ember-views/lib/views/view.js:1917</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1917">packages/ember-views/lib/views/view.js:1917</a>
     </p>
 
     
@@ -5413,7 +5766,7 @@ Ember.View.create({
           <a href="/api/classes/Ember.View.html#method_childViews">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L933">packages/ember-views/lib/views/view.js:933</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L933">packages/ember-views/lib/views/view.js:933</a>
     </p>
 
     
@@ -5457,7 +5810,7 @@ Ember.View.create({
           <a href="/api/classes/Ember.View.html#method_classNameBindings">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1880">packages/ember-views/lib/views/view.js:1880</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1880">packages/ember-views/lib/views/view.js:1880</a>
     </p>
 
     
@@ -5555,7 +5908,7 @@ Ember.View.create({
           <a href="/api/classes/Ember.View.html#method_classNames">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1869">packages/ember-views/lib/views/view.js:1869</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1869">packages/ember-views/lib/views/view.js:1869</a>
     </p>
 
     
@@ -5606,7 +5959,7 @@ superclasses as well.</p>
           <a href="/api/classes/Ember.View.html#method_collectionView">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1038">packages/ember-views/lib/views/view.js:1038</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1038">packages/ember-views/lib/views/view.js:1038</a>
     </p>
 
     
@@ -5659,7 +6012,7 @@ superclasses as well.</p>
           <a href="/api/classes/Ember.View.html#method_contentView">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1059">packages/ember-views/lib/views/view.js:1059</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1059">packages/ember-views/lib/views/view.js:1059</a>
     </p>
 
     
@@ -5713,7 +6066,7 @@ superclasses as well.</p>
           <a href="/api/classes/Ember.View.html#method_context">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L853">packages/ember-views/lib/views/view.js:853</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L853">packages/ember-views/lib/views/view.js:853</a>
     </p>
 
     
@@ -5766,7 +6119,7 @@ to do with it.</p>
           <a href="/api/classes/Ember.View.html#method_controller">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L799">packages/ember-views/lib/views/view.js:799</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L799">packages/ember-views/lib/views/view.js:799</a>
     </p>
 
     
@@ -5814,7 +6167,7 @@ made available for use by the template.</p>
           <a href="/api/classes/Ember.View.html#method_element">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1377">packages/ember-views/lib/views/view.js:1377</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1377">packages/ember-views/lib/views/view.js:1377</a>
     </p>
 
     
@@ -5861,7 +6214,7 @@ made available for use by the template.</p>
           <a href="/api/classes/Ember.View.html#method_elementId">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1558">packages/ember-views/lib/views/view.js:1558</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1558">packages/ember-views/lib/views/view.js:1558</a>
     </p>
 
     
@@ -5909,7 +6262,7 @@ This ID must be set at the time the view is created.</p>
           <a href="/api/classes/Ember.View.html#method_isDestroyed">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/system/core_object.js#L102">packages/ember-runtime/lib/system/core_object.js:102</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/system/core_object.js#L102">packages/ember-runtime/lib/system/core_object.js:102</a>
     </p>
 
     
@@ -5952,7 +6305,7 @@ This ID must be set at the time the view is created.</p>
           <a href="/api/classes/Ember.View.html#method_isDestroying">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-runtime/lib/system/core_object.js#L108">packages/ember-runtime/lib/system/core_object.js:108</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-runtime/lib/system/core_object.js#L108">packages/ember-runtime/lib/system/core_object.js:108</a>
     </p>
 
     
@@ -5997,7 +6350,7 @@ This ID must be set at the time the view is created.</p>
           <a href="/api/classes/Ember.View.html#method_isView">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L728">packages/ember-views/lib/views/view.js:728</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L728">packages/ember-views/lib/views/view.js:728</a>
     </p>
 
     
@@ -6047,7 +6400,7 @@ This ID must be set at the time the view is created.</p>
           <a href="/api/classes/Ember.View.html#method_isVisible">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L924">packages/ember-views/lib/views/view.js:924</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L924">packages/ember-views/lib/views/view.js:924</a>
     </p>
 
     
@@ -6096,7 +6449,7 @@ This ID must be set at the time the view is created.</p>
           <a href="/api/classes/Ember.View.html#method_itemView">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1048">packages/ember-views/lib/views/view.js:1048</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1048">packages/ember-views/lib/views/view.js:1048</a>
     </p>
 
     
@@ -6150,7 +6503,7 @@ an Ember.CollectionView</p>
           <a href="/api/classes/Ember.View.html#method_layout">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L817">packages/ember-views/lib/views/view.js:817</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L817">packages/ember-views/lib/views/view.js:817</a>
     </p>
 
     
@@ -6205,7 +6558,7 @@ on a subclass.</p>
           <a href="/api/classes/Ember.View.html#method_layoutName">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L757">packages/ember-views/lib/views/view.js:757</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L757">packages/ember-views/lib/views/view.js:757</a>
     </p>
 
     
@@ -6258,7 +6611,7 @@ shared in <code>Ember.TEMPLATES</code>.</p>
           <a href="/api/classes/Ember.View.html#method_nearestChildOf">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1021">packages/ember-views/lib/views/view.js:1021</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1021">packages/ember-views/lib/views/view.js:1021</a>
     </p>
 
     
@@ -6314,7 +6667,7 @@ shared in <code>Ember.TEMPLATES</code>.</p>
           <a href="/api/classes/Ember.View.html#method_nearestInstanceOf">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L965">packages/ember-views/lib/views/view.js:965</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L965">packages/ember-views/lib/views/view.js:965</a>
     </p>
 
     
@@ -6326,60 +6679,6 @@ shared in <code>Ember.TEMPLATES</code>.</p>
     <div class="description">
       <p>Return the nearest ancestor that is an instance of the provided
 class.</p>
-
-    </div>
-  
-
-  
-
-  
-
-  
-
-  
-    <div class="return">
-      <h3>Returns:</h3>
-
-      : Ember.View
-    </div>
-  
-
-</div>
-
-    
-      <div id="property_nearestOfType" class="property inherited">
-  <h3 class="name"><code>nearestOfType</code></h3>
-
-
-  <span class="type"></span>
-
-
-
-
-
-
-
-
-  <div class="meta">
-    <p>
-      
-        
-          Inherited from
-          <a href="/api/classes/Ember.View.html#method_nearestOfType">Ember.View</a>
-        
-      
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L984">packages/ember-views/lib/views/view.js:984</a>
-    </p>
-
-    
-
-    
-  </div>
-
-  
-    <div class="description">
-      <p>Return the nearest ancestor that is an instance of the provided
-class or mixin.</p>
 
     </div>
   
@@ -6422,7 +6721,7 @@ class or mixin.</p>
           <a href="/api/classes/Ember.View.html#method_nearestWithProperty">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1005">packages/ember-views/lib/views/view.js:1005</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1005">packages/ember-views/lib/views/view.js:1005</a>
     </p>
 
     
@@ -6475,7 +6774,7 @@ class or mixin.</p>
           <a href="/api/classes/Ember.View.html#method_tagName">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1838">packages/ember-views/lib/views/view.js:1838</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1838">packages/ember-views/lib/views/view.js:1838</a>
     </p>
 
     
@@ -6528,7 +6827,7 @@ must destroy and recreate the view element.</p>
           <a href="/api/classes/Ember.View.html#method_template">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L779">packages/ember-views/lib/views/view.js:779</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L779">packages/ember-views/lib/views/view.js:779</a>
     </p>
 
     
@@ -6580,7 +6879,7 @@ the template yourself.</p>
           <a href="/api/classes/Ember.View.html#method_templateName">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L744">packages/ember-views/lib/views/view.js:744</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L744">packages/ember-views/lib/views/view.js:744</a>
     </p>
 
     
@@ -6633,7 +6932,7 @@ shared in <code>Ember.TEMPLATES</code>.</p>
           <a href="/api/classes/Ember.View.html#method_templates">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L770">packages/ember-views/lib/views/view.js:770</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L770">packages/ember-views/lib/views/view.js:770</a>
     </p>
 
     
@@ -6683,7 +6982,7 @@ shared in <code>Ember.TEMPLATES</code>.</p>
           <a href="/api/classes/Ember.View.html#method_views">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L2383">packages/ember-views/lib/views/view.js:2383</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L2383">packages/ember-views/lib/views/view.js:2383</a>
     </p>
 
     
@@ -6732,7 +7031,7 @@ shared in <code>Ember.TEMPLATES</code>.</p>
           <a href="/api/classes/Ember.View.html#method_didInsertElement">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1617">packages/ember-views/lib/views/view.js:1617</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1617">packages/ember-views/lib/views/view.js:1617</a>
     </p>
 
     
@@ -6780,7 +7079,7 @@ document body.</p>
           <a href="/api/classes/Ember.View.html#method_parentViewDidChange">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1778">packages/ember-views/lib/views/view.js:1778</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1778">packages/ember-views/lib/views/view.js:1778</a>
     </p>
 
     
@@ -6826,7 +7125,7 @@ document body.</p>
           <a href="/api/classes/Ember.View.html#method_willClearRender">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1626">packages/ember-views/lib/views/view.js:1626</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1626">packages/ember-views/lib/views/view.js:1626</a>
     </p>
 
     
@@ -6874,7 +7173,7 @@ observers you have installed based on the DOM state</p>
           <a href="/api/classes/Ember.View.html#method_willDestroyElement">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1729">packages/ember-views/lib/views/view.js:1729</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1729">packages/ember-views/lib/views/view.js:1729</a>
     </p>
 
     
@@ -6922,7 +7221,7 @@ event listeners.</p>
           <a href="/api/classes/Ember.View.html#method_willInsertElement">Ember.View</a>
         
       
-      <a href="https://github.com/emberjs/ember.js/tree/b45af99/packages/ember-views/lib/views/view.js#L1610">packages/ember-views/lib/views/view.js:1610</a>
+      <a href="https://github.com/emberjs/ember.js/tree/b5cee6e/packages/ember-views/lib/views/view.js#L1610">packages/ember-views/lib/views/view.js:1610</a>
     </p>
 
     
@@ -6957,10 +7256,14 @@ event listeners.</p>
     </div>
 
     <div id="footer">
-      <div class="info">
-        <div class="links"><a href="http://twitter.com/emberjs">Twitter</a> &bull; <a href="https://github.com/emberjs/ember.js">GitHub</a></div>
-        <div class="copyright">Copyright 2012 <a href="http://tilde.io">Tilde Inc.</a></div>
-        <div class="credit">Design by <a href="http://www.heropixel.com">HeroPixel</a></div>
+      <div id="footer-wrapper">
+        <div class="info">Copyright 2012 <a href="http://tilde.io">Tilde Inc.</a><br>Design by <a href="http://www.heropixel.com">HeroPixel</a></div>
+        <div class="statement">Ember.js is free, open source and always will be.</div>
+        <div class="links">
+          <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
+          <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
+          
+        </div>
       </div>
     </div>
 
