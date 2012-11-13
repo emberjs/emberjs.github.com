@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Ember Blog</title>
+  <subtitle>Ember News and Updates</subtitle>
+  <id>http://emberjs.com/blog</id>
+  <link href="http://emberjs.com/blog"/>
+  <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
+  <updated>2012-11-02T00:00:00Z</updated>
+  <author>
+    <name>Ember</name>
+  </author>
+  <entry>
+    <title>This Week in Ember.js</title>
+    <link rel="alternate" href="/blog/2012/11/02/this-week-in-ember-js/"/>
+    <id>/blog/2012/11/02/this-week-in-ember-js/</id>
+    <published>2012-11-02T00:00:00Z</published>
+    <updated>2012-11-02T00:00:00Z</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;There&amp;#39;s a lot of work happening on Ember.js and sometimes it&amp;#39;s hard to keep track of what&amp;#39;s going on. Here&amp;#39;s what me and Yehuda got done this week.&lt;/p&gt;
+
+</summary>
+    <content type="html">&lt;p&gt;There&amp;#39;s a lot of work happening on Ember.js and sometimes it&amp;#39;s hard to keep track of what&amp;#39;s going on. Here&amp;#39;s what me and Yehuda got done this week.&lt;/p&gt;
+
+
+&lt;h3 id='toc_meetup'&gt;Meetup&lt;/h3&gt;
+&lt;p&gt;The SF Ember.js Meetup on Tuesday (which we actually held in Mountain
+View this month) was a success! It was sponsored by our friends at
+Addepar, who are also &lt;a href="https://addepar.com/ember/"&gt;funding me and Yehuda to work on Ember Data for
+the next few months&lt;/a&gt;. So, big thanks to them!&lt;/p&gt;
+
+&lt;p&gt;Tony Sherbondy gave an overview of the Addepar app and described how
+Ember.js has helped them. The biggest &amp;quot;a-ha&amp;quot; moment for me was when he
+described how they completely changed out the table view that powers big
+chunks of the UI, and didn&amp;#39;t have to make any changes in the rest of the
+app. It&amp;#39;s exactly this type of encapsulation that makes Ember a win, and
+I&amp;#39;m glad to see it happening in real life.&lt;/p&gt;
+
+&lt;p&gt;I gave a talk on Ember Data, and discussed some of the new APIs we&amp;#39;ll be
+working on over the next few months. Yehuda gave a talk about the router
+proposal. The pork belly buns from the Chairman Bao
+food truck were epic. I got a little drunk.&lt;/p&gt;
+&lt;h3 id='toc_per-type-adapters'&gt;Per-Type Adapters&lt;/h3&gt;
+&lt;p&gt;You can now register different adapters on the store per-type. You can
+read more about this feature in &lt;a href="https://gist.github.com/4004913"&gt;this Gist&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;This feature is done and on &lt;code&gt;master&lt;/code&gt;!&lt;/p&gt;
+&lt;h3 id='toc_explicit-inverses'&gt;Explicit Inverses&lt;/h3&gt;
+&lt;p&gt;Ember Data has always been smart enough to know that when you set a &lt;code&gt;belongsTo&lt;/code&gt; relationship, the child record should be added to the parent&amp;#39;s corresponding &lt;code&gt;hasMany&lt;/code&gt; relationship.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, it was pretty braindead about &lt;em&gt;which&lt;/em&gt; &lt;code&gt;hasMany&lt;/code&gt; relationship it would update. Before, it would just pick the first relationship it found with the same type as the child.&lt;/p&gt;
+
+&lt;p&gt;Because it&amp;#39;s reasonable for people to have multiple &lt;code&gt;belongsTo&lt;/code&gt;/&lt;code&gt;hasMany&lt;/code&gt;s for the same type, we added support for specifying an inverse:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;App.Comment = DS.Model.extend({
+  &lt;span class="key"&gt;onePost&lt;/span&gt;: DS.belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;App.Post&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;),
+  &lt;span class="key"&gt;twoPost&lt;/span&gt;: DS.belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;App.Post&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;),
+  &lt;span class="key"&gt;redPost&lt;/span&gt;: DS.belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;App.Post&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;),
+  &lt;span class="key"&gt;bluePost&lt;/span&gt;: DS.belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;App.Post&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;)
+});
+App.Post = DS.Model.extend({
+  &lt;span class="key"&gt;comments&lt;/span&gt;: DS.hasMany(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;App.Comment&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, {
+    &lt;span class="key"&gt;inverse&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;redPost&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;
+  })
+});&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;p&gt;You can also specify an inverse on a &lt;code&gt;belongsTo&lt;/code&gt;, which works how you&amp;#39;d expect.&lt;/p&gt;
+&lt;h3 id='toc_mappable-refactor'&gt;Mappable Refactor&lt;/h3&gt;
+&lt;p&gt;We noticed that a lot of configuration APIs we were introducing in the
+adapter layer wanted to treat the adapter or serializer object like a
+map, but there were some slightly different semantics than the standard
+&lt;code&gt;Ember.Map&lt;/code&gt; implementation.&lt;/p&gt;
+
+&lt;p&gt;This refactor greatly cleans up the implementation and increases the
+amount of code shared between classes.&lt;/p&gt;
+
+&lt;p&gt;It&amp;#39;s a little hard to explain, but hopefully the inline documentation
+plus the actual usage in the framework should make it clear what I mean.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately I totally spaced and forgot to push this, and it&amp;#39;s on a
+computer I don&amp;#39;t have access to at the moment. Look for this in a few
+weeks!&lt;/p&gt;
+&lt;h3 id='toc_core-concepts-guide'&gt;Core Concepts Guide&lt;/h3&gt;
+&lt;p&gt;Many people getting started with Ember.js tell me that each of the
+individual pieces make sense, but they&amp;#39;re not sure how all of those
+pieces fit together.&lt;/p&gt;
+
+&lt;p&gt;We&amp;#39;re making a big push towards improving our documentation as we head
+towards the 1.0 release, and this is one of the first things I want to
+address.&lt;/p&gt;
+
+&lt;p&gt;To that end, I wrote a &amp;quot;Core Concepts&amp;quot; guide that I hope you will find
+helpful. It&amp;#39;s not up yet (I&amp;#39;m still working on a branch of the website)
+but you can &lt;a href="https://github.com/emberjs/website/blob/doc-refactor/source/guides/getting-started/core-concepts.md"&gt;view the Markdown on GitHub&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;We want to make Ember.js as easy for new developers to pick up as
+possible, so your feedback about our documentation, as always, is
+extremely important. Please review and let me know what you think!&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Finally, I&amp;#39;d like to give a shoutout to Trek Glowacki for doing an
+awesome job &lt;a href="http://javascriptjabber.com/034-jsj-ember-js/"&gt;repping the Ember.js community on the JS Jabber
+podcast&lt;/a&gt;. I had no idea
+how sexy his voice was.  If you haven&amp;#39;t listened yet, it&amp;#39;s worth your
+time. (Feel free to troll him about not knowing how the run loop works.
+;)&lt;/p&gt;
+
+&lt;p&gt;Me, Yehuda and the rest of the Tilde team will be in Hawaii next week
+for our company offsite. We should have wi-fi and be generally
+available, but we have plenty of luaus, boat cruises, and zip line
+adventures planned, so if we&amp;#39;re less available than usual, that&amp;#39;s the
+reason.&lt;/p&gt;
+
+&lt;p&gt;That&amp;#39;s it for this week,&lt;br&gt;
+Tom Dale&lt;br&gt;
+&lt;a href="https://twitter.com/tomdale"&gt;@tomdale&lt;/a&gt;&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Ember 1.0 Prerelease 2</title>
+    <link rel="alternate" href="/blog/2012/10/25/ember-1-0-pre2/"/>
+    <id>/blog/2012/10/25/ember-1-0-pre2/</id>
+    <published>2012-10-25T00:00:00Z</published>
+    <updated>2012-10-25T00:00:00Z</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Ember 1.0 Prerelease 2 is out now. This is mainly a bug fix release
+after 1.0.pre. However, there are a few things you should be aware of
+and we&amp;#39;ll go over those a bit below. We&amp;#39;re still pushing hard toward the a 1.0 beta release but wanted to make some of our bug fixes available in a more formal way. If you want to go ahead and
+download now, you can grab it over on the &lt;a href="https://github.com/emberjs/ember.js/downloads"&gt;Github Download Page&lt;/a&gt;.  &lt;/p&gt;
+
+</summary>
+    <content type="html">&lt;p&gt;Ember 1.0 Prerelease 2 is out now. This is mainly a bug fix release
+after 1.0.pre. However, there are a few things you should be aware of
+and we&amp;#39;ll go over those a bit below. We&amp;#39;re still pushing hard toward the a 1.0 beta release but wanted to make some of our bug fixes available in a more formal way. If you want to go ahead and
+download now, you can grab it over on the &lt;a href="https://github.com/emberjs/ember.js/downloads"&gt;Github Download Page&lt;/a&gt;.  &lt;/p&gt;
+
+
+&lt;h2 id='toc_what-s-changed-now'&gt;What&amp;#39;s Changed Now&lt;/h2&gt;
+&lt;p&gt;Other than bug fixes, there are a few things we&amp;#39;ve changed that
+could affect your 1.0.pre apps.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;{{outlet}}&lt;/code&gt; now creates a Metamorph rather than a &lt;code&gt;&amp;lt;div&amp;gt;&lt;/code&gt;. This makes
+it less obtrusive, but you may have to change your HTML or CSS if you 
+were relying on the &lt;code&gt;&amp;lt;div&amp;gt;&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;We have removed &lt;code&gt;CP_DEFAULT_CACHEABLE&lt;/code&gt; and &lt;code&gt;VIEW_PRESERVES_CONTEXT&lt;/code&gt;
+flags. Both behaviors are now always on.&lt;/li&gt;
+&lt;li&gt;Inline Handlebars templates must always be named now. The default name
+is &amp;#39;application&amp;#39;. This means that &lt;code&gt;&amp;lt;script type=&amp;quot;text/x-handlebars&amp;quot;&amp;gt;&lt;/code&gt;
+behaves exactly the same as
+&lt;code&gt;&amp;lt;script type=&amp;quot;text/x-handlebars&amp;quot; data-template-name=&amp;quot;application&amp;quot;&amp;gt;&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Using the &lt;code&gt;{{collection}}&lt;/code&gt; helper without a class has been deprecated,
+use the &lt;code&gt;{{each}}&lt;/code&gt; helper instead. The &lt;code&gt;{{each}}&lt;/code&gt; helper also now
+supports &lt;code&gt;itemViewClass&lt;/code&gt; which was the main benefit to using
+&lt;code&gt;{{collection}}&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Ember.ViewState&lt;/code&gt; has been removed.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For more information on what&amp;#39;s been changing in Ember, take a look at
+Bradley Priest&amp;#39;s &lt;a href="http://bradleypriest.com/tags.html#ember-wrapup-ref"&gt;What&amp;#39;s New in EmberJS&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id='toc_what-will-change-later'&gt;What Will Change Later&lt;/h2&gt;
+&lt;p&gt;There are still some things that we want to take care of before we do a
+beta release. Here are a few of them:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;New Router API: This is mostly finalized but has not yet been
+implemented.&lt;/li&gt;
+&lt;li&gt;New Computed Property API: We&amp;#39;re working on a new API for Computed 
+Property getters and setters. Don&amp;#39;t worry, we expect to support
+the existing one for the foreseeable future.&lt;/li&gt;
+&lt;li&gt;Asynchronous Observers: Currently observers are fired immediately
+whereas bindings are synchronized with the RunLoop. In most cases
+observers can and should be delayed for optimal performance. We plan
+to change the existing behavior and add a new API for the cases where
+immediate execution really is needed.&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Ember 1.0 Prerelease</title>
+    <link rel="alternate" href="/blog/2012/08/03/ember-1-0-prerelease/"/>
+    <id>/blog/2012/08/03/ember-1-0-prerelease/</id>
+    <published>2012-08-03T00:00:00Z</published>
+    <updated>2012-08-03T00:00:00Z</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;We&amp;#39;re pleased to announce the Ember 1.0 Prerelease. It&amp;#39;s been a couple
+of months since our 0.9.8.1 release and a lot has changed. By making
+this prerelease available we&amp;#39;re giving you the opportunity to try out
+the feature set for 1.0. Read on to learn what&amp;#39;s new along with a few
+caveats.&lt;/p&gt;
+
+</summary>
+    <content type="html">&lt;p&gt;We&amp;#39;re pleased to announce the Ember 1.0 Prerelease. It&amp;#39;s been a couple
+of months since our 0.9.8.1 release and a lot has changed. By making
+this prerelease available we&amp;#39;re giving you the opportunity to try out
+the feature set for 1.0. Read on to learn what&amp;#39;s new along with a few
+caveats.&lt;/p&gt;
+
+
+&lt;h2 id='toc_what-s-new'&gt;What&amp;#39;s New&lt;/h2&gt;&lt;h3 id='toc_router'&gt;Router&lt;/h3&gt;
+&lt;p&gt;Ember.js is all about giving you the tools to build ambitious apps on
+the web. Here&amp;#39;s the thing about ambitious apps: they usually have state.
+Lots of state. And the bigger your app gets, the harder keeping all
+of it in your head becomes.&lt;/p&gt;
+
+&lt;p&gt;Part of being an app on the web is taking advantages of the browser&amp;#39;s
+strengths. In particular, the fact that we have URLs to describe what
+we see on our screen is an advantage over native applications. Your
+users want to be able to share that URL on Twitter or Facebook and have
+ their friends see what they&amp;#39;re seeing.&lt;/p&gt;
+
+&lt;p&gt;Ember 1.0 Prerelease includes what we think is the most advanced tool
+for modeling your application&amp;#39;s state: &lt;code&gt;Ember.Router&lt;/code&gt;. The router allows
+you to describe the state of your application as discrete objects, which
+means it&amp;#39;s impossible for your application to ever get into a &amp;quot;bad
+state.&amp;quot; And because the URL is just a serialization of your
+application&amp;#39;s state, you just tell us how to build the URL and we&amp;#39;ll
+keep it up-to-date as your users move throughout the application.&lt;/p&gt;
+
+&lt;p&gt;We&amp;#39;re still making tweaks to the router API to make it as easy as
+possible for new users to pick up, but we think that modeling your apps
+as discrete states is the way all apps will be built in the future. It&amp;#39;s
+still new but we believe in a few years it will be as relied on as
+automated testing for building the most robust applications possible.&lt;/p&gt;
+&lt;h3 id='toc_view-context-changes'&gt;View Context Changes&lt;/h3&gt;
+&lt;p&gt;In apps built on earlier version of Ember, the &lt;code&gt;{{#view}}&lt;/code&gt; helper
+created a new context for the view. This meant that you had to
+explicitly set the context on them. In 1.0, we&amp;#39;ve made this a bit
+simpler. The &lt;code&gt;{{#view}}&lt;/code&gt; helper no longer changes the context, instead
+maintaining the parent context by default. Alternatively, we will use
+the &lt;code&gt;controller&lt;/code&gt; property if provided. You may also choose to directly
+override the &lt;code&gt;context&lt;/code&gt; property. The order is as follows:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Specified controller&lt;/li&gt;
+&lt;li&gt;Supplied context (usually by Handlebars)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;parentView&lt;/code&gt;&amp;#39;s context (for a child of a ContainerView)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;In the event that you do need to directly refer to a property on the
+view, you can use the &lt;code&gt;view&lt;/code&gt; keyword, i.e. &lt;code&gt;{{view.myProp}}&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id='toc_miscellaneous'&gt;Miscellaneous&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;getPath&lt;/code&gt; and &lt;code&gt;setPath&lt;/code&gt; have been merged into &lt;code&gt;get&lt;/code&gt; and &lt;code&gt;set&lt;/code&gt;
+respectively.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Ember.ObjectProxy&lt;/code&gt; - this object proxies to its &lt;code&gt;content&lt;/code&gt; property.
+Along with this comes &lt;code&gt;Ember.ObjectController&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;#with&lt;/code&gt; helper now supports assigning an object to a custom
+property name using the format &lt;code&gt;{{#with path.to.object as custom}}&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;#each&lt;/code&gt; helper also allows for a custom property using the format
+&lt;code&gt;{{#each custom in path.to.array}}&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Ember.SortableMixin&lt;/code&gt; - this mixin can be added to array-like objects
+for sorting functionality.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Ember.Evented#one&lt;/code&gt; has been added for one time events.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Ember.View#classNameBindings&lt;/code&gt; and &lt;code&gt;bindAttr class&lt;/code&gt; now support the
+double colon syntax: &lt;code&gt;myProperty:enabledClass:disabledClass&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Ember.Object#canInvoke&lt;/code&gt;, &lt;code&gt;tryInvoke&lt;/code&gt; - simplifies checking to see if
+a method can be invoked on the object.&lt;/li&gt;
+&lt;li&gt;jQuery 1.6 is no longer supported. You must use 1.7 or greater.&lt;/li&gt;
+&lt;li&gt;Handlebars is no longer bundled with Ember. This allows you to more
+easily control your version as well as allowing for the runtime only
+version to be used.&lt;/li&gt;
+&lt;li&gt;ViewStates are now deprecated.&lt;/li&gt;
+&lt;li&gt;Binding transforms have been removed in favor of computed properties.&lt;/li&gt;
+&lt;li&gt;Async state transitions have been removed in favor of transitional
+states.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Ember.StateManager#transitionTo&lt;/code&gt; should be used instead of
+&lt;code&gt;goToState&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Ember.Evented#fire&lt;/code&gt; has been renamed to &lt;code&gt;trigger&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Ember.Tabs&lt;/code&gt; have been deprecated.&lt;/li&gt;
+&lt;li&gt;Some existing deprecations have been removed entirely.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For a full list, see the &lt;a href="https://github.com/emberjs/ember.js/blob/master/CHANGELOG"&gt;Changelog&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id='toc_known-issues'&gt;Known Issues&lt;/h2&gt;
+&lt;p&gt;Since this is a prerelease, there are still some important known issues:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Router&lt;/strong&gt; - The Router API is not finalized. Conceptually, things
+are pretty stable, but API details are likely to change.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Ember.Object.create&lt;/strong&gt; - We are currently considering changing &lt;code&gt;create&lt;/code&gt;
+to behave to make it behave more like &lt;code&gt;setProperties&lt;/code&gt;. If this does
+happen, we will try to maintain backwards compatibility as far as
+possible.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Ember Data&lt;/strong&gt; - We hope to merge Ember Data into the core Ember project
+before the final 1.0 release.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Memory leaks&lt;/strong&gt; - There are some known memory leaks. We will fix these
+before the final 1.0 release. &lt;a href="https://github.com/emberjs/ember.js/issues/1165"&gt;Issue #1165&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Browser support&lt;/strong&gt; - We have only done limited testing on older
+browsers so far. We will do more comprehensive testing before the
+final release.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Dependent Bindings&lt;/strong&gt; - Bindings that depend on other bindings may
+fail on initial connect unless properly ordered. &lt;a href="https://github.com/emberjs/ember.js/issues/1164"&gt;Issue #1164&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ContainerView and SortableMixin&lt;/strong&gt; - Using &lt;code&gt;ContainerView&lt;/code&gt;, or its
+subclass &lt;code&gt;CollectionView&lt;/code&gt; (which is used by the &lt;code&gt;#each&lt;/code&gt; and
+&lt;code&gt;#collection&lt;/code&gt; helpers), with &lt;code&gt;SortableMixin&lt;/code&gt; may cause unexpected
+rendering errors. &lt;a href="https://github.com/emberjs/ember.js/issues/800"&gt;Issue #800&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+</feed>
