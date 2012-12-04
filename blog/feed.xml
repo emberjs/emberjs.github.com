@@ -5,10 +5,102 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2012-11-02T00:00:00Z</updated>
+  <updated>2012-12-02T00:00:00Z</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>This Week in Ember.js 2</title>
+    <link rel="alternate" href="/blog/2012/12/02/this-week-in-ember-js-2/"/>
+    <id>/blog/2012/12/02/this-week-in-ember-js-2/</id>
+    <published>2012-12-02T00:00:00Z</published>
+    <updated>2012-12-02T00:00:00Z</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;There&amp;#39;s been a lot of exciting changes going in the Ember.js community, here&amp;#39;s a recap of some of the biggest updates.&lt;/p&gt;
+
+</summary>
+    <content type="html">&lt;p&gt;There&amp;#39;s been a lot of exciting changes going in the Ember.js community, here&amp;#39;s a recap of some of the biggest updates.&lt;/p&gt;
+
+
+&lt;h3 id='toc_data-format-agnosticism'&gt;Data Format Agnosticism&lt;/h3&gt;
+&lt;p&gt;While we believe the vast majority of Ember.js apps will be using JSON for
+communication, there&amp;#39;s no reason to restrict it so.&lt;/p&gt;
+
+&lt;p&gt;To this end we&amp;#39;ve made two changes to Ember Data&amp;#39;s &lt;code&gt;DS.Store&lt;/code&gt;:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;A new &lt;code&gt;extractId&lt;/code&gt; method has been added to the adapter for extracting the
+ ID from a data hash, by default this simply asks for &lt;code&gt;data.id&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Any method with the term &lt;code&gt;JSON&lt;/code&gt; has been renamed to use &lt;code&gt;Data&lt;/code&gt; instead,
+ for instance &lt;code&gt;DS.Serializer&lt;/code&gt;&amp;#39;s &lt;code&gt;toJSON&lt;/code&gt; method has been renamed to &lt;code&gt;toData&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;If you are using the built-in &lt;code&gt;DS.RESTAdapter&lt;/code&gt;, these changes do not affect you.&lt;/p&gt;
+
+&lt;p&gt;Check out &lt;a href="https://github.com/emberjs/data/blob/master/BREAKING_CHANGES.md"&gt;BREAKING_CHANGES&lt;/a&gt;
+for more information.&lt;/p&gt;
+&lt;h3 id='toc_adapter-dirtiness-hooks'&gt;Adapter Dirtiness Hooks&lt;/h3&gt;
+&lt;p&gt;In line with the efforts to decouple Ember.js from REST specifics, we&amp;#39;ve made
+some more changes to how the adapter dirties records in relationships.&lt;/p&gt;
+
+&lt;p&gt;Previously the store would dirty all the objects involved when a relationship was modified
+and let the adapter decide what to do with the records on &lt;code&gt;commit&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;As of revision 9, Ember now provides a series of adapter dirtiness hooks:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;dirtyRecordsForAttributeChange&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;dirtyRecordsForBelongsToChange&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;dirtyRecordsForHasManyChange&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;By firing these hooks at the time of dirtying, the adapter can mark the
+appropriate objects as dirty and move on.&lt;/p&gt;
+
+&lt;p&gt;If you are using the built-in &lt;code&gt;DS.RESTAdapter&lt;/code&gt;, these changes do not affect you.&lt;/p&gt;
+
+&lt;p&gt;Check out &lt;a href="https://github.com/emberjs/data/blob/master/BREAKING_CHANGES.md"&gt;BREAKING_CHANGES&lt;/a&gt;
+for more information.&lt;/p&gt;
+&lt;h3 id='toc_new-router-api'&gt;New Router API&lt;/h3&gt;
+&lt;p&gt;Managing state in intermediate- to large-scale applications is a major
+challenge for web developers. In fact, that&amp;#39;s part of the reason so many
+people love Ember.js—tools like the router built-in to the framework
+make dealing with complex state manageable.&lt;/p&gt;
+
+&lt;p&gt;Still, we&amp;#39;ve heard the feedback loud and clear that the current router
+API is too hard to understand, complicated to maintain, and aesthetically
+unpleasing.&lt;/p&gt;
+
+&lt;p&gt;Because we think the router is the centerpiece of Ember, we&amp;#39;ve been working hard to get this right.&lt;/p&gt;
+
+&lt;p&gt;Implementation has been started on a new router API. You can check out the progress on
+the &lt;a href="https://github.com/emberjs/ember.js/tree/new-router"&gt;new-router&lt;/a&gt; branch.&lt;/p&gt;
+
+&lt;p&gt;Check out a quick rundown of the changes in &lt;a href="https://gist.github.com/3981133"&gt;this gist&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;We believe that this is the final step to make Ember an easily accessible
+framework for new developers.&lt;/p&gt;
+&lt;h3 id='toc_view-default-context'&gt;View default context&lt;/h3&gt;
+&lt;p&gt;Although it has been deprecated for a while, we&amp;#39;ve &lt;a href="https://github.com/emberjs/ember.js/commit/ed38ab3777733597ac5abd33ce26c3edeb2d7d13"&gt;finally removed&lt;/a&gt;
+the defaulting of a view&amp;#39;s context to itself if none was provided. This should
+not be an issue for most applications out there, but may break example snippets
+around the place.&lt;/p&gt;
+&lt;h3 id='toc_meetups'&gt;Meetups&lt;/h3&gt;
+&lt;p&gt;Zendesk is hosting the &lt;a href="http://www.meetup.com/Ember-SF/events/89198892/"&gt;SF Ember.js Meetup&lt;/a&gt;
+on Tuesday 2 December, if you&amp;#39;re in the area please head along and
+hang out with fellow Emberenõs.&lt;/p&gt;
+
+&lt;p&gt;Likewise, Tom Dale and Yehuda Katz will be making an
+appearance at the &lt;a href="http://www.meetup.com/Ember-js-Seattle-Meetup/events/68465172/"&gt;Seattle Ember.js DecEMBER Meetup&lt;/a&gt;
+on Thursday 6 December.&lt;/p&gt;
+
+&lt;p&gt;That&amp;#39;s all for this week,&lt;br&gt;
+Bradley Priest&lt;br&gt;
+&lt;a href="https://twitter.com/bradleypriest"&gt;@bradleypriest&lt;/a&gt;&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>This Week in Ember.js</title>
     <link rel="alternate" href="/blog/2012/11/02/this-week-in-ember-js/"/>

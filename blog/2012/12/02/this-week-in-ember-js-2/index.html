@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Ember 1.0 Prerelease 2</title>
+    <title>Ember.js - This Week in Ember.js 2</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
@@ -56,7 +56,7 @@
     
   </head>
 
-  <body class="blog blog_2012 blog_2012_10 blog_2012_10_25 blog_2012_10_25_ember-1-0-pre2 blog_2012_10_25_ember-1-0-pre2_index">
+  <body class="blog blog_2012 blog_2012_12 blog_2012_12_02 blog_2012_12_02_this-week-in-ember-js-2 blog_2012_12_02_this-week-in-ember-js-2_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -95,53 +95,86 @@
       
       <div id="content" class="has-sidebar">
           <article class="blog-post">
-    <h1>Ember 1.0 Prerelease 2</h1>
+    <h1>This Week in Ember.js 2</h1>
 
-    <p>Ember 1.0 Prerelease 2 is out now. This is mainly a bug fix release
-after 1.0.pre. However, there are a few things you should be aware of
-and we&#39;ll go over those a bit below. We&#39;re still pushing hard toward the a 1.0 beta release but wanted to make some of our bug fixes available in a more formal way. If you want to go ahead and
-download now, you can grab it over on the <a href="https://github.com/emberjs/ember.js/downloads">Github Download Page</a>.  </p>
+    <p>There&#39;s been a lot of exciting changes going in the Ember.js community, here&#39;s a recap of some of the biggest updates.</p>
 
 
-<h2 id='toc_what-s-changed-now'>What&#39;s Changed Now</h2>
-<p>Other than bug fixes, there are a few things we&#39;ve changed that
-could affect your 1.0.pre apps.</p>
+<h3 id='toc_data-format-agnosticism'>Data Format Agnosticism</h3>
+<p>While we believe the vast majority of Ember.js apps will be using JSON for
+communication, there&#39;s no reason to restrict it so.</p>
 
-<ul>
-<li><code>{{outlet}}</code> now creates a Metamorph rather than a <code>&lt;div&gt;</code>. This makes
-it less obtrusive, but you may have to change your HTML or CSS if you 
-were relying on the <code>&lt;div&gt;</code>.</li>
-<li>We have removed <code>CP_DEFAULT_CACHEABLE</code> and <code>VIEW_PRESERVES_CONTEXT</code>
-flags. Both behaviors are now always on.</li>
-<li>Inline Handlebars templates must always be named now. The default name
-is &#39;application&#39;. This means that <code>&lt;script type=&quot;text/x-handlebars&quot;&gt;</code>
-behaves exactly the same as
-<code>&lt;script type=&quot;text/x-handlebars&quot; data-template-name=&quot;application&quot;&gt;</code>.</li>
-<li>Using the <code>{{collection}}</code> helper without a class has been deprecated,
-use the <code>{{each}}</code> helper instead. The <code>{{each}}</code> helper also now
-supports <code>itemViewClass</code> which was the main benefit to using
-<code>{{collection}}</code>.</li>
-<li><code>Ember.ViewState</code> has been removed.</li>
-</ul>
+<p>To this end we&#39;ve made two changes to Ember Data&#39;s <code>DS.Store</code>:</p>
 
-<p>For more information on what&#39;s been changing in Ember, take a look at
-Bradley Priest&#39;s <a href="http://bradleypriest.com/tags.html#ember-wrapup-ref">What&#39;s New in EmberJS</a>.</p>
-<h2 id='toc_what-will-change-later'>What Will Change Later</h2>
-<p>There are still some things that we want to take care of before we do a
-beta release. Here are a few of them:</p>
+<ol>
+<li>A new <code>extractId</code> method has been added to the adapter for extracting the
+ ID from a data hash, by default this simply asks for <code>data.id</code>.</li>
+<li>Any method with the term <code>JSON</code> has been renamed to use <code>Data</code> instead,
+ for instance <code>DS.Serializer</code>&#39;s <code>toJSON</code> method has been renamed to <code>toData</code>.</li>
+</ol>
+
+<p>If you are using the built-in <code>DS.RESTAdapter</code>, these changes do not affect you.</p>
+
+<p>Check out <a href="https://github.com/emberjs/data/blob/master/BREAKING_CHANGES.md">BREAKING_CHANGES</a>
+for more information.</p>
+<h3 id='toc_adapter-dirtiness-hooks'>Adapter Dirtiness Hooks</h3>
+<p>In line with the efforts to decouple Ember.js from REST specifics, we&#39;ve made
+some more changes to how the adapter dirties records in relationships.</p>
+
+<p>Previously the store would dirty all the objects involved when a relationship was modified
+and let the adapter decide what to do with the records on <code>commit</code>.</p>
+
+<p>As of revision 9, Ember now provides a series of adapter dirtiness hooks:</p>
 
 <ul>
-<li>New Router API: This is mostly finalized but has not yet been
-implemented.</li>
-<li>New Computed Property API: We&#39;re working on a new API for Computed 
-Property getters and setters. Don&#39;t worry, we expect to support
-the existing one for the foreseeable future.</li>
-<li>Asynchronous Observers: Currently observers are fired immediately
-whereas bindings are synchronized with the RunLoop. In most cases
-observers can and should be delayed for optimal performance. We plan
-to change the existing behavior and add a new API for the cases where
-immediate execution really is needed.</li>
+<li><code>dirtyRecordsForAttributeChange</code></li>
+<li><code>dirtyRecordsForBelongsToChange</code></li>
+<li><code>dirtyRecordsForHasManyChange</code></li>
 </ul>
+
+<p>By firing these hooks at the time of dirtying, the adapter can mark the
+appropriate objects as dirty and move on.</p>
+
+<p>If you are using the built-in <code>DS.RESTAdapter</code>, these changes do not affect you.</p>
+
+<p>Check out <a href="https://github.com/emberjs/data/blob/master/BREAKING_CHANGES.md">BREAKING_CHANGES</a>
+for more information.</p>
+<h3 id='toc_new-router-api'>New Router API</h3>
+<p>Managing state in intermediate- to large-scale applications is a major
+challenge for web developers. In fact, that&#39;s part of the reason so many
+people love Ember.js—tools like the router built-in to the framework
+make dealing with complex state manageable.</p>
+
+<p>Still, we&#39;ve heard the feedback loud and clear that the current router
+API is too hard to understand, complicated to maintain, and aesthetically
+unpleasing.</p>
+
+<p>Because we think the router is the centerpiece of Ember, we&#39;ve been working hard to get this right.</p>
+
+<p>Implementation has been started on a new router API. You can check out the progress on
+the <a href="https://github.com/emberjs/ember.js/tree/new-router">new-router</a> branch.</p>
+
+<p>Check out a quick rundown of the changes in <a href="https://gist.github.com/3981133">this gist</a>.</p>
+
+<p>We believe that this is the final step to make Ember an easily accessible
+framework for new developers.</p>
+<h3 id='toc_view-default-context'>View default context</h3>
+<p>Although it has been deprecated for a while, we&#39;ve <a href="https://github.com/emberjs/ember.js/commit/ed38ab3777733597ac5abd33ce26c3edeb2d7d13">finally removed</a>
+the defaulting of a view&#39;s context to itself if none was provided. This should
+not be an issue for most applications out there, but may break example snippets
+around the place.</p>
+<h3 id='toc_meetups'>Meetups</h3>
+<p>Zendesk is hosting the <a href="http://www.meetup.com/Ember-SF/events/89198892/">SF Ember.js Meetup</a>
+on Tuesday 2 December, if you&#39;re in the area please head along and
+hang out with fellow Emberenõs.</p>
+
+<p>Likewise, Tom Dale and Yehuda Katz will be making an
+appearance at the <a href="http://www.meetup.com/Ember-js-Seattle-Meetup/events/68465172/">Seattle Ember.js DecEMBER Meetup</a>
+on Thursday 6 December.</p>
+
+<p>That&#39;s all for this week,<br>
+Bradley Priest<br>
+<a href="https://twitter.com/bradleypriest">@bradleypriest</a></p>
 
 
     <hr>
