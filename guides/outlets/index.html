@@ -11,13 +11,6 @@
 
     <script type="text/javascript">
       $(function() {
-        $('#logo').on('click', function(evt) {
-          if (evt.shiftKey) {
-            $('#content-wrapper').toggleClass('grid');
-            return false;
-          }
-        });
-
         var backToTop = $('#back-to-top');
         var doc = $(document);
         var offset = backToTop.offset();
@@ -116,12 +109,12 @@ determined at runtime based on user interaction.</p>
 
 <p>The template for the Application (<code>application.handlebars</code>) will look
 something like this:</p>
-<div class="highlight  "><div class="ribbon"></div><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 </pre></td>
-  <td class="code"><pre>&lt;h1&gt;My Application&lt;/h1&gt;
-{{outlet}}</pre></td>
+  <td class="code"><pre><span class="tag">&lt;h1&gt;</span>My Application<span class="tag">&lt;/h1&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span><span class="inline-delimiter">}}</span></span></pre></td>
 </tr></table>
 </div>
 <p>By default, the router will initially enter the <em>list of posts</em> state,
@@ -137,16 +130,16 @@ Clicking on the link for an individual post will replace the contents of
 the application&#39;s outlet with the template for an individual post.</p>
 
 <p>The template will look like this:</p>
-<div class="highlight  "><div class="ribbon"></div><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
 4
 </pre></td>
-  <td class="code"><pre>{{#each post in controller}}
-&lt;h1&gt;&lt;a {{action showPost post href=true}}&gt;{{post.title}}&lt;/a&gt;&lt;/h1&gt;
-&lt;div&gt;{{post.intro}}&lt;/div&gt;
-{{/each}}</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">post</span> <span class="attribute-name">in</span> <span class="attribute-name">controller</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;h1&gt;</span><span class="tag">&lt;a</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">showPost</span> <span class="attribute-name">post</span> <span class="attribute-name">href</span>=<span class="attribute-value">true</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">post.title</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;div&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">post.intro</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/div&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span></pre></td>
 </tr></table>
 </div>
 <p>When clicking on a link for an individual post, the application will
@@ -162,18 +155,18 @@ outlet will allow the user to choose between viewing comments or
 trackbacks.</p>
 
 <p>The template for an individual post looks like this:</p>
-<div class="highlight  "><div class="ribbon"></div><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
 4
 5
 </pre></td>
-  <td class="code"><pre>&lt;h1&gt;{{title}}&lt;/h1&gt;
-&lt;div class=&quot;body&quot;&gt;
-  {{body}}
-&lt;/div&gt;
-{{outlet}}</pre></td>
+  <td class="code"><pre><span class="tag">&lt;h1&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">title</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">body</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">body</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/div&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span><span class="inline-delimiter">}}</span></span></pre></td>
 </tr></table>
 </div>
 <p>Again, the <code>{{outlet}}</code> simply specifies that the router will make the
@@ -336,14 +329,14 @@ transition.</p>
 </div>
 <p>You invoke this transition by using the <code>{{action}}</code> helper in the
 current template.</p>
-<div class="highlight  "><div class="ribbon"></div><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
 </pre></td>
-  <td class="code"><pre>{{#each post in controller}}
-  &lt;h1&gt;&lt;a {{action showPost post href=true}}&gt;{{post.title}}&lt;/a&gt;&lt;/h1&gt;
-{{/each}}</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">post</span> <span class="attribute-name">in</span> <span class="attribute-name">controller</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;h1&gt;</span><span class="tag">&lt;a</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">showPost</span> <span class="attribute-name">post</span> <span class="attribute-name">href</span>=<span class="attribute-value">true</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">post.title</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/h1&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span></pre></td>
 </tr></table>
 </div>
 <p>When a user clicks on a link with an <code>{{action}}</code> helper, Ember will
@@ -475,7 +468,7 @@ directly from the <code>postController</code>.</li>
 </ul>
 
 <p>Here&#39;s the template for an individual post.</p>
-<div class="highlight  "><div class="ribbon"></div><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
@@ -486,15 +479,15 @@ directly from the <code>postController</code>.</li>
 8
 9
 </pre></td>
-  <td class="code"><pre>&lt;h1&gt;{{title}}&lt;/h1&gt;
-&lt;div class=&quot;body&quot;&gt;
-  {{body}}
-&lt;/div&gt;
-&lt;p&gt;
-  &lt;a {{action showComments href=true}}&gt;Comments&lt;/a&gt; |
-  &lt;a {{action showTrackbacks href=true}}&gt;Trackbacks&lt;/a&gt;
-&lt;/p&gt;
-{{outlet}}</pre></td>
+  <td class="code"><pre><span class="tag">&lt;h1&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">title</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">body</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">body</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;p&gt;</span>
+  <span class="tag">&lt;a</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">showComments</span> <span class="attribute-name">href</span>=<span class="attribute-value">true</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>Comments<span class="tag">&lt;/a&gt;</span> |
+  <span class="tag">&lt;a</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">showTrackbacks</span> <span class="attribute-name">href</span>=<span class="attribute-value">true</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>Trackbacks<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;/p&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span><span class="inline-delimiter">}}</span></span></pre></td>
 </tr></table>
 </div>
 <p>And finally, coming back from a bookmarked link will work fine with this
@@ -535,18 +528,18 @@ along with the post, ember-data will also automatically update the
 
 <p>In your <code>trackbacks.handlebars</code> template, you will have done something
 like:</p>
-<div class="highlight  "><div class="ribbon"></div><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
 4
 5
 </pre></td>
-  <td class="code"><pre>&lt;ul&gt;
-{{#each trackback in controller}}
-  &lt;li&gt;&lt;a {{bindAttr href=&quot;trackback.url&quot;}}&gt;{{trackback.title}}&lt;/a&gt;&lt;/li&gt;
-{{/each}}
-&lt;/ul&gt;</pre></td>
+  <td class="code"><pre><span class="tag">&lt;ul&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">trackback</span> <span class="attribute-name">in</span> <span class="attribute-name">controller</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;li&gt;</span><span class="tag">&lt;a</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bindAttr</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">trackback.url</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">trackback.title</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/li&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/ul&gt;</span></pre></td>
 </tr></table>
 </div>
 <p>When ember-data updates the <code>trackbacks</code> array, the change will
@@ -554,7 +547,7 @@ propagate through the <code>trackbacksController</code> and into the DOM.</p>
 
 <p>You may also want to avoid showing partial data that is not yet loaded.
 In that case, you could do something like:</p>
-<div class="highlight  "><div class="ribbon"></div><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
@@ -565,15 +558,15 @@ In that case, you could do something like:</p>
 8
 9
 </pre></td>
-  <td class="code"><pre>&lt;ul&gt;
-{{#if controller.isLoaded}}
-  {{#each trackback in controller}}
-    &lt;li&gt;&lt;a {{bindAttr href=&quot;trackback.url&quot;}}&gt;{{trackback.title}}&lt;/a&gt;&lt;/li&gt;
-  {{/each}}
-{{else}}
-  &lt;li&gt;&lt;img src=&quot;/spinner.gif&quot;&gt; Loading trackbacks...&lt;/li&gt;
-{{/if}}
-&lt;/ul&gt;</pre></td>
+  <td class="code"><pre><span class="tag">&lt;ul&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">controller.isLoaded</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">trackback</span> <span class="attribute-name">in</span> <span class="attribute-name">controller</span><span class="inline-delimiter">}}</span></span>
+    <span class="tag">&lt;li&gt;</span><span class="tag">&lt;a</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bindAttr</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">trackback.url</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">trackback.title</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/li&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">else</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;li&gt;</span><span class="tag">&lt;img</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/spinner.gif</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span> Loading trackbacks...<span class="tag">&lt;/li&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/ul&gt;</span></pre></td>
 </tr></table>
 </div>
 <p>When ember-data populates the <code>ManyArray</code> for the trackbacks from the
