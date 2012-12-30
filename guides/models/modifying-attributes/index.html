@@ -62,7 +62,7 @@
     
   </head>
 
-  <body class="guides guides_models guides_models_defining-models guides_models_defining-models_index">
+  <body class="guides guides_models guides_models_modifying-attributes guides_models_modifying-attributes_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -99,116 +99,60 @@
 
   <div class="chapter">
     <h1> Models </h1>
-    <h2 id='toc_defining-models'>Defining Models</h2>
-<p>For every type of model you&#39;d like to represent, create a new subclass of
-<code>DS.Model</code>:</p>
-<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-</pre></td>
-  <td class="code"><pre>App.Person = DS.Model.extend();
-</pre></td>
-</tr></table>
-</div><h3 id='toc_attributes'>Attributes</h3>
-<p>You can specify which attributes a model has by using <code>DS.attr</code>. You can
-use attributes just like any other property, including as part of a
-computed property.</p>
-<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+    <h2 id='toc_modifying-attributes'>Modifying Attributes</h2>
+<p>Once a record has been loaded, you can begin making changes to its
+attributes. Attributes behave just like normal properties in Ember.js
+objects. Making changes is as simple as setting the attribute you
+want to change:</p>
+<div class="highlight js "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> attr = DS.attr;
-
-App.Person = DS.Model.extend({
-  <span class="key">firstName</span>: attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
-  <span class="key">lastName</span>: attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
-  <span class="key">birthday</span>: attr(<span class="string"><span class="delimiter">'</span><span class="content">date</span><span class="delimiter">'</span></span>),
-
-  <span class="function">fullName</span>: <span class="keyword">function</span>() {
-    <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
-  }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
-});
+  <td class="code"><pre><span class="keyword">var</span> tyrion = App.Person.find(<span class="integer">1</span>);
+<span class="comment">// ...after the record has loaded</span>
+tyrion.set(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Yollo</span><span class="delimiter">&quot;</span></span>);
 </pre></td>
 </tr></table>
 </div>
-<p>By default, the REST adapter supports attribute types of <code>string</code>,
-<code>number</code>, <code>boolean</code>, and <code>date</code>. Custom adapters may offer additional
-attribute types.</p>
-<h3 id='toc_relationships'>Relationships</h3>
-<p>Ember Data includes several built-in relationship types to help you
-define how your models relate to each other.</p>
-<h4 id='toc_one-to-one'>One-to-One</h4>
-<p>To declare a one-to-one relationship between two models, use
-<code>DS.belongsTo</code>:</p>
+<p>All of the Ember.js conveniences are available for
+modifying attributes. For example, you can use <code>Ember.Object</code>&#39;s
+<code>incrementProperty</code> helper:</p>
 <div class="highlight js "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
-3
-4
-5
-6
-7
 </pre></td>
-  <td class="code"><pre>App.User = DS.Model.extend({
-  <span class="key">profile</span>: DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">App.Profile</span><span class="delimiter">'</span></span>)
-});
-
-App.Profile = DS.Model.extend({
-  <span class="key">user</span>: DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">App.User</span><span class="delimiter">'</span></span>)
-});
-</pre></td>
-</tr></table>
-</div><h4 id='toc_one-to-many'>One-to-Many</h4>
-<p>To declare a one-to-many relationship between two models, use
-<code>DS.belongsTo</code> in combination with <code>DS.hasMany</code>, like this:</p>
-<div class="highlight js "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>App.Post = DS.Model.extend({
-  <span class="key">comments</span>: DS.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">App.Comment</span><span class="delimiter">'</span></span>)
-});
-
-App.Comment = DS.Model.extend({
-  <span class="key">post</span>: DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">App.Post</span><span class="delimiter">'</span></span>)
-});
-</pre></td>
-</tr></table>
-</div><h4 id='toc_many-to-many'>Many-to-Many</h4>
-<p>To declare a many-to-many relationship between two models, use
-<code>DS.hasMany</code>:</p>
-<div class="highlight js "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>App.BlogPost = DS.Model.extend({
-  <span class="key">tags</span>: DS.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">App.Tag</span><span class="delimiter">'</span></span>)
-});
-
-App.Tag = DS.Model.extend({
-  <span class="key">posts</span>: DS.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">App.Post</span><span class="delimiter">'</span></span>)
-});
+  <td class="code"><pre>person.incrementProperty(<span class="string"><span class="delimiter">'</span><span class="content">age</span><span class="delimiter">'</span></span>);
+<span class="comment">// Happy birthday!</span>
 </pre></td>
 </tr></table>
 </div>
+<p>You can tell if a record has outstanding changes that have not yet been
+saved by checking its <code>isDirty</code> property.</p>
+<div class="highlight js "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>person.get(<span class="string"><span class="delimiter">'</span><span class="content">isDirty</span><span class="delimiter">'</span></span>);
+<span class="comment">//=&gt; false</span>
+
+person.set(<span class="string"><span class="delimiter">'</span><span class="content">isAdmin</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
+
+person.get(<span class="string"><span class="delimiter">'</span><span class="content">isDirty</span><span class="delimiter">'</span></span>);
+<span class="comment">//=&gt; true</span>
+</pre></td>
+</tr></table>
+</div>
+<p>Make sure that a record has finished loading before you try to modify.
+If you attempt to modify a record before it has finished loading, Ember
+Data will raise an exception. For more information, see <a href="/guides/models/model-lifecycle">Model
+Lifecycle</a>.</p>
+
   </div>
 
   <script>

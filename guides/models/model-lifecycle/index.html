@@ -62,7 +62,7 @@
     
   </head>
 
-  <body class="guides guides_models guides_models_defining-models guides_models_defining-models_index">
+  <body class="guides guides_models guides_models_model-lifecycle guides_models_model-lifecycle_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -99,116 +99,88 @@
 
   <div class="chapter">
     <h1> Models </h1>
-    <h2 id='toc_defining-models'>Defining Models</h2>
-<p>For every type of model you&#39;d like to represent, create a new subclass of
-<code>DS.Model</code>:</p>
-<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-</pre></td>
-  <td class="code"><pre>App.Person = DS.Model.extend();
-</pre></td>
-</tr></table>
-</div><h3 id='toc_attributes'>Attributes</h3>
-<p>You can specify which attributes a model has by using <code>DS.attr</code>. You can
-use attributes just like any other property, including as part of a
-computed property.</p>
-<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+    <h2 id='toc_model-lifecycle'>Model Lifecycle</h2>
+<p>Since models must be loaded and saved asynchronously, there are several
+possible states that a record may be in at a given time. Each instance
+of <code>DS.Model</code> has a set of Boolean properties that you can use to
+introspect the current state of the record.</p>
+
+<ul>
+<li><strong>isLoaded</strong> The adapter has finished retrieving the current state of
+the record from its backend.</li>
+<li><strong>isDirty</strong> The record has local changes that have not yet been saved
+by the adapter. This includes records that have been created (but not
+yet saved) or deleted.</li>
+<li><strong>isSaving</strong> The record has been sent to the adapter to have its
+changes saved to the backend, but the adapter has not yet confirmed
+that the changes were successful.</li>
+<li><strong>isDeleted</strong> The record was marked for deletion. When <code>isDeleted</code>
+is true and <code>isDirty</code> is true, the record is deleted locally
+but the deletion was not yet persisted. When <code>isSaving</code> is
+true, the change is in-flight. When both <code>isDirty</code> and
+<code>isSaving</code> are false, the change has been saved.</li>
+<li><strong>isError</strong> The adapter reported that it was unable to save
+local changes to the backend. This may also result in the
+record having its <code>isValid</code> property become false if the
+adapter reported that server-side validations failed.</li>
+<li><strong>isNew</strong> The record was created locally and the adapter
+did not yet report that it was successfully saved.</li>
+<li><strong>isValid</strong> No client-side validations have failed and the
+adapter did not report any server-side validation failures.</li>
+</ul>
+
+<p>Additionally, you can subscribe to events that are emitted when a record
+changes state. For example, you can run some code when a record becomes
+loaded:</p>
+<div class="highlight js "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> attr = DS.attr;
-
-App.Person = DS.Model.extend({
-  <span class="key">firstName</span>: attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
-  <span class="key">lastName</span>: attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
-  <span class="key">birthday</span>: attr(<span class="string"><span class="delimiter">'</span><span class="content">date</span><span class="delimiter">'</span></span>),
-
-  <span class="function">fullName</span>: <span class="keyword">function</span>() {
-    <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
-  }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
+  <td class="code"><pre>record.on(<span class="string"><span class="delimiter">'</span><span class="content">didLoad</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+  console.log(<span class="string"><span class="delimiter">&quot;</span><span class="content">Loaded!</span><span class="delimiter">&quot;</span></span>);
 });
 </pre></td>
 </tr></table>
 </div>
-<p>By default, the REST adapter supports attribute types of <code>string</code>,
-<code>number</code>, <code>boolean</code>, and <code>date</code>. Custom adapters may offer additional
-attribute types.</p>
-<h3 id='toc_relationships'>Relationships</h3>
-<p>Ember Data includes several built-in relationship types to help you
-define how your models relate to each other.</p>
-<h4 id='toc_one-to-one'>One-to-One</h4>
-<p>To declare a one-to-one relationship between two models, use
-<code>DS.belongsTo</code>:</p>
-<div class="highlight js "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>App.User = DS.Model.extend({
-  <span class="key">profile</span>: DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">App.Profile</span><span class="delimiter">'</span></span>)
-});
+<p>Valid events are:</p>
 
-App.Profile = DS.Model.extend({
-  <span class="key">user</span>: DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">App.User</span><span class="delimiter">'</span></span>)
-});
-</pre></td>
-</tr></table>
-</div><h4 id='toc_one-to-many'>One-to-Many</h4>
-<p>To declare a one-to-many relationship between two models, use
-<code>DS.belongsTo</code> in combination with <code>DS.hasMany</code>, like this:</p>
-<div class="highlight js "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>App.Post = DS.Model.extend({
-  <span class="key">comments</span>: DS.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">App.Comment</span><span class="delimiter">'</span></span>)
-});
+<ul>
+<li><code>didLoad</code></li>
+<li><code>didCreate</code></li>
+<li><code>didUpdate</code></li>
+<li><code>didDelete</code></li>
+<li><code>becameError</code></li>
+<li><code>becameInvalid</code></li>
+</ul>
+<h3 id='toc_record-states'>Record States</h3><h4 id='toc_loading'>Loading</h4>
+<p>A record typically starts off in the loading state. This means Ember
+Data has not yet received information from the adapter about what values
+its attributes and relationships should have. You can put the record
+into templates and they will automatically update once the record
+becomes loaded.</p>
 
-App.Comment = DS.Model.extend({
-  <span class="key">post</span>: DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">App.Post</span><span class="delimiter">'</span></span>)
-});
-</pre></td>
-</tr></table>
-</div><h4 id='toc_many-to-many'>Many-to-Many</h4>
-<p>To declare a many-to-many relationship between two models, use
-<code>DS.hasMany</code>:</p>
-<div class="highlight js "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>App.BlogPost = DS.Model.extend({
-  <span class="key">tags</span>: DS.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">App.Tag</span><span class="delimiter">'</span></span>)
-});
+<p>Attempting to modify a record in the loading state will raise an
+exception.</p>
+<h4 id='toc_loaded-clean'>Loaded/Clean</h4>
+<p>A record that is both loaded and clean means that is has received
+information about its attributes and relationships from the server, and
+no changes have been made locally on the client.</p>
+<h4 id='toc_dirty'>Dirty</h4>
+<p>A dirty record has outstanding changes to either its attributes or
+relationships that have not yet been synchronized with the adapter.</p>
+<h4 id='toc_in-flight'>In-Flight</h4>
+<p>A record that is in-flight is a dirty record that has been given to the
+adapter to save the changes made locally. Once the server has
+acknowledged that the changes have been saved successfully, the record
+will become clean.</p>
+<h4 id='toc_invalid'>Invalid</h4>
+<p>A record becomes invalid if the adapter is notified by the server that
+it was not able to be saved because the backend deemed it invalid.</p>
+<h4 id='toc_error'>Error</h4>
+<p>A record enters the error state when the adapter is unable to save it
+for some reason other than invalidity.</p>
 
-App.Tag = DS.Model.extend({
-  <span class="key">posts</span>: DS.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">App.Post</span><span class="delimiter">'</span></span>)
-});
-</pre></td>
-</tr></table>
-</div>
   </div>
 
   <script>
