@@ -5,10 +5,99 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2012-12-02T00:00:00Z</updated>
+  <updated>2012-12-22T00:00:00Z</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>This Week in Ember.js 3</title>
+    <link rel="alternate" href="/blog/2012/12/22/this-week-in-ember-js-3/"/>
+    <id>/blog/2012/12/22/this-week-in-ember-js-3/</id>
+    <published>2012-12-22T00:00:00Z</published>
+    <updated>2012-12-22T00:00:00Z</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Only a few more days left, I hope everyone&amp;#39;s had a great 2012,
+while you get ready for the New Year, here&amp;#39;s what&amp;#39;s been happening in Ember.&lt;/p&gt;
+
+</summary>
+    <content type="html">&lt;p&gt;Only a few more days left, I hope everyone&amp;#39;s had a great 2012,
+while you get ready for the New Year, here&amp;#39;s what&amp;#39;s been happening in Ember.&lt;/p&gt;
+
+
+&lt;h3 id='toc_new-router-api'&gt;New Router API&lt;/h3&gt;
+&lt;p&gt;The new router API is has been &lt;a href="https://github.com/emberjs/ember.js/commit/44b23dcf245b0fffdeb29f9f8a5d1bbdc9eb7690"&gt;merged into
+master!&lt;/a&gt;
+We&amp;#39;ve spent a lot of time incorporating feedback about our first
+iteration of the router, and we think you&amp;#39;re going to really love what
+we&amp;#39;ve come up with. It makes getting started super simple, and
+eliminates the old API that forced you to write unwieldy nested objects.&lt;/p&gt;
+
+&lt;p&gt;There is a &lt;a href="https://gist.github.com/3981133"&gt;short walkthrough&lt;/a&gt; that
+describes the thinking behind the new API. Full documentation should be
+landing this week.&lt;/p&gt;
+&lt;h3 id='toc_embedded-records'&gt;Embedded Records&lt;/h3&gt;
+&lt;p&gt;After a massive refactor of the Ember Data library, it now fully
+supports embedded records, amongst other goodies.&lt;/p&gt;
+
+&lt;p&gt;As always, check out &lt;a href="https://github.com/emberjs/data/blob/master/BREAKING_CHANGES.md"&gt;BREAKING_CHANGES&lt;/a&gt;
+for information about updating your apps.&lt;/p&gt;
+&lt;h3 id='toc_ds-jsonserializer'&gt;DS.JSONSerializer&lt;/h3&gt;
+&lt;p&gt;In the last post we talked about the changes in the serialization API&amp;#39;s renaming methods
+to remove the JSON specificity whilst adding hooks to manage relationship dirtiness.&lt;/p&gt;
+
+&lt;p&gt;We&amp;#39;ve now fully extracted all the JSON semantics from &lt;code&gt;DS.Serializer&lt;/code&gt; into it&amp;#39;s own class.
+The &lt;code&gt;DS.JSONSerializer&lt;/code&gt; is a subclass of &lt;code&gt;DS.Serializer&lt;/code&gt; which implements
+the JSON-specific semantics. The &lt;code&gt;RESTAdapter&lt;/code&gt; now uses the &lt;code&gt;JSONSerializer&lt;/code&gt; by
+default so if you are using that there is no need to change anything in your application.&lt;/p&gt;
+
+&lt;p&gt;After some feedback we&amp;#39;ve also renamed &lt;code&gt;toData/fromData&lt;/code&gt; to &lt;code&gt;serialize/deserialize&lt;/code&gt;
+for a more friendly API.&lt;/p&gt;
+
+&lt;p&gt;As always, check out &lt;a href="https://github.com/emberjs/data/blob/master/BREAKING_CHANGES.md"&gt;BREAKING_CHANGES&lt;/a&gt;
+for more information.&lt;/p&gt;
+&lt;h3 id='toc_bound-handlebars-helpers'&gt;Bound handlebars helpers&lt;/h3&gt;
+&lt;p&gt;Ember.Handlebars just got a little bit smarter. &lt;code&gt;Ember.Handlebars.registerBoundHelper&lt;/code&gt;
+provides a way to easily create your own bound custom helpers.&lt;/p&gt;
+&lt;h4 id='toc_example'&gt;Example:&lt;/h4&gt;&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"&gt;&lt;pre&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;  Ember.Handlebars.registerBoundHelper(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;capitalize&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="keyword"&gt;function&lt;/span&gt;(value) {
+    &lt;span class="keyword"&gt;return&lt;/span&gt; value.toUpperCase();
+  });&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;p&gt;which can be used in your templates as follows:&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"&gt;&lt;pre&gt;
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;capitalize&lt;/span&gt; &lt;span class="attribute-name"&gt;name&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;h3 id='toc_ember-object-create-behavior-change'&gt;Ember.Object.create behavior change&lt;/h3&gt;
+&lt;p&gt;The new behavior will call computed property setters instead of overwriting them.&lt;br&gt;
+We suggest using &lt;code&gt;Ember.Object.extend()&lt;/code&gt; to create classes and use &lt;code&gt;create&lt;/code&gt; to initialize
+properties on your instance. The old behavior is available via &lt;code&gt;createWithMixins&lt;/code&gt;.&lt;br&gt;
+This change should increase object creation performance by 2x.&lt;/p&gt;
+&lt;h3 id='toc_other-changes-of-note'&gt;Other changes of note&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;reject&lt;/code&gt; and &lt;code&gt;rejectProperty&lt;/code&gt; methods have been added to &lt;code&gt;Ember.Enumerable&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;Ember.none&lt;/code&gt; and &lt;code&gt;Ember.empty&lt;/code&gt; have been renamed to &lt;code&gt;Ember.isEmpty&lt;/code&gt; and &lt;code&gt;Ember.isNone&lt;/code&gt;
+to keep with the Ember Boolean naming convention.&lt;/p&gt;
+&lt;h3 id='toc_embercamp'&gt;EmberCamp&lt;/h3&gt;
+&lt;p&gt;The very first Ember Camp in SF is happening on the 15th February 2013.
+&lt;a href="https://tito.io/tilde/ember-camp-2013"&gt;Sign up here&lt;/a&gt;, be quick, tickets are limited.&lt;/p&gt;
+
+&lt;p&gt;Looking to learn Ember? There&amp;#39;s also an &lt;a href="http://www.embertraining.com/"&gt;Introduction to Ember&lt;/a&gt;
+event in the week leading up to Ember Camp.&lt;/p&gt;
+
+&lt;p&gt;Enjoy your holiday,&lt;br&gt;
+Bradley Priest&lt;br&gt;
+&lt;a href="https://twitter.com/bradleypriest"&gt;@bradleypriest&lt;/a&gt;&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>This Week in Ember.js 2</title>
     <link rel="alternate" href="/blog/2012/12/02/this-week-in-ember-js-2/"/>
