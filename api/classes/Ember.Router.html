@@ -393,12 +393,15 @@ of the application:</p>
 3
 4
 5
+6
 </pre></td>
   <td class="code"><pre>App = Ember.Application.create({
   <span class="key">Router</span>: Ember.Router.extend({ ... })
 });
+
 App.initialize();
-App.get(<span class="string"><span class="delimiter">'</span><span class="content">router</span><span class="delimiter">'</span></span>) <span class="comment">// an instance of App.Router</span></pre></td>
+App.get(<span class="string"><span class="delimiter">'</span><span class="content">router</span><span class="delimiter">'</span></span>) <span class="comment">// an instance of App.Router</span>
+</pre></td>
 </tr></table>
 </div>
 <p>If you want to define a Router instance elsewhere, you can pass the instance to the application&#39;s
@@ -408,11 +411,14 @@ App.get(<span class="string"><span class="delimiter">'</span><span class="conten
 2
 3
 4
+5
 </pre></td>
   <td class="code"><pre>App = Ember.Application.create();
 aRouter = Ember.Router.create({ ... });
+
 App.initialize(aRouter);
-App.get(<span class="string"><span class="delimiter">'</span><span class="content">router</span><span class="delimiter">'</span></span>) <span class="comment">// aRouter</span></pre></td>
+App.get(<span class="string"><span class="delimiter">'</span><span class="content">router</span><span class="delimiter">'</span></span>) <span class="comment">// aRouter</span>
+</pre></td>
 </tr></table>
 </div>
 <h2>Adding Routes to a Router</h2>
@@ -444,7 +450,8 @@ of Ember.Route which each have a <code>route</code> property describing the URL 
     })
   })
 });
-App.initialize();</pre></td>
+App.initialize();
+</pre></td>
 </tr></table>
 </div>
 <p>When an application loads, Ember will parse the URL and attempt to find an Ember.Route within
@@ -479,7 +486,8 @@ the application&#39;s states that matches. (The example URL-matching below will 
     })
   })
 });
-App.initialize();</pre></td>
+App.initialize();
+</pre></td>
 </tr></table>
 </div>
 <p>Loading the page at the URL &#39;#/&#39; will detect the route property of &#39;root.aRoute&#39; (&#39;/&#39;) and
@@ -519,26 +527,35 @@ to when the base route is detected in the URL:</p>
 17
 18
 19
+<strong>20</strong>
+21
+22
+23
 </pre></td>
   <td class="code"><pre>App = Ember.Application.create({
   <span class="key">Router</span>: Ember.Router.extend({
     <span class="key">root</span>: Ember.Route.extend({
       <span class="key">aRoute</span>: Ember.Route.extend({
         <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/theBaseRouteForThisSet</span><span class="delimiter">'</span></span>,
+
         <span class="key">indexSubRoute</span>: Ember.Route.extend({
           <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>
         }),
+
         <span class="key">subRouteOne</span>: Ember.Route.extend({
           <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/subroute1</span><span class="delimiter">'</span></span>
         }),
+
         <span class="key">subRouteTwo</span>: Ember.Route.extend({
           <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/subRoute2</span><span class="delimiter">'</span></span>
         })
+
       })
     })
   })
 });
-App.initialize();</pre></td>
+App.initialize();
+</pre></td>
 </tr></table>
 </div>
 <p>When the application is loaded at &#39;/theBaseRouteForThisSet&#39; the Router will transition to the route
@@ -588,7 +605,8 @@ Ember.Router instances (see &#39;Changing View Hierarchy in Response To State Ch
     })
   })
 });
-App.initialize();</pre></td>
+App.initialize();
+</pre></td>
 </tr></table>
 </div>
 <p>Will result in console output of:</p>
@@ -597,7 +615,8 @@ App.initialize();</pre></td>
 2
 </pre></td>
   <td class="code"><pre><span class="string"><span class="delimiter">'</span><span class="content">entering root.aRoute from root</span><span class="delimiter">'</span></span>
-<span class="string"><span class="delimiter">'</span><span class="content">entered root.aRoute, fully transitioned to root.aRoute </span><span class="delimiter">'</span></span></pre></td>
+<span class="string"><span class="delimiter">'</span><span class="content">entered root.aRoute, fully transitioned to root.aRoute </span><span class="delimiter">'</span></span>
+</pre></td>
 </tr></table>
 </div>
 <p>Ember.Route has two additional callbacks for handling URL serialization and deserialization. See
@@ -646,7 +665,8 @@ as its second argument.</p>
     })
   })
 });
-App.initialize();</pre></td>
+App.initialize();
+</pre></td>
 </tr></table>
 </div>
 <p>Will call the &#39;deserialize&#39; method of the Route instance at the path &#39;root.aRoute&#39; with the
@@ -660,7 +680,8 @@ following hash as its second argument:</p>
   <td class="code"><pre>{
   <span class="key">dynamicSectionA</span>: <span class="string"><span class="delimiter">'</span><span class="content">thefirstvalue</span><span class="delimiter">'</span></span>,
   <span class="key">dynamicSectionB</span>: <span class="string"><span class="delimiter">'</span><span class="content">thesecondvalue</span><span class="delimiter">'</span></span>
-}</pre></td>
+}
+</pre></td>
 </tr></table>
 </div>
 <p>Within <code>deserialize</code> you should use this information to retrieve or create an appropriate context
@@ -716,7 +737,8 @@ dynamic segments and should be an object with keys that match the names of the d
     })
   })
 });
-App.initialize();</pre></td>
+App.initialize();
+</pre></td>
 </tr></table>
 </div>
 <p>Transitioning to &quot;root.bRoute&quot; with a context of <code>Object.create({name: &#39;Yehuda&#39;})</code> will call
@@ -757,14 +779,16 @@ loaded at the URL &#39;#/&#39;:</p>
     })
   })
 });
-App.initialize();</pre></td>
+App.initialize();
+</pre></td>
 </tr></table>
 </div>
 <p>And application code:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 </pre></td>
-  <td class="code"><pre>App.get(<span class="string"><span class="delimiter">'</span><span class="content">router</span><span class="delimiter">'</span></span>).send(<span class="string"><span class="delimiter">'</span><span class="content">moveElsewhere</span><span class="delimiter">'</span></span>);</pre></td>
+  <td class="code"><pre>App.get(<span class="string"><span class="delimiter">'</span><span class="content">router</span><span class="delimiter">'</span></span>).send(<span class="string"><span class="delimiter">'</span><span class="content">moveElsewhere</span><span class="delimiter">'</span></span>);
+</pre></td>
 </tr></table>
 </div>
 <p>Will transition the application&#39;s state to &#39;root.bRoute&#39; and trigger an update of the URL to
@@ -804,7 +828,8 @@ supplied values. Given the following state structure loaded at the URL &#39;#/&#
     })
   })
 });
-App.initialize();</pre></td>
+App.initialize();
+</pre></td>
 </tr></table>
 </div>
 <p>And application code:</p>
@@ -817,7 +842,8 @@ App.initialize();</pre></td>
   <td class="code"><pre>App.get(<span class="string"><span class="delimiter">'</span><span class="content">router</span><span class="delimiter">'</span></span>).send(<span class="string"><span class="delimiter">'</span><span class="content">moveElsewhere</span><span class="delimiter">'</span></span>, {
   <span class="key">dynamicSection</span>: <span class="string"><span class="delimiter">'</span><span class="content">42</span><span class="delimiter">'</span></span>,
   <span class="key">anotherDynamicSection</span>: <span class="string"><span class="delimiter">'</span><span class="content">Life</span><span class="delimiter">'</span></span>
-});</pre></td>
+});
+</pre></td>
 </tr></table>
 </div>
 <p>Will transition the application&#39;s state to &#39;root.bRoute&#39; and trigger an update of the URL to
@@ -838,12 +864,15 @@ Ember.ControllerMixin mixin.</p>
 3
 4
 5
+6
 </pre></td>
   <td class="code"><pre>App = Ember.Application.create({
   <span class="key">FooController</span>: Ember.Object.create(Ember.ControllerMixin),
   <span class="key">Router</span>: Ember.Router.extend({ ... })
 });
-App.get(<span class="string"><span class="delimiter">'</span><span class="content">router.fooController</span><span class="delimiter">'</span></span>); <span class="comment">// instance of App.FooController</span></pre></td>
+
+App.get(<span class="string"><span class="delimiter">'</span><span class="content">router.fooController</span><span class="delimiter">'</span></span>); <span class="comment">// instance of App.FooController</span>
+</pre></td>
 </tr></table>
 </div>
 <p>The controller singletons will have their <code>namespace</code> property set to the application and their <code>target</code>
@@ -876,6 +905,7 @@ associated views.  Uses of the <code>{{action}}</code> helper will automatically
 16
 17
 18
+19
 </pre></td>
   <td class="code"><pre>App = Ember.Application.create({
   <span class="key">Router</span>: Ember.Router.extend({
@@ -889,12 +919,14 @@ associated views.  Uses of the <code>{{action}}</code> helper will automatically
       anotherState: Ember.Route.extend({
         <span class="key">route</span>: <span class="string"><span class="delimiter">'</span><span class="content">/differentUrl</span><span class="delimiter">'</span></span>,
         <span class="function">connectOutlets</span>: <span class="keyword">function</span>(router, context) {
+
         }
       })
     })
   })
 });
-App.initialize();</pre></td>
+App.initialize();
+</pre></td>
 </tr></table>
 </div>
 <p>The following template:</p>
@@ -905,7 +937,8 @@ App.initialize();</pre></td>
 </pre></td>
   <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">aView</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
 <span class="inline">    &lt;h1&gt;&lt;a </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">anActionOnTheRouter</span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">title</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/h1&gt;</span>
-<span class="tag">&lt;/script&gt;</span></pre></td>
+<span class="tag">&lt;/script&gt;</span>
+</pre></td>
 </tr></table>
 </div>
 <p>Will delegate <code>click</code> events on the rendered <code>h1</code> to the application&#39;s router instance. In this case the
@@ -925,7 +958,8 @@ between application states:</p>
 <span class="inline">  </span><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">photo</span> <span class="attribute-name">in</span> <span class="attribute-name">controller</span><span class="inline-delimiter">}}</span></span>
     <span class="tag">&lt;h1&gt;</span><span class="tag">&lt;a</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">showPhoto</span> <span class="attribute-name">photo</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">title</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/h1&gt;</span>
   <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
-<span class="tag">&lt;/script&gt;</span></pre></td>
+<span class="tag">&lt;/script&gt;</span>
+</pre></td>
 </tr></table>
 </div>
 <p>See <code>Handlebars.helpers.action</code> for additional usage examples.</p>
@@ -953,12 +987,16 @@ within the &#39;connectOutlets&#39; event of an Ember.Route:</p>
 15
 16
 17
+18
+19
 </pre></td>
   <td class="code"><pre>App = Ember.Application.create({
   <span class="key">OneController</span>: Ember.ObjectController.extend(),
   <span class="key">OneView</span>: Ember.View.extend(),
+
   <span class="key">AnotherController</span>: Ember.ObjectController.extend(),
   <span class="key">AnotherView</span>: Ember.View.extend(),
+
   <span class="key">Router</span>: Ember.Router.extend({
     <span class="key">root</span>: Ember.Route.extend({
       <span class="key">aRoute</span>: Ember.Route.extend({
@@ -970,7 +1008,8 @@ within the &#39;connectOutlets&#39; event of an Ember.Route:</p>
     })
   })
 });
-App.initialize();</pre></td>
+App.initialize();
+</pre></td>
 </tr></table>
 </div>
 <p>This will detect the &#39;{{outlet}}&#39; portion of <code>oneController</code>&#39;s view (an instance of <code>App.OneView</code>) and
@@ -1319,9 +1358,10 @@ with the last context you passed.</p>
 <p>Observer methods you pass should generally have the following signature if
 you do not pass a &quot;context&quot; parameter:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 </pre></td>
-  <td class="code"><pre>  <span class="function">fooDidChange</span>: <span class="keyword">function</span>(sender, key, value, rev);</pre></td>
+  <td class="code"><pre>  <span class="function">fooDidChange</span>: <span class="keyword">function</span>(sender, key, value, rev);
+</pre></td>
 </tr></table>
 </div>
 <p>The sender is the object that changed. The key is the property that
@@ -1332,9 +1372,10 @@ use to detect if the key value has really changed or not.</p>
 <p>If you pass a &quot;context&quot; parameter, the context will be passed before the
 revision like so:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 </pre></td>
-  <td class="code"><pre>  <span class="function">fooDidChange</span>: <span class="keyword">function</span>(sender, key, value, context, rev);</pre></td>
+  <td class="code"><pre>  <span class="function">fooDidChange</span>: <span class="keyword">function</span>(sender, key, value, context, rev);
+</pre></td>
 </tr></table>
 </div>
 <p>Usually you will not need the value, context or revision parameters at
@@ -1679,7 +1720,8 @@ generated lazily.</p>
 2
 </pre></td>
   <td class="code"><pre>player.decrementProperty(<span class="string"><span class="delimiter">'</span><span class="content">lives</span><span class="delimiter">'</span></span>);
-orc.decrementProperty(<span class="string"><span class="delimiter">'</span><span class="content">health</span><span class="delimiter">'</span></span>, <span class="integer">5</span>);</pre></td>
+orc.decrementProperty(<span class="string"><span class="delimiter">'</span><span class="content">health</span><span class="delimiter">'</span></span>, <span class="integer">5</span>);
+</pre></td>
 </tr></table>
 </div>
     </div>
@@ -2027,7 +2069,8 @@ declared at the end, such as:</p>
 </pre></td>
   <td class="code"><pre>  <span class="function">fullName</span>: <span class="keyword">function</span>() {
     <span class="keyword">return</span> <span class="local-variable">this</span>.getEach(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>).compact().join(<span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span>);
-  }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)</pre></td>
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
+</pre></td>
 </tr></table>
 </div>
 <p>When you call <code>get</code> on a computed property, the function will be
@@ -2178,16 +2221,18 @@ not defined upfront.</p>
       <p>To get multiple properties at once, call getProperties
 with a list of strings or an array:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 </pre></td>
-  <td class="code"><pre>  record.getProperties(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">zipCode</span><span class="delimiter">'</span></span>); <span class="comment">// =&gt; { firstName: 'John', lastName: 'Doe', zipCode: '10011' }</span></pre></td>
+  <td class="code"><pre>  record.getProperties(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">zipCode</span><span class="delimiter">'</span></span>); <span class="comment">// =&gt; { firstName: 'John', lastName: 'Doe', zipCode: '10011' }</span>
+</pre></td>
 </tr></table>
 </div>
 <p>is equivalent to:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 </pre></td>
-  <td class="code"><pre>  record.getProperties([<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">zipCode</span><span class="delimiter">'</span></span>]); <span class="comment">// =&gt; { firstName: 'John', lastName: 'Doe', zipCode: '10011' }</span></pre></td>
+  <td class="code"><pre>  record.getProperties([<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">zipCode</span><span class="delimiter">'</span></span>]); <span class="comment">// =&gt; { firstName: 'John', lastName: 'Doe', zipCode: '10011' }</span>
+</pre></td>
 </tr></table>
 </div>
     </div>
@@ -2268,14 +2313,19 @@ with a list of strings or an array:</p>
 5
 6
 7
+8
+9
 </pre></td>
   <td class="code"><pre>manager = Ember.StateManager.create({
   <span class="key">root</span>: Ember.State.create({
     <span class="key">dashboard</span>: Ember.State.create()
   })
 });
+
 manager.getStateByPath(manager, <span class="string"><span class="delimiter">&quot;</span><span class="content">root.dashboard</span><span class="delimiter">&quot;</span></span>)
-<span class="comment">// returns the dashboard state</span></pre></td>
+
+<span class="comment">// returns the dashboard state</span>
+</pre></td>
 </tr></table>
 </div>
     </div>
@@ -2426,9 +2476,10 @@ on.</p>
       <p>Retrieves the value of a property, or a default value in the case that the property
 returns undefined.</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 </pre></td>
-  <td class="code"><pre>person.getWithDefault(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Doe</span><span class="delimiter">'</span></span>);</pre></td>
+  <td class="code"><pre>person.getWithDefault(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Doe</span><span class="delimiter">'</span></span>);
+</pre></td>
 </tr></table>
 </div>
     </div>
@@ -2581,7 +2632,8 @@ on the object.</p>
 2
 </pre></td>
   <td class="code"><pre>person.incrementProperty(<span class="string"><span class="delimiter">'</span><span class="content">age</span><span class="delimiter">'</span></span>);
-team.incrementProperty(<span class="string"><span class="delimiter">'</span><span class="content">score</span><span class="delimiter">'</span></span>, <span class="integer">2</span>);</pre></td>
+team.incrementProperty(<span class="string"><span class="delimiter">'</span><span class="content">score</span><span class="delimiter">'</span></span>, <span class="integer">2</span>);
+</pre></td>
 </tr></table>
 </div>
     </div>
@@ -2712,15 +2764,17 @@ available for introspection.</p>
   <td class="code"><pre><span class="function">person</span>: <span class="keyword">function</span>() {
   <span class="keyword">var</span> personId = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">personId</span><span class="delimiter">'</span></span>);
   <span class="keyword">return</span> App.Person.create({ <span class="key">id</span>: personId });
-}.property().meta({ <span class="key">type</span>: App.Person })</pre></td>
+}.property().meta({ <span class="key">type</span>: App.Person })
+</pre></td>
 </tr></table>
 </div>
 <p>Once you&#39;ve done this, you can retrieve the values saved to the computed
 property from your class like this:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 </pre></td>
-  <td class="code"><pre>MyClass.metaForProperty(<span class="string"><span class="delimiter">'</span><span class="content">person</span><span class="delimiter">'</span></span>);</pre></td>
+  <td class="code"><pre>MyClass.metaForProperty(<span class="string"><span class="delimiter">'</span><span class="content">person</span><span class="delimiter">'</span></span>);
+</pre></td>
 </tr></table>
 </div>
 <p>This will return the original hash that was passed to <code>meta()</code>.</p>
@@ -3190,9 +3244,10 @@ later time in a coalesced manner.</p>
 <p>In addition to property changes, set() returns the value of the object
 itself so you can do chaining like this:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 </pre></td>
-  <td class="code"><pre>  record.set(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Charles</span><span class="delimiter">'</span></span>).set(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Jolley</span><span class="delimiter">'</span></span>);</pre></td>
+  <td class="code"><pre>  record.set(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Charles</span><span class="delimiter">'</span></span>).set(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Jolley</span><span class="delimiter">'</span></span>);
+</pre></td>
 </tr></table>
 </div>
     </div>
@@ -3341,9 +3396,10 @@ itself so you can do chaining like this:</p>
       <p>To set multiple properties at once, call setProperties
 with a Hash:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 </pre></td>
-  <td class="code"><pre>  record.setProperties({ <span class="key">firstName</span>: <span class="string"><span class="delimiter">'</span><span class="content">Charles</span><span class="delimiter">'</span></span>, <span class="key">lastName</span>: <span class="string"><span class="delimiter">'</span><span class="content">Jolley</span><span class="delimiter">'</span></span> });</pre></td>
+  <td class="code"><pre>  record.setProperties({ <span class="key">firstName</span>: <span class="string"><span class="delimiter">'</span><span class="content">Charles</span><span class="delimiter">'</span></span>, <span class="key">lastName</span>: <span class="string"><span class="delimiter">'</span><span class="content">Jolley</span><span class="delimiter">'</span></span> });
+</pre></td>
 </tr></table>
 </div>
     </div>
@@ -3485,9 +3541,10 @@ this method to create &quot;virtual&quot; properties.</p>
       <p>Set the value of a boolean property to the opposite of it&#39;s
 current value.</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 </pre></td>
-  <td class="code"><pre>starship.toggleProperty(<span class="string"><span class="delimiter">'</span><span class="content">warpDriveEnaged</span><span class="delimiter">'</span></span>);</pre></td>
+  <td class="code"><pre>starship.toggleProperty(<span class="string"><span class="delimiter">'</span><span class="content">warpDriveEnaged</span><span class="delimiter">'</span></span>);
+</pre></td>
 </tr></table>
 </div>
     </div>
@@ -3575,6 +3632,7 @@ current value.</p>
 12
 13
 14
+15
 </pre></td>
   <td class="code"><pre>aManager = Ember.StateManager.create({
   <span class="key">stateOne</span>: Ember.State.create({
@@ -3582,6 +3640,7 @@ current value.</p>
   }),
   <span class="key">stateTwo</span>: Ember.State.create({})
 })
+
 bManager = Ember.StateManager.create({
   <span class="key">stateOne</span>: Ember.State.create({
     <span class="function">changeToStateTwo</span>: <span class="keyword">function</span>(manager, context){
@@ -3589,7 +3648,8 @@ bManager = Ember.StateManager.create({
     }
   }),
   <span class="key">stateTwo</span>: Ember.State.create({})
-})</pre></td>
+})
+</pre></td>
 </tr></table>
 </div>
     </div>

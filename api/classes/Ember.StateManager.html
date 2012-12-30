@@ -394,6 +394,7 @@ a <code>states</code> property that contains all the states:</p>
 9
 <strong>10</strong>
 11
+12
 </pre></td>
   <td class="code"><pre>managerA = Ember.StateManager.create({
   <span class="key">states</span>: {
@@ -401,11 +402,13 @@ a <code>states</code> property that contains all the states:</p>
     <span class="key">stateTwo</span>: Ember.State.create()
   }
 })
+
 managerA.get(<span class="string"><span class="delimiter">'</span><span class="content">states</span><span class="delimiter">'</span></span>)
 <span class="comment">// {</span>
 <span class="comment">//   stateOne: Ember.State.create(),</span>
 <span class="comment">//   stateTwo: Ember.State.create()</span>
-<span class="comment">// }</span></pre></td>
+<span class="comment">// }</span>
+</pre></td>
 </tr></table>
 </div>
 <p>You can also add instances of <code>Ember.State</code> (or an <code>Ember.State</code> subclass) directly as properties
@@ -420,16 +423,19 @@ of a StateManager. These states will be collected into the <code>states</code> p
 7
 8
 9
+<strong>10</strong>
 </pre></td>
   <td class="code"><pre>managerA = Ember.StateManager.create({
   <span class="key">stateOne</span>: Ember.State.create(),
   <span class="key">stateTwo</span>: Ember.State.create()
 })
+
 managerA.get(<span class="string"><span class="delimiter">'</span><span class="content">states</span><span class="delimiter">'</span></span>)
 <span class="comment">// {</span>
 <span class="comment">//   stateOne: Ember.State.create(),</span>
 <span class="comment">//   stateTwo: Ember.State.create()</span>
-<span class="comment">// }</span></pre></td>
+<span class="comment">// }</span>
+</pre></td>
 </tr></table>
 </div>
 <h2>The Initial State</h2>
@@ -447,16 +453,23 @@ defined as its <code>start</code> property or the state referenced by name in it
 7
 8
 9
+<strong>10</strong>
+11
+12
 </pre></td>
   <td class="code"><pre>managerA = Ember.StateManager.create({
   <span class="key">start</span>: Ember.State.create({})
 })
+
 managerA.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// 'start'</span>
+
 managerB = Ember.StateManager.create({
   <span class="key">initialState</span>: <span class="string"><span class="delimiter">'</span><span class="content">beginHere</span><span class="delimiter">'</span></span>,
   <span class="key">beginHere</span>: Ember.State.create({})
 })
-managerB.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// 'beginHere'</span></pre></td>
+
+managerB.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// 'beginHere'</span>
+</pre></td>
 </tr></table>
 </div>
 <p>Because it is a property you may also provide a computed function if you wish to derive
@@ -484,7 +497,8 @@ an <code>initialState</code> programmatically:</p>
   }.property(),
   <span class="key">active</span>: Ember.State.create({}),
   <span class="key">passive</span>: Ember.State.create({})
-})</pre></td>
+})
+</pre></td>
 </tr></table>
 </div>
 <h2>Moving Between States</h2>
@@ -502,15 +516,18 @@ and can have a single one of these states as its current state.</p>
 6
 7
 8
+9
 </pre></td>
   <td class="code"><pre>robotManager = Ember.StateManager.create({
   <span class="key">initialState</span>: <span class="string"><span class="delimiter">'</span><span class="content">poweredDown</span><span class="delimiter">'</span></span>,
   <span class="key">poweredDown</span>: Ember.State.create({}),
   <span class="key">poweredUp</span>: Ember.State.create({})
 })
+
 robotManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// 'poweredDown'</span>
 robotManager.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">poweredUp</span><span class="delimiter">'</span></span>)
-robotManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// 'poweredUp'</span></pre></td>
+robotManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// 'poweredUp'</span>
+</pre></td>
 </tr></table>
 </div>
 <p>Before transitioning into a new state the existing <code>currentState</code> will have its
@@ -539,6 +556,7 @@ an object representing the transition as its second argument.</p>
 16
 17
 18
+19
 </pre></td>
   <td class="code"><pre>robotManager = Ember.StateManager.create({
   <span class="key">initialState</span>: <span class="string"><span class="delimiter">'</span><span class="content">poweredDown</span><span class="delimiter">'</span></span>,
@@ -553,11 +571,13 @@ an object representing the transition as its second argument.</p>
     }
   })
 })
+
 robotManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// 'poweredDown'</span>
 robotManager.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">poweredUp</span><span class="delimiter">'</span></span>)
 <span class="comment">// will log</span>
 <span class="comment">// 'exiting the poweredDown state'</span>
-<span class="comment">// 'entering the poweredUp state. Destroy all humans.'</span></pre></td>
+<span class="comment">// 'entering the poweredUp state. Destroy all humans.'</span>
+</pre></td>
 </tr></table>
 </div>
 <p>Once a StateManager is already in a state, subsequent attempts to enter that state will
@@ -585,6 +605,8 @@ manager does not have will result in no changes in the StateManager&#39;s curren
 19
 <strong>20</strong>
 21
+22
+23
 </pre></td>
   <td class="code"><pre>robotManager = Ember.StateManager.create({
   <span class="key">initialState</span>: <span class="string"><span class="delimiter">'</span><span class="content">poweredDown</span><span class="delimiter">'</span></span>,
@@ -599,14 +621,17 @@ manager does not have will result in no changes in the StateManager&#39;s curren
     }
   })
 })
+
 robotManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// 'poweredDown'</span>
 robotManager.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">poweredUp</span><span class="delimiter">'</span></span>)
 <span class="comment">// will log</span>
 <span class="comment">// 'exiting the poweredDown state'</span>
 <span class="comment">// 'entering the poweredUp state. Destroy all humans.'</span>
 robotManager.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">poweredUp</span><span class="delimiter">'</span></span>) <span class="comment">// no logging, no state change</span>
+
 robotManager.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">someUnknownState</span><span class="delimiter">'</span></span>) <span class="comment">// silently fails</span>
-robotManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// 'poweredUp'</span></pre></td>
+robotManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// 'poweredUp'</span>
+</pre></td>
 </tr></table>
 </div>
 <p>Each state property may itself contain properties that are instances of Ember.State.
@@ -634,6 +659,11 @@ keep track of the full path to its currentState</p>
 18
 19
 <strong>20</strong>
+21
+22
+23
+24
+25
 </pre></td>
   <td class="code"><pre>robotManager = Ember.StateManager.create({
   <span class="key">initialState</span>: <span class="string"><span class="delimiter">'</span><span class="content">poweredDown</span><span class="delimiter">'</span></span>,
@@ -646,15 +676,21 @@ keep track of the full path to its currentState</p>
     <span class="key">stationary</span>: Ember.State.create()
   })
 })
+
 robotManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// 'poweredDown'</span>
+
 robotManager.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">poweredUp</span><span class="delimiter">'</span></span>)
 robotManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// 'poweredUp'</span>
+
 robotManager.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">mobile</span><span class="delimiter">'</span></span>)
 robotManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// 'mobile'</span>
+
 <span class="comment">// transition via a state path</span>
 robotManager.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">poweredDown.charging</span><span class="delimiter">'</span></span>)
 robotManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// 'charging'</span>
-robotManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.path</span><span class="delimiter">'</span></span>) <span class="comment">// 'poweredDown.charging'</span></pre></td>
+
+robotManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.path</span><span class="delimiter">'</span></span>) <span class="comment">// 'poweredDown.charging'</span>
+</pre></td>
 </tr></table>
 </div>
 <p>Enter transition methods will be called for each state and nested child state in their
@@ -712,6 +748,9 @@ only when transitioning to a new section of possible states in the hierarchy.</p
 46
 47
 48
+49
+<strong>50</strong>
+51
 </pre></td>
   <td class="code"><pre>robotManager = Ember.StateManager.create({
   <span class="key">initialState</span>: <span class="string"><span class="delimiter">'</span><span class="content">poweredDown</span><span class="delimiter">'</span></span>,
@@ -750,17 +789,21 @@ only when transitioning to a new section of possible states in the hierarchy.</p
     })
   })
 })
+
+
 robotManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.path</span><span class="delimiter">'</span></span>) <span class="comment">// 'poweredDown'</span>
 robotManager.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">charged</span><span class="delimiter">'</span></span>)
 <span class="comment">// logs 'entered charged state'</span>
 <span class="comment">// but does *not* log  'exited poweredDown state'</span>
 robotManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// 'charged</span>
+
 robotManager.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">poweredUp.mobile</span><span class="delimiter">'</span></span>)
 <span class="comment">// logs</span>
 <span class="comment">// 'exited charged state'</span>
 <span class="comment">// 'exited poweredDown state'</span>
 <span class="comment">// 'entered poweredUp state'</span>
-<span class="comment">// 'entered mobile state'</span></pre></td>
+<span class="comment">// 'entered mobile state'</span>
+</pre></td>
 </tr></table>
 </div>
 <p>During development you can set a StateManager&#39;s <code>enableLogging</code> property to <code>true</code> to
@@ -772,7 +815,8 @@ receive console messages of state transitions.</p>
 </pre></td>
   <td class="code"><pre>robotManager = Ember.StateManager.create({
   <span class="key">enableLogging</span>: <span class="predefined-constant">true</span>
-})</pre></td>
+})
+</pre></td>
 </tr></table>
 </div>
 <h2>Managing currentState with Actions</h2>
@@ -809,6 +853,8 @@ argument and an optional <code>context</code> object as the second argument.</p>
 21
 22
 23
+24
+25
 </pre></td>
   <td class="code"><pre>managerA = Ember.StateManager.create({
   <span class="key">initialState</span>: <span class="string"><span class="delimiter">'</span><span class="content">stateOne.substateOne.subsubstateOne</span><span class="delimiter">'</span></span>,
@@ -821,6 +867,7 @@ argument and an optional <code>context</code> object as the second argument.</p>
     })
   })
 })
+
 managerA.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// 'subsubstateOne'</span>
 managerA.send(<span class="string"><span class="delimiter">'</span><span class="content">anAction</span><span class="delimiter">'</span></span>)
 <span class="comment">// 'stateOne.substateOne.subsubstateOne' has no anAction method</span>
@@ -828,11 +875,13 @@ managerA.send(<span class="string"><span class="delimiter">'</span><span class="
 <span class="comment">// and logs &quot;an action was called&quot;</span>
 <span class="comment">// with managerA as the first argument</span>
 <span class="comment">// and no second argument</span>
+
 someObject = {}
 managerA.send(<span class="string"><span class="delimiter">'</span><span class="content">anAction</span><span class="delimiter">'</span></span>, someObject)
 <span class="comment">// the 'anAction' method of 'stateOne.substateOne' is called again</span>
 <span class="comment">// with managerA as the first argument and</span>
-<span class="comment">// someObject as the second argument.</span></pre></td>
+<span class="comment">// someObject as the second argument.</span>
+</pre></td>
 </tr></table>
 </div>
 <p>If the StateManager attempts to send an action but does not find an appropriately named
@@ -858,6 +907,7 @@ from the current state. It does not search in other portions of the hierarchy.</
 16
 17
 18
+19
 </pre></td>
   <td class="code"><pre>managerB = Ember.StateManager.create({
   <span class="key">initialState</span>: <span class="string"><span class="delimiter">'</span><span class="content">stateOne.substateOne.subsubstateOne</span><span class="delimiter">'</span></span>,
@@ -873,10 +923,12 @@ from the current state. It does not search in other portions of the hierarchy.</
    }
   })
 })
+
 managerB.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// 'subsubstateOne'</span>
 managerB.send(<span class="string"><span class="delimiter">'</span><span class="content">anAction</span><span class="delimiter">'</span></span>)
 <span class="comment">// Error: &lt;Ember.StateManager:ember132&gt; could not</span>
-<span class="comment">// respond to event anAction in state stateOne.substateOne.subsubstateOne.</span></pre></td>
+<span class="comment">// respond to event anAction in state stateOne.substateOne.subsubstateOne.</span>
+</pre></td>
 </tr></table>
 </div>
 <p>Inside of an action method the given state should delegate <code>transitionTo</code> calls on its
@@ -916,6 +968,11 @@ StateManager.</p>
 32
 33
 34
+35
+36
+37
+38
+39
 </pre></td>
   <td class="code"><pre>robotManager = Ember.StateManager.create({
   <span class="key">initialState</span>: <span class="string"><span class="delimiter">'</span><span class="content">poweredDown.charging</span><span class="delimiter">'</span></span>,
@@ -938,19 +995,25 @@ StateManager.</p>
     <span class="key">rampaging</span>: Ember.State.create()
   })
 })
+
 robotManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// 'charging'</span>
 robotManager.send(<span class="string"><span class="delimiter">'</span><span class="content">boot</span><span class="delimiter">'</span></span>) <span class="comment">// throws error, no boot action</span>
                           <span class="comment">// in current hierarchy</span>
 robotManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// remains 'charging'</span>
+
 robotManager.send(<span class="string"><span class="delimiter">'</span><span class="content">beginExtermination</span><span class="delimiter">'</span></span>) <span class="comment">// throws error, no beginExtermination</span>
                                         <span class="comment">// action in current hierarchy</span>
 robotManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// remains 'charging'</span>
+
 robotManager.send(<span class="string"><span class="delimiter">'</span><span class="content">chargeComplete</span><span class="delimiter">'</span></span>)
 robotManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// 'charged'</span>
+
 robotManager.send(<span class="string"><span class="delimiter">'</span><span class="content">boot</span><span class="delimiter">'</span></span>)
 robotManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// 'poweredUp'</span>
+
 robotManager.send(<span class="string"><span class="delimiter">'</span><span class="content">beginExtermination</span><span class="delimiter">'</span></span>, allHumans)
-robotManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// 'rampaging'</span></pre></td>
+robotManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentState.name</span><span class="delimiter">'</span></span>) <span class="comment">// 'rampaging'</span>
+</pre></td>
 </tr></table>
 </div>
 <p>Transition actions can also be created using the <code>transitionTo</code> method of the Ember.State class. The
@@ -970,6 +1033,7 @@ following example StateManagers are equivalent:</p>
 12
 13
 14
+15
 </pre></td>
   <td class="code"><pre>aManager = Ember.StateManager.create({
   <span class="key">stateOne</span>: Ember.State.create({
@@ -977,6 +1041,7 @@ following example StateManagers are equivalent:</p>
   }),
   <span class="key">stateTwo</span>: Ember.State.create({})
 })
+
 bManager = Ember.StateManager.create({
   <span class="key">stateOne</span>: Ember.State.create({
     <span class="function">changeToStateTwo</span>: <span class="keyword">function</span>(manager, context){
@@ -984,7 +1049,8 @@ bManager = Ember.StateManager.create({
     }
   }),
   <span class="key">stateTwo</span>: Ember.State.create({})
-})</pre></td>
+})
+</pre></td>
 </tr></table>
 </div>
   </div>
@@ -1312,9 +1378,10 @@ with the last context you passed.</p>
 <p>Observer methods you pass should generally have the following signature if
 you do not pass a &quot;context&quot; parameter:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 </pre></td>
-  <td class="code"><pre>  <span class="function">fooDidChange</span>: <span class="keyword">function</span>(sender, key, value, rev);</pre></td>
+  <td class="code"><pre>  <span class="function">fooDidChange</span>: <span class="keyword">function</span>(sender, key, value, rev);
+</pre></td>
 </tr></table>
 </div>
 <p>The sender is the object that changed. The key is the property that
@@ -1325,9 +1392,10 @@ use to detect if the key value has really changed or not.</p>
 <p>If you pass a &quot;context&quot; parameter, the context will be passed before the
 revision like so:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 </pre></td>
-  <td class="code"><pre>  <span class="function">fooDidChange</span>: <span class="keyword">function</span>(sender, key, value, context, rev);</pre></td>
+  <td class="code"><pre>  <span class="function">fooDidChange</span>: <span class="keyword">function</span>(sender, key, value, context, rev);
+</pre></td>
 </tr></table>
 </div>
 <p>Usually you will not need the value, context or revision parameters at
@@ -1672,7 +1740,8 @@ generated lazily.</p>
 2
 </pre></td>
   <td class="code"><pre>player.decrementProperty(<span class="string"><span class="delimiter">'</span><span class="content">lives</span><span class="delimiter">'</span></span>);
-orc.decrementProperty(<span class="string"><span class="delimiter">'</span><span class="content">health</span><span class="delimiter">'</span></span>, <span class="integer">5</span>);</pre></td>
+orc.decrementProperty(<span class="string"><span class="delimiter">'</span><span class="content">health</span><span class="delimiter">'</span></span>, <span class="integer">5</span>);
+</pre></td>
 </tr></table>
 </div>
     </div>
@@ -2020,7 +2089,8 @@ declared at the end, such as:</p>
 </pre></td>
   <td class="code"><pre>  <span class="function">fullName</span>: <span class="keyword">function</span>() {
     <span class="keyword">return</span> <span class="local-variable">this</span>.getEach(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>).compact().join(<span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span>);
-  }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)</pre></td>
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
+</pre></td>
 </tr></table>
 </div>
 <p>When you call <code>get</code> on a computed property, the function will be
@@ -2171,16 +2241,18 @@ not defined upfront.</p>
       <p>To get multiple properties at once, call getProperties
 with a list of strings or an array:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 </pre></td>
-  <td class="code"><pre>  record.getProperties(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">zipCode</span><span class="delimiter">'</span></span>); <span class="comment">// =&gt; { firstName: 'John', lastName: 'Doe', zipCode: '10011' }</span></pre></td>
+  <td class="code"><pre>  record.getProperties(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">zipCode</span><span class="delimiter">'</span></span>); <span class="comment">// =&gt; { firstName: 'John', lastName: 'Doe', zipCode: '10011' }</span>
+</pre></td>
 </tr></table>
 </div>
 <p>is equivalent to:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 </pre></td>
-  <td class="code"><pre>  record.getProperties([<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">zipCode</span><span class="delimiter">'</span></span>]); <span class="comment">// =&gt; { firstName: 'John', lastName: 'Doe', zipCode: '10011' }</span></pre></td>
+  <td class="code"><pre>  record.getProperties([<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">zipCode</span><span class="delimiter">'</span></span>]); <span class="comment">// =&gt; { firstName: 'John', lastName: 'Doe', zipCode: '10011' }</span>
+</pre></td>
 </tr></table>
 </div>
     </div>
@@ -2262,14 +2334,19 @@ with a list of strings or an array:</p>
 5
 6
 7
+8
+9
 </pre></td>
   <td class="code"><pre>manager = Ember.StateManager.create({
   <span class="key">root</span>: Ember.State.create({
     <span class="key">dashboard</span>: Ember.State.create()
   })
 });
+
 manager.getStateByPath(manager, <span class="string"><span class="delimiter">&quot;</span><span class="content">root.dashboard</span><span class="delimiter">&quot;</span></span>)
-<span class="comment">// returns the dashboard state</span></pre></td>
+
+<span class="comment">// returns the dashboard state</span>
+</pre></td>
 </tr></table>
 </div>
     </div>
@@ -2421,9 +2498,10 @@ on.</p>
       <p>Retrieves the value of a property, or a default value in the case that the property
 returns undefined.</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 </pre></td>
-  <td class="code"><pre>person.getWithDefault(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Doe</span><span class="delimiter">'</span></span>);</pre></td>
+  <td class="code"><pre>person.getWithDefault(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Doe</span><span class="delimiter">'</span></span>);
+</pre></td>
 </tr></table>
 </div>
     </div>
@@ -2576,7 +2654,8 @@ on the object.</p>
 2
 </pre></td>
   <td class="code"><pre>person.incrementProperty(<span class="string"><span class="delimiter">'</span><span class="content">age</span><span class="delimiter">'</span></span>);
-team.incrementProperty(<span class="string"><span class="delimiter">'</span><span class="content">score</span><span class="delimiter">'</span></span>, <span class="integer">2</span>);</pre></td>
+team.incrementProperty(<span class="string"><span class="delimiter">'</span><span class="content">score</span><span class="delimiter">'</span></span>, <span class="integer">2</span>);
+</pre></td>
 </tr></table>
 </div>
     </div>
@@ -2708,15 +2787,17 @@ available for introspection.</p>
   <td class="code"><pre><span class="function">person</span>: <span class="keyword">function</span>() {
   <span class="keyword">var</span> personId = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">personId</span><span class="delimiter">'</span></span>);
   <span class="keyword">return</span> App.Person.create({ <span class="key">id</span>: personId });
-}.property().meta({ <span class="key">type</span>: App.Person })</pre></td>
+}.property().meta({ <span class="key">type</span>: App.Person })
+</pre></td>
 </tr></table>
 </div>
 <p>Once you&#39;ve done this, you can retrieve the values saved to the computed
 property from your class like this:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 </pre></td>
-  <td class="code"><pre>MyClass.metaForProperty(<span class="string"><span class="delimiter">'</span><span class="content">person</span><span class="delimiter">'</span></span>);</pre></td>
+  <td class="code"><pre>MyClass.metaForProperty(<span class="string"><span class="delimiter">'</span><span class="content">person</span><span class="delimiter">'</span></span>);
+</pre></td>
 </tr></table>
 </div>
 <p>This will return the original hash that was passed to <code>meta()</code>.</p>
@@ -3186,9 +3267,10 @@ later time in a coalesced manner.</p>
 <p>In addition to property changes, set() returns the value of the object
 itself so you can do chaining like this:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 </pre></td>
-  <td class="code"><pre>  record.set(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Charles</span><span class="delimiter">'</span></span>).set(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Jolley</span><span class="delimiter">'</span></span>);</pre></td>
+  <td class="code"><pre>  record.set(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Charles</span><span class="delimiter">'</span></span>).set(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Jolley</span><span class="delimiter">'</span></span>);
+</pre></td>
 </tr></table>
 </div>
     </div>
@@ -3337,9 +3419,10 @@ itself so you can do chaining like this:</p>
       <p>To set multiple properties at once, call setProperties
 with a Hash:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 </pre></td>
-  <td class="code"><pre>  record.setProperties({ <span class="key">firstName</span>: <span class="string"><span class="delimiter">'</span><span class="content">Charles</span><span class="delimiter">'</span></span>, <span class="key">lastName</span>: <span class="string"><span class="delimiter">'</span><span class="content">Jolley</span><span class="delimiter">'</span></span> });</pre></td>
+  <td class="code"><pre>  record.setProperties({ <span class="key">firstName</span>: <span class="string"><span class="delimiter">'</span><span class="content">Charles</span><span class="delimiter">'</span></span>, <span class="key">lastName</span>: <span class="string"><span class="delimiter">'</span><span class="content">Jolley</span><span class="delimiter">'</span></span> });
+</pre></td>
 </tr></table>
 </div>
     </div>
@@ -3481,9 +3564,10 @@ this method to create &quot;virtual&quot; properties.</p>
       <p>Set the value of a boolean property to the opposite of it&#39;s
 current value.</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 </pre></td>
-  <td class="code"><pre>starship.toggleProperty(<span class="string"><span class="delimiter">'</span><span class="content">warpDriveEnaged</span><span class="delimiter">'</span></span>);</pre></td>
+  <td class="code"><pre>starship.toggleProperty(<span class="string"><span class="delimiter">'</span><span class="content">warpDriveEnaged</span><span class="delimiter">'</span></span>);
+</pre></td>
 </tr></table>
 </div>
     </div>
@@ -3571,6 +3655,7 @@ current value.</p>
 12
 13
 14
+15
 </pre></td>
   <td class="code"><pre>aManager = Ember.StateManager.create({
   <span class="key">stateOne</span>: Ember.State.create({
@@ -3578,6 +3663,7 @@ current value.</p>
   }),
   <span class="key">stateTwo</span>: Ember.State.create({})
 })
+
 bManager = Ember.StateManager.create({
   <span class="key">stateOne</span>: Ember.State.create({
     <span class="function">changeToStateTwo</span>: <span class="keyword">function</span>(manager, context){
@@ -3585,7 +3671,8 @@ bManager = Ember.StateManager.create({
     }
   }),
   <span class="key">stateTwo</span>: Ember.State.create({})
-})</pre></td>
+})
+</pre></td>
 </tr></table>
 </div>
     </div>
