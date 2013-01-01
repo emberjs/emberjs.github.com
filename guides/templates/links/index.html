@@ -62,7 +62,7 @@
     
   </head>
 
-  <body class="guides guides_templates guides_templates_conditionals guides_templates_conditionals_index">
+  <body class="guides guides_templates guides_templates_links guides_templates_links_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -99,27 +99,94 @@
 
   <div class="chapter">
     <h1> Templates </h1>
-    <h2 id='toc_conditionals'>Conditionals</h2>
-<p>Sometimes you may only want to display part of your template if a property
-exists.</p>
-
-<p>We can use the <code>{{#if}}</code> helper to conditionally render a block:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
+    <h2 id='toc_links-the-code-linkto-code-helper'>Links (The <code>{{linkTo}}</code> Helper)</h2>
+<p>You create a link to a route using the <code>{{linkTo}}</code> helper.</p>
+<div class="highlight js "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
+4
+5
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">person</span><span class="inline-delimiter">}}</span></span>
-  Welcome back, <span class="tag">&lt;b&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">person.firstName</span><span class="inline-delimiter">}}</span></span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">person.lastName</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/b&gt;</span>!
-<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>(match) {
+  match(<span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">index</span><span class="delimiter">'</span></span>);
+  match(<span class="string"><span class="delimiter">'</span><span class="content">/posts</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>);
+  match(<span class="string"><span class="delimiter">'</span><span class="content">/posts/:post_id</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>);
+});
+</pre></td>
+</tr></table>
+</div><div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="comment">&lt;!-- posts.handlebars --&gt;</span>
+
+<span class="tag">&lt;ul&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">post</span> <span class="attribute-name">in</span> <span class="attribute-name">posts</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;li&gt;</span><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">&quot;</span><span class="attribute-name">post</span><span class="error">&quot;</span> <span class="attribute-name">post</span><span class="inline-delimiter">}}</span></span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">post.title</span><span class="inline-delimiter">}}</span></span><span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/li&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/ul&gt;</span>
 </pre></td>
 </tr></table>
 </div>
-<p>Handlebars will not render the block if the argument passed evaluates to
-<code>false</code>, <code>undefined</code>, <code>null</code> or <code>[]</code> (i.e., any &quot;falsy&quot; value).</p>
+<p>If the model for the <code>posts</code> template is a list of three posts, the
+rendered HTML would look something like this:</p>
+<div class="highlight html "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;ul&gt;</span>
+  <span class="tag">&lt;li&gt;</span><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/posts/1</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Infinity Madness<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/posts/2</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Hexadecimal Weirdness<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/posts/3</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Slashes!<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span>
+</pre></td>
+</tr></table>
+</div>
+<p>The <code>{{linkTo}}</code> helper takes:</p>
 
-<p>If the expression evaluates to falsy, we can also display an alternate template
-using <code>{{else}}</code>:</p>
+<ul>
+<li>The name of a route. In this example, it would be <code>index</code>, <code>posts</code>, or
+<code>post</code>.</li>
+<li>If the route has a dynamic segment, an model that represents the
+segment. By default, Ember.js will replace the segment with the
+value of the object&#39;s <code>id</code> property.</li>
+</ul>
+<h3 id='toc_multiple-contexts'>Multiple Contexts</h3>
+<p>If the route is nested, you can supply a model for each dynamic
+segment.</p>
+<div class="highlight js "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>(match) {
+  match(<span class="string"><span class="delimiter">'</span><span class="content">/posts</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(match) {
+    match(<span class="string"><span class="delimiter">'</span><span class="content">/:post_id</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(match) {
+      match(<span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">postIndex</span><span class="delimiter">'</span></span>);
+      match(<span class="string"><span class="delimiter">'</span><span class="content">/comments</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>);
+      match(<span class="string"><span class="delimiter">'</span><span class="content">/comments/:comment_id</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>);
+    });
+  });
+});
+</pre></td>
+</tr></table>
+</div>
+<p>In the <code>postIndex</code> template:</p>
 <div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
@@ -127,30 +194,46 @@ using <code>{{else}}</code>:</p>
 4
 5
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">person</span><span class="inline-delimiter">}}</span></span>
-  Welcome back, <span class="tag">&lt;b&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">person.firstName</span><span class="inline-delimiter">}}</span></span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">person.lastName</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/b&gt;</span>!
-<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">else</span><span class="inline-delimiter">}}</span></span>
-  Please log in.
-<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">body</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/div&gt;</span>
+
+<span class="tag">&lt;p&gt;</span><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">'</span><span class="attribute-name">comment</span><span class="error">'</span> <span class="attribute-name">primaryComment</span><span class="inline-delimiter">}}</span></span>Main Comment<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/p&gt;</span>
 </pre></td>
 </tr></table>
 </div>
-<p>To only render a block if a value is falsy, use <code>{{#unless}}</code>:</p>
+<p>Since only a single model was supplied, the link will inherit the
+current post for the dynamic segment <code>:post_id</code>. The <code>primaryComment</code>
+will become the new model for the <code>comment</code> route handler.</p>
+
+<p>Alternatively, you could pass both a post and a comment to the helper:</p>
 <div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
+4
+5
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">unless</span> <span class="attribute-name">hasPaid</span><span class="inline-delimiter">}}</span></span>
-  You owe: $<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">total</span><span class="inline-delimiter">}}</span></span>
-<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">unless</span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="tag">&lt;p&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">'</span><span class="attribute-name">comment</span><span class="error">'</span> <span class="attribute-name">nextPost</span> <span class="attribute-name">primaryComment</span><span class="inline-delimiter">}}</span></span>
+    Main Comment for the Next Post
+  <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/p&gt;</span>
 </pre></td>
 </tr></table>
 </div>
-<p><code>{{#if}}</code> and <code>{{#unless}}</code> are examples of block expressions. These allow you
-to invoke a helper with a portion of your template. Block expressions look like
-normal expressions except that they contain a hash (#) before the helper name,
-and require a closing expression.</p>
+<p>In this case, the models specified will populate both the <code>:post_id</code>
+and <code>:comment_id</code>. The specified <code>nextPost</code> will become the new
+model for the <code>post</code> handler and the <code>primaryComment</code> will become the
+new model for the <code>comment</code> handler.</p>
+
+<p>When transitioning to a new URL, the router will only execute the
+handler if:</p>
+
+<ul>
+<li>the handler became newly active, or</li>
+<li>the model for the handler changes</li>
+</ul>
 
   </div>
 
