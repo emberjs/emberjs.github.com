@@ -107,15 +107,18 @@
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
+4
 </pre></td>
   <td class="code"><pre>Ember.Handlebars.registerBoundHelper(<span class="string"><span class="delimiter">'</span><span class="content">highlight</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(value, options) {
-  <span class="keyword">return</span> <span class="keyword">new</span> Handlebars.SafeString(<span class="string"><span class="delimiter">'</span><span class="content">&lt;span class=&quot;highlight&quot;&gt;</span><span class="delimiter">'</span></span>+value+<span class="string"><span class="delimiter">'</span><span class="content">&lt;/span&gt;</span><span class="delimiter">'</span></span>);
+  escaped = Handlebars.Utils.escapeExpression(value);
+  <span class="keyword">return</span> <span class="keyword">new</span> Handlebars.SafeString(<span class="string"><span class="delimiter">'</span><span class="content">&lt;span class=&quot;highlight&quot;&gt;</span><span class="delimiter">'</span></span> + escaped + <span class="string"><span class="delimiter">'</span><span class="content">&lt;/span&gt;</span><span class="delimiter">'</span></span>);
 });
 </pre></td>
 </tr></table>
 </div>
 <p>If you return HTML from a helper, and you don&#39;t want it to be escaped,
-make sure to return a new <code>SafeString</code>.</p>
+make sure to return a new <code>SafeString</code>. Make sure you first escape any
+user data!</p>
 
 <p>Anywhere in your Handlebars templates, you can now invoke this helper:</p>
 <div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
