@@ -62,7 +62,7 @@
     
   </head>
 
-  <body class="guides guides_routing guides_routing_index">
+  <body class="guides guides_routing guides_routing_redirection guides_routing_redirection_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -99,41 +99,105 @@
 
   <div class="chapter">
     <h1> Routing </h1>
-    <h2 id='toc_routing'>Routing</h2>
-<p>As users interact with your application, it moves through many
-different states. Ember.js gives you helpful tools for managing
-that state in a way that scales with your application.</p>
+    <h2 id='toc_redirecting-to-a-different-url'>Redirecting to a Different URL</h2>
+<p>If you want to redirect from one route to another, simply implement the
+<code>redirect</code> hook in your route handler.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>(match) {
+  match(<span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">index</span><span class="delimiter">'</span></span>);
+  match(<span class="string"><span class="delimiter">'</span><span class="content">/posts</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>);
+});
 
-<p>To understand why this is important, imagine we are writing a web app
-for managing a blog. At any given time, we should be able to answer
-questions like: <em>Is the user currently logged in? Are they an admin
-user? What post are they looking at? Is the settings screen open?  Are
-they editing the current post?</em></p>
+App.IndexRoute = Ember.Route.extend({
+  <span class="function">redirect</span>: <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>);
+  }
+});
+</pre></td>
+</tr></table>
+</div>
+<p>You can conditionally transition based on some other application state.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+22
+23
+24
+25
+26
+27
+28
+29
+</pre></td>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>(match) {
+  match(<span class="string"><span class="delimiter">'</span><span class="content">/topCharts</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">topCharts</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(match) {
+    match(<span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">choose</span><span class="delimiter">'</span></span>);
+    match(<span class="string"><span class="delimiter">'</span><span class="content">/albums</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">albums</span><span class="delimiter">'</span></span>);
+    match(<span class="string"><span class="delimiter">'</span><span class="content">/songs</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">songs</span><span class="delimiter">'</span></span>);
+    match(<span class="string"><span class="delimiter">'</span><span class="content">/artists</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">artists</span><span class="delimiter">'</span></span>);
+    match(<span class="string"><span class="delimiter">'</span><span class="content">/playlists</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">playlists</span><span class="delimiter">'</span></span>);
+  });
+});
 
-<p>In Ember.js, each of the possible states in your application is
-represented by a URL. Because all of the questions we asked above—
-<em>Are we logged in?  What post are we looking at?</em> —are encapsulated by
-route handlers for the URLs, answering them is both simple and accurate.</p>
+App.ChooseRoute = Ember.Route.extend({
+  <span class="function">redirect</span>: <span class="keyword">function</span>() {
+    <span class="keyword">var</span> lastFilter = <span class="local-variable">this</span>.controllerFor(<span class="string"><span class="delimiter">'</span><span class="content">application</span><span class="delimiter">'</span></span>).get(<span class="string"><span class="delimiter">'</span><span class="content">lastFilter</span><span class="delimiter">'</span></span>);
+    <span class="local-variable">this</span>.transitionTo(lastFilter || <span class="string"><span class="delimiter">'</span><span class="content">songs</span><span class="delimiter">'</span></span>);
+  }
+});
 
-<p>At any given time, your application has one or more <em>active route
-handlers</em>. The active handlers can change for one of two reasons:</p>
+<span class="comment">// Superclass to be used by all of the filter routes below</span>
+App.FilterRoute = Ember.Route.extend({
+  <span class="function">enter</span>: <span class="keyword">function</span>() {
+    <span class="keyword">var</span> controller = <span class="local-variable">this</span>.controllerFor(<span class="string"><span class="delimiter">'</span><span class="content">application</span><span class="delimiter">'</span></span>);
+    controller.set(<span class="string"><span class="delimiter">'</span><span class="content">lastFilter</span><span class="delimiter">'</span></span>, <span class="local-variable">this</span>.templateName);
+  }
+});
 
-<ol>
-<li>The user interacted with a view, which generated an event that caused
-the URL to change.</li>
-<li>The user changed the URL manually (e.g., via the back button), or the
-page was loaded for the first time.</li>
-</ol>
+App.SongsRoute = App.FilterRoute.extend();
+App.AlbumsRoute = App.FilterRoute.extend();
+App.ArtistsRoute = App.FilterRoute.extend();
+App.PlayistsRoute = App.FilterRoute.extend();
+</pre></td>
+</tr></table>
+</div>
+<p>In this example, navigating to the <code>/</code> URL immediately transitions into
+the last filter URL that the user was at. The first time, it transitions
+to the <code>/songs</code> URL.</p>
 
-<p>When the current URL changes, the newly active route handlers may do one
-or more of the following:</p>
-
-<ol>
-<li>Conditionally redirect to a new URL.</li>
-<li>Update a controller so that it represents a particular model.</li>
-<li>Change the template on screen, or place a new template into an
-existing outlet.</li>
-</ol>
+<p>Your route can also choose to transition only in some cases. If the
+<code>redirect</code> hook does not transition to a new route, the remaining hooks
+(<code>model</code>, <code>setupControllers</code>, <code>renderTemplates</code>) will execute as usual.</p>
 
   </div>
 
