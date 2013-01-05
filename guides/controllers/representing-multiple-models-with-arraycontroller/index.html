@@ -62,7 +62,7 @@
     
   </head>
 
-  <body class="guides guides_controllers guides_controllers_index">
+  <body class="guides guides_controllers guides_controllers_representing-multiple-models-with-arraycontroller guides_controllers_representing-multiple-models-with-arraycontroller_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -99,49 +99,102 @@
 
   <div class="chapter">
     <h1> Controllers </h1>
-    <h2 id='toc_controllers'>Controllers</h2>
-<p>A controller may have one or both of these responsibilities:</p>
+    <h2 id='toc_representing-multiple-models'>Representing Multiple Models</h2>
+<p>You can use <code>Ember.ArrayController</code> to represent an array of models. To tell an
+<code>ArrayController</code> which model to represent, set its <code>content</code> property
+in your route&#39;s <code>setupControllers</code> method.</p>
 
-<ul>
-<li>Representing a model for a template.</li>
-<li>Storing application properties that do not need to be saved to the server.</li>
-</ul>
+<p>You can treat an <code>ArrayController</code> just like its underlying array. For
+example, imagine we want to display the current playlist. In our router,
+we set tell our <code>SongsController</code> to represent the songs in the playlist:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.SongsRoute = Ember.Route.extend({
+  <span class="function">setupControllers</span>: <span class="keyword">function</span>(controller, playlist) {
+    controller.set(<span class="string"><span class="delimiter">'</span><span class="content">content</span><span class="delimiter">'</span></span>, playlist.get(<span class="string"><span class="delimiter">'</span><span class="content">songs</span><span class="delimiter">'</span></span>));
+  }
+});
+</pre></td>
+</tr></table>
+</div>
+<p>In the <code>songs</code> template, we can use the <code>{{#each}}</code> helper to display
+each song:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;h1&gt;</span>Playlist<span class="tag">&lt;/h1&gt;</span>
 
-<p>Most of your controllers will be very small. Unlike other
-frameworks, where the state of your application is spread amongst many
-controllers, in Ember.js, we encapsulate that state in the router. This
-allows your controllers to be lightweight and focused on one thing.</p>
-<h3 id='toc_representing-models'>Representing Models</h3>
-<p>Templates are always connected to controllers, not models. This makes it
-easy to separate display-specific properties from model-specific
-properties.</p>
+<span class="tag">&lt;ul&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">controller</span><span class="inline-delimiter">}}</span></span>
+    <span class="tag">&lt;li&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">name</span><span class="inline-delimiter">}}</span></span> by <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">artist</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/li&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/ul&gt;</span>
+</pre></td>
+</tr></table>
+</div>
+<p>You can use the <code>ArrayController</code> to collect aggregate information about
+the models it represents. For example, imagine we want to display the
+number of songs that are over 30 seconds long. We can add a new computed
+property called <code>longSongCount</code> to the controller:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre>App.SongsController = App.ArrayController.extend({
+  <span class="function">longSongCount</span>: <span class="keyword">function</span>() {
+    <span class="keyword">var</span> longSongs = <span class="local-variable">this</span>.filter(<span class="keyword">function</span>(song) {
+      <span class="keyword">return</span> song.get(<span class="string"><span class="delimiter">'</span><span class="content">duration</span><span class="delimiter">'</span></span>) &gt; <span class="integer">30</span>;
+    });
+    <span class="keyword">return</span> longSongs.get(<span class="string"><span class="delimiter">'</span><span class="content">length</span><span class="delimiter">'</span></span>);
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">@each.duration</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div>
+<p>Now we can use this property in our template:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;ul&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">controller</span><span class="inline-delimiter">}}</span></span>
+    <span class="tag">&lt;li&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">name</span><span class="inline-delimiter">}}</span></span> by <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">artist</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/li&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/ul&gt;</span>
 
-<p>Often, however, it is convenient for your templates to be able to
-retrieve properties directly from a model. Ember.js makes this easy with
-<code>Ember.ObjectController</code> and <code>Ember.ArrayController</code>.</p>
-<h3 id='toc_storing-application-properties'>Storing Application Properties</h3>
-<p>Often, your application will need to store information that does not
-belong in the model. Any time you need to save information that does not
-need to be persisted to the server, you should put it in a controller.</p>
-
-<p>For example, imagine your application has a search field that is always
-present. You would have a <code>SearchController</code> with a <code>query</code> property, to
-which the search field would be bound.</p>
-
-<p>If your user wants to search, she would type her query in the search
-field, then hit the enter key.</p>
-
-<p>When your router initiates the query to the server, it should retrieve
-the current query from the <code>SearchController</code>, instead of trying to
-retrieve it from the search field.</p>
-
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">longSongCount</span><span class="inline-delimiter">}}</span></span> songs over 30 seconds.
+</pre></td>
+</tr></table>
+</div>
     
       <footer>
-         
-      <a class="next-guide" href="/guides/controllers/representing-a-single-model-with-objectcontroller">
-        Representing a Single Model with ObjectController →
-      </a>
-      
+        
+        <a class="previous-guide" href="/guides/controllers/representing-a-single-model-with-objectcontroller">
+          ← Representing a Single Model with ObjectController
+        </a>
+       
       </footer>
       
   </div>

@@ -62,7 +62,7 @@
     
   </head>
 
-  <body class="guides guides_controllers guides_controllers_index">
+  <body class="guides guides_controllers guides_controllers_representing-a-single-model-with-objectcontroller guides_controllers_representing-a-single-model-with-objectcontroller_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -99,47 +99,174 @@
 
   <div class="chapter">
     <h1> Controllers </h1>
-    <h2 id='toc_controllers'>Controllers</h2>
-<p>A controller may have one or both of these responsibilities:</p>
+    <h2 id='toc_representing-a-single-model'>Representing a Single Model</h2>
+<p>Use <code>Ember.ObjectController</code> to represent a single model. To tell an
+<code>ObjectController</code> which model to represent, set its <code>content</code>
+property in your route&#39;s <code>setupControllers</code> method.</p>
 
-<ul>
-<li>Representing a model for a template.</li>
-<li>Storing application properties that do not need to be saved to the server.</li>
-</ul>
+<p>When a template asks an <code>ObjectController</code> for a property, it will first
+check to see if it has its own property with that name defined. If so, it will
+return its current value.</p>
 
-<p>Most of your controllers will be very small. Unlike other
-frameworks, where the state of your application is spread amongst many
-controllers, in Ember.js, we encapsulate that state in the router. This
-allows your controllers to be lightweight and focused on one thing.</p>
-<h3 id='toc_representing-models'>Representing Models</h3>
-<p>Templates are always connected to controllers, not models. This makes it
-easy to separate display-specific properties from model-specific
-properties.</p>
+<p>However, if the controller does not have a property with that name defined, it
+will return the value of the property on the model.</p>
 
-<p>Often, however, it is convenient for your templates to be able to
-retrieve properties directly from a model. Ember.js makes this easy with
-<code>Ember.ObjectController</code> and <code>Ember.ArrayController</code>.</p>
-<h3 id='toc_storing-application-properties'>Storing Application Properties</h3>
-<p>Often, your application will need to store information that does not
-belong in the model. Any time you need to save information that does not
-need to be persisted to the server, you should put it in a controller.</p>
+<p>For example, imagine you are writing a music player. You have defined
+your <code>SongController</code> to represent the currently playing song.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>App.SongController = Ember.ObjectController.extend({
+  <span class="key">soundVolume</span>: <span class="integer">1</span>
+});
+</pre></td>
+</tr></table>
+</div>
+<p>In your router, you set the <code>content</code> of the controller to the
+currently playing song:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.SongRoute = Ember.Route.extend({
+  <span class="function">setupControllers</span>: <span class="keyword">function</span>(controller, song) {
+    controller.set(<span class="string"><span class="delimiter">'</span><span class="content">content</span><span class="delimiter">'</span></span>, song);
+  }
+});
+</pre></td>
+</tr></table>
+</div>
+<p>In your template, you want to display the name of the currently playing
+song, as well as the volume at which it is playing.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;p&gt;</span>
+  <span class="tag">&lt;strong&gt;</span>Song<span class="tag">&lt;/strong&gt;</span>: <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">name</span><span class="inline-delimiter">}}</span></span> by <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">artist</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;p&gt;</span>
+  <span class="tag">&lt;strong&gt;</span>Current Volume<span class="tag">&lt;/strong&gt;</span>: <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">soundVolume</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/p&gt;</span>
+</pre></td>
+</tr></table>
+</div>
+<p>Because <code>name</code> and <code>artist</code> are persisted information, and thus stored
+on the model, the controller looks them up there and provides them to
+the template.</p>
 
-<p>For example, imagine your application has a search field that is always
-present. You would have a <code>SearchController</code> with a <code>query</code> property, to
-which the search field would be bound.</p>
+<p><code>soundVolume</code>, however, is specific to the current user&#39;s session, and
+thus stored on the controller. The controller can return its own value
+without consulting the model.</p>
 
-<p>If your user wants to search, she would type her query in the search
-field, then hit the enter key.</p>
+<p>The advantage of this architecture is that it is easy to get started
+by accessing the properties of the model via the object controller. If,
+however, you need to transform a model property for a template, there is
+a well-defined place to do so without adding view-specific concerns to
+the model.</p>
 
-<p>When your router initiates the query to the server, it should retrieve
-the current query from the <code>SearchController</code>, instead of trying to
-retrieve it from the search field.</p>
+<p>For example, imagine we want to display the duration of the song:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;p&gt;</span>
+  <span class="tag">&lt;strong&gt;</span>Song<span class="tag">&lt;/strong&gt;</span>: <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">name</span><span class="inline-delimiter">}}</span></span> by <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">artist</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;p&gt;</span>
+  <span class="tag">&lt;strong&gt;</span>Duration<span class="tag">&lt;/strong&gt;</span>: <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">duration</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/p&gt;</span>
+</pre></td>
+</tr></table>
+</div>
+<p>This is saved on the server as an integer representing the number of
+seconds, so our first attempt looks like this:</p>
+<div class="highlight html "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;p&gt;</span>
+  <span class="tag">&lt;strong&gt;</span>Song<span class="tag">&lt;/strong&gt;</span>: 4 Minute Warning by Radiohead
+<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;p&gt;</span>
+  <span class="tag">&lt;strong&gt;</span>Duration<span class="tag">&lt;/strong&gt;</span>: 257
+<span class="tag">&lt;/p&gt;</span>
+</pre></td>
+</tr></table>
+</div>
+<p>Since our users are humans and not robots, however, we&#39;d like to display
+the duration as a formatted string.</p>
 
+<p>This is very easy to do by defining a computed property on the
+controller that transforms the model&#39;s value into a format more useful
+by the template:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre>App.SongController = Ember.ObjectController.extend({
+  <span class="function">duration</span>: <span class="keyword">function</span>() {
+    <span class="keyword">var</span> duration = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">content.duration</span><span class="delimiter">'</span></span>),
+         minutes = Math.floor(duration / <span class="integer">60</span>),
+         seconds = duration % <span class="integer">60</span>;
+
+    <span class="keyword">return</span> [minutes, seconds].join(<span class="string"><span class="delimiter">'</span><span class="content">:</span><span class="delimiter">'</span></span>);
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">content.duration</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div>
+<p>Now, the output of our template is a lot friendlier:</p>
+<div class="highlight html "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;p&gt;</span>
+  <span class="tag">&lt;strong&gt;</span>Song<span class="tag">&lt;/strong&gt;</span>: 4 Minute Warning by Radiohead
+<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;p&gt;</span>
+  <span class="tag">&lt;strong&gt;</span>Duration<span class="tag">&lt;/strong&gt;</span>: 4:17
+<span class="tag">&lt;/p&gt;</span>
+</pre></td>
+</tr></table>
+</div>
     
       <footer>
-         
-      <a class="next-guide" href="/guides/controllers/representing-a-single-model-with-objectcontroller">
-        Representing a Single Model with ObjectController →
+        
+        <a class="previous-guide" href="/guides/controllers">
+          ← Introduction
+        </a>
+       
+      <a class="next-guide" href="/guides/controllers/representing-multiple-models-with-arraycontroller">
+        Representing Multiple Models with ArrayController →
       </a>
       
       </footer>
