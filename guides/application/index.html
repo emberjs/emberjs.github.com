@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> Application </h1>
-    <h2 id='toc_creating-an-application'>Creating an Application</h2>
+    <h2 class='anchorable-toc' id='toc_creating-an-application'>Creating an Application</h2>
 <p>The first step in creating an Ember.js application is to make an
 instance of <code>Ember.Application</code>:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
@@ -139,12 +139,26 @@ current URL.</li>
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -158,7 +172,7 @@ current URL.</li>
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

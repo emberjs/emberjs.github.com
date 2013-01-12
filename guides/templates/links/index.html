@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> Templates </h1>
-    <h2 id='toc_links-the-code-linkto-code-helper'>Links (The <code>{{linkTo}}</code> Helper)</h2>
+    <h2 class='anchorable-toc' id='toc_links-the-code-linkto-code-helper'>Links (The <code>{{linkTo}}</code> Helper)</h2>
 <p>You create a link to a route using the <code>{{linkTo}}</code> helper.</p>
 <div class="highlight js "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
@@ -160,7 +160,7 @@ rendered HTML would look something like this:</p>
 segment. By default, Ember.js will replace the segment with the
 value of the object&#39;s <code>id</code> property.</li>
 </ul>
-<h3 id='toc_multiple-contexts'>Multiple Contexts</h3>
+<h3 class='anchorable-toc' id='toc_multiple-contexts'>Multiple Contexts</h3>
 <p>If the route is nested, you can supply a model for each dynamic
 segment.</p>
 <div class="highlight js "><div class="ribbon"></div><table class="CodeRay"><tr>
@@ -251,12 +251,26 @@ handler if:</p>
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -270,7 +284,7 @@ handler if:</p>
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

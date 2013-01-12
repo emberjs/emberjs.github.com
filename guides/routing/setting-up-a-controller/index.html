@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> Routing </h1>
-    <h2 id='toc_setting-up-a-controller'>Setting Up a Controller</h2>
+    <h2 class='anchorable-toc' id='toc_setting-up-a-controller'>Setting Up a Controller</h2>
 <p>Changing the URL may also change which template is displayed on
 screen. Templates, however, are usually only useful if they have some
 source of information to display.</p>
@@ -181,12 +181,26 @@ associated with the route handler, use the <code>controllerFor</code> method:</p
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -200,7 +214,7 @@ associated with the route handler, use the <code>controllerFor</code> method:</p
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

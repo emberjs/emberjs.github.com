@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> Views </h1>
-    <h2 id='toc_customizing-a-view-s-element'>Customizing a View&#39;s Element</h2>
+    <h2 class='anchorable-toc' id='toc_customizing-a-view-s-element'>Customizing a View&#39;s Element</h2>
 <p>A view is represented by a single DOM element on the page. You can change what kind of element is created by
 changing the <code>tagName</code> property.</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
@@ -247,7 +247,7 @@ modification:</p>
   <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view highestPriority</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
 </pre></td>
 </tr></table>
-</div><h4 id='toc_attribute-bindings-on-a-view'>Attribute Bindings on a View</h4>
+</div><h4 class='anchorable-toc' id='toc_attribute-bindings-on-a-view'>Attribute Bindings on a View</h4>
 <p>You can bind attributes to the DOM element that represents a view by using <code>attributeBindings</code>:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
@@ -263,7 +263,7 @@ modification:</p>
 });
 </pre></td>
 </tr></table>
-</div><h3 id='toc_customizing-a-view-s-element-from-handlebars'>Customizing a View&#39;s Element from Handlebars</h3>
+</div><h3 class='anchorable-toc' id='toc_customizing-a-view-s-element-from-handlebars'>Customizing a View&#39;s Element from Handlebars</h3>
 <p>When you append a view, it creates a new HTML element that holds its content.
 If your view has any child views, they will also be displayed as child nodes
 of the parent&#39;s HTML element.</p>
@@ -351,12 +351,26 @@ override this by passing a <code>tagName</code> parameter:</p>
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -370,7 +384,7 @@ override this by passing a <code>tagName</code> parameter:</p>
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

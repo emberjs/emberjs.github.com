@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> The Object Model </h1>
-    <h2 id='toc_what-do-i-use-when'>What Do I Use When?</h2>
+    <h2 class='anchorable-toc' id='toc_what-do-i-use-when'>What Do I Use When?</h2>
 <p>Sometimes new users are confused about when to use computed properties,
 bindings and observers. Here are some guidelines to help:</p>
 
@@ -129,12 +129,26 @@ Handlebars.</p></li>
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -148,7 +162,7 @@ Handlebars.</p></li>
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

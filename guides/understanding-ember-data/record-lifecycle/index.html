@@ -99,7 +99,7 @@
 
   <div class="chapter">
     
-    <h1 id='toc_ember-data-record-lifecycle'>Ember Data Record Lifecycle</h1>
+    <h1 class='anchorable-toc' id='toc_ember-data-record-lifecycle'>Ember Data Record Lifecycle</h1>
 <p>The goal of this guide is to walk you through the lifecycle of an Ember
 Data record.</p>
 
@@ -133,7 +133,7 @@ model:</p>
 <p>The guide will walk through the initial <code>find</code> on the model, how the
 adapter loads the data in from the server, and how the server data is
 materialized into an Ember Data record.</p>
-<h2 id='toc_step-1-finding-a-record'>Step 1: Finding a Record</h2>
+<h2 class='anchorable-toc' id='toc_step-1-finding-a-record'>Step 1: Finding a Record</h2>
 <p>When you request a record using <code>Person.find(1)</code>, Ember Data will ask
 the store to find the record (<code>store.find(Person, 1)</code>).</p>
 
@@ -155,7 +155,7 @@ data.</p>
 <figure>
   <img src="/images/ember-data-guide/step3.png">
 </figure>
-<h2 id='toc_step-2-adapter-loads-data-into-the-store'>Step 2: Adapter Loads Data Into the Store</h2>
+<h2 class='anchorable-toc' id='toc_step-2-adapter-loads-data-into-the-store'>Step 2: Adapter Loads Data Into the Store</h2>
 <p>At some point later, the server will return some data to the adapter.</p>
 
 <figure>
@@ -172,7 +172,7 @@ notify the record that the data hash is available.</p>
 <figure>
   <img src="/images/ember-data-guide/step6.png">
 </figure>
-<h2 id='toc_step-3-getting-an-attribute'>Step 3: Getting an Attribute</h2>
+<h2 class='anchorable-toc' id='toc_step-3-getting-an-attribute'>Step 3: Getting an Attribute</h2>
 <p>In response to the notification, the app will typically request some
 attribute. In this case, imagine that the <code>Person</code> was represented by
 the following template:</p>
@@ -192,7 +192,7 @@ data hash loads in from the server, the registered observer will call
 <figure>
   <img src="/images/ember-data-guide/step7.png">
 </figure>
-<h2 id='toc_step-4-materialization'>Step 4: Materialization</h2>
+<h2 class='anchorable-toc' id='toc_step-4-materialization'>Step 4: Materialization</h2>
 <p>Because this is the first time the record needs its backend-provided
 data, it will ask the store to load it in using <code>materializeData</code>.</p>
 
@@ -243,7 +243,7 @@ requested <code>firstName</code>.</p>
 
 <p>Because the adapter has already populated the record, trying to <code>get</code>
 its <code>lastName</code> will not trigger additional materialization.</p>
-<h2 id='toc_identity-map'>Identity Map</h2>
+<h2 class='anchorable-toc' id='toc_identity-map'>Identity Map</h2>
 <p>Additional requests for Person 1 will skip all of these steps, because
 <code>store.find(Person, 1)</code> will see that it has already created an instance
 for that record and return it.</p>
@@ -253,7 +253,7 @@ ID will return the same object.</p>
 
 <p>This feature is known as an &quot;identity map&quot;, because it guarantees
 JavaScript <em>identity</em> for objects representing the same backend data.</p>
-<h2 id='toc_practical-note'>Practical Note</h2>
+<h2 class='anchorable-toc' id='toc_practical-note'>Practical Note</h2>
 <p>In the example above, we used a template that rendered the <code>Person</code>
 object directly. As a result, we got partially loaded output that
 automatically filled in as the data loaded.</p>
@@ -294,12 +294,26 @@ changed, which will cause the template to render the first branch
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -313,7 +327,7 @@ changed, which will cause the template to render the first branch
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

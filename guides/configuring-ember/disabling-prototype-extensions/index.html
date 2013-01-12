@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> Configuring Ember.js </h1>
-    <h2 id='toc_disabling-prototype-extensions'>Disabling Prototype Extensions</h2>
+    <h2 class='anchorable-toc' id='toc_disabling-prototype-extensions'>Disabling Prototype Extensions</h2>
 <p>By default, Ember.js will extend the prototypes of native JavaScript
 objects in the following ways:</p>
 
@@ -144,11 +144,11 @@ Ember.EXTEND_PROTOTYPES = <span class="predefined-constant">false</span>;
 <p>Note that the above code must be evaluated <strong>before</strong> Ember.js loads. If
 you set the flag after the Ember.js JavaScript file has been evaluated,
 the native prototypes will already have been modified.</p>
-<h3 id='toc_life-without-prototype-extension'>Life Without Prototype Extension</h3>
+<h3 class='anchorable-toc' id='toc_life-without-prototype-extension'>Life Without Prototype Extension</h3>
 <p>In order for your application to behave correctly, you will need to
 manually extend or create the objects that the native objects were
 creating before.</p>
-<h4 id='toc_arrays'>Arrays</h4>
+<h4 class='anchorable-toc' id='toc_arrays'>Arrays</h4>
 <p>Native arrays will no longer implement the functionality needed to
 observe them. If you disable prototype extension and attempt to use
 native arrays with things like a template&#39;s <code>{{#each}}</code> helper, Ember.js
@@ -185,7 +185,7 @@ islands.contains(<span class="string"><span class="delimiter">'</span><span clas
 <span class="comment">//=&gt; true</span>
 </pre></td>
 </tr></table>
-</div><h4 id='toc_strings'>Strings</h4>
+</div><h4 class='anchorable-toc' id='toc_strings'>Strings</h4>
 <p>Strings will no longer have the convenience methods described in the
 <a href="/api/classes/Ember.String.html">Ember.String API reference.</a>. Instead,
 you can use the similarly-named methods of the <code>Ember.String</code> object and
@@ -204,7 +204,7 @@ Ember.String.camelize(<span class="string"><span class="delimiter">&quot;</span>
 <span class="comment">//=&gt; &quot;myCoolClass&quot;</span>
 </pre></td>
 </tr></table>
-</div><h4 id='toc_functions'>Functions</h4>
+</div><h4 class='anchorable-toc' id='toc_functions'>Functions</h4>
 <p>To annotate computed properties, use the <code>Ember.computed()</code> method to
 wrap the function:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
@@ -266,12 +266,26 @@ fullNameDidChange: Ember.observer(<span class="keyword">function</span>() {
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -285,7 +299,7 @@ fullNameDidChange: Ember.observer(<span class="keyword">function</span>() {
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

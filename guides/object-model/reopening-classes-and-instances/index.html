@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> The Object Model </h1>
-    <h3 id='toc_reopening-classes-and-instances'>Reopening Classes and Instances</h3>
+    <h3 class='anchorable-toc' id='toc_reopening-classes-and-instances'>Reopening Classes and Instances</h3>
 <p>You don&#39;t need to define a class all at once. You can reopen a class and
 define new properties using the <code>reopen</code> method.</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
@@ -173,12 +173,26 @@ Person.createMan().get(<span class="string"><span class="delimiter">'</span><spa
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -192,7 +206,7 @@ Person.createMan().get(<span class="string"><span class="delimiter">'</span><spa
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

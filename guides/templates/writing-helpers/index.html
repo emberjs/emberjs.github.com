@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> Templates </h1>
-    <h2 id='toc_writing-custom-helpers'>Writing Custom Helpers</h2>
+    <h2 class='anchorable-toc' id='toc_writing-custom-helpers'>Writing Custom Helpers</h2>
 <p>Sometimes, you may use the same HTML in your application multiple times. In those case, you can register a custom helper that can be invoked from any Handlebars template.</p>
 
 <p>For example, imagine you are frequently wrapping certain values in a <code>&lt;span&gt;</code> tag with a custom class. You can register a helper from your JavaScript like this:</p>
@@ -139,7 +139,7 @@ user data!</p>
 <p>If the <code>name</code> property on the current context changes, Ember.js will
 automatically execute the helper again and update the DOM with the new
 value.</p>
-<h3 id='toc_dependencies'>Dependencies</h3>
+<h3 class='anchorable-toc' id='toc_dependencies'>Dependencies</h3>
 <p>Imagine you want to render the full name of an <code>App.Person</code>. In this
 case, you will want to update the output if the person itself changes,
 or if the <code>firstName</code> or <code>lastName</code> properties change.</p>
@@ -180,12 +180,26 @@ be full <em>property paths</em> (e.g. <code>person.address.country</code>).</p>
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -199,7 +213,7 @@ be full <em>property paths</em> (e.g. <code>person.address.country</code>).</p>
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

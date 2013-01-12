@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> Understanding Ember.js </h1>
-    <h2 id='toc_the-ember-js-view-layer'>The Ember.js View Layer</h2>
+    <h2 class='anchorable-toc' id='toc_the-ember-js-view-layer'>The Ember.js View Layer</h2>
 <p>This guide goes into extreme detail about the Ember.js view layer. It is
 intended for an experienced Ember developer, and includes details that
 are unnecessary for getting started with Ember.</p>
@@ -113,7 +113,7 @@ are unnecessary for getting started with Ember.</p>
 <p>You can also dynamically make changes to the view hierarchy at application runtime using the <code>Ember.ContainerView</code> class. Rather than being template-driven, a container view exposes an array of child view instances that can be manually managed.</p>
 
 <p>Views and templates work in tandem to provide a robust system for creating whatever user interface you dream up. End users should be isolated from the complexities of things like timing issues while rendering and event propagation. Application developers should be able to describe their UI once, as a string of Handlebars markup, and then carry on with their application without having to worry about making sure that it remains up-to-date.</p>
-<h3 id='toc_what-problems-does-it-solve'>What problems does it solve?</h3><h4 id='toc_child-views'>Child Views</h4>
+<h3 class='anchorable-toc' id='toc_what-problems-does-it-solve'>What problems does it solve?</h3><h4 class='anchorable-toc' id='toc_child-views'>Child Views</h4>
 <p>In a typical client-side application, views may represent elements nested inside of each other in the DOM. In the naïve solution to this problem, separate view objects represent each DOM element, and ad-hoc references help the various view object keep track of the views conceptually nested inside of them.</p>
 
 <p>Here is a simple example, representing one main app view, a collection nested inside of it, and individual items nested inside of the collection.</p>
@@ -135,7 +135,7 @@ are unnecessary for getting started with Ember.</p>
 <p>When the App View re-renders, Ember is responsible for re-rendering and inserting the child views, not application code. This also means that Ember can perform any memory management for you, such as cleaning up observers and bindings.</p>
 
 <p>Not only does this eliminate quite a bit of boilerplate code, but it eliminates the possibility that an imperfectly implemented view hierarchy will cause unexpected failures.</p>
-<h4 id='toc_event-delegation'>Event Delegation</h4>
+<h4 class='anchorable-toc' id='toc_event-delegation'>Event Delegation</h4>
 <p>In the past, web developers have added event listeners to individual elements in order to know when the user interacts with them. For example, you might have a <code>&lt;div&gt;</code> element on which you register a function that gets called when the user clicks it.</p>
 
 <p>However, this approach often does not scale when dealing with large numbers of interactive elements. For example, imagine a <code>&lt;ul&gt;</code> with 100 <code>&lt;li&gt;</code>s in it, with a delete button next to each item. Since the behavior is the same for all of these items, it would be inefficient to create 100 event listeners, one for each delete button.</p>
@@ -161,7 +161,7 @@ are unnecessary for getting started with Ember.</p>
 <p>In order to solve this problem, Ember delegates all events to the application&#39;s root element (usually the document <code>body</code>) using jQuery. When an event occurs, Ember identifies the nearest view that handles the event and invokes its event handler. This means that you can create views to hold a JavaScript context, but still get the benefit of event delegation.</p>
 
 <p>Further, because Ember registers only one event for the entire Ember application, creating new views never requires setting up event listeners, making re-renders efficient and less error-prone. When a view has child views, this also means that there is no need to manually undelegate views that the re-render process replaces.</p>
-<h4 id='toc_the-rendering-pipeline'>The Rendering Pipeline</h4>
+<h4 class='anchorable-toc' id='toc_the-rendering-pipeline'>The Rendering Pipeline</h4>
 <p>Most web applications specify their user interface using the markup of a particular templating language. For Ember.js, we&#39;ve done the work to make templates written using the Handlebars templating language automatically update when the values used inside of them are changed.</p>
 
 <p>While the process of displaying a template is automatic for developers, under the hood there are a series of steps that must be taken to go from the original template to the final, live DOM representation that the user sees.</p>
@@ -171,13 +171,13 @@ are unnecessary for getting started with Ember.</p>
 <figure>
   <img src="/images/view-guide/view-lifecycle-ember.png">
 </figure>
-<h5 id='toc_1-template-compilation'>1. Template Compilation</h5>
+<h5 class='anchorable-toc' id='toc_1-template-compilation'>1. Template Compilation</h5>
 <p>The application&#39;s templates are loaded over the network or as part of the application payload in string form. When the application loads, it sends the template string to Handlebars to be compiled into a function. Once compiled, the template function is saved, and can be used by multiple views repeatedly, each time they need to re-render.</p>
 
 <p>This step may be omitted in applications where the templates are pre-compiled on the server. In those cases, the template is transferred not as the original, human-readable template string but as the compiled code.</p>
 
 <p>Because Ember is responsible for template compilation, you don&#39;t have to do any additional work to ensure that compiled templates are reused.</p>
-<h5 id='toc_2-string-concatenation'>2. String Concatenation</h5>
+<h5 class='anchorable-toc' id='toc_2-string-concatenation'>2. String Concatenation</h5>
 <p>A view&#39;s rendering process is kickstarted when the application calls <code>append</code> or <code>appendTo</code> on the view. Calling <code>append</code> or <code>appendTo</code> <strong>schedules</strong> the view to be rendered and inserted later. This allows any deferred logic in your application (such as binding synchronization) to happen before rendering the element.</p>
 
 <p>To begin the rendering process, Ember creates a <code>RenderBuffer</code> and gives it to the view to append its contents to. During this process, a view can create and render child views. When it does so, the parent view creates and assigns a <code>RenderBuffer</code> for the child, and links it to the parent&#39;s <code>RenderBuffer</code>.</p>
@@ -193,11 +193,11 @@ are unnecessary for getting started with Ember.</p>
 </figure>
 
 <p>In addition to children (Strings and other <code>RenderBuffer</code>s), a <code>RenderBuffer</code> also encapsulates the element&#39;s tag name, id, classes, style, and other attributes. This makes it possible for the render process to modify one of these properties (style, for example), even after its child Strings have rendered. Because many of these properties are controlled via bindings (e.g. using <code>bindAttr</code>), this makes the process robust and transparent.</p>
-<h5 id='toc_3-element-creation-and-insertion'>3. Element Creation and Insertion</h5>
+<h5 class='anchorable-toc' id='toc_3-element-creation-and-insertion'>3. Element Creation and Insertion</h5>
 <p>At the end of the rendering process, the root view asks the <code>RenderBuffer</code> for its element. The <code>RenderBuffer</code> takes its completed string and uses jQuery to convert it into an element. The view assigns that element to its <code>element</code> property and places it into the correct place in the DOM (the location specified in <code>appendTo</code> or the application&#39;s root element if the application used <code>append</code>).</p>
 
 <p>While the parent view assigns its element directly, each child views looks up its element lazily. It does this by looking for an element whose <code>id</code> matches its <code>elementId</code> property. Unless explicitly provided, the rendering process generates an <code>elementId</code> property and assigns its value to the view&#39;s <code>RenderBuffer</code>, which allows the view to find its element as needed.</p>
-<h5 id='toc_4-re-rendering'>4. Re-Rendering</h5>
+<h5 class='anchorable-toc' id='toc_4-re-rendering'>4. Re-Rendering</h5>
 <p>After the view inserts itself into the DOM, either Ember or the application may want to re-render the view. They can trigger a re-render by calling the <code>rerender</code> method on a view.</p>
 
 <p>Rerendering will repeat steps 2 and 3 above, with two exceptions:</p>
@@ -220,7 +220,7 @@ are unnecessary for getting started with Ember.</p>
 <figure>
   <img src="/images/view-guide/re-render.png">
 </figure>
-<h3 id='toc_the-view-hierarchy'>The View Hierarchy</h3><h4 id='toc_parent-and-child-views'>Parent and Child Views</h4>
+<h3 class='anchorable-toc' id='toc_the-view-hierarchy'>The View Hierarchy</h3><h4 class='anchorable-toc' id='toc_parent-and-child-views'>Parent and Child Views</h4>
 <p>As Ember renders a templated view, it will generate a view hierarchy. Let&#39;s assume we have a template <code>form</code>.</p>
 <div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
@@ -274,7 +274,7 @@ children.objectAt(<span class="integer">0</span>).get(<span class="string"><span
 })
 </pre></td>
 </tr></table>
-</div><h4 id='toc_lifecycle-hooks'>Lifecycle Hooks</h4>
+</div><h4 class='anchorable-toc' id='toc_lifecycle-hooks'>Lifecycle Hooks</h4>
 <p>In order to make it easy to take action at different points during your view&#39;s lifecycle, there are several hooks you can implement.</p>
 
 <ul>
@@ -297,7 +297,7 @@ children.objectAt(<span class="integer">0</span>).get(<span class="string"><span
 });
 </pre></td>
 </tr></table>
-</div><h4 id='toc_virtual-views'>Virtual Views</h4>
+</div><h4 class='anchorable-toc' id='toc_virtual-views'>Virtual Views</h4>
 <p>As described above, Handlebars creates views in the view hierarchy to
 represent bound values. Every time you use a Handlebars expression,
 whether it&#39;s a simple value or a block helper like <code>{{#with}}</code> or
@@ -376,7 +376,7 @@ public API for your use-case.</p>
 
 <p>Bottom line: This API is like XML. If you think you have a use for it,
 you may not yet understand the problem enough. Reconsider!</p>
-<h4 id='toc_event-bubbling'>Event Bubbling</h4>
+<h4 class='anchorable-toc' id='toc_event-bubbling'>Event Bubbling</h4>
 <p>One responsibility of views is to respond to primitive user events
 and translate them into events that have semantic meaning for your
 application.</p>
@@ -544,7 +544,7 @@ form view will &quot;just work&quot;.</p>
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">view</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
-</div><h4 id='toc_adding-new-events'>Adding New Events</h4>
+</div><h4 class='anchorable-toc' id='toc_adding-new-events'>Adding New Events</h4>
 <p>Ember comes with built-in support for the following native browser
 events:</p>
 
@@ -614,7 +614,7 @@ new application:</p>
 <p>In order for this to work for a custom event, the HTML5 spec must define
 the event as &quot;bubbling&quot;, or jQuery must have provided an event
 delegation shim for the event.</p>
-<h3 id='toc_templated-views'>Templated Views</h3>
+<h3 class='anchorable-toc' id='toc_templated-views'>Templated Views</h3>
 <p>As you&#39;ve seen so far in this guide, the majority of views that you will
 use in your application are backed by a template. When using templates,
 you do not need to programmatically create your view hierarchy because
@@ -655,7 +655,7 @@ in the right place relative to any plain text.</p>
 direct, programmatic control of a view&#39;s children. In that case, you can
 use <code>Ember.ContainerView</code>, which explicitly exposes a public API for
 doing so.</p>
-<h3 id='toc_container-views'>Container Views</h3>
+<h3 class='anchorable-toc' id='toc_container-views'>Container Views</h3>
 <p>Container views contain no plain text. They are composed entirely of
 their child views (which may themselves be template-backed).</p>
 
@@ -757,7 +757,7 @@ is automatically instantiated, if necessary, and added to the
 <figure>
   <img src="/images/view-guide/container-view-shorthand.png">
 </figure>
-<h3 id='toc_template-scopes'>Template Scopes</h3>
+<h3 class='anchorable-toc' id='toc_template-scopes'>Template Scopes</h3>
 <p>Standard Handlebars templates have the concept of a <em>context</em>--the
 object from which expressions will be looked up.</p>
 
@@ -801,7 +801,7 @@ scope as its context.</p>
 property on the current controller. When the <code>user</code> property changes,
 Ember re-renders the block, using the new value of <code>controller.user</code> as
 its context.</p>
-<h4 id='toc_view-scope'>View Scope</h4>
+<h4 class='anchorable-toc' id='toc_view-scope'>View Scope</h4>
 <p>In addition to the Handlebars context, templates in Ember also have the
 notion of the current view. No matter what the current context is, the
 <code>view</code> property always references the closest view.</p>
@@ -844,7 +844,7 @@ You can get access to a view&#39;s parent using <code>view.parentView</code>.</p
 <p>Even though the Handlebars context has changed to the current
 controller, you can still access the view&#39;s <code>bulletText</code> by referencing
 <code>view.bulletText</code>.</p>
-<h3 id='toc_template-variables'>Template Variables</h3>
+<h3 class='anchorable-toc' id='toc_template-variables'>Template Variables</h3>
 <p>So far in this guide, we&#39;ve been handwaving around the use of the
 <code>controller</code> property in our Handlebars templates. Where does it come
 from?</p>
@@ -867,7 +867,7 @@ Ember sets the <code>view</code> variable to the view rendering the template.</p
 a rendered view has a <code>controller</code> property. If a view has no
 <code>controller</code> property, it inherits the <code>controller</code> variable from the
 most recent view with one.</p>
-<h4 id='toc_other-variables'>Other Variables</h4>
+<h4 class='anchorable-toc' id='toc_other-variables'>Other Variables</h4>
 <p>Handlebars helpers in Ember may also specify variables. For example, the
 <code>{{#with controller.person as tom}}</code> form specifies a <code>tom</code> variable
 that descendent scopes can access. Even if a child context has a <code>tom</code>
@@ -905,7 +905,7 @@ but remain in the same scope as where the template invoked the <code>each</code>
 </div>
 <p>Note that these variables inherit through <code>ContainerView</code>s, even though
 they are not part of the Handlebars context hierarchy.</p>
-<h4 id='toc_accessing-template-variables-from-views'>Accessing Template Variables from Views</h4>
+<h4 class='anchorable-toc' id='toc_accessing-template-variables-from-views'>Accessing Template Variables from Views</h4>
 <p>In most cases, you will need to access these template variables from
 inside your templates. In some unusual cases, you may want to access the
 variables in-scope from your view&#39;s JavaScript code.</p>
@@ -931,12 +931,26 @@ recent template-backed view.</p>
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -950,7 +964,7 @@ recent template-backed view.</p>
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

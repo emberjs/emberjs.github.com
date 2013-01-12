@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> Models </h1>
-    <h2 id='toc_model-lifecycle'>Model Lifecycle</h2>
+    <h2 class='anchorable-toc' id='toc_model-lifecycle'>Model Lifecycle</h2>
 <p>Since models must be loaded and saved asynchronously, there are several
 possible states that a record may be in at a given time. Each instance
 of <code>DS.Model</code> has a set of Boolean properties that you can use to
@@ -153,7 +153,7 @@ loaded:</p>
 <li><code>becameError</code></li>
 <li><code>becameInvalid</code></li>
 </ul>
-<h3 id='toc_record-states'>Record States</h3><h4 id='toc_loading'>Loading</h4>
+<h3 class='anchorable-toc' id='toc_record-states'>Record States</h3><h4 class='anchorable-toc' id='toc_loading'>Loading</h4>
 <p>A record typically starts off in the loading state. This means Ember
 Data has not yet received information from the adapter about what values
 its attributes and relationships should have. You can put the record
@@ -162,22 +162,22 @@ becomes loaded.</p>
 
 <p>Attempting to modify a record in the loading state will raise an
 exception.</p>
-<h4 id='toc_loaded-clean'>Loaded/Clean</h4>
+<h4 class='anchorable-toc' id='toc_loaded-clean'>Loaded/Clean</h4>
 <p>A record that is both loaded and clean means that is has received
 information about its attributes and relationships from the server, and
 no changes have been made locally on the client.</p>
-<h4 id='toc_dirty'>Dirty</h4>
+<h4 class='anchorable-toc' id='toc_dirty'>Dirty</h4>
 <p>A dirty record has outstanding changes to either its attributes or
 relationships that have not yet been synchronized with the adapter.</p>
-<h4 id='toc_in-flight'>In-Flight</h4>
+<h4 class='anchorable-toc' id='toc_in-flight'>In-Flight</h4>
 <p>A record that is in-flight is a dirty record that has been given to the
 adapter to save the changes made locally. Once the server has
 acknowledged that the changes have been saved successfully, the record
 will become clean.</p>
-<h4 id='toc_invalid'>Invalid</h4>
+<h4 class='anchorable-toc' id='toc_invalid'>Invalid</h4>
 <p>A record becomes invalid if the adapter is notified by the server that
 it was not able to be saved because the backend deemed it invalid.</p>
-<h4 id='toc_error'>Error</h4>
+<h4 class='anchorable-toc' id='toc_error'>Error</h4>
 <p>A record enters the error state when the adapter is unable to save it
 for some reason other than invalidity.</p>
 
@@ -197,12 +197,26 @@ for some reason other than invalidity.</p>
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -216,7 +230,7 @@ for some reason other than invalidity.</p>
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

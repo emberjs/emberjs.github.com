@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> Controllers </h1>
-    <h2 id='toc_representing-multiple-models'>Representing Multiple Models</h2>
+    <h2 class='anchorable-toc' id='toc_representing-multiple-models'>Representing Multiple Models</h2>
 <p>You can use <code>Ember.ArrayController</code> to represent an array of models. To tell an
 <code>ArrayController</code> which model to represent, set its <code>content</code> property
 in your route&#39;s <code>setupControllers</code> method.</p>
@@ -200,12 +200,26 @@ property called <code>longSongCount</code> to the controller:</p>
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -219,7 +233,7 @@ property called <code>longSongCount</code> to the controller:</p>
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

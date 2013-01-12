@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> Models </h1>
-    <h2 id='toc_defining-models'>Defining Models</h2>
+    <h2 class='anchorable-toc' id='toc_defining-models'>Defining Models</h2>
 <p>For every type of model you&#39;d like to represent, create a new subclass of
 <code>DS.Model</code>:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
@@ -108,7 +108,7 @@
   <td class="code"><pre>App.Person = DS.Model.extend();
 </pre></td>
 </tr></table>
-</div><h3 id='toc_attributes'>Attributes</h3>
+</div><h3 class='anchorable-toc' id='toc_attributes'>Attributes</h3>
 <p>You can specify which attributes a model has by using <code>DS.attr</code>. You can
 use attributes just like any other property, including as part of a
 computed property.</p>
@@ -142,10 +142,10 @@ App.Person = DS.Model.extend({
 <p>By default, the REST adapter supports attribute types of <code>string</code>,
 <code>number</code>, <code>boolean</code>, and <code>date</code>. Custom adapters may offer additional
 attribute types.</p>
-<h3 id='toc_relationships'>Relationships</h3>
+<h3 class='anchorable-toc' id='toc_relationships'>Relationships</h3>
 <p>Ember Data includes several built-in relationship types to help you
 define how your models relate to each other.</p>
-<h4 id='toc_one-to-one'>One-to-One</h4>
+<h4 class='anchorable-toc' id='toc_one-to-one'>One-to-One</h4>
 <p>To declare a one-to-one relationship between two models, use
 <code>DS.belongsTo</code>:</p>
 <div class="highlight js "><div class="ribbon"></div><table class="CodeRay"><tr>
@@ -166,7 +166,7 @@ App.Profile = DS.Model.extend({
 });
 </pre></td>
 </tr></table>
-</div><h4 id='toc_one-to-many'>One-to-Many</h4>
+</div><h4 class='anchorable-toc' id='toc_one-to-many'>One-to-Many</h4>
 <p>To declare a one-to-many relationship between two models, use
 <code>DS.belongsTo</code> in combination with <code>DS.hasMany</code>, like this:</p>
 <div class="highlight js "><div class="ribbon"></div><table class="CodeRay"><tr>
@@ -187,7 +187,7 @@ App.Comment = DS.Model.extend({
 });
 </pre></td>
 </tr></table>
-</div><h4 id='toc_many-to-many'>Many-to-Many</h4>
+</div><h4 class='anchorable-toc' id='toc_many-to-many'>Many-to-Many</h4>
 <p>To declare a many-to-many relationship between two models, use
 <code>DS.hasMany</code>:</p>
 <div class="highlight js "><div class="ribbon"></div><table class="CodeRay"><tr>
@@ -225,12 +225,26 @@ App.Tag = DS.Model.extend({
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -244,7 +258,7 @@ App.Tag = DS.Model.extend({
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

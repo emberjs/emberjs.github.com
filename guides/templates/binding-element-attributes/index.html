@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> Templates </h1>
-    <h2 id='toc_binding-element-attributes'>Binding Element Attributes</h2>
+    <h2 class='anchorable-toc' id='toc_binding-element-attributes'>Binding Element Attributes</h2>
 <p>In addition to normal text, you may also want have your templates
 contain HTML elements whose attributes are bound to the controller.</p>
 
@@ -170,12 +170,26 @@ HTML element:</p>
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -189,7 +203,7 @@ HTML element:</p>
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

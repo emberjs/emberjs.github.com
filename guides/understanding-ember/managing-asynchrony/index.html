@@ -99,10 +99,10 @@
 
   <div class="chapter">
     <h1> Understanding Ember.js </h1>
-    <h2 id='toc_managing-asynchrony-in-ember'>Managing Asynchrony in Ember</h2>
+    <h2 class='anchorable-toc' id='toc_managing-asynchrony-in-ember'>Managing Asynchrony in Ember</h2>
 <p>Many Ember concepts, like bindings and computed properties, are designed
 to help manage asynchronous behavior.</p>
-<h3 id='toc_without-ember'>Without Ember</h3>
+<h3 class='anchorable-toc' id='toc_without-ember'>Without Ember</h3>
 <p>We&#39;ll start by taking a look at ways to manage asynchronous behavior
 using jQuery or event-based MVC frameworks.</p>
 
@@ -204,7 +204,7 @@ jQuery.getJSON(<span class="string"><span class="delimiter">'</span><span class=
 approach is typical of event-driven MVC frameworks. It helps organize
 the asynchronous events, but asynchronous behavior is still the core
 programming model.</p>
-<h3 id='toc_ember-s-approach'>Ember&#39;s Approach</h3>
+<h3 class='anchorable-toc' id='toc_ember-s-approach'>Ember&#39;s Approach</h3>
 <p>In general, Ember&#39;s goal is to eliminate explicit forms of asynchronous
 behavior. As we&#39;ll see later, this gives Ember the ability to coalesce
 multiple events that have the same result.</p>
@@ -283,7 +283,7 @@ changed.</p>
 <p>Instead, Ember&#39;s binding system automatically follows the trail from the
 <code>salutation</code> and <code>name</code> set in the <code>getJSON</code> callback to the computed
 property in the <code>PostController</code> and all the way into the DOM.</p>
-<h3 id='toc_benefits'>Benefits</h3>
+<h3 class='anchorable-toc' id='toc_benefits'>Benefits</h3>
 <p>Because Ember is usually responsible for propagating changes, it can
 guarantee that a single change is only propagated one time in response
 to each user event.</p>
@@ -353,7 +353,7 @@ shouldn&#39;t assume synchronous side effects even in a more event-focused
 system. The fact that side effects don&#39;t propagate immediately in Ember
 eliminates the temptation to cheat and accidentally couple code together
 that should be separate.</p>
-<h3 id='toc_side-effect-callbacks'>Side-Effect Callbacks</h3>
+<h3 class='anchorable-toc' id='toc_side-effect-callbacks'>Side-Effect Callbacks</h3>
 <p>Since you can&#39;t rely on synchronous side-effects, you may be wondering
 how to make sure that certain actions happen at the right time.</p>
 
@@ -424,7 +424,7 @@ control of creating and inserting views in appropriate situations.</p>
 <p>This also means that all of the code for working with the DOM is in a
 few sanctioned parts of your application, so Ember has more freedom in
 the parts of the render process outside of these callbacks.</p>
-<h3 id='toc_observers'>Observers</h3>
+<h3 class='anchorable-toc' id='toc_observers'>Observers</h3>
 <p>In some rare cases, you will want to perform certain behavior after a
 property&#39;s changes have propagated. As in the previous section, Ember
 provides a mechanism to hook into the property change notifications.</p>
@@ -573,12 +573,26 @@ definition if possible.</p>
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -592,7 +606,7 @@ definition if possible.</p>
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

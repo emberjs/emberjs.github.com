@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> Models </h1>
-    <h2 id='toc_modifying-attributes'>Modifying Attributes</h2>
+    <h2 class='anchorable-toc' id='toc_modifying-attributes'>Modifying Attributes</h2>
 <p>Once a record has been loaded, you can begin making changes to its
 attributes. Attributes behave just like normal properties in Ember.js
 objects. Making changes is as simple as setting the attribute you
@@ -169,12 +169,26 @@ Lifecycle</a>.</p>
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -188,7 +202,7 @@ Lifecycle</a>.</p>
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

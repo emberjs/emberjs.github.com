@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> The Object Model </h1>
-    <h2 id='toc_bindings'>Bindings</h2>
+    <h2 class='anchorable-toc' id='toc_bindings'>Bindings</h2>
 <p>A binding creates a link between two properties such that when one changes, the
 other one is updated to the new value automatically. Bindings can connect
 properties on the same object, or across two different objects. Unlike most other
@@ -143,7 +143,7 @@ App.wife.get(<span class="string"><span class="delimiter">'</span><span class="c
 application code has finished running before synchronizing changes, so you can
 change a bound property as many times as you&#39;d like without worrying about the
 overhead of syncing bindings when values are transient.</p>
-<h2 id='toc_one-way-bindings'>One-Way Bindings</h2>
+<h2 class='anchorable-toc' id='toc_one-way-bindings'>One-Way Bindings</h2>
 <p>A one-way binding only propagates changes in one direction. Usually, one-way
 bindings are just a performance optimization and you can safely use
 the more concise two-way binding syntax (as, of course, two-way bindings are
@@ -203,12 +203,26 @@ App.user.get(<span class="string"><span class="delimiter">'</span><span class="c
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -222,7 +236,7 @@ App.user.get(<span class="string"><span class="delimiter">'</span><span class="c
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

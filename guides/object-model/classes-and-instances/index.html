@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> The Object Model </h1>
-    <h2 id='toc_classes-and-instances'>Classes and Instances</h2>
+    <h2 class='anchorable-toc' id='toc_classes-and-instances'>Classes and Instances</h2>
 <p>At its most basic, you create a new Ember class by using the
 <code>extend</code> method on <code>Ember.Object</code>.</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
@@ -186,7 +186,7 @@ you could override the <code>say</code> method from the <code>Person</code> clas
 </div>
 <p>You can use the <code>_super</code> method on the object (<code>super</code> is a reserved
 word in JavaScript) to call the original method you overrode.</p>
-<h3 id='toc_subclassing-classes'>Subclassing Classes</h3>
+<h3 class='anchorable-toc' id='toc_subclassing-classes'>Subclassing Classes</h3>
 <p>You can also create subclasses of classes you create by using the
 <code>extend</code> method. In fact, when we created a new class above by calling
 <code>extend</code> on <code>Ember.Object</code>, we were <strong>subclassing</strong> <code>Ember.Object</code>.</p>
@@ -220,12 +220,26 @@ overriding.</p>
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -239,7 +253,7 @@ overriding.</p>
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

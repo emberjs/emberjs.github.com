@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> Enumerables </h1>
-    <h2 id='toc_enumerables'>Enumerables</h2>
+    <h2 class='anchorable-toc' id='toc_enumerables'>Enumerables</h2>
 <p>In Ember.js, an Enumerable is any object that contains a number of child
 objects, and which allows you to work with those children using the
 <code>Ember.Enumerable</code> API. The most common Enumerable in the majority of
@@ -166,7 +166,7 @@ array.forEach(<span class="keyword">function</span>(item) {
 <span class="comment">//=&gt; 3 2</span>
 </pre></td>
 </tr></table>
-</div><h3 id='toc_enumerables-in-ember-js'>Enumerables in Ember.js</h3>
+</div><h3 class='anchorable-toc' id='toc_enumerables-in-ember-js'>Enumerables in Ember.js</h3>
 <p>Usually, objects that represent lists implement the Enumerable interface. Some examples:</p>
 
 <ul>
@@ -178,11 +178,11 @@ adds additional functionality for the view layer.</li>
 <li><strong>Ember.Set</strong> - An data structure that can efficiently answer whether it
 includes an object.</li>
 </ul>
-<h3 id='toc_api-overview'>API Overview</h3>
+<h3 class='anchorable-toc' id='toc_api-overview'>API Overview</h3>
 <p>In this guide, we&#39;ll explore some of the most common Enumerable
 conveniences. For the full list, please see the <a href="/api/classes/Ember.Enumerable.html">Ember.Enumerable API
 reference documentation.</a></p>
-<h4 id='toc_iterating-over-an-enumerable'>Iterating Over an Enumerable</h4>
+<h4 class='anchorable-toc' id='toc_iterating-over-an-enumerable'>Iterating Over an Enumerable</h4>
 <p>To enumerate all the values of an enumerable object, use the <code>forEach</code> method:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
@@ -206,7 +206,7 @@ food.forEach(<span class="keyword">function</span>(item, index) {
 <span class="comment">// Menu Item 3: Adobo Chicken</span>
 </pre></td>
 </tr></table>
-</div><h4 id='toc_making-an-array-copy'>Making an Array Copy</h4>
+</div><h4 class='anchorable-toc' id='toc_making-an-array-copy'>Making an Array Copy</h4>
 <p>You can make a native array copy of any object that implements
 <code>Ember.Enumerable</code> by calling the <code>toArray()</code> method:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
@@ -230,7 +230,7 @@ states.toArray()
 </div>
 <p>Note that in many enumerables, such as the <code>Ember.Set</code> used in this
 example, the order of the resulting array is not guaranteed.</p>
-<h4 id='toc_first-and-last-objects'>First and Last Objects</h4>
+<h4 class='anchorable-toc' id='toc_first-and-last-objects'>First and Last Objects</h4>
 <p>All Enumerables expose <code>firstObject</code> and <code>lastObject</code> properties
 that you can bind to.</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
@@ -255,7 +255,7 @@ animals.get(<span class="string"><span class="delimiter">'</span><span class="co
 <span class="comment">//=&gt; &quot;peacock&quot;</span>
 </pre></td>
 </tr></table>
-</div><h4 id='toc_map'>Map</h4>
+</div><h4 class='anchorable-toc' id='toc_map'>Map</h4>
 <p>You can easily transform each item in an enumerable using the
 <code>map()</code> method, which creates a new array with results of calling a
 function on each item in the enumerable.</p>
@@ -307,7 +307,7 @@ states.mapProperty(<span class="string"><span class="delimiter">'</span><span cl
 <span class="comment">//=&gt; [&quot;Honolulu&quot;, &quot;Sacramento&quot;]</span>
 </pre></td>
 </tr></table>
-</div><h4 id='toc_filtering'>Filtering</h4>
+</div><h4 class='anchorable-toc' id='toc_filtering'>Filtering</h4>
 <p>Another common task to perform on an Enumerable is to take the
 Enumerable as input, and return an Array after filtering it based on
 some criteria.</p>
@@ -367,7 +367,7 @@ todos.filterProperty(<span class="string"><span class="delimiter">'</span><span 
 </tr></table>
 </div>
 <p>If you want to return just the first matched value, rather than an Array containing all of the matched values, you can use <code>find</code> and <code>findProperty</code>, which work just like <code>filter</code> and <code>filterProperty</code>, but return only one item.</p>
-<h4 id='toc_aggregate-information-all-or-any'>Aggregate Information (All or Any)</h4>
+<h4 class='anchorable-toc' id='toc_aggregate-information-all-or-any'>Aggregate Information (All or Any)</h4>
 <p>If you want to find out whether every item in an Enumerable matches some condition, you can use the <code>every</code> method:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
@@ -438,12 +438,26 @@ people.someProperty(<span class="string"><span class="delimiter">'</span><span c
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -457,7 +471,7 @@ people.someProperty(<span class="string"><span class="delimiter">'</span><span c
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

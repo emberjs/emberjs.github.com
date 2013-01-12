@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> Views </h1>
-    <h2 id='toc_handling-events'>Handling Events</h2>
+    <h2 class='anchorable-toc' id='toc_handling-events'>Handling Events</h2>
 <p>Instead of having to register event listeners on elements you&#39;d like to
 respond to, simply implement the name of the event you want to respond to
 as a method on your view.</p>
@@ -153,12 +153,26 @@ using the {{view}} helper in Handlebars), see the Ember.ContainerView documentat
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -172,7 +186,7 @@ using the {{view}} helper in Handlebars), see the Ember.ContainerView documentat
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

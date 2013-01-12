@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> Routing </h1>
-    <h2 id='toc_routing'>Routing</h2>
+    <h2 class='anchorable-toc' id='toc_routing'>Routing</h2>
 <p>As users interact with your application, it moves through many
 different states. Ember.js gives you helpful tools for managing
 that state in a way that scales with your application.</p>
@@ -147,12 +147,26 @@ existing outlet.</li>
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -166,7 +180,7 @@ existing outlet.</li>
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> Views </h1>
-    <h2 id='toc_manually-managed-views-with-ember-containerview'>Manually Managed Views with Ember.ContainerView</h2>
+    <h2 class='anchorable-toc' id='toc_manually-managed-views-with-ember-containerview'>Manually Managed Views with Ember.ContainerView</h2>
 <p>Usually, views create their child views by using the <code>{{view}}</code> helper. Sometimes it is useful to manually manage a view&#39;s
 child views. If you create an instance of <code>Ember.ContainerView</code>, the <code>childViews</code> array is editable. Views that you add
 are rendered to the page, and views that you remove are removed from the DOM.</p>
@@ -153,12 +153,26 @@ container view is created, these views will be instantiated and added to the chi
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -172,7 +186,7 @@ container view is created, these views will be instantiated and added to the chi
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

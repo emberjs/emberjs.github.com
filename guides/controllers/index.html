@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> Controllers </h1>
-    <h2 id='toc_controllers'>Controllers</h2>
+    <h2 class='anchorable-toc' id='toc_controllers'>Controllers</h2>
 <p>A controller may have one or both of these responsibilities:</p>
 
 <ul>
@@ -111,7 +111,7 @@
 frameworks, where the state of your application is spread amongst many
 controllers, in Ember.js, we encapsulate that state in the router. This
 allows your controllers to be lightweight and focused on one thing.</p>
-<h3 id='toc_representing-models'>Representing Models</h3>
+<h3 class='anchorable-toc' id='toc_representing-models'>Representing Models</h3>
 <p>Templates are always connected to controllers, not models. This makes it
 easy to separate display-specific properties from model-specific
 properties.</p>
@@ -119,7 +119,7 @@ properties.</p>
 <p>Often, however, it is convenient for your templates to be able to
 retrieve properties directly from a model. Ember.js makes this easy with
 <code>Ember.ObjectController</code> and <code>Ember.ArrayController</code>.</p>
-<h3 id='toc_storing-application-properties'>Storing Application Properties</h3>
+<h3 class='anchorable-toc' id='toc_storing-application-properties'>Storing Application Properties</h3>
 <p>Often, your application will need to store information that does not
 belong in the model. Any time you need to save information that does not
 need to be persisted to the server, you should put it in a controller.</p>
@@ -147,12 +147,26 @@ retrieve it from the search field.</p>
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -166,7 +180,7 @@ retrieve it from the search field.</p>
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

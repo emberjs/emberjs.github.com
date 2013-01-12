@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> Templates </h1>
-    <h2 id='toc_actions-the-code-action-code-helper'>Actions (The <code>{{action}}</code> Helper)</h2>
+    <h2 class='anchorable-toc' id='toc_actions-the-code-action-code-helper'>Actions (The <code>{{action}}</code> Helper)</h2>
 <p>You may want to trigger high level events in response to a simple user
 event (like a click).</p>
 
@@ -176,7 +176,7 @@ controller. You can also pass parameters to the method:</p>
   <td class="code"><pre><span class="tag">&lt;p&gt;</span><span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">select</span><span class="error">&quot;</span> <span class="attribute-name">post</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>✓<span class="tag">&lt;/button&gt;</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">post.title</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/p&gt;</span>
 </pre></td>
 </tr></table>
-</div><h3 id='toc_target-bubbling'>Target Bubbling</h3>
+</div><h3 class='anchorable-toc' id='toc_target-bubbling'>Target Bubbling</h3>
 <p>If the action is not found on the current controller, it will bubble up
 to the current route handler. From there, it will bubble up to parent
 route handlers until it reaches the application route.</p>
@@ -223,12 +223,26 @@ route.</p>
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -242,7 +256,7 @@ route.</p>
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

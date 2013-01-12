@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> Views </h1>
-    <h2 id='toc_defining-a-view'>Defining a View</h2>
+    <h2 class='anchorable-toc' id='toc_defining-a-view'>Defining a View</h2>
 <p>You can use <code>Ember.View</code> to render a Handlebars template and insert it into the DOM.</p>
 
 <p>To tell the view which template to use, set its <code>templateName</code> property. For example, if I had a <code>&lt;script&gt;</code> tag like this:</p>
@@ -178,12 +178,26 @@
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -197,7 +211,7 @@
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>

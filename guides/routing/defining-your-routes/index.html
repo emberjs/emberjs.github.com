@@ -99,7 +99,7 @@
 
   <div class="chapter">
     <h1> Routing </h1>
-    <h2 id='toc_defining-your-routes'>Defining Your Routes</h2>
+    <h2 class='anchorable-toc' id='toc_defining-your-routes'>Defining Your Routes</h2>
 <p>When your application starts, the router is responsible for displaying
 templates, loading data, and otherwise setting up application state.
 It does so by matching the current URL to the <em>routes</em> that you&#39;ve
@@ -195,7 +195,7 @@ routes. For example, in the case of <code>/favs</code>:</p>
 });
 </pre></td>
 </tr></table>
-</div><h3 id='toc_nested-routes'>Nested Routes</h3>
+</div><h3 class='anchorable-toc' id='toc_nested-routes'>Nested Routes</h3>
 <p>You can define nested routes by passing an additional function to the
 <code>to()</code> method:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
@@ -243,7 +243,7 @@ example, to customize <code>/posts/new</code>:</p>
 is always <code>&lt;parent&gt;/&lt;current&gt;</code>.</p>
 
 <!-- See [Nested Routes][1] for more information. -->
-<h3 id='toc_dynamic-segments'>Dynamic Segments</h3>
+<h3 class='anchorable-toc' id='toc_dynamic-segments'>Dynamic Segments</h3>
 <p>One of the responsibilities of a route handler is to convert a URL
 into a model.</p>
 
@@ -329,12 +329,26 @@ as expected out of the box.</p>
   </div>
 
   <script>
-    $("#guide_list .level-1 > a").click(function() {
-      $(this).parent().find('> ol').slideToggle(function() {
-        positionBackToTop(true);
+    $(function(){
+      $("#guide_list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
       });
 
-      return false;
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
     });
   </script>
 
@@ -348,7 +362,7 @@ as expected out of the box.</p>
         <div class="links">
           <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
           <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
-          
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
         </div>
       </div>
     </div>
