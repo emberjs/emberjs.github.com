@@ -110,9 +110,9 @@ defined.</p>
 3
 4
 </pre></td>
-  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>(match) {
-  match(<span class="string"><span class="delimiter">&quot;</span><span class="content">/about</span><span class="delimiter">&quot;</span></span>).to(<span class="string"><span class="delimiter">&quot;</span><span class="content">about</span><span class="delimiter">&quot;</span></span>);
-  match(<span class="string"><span class="delimiter">&quot;</span><span class="content">/favs</span><span class="delimiter">&quot;</span></span>).to(<span class="string"><span class="delimiter">&quot;</span><span class="content">favorites</span><span class="delimiter">&quot;</span></span>);
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">&quot;</span><span class="content">about</span><span class="delimiter">&quot;</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">/about</span><span class="delimiter">&quot;</span></span> });
+  <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">&quot;</span><span class="content">favorites</span><span class="delimiter">&quot;</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">/favs</span><span class="delimiter">&quot;</span></span> });
 });
 </pre></td>
 </tr></table>
@@ -121,8 +121,23 @@ defined.</p>
 Visiting <code>/about</code> renders the <code>about</code> template, and <code>/favs</code> renders the
 <code>favorites</code> template.</p>
 
+<p>Note that you can leave off the path if it is the same as the route
+name. In this case, the following is equivalent to the above example:</p>
+<div class="highlight js "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">&quot;</span><span class="content">about</span><span class="delimiter">&quot;</span></span>);
+  <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">&quot;</span><span class="content">favorites</span><span class="delimiter">&quot;</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">/favs</span><span class="delimiter">&quot;</span></span> });
+});
+</pre></td>
+</tr></table>
+</div>
 <p>Inside your templates, you can use <code>{{linkTo}}</code> to navigate between
-routes, using the name that you provided in the <code>to()</code> method (or, in
+routes, using the name that you provided to the <code>route</code> method (or, in
 the case of <code>/</code>, the name <code>index</code>).</p>
 <div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
@@ -175,29 +190,46 @@ Now that you&#39;ve set <code>title</code>, you can use it in the template:</p>
 </pre></td>
 </tr></table>
 </div>
-<p>You don&#39;t need to create an <code>App.IndexController</code> just yet; Ember.js
-will create controllers for you.</p>
+<p>(If you don&#39;t explicitly define an <code>App.IndexController</code>, Ember.js will
+automatically generate one for you.)</p>
 
-<p>The above examples show you how to customize <code>/</code>, which is implicitly
-named <code>index</code>. Use the name provided to <code>to()</code> when customizing other
-routes. For example, in the case of <code>/favs</code>:</p>
-<div class="highlight js "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre>App.FavoritesRoute = Ember.Route.extend({
-  <span class="function">setupController</span>: <span class="keyword">function</span>(controller) {
-    <span class="comment">// ...controller setup here</span>
-  }
-});
-</pre></td>
-</tr></table>
-</div><h3 class='anchorable-toc' id='toc_nested-routes'>Nested Routes</h3>
-<p>You can define nested routes by passing an additional function to the
-<code>to()</code> method:</p>
+<p>Ember.js automatically figures out the names of routes and controllers based on
+the name you pass to <code>this.route</code>.</p>
+
+<table>
+  <thead>
+  <tr>
+    <th>URL</th>
+    <th>Route Name</th>
+    <th>Controller</th>
+    <th>Route</th>
+    <th>Template</th>
+  </tr>
+  </thead>
+  <tr>
+    <td><code>/</code></td>
+    <td><code>index</code></td>
+    <td><code>App.IndexController</code></td>
+    <td><code>App.IndexRoute</code></td>
+    <td><code>index</code></td>
+  </tr>
+  <tr>
+    <td><code>/about</code></td>
+    <td><code>about</code></td>
+    <td><code>App.AboutController</code></td>
+    <td><code>App.AboutRoute</code></td>
+    <td><code>about</code></td>
+  </tr>
+  <tr>
+    <td><code>/favs</code></td>
+    <td><code>favorites</code></td>
+    <td><code>App.FavoritesController</code></td>
+    <td><code>App.FavoritesRoute</code></td>
+    <td><code>favorites</code></td>
+  </tr>
+</table>
+<h3 class='anchorable-toc' id='toc_resources'>Resources</h3>
+<p>You can define groups of routes that work with a resource:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
@@ -205,9 +237,26 @@ routes. For example, in the case of <code>/favs</code>:</p>
 4
 5
 </pre></td>
-  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>(match) {
-  match(<span class="string"><span class="delimiter">'</span><span class="content">/posts</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(match) {
-    match(<span class="string"><span class="delimiter">'</span><span class="content">/new</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">new</span><span class="delimiter">'</span></span>);
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">/posts</span><span class="delimiter">'</span></span> }, <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">new</span><span class="delimiter">'</span></span>);
+  });
+});
+</pre></td>
+</tr></table>
+</div>
+<p>As with <code>this.route</code>, you can leave off the path if it&#39;s the same as the
+name of the route, so the following router is equivalent:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">new</span><span class="delimiter">'</span></span>);
   });
 });
 </pre></td>
@@ -215,39 +264,59 @@ routes. For example, in the case of <code>/favs</code>:</p>
 </div>
 <p>This router creates three routes:</p>
 
-<ul>
-<li><code>/</code></li>
-<li><code>/posts</code></li>
-<li><code>/posts/new</code></li>
-</ul>
+<table>
+  <thead>
+  <tr>
+    <th>URL</th>
+    <th>Route Name</th>
+    <th>Controller</th>
+    <th>Route</th>
+    <th>Template</th>
+  </tr>
+  </thead>
+  <tr>
+    <td><code>/</code></td>
+    <td><code>index</code></td>
+    <td><code>App.IndexController</code></td>
+    <td><code>App.IndexRoute</code></td>
+    <td><code>index</code></td>
+  </tr>
+  <tr>
+    <td><code>/posts</code></td>
+    <td><code>posts.index</code></td>
+    <td><code>App.PostsIndexController</code></td>
+    <td><code>App.PostsIndexRoute</code></td>
+    <td><code>posts/index</code></td>
+  </tr>
+  <tr>
+    <td><code>/posts/new</code></td>
+    <td><code>posts.new</code></td>
+    <td><code>App.PostsNewController</code></td>
+    <td><code>App.PostsNewRoute</code></td>
+    <td><code>posts/new</code></td>
+  </tr>
+</table>
 
-<p>Visiting <code>/</code> renders the <code>index</code> template into the <code>application</code>
-template&#39;s outlet, as you would expect.</p>
+<p>Routes nested under a resource take the name of the resource plus their
+name as their route name. If you want to transition to a route (either
+via <code>transitionTo</code> or <code>{{#linkTo}}</code>, make sure to use the full route
+name (<code>posts.new</code>, not <code>new</code>).</p>
+
+<p>Visiting <code>/</code> renders the <code>index</code> template, as you would expect.</p>
 
 <p>Visiting <code>/posts</code> is slightly different. It will first render the
-<code>posts</code> template into the <code>application</code> template&#39;s outlet. Then, it will
-render the <code>posts/index</code> template into the <code>posts</code> template&#39;s outlet.</p>
+<code>posts</code> template. Then, it will render the <code>posts/index</code> template into the
+<code>posts</code> template&#39;s outlet.</p>
 
 <p>Finally, visiting <code>/posts/new</code> will first render the <code>posts</code> template,
 then render the <code>posts/new</code> template into its outlet.</p>
 
-<p>Customizing routes or controllers uses a similar naming scheme. For
-example, to customize <code>/posts/new</code>:</p>
-
-<ul>
-<li>The route is <code>App.PostsNewRoute</code></li>
-<li>The controller is <code>App.PostsNewController</code></li>
-</ul>
-
-<p>This nested naming does not continue forever. A nested route&#39;s template
-is always <code>&lt;parent&gt;/&lt;current&gt;</code>.</p>
-
 <!-- See [Nested Routes][1] for more information. -->
 <h3 class='anchorable-toc' id='toc_dynamic-segments'>Dynamic Segments</h3>
-<p>One of the responsibilities of a route handler is to convert a URL
+<p>One of the responsibilities of a resource&#39;s route handler is to convert a URL
 into a model.</p>
 
-<p>For example, if we have the route <code>match(&#39;/blog_posts&#39;).to(&#39;blogPosts&#39;)</code>, our
+<p>For example, if we have the resource <code>this.resource(&#39;/blog_posts&#39;);</code>, our
 route handler might look like this:</p>
 <div class="highlight js "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
@@ -264,12 +333,12 @@ route handler might look like this:</p>
 </pre></td>
 </tr></table>
 </div>
-<p>The <code>posts</code> template will then receive a list of all available posts as
+<p>The <code>blog_posts</code> template will then receive a list of all available posts as
 its context.</p>
 
-<p>Because <code>/posts</code> represents a fixed model, we don&#39;t need any additional
-information to know what to use.  However, if we want a route to
-represent a single post, we would not want to have to hardcode every
+<p>Because <code>/blog_posts</code> represents a fixed model, we don&#39;t need any
+additional information to know what to use.  However, if we want a route
+to represent a single post, we would not want to have to hardcode every
 possible post into the router.</p>
 
 <p>Enter <em>dynamic segments</em>.</p>
@@ -288,26 +357,26 @@ followed by an identifier.</p>
 9
 <strong>10</strong>
 </pre></td>
-  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>(match) {
-  match(<span class="string"><span class="delimiter">'</span><span class="content">/posts</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">blogPosts</span><span class="delimiter">'</span></span>);
-  match(<span class="string"><span class="delimiter">'</span><span class="content">/posts/:blog_post_id</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">showBlogPost</span><span class="delimiter">'</span></span>);
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>);
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">/posts/:post_id</span><span class="delimiter">'</span></span> });
 });
 
-App.ShowBlogPostRoute = Ember.Route.extend({
+App.PostRoute = Ember.Route.extend({
   <span class="function">model</span>: <span class="keyword">function</span>(params) {
-    <span class="keyword">return</span> App.BlogPost.find(params.blog_post_id);
+    <span class="keyword">return</span> App.Post.find(params.post_id);
   }
 });
 </pre></td>
 </tr></table>
 </div>
-<p>Because this pattern is so common, the above model definition is the
+<p>Because this pattern is so common, the above <code>model</code> hook is the
 default behavior.</p>
 
-<p>For example, if the dynamic segment is <code>:blog_post_id</code>, Ember.js is smart
-enough to know that it should use the model <code>App.BlogPost</code> (with the ID
-provided in the URL). If you use the default <code>model</code>, the route will
-call <code>App.BlogPost.find(params.blog_post_id)</code> for you.</p>
+<p>For example, if the dynamic segment is <code>:post_id</code>, Ember.js is smart
+enough to know that it should use the model <code>App.Post</code> (with the ID
+provided in the URL). Specifically, unless you override <code>model</code>, the route will
+return <code>App.Post.find(params.post_id)</code> automatically.</p>
 
 <p>Not coincidentally, this is exactly what Ember Data expects. So if you
 use the Ember router with Ember Data, your dynamic segments will work

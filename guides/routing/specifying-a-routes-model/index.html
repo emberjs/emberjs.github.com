@@ -119,8 +119,8 @@ should be associated with that URL by implementing the route handler&#39;s
 8
 9
 </pre></td>
-  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>(match) {
-  match(<span class="string"><span class="delimiter">'</span><span class="content">/posts</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>);
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>);
 });
 
 App.PostsRoute = Ember.Route.extend({
@@ -132,7 +132,7 @@ App.PostsRoute = Ember.Route.extend({
 </tr></table>
 </div>
 <p>By default, the value returned from your <code>model</code> hook will be assigned
-to the <code>content</code> property of the <code>posts</code> controller. You can change this
+to the <code>model</code> property of the <code>posts</code> controller. You can change this
 behavior by implementing the <a href="/guides/routing/setting-up-a-controller">setupControllers hook</a>. The <code>posts</code>
 controller is the context for the <code>posts</code> template.</p>
 <h3 class='anchorable-toc' id='toc_dynamic-models'>Dynamic Models</h3>
@@ -149,8 +149,8 @@ decide which model to use:</p>
 8
 9
 </pre></td>
-  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>(match) {
-  match(<span class="string"><span class="delimiter">'</span><span class="content">/posts/:post_id</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">showPost</span><span class="delimiter">'</span></span>);
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">/posts/:post_id</span><span class="delimiter">'</span></span> });
 });
 
 App.ShowPostRoute = Ember.Route.extend({
@@ -161,13 +161,13 @@ App.ShowPostRoute = Ember.Route.extend({
 </pre></td>
 </tr></table>
 </div>
-<p>Because this pattern is so common, the above model definition is the
+<p>Because this pattern is so common, the above <code>model</code> hook is the
 default behavior.</p>
 
-<p>For example, if the dynamic segment is <code>:blog_post_id</code>, Ember.js is smart
-enough to know that it should use the model <code>App.BlogPost</code> (with the ID
-provided in the URL). If you use the default <code>model</code>, the route will
-call <code>App.BlogPost.find(params.blog_post_id)</code> for you.</p>
+<p>For example, if the dynamic segment is <code>:post_id</code>, Ember.js is smart
+enough to know that it should use the model <code>App.Post</code> (with the ID
+provided in the URL). Specifically, unless you override <code>model</code>, the route will
+return <code>App.Post.find(params.post_id)</code> automatically.</p>
 
 <p>Not coincidentally, this is exactly what Ember Data expects. So if you
 use the Ember router with Ember Data, your dynamic segments will work

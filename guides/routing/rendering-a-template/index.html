@@ -112,8 +112,8 @@ into the <code>application</code> template&#39;s outlet.</p>
 4
 5
 </pre></td>
-  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>(match) {
-  match(<span class="string"><span class="delimiter">'</span><span class="content">/posts</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>);
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>);
 });
 
 App.PostsRoute = Ember.Route.extend();
@@ -158,22 +158,6 @@ controller:</p>
 </pre></td>
 </tr></table>
 </div>
-<p>If you want to render the template into a different parent template:</p>
-<div class="highlight js "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre>App.PostsRoute = Ember.Route.extend({
-  <span class="function">renderTemplate</span>: <span class="keyword">function</span>() {
-    <span class="local-variable">this</span>.render({ <span class="key">into</span>: <span class="string"><span class="delimiter">'</span><span class="content">sidebar</span><span class="delimiter">'</span></span> });
-  }
-});
-</pre></td>
-</tr></table>
-</div>
 <p>If you want to render the template into a different named outlet:</p>
 <div class="highlight js "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
@@ -206,17 +190,15 @@ combination you&#39;d like:</p>
 11
 12
 13
-14
 </pre></td>
   <td class="code"><pre>App.PostsRoute = Ember.Route.extend({
   <span class="function">renderTemplate</span>: <span class="keyword">function</span>() {
     <span class="keyword">var</span> controller = <span class="local-variable">this</span>.controllerFor(<span class="string"><span class="delimiter">'</span><span class="content">favoritePost</span><span class="delimiter">'</span></span>);
 
     <span class="comment">// Render the `favoritePost` template into</span>
-    <span class="comment">// the `sidebar` template's outlet `posts`,</span>
-    <span class="comment">// and display the `favoritePost` controller.</span>
+    <span class="comment">// the outlet `posts`, and display the `favoritePost`</span>
+    <span class="comment">// controller.</span>
     <span class="local-variable">this</span>.render(<span class="string"><span class="delimiter">'</span><span class="content">favoritePost</span><span class="delimiter">'</span></span>, {
-      <span class="key">into</span>: <span class="string"><span class="delimiter">'</span><span class="content">sidebar</span><span class="delimiter">'</span></span>,
       <span class="key">outlet</span>: <span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>,
       <span class="key">controller</span>: controller
     });
