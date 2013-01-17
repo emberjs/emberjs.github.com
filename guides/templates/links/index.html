@@ -108,10 +108,10 @@
 4
 5
 </pre></td>
-  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>(match) {
-  match(<span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">index</span><span class="delimiter">'</span></span>);
-  match(<span class="string"><span class="delimiter">'</span><span class="content">/posts</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>);
-  match(<span class="string"><span class="delimiter">'</span><span class="content">/posts/:post_id</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>);
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">&quot;</span><span class="content">posts</span><span class="delimiter">&quot;</span></span>, <span class="keyword">function</span>(){
+    <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">/:post_id</span><span class="delimiter">&quot;</span></span> });
+  });
 });
 </pre></td>
 </tr></table>
@@ -128,7 +128,7 @@
 
 <span class="tag">&lt;ul&gt;</span>
 <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">post</span> <span class="attribute-name">in</span> <span class="attribute-name">posts</span><span class="inline-delimiter">}}</span></span>
-  <span class="tag">&lt;li&gt;</span><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">&quot;</span><span class="attribute-name">post</span><span class="error">&quot;</span> <span class="attribute-name">post</span><span class="inline-delimiter">}}</span></span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">post.title</span><span class="inline-delimiter">}}</span></span><span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="attribute-name">posts.post</span> <span class="attribute-name">post</span><span class="inline-delimiter">}}</span></span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">post.title</span><span class="inline-delimiter">}}</span></span><span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/li&gt;</span>
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
 <span class="tag">&lt;/ul&gt;</span>
 </pre></td>
@@ -159,6 +159,7 @@ rendered HTML would look something like this:</p>
 <li>If the route has a dynamic segment, a model that represents the
 segment. By default, Ember.js will replace the segment with the
 value of the object&#39;s <code>id</code> property.</li>
+<li>An optional title which will be bound to the <code>a</code> title attribute</li>
 </ul>
 <h3 class='anchorable-toc' id='toc_multiple-contexts'>Multiple Contexts</h3>
 <p>If the route is nested, you can supply a model for each dynamic
@@ -172,14 +173,12 @@ segment.</p>
 6
 7
 8
-9
 </pre></td>
-  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>(match) {
-  match(<span class="string"><span class="delimiter">'</span><span class="content">/posts</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(match) {
-    match(<span class="string"><span class="delimiter">'</span><span class="content">/:post_id</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(match) {
-      match(<span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">postIndex</span><span class="delimiter">'</span></span>);
-      match(<span class="string"><span class="delimiter">'</span><span class="content">/comments</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>);
-      match(<span class="string"><span class="delimiter">'</span><span class="content">/comments/:comment_id</span><span class="delimiter">'</span></span>).to(<span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>);
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">&quot;</span><span class="content">posts</span><span class="delimiter">&quot;</span></span>, <span class="keyword">function</span>(){
+    <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">/:post_id</span><span class="delimiter">&quot;</span></span> }, <span class="keyword">function</span>(){
+      <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">&quot;</span><span class="content">comments</span><span class="delimiter">&quot;</span></span>);
+      <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">&quot;</span><span class="content">comment</span><span class="delimiter">&quot;</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">/comments/:comment_id</span><span class="delimiter">&quot;</span></span> });
     });
   });
 });
@@ -198,7 +197,7 @@ segment.</p>
   <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">body</span><span class="inline-delimiter">}}</span></span>
 <span class="tag">&lt;/div&gt;</span>
 
-<span class="tag">&lt;p&gt;</span><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">'</span><span class="attribute-name">comment</span><span class="error">'</span> <span class="attribute-name">primaryComment</span><span class="inline-delimiter">}}</span></span>Main Comment<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;p&gt;</span><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="attribute-name">post.comment</span> <span class="attribute-name">primaryComment</span><span class="inline-delimiter">}}</span></span>Main Comment<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/p&gt;</span>
 </pre></td>
 </tr></table>
 </div>
@@ -215,7 +214,7 @@ will become the new model for the <code>comment</code> route handler.</p>
 5
 </pre></td>
   <td class="code"><pre><span class="tag">&lt;p&gt;</span>
-  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">'</span><span class="attribute-name">comment</span><span class="error">'</span> <span class="attribute-name">nextPost</span> <span class="attribute-name">primaryComment</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="attribute-name">post.comment</span> <span class="attribute-name">nextPost</span> <span class="attribute-name">primaryComment</span><span class="inline-delimiter">}}</span></span>
     Main Comment for the Next Post
   <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
 <span class="tag">&lt;/p&gt;</span>

@@ -322,8 +322,6 @@ name (<code>posts.new</code>, not <code>new</code>).</p>
 <p>Finally, visiting <code>/posts/new</code> will first render the <code>posts</code> template,
 then render the <code>posts/new</code> template into its outlet.</p>
 
-<!-- See [Nested Routes][1] for more information. -->
-
 <p>NOTE: You should use <code>this.resource</code> for URLs that represent a <strong>noun</strong>,
 and <code>this.route</code> for URLs that represent <strong>adjectives</strong> or <strong>verbs</strong>
 modifying those nouns.</p>
@@ -396,6 +394,99 @@ return <code>App.Post.find(params.post_id)</code> automatically.</p>
 <p>Not coincidentally, this is exactly what Ember Data expects. So if you
 use the Ember router with Ember Data, your dynamic segments will work
 as expected out of the box.</p>
+<h3 class='anchorable-toc' id='toc_nested-resources'>Nested Resources</h3>
+<p>You cannot nest routes, but you can nest resources:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>({ <span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">/post/:post_id</span><span class="delimiter">'</span></span> }) {
+    <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">edit</span><span class="delimiter">'</span></span>);
+    <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+        <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">new</span><span class="delimiter">'</span></span>);
+    }
+  });
+});
+</pre></td>
+</tr></table>
+</div>
+<p>This router creates five routes:</p>
+
+<div style="overflow: auto">
+  <table>
+    <thead>
+    <tr>
+      <th>URL</th>
+      <th>Route Name</th>
+      <th>Controller</th>
+      <th>Route</th>
+      <th>Template</th>
+    </tr>
+    </thead>
+    <tr>
+      <td><code>/</code></td>
+      <td><code>index</code></td>
+      <td><code>App.IndexController</code></td>
+      <td><code>App.IndexRoute</code></td>
+      <td><code>index</code></td>
+    </tr>
+    <tr>
+      <td>N/A</td>
+      <td><code>post</code></td>
+      <td><code>App.PostController</code></td>
+      <td><code>App.PostRoute</code></td>
+      <td><code>post</code></td>
+    </tr>
+    <tr>
+      <td><code>/post/:post_id<sup>2</sup></code></td>
+      <td><code>post.index</code></td>
+      <td><code>App.PostIndexController</code></td>
+      <td><code>App.PostIndexRoute</code></td>
+      <td><code>post/index</code></td>
+    </tr>
+    <tr>
+      <td><code>/post/:post_id/edit</code></td>
+      <td><code>post.edit</code></td>
+      <td><code>App.PostEditController</code></td>
+      <td><code>App.PostEditRoute</code></td>
+      <td><code>post/edit</code></td>
+    </tr>
+    <tr>
+      <td>N/A</td>
+      <td><code>comments</code></td>
+      <td><code>App.CommentsController</code></td>
+      <td><code>App.CommentsRoute</code></td>
+      <td><code>comments</code></td>
+    </tr>
+    <tr>
+      <td><code>/post/:post_id/comments</code></td>
+      <td><code>comments.index</code></td>
+      <td><code>App.CommentsIndexController</code></td>
+      <td><code>App.CommentsIndexRoute</code></td>
+      <td><code>comments/index</code></td>
+    </tr>
+    <tr>
+      <td><code>/post/:post_id/comments/new</code></td>
+      <td><code>comments.new</code></td>
+      <td><code>App.CommentsNewController</code></td>
+      <td><code>App.CommentsNewRoute</code></td>
+      <td><code>comments/new</code></td>
+    </tr>
+  </table>
+</div>
+
+<p><small><sup>2</sup> :post_id is the post&#39;s id.  For a post with id = 1, the route will be: 
+<code>/post/1</code></small></p>
+
+<p>The <code>comments</code> template will be rendered in the <code>post</code> outlet.<br>
+All templates under <code>comments</code> (<code>comments/index</code> and <code>comments/new</code>) will be rendered in the <code>comments</code> outlet.</p>
 
     
       <footer>
