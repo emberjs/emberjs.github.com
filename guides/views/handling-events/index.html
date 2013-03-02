@@ -370,7 +370,7 @@ This is a clickable area!
 </pre></td>
 </tr></table>
 </div>
-<p>Let&#39;s implement App.ClickableView such that when it is
+<p>Let&#39;s implement <code>App.ClickableView</code> such that when it is
 clicked, an alert is displayed:</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
@@ -389,8 +389,60 @@ clicked, an alert is displayed:</p>
 </div>
 <p>Events bubble up from the target view to each parent view in
 succession, until the root view. These values are read-only. If you want to manually manage views in JavaScript (instead of creating them
-using the {{view}} helper in Handlebars), see the Ember.ContainerView documentation below.</p>
-
+using the {{view}} helper in Handlebars), see the <code>Ember.ContainerView</code> documentation below.</p>
+<h3 class='anchorable-toc' id='toc_sending-events'>Sending Events</h3>
+<p>To have the click event from <code>App.ClickableView</code> affect the state of your application, simply send an event to the view&#39;s controller:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.ClickableView = Ember.View.extend({
+  <span class="function">click</span>: <span class="keyword">function</span>(evt) {
+    <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">controller</span><span class="delimiter">'</span></span>).send(<span class="string"><span class="delimiter">'</span><span class="content">turnItUp</span><span class="delimiter">'</span></span>, <span class="integer">11</span>); 
+  }
+});
+</pre></td>
+</tr></table>
+</div>
+<p>If the controller has a method called <code>turnItUp</code>, it will be called:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.PlaybackController = Ember.ObjectController.extend({
+  <span class="function">turnItUp</span>: <span class="keyword">function</span>(level){
+    <span class="comment">//Do your thing</span>
+  }
+});
+</pre></td>
+</tr></table>
+</div>
+<p>If it doesn&#39;t, the message will be passed to the current route:</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>App.PlaybackRoute = Ember.Route.extend({
+  <span class="key">events</span>: {
+    <span class="function">turnItUp</span>: <span class="keyword">function</span>(level){
+      <span class="comment">//This won't be called if it's defined on App.PlaybackController</span>
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div>
     
       <footer>
          
