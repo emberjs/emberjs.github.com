@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Getting Started with Ember.js</title>
+    <title>Ember.js - Concepts</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
@@ -77,7 +77,7 @@
     
   </head>
 
-  <body class="guides guides_getting-started guides_getting-started_understanding-web-apps guides_getting-started_understanding-web-apps_index">
+  <body class="guides guides_concepts guides_concepts_core-concepts guides_concepts_core-concepts_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -101,11 +101,15 @@
           
     <ol id="toc-list">
           <li class="level-1 selected">
-            <a href="/guides/getting-started/core-concepts">Getting Started with Ember.js</a>
+            <a href="/guides/concepts/core-concepts">Concepts</a>
             <ol class='selected'>
         
+            <li class="level-3 sub-selected">
+              <a href="/guides/concepts/core-concepts">Core Concepts</a>
+            </li>
+          
             <li class="level-3">
-              <a href="/guides/getting-started/core-concepts">Core Concepts</a>
+              <a href="/guides/concepts/naming-conventions">Naming Conventions</a>
             </li>
           </ol></li>
           <li class="level-1">
@@ -352,25 +356,92 @@
           
 
   <div class="chapter">
-    <h1>Getting Started with Ember.js</h1>
-    <p>Traditional web applications make the user download a new page every time
-they interact with the server. This means that every interaction is never faster
-than the latency between you and the user, and usually slower. Using AJAX to
-replace only parts of the page helps somewhat, but still requires a roundtrip to
-your server every time your UI needs to update. And if multiple parts of the
-page need to update all at once, most developers just resort to loading the page
-over again, since keeping everything in sync is tricky.</p>
+    <h1>Concepts</h1>
+    <h2 class='anchorable-toc' id='toc_core-concepts'>Core Concepts</h2>
+<p>To get started with Ember.js, there are a few core concepts you
+should understand. </p>
 
-<p>Ember.js, like some other modern JavaScript frameworks, works a little differently.
-Instead of the majority of your application&#39;s logic living on the server, an
-Ember.js application downloads everything it needs to run in the initial page
-load. That means that while your user is using your app, she never has to load
-a new page and your UI responds quickly to their interaction.</p>
+<p>We want developers to be able to build ambitiously large web
+applications that are competitive with native apps. To do that, they
+need both sophisticated tools <em>and</em> the right vocabulary of concepts to
+help them communicate and collaborate.</p>
 
-<p>One advantage of this architecture is that your web application uses the same
-REST API as your native apps or third-party clients. Back-end developers can
-focus on building a fast, reliable, and secure API server, and don&#39;t have to be
-front-end experts, too.</p>
+<p>We&#39;ve spent a lot of time borrowing liberally from ideas introduced
+by native application frameworks, like Cocoa. When we felt those
+concepts were more hindrance than help–or didn&#39;t fit within the unique
+constraints of the web–we turned to other popular open source projects
+like Ruby on Rails and Backbone.js for inspiration.</p>
+
+<p>Ember.js, therefore, is a synthesis of the powerful tools of our native
+forebearers with the lightweight sensibilities of the modern web. </p>
+<h3 class='anchorable-toc' id='toc_concepts'>Concepts</h3><h4 class='anchorable-toc' id='toc_templates'>Templates</h4>
+<p>A <strong>template</strong>, written in the Handlebars templating language, describes
+the user interface of your application. In addition to plain HTML,
+templates can contain:</p>
+
+<ul>
+<li><strong>Expressions</strong>, like <code>{{firstName}}</code>, which take information from
+controllers and models, place them into HTML, and automatically keep them
+updated.</li>
+<li><strong>Outlets</strong>, which are placeholders for other templates. As your user
+moves around your app, different templates can be plugged into the
+outlet by the router. You can put outlets into your template using the
+<code>{{outlet}}</code> helper.</li>
+<li><strong>Views</strong>, which are responsible for handling user events. You can put
+views into your templates using the <code>{{view}}</code> helper.</li>
+</ul>
+<h4 class='anchorable-toc' id='toc_views'>Views</h4>
+<p>A <strong>view</strong> is embedded inside a template and is responsible for
+translating <em>primitive events</em> (like clicks, taps, and swipes) into
+<em>semantic events</em> that have meaning to your application and are sent to
+the controller.</p>
+
+<p>For example, a view might translate a <code>click</code> event into the more
+meaningful <code>deleteItem</code> event, which would be sent to the controller.
+If the controller does not implement the <code>deleteItem</code> event, the event
+will be sent to the current route.</p>
+<h4 class='anchorable-toc' id='toc_controllers'>Controllers</h4>
+<p>A <strong>controller</strong> is an object that stores <em>application state</em>. Templates
+are connected to controllers and translate the current state of the
+controller into HTML.</p>
+
+<p>Controllers often act as representations of <strong>models</strong> for templates. In
+these cases, the controller passes the properties of the model to the
+template, and can transform or augment the model to present it in a way
+the template is expecting.</p>
+<h4 class='anchorable-toc' id='toc_models'>Models</h4>
+<p>A <strong>model</strong> is an object that stores <em>persistent state</em>. This is the
+data that your application operates on and what gives it value to your
+users.  These objects are usually loaded from your server, then saved
+back when changes are made on the client.</p>
+
+<p>Usually, you&#39;ll use Ember Data to translate the <em>raw JSON payloads</em>
+delivered by your API server into full-blown Ember.js objects with
+associations, computed properties, and more.</p>
+<h4 class='anchorable-toc' id='toc_router'>Router</h4>
+<p>The <strong>router</strong> is the object responsible for <em>managing application state</em>.</p>
+
+<p>When your user starts your application, it will look at the URL and make
+sure that the right set of templates is displayed, as well as pairing
+those templates with the right model objects.</p>
+
+<p>As you move around the different states of your application, the
+router automatically keeps the URL up-to-date. Users can save the URL
+and re-enter the application at this state later, or share the app in
+its current state with others.</p>
+
+<hr>
+
+<p>These are the core concepts you&#39;ll need to understand as you develop
+your Ember.js app. If you stick to these basics, we&#39;ve designed the
+system to scale up in complexity, so that adding new functionality
+doesn&#39;t require you to go back and change the entire system.</p>
+
+<p>We think it&#39;s important that multiple developers can look at a problem
+and, using the patterns of the framework, arrive at the same solution.
+Now that you understand the roles of these objects, you&#39;re equipped to
+dive deep into Ember.js and learn the details of how each of these
+individual pieces work.</p>
 
     
       <footer>
