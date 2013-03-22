@@ -159,10 +159,28 @@
 11
 12
 13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+22
+23
+24
+25
+26
+27
+28
+29
 </pre></td>
-  <td class="code"><pre>App.Person = DS.Model.extend({
-  <span class="key">firstName</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
-  <span class="key">lastName</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <td class="code"><pre>App = Ember.Application.create();
+
+App.Person = Ember.Object.extend({
+  <span class="key">firstName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>,
+  <span class="key">lastName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>,
 
   <span class="function">fullName</span>: <span class="keyword">function</span>() {
     <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>) +
@@ -170,9 +188,23 @@
   }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
 });
 
-App.peopleController = Em.ArrayController.create({
-  <span class="key">content</span>: App.Person.find()
+
+App.ApplicationRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>() {
+    <span class="keyword">var</span> people = [
+      App.Person.create({
+        <span class="key">firstName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Tom</span><span class="delimiter">&quot;</span></span>,
+        <span class="key">lastName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Dale</span><span class="delimiter">&quot;</span></span>
+      }),
+      App.Person.create({
+        <span class="key">firstName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Yehuda</span><span class="delimiter">&quot;</span></span>,
+        <span class="key">lastName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Katz</span><span class="delimiter">&quot;</span></span>
+      })
+    ];
+    <span class="keyword">return</span> people;
+  }
 });
+
 </pre></td>
 </tr></table>
 </div>
@@ -184,14 +216,18 @@ App.peopleController = Em.ArrayController.create({
 5
 6
 7
+8
+9
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;h1&gt;</span>People<span class="tag">&lt;/h1&gt;</span>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="inline">  <span class="tag">&lt;h1&gt;</span>People<span class="tag">&lt;/h1&gt;</span>
 
-<span class="tag">&lt;ul&gt;</span>
-<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">peopleController</span><span class="inline-delimiter">}}</span></span>
-  <span class="tag">&lt;li&gt;</span>Hello, <span class="tag">&lt;b&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">fullName</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/b&gt;</span>!<span class="tag">&lt;/li&gt;</span>
-<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
-<span class="tag">&lt;/ul&gt;</span>
+  &lt;ul&gt;
+  </span><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">controller</span><span class="inline-delimiter">}}</span></span>
+    <span class="tag">&lt;li&gt;</span>Hello, <span class="tag">&lt;b&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">fullName</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/b&gt;</span>!<span class="tag">&lt;/li&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;/ul&gt;</span>
+<span class="tag">&lt;/script&gt;</span>
 </pre></td>
 </tr></table>
 </div>
