@@ -5,10 +5,334 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2013-03-21T00:00:00Z</updated>
+  <updated>2013-03-22T00:00:00Z</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>Stabilizing Ember Data</title>
+    <link rel="alternate" href="/blog/2013/03/22/stabilizing-ember-data.html"/>
+    <id>/blog/2013/03/22/stabilizing-ember-data.html</id>
+    <published>2013-03-22T00:00:00Z</published>
+    <updated>2013-03-22T00:00:00Z</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Yesterday, we gave you an update on our progress making Ember.js easier
+to use. One thing we didn&amp;#39;t discuss was our plan for Ember Data.&lt;/p&gt;
+
+&lt;p&gt;It&amp;#39;s no secret that, while many developers are building awesome apps
+with Ember.js, Ember Data still causes lots of frustration due to bugs&lt;/p&gt;
+</summary>
+    <content type="html">&lt;p&gt;Yesterday, we gave you an update on our progress making Ember.js easier
+to use. One thing we didn&amp;#39;t discuss was our plan for Ember Data.&lt;/p&gt;
+
+&lt;p&gt;It&amp;#39;s no secret that, while many developers are building awesome apps
+with Ember.js, Ember Data still causes lots of frustration due to bugs
+and a changing, complex API. Documentation about it is also mixed in
+with Ember.js documentation, making it difficult for new developers to
+understand what is stable and what is not.&lt;/p&gt;
+
+&lt;p&gt;To be clear, Ember Data is not a dependency of Ember.js.
+&lt;a href="https://github.com/discourse/discourse"&gt;Discourse&lt;/a&gt;, for example, uses
+its own, simple wrapper around
+&lt;a href="https://github.com/discourse/discourse/blob/master/app/assets/javascripts/discourse/models/model.js"&gt;&lt;code&gt;$.ajax&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Even though Ember Data is not a dependency of Ember.js, loading data
+from the server is an extremely important part of most web applications,
+and it&amp;#39;s a problem that every Ember.js application will have to deal
+with.&lt;/p&gt;
+
+&lt;p&gt;Our long-term goal is simple: we don&amp;#39;t think most web developers should
+have to write any custom XHR code for loading data. Strong conventions
+on the client and strong conventions on the server should allow them to
+communicate automatically.&lt;/p&gt;
+
+&lt;p&gt;We know we&amp;#39;re not there yet.&lt;/p&gt;
+
+&lt;p&gt;In order for this to work, there are many necessary features that must
+be rock-solid across all sorts of different persistence layers—local
+storage, relational databases, and key-value stores, to name a few. To
+top it off, the asynchronous environment of the browser (with an often
+unreliable internet connection) adds significant complexity, and means
+we can&amp;#39;t simply port the solutions to these problems that have been
+pioneered on the server.&lt;/p&gt;
+
+&lt;p&gt;Getting all of these features working well together is a challenging
+problem, and we have not been able to deliver everything we thought we
+could in a reasonable amount of time.&lt;/p&gt;
+
+&lt;p&gt;Additionally, many developers are writing web applications that need to
+consume an existing JSON API that evolved organically and is not
+consistently named or structured. The API we have provided so far is
+suboptimal for this task.&lt;/p&gt;
+
+&lt;p&gt;To make the experience of writing an Ember Data application less
+frustrating, we&amp;#39;re doing two things:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;We&amp;#39;re identifying a subset of features that already work reliably.&lt;/li&gt;
+&lt;li&gt;We&amp;#39;re introducing a new, simpler API for working with remote data
+that makes fewer assumptions. You still get to use the model API
+in Ember Data, but can &amp;quot;bring your own &lt;code&gt;$.ajax&lt;/code&gt;&amp;quot; to load and store
+records.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Right now, what gets documented is somewhat ad-hoc. Going forward, we
+will heavily document the stable features. Finding documentation about
+an Ember Data feature on the emberjs.com website will be your indication
+that we consider it stable and safe to use.&lt;/p&gt;
+
+&lt;p&gt;Over time, after we have put new features through their paces and
+written extensive documentation, the set of stable features will grow.
+In other words, we are refocusing on a small core of practical features,
+which we will slowly iterate towards our long-term, ambitious goal.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_the-basic-adapter'&gt;The Basic Adapter&lt;/h2&gt;
+&lt;p&gt;The Ember Data adapter layer, which is responsible for finding and
+saving records, is currently designed to make it easy to build reusable
+adapters, like the ones people have written for
+&lt;a href="https://github.com/clintjhill/ember-parse-adapter"&gt;Parse&lt;/a&gt; or
+&lt;a href="https://github.com/pangratz/ember-couchdb-adapter"&gt;CouchDB&lt;/a&gt;. It is not
+well-suited for delegating out to &lt;code&gt;$.ajax&lt;/code&gt; to work with an API
+that is not 100% consistent.&lt;/p&gt;
+
+&lt;p&gt;To make it easier to use Ember Data with any kind of JSON data, we
+are introducing the Basic Adapter, which simply delegates to a &lt;code&gt;sync&lt;/code&gt;
+object on your model.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s look at an example of using the Basic Adapter with the Twitter API.&lt;/p&gt;
+
+&lt;p&gt;First, note that the syntax for defining a model hasn&amp;#39;t changed
+(historically, this has been one of the most stable parts of Ember
+Data):&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+13
+14
+15
+16
+17
+18
+19
+&lt;strong&gt;20&lt;/strong&gt;
+21
+22
+23
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; attr = DS.attr, hasMany = DS.hasMany, belongsTo = DS.belongsTo;
+
+App.User = DS.Model.extend({
+  &lt;span class="key"&gt;defaultProfileImage&lt;/span&gt;: attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;boolean&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
+  &lt;span class="key"&gt;description&lt;/span&gt;: attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;string&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
+  &lt;span class="key"&gt;screenName&lt;/span&gt;: attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;string&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
+  &lt;span class="key"&gt;isVerified&lt;/span&gt;: attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;boolean&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
+  &lt;span class="key"&gt;createdAt&lt;/span&gt;: attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;date&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
+
+  &lt;span class="key"&gt;tweets&lt;/span&gt;: hasMany(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;App.Tweet&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
+});
+
+App.Tweet = DS.Model.extend({
+  &lt;span class="key"&gt;coordinates&lt;/span&gt;: attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;point&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
+  &lt;span class="key"&gt;createdAt&lt;/span&gt;: attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;date&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
+  &lt;span class="key"&gt;isFavorited&lt;/span&gt;: attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;boolean&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
+  &lt;span class="key"&gt;retweetCount&lt;/span&gt;: attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;number&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
+  &lt;span class="key"&gt;text&lt;/span&gt;: attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;string&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
+  &lt;span class="key"&gt;isTruncated&lt;/span&gt;: attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;boolean&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
+
+  &lt;span class="key"&gt;replyTo&lt;/span&gt;: belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;App.User&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
+  &lt;span class="key"&gt;user&lt;/span&gt;: belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;App.User&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;p&gt;Finding records also hasn&amp;#39;t changed:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// use the Promise API&lt;/span&gt;
+App.User.find(userId).then(&lt;span class="keyword"&gt;function&lt;/span&gt;(user) {
+  &lt;span class="keyword"&gt;return&lt;/span&gt; user.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;tweets&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+}).then(&lt;span class="keyword"&gt;function&lt;/span&gt;(tweets) {
+  &lt;span class="comment"&gt;// do something with `tweets`&lt;/span&gt;
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;p&gt;When you request the &lt;code&gt;User&lt;/code&gt; and then its &lt;code&gt;tweets&lt;/code&gt;, Ember Data will make
+calls to your models&amp;#39; &lt;code&gt;sync&lt;/code&gt; object.&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+13
+14
+15
+16
+17
+18
+19
+&lt;strong&gt;20&lt;/strong&gt;
+21
+22
+23
+24
+25
+26
+27
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;App.User.sync = {
+  &lt;span class="function"&gt;find&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;(id, process) {
+    &lt;span class="predefined"&gt;$&lt;/span&gt;.getJSON(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;/users/show&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;, { &lt;span class="key"&gt;screen_name&lt;/span&gt;: id }).then(&lt;span class="keyword"&gt;function&lt;/span&gt;(user) {        
+      process(user)                 
+        .primaryKey(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;screen_name&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
+        .camelizeKeys()
+        .applyTransforms(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;twitter&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
+        .load();
+    });
+  },
+
+  &lt;span class="function"&gt;findTweets&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;(user, name, process) {
+    &lt;span class="keyword"&gt;var&lt;/span&gt; screenName = user.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;id&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+
+    &lt;span class="predefined"&gt;$&lt;/span&gt;.getJSON(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;/statuses/user_timeline&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;, { &lt;span class="key"&gt;screen_name&lt;/span&gt;: screenName }).then(&lt;span class="keyword"&gt;function&lt;/span&gt;(timeline) {
+      process(timeline)
+        .primaryKey(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;id_str&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
+        .camelizeKeys()
+        .applyTransforms(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;twitter&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
+        .munge(&lt;span class="keyword"&gt;function&lt;/span&gt;(json) {
+          json.isTruncated = json.truncated;
+          json.replyTo = json.inReplyToScreenName;
+        })
+        .load();
+    });
+  }
+};
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;p&gt;As you can see, in each of the hooks on the &lt;code&gt;sync&lt;/code&gt; object, the last
+argument passed in is a function called &lt;code&gt;process&lt;/code&gt;. You use this function to
+load JSON data returned from the XHR into the store. It also includes
+several conveniences for common transformations, like camelizing
+property names and transforming values like dates.&lt;/p&gt;
+
+&lt;p&gt;Of course, you are not required to use these conveniences. You can write
+whatever imperative code you&amp;#39;d like to transform the JSON returned from
+the server into the form that Ember Data is expecting. Here is the above
+example re-written without using the chained conveniences.&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+13
+14
+15
+16
+17
+18
+19
+&lt;strong&gt;20&lt;/strong&gt;
+21
+22
+23
+24
+25
+26
+27
+28
+29
+&lt;strong&gt;30&lt;/strong&gt;
+31
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="function"&gt;findTweets&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;(user, name, process) {
+  &lt;span class="keyword"&gt;var&lt;/span&gt; screenName = user.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;id&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+
+  &lt;span class="predefined"&gt;$&lt;/span&gt;.getJSON(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;/statuses/user_timeline&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;, { &lt;span class="key"&gt;screen_name&lt;/span&gt;: screenName }).then(&lt;span class="keyword"&gt;function&lt;/span&gt;(timeline) {
+    &lt;span class="keyword"&gt;var&lt;/span&gt; tweets = timeline.map(&lt;span class="keyword"&gt;function&lt;/span&gt;(json) {
+      &lt;span class="comment"&gt;// Map primary key&lt;/span&gt;
+      json.id = json.id_str;
+
+      &lt;span class="comment"&gt;// Camelize property names&lt;/span&gt;
+      &lt;span class="keyword"&gt;for&lt;/span&gt; (&lt;span class="keyword"&gt;var&lt;/span&gt; prop &lt;span class="keyword"&gt;in&lt;/span&gt; json) {
+        &lt;span class="keyword"&gt;var&lt;/span&gt; value = json[prop];
+        &lt;span class="keyword"&gt;delete&lt;/span&gt; json[prop];
+        json[camelize(prop)] = value;
+      }
+
+      &lt;span class="comment"&gt;// Convert string-formatted date to object&lt;/span&gt;
+      json.createdAt = Date.parse(json.createdAt);
+
+      &lt;span class="comment"&gt;// Convert hash to JavaScript object&lt;/span&gt;
+      json.coordinates = &lt;span class="keyword"&gt;new&lt;/span&gt; Twitter.Point(json.coordinates);
+
+      &lt;span class="comment"&gt;// Rename properties&lt;/span&gt;
+      json.isTruncated = json.truncated;
+      json.replyTo = json.inReplyToScreenName;
+
+      &lt;span class="keyword"&gt;return&lt;/span&gt; json;
+    });
+
+    process(tweets).load();
+  });
+}
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;h2 class='anchorable-toc' id='toc_timeline'&gt;Timeline&lt;/h2&gt;
+&lt;p&gt;We have been working on this new API part-time for the past few weeks.
+You can see our progress on Ember Data&amp;#39;s master branch, by looking at
+&lt;a href="https://github.com/emberjs/data/tree/master/packages/ember-data/tests/integration/adapters/basic_adapter"&gt;the tests&lt;/a&gt; or &lt;a href="https://github.com/emberjs/data/blob/master/packages/ember-data/lib/adapters/basic_adapter.js"&gt;the implementation&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Over the next few weeks, we will be writing documentation that will be
+available in the &lt;a href="http://emberjs.com/guides/"&gt;Ember.js Guides&lt;/a&gt;. Once a
+few people have had the opportunity to use the Basic Adapter and
+sanity-check our work, we will start cutting beta releases of Ember
+Data. We think that this will be a lot easier for new developers than &amp;quot;make
+a build from master.&amp;quot;&lt;/p&gt;
+
+&lt;p&gt;Our thanks go out to &lt;a href="http://mcdowall.info"&gt;John McDowall&lt;/a&gt;, who has been
+tracking our progress on Basic Adapter and writing documentation to go
+with it.&lt;/p&gt;
+
+&lt;p&gt;Finally, we&amp;#39;d like to give a big thanks to
+&lt;a href="https://addepar.com/"&gt;Addepar&lt;/a&gt; for financially supporting us
+while we do this work. They are big users of and contributors to Ember
+Data, and we couldn&amp;#39;t do it without them.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>Making Ember.js Easier</title>
     <link rel="alternate" href="/blog/2013/03/21/making-ember-easier.html"/>
@@ -556,132 +880,6 @@ on Thursday 6 December.&lt;/p&gt;
 &lt;p&gt;That&amp;#39;s all for this week,&lt;br&gt;
 Bradley Priest&lt;br&gt;
 &lt;a href="https://twitter.com/bradleypriest"&gt;@bradleypriest&lt;/a&gt;&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>This Week in Ember.js</title>
-    <link rel="alternate" href="/blog/2012/11/02/this-week-in-ember-js.html"/>
-    <id>/blog/2012/11/02/this-week-in-ember-js.html</id>
-    <published>2012-11-02T00:00:00Z</published>
-    <updated>2012-11-02T00:00:00Z</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;There&amp;#39;s a lot of work happening on Ember.js and sometimes it&amp;#39;s hard to keep track of what&amp;#39;s going on. Here&amp;#39;s what me and Yehuda got done this week.&lt;/p&gt;
-</summary>
-    <content type="html">&lt;p&gt;There&amp;#39;s a lot of work happening on Ember.js and sometimes it&amp;#39;s hard to keep track of what&amp;#39;s going on. Here&amp;#39;s what me and Yehuda got done this week.&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_meetup'&gt;Meetup&lt;/h3&gt;
-&lt;p&gt;The SF Ember.js Meetup on Tuesday (which we actually held in Mountain
-View this month) was a success! It was sponsored by our friends at
-Addepar, who are also &lt;a href="https://addepar.com/ember/"&gt;funding me and Yehuda to work on Ember Data for
-the next few months&lt;/a&gt;. So, big thanks to them!&lt;/p&gt;
-
-&lt;p&gt;Tony Sherbondy gave an overview of the Addepar app and described how
-Ember.js has helped them. The biggest &amp;quot;a-ha&amp;quot; moment for me was when he
-described how they completely changed out the table view that powers big
-chunks of the UI, and didn&amp;#39;t have to make any changes in the rest of the
-app. It&amp;#39;s exactly this type of encapsulation that makes Ember a win, and
-I&amp;#39;m glad to see it happening in real life.&lt;/p&gt;
-
-&lt;p&gt;I gave a talk on Ember Data, and discussed some of the new APIs we&amp;#39;ll be
-working on over the next few months. Yehuda gave a talk about the router
-proposal. The pork belly buns from the Chairman Bao
-food truck were epic. I got a little drunk.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_per-type-adapters'&gt;Per-Type Adapters&lt;/h3&gt;
-&lt;p&gt;You can now register different adapters on the store per-type. You can
-read more about this feature in &lt;a href="https://gist.github.com/4004913"&gt;this Gist&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;This feature is done and on &lt;code&gt;master&lt;/code&gt;!&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_explicit-inverses'&gt;Explicit Inverses&lt;/h3&gt;
-&lt;p&gt;Ember Data has always been smart enough to know that when you set a &lt;code&gt;belongsTo&lt;/code&gt; relationship, the child record should be added to the parent&amp;#39;s corresponding &lt;code&gt;hasMany&lt;/code&gt; relationship.&lt;/p&gt;
-
-&lt;p&gt;Unfortunately, it was pretty braindead about &lt;em&gt;which&lt;/em&gt; &lt;code&gt;hasMany&lt;/code&gt; relationship it would update. Before, it would just pick the first relationship it found with the same type as the child.&lt;/p&gt;
-
-&lt;p&gt;Because it&amp;#39;s reasonable for people to have multiple &lt;code&gt;belongsTo&lt;/code&gt;/&lt;code&gt;hasMany&lt;/code&gt;s for the same type, we added support for specifying an inverse:&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-&lt;strong&gt;10&lt;/strong&gt;
-11
-12
-13
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;App.Comment = DS.Model.extend({
-  &lt;span class="key"&gt;onePost&lt;/span&gt;: DS.belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;App.Post&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;),
-  &lt;span class="key"&gt;twoPost&lt;/span&gt;: DS.belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;App.Post&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;),
-  &lt;span class="key"&gt;redPost&lt;/span&gt;: DS.belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;App.Post&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;),
-  &lt;span class="key"&gt;bluePost&lt;/span&gt;: DS.belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;App.Post&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;)
-});
-
-
-App.Post = DS.Model.extend({
-  &lt;span class="key"&gt;comments&lt;/span&gt;: DS.hasMany(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;App.Comment&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, {
-    &lt;span class="key"&gt;inverse&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;redPost&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;
-  })
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;p&gt;You can also specify an inverse on a &lt;code&gt;belongsTo&lt;/code&gt;, which works how you&amp;#39;d expect.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_mappable-refactor'&gt;Mappable Refactor&lt;/h3&gt;
-&lt;p&gt;We noticed that a lot of configuration APIs we were introducing in the
-adapter layer wanted to treat the adapter or serializer object like a
-map, but there were some slightly different semantics than the standard
-&lt;code&gt;Ember.Map&lt;/code&gt; implementation.&lt;/p&gt;
-
-&lt;p&gt;This refactor greatly cleans up the implementation and increases the
-amount of code shared between classes.&lt;/p&gt;
-
-&lt;p&gt;It&amp;#39;s a little hard to explain, but hopefully the inline documentation
-plus the actual usage in the framework should make it clear what I mean.&lt;/p&gt;
-
-&lt;p&gt;Unfortunately I totally spaced and forgot to push this, and it&amp;#39;s on a
-computer I don&amp;#39;t have access to at the moment. Look for this in a few
-weeks!&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_core-concepts-guide'&gt;Core Concepts Guide&lt;/h3&gt;
-&lt;p&gt;Many people getting started with Ember.js tell me that each of the
-individual pieces make sense, but they&amp;#39;re not sure how all of those
-pieces fit together.&lt;/p&gt;
-
-&lt;p&gt;We&amp;#39;re making a big push towards improving our documentation as we head
-towards the 1.0 release, and this is one of the first things I want to
-address.&lt;/p&gt;
-
-&lt;p&gt;To that end, I wrote a &amp;quot;Core Concepts&amp;quot; guide that I hope you will find
-helpful. It&amp;#39;s not up yet (I&amp;#39;m still working on a branch of the website)
-but you can &lt;a href="https://github.com/emberjs/website/blob/doc-refactor/source/guides/getting-started/core-concepts.md"&gt;view the Markdown on GitHub&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;We want to make Ember.js as easy for new developers to pick up as
-possible, so your feedback about our documentation, as always, is
-extremely important. Please review and let me know what you think!&lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;p&gt;Finally, I&amp;#39;d like to give a shoutout to Trek Glowacki for doing an
-awesome job &lt;a href="http://javascriptjabber.com/034-jsj-ember-js/"&gt;repping the Ember.js community on the JS Jabber
-podcast&lt;/a&gt;. I had no idea
-how sexy his voice was.  If you haven&amp;#39;t listened yet, it&amp;#39;s worth your
-time. (Feel free to troll him about not knowing how the run loop works.
-;)&lt;/p&gt;
-
-&lt;p&gt;Me, Yehuda and the rest of the Tilde team will be in Hawaii next week
-for our company offsite. We should have wi-fi and be generally
-available, but we have plenty of luaus, boat cruises, and zip line
-adventures planned, so if we&amp;#39;re less available than usual, that&amp;#39;s the
-reason.&lt;/p&gt;
-
-&lt;p&gt;That&amp;#39;s it for this week,&lt;br&gt;
-Tom Dale&lt;br&gt;
-&lt;a href="https://twitter.com/tomdale"&gt;@tomdale&lt;/a&gt;&lt;/p&gt;
 </content>
   </entry>
 </feed>
