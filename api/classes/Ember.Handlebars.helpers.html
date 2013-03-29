@@ -194,7 +194,7 @@
         <div id="sidebar">
           
     <ol id='toc-list'>
-      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commit/v1.0.0-rc.1" target="_blank"> Tag: v1.0.0-rc.1</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commit/v1.0.0-rc.2" target="_blank"> Tag: v1.0.0-rc.2</a></li>
 
       
           <li class="level-1 ">
@@ -477,6 +477,14 @@
             
           <li class="level-3 ">
           
+              <a href="/api/classes/Ember.DefaultResolver.html">Ember.DefaultResolver</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
               <a href="/api/classes/Ember.Deferred.html">Ember.Deferred</a>
             
           </li>
@@ -566,6 +574,14 @@
           <li class="level-3 ">
           
               <a href="/api/classes/Ember.HistoryLocation.html">Ember.HistoryLocation</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.LinkView.html">Ember.LinkView</a>
             
           </li>
         
@@ -678,6 +694,14 @@
           <li class="level-3 ">
           
               <a href="/api/classes/Ember.OrderedSet.html">Ember.OrderedSet</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.RSVP.html">Ember.RSVP</a>
             
           </li>
         
@@ -970,6 +994,14 @@
             </li>
           
             <li class="method ">
+              <a href="#method_partial">partial</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_render">render</a>
+            </li>
+          
+            <li class="method ">
               <a href="#method_template">template</a>
             </li>
           
@@ -1044,7 +1076,7 @@
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.1/packages/ember-handlebars/lib/helpers/binding.js#L135">packages/ember-handlebars/lib/helpers/binding.js:135</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.2/packages/ember-handlebars/lib/helpers/binding.js#L135">packages/ember-handlebars/lib/helpers/binding.js:135</a>
 
     
 
@@ -1091,7 +1123,7 @@
 <div id="method_action" class="method  item-entry">
   <h3 data-id="method_action" class="name anchorable-toc"><code>action</code></h3>
   <span class="args">
-    (actionName, model, options)
+    (actionName, context, options)
   </span>
 
 
@@ -1104,13 +1136,13 @@
 
   <div class="meta">
       
-        Inherited from
-        <a href="/api/classes/Ember.Handlebars.helpers.html#method_action">Ember.Handlebars.helpers</a>
         
-          but overwritten in
+          
+            Defined in
+          
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.1/packages/ember-routing/lib/helpers/render.js#L12">packages/ember-routing/lib/helpers/render.js:12</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.2/packages/ember-routing/lib/helpers/action.js#L93">packages/ember-routing/lib/helpers/action.js:93</a>
 
     
 
@@ -1119,15 +1151,254 @@
 
   
     <div class="description">
-      <p>Renders the named template in the current context using the singleton
-instance of the same-named controller.</p>
+      <p>The <code>{{action}}</code> helper registers an HTML element within a template for DOM
+event handling and forwards that interaction to the view&#39;s controller
+or supplied <code>target</code> option (see &#39;Specifying a Target&#39;).</p>
 
-<p>If a view class with the same name exists, uses the view class.</p>
+<p>If the view&#39;s controller does not implement the event, the event is sent
+to the current route, and it bubbles up the route hierarchy from there.</p>
 
-<p>If a <code>model</code> is specified, it becomes the model for that controller.</p>
+<p>User interaction with that element will invoke the supplied action name on
+the appropriate target.</p>
 
-<p>The default target for <code>{{action}}</code>s in the rendered template is the
-named controller.</p>
+<p>Given the following Handlebars template on the page</p>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
+<span class="inline">  &lt;div </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">anActionName</span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span>
+    click me
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/script&gt;</span>
+</pre></td>
+</tr></table>
+</div>
+<p>And application code</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+</pre></td>
+  <td class="code"><pre>AController = Ember.Controller.extend({
+  <span class="function">anActionName</span>: <span class="keyword">function</span>() {}
+});
+
+AView = Ember.View.extend({
+  <span class="key">controller</span>: AController.create(),
+  <span class="key">templateName</span>: <span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span>
+});
+
+aView = AView.create();
+aView.appendTo(<span class="string"><span class="delimiter">'</span><span class="content">body</span><span class="delimiter">'</span></span>);
+</pre></td>
+</tr></table>
+</div>
+<p>Will results in the following rendered HTML</p>
+<div class="highlight html "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attribute-name">data-ember-action</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    click me
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div>
+<p>Clicking &quot;click me&quot; will trigger the <code>anActionName</code> method of the
+<code>AController</code>. In this case, no additional parameters will be passed.</p>
+
+<p>If you provide additional parameters to the helper:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">'</span><span class="attribute-name">edit</span><span class="error">'</span> <span class="attribute-name">post</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>Edit<span class="tag">&lt;/button&gt;</span>
+</pre></td>
+</tr></table>
+</div>
+<p>Those parameters will be passed along as arguments to the JavaScript
+function implementing the action.</p>
+
+<h3>Event Propagation</h3>
+
+<p>Events triggered through the action helper will automatically have
+<code>.preventDefault()</code> called on them. You do not need to do so in your event
+handlers.</p>
+
+<p>To also disable bubbling, pass <code>bubbles=false</code> to the helper:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">'</span><span class="attribute-name">edit</span><span class="error">'</span> <span class="attribute-name">post</span> <span class="attribute-name">bubbles</span>=<span class="attribute-value">false</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>Edit<span class="tag">&lt;/button&gt;</span>
+</pre></td>
+</tr></table>
+</div>
+<p>If you need the default handler to trigger you should either register your
+own event handler, or use event methods on your view class. See <code>Ember.View</code>
+&#39;Responding to Browser Events&#39; for more information.</p>
+
+<h3>Specifying DOM event type</h3>
+
+<p>By default the <code>{{action}}</code> helper registers for DOM <code>click</code> events. You can
+supply an <code>on</code> option to the helper to specify a different DOM event name:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
+<span class="inline">  &lt;div </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">anActionName</span> <span class="attribute-name">on</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">doubleClick</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span>
+    click me
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/script&gt;</span>
+</pre></td>
+</tr></table>
+</div>
+<p>See <code>Ember.View</code> &#39;Responding to Browser Events&#39; for a list of
+acceptable DOM event names.</p>
+
+<p>NOTE: Because <code>{{action}}</code> depends on Ember&#39;s event dispatch system it will
+only function if an <code>Ember.EventDispatcher</code> instance is available. An
+<code>Ember.EventDispatcher</code> instance will be created when a new <code>Ember.Application</code>
+is created. Having an instance of <code>Ember.Application</code> will satisfy this
+requirement.</p>
+
+<h3>Specifying whitelisted modifier keys</h3>
+
+<p>By default the <code>{{action}}</code> helper will ignore click event with pressed modifier
+keys. You can supply an <code>allowedKeys</code> option to specify which keys should not be ignored.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
+<span class="inline">  &lt;div </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">anActionName</span> <span class="attribute-name">allowedKeys</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">alt</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span>
+    click me
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/script&gt;</span>
+</pre></td>
+</tr></table>
+</div>
+<p>This way the <code>{{action}}</code> will fire when clicking with the alt key pressed down.</p>
+
+<h3>Specifying a Target</h3>
+
+<p>There are several possible target objects for <code>{{action}}</code> helpers:</p>
+
+<p>In a typical Ember application, where views are managed through use of the
+<code>{{outlet}}</code> helper, actions will bubble to the current controller, then
+to the current route, and then up the route hierarchy.</p>
+
+<p>Alternatively, a <code>target</code> option can be provided to the helper to change
+which object will receive the method call. This option must be a path
+path to an object, accessible in the current context:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
+<span class="inline">  &lt;div </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">anActionName</span> <span class="attribute-name">target</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">MyApplication.someObject</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span>
+    click me
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/script&gt;</span>
+</pre></td>
+</tr></table>
+</div>
+<p>Clicking &quot;click me&quot; in the rendered HTML of the above template will trigger
+the  <code>anActionName</code> method of the object at <code>MyApplication.someObject</code>.</p>
+
+<p>If an action&#39;s target does not implement a method that matches the supplied
+action name an error will be thrown.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
+<span class="inline">  &lt;div </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">aMethodNameThatIsMissing</span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span>
+    click me
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/script&gt;</span>
+</pre></td>
+</tr></table>
+</div>
+<p>With the following application code</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre>AView = Ember.View.extend({
+  templateName; <span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span>,
+  <span class="comment">// note: no method 'aMethodNameThatIsMissing'</span>
+  <span class="function">anActionName</span>: <span class="keyword">function</span>(event) {}
+});
+
+aView = AView.create();
+aView.appendTo(<span class="string"><span class="delimiter">'</span><span class="content">body</span><span class="delimiter">'</span></span>);
+</pre></td>
+</tr></table>
+</div>
+<p>Will throw <code>Uncaught TypeError: Cannot call method &#39;call&#39; of undefined</code> when
+&quot;click me&quot; is clicked.</p>
+
+<h3>Additional Parameters</h3>
+
+<p>You may specify additional parameters to the <code>{{action}}</code> helper. These
+parameters are passed along as the arguments to the JavaScript function
+implementing the action.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
+<span class="inline">  </span><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">person</span> <span class="attribute-name">in</span> <span class="attribute-name">people</span><span class="inline-delimiter">}}</span></span>
+    <span class="tag">&lt;div</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">edit</span> <span class="attribute-name">person</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+      click me
+    <span class="tag">&lt;/div&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/script&gt;</span>
+</pre></td>
+</tr></table>
+</div>
+<p>Clicking &quot;click me&quot; will trigger the <code>edit</code> method on the current view&#39;s
+controller with the current person as a parameter.</p>
 
     </div>
   
@@ -1147,7 +1418,7 @@ named controller.</p>
           <dt><strong>actionName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
           <dd></dd>
         
-          <dt><strong>model</strong> <span class="type">Object?</span></dt>
+          <dt><strong>context</strong> <span class="type">Object</span></dt>
           <dd></dd>
         
           <dt><strong>options</strong> <span class="type">Hash</span></dt>
@@ -1186,7 +1457,7 @@ named controller.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.1/packages/ember-handlebars/lib/helpers/binding.js#L161">packages/ember-handlebars/lib/helpers/binding.js:161</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.2/packages/ember-handlebars/lib/helpers/binding.js#L161">packages/ember-handlebars/lib/helpers/binding.js:161</a>
 
     
 
@@ -1253,7 +1524,7 @@ named controller.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.1/packages/ember-handlebars/lib/helpers/binding.js#L314">packages/ember-handlebars/lib/helpers/binding.js:314</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.2/packages/ember-handlebars/lib/helpers/binding.js#L314">packages/ember-handlebars/lib/helpers/binding.js:314</a>
 
     
 
@@ -1355,7 +1626,7 @@ example, the following view and template:</p>
 <p>A boolean return value will insert a specified class name if the property
 returns <code>true</code> and remove the class name if the property returns <code>false</code>.</p>
 
-<p>A class name is provided via the syntax 
+<p>A class name is provided via the syntax
 <code>somePropertyName:class-name-if-true</code>.</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
@@ -1477,7 +1748,7 @@ hard-coded value – can be combined in a single declaration:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.1/packages/ember-handlebars/lib/helpers/binding.js#L199">packages/ember-handlebars/lib/helpers/binding.js:199</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.2/packages/ember-handlebars/lib/helpers/binding.js#L199">packages/ember-handlebars/lib/helpers/binding.js:199</a>
 
     
 
@@ -1546,7 +1817,7 @@ hard-coded value – can be combined in a single declaration:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.1/packages/ember-handlebars/lib/helpers/collection.js#L14">packages/ember-handlebars/lib/helpers/collection.js:14</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.2/packages/ember-handlebars/lib/helpers/collection.js#L14">packages/ember-handlebars/lib/helpers/collection.js:14</a>
 
     
 
@@ -1782,7 +2053,7 @@ item (note the camelcasing):</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.1/packages/ember-routing/lib/helpers/control.js#L9">packages/ember-routing/lib/helpers/control.js:9</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.2/packages/ember-routing/lib/helpers/control.js#L9">packages/ember-routing/lib/helpers/control.js:9</a>
 
     
 
@@ -1857,7 +2128,7 @@ To enable it, set <code>ENV.EXPERIMENTAL_CONTROL_HELPER = true</code> before req
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.1/packages/ember-handlebars/lib/helpers/debug.js#L33">packages/ember-handlebars/lib/helpers/debug.js:33</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.2/packages/ember-handlebars/lib/helpers/debug.js#L33">packages/ember-handlebars/lib/helpers/debug.js:33</a>
 
     
 
@@ -1923,7 +2194,7 @@ To enable it, set <code>ENV.EXPERIMENTAL_CONTROL_HELPER = true</code> before req
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.1/packages/ember-handlebars/lib/helpers/each.js#L183">packages/ember-handlebars/lib/helpers/each.js:183</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.2/packages/ember-handlebars/lib/helpers/each.js#L183">packages/ember-handlebars/lib/helpers/each.js:183</a>
 
     
 
@@ -2014,7 +2285,7 @@ with its own <code>template</code> you can omit the block.</p>
 3
 </pre></td>
   <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">view</span> <span class="attribute-name">App.MyView</span> <span class="inline-delimiter">}}</span></span>
-  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">each</span> <span class="attribute-name">view.items</span> <span class="attribute-name">itemViewClass</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">App.AnItemView</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span> 
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">each</span> <span class="attribute-name">view.items</span> <span class="attribute-name">itemViewClass</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">App.AnItemView</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">view</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
@@ -2097,7 +2368,7 @@ or synthesis for display:</p>
 2
 3
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">person</span> <span class="attribute-name">in</span> <span class="attribute-name">Developers</span> <span class="attribute-name">itemController</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">developer</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">person</span> <span class="attribute-name">in</span> <span class="attribute-name">developers</span> <span class="attribute-name">itemController</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">developer</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
   <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">person.name</span><span class="inline-delimiter">}}</span></span> <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">person.isAvailableForHire</span><span class="inline-delimiter">}}</span></span>Hire me!<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
@@ -2159,7 +2430,7 @@ or synthesis for display:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.1/packages/ember-handlebars/lib/ext.js#L116">packages/ember-handlebars/lib/ext.js:116</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.2/packages/ember-handlebars/lib/ext.js#L116">packages/ember-handlebars/lib/ext.js:116</a>
 
     
 
@@ -2218,7 +2489,7 @@ or synthesis for display:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.1/packages/ember-handlebars/lib/helpers/binding.js#L279">packages/ember-handlebars/lib/helpers/binding.js:279</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.2/packages/ember-handlebars/lib/helpers/binding.js#L279">packages/ember-handlebars/lib/helpers/binding.js:279</a>
 
     
 
@@ -2290,7 +2561,7 @@ or synthesis for display:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.1/packages/ember-routing/lib/helpers/link_to.js#L94">packages/ember-routing/lib/helpers/link_to.js:94</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.2/packages/ember-routing/lib/helpers/link_to.js#L112">packages/ember-routing/lib/helpers/link_to.js:112</a>
 
     
 
@@ -2356,7 +2627,7 @@ or synthesis for display:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.1/packages/ember-handlebars/lib/helpers/debug.js#L12">packages/ember-handlebars/lib/helpers/debug.js:12</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.2/packages/ember-handlebars/lib/helpers/debug.js#L12">packages/ember-handlebars/lib/helpers/debug.js:12</a>
 
     
 
@@ -2423,7 +2694,7 @@ context.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.1/packages/ember-routing/lib/helpers/outlet.js#L18">packages/ember-routing/lib/helpers/outlet.js:18</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.2/packages/ember-routing/lib/helpers/outlet.js#L18">packages/ember-routing/lib/helpers/outlet.js:18</a>
 
     
 
@@ -2432,8 +2703,8 @@ context.</p>
 
   
     <div class="description">
-      <p>The <code>outlet</code> helper allows you to specify that the current
-view&#39;s controller will fill in the view for a given area.</p>
+      <p>The <code>outlet</code> helper is a placeholder that the router will fill in with
+the appropriate template based on the current state of the application.</p>
 <div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 </pre></td>
@@ -2441,39 +2712,53 @@ view&#39;s controller will fill in the view for a given area.</p>
 </pre></td>
 </tr></table>
 </div>
-<p>By default, when the the current controller&#39;s <code>view</code> property changes, the
-outlet will replace its current view with the new view. You can set the
-<code>view</code> property directly, but it&#39;s normally best to use <code>connectOutlet</code>.</p>
-<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-</pre></td>
-  <td class="code"><pre><span class="error">#</span> Instantiate App.PostsView and assign to <span class="error">`</span>view<span class="error">`</span>, so as to render into outlet.
-controller.connectOutlet(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>);
-</pre></td>
-</tr></table>
-</div>
-<p>You can also specify a particular name other than <code>view</code>:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-</pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span> <span class="attribute-name">masterView</span><span class="inline-delimiter">}}</span></span>
-<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span> <span class="attribute-name">detailView</span><span class="inline-delimiter">}}</span></span>
-</pre></td>
-</tr></table>
-</div>
-<p>Then, you can control several outlets from a single controller.</p>
+<p>By default, a template based on Ember&#39;s naming conventions will be rendered
+into the <code>outlet</code> (e.g. <code>App.PostsRoute</code> will render the <code>posts</code> template).</p>
+
+<p>You can render a different template by using the <code>render()</code> method in the
+route&#39;s <code>renderTemplate</code> hook. The following will render the <code>favoritePost</code>
+template into the <code>outlet</code>.</p>
 <div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
 4
+5
 </pre></td>
-  <td class="code"><pre><span class="error">#</span> Instantiate App.PostsView and assign to controller.masterView.
-controller.connectOutlet(<span class="string"><span class="delimiter">'</span><span class="content">masterView</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>);
-<span class="error">#</span> Also, instantiate App.PostInfoView and assign to controller.detailView.
-controller.connectOutlet(<span class="string"><span class="delimiter">'</span><span class="content">detailView</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">postInfo</span><span class="delimiter">'</span></span>);
+  <td class="code"><pre>App.PostsRoute = Ember.Route.extend({
+  <span class="function">renderTemplate</span>: <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.render(<span class="string"><span class="delimiter">'</span><span class="content">favoritePost</span><span class="delimiter">'</span></span>);
+  }
+});
+</pre></td>
+</tr></table>
+</div>
+<p>You can create custom named outlets for more control.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span> <span class="attribute-name">favoritePost</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span> <span class="attribute-name">posts</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div>
+<p>Then you can define what template is rendered into each outlet in your
+route.</p>
+<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre>App.PostsRoute = Ember.Route.extend({
+  <span class="function">renderTemplate</span>: <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.render(<span class="string"><span class="delimiter">'</span><span class="content">favoritePost</span><span class="delimiter">'</span></span>, { <span class="key">outlet</span>: <span class="string"><span class="delimiter">'</span><span class="content">favoritePost</span><span class="delimiter">'</span></span> });
+    <span class="local-variable">this</span>.render(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>, { <span class="key">outlet</span>: <span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span> });
+  }
+});
 </pre></td>
 </tr></table>
 </div>
@@ -2495,6 +2780,171 @@ controller.connectOutlet(<span class="string"><span class="delimiter">'</span><s
           <dt><strong>property</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
           <dd>the property on the controller
   that holds the view for this outlet</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
+<div id="method_partial" class="method  item-entry">
+  <h3 data-id="method_partial" class="name anchorable-toc"><code>partial</code></h3>
+  <span class="args">
+    (partialName)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.2/packages/ember-handlebars/lib/helpers/partial.js#L8">packages/ember-handlebars/lib/helpers/partial.js:8</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p><code>partial</code> renders a template directly using the current context.
+If needed the context can be set using the <code>{{#with foo}}</code> helper.</p>
+<div class="highlight html "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">header_bar</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="inline">  {{<span class="error">#</span><span class="keyword">with</span> currentUser}}
+    {{partial user_info}}
+  {{<span class="regexp"><span class="delimiter">/</span><span class="content">with}}</span></span></span>
+<span class="tag">&lt;/script&gt;</span>
+
+The `data-template-name` attribute of a partial template
+is prefixed with an underscore.
+
+```html
+<span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">_user_info</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="inline">  <span class="tag">&lt;span&gt;</span>Hello {{username}}!<span class="tag">&lt;/span&gt;</span></span>
+<span class="tag">&lt;/script&gt;</span>
+</pre></td>
+</tr></table>
+</div>
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>partialName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>the name of the template to render minus the leading underscore</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
+<div id="method_render" class="method  item-entry">
+  <h3 data-id="method_render" class="name anchorable-toc"><code>render</code></h3>
+  <span class="args">
+    (name, contextString, options)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.2/packages/ember-routing/lib/helpers/render.js#L12">packages/ember-routing/lib/helpers/render.js:12</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Renders the named template in the current context using the singleton
+instance of the same-named controller.</p>
+
+<p>If a view class with the same name exists, uses the view class.</p>
+
+<p>If a <code>model</code> is specified, it becomes the model for that controller.</p>
+
+<p>The default target for <code>{{action}}</code>s in the rendered template is the
+named controller.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd></dd>
+        
+          <dt><strong>contextString</strong> <span class="type">Object?</span></dt>
+          <dd></dd>
+        
+          <dt><strong>options</strong> <span class="type">Hash</span></dt>
+          <dd></dd>
         
       </dl>
     </div>
@@ -2527,7 +2977,7 @@ controller.connectOutlet(<span class="string"><span class="delimiter">'</span><s
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.1/packages/ember-handlebars/lib/helpers/template.js#L8">packages/ember-handlebars/lib/helpers/template.js:8</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.2/packages/ember-handlebars/lib/helpers/template.js#L8">packages/ember-handlebars/lib/helpers/template.js:8</a>
 
     
 
@@ -2564,6 +3014,20 @@ This allows you to re-use the same template in multiple places. For example:</p>
 <span class="inline">  Name: <span class="tag">&lt;em&gt;</span>{{name}}<span class="tag">&lt;/em&gt;</span>
   Karma: <span class="tag">&lt;em&gt;</span>{{karma}}<span class="tag">&lt;/em&gt;</span></span>
 <span class="tag">&lt;/script&gt;</span>
+</pre></td>
+</tr></table>
+</div><div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">isUser</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">template</span> <span class="error">&quot;</span><span class="attribute-name">user_info</span><span class="error">&quot;</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">else</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">template</span> <span class="error">&quot;</span><span class="attribute-name">unlogged_user_info</span><span class="error">&quot;</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div>
@@ -2629,7 +3093,7 @@ they will be compiled and placed in this hash automatically.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.1/packages/ember-handlebars/lib/helpers/unbound.js#L12">packages/ember-handlebars/lib/helpers/unbound.js:12</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.2/packages/ember-handlebars/lib/helpers/unbound.js#L12">packages/ember-handlebars/lib/helpers/unbound.js:12</a>
 
     
 
@@ -2714,7 +3178,7 @@ render it in its unbound form:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.1/packages/ember-handlebars/lib/helpers/binding.js#L295">packages/ember-handlebars/lib/helpers/binding.js:295</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.2/packages/ember-handlebars/lib/helpers/binding.js#L295">packages/ember-handlebars/lib/helpers/binding.js:295</a>
 
     
 
@@ -2781,7 +3245,7 @@ render it in its unbound form:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.1/packages/ember-handlebars/lib/helpers/view.js#L150">packages/ember-handlebars/lib/helpers/view.js:150</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.2/packages/ember-handlebars/lib/helpers/view.js#L155">packages/ember-handlebars/lib/helpers/view.js:155</a>
 
     
 
@@ -3089,7 +3553,7 @@ aView.get(<span class="string"><span class="delimiter">'</span><span class="cont
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.1/packages/ember-handlebars/lib/helpers/binding.js#L233">packages/ember-handlebars/lib/helpers/binding.js:233</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.2/packages/ember-handlebars/lib/helpers/binding.js#L233">packages/ember-handlebars/lib/helpers/binding.js:233</a>
 
     
 
@@ -3156,7 +3620,7 @@ aView.get(<span class="string"><span class="delimiter">'</span><span class="cont
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.1/packages/ember-handlebars/lib/helpers/yield.js#L8">packages/ember-handlebars/lib/helpers/yield.js:8</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.2/packages/ember-handlebars/lib/helpers/yield.js#L8">packages/ember-handlebars/lib/helpers/yield.js:8</a>
 
     
 
