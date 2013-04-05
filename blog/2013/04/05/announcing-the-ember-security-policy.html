@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - This Week in Ember.js</title>
+    <title>Ember.js - Announcing the Ember.js Security Policy</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
@@ -77,7 +77,7 @@
     
   </head>
 
-  <body class="blog blog_2012 blog_2012_11 blog_2012_11_02 blog_2012_11_02_this-week-in-ember-js">
+  <body class="blog blog_2013 blog_2013_04 blog_2013_04_05 blog_2013_04_05_announcing-the-ember-security-policy">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -150,124 +150,55 @@
       
       <div id="content" class="has-sidebar">
           <article class="blog-post">
-    <h1>This Week in Ember.js</h1>
+    <h1>Announcing the Ember.js Security Policy</h1>
     
       <h3 class="blog-post-author">Posted By: Tom Dale</h3>
     
 
-    <p>There&#39;s a lot of work happening on Ember.js and sometimes it&#39;s hard to keep track of what&#39;s going on. Here&#39;s what me and Yehuda got done this week.</p>
+    <p>We know that building your apps on top of a framework requires
+trust, and that trust is never put to the test more than when security
+vulnerabilities are discovered.</p>
 
-<p></p>
-<h3 class='anchorable-toc' id='toc_meetup'>Meetup</h3>
-<p>The SF Ember.js Meetup on Tuesday (which we actually held in Mountain
-View this month) was a success! It was sponsored by our friends at
-Addepar, who are also <a href="https://addepar.com/ember/">funding me and Yehuda to work on Ember Data for
-the next few months</a>. So, big thanks to them!</p>
+<p>While we&#39;re very fortunate to work on an open source project that runs
+in a sandboxed environment, the browser, we realize that even JavaScript
+applications can be vulnerable to attacks from malicious third-parties.</p>
 
-<p>Tony Sherbondy gave an overview of the Addepar app and described how
-Ember.js has helped them. The biggest &quot;a-ha&quot; moment for me was when he
-described how they completely changed out the table view that powers big
-chunks of the UI, and didn&#39;t have to make any changes in the rest of the
-app. It&#39;s exactly this type of encapsulation that makes Ember a win, and
-I&#39;m glad to see it happening in real life.</p>
+<p>Ember.js is designed to mitigate common forms of attack. For example,
+all values rendered using Handlebars are automatically escaped to
+prevent XSS attacks, and developers must explicitly opt in to outputting
+raw HTML.</p>
 
-<p>I gave a talk on Ember Data, and discussed some of the new APIs we&#39;ll be
-working on over the next few months. Yehuda gave a talk about the router
-proposal. The pork belly buns from the Chairman Bao
-food truck were epic. I got a little drunk.</p>
-<h3 class='anchorable-toc' id='toc_per-type-adapters'>Per-Type Adapters</h3>
-<p>You can now register different adapters on the store per-type. You can
-read more about this feature in <a href="https://gist.github.com/4004913">this Gist</a>.</p>
+<p>To ensure that Ember applications stay safe, today we&#39;re announcing the
+<a href="/security">Ember.js Security Policy</a>, to help security researchers and
+developers responsibly disclose potential vulnerabilities in Ember and
+Ember Data.</p>
 
-<p>This feature is done and on <code>master</code>!</p>
-<h3 class='anchorable-toc' id='toc_explicit-inverses'>Explicit Inverses</h3>
-<p>Ember Data has always been smart enough to know that when you set a <code>belongsTo</code> relationship, the child record should be added to the parent&#39;s corresponding <code>hasMany</code> relationship.</p>
+<p>We have also set up the <a href="https://groups.google.com/forum/#!forum/ember-security">Ember.js security announcements mailing
+list</a>. This is
+an extremely low-traffic mailing list reserved solely for announcing
+security releases of the framework. If you&#39;re deploying Ember to
+production, you or your security team may wish to subscribe.</p>
 
-<p>Unfortunately, it was pretty braindead about <em>which</em> <code>hasMany</code> relationship it would update. Before, it would just pick the first relationship it found with the same type as the child.</p>
+<p>To be clear, there are no vulnerabilities we&#39;re aware of at this time
+and there is not a security release forthcoming. We just take security
+extremely seriously and believe that having a procedure in place ahead of
+time will allow us to respond most effectively should the
+worst happen.</p>
 
-<p>Because it&#39;s reasonable for people to have multiple <code>belongsTo</code>/<code>hasMany</code>s for the same type, we added support for specifying an inverse:</p>
-<div class="highlight javascript "><div class="ribbon"></div><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
-</pre></td>
-  <td class="code"><pre>App.Comment = DS.Model.extend({
-  <span class="key">onePost</span>: DS.belongsTo(<span class="string"><span class="delimiter">&quot;</span><span class="content">App.Post</span><span class="delimiter">&quot;</span></span>),
-  <span class="key">twoPost</span>: DS.belongsTo(<span class="string"><span class="delimiter">&quot;</span><span class="content">App.Post</span><span class="delimiter">&quot;</span></span>),
-  <span class="key">redPost</span>: DS.belongsTo(<span class="string"><span class="delimiter">&quot;</span><span class="content">App.Post</span><span class="delimiter">&quot;</span></span>),
-  <span class="key">bluePost</span>: DS.belongsTo(<span class="string"><span class="delimiter">&quot;</span><span class="content">App.Post</span><span class="delimiter">&quot;</span></span>)
-});
+<p>If you have any questions or concerns that are not addressed by the new
+security policy, please email us at
+<a href="mailto:security@emberjs.com">security@emberjs.com</a>.</p>
 
+<p>I&#39;d like to thank the Ruby on Rails security team, from whom our
+security policy was lifted almost wholesale, for serving as a role model
+for open source projects everywhere.</p>
 
-App.Post = DS.Model.extend({
-  <span class="key">comments</span>: DS.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">App.Comment</span><span class="delimiter">'</span></span>, {
-    <span class="key">inverse</span>: <span class="string"><span class="delimiter">'</span><span class="content">redPost</span><span class="delimiter">'</span></span>
-  })
-});
-</pre></td>
-</tr></table>
-</div>
-<p>You can also specify an inverse on a <code>belongsTo</code>, which works how you&#39;d expect.</p>
-<h3 class='anchorable-toc' id='toc_mappable-refactor'>Mappable Refactor</h3>
-<p>We noticed that a lot of configuration APIs we were introducing in the
-adapter layer wanted to treat the adapter or serializer object like a
-map, but there were some slightly different semantics than the standard
-<code>Ember.Map</code> implementation.</p>
+<p>Lastly, my personal thanks to <a href="https://twitter.com/tenderlove">Aaron &quot;tenderlove&quot;
+Patterson</a> and <a href="https://twitter.com/bascule">Tony &quot;bascule&quot;
+Arcieri</a> for reviewing our policy and
+answering many of my ignorant questions.</p>
 
-<p>This refactor greatly cleans up the implementation and increases the
-amount of code shared between classes.</p>
-
-<p>It&#39;s a little hard to explain, but hopefully the inline documentation
-plus the actual usage in the framework should make it clear what I mean.</p>
-
-<p>Unfortunately I totally spaced and forgot to push this, and it&#39;s on a
-computer I don&#39;t have access to at the moment. Look for this in a few
-weeks!</p>
-<h3 class='anchorable-toc' id='toc_core-concepts-guide'>Core Concepts Guide</h3>
-<p>Many people getting started with Ember.js tell me that each of the
-individual pieces make sense, but they&#39;re not sure how all of those
-pieces fit together.</p>
-
-<p>We&#39;re making a big push towards improving our documentation as we head
-towards the 1.0 release, and this is one of the first things I want to
-address.</p>
-
-<p>To that end, I wrote a &quot;Core Concepts&quot; guide that I hope you will find
-helpful. It&#39;s not up yet (I&#39;m still working on a branch of the website)
-but you can <a href="https://github.com/emberjs/website/blob/doc-refactor/source/guides/getting-started/core-concepts.md">view the Markdown on GitHub</a>.</p>
-
-<p>We want to make Ember.js as easy for new developers to pick up as
-possible, so your feedback about our documentation, as always, is
-extremely important. Please review and let me know what you think!</p>
-
-<hr>
-
-<p>Finally, I&#39;d like to give a shoutout to Trek Glowacki for doing an
-awesome job <a href="http://javascriptjabber.com/034-jsj-ember-js/">repping the Ember.js community on the JS Jabber
-podcast</a>. I had no idea
-how sexy his voice was.  If you haven&#39;t listened yet, it&#39;s worth your
-time. (Feel free to troll him about not knowing how the run loop works.
-;)</p>
-
-<p>Me, Yehuda and the rest of the Tilde team will be in Hawaii next week
-for our company offsite. We should have wi-fi and be generally
-available, but we have plenty of luaus, boat cruises, and zip line
-adventures planned, so if we&#39;re less available than usual, that&#39;s the
-reason.</p>
-
-<p>That&#39;s it for this week,<br>
-Tom Dale<br>
-<a href="https://twitter.com/tomdale">@tomdale</a></p>
+<p>Let&#39;s stay safe out there.</p>
 
 
     <hr>
