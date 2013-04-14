@@ -162,6 +162,10 @@
             </li>
           
             <li class="level-3">
+              <a href="/guides/templates/rendering-with-helpers">Rendering with Helpers</a>
+            </li>
+          
+            <li class="level-3">
               <a href="/guides/templates/writing-helpers">Writing Helpers</a>
             </li>
           </ol></li>
@@ -372,8 +376,8 @@
 5
 </pre></td>
   <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
-  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">&quot;</span><span class="content">posts</span><span class="delimiter">&quot;</span></span>, <span class="keyword">function</span>(){
-    <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">/:post_id</span><span class="delimiter">&quot;</span></span> });
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">&quot;</span><span class="content">photos</span><span class="delimiter">&quot;</span></span>, <span class="keyword">function</span>(){
+    <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">&quot;</span><span class="content">edit</span><span class="delimiter">&quot;</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">/:photo_id</span><span class="delimiter">&quot;</span></span> });
   });
 });
 </pre></td>
@@ -387,17 +391,17 @@
 6
 7
 </pre></td>
-  <td class="code"><pre><span class="comment">&lt;!-- posts.handlebars --&gt;</span>
+  <td class="code"><pre><span class="comment">&lt;!-- photos.handlebars --&gt;</span>
 
 <span class="tag">&lt;ul&gt;</span>
-<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">post</span> <span class="attribute-name">in</span> <span class="attribute-name">posts</span><span class="inline-delimiter">}}</span></span>
-  <span class="tag">&lt;li&gt;</span><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="attribute-name">posts.post</span> <span class="attribute-name">post</span><span class="inline-delimiter">}}</span></span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">post.title</span><span class="inline-delimiter">}}</span></span><span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/li&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">photo</span> <span class="attribute-name">in</span> <span class="attribute-name">photos</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;li&gt;</span><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="attribute-name">photos.edit</span> <span class="attribute-name">photo</span><span class="inline-delimiter">}}</span></span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">photo.title</span><span class="inline-delimiter">}}</span></span><span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/li&gt;</span>
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
 <span class="tag">&lt;/ul&gt;</span>
 </pre></td>
 </tr></table>
 </div>
-<p>If the model for the <code>posts</code> template is a list of three posts, the
+<p>If the model for the <code>photos</code> template is a list of three photos, the
 rendered HTML would look something like this:</p>
 <div class="highlight html "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
@@ -407,20 +411,22 @@ rendered HTML would look something like this:</p>
 5
 </pre></td>
   <td class="code"><pre><span class="tag">&lt;ul&gt;</span>
-  <span class="tag">&lt;li&gt;</span><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/posts/1</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Infinity Madness<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/li&gt;</span>
-  <span class="tag">&lt;li&gt;</span><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/posts/2</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Hexadecimal Weirdness<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/li&gt;</span>
-  <span class="tag">&lt;li&gt;</span><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/posts/3</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Slashes!<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/photos/1</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Happy Kittens<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/photos/2</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Puppy Running<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/photos/3</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Mountain Landscape<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/li&gt;</span>
 <span class="tag">&lt;/ul&gt;</span>
 </pre></td>
 </tr></table>
 </div>
-<p>When the rendered link matches the current route, and the same object instance is passed into the helper, then the link is given <code>class=&quot;active&quot;</code>.</p>
+<p>When the rendered link matches the current route, and the same
+object instance is passed into the helper, then the link is given
+<code>class=&quot;active&quot;</code>.</p>
 
 <p>The <code>{{linkTo}}</code> helper takes:</p>
 
 <ul>
-<li>The name of a route. In this example, it would be <code>index</code>, <code>posts</code>, or
-<code>post</code>.</li>
+<li>The name of a route. In this example, it would be <code>index</code>, <code>photos</code>, or
+<code>edit</code>.</li>
 <li>If the route has a <a href="/guides/routing/defining-your-routes/#toc_dynamic-segments">dynamic segment</a>,
 a model that represents the segment. By default, Ember.js will replace the segment with the
 value of the object&#39;s <code>id</code> property.</li>
@@ -440,8 +446,8 @@ segment.</p>
 8
 </pre></td>
   <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
-  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">&quot;</span><span class="content">posts</span><span class="delimiter">&quot;</span></span>, <span class="keyword">function</span>(){
-    <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">/:post_id</span><span class="delimiter">&quot;</span></span> }, <span class="keyword">function</span>(){
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">&quot;</span><span class="content">photos</span><span class="delimiter">&quot;</span></span>, <span class="keyword">function</span>(){
+    <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">&quot;</span><span class="content">photo</span><span class="delimiter">&quot;</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">/:photo_id</span><span class="delimiter">&quot;</span></span> }, <span class="keyword">function</span>(){
       <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">&quot;</span><span class="content">comments</span><span class="delimiter">&quot;</span></span>);
       <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">&quot;</span><span class="content">comment</span><span class="delimiter">&quot;</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">/comments/:comment_id</span><span class="delimiter">&quot;</span></span> });
     });
@@ -450,7 +456,7 @@ segment.</p>
 </pre></td>
 </tr></table>
 </div>
-<p>In the <code>postIndex</code> template:</p>
+<p>In the <code>photoIndex</code> template:</p>
 <div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
@@ -458,19 +464,19 @@ segment.</p>
 4
 5
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">photo</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
   <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">body</span><span class="inline-delimiter">}}</span></span>
 <span class="tag">&lt;/div&gt;</span>
 
-<span class="tag">&lt;p&gt;</span><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="attribute-name">post.comment</span> <span class="attribute-name">primaryComment</span><span class="inline-delimiter">}}</span></span>Main Comment<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;p&gt;</span><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="attribute-name">photo.comment</span> <span class="attribute-name">primaryComment</span><span class="inline-delimiter">}}</span></span>Main Comment<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/p&gt;</span>
 </pre></td>
 </tr></table>
 </div>
 <p>Since only a single model was supplied, the link will inherit the
-current post for the dynamic segment <code>:post_id</code>. The <code>primaryComment</code>
+current photo for the dynamic segment <code>:photo_id</code>. The <code>primaryComment</code>
 will become the new model for the <code>comment</code> route handler.</p>
 
-<p>Alternatively, you could pass both a post and a comment to the helper:</p>
+<p>Alternatively, you could pass both a photo and a comment to the helper:</p>
 <div class="highlight handlebars "><div class="ribbon"></div><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
@@ -479,16 +485,16 @@ will become the new model for the <code>comment</code> route handler.</p>
 5
 </pre></td>
   <td class="code"><pre><span class="tag">&lt;p&gt;</span>
-  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="attribute-name">post.comment</span> <span class="attribute-name">nextPost</span> <span class="attribute-name">primaryComment</span><span class="inline-delimiter">}}</span></span>
-    Main Comment for the Next Post
+  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="attribute-name">photo.comment</span> <span class="attribute-name">nextPhoto</span> <span class="attribute-name">primaryComment</span><span class="inline-delimiter">}}</span></span>
+    Main Comment for the Next Photo
   <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
 <span class="tag">&lt;/p&gt;</span>
 </pre></td>
 </tr></table>
 </div>
-<p>In this case, the models specified will populate both the <code>:post_id</code>
-and <code>:comment_id</code>. The specified <code>nextPost</code> will become the new
-model for the <code>post</code> handler and the <code>primaryComment</code> will become the
+<p>In this case, the models specified will populate both the <code>:photo_id</code>
+and <code>:comment_id</code>. The specified <code>nextPhoto</code> will become the new
+model for the <code>photo</code> handler and the <code>primaryComment</code> will become the
 new model for the <code>comment</code> handler.</p>
 
 <p>When transitioning to a new URL, the router will only execute the
