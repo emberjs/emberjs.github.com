@@ -5,10 +5,112 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2013-04-05T00:00:00Z</updated>
+  <updated>2013-04-21T00:00:00Z</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>Ember 1.0 RC3</title>
+    <link rel="alternate" href="/blog/2013/04/21/ember-1-0-rc3.html"/>
+    <id>/blog/2013/04/21/ember-1-0-rc3.html</id>
+    <published>2013-04-21T00:00:00Z</published>
+    <updated>2013-04-21T00:00:00Z</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Today we are announcing the third Release Candidate of Ember 1.0.
+As we said when we released RC1, all releases until 1.0 is final
+will be about bugfixes and improvements, and should not have any
+breaking changes.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_performance'&gt;Performance&lt;/h3&gt;
+&lt;p&gt;Since RC2, a series of performance improvements have landed.&lt;/p&gt;
+</summary>
+    <content type="html">&lt;p&gt;Today we are announcing the third Release Candidate of Ember 1.0.
+As we said when we released RC1, all releases until 1.0 is final
+will be about bugfixes and improvements, and should not have any
+breaking changes.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_performance'&gt;Performance&lt;/h3&gt;
+&lt;p&gt;Since RC2, a series of performance improvements have landed.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;When adjacent child views are scheduled for insertion they are
+are now batched together, and inserted together rather then one at
+a time.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Object deletion is now async, this prevents un-needed churn when destroying
+large interconnected object graphs.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The number of objects allocated during view rendering has been cut down.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The ongoing performance effort is being championed 
+by Erik Bryn and Kris Selden.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_testing'&gt;Testing&lt;/h3&gt;
+&lt;p&gt;There have been many fixes and improvements to App#reset, which should now
+correctly clear application state when invoked. Typically this is only used
+for integration tests.&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"&gt;&lt;pre&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// before each integration test&lt;/span&gt;
+App.reset();
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Please Note: &lt;code&gt;App.reset()&lt;/code&gt; now brings its own run loop, and no longer
+needs to be wrapped in one.&lt;/p&gt;
+
+&lt;p&gt;Initial work on a new &lt;a href="https://github.com/emberjs/ember.js/tree/master/packages/ember-testing"&gt;ember-testing package&lt;/a&gt;
+has begun. The goal of this project is to make testing Ember applications easier,
+especially when it comes to testing asynchrony. As this effort matures, expect full
+documentation, examples and guides.&lt;/p&gt;
+
+&lt;p&gt;Props to Erik Bryn for researching integration testing approaches by many community
+members, including Jo Liss and Katie Gengler, and spearheading initial work on what
+will be our official library.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_ember-builds'&gt;Ember Builds&lt;/h3&gt;
+&lt;p&gt;Each successful &lt;a href="https://travis-ci.org/emberjs/ember.js"&gt;CI&lt;/a&gt; run now publishes its build results to
+&lt;a href="http://builds.emberjs.com/"&gt;http://builds.emberjs.com/&lt;/a&gt;. This should make
+it much simpler to reference and use the &lt;a href="http://builds.emberjs.com/ember-latest.js"&gt;the latest ember build&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Thanks to Stanley Stuart, Luke Melia, Erik Bryn and others for getting this set up.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_new-input-and-textarea-helpers'&gt;New Input and TextArea helpers&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;TextField&lt;/code&gt;, &lt;code&gt;TextArea&lt;/code&gt; and &lt;code&gt;Checkbox&lt;/code&gt; views now have corresponding handlebars helpers.&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"&gt;&lt;pre&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;view&lt;/span&gt; &lt;span class="attribute-name"&gt;Ember.TextField&lt;/span&gt; &lt;span class="attribute-name"&gt;valueBinding&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;name&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;view&lt;/span&gt; &lt;span class="attribute-name"&gt;Ember.Checkbox&lt;/span&gt;  &lt;span class="attribute-name"&gt;checkedBinding&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;isActive&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;view&lt;/span&gt; &lt;span class="attribute-name"&gt;Ember.TextArea&lt;/span&gt;  &lt;span class="attribute-name"&gt;valueBinding&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;name&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;can now be expressed as:&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"&gt;&lt;pre&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;input&lt;/span&gt; &lt;span class="attribute-name"&gt;value&lt;/span&gt;=&lt;span class="attribute-value"&gt;name&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;input&lt;/span&gt; &lt;span class="attribute-name"&gt;checked&lt;/span&gt;=&lt;span class="attribute-value"&gt;isActive&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;textarea&lt;/span&gt; &lt;span class="attribute-name"&gt;value&lt;/span&gt;=&lt;span class="attribute-value"&gt;name&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;We recommend using the &amp;quot;dynamic tag&amp;quot; forms rather than the &lt;code&gt;{{view}}&lt;/code&gt; forms because
+they are equivalent to the static tags that we all know and love.&lt;/p&gt;
+
+&lt;p&gt;Note that when using dynamic tags, you do not need to use a &lt;code&gt;Binding&lt;/code&gt; suffix and
+must leave out the quotation marks around the values. Ember will interpret quoted
+strings as static strings in this context.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_documentation'&gt;Documentation&lt;/h3&gt;
+&lt;p&gt;The API docs have been refined and filled in by more community members
+than we can mention here. Thank you everyone for helping out!&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_changelog'&gt;Changelog&lt;/h3&gt;
+&lt;p&gt;The full &lt;a href="https://github.com/emberjs/ember.js/blob/master/CHANGELOG"&gt;CHANGELOG&lt;/a&gt; is available on Github, as always.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>Announcing the Ember.js Security Policy</title>
     <link rel="alternate" href="/blog/2013/04/05/announcing-the-ember-security-policy.html"/>
@@ -764,158 +866,6 @@ using the private &lt;code&gt;enter&lt;/code&gt; and &lt;code&gt;exit&lt;/code&g
 &lt;/ul&gt;
 
 &lt;p&gt;You can see the full changelog at &lt;a href="https://github.com/emberjs/ember.js/blob/master/CHANGELOG"&gt;the official CHANGELOG&lt;/a&gt;.&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>This Week in Ember</title>
-    <link rel="alternate" href="/blog/2013/01/18/this-week-in-ember-js-4.html"/>
-    <id>/blog/2013/01/18/this-week-in-ember-js-4.html</id>
-    <published>2013-01-18T00:00:00Z</published>
-    <updated>2013-01-18T00:00:00Z</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;It&amp;#39;s been a big month for Ember.js, and we&amp;#39;re excited about the progress
-that we&amp;#39;ve made. With so much going on, it can be hard to
-keep up-to-date with the project, so here&amp;#39;s what you need to know.&lt;/p&gt;
-</summary>
-    <content type="html">&lt;p&gt;It&amp;#39;s been a big month for Ember.js, and we&amp;#39;re excited about the progress
-that we&amp;#39;ve made. With so much going on, it can be hard to
-keep up-to-date with the project, so here&amp;#39;s what you need to know.&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_ember-camp'&gt;Ember Camp&lt;/h2&gt;
-&lt;p&gt;While we have an incredible network of local meetup groups, &lt;a href="http://www.embercamp.com"&gt;Ember
-Camp&lt;/a&gt; is the first national event for the Ember
-community.&lt;/p&gt;
-
-&lt;p&gt;We&amp;#39;ve been working hard on making sure that this event is both fun and
-educational, and we&amp;#39;ll be announcing the lineup of speakers soon.
-Unfortuately, tickets have sold out, so if you didn&amp;#39;t get yours this
-time, make sure you grab a ticket next year!&lt;/p&gt;
-
-&lt;p&gt;While Ember Camp is happening, keep an eye on this website and on &lt;a href="https://twitter.com/emberjs"&gt;our
-Twitter account&lt;/a&gt;. There will be several announcements you won&amp;#39;t want
-to miss!&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_peepcode'&gt;PeepCode&lt;/h2&gt;
-&lt;p&gt;We were fortunate enough to get to spend a day with Geoffrey Grosenbach,
-reviewing his in-progress PeepCode screencast about Ember.js. He spent a
-lot of time getting to know Ember in-depth, and we think the final
-product will be invaluable for new developers getting started with the
-framework.&lt;/p&gt;
-
-&lt;p&gt;&lt;center&gt;&lt;/p&gt;
-
-&lt;blockquote class="twitter-tweet"&gt;&lt;p&gt;Finished an Ember.js demo app, filming screencast tomorrow, will publish next week. Fun stuff! &lt;a href="https://t.co/Sq4q85Ql" title="https://peepcode.com/system/uploads/2013/peepcode-emberjs-demo.png"&gt;peepcode.com/system/uploads…&lt;/a&gt;&lt;/p&gt;&amp;mdash; PeepCode (@peepcode) &lt;a href="https://twitter.com/peepcode/status/291350861207187456" data-datetime="2013-01-16T01:07:13+00:00"&gt;January 16, 2013&lt;/a&gt;&lt;/blockquote&gt;
-
-&lt;script async src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
-
-&lt;p&gt;&lt;/center&gt;&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_the-road-to-1-0'&gt;The Road to 1.0&lt;/h2&gt;
-&lt;p&gt;If you&amp;#39;ve been tracking &lt;code&gt;master&lt;/code&gt; over the last month, you know that we
-have made many large improvements to Ember.js in quick succession. Some
-of these involved API changes that were not backwards compatible.&lt;/p&gt;
-
-&lt;p&gt;We appreciate your patience as we round the corner to a 1.0 release. We
-take feedback about &amp;quot;developer ergonomics&amp;quot; extremely seriously, and
-we&amp;#39;re not willing to rush out a release if we&amp;#39;re not satisfied that the
-API is as good as we can make it.&lt;/p&gt;
-
-&lt;p&gt;Thanks for all your excellent feedback on earlier iterations of the
-router API. Learning about how you found the API confusing or hard to
-use drove our work on the final version that is shipping in &lt;code&gt;pre4&lt;/code&gt;.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_the-router'&gt;The Router&lt;/h3&gt;
-&lt;p&gt;The first iteration of the Ember.js router (which some have colloquially
-begun referring to as &amp;quot;v1&amp;quot;) allowed us to begin fleshing out some
-conventions around application structure. Previously, application
-structure was mostly done on an ad hoc basis, but common conventions
-emerged in the community, which we rolled into &amp;quot;Router v1.&amp;quot;&lt;/p&gt;
-
-&lt;p&gt;However, despite the fact that developers appreciated conventions around
-app structure, their reaction to the first version of the API could
-generously be described as &lt;em&gt;horrified&lt;/em&gt;. Indeed, the router for large
-applications began to look like the twisted amalgams of views in old
-SproutCore applications. We knew we had to head back to the drawing
-board with the lessons we had learned.&lt;/p&gt;
-
-&lt;p&gt;The reaction to &amp;quot;v2&amp;quot; of our router proposal, in contrast, has been
-overwhelmingly positive. While we&amp;#39;ve had to make several tweaks over the
-past month to make sure the API is as intuitive as possible, the overall
-concepts behind the API have remained stable.&lt;/p&gt;
-
-&lt;p&gt;We believe that we&amp;#39;ve finally worked out all of the kinks, and do not
-have any plans to make any further backwards-incompatible changes to the
-router API before the final 1.0 release.&lt;/p&gt;
-
-&lt;p&gt;To learn what this router API is all about, head over to the &lt;a href="http://www.emberjs.com/guides/routing/"&gt;Routing
-guide&lt;/a&gt;.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_api-freeze'&gt;API Freeze&lt;/h3&gt;
-&lt;p&gt;In the run-up to Ember 1.0, we have chosen to aggressively make API
-changes in response to your feedback in an effort to make the 1.0 API as
-good as possible.&lt;/p&gt;
-
-&lt;p&gt;The reward for putting up with that level of churn is that we plan to
-keep things very stable after 1.0. As we get close to that milestone, we
-are starting to freeze portions of the API.&lt;/p&gt;
-
-&lt;p&gt;As of today, we will no longer make changes to the API that affect
-high-level tutorials, screencasts or our introductory-level
-documentation, unless such a change is necessary to address a critical
-bug.&lt;/p&gt;
-
-&lt;p&gt;When we release the first RC, we will no longer make changes that affect
-any part of the documented API–again–unless such a change is necessary
-to address a critical bug.&lt;/p&gt;
-
-&lt;p&gt;In keeping with &lt;a href="http://semver.org/"&gt;SemVer&lt;/a&gt;, once we release the final 1.0, we will
-not make breaking, backwards-incompatible changes to publicly documented
-APIs until Ember 2.0. We may deprecate APIs, and print deprecation
-warnings in the debug build, but things will continue to work.&lt;/p&gt;
-
-&lt;p&gt;In order to facilitate these API freezes, we are planning on taking
-several steps:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;We will convert high-profile screencasts and much of our public
-documentation into integration tests. &amp;quot;Your commit broke the PeepCode
-screencast&amp;quot; is something that Travis will tell contributors.&lt;/li&gt;
-&lt;li&gt;We will freeze the Ember 1.0 tests and run them against all builds of
-Ember in the 1.x series. This will notify us if we make a
-potentially backwards-incompatible change, and we can examine if it
-is the result of an API change or simply brittle tests. If we have to
-modify an old test, we will announce it here.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 class='anchorable-toc' id='toc_documentation'&gt;Documentation&lt;/h2&gt;
-&lt;p&gt;Perhaps the most widespread feedback we received from developers was:
-&lt;em&gt;&amp;quot;Ember.js looks really cool, but your documentation sucks.&amp;quot;&lt;/em&gt; We heard
-you loud and clear.&lt;/p&gt;
-
-&lt;p&gt;We recently launched the &lt;a href="http://www.emberjs.com/guides/"&gt;completely redesigned Guides&lt;/a&gt;, and due to
-their more focused nature, have been able to rapidly iterate on them.
-Since deploying the new site, the bounce rate has dropped dramatically
-and engagement with any particular page has nearly doubled.&lt;/p&gt;
-
-&lt;p&gt;We have lots more great documentation coming your way as we approach the
-1.0 release, and we think the design work that &lt;a href="http://www.heropixel.com"&gt;Matt Grantham&lt;/a&gt; did on
-the new guides will make them much easier for new developers to approach.&lt;/p&gt;
-
-&lt;p&gt;We are also working on improving the API reference documentation. In
-particular, &lt;a href="https://twitter.com/stefanpenner"&gt;Stefan Penner&lt;/a&gt; has been putting in a heroic effort to
-bring them up to a similarly polished look-and-feel as the guides.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_thanks'&gt;Thanks&lt;/h2&gt;
-&lt;p&gt;We&amp;#39;ve been working on Ember.js for just over a year now, and it&amp;#39;s no
-understatement to say that it has attracted some of the best and
-brightest web engineers on the planet. It has been extremely gratifying
-to see our ideas take form, and we can&amp;#39;t wait to see what 2013 holds for
-web applications.&lt;/p&gt;
-
-&lt;p&gt;Big thanks to all of &lt;a href="https://github.com/emberjs/ember.js/graphs/contributors"&gt;our contributors&lt;/a&gt;, who have poured hours of
-their nights and weekends into helping us make one of the best tools for
-writing ambitious web applications. We quite literally could not have
-done it without you.&lt;/p&gt;
-
-&lt;p&gt;Wishing you all the best in the new year,&lt;br&gt;
-Yehuda Katz &amp;amp; Tom Dale&lt;/p&gt;
 </content>
   </entry>
 </feed>
