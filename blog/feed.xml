@@ -5,10 +5,185 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2013-05-03T00:00:00Z</updated>
+  <updated>2013-05-28T00:00:00Z</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>Ember 1.0 RC4 and Ember Data 0.13</title>
+    <link rel="alternate" href="/blog/2013/05/28/ember-1-0-rc4 copy.html"/>
+    <id>/blog/2013/05/28/ember-1-0-rc4 copy.html</id>
+    <published>2013-05-28T00:00:00Z</published>
+    <updated>2013-05-28T00:00:00Z</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Today, we are pleased to announce Ember.js 1.0 RC4:&lt;/p&gt;
+
+&lt;p&gt;This RC4 release of Ember puts us very close to the final 1.0 release.
+If everything goes to plan, we anticipate one more possible RC release
+before we&amp;#39;re ready to put the &amp;quot;all done&amp;quot; stamp on it.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_ember-js-1-0-rc4'&gt;Ember.js 1.0 RC4&lt;/h3&gt;</summary>
+    <content type="html">&lt;p&gt;Today, we are pleased to announce Ember.js 1.0 RC4:&lt;/p&gt;
+
+&lt;p&gt;This RC4 release of Ember puts us very close to the final 1.0 release.
+If everything goes to plan, we anticipate one more possible RC release
+before we&amp;#39;re ready to put the &amp;quot;all done&amp;quot; stamp on it.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_ember-js-1-0-rc4'&gt;Ember.js 1.0 RC4&lt;/h3&gt;
+&lt;p&gt;As we approach 1.0 final, our focus continues to be on bugfixes, performance, and
+reliability.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_breaking-change-controller-model-setup'&gt;BREAKING CHANGE: Controller/Model Setup&lt;/h4&gt;
+&lt;p&gt;One of the roles of &lt;code&gt;Route&lt;/code&gt; objects in an Ember application is to tell
+controllers which model they should represent.&lt;/p&gt;
+
+&lt;p&gt;By default, the object that you return from a route&amp;#39;s &lt;code&gt;model&lt;/code&gt; hook is
+set as the &lt;code&gt;model&lt;/code&gt; property on the corresponding controller. So, for
+example, if you have this route:&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;App.PhotosRoute = Ember.Route.extend({
+  &lt;span class="function"&gt;model&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;() {
+    &lt;span class="keyword"&gt;return&lt;/span&gt; App.Photo.find();
+  }
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;The array returned from &lt;code&gt;model&lt;/code&gt; would be set as the &lt;code&gt;model&lt;/code&gt; property of
+the &lt;code&gt;App.PhotosController&lt;/code&gt;. This tells the controller that it should
+present that model to its template.&lt;/p&gt;
+
+&lt;p&gt;What if you need to set up additional controllers, beyond the primary
+controller associated with that route? In that case, you can implement
+the &lt;code&gt;setupController&lt;/code&gt; hook:&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;App.PhotosRoute = Ember.Route.extend({
+  &lt;span class="function"&gt;model&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;() {
+    &lt;span class="keyword"&gt;return&lt;/span&gt; App.Photo.find();
+  },
+
+  &lt;span class="function"&gt;setupController&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;(controller, model) {
+    &lt;span class="local-variable"&gt;this&lt;/span&gt;.controllerFor(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;application&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).set(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;showingPhotos&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="predefined-constant"&gt;true&lt;/span&gt;);
+  }
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;This is all well and good, but what if you wanted to &lt;strong&gt;prevent&lt;/strong&gt; a model
+from being set on the &lt;code&gt;PhotosController&lt;/code&gt; at all?&lt;/p&gt;
+
+&lt;p&gt;In RC3, &lt;em&gt;preventing this default behavior was impossible&lt;/em&gt;. In RC4,
+&lt;strong&gt;implementing the &lt;code&gt;setupController&lt;/code&gt; hook prevents the default behavior
+from happening. This is a potentially breaking change.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;If your route implements the &lt;code&gt;setupController&lt;/code&gt; hook &lt;em&gt;and&lt;/em&gt; you want to
+preserve default behavior, &lt;strong&gt;make sure you call &lt;code&gt;_super()&lt;/code&gt; from within
+the hook&lt;/strong&gt;:&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;App.PhotosRoute = Ember.Route.extend({
+  &lt;span class="function"&gt;model&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;() {
+    &lt;span class="keyword"&gt;return&lt;/span&gt; App.Photo.find();
+  },
+
+  &lt;span class="function"&gt;setupController&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;(controller, model) {
+    &lt;span class="comment"&gt;// Call _super for default behavior&lt;/span&gt;
+    &lt;span class="local-variable"&gt;this&lt;/span&gt;._super(controller, model);
+    &lt;span class="local-variable"&gt;this&lt;/span&gt;.controllerFor(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;application&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).set(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;showingPhotos&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="predefined-constant"&gt;true&lt;/span&gt;);
+  }
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Thanks to Kris Selden and Luke Melia for pulling together PRs from
+Paul Chavard, Rob Harper and input from others into a cohesive change.
+We don&amp;#39;t take breaking changes lightly at this stage of the release
+process, but this one is worthwhile.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_rsvp-2-0'&gt;RSVP 2.0&lt;/h4&gt;
+&lt;p&gt;Ember now embeds version 2.0 of
+&lt;a href="https://github.com/tildeio/rsvp.js"&gt;RSVP.js&lt;/a&gt;, a microlibrary for
+&lt;a href="http://promises-aplus.github.io/promises-spec/"&gt;Promises/A+ compatible
+promises&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;All of the Ember.js APIs that return promises use this library to
+ensure compatible behavior.&lt;/p&gt;
+
+&lt;p&gt;A big, big thanks to Stefan Penner for all of his work on improving the
+promises story across both Ember and Ember Data.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_run-loop-extracted-to-backburner-js'&gt;Run Loop Extracted to Backburner.js&lt;/h4&gt;
+&lt;p&gt;Erik Bryn has extracted the run loop into the
+&lt;a href="https://github.com/ebryn/backburner.js"&gt;Backburner.js&lt;/a&gt; microlibrary,
+which Ember now uses.&lt;/p&gt;
+
+&lt;p&gt;This will allow other frameworks and libraries that use
+Backburner to benefit from using a deferred event queue, and hopefully
+we can share our work to make the web platform faster for everyone.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_handlebars-rc4-compatibility'&gt;Handlebars RC4 Compatibility&lt;/h4&gt;
+&lt;p&gt;Ember.js RC4 requires the latest release of Handlebars, which is also at RC4.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_improved-route-redirection'&gt;Improved Route Redirection&lt;/h4&gt;
+&lt;p&gt;Routes provide a &lt;code&gt;redirect&lt;/code&gt; hook that allow them to conditionally redirect to
+a different route. For example, you may redirect the user to a login
+route if you detect that they do not have an authentication token saved.&lt;/p&gt;
+
+&lt;p&gt;Many improvements to the &lt;code&gt;redirect&lt;/code&gt; hook have been made to make it more
+reliable. Additionally, you can now implement this hook in the
+&lt;code&gt;ApplicationRoute&lt;/code&gt;, which previously would not work.&lt;/p&gt;
+
+&lt;p&gt;Props to Tom Dale for this work.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_linkto-now-generates-routeto-events'&gt;linkTo now generates routeTo events&lt;/h4&gt;
+&lt;p&gt;Previously, the &lt;code&gt;{{linkTo}}&lt;/code&gt; helper caused the router to transition without
+any hooks to affect that behavior. Thanks to the work of Alex Matchneer,
+the &lt;code&gt;{{linkTo}}&lt;/code&gt; helper now generates a routeTo event that can be handled
+just like any other event in a controller or a route&amp;#39;s &lt;code&gt;events&lt;/code&gt; object. The
+default behavior of transitioning to the specified route remains unchanged.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_ember-testing-improvements'&gt;ember-testing Improvements&lt;/h4&gt;
+&lt;p&gt;The &lt;code&gt;ember-testing&lt;/code&gt; package, included in Ember.js, is the
+officially-supported library for writing unit and integration tests for
+Ember apps. Introduced in RC3, this has continued to be improved, with
+many bug fixes and performance improvements landing in RC4.&lt;/p&gt;
+
+&lt;p&gt;A huge thanks to Teddy Zeeny for driving many of these improvements.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_code-disabledwhen-code-linkto-option'&gt;&lt;code&gt;disabledWhen&lt;/code&gt; {{linkTo}} Option&lt;/h4&gt;
+&lt;p&gt;The &lt;code&gt;{{#linkTo}}&lt;/code&gt; Handlebars helper now has a &lt;code&gt;disabledWhen&lt;/code&gt; option that
+can be bound to conditionally disable a link:&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"&gt;&lt;pre&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{#&lt;/span&gt;&lt;span class="attribute-name"&gt;linkTo&lt;/span&gt; &lt;span class="error"&gt;'&lt;/span&gt;&lt;span class="attribute-name"&gt;upgradeAccount&lt;/span&gt;&lt;span class="error"&gt;'&lt;/span&gt; &lt;span class="attribute-name"&gt;disabledWhen&lt;/span&gt;=&lt;span class="attribute-value"&gt;isPremiumUser&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;Upgrade
+Account&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{/&lt;/span&gt;&lt;span class="attribute-name"&gt;linkTo&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Thanks to Trek Glowacki for this improvement.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>Ember Data Progress Update</title>
     <link rel="alternate" href="/blog/2013/05/03/ember-data-progress-update.html"/>
@@ -849,82 +1024,6 @@ with it.&lt;/p&gt;
 &lt;a href="https://addepar.com/"&gt;Addepar&lt;/a&gt; for financially supporting us
 while we do this work. They are big users of and contributors to Ember
 Data, and we couldn&amp;#39;t do it without them.&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Making Ember.js Easier</title>
-    <link rel="alternate" href="/blog/2013/03/21/making-ember-easier.html"/>
-    <id>/blog/2013/03/21/making-ember-easier.html</id>
-    <published>2013-03-21T00:00:00Z</published>
-    <updated>2013-03-21T00:00:00Z</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;We frequently receive feedback from new developers about how frustrating
-it can be to get started with Ember. Yesterday, one of the &lt;a href="https://news.ycombinator.com/item?id=5406857"&gt;most active
-comment threads on Hacker
-News&lt;/a&gt; was largely about just that.&lt;/p&gt;
-</summary>
-    <content type="html">&lt;p&gt;We frequently receive feedback from new developers about how frustrating
-it can be to get started with Ember. Yesterday, one of the &lt;a href="https://news.ycombinator.com/item?id=5406857"&gt;most active
-comment threads on Hacker
-News&lt;/a&gt; was largely about just that.&lt;/p&gt;
-
-&lt;p&gt;We hear you loud and clear. Ember.js is not easy to get started with, and we take that very seriously. We are all working nights and weekends to make the framework as approachable as humanly possible.&lt;/p&gt;
-
-&lt;p&gt;One of the Hacker News commenters, kanja, nailed it. In response to another commenter who felt like the negative reaction was strong:&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;It&amp;#39;s incredibly out of proportion - but people really want to use ember (because it promises all these great things!) and they&amp;#39;re frustrated by the docs (because they&amp;#39;re not really good for first time users) so this is kind of a flash point.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Absolutely right. Ember promises—and, we think, delivers—tremendous value. But ramping up to that point is not easy, and we received this feedback repeatedly and take it very seriously.&lt;/p&gt;
-
-&lt;p&gt;There was another common sentiment that we&amp;#39;d like to address:&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;I have seen this sort of attitude from quite a few domain experts - if you didn&amp;#39;t get it, you aren&amp;#39;t smart enough and &amp;quot;don&amp;#39;t deserve to be in our group.&amp;quot;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;That does not reflect our feelings at all. If people find it difficult to use the tools we&amp;#39;ve created, that&amp;#39;s a failure on our part. Period.&lt;/p&gt;
-
-&lt;p&gt;To keep things in perspective, we froze the Ember 1.0 API a mere month ago, when we released the first 1.0 RC. Before that, we were focused on iterating the API based on feedback we received from our early adopters. We believe that our willingness to change the API allowed us to build a better product than our competitors that locked in their first attempts. But that also means that much of the effort that people put into writing tutorials and documentation, including our own, quickly became obsolete.&lt;/p&gt;
-
-&lt;p&gt;Thankfully, that period is over. As we said in our &lt;a href="https://www.youtube.com/watch?feature=player_detailpage&amp;amp;v=RYAD2arvysU#t=229s"&gt;EmberCamp keynote&lt;/a&gt;, our focus now is on stability and building the ecosystem.&lt;/p&gt;
-
-&lt;p&gt;Since EmberCamp, momentum has been incredible. We&amp;#39;ve seen the amount of material helping new users grow quickly.&lt;/p&gt;
-
-&lt;p&gt;To call out a few of the big ones:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://peepcode.com/products/emberjs"&gt;Fire Up Ember.js PeepCode&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://railscasts.com/episodes/408-ember-part-1"&gt;Ember RailsCast&lt;/a&gt; (and &lt;a href="http://railscasts.com/episodes/410-ember-part-2"&gt;Part 2&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://www.toranbillups.com/blog/archive/2013/03/02/emberjs-rc1-introduction-screencast/"&gt;RC1 Introduction Screencast&lt;/a&gt; by Toran Billups&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://net.tutsplus.com/tutorials/javascript-ajax/getting-into-ember-js/"&gt;NetTuts&amp;#39; Getting into Ember.js series&lt;/a&gt; by Rey Bango&lt;/li&gt;
-&lt;li&gt;The guides on the Ember.js website have been dramatically expanded&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Additionally, great open source examples built on top of RC1 are out in the wild, like &lt;a href="https://github.com/addyosmani/todomvc/tree/gh-pages/architecture-examples/emberjs"&gt;TodoMVC&lt;/a&gt; and the &amp;quot;Big Kahuna,&amp;quot; &lt;a href="https://github.com/discourse/discourse"&gt;Discourse&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;We&amp;#39;ve also been working on tooling to make the process of developing Ember.js apps easier. For example, &lt;a href="https://github.com/rpflorence/ember-tools"&gt;Ryan Florence&amp;#39;s ember-tools&lt;/a&gt; significantly improves bootstrapping a new project, and the &lt;a href="https://github.com/tildeio/ember-extension"&gt;Ember Inspector plugin for Chrome&lt;/a&gt; (which we &lt;a href="https://www.youtube.com/watch?feature=player_detailpage&amp;amp;v=RYAD2arvysU#t=1924s"&gt;demoed at EmberCamp&lt;/a&gt;) should make debugging and understanding apps much easier.&lt;/p&gt;
-
-&lt;p&gt;But we know that these things aren&amp;#39;t enough. Here are the specific steps we will be taking to improve the experience for developers getting started:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;We&amp;#39;re actively working on a Getting Started Guide with live examples that walks the user through building a new application from scratch&lt;/li&gt;
-&lt;li&gt;We&amp;#39;re writing the script for a short screencast introducing the framework and illustrating how it works that will be prominently displayed on the homepage.&lt;/li&gt;
-&lt;li&gt;We&amp;#39;re continuing to improve our guides to talk through areas, like the naming conventions we use in Ember, that might be confusing for new developers.&lt;/li&gt;
-&lt;li&gt;The Starter Kit will return, giving developers a one-click way to try out Ember. (We removed it temporarily to bring it up to date with the most recent idioms, but it will be coming back very soon. This was a hard decision, but leaving around an out of date starter kit seemed worse than removing it.)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;We also understand that there are some features in Ember.js that consistently trip up developers new to the framework. The Handlebars &lt;code&gt;{{bindAttr}}&lt;/code&gt; helper is a good example. We focus relentlessly on identifying and fixing these issues; you can see the start of an effort to improve this in the work that Yehuda has been doing on &lt;a href="http://github.com/tildeio/htmlbars"&gt;htmlbars&lt;/a&gt;, which will hopefully land in Ember 1.1.&lt;/p&gt;
-
-&lt;p&gt;We&amp;#39;d like to give a big thank you to all of the contributors who have helped make Ember so successful. We believe that a truly community-backed open source project is important. Although it takes time to build that community, versus being able to hire a full-time staff, we believe that in the long run it leads to a stronger, more robust project that can&amp;#39;t be &amp;quot;Google Reader&amp;#39;d.&amp;quot; Immunity to any one company going under or pulling support is baked right in.&lt;/p&gt;
-
-&lt;p&gt;Lastly, we&amp;#39;d love your help. If you think there&amp;#39;s something we&amp;#39;re missing, or if you&amp;#39;d like to volunteer to help, please let us know in &lt;a href="http://discuss.emberjs.com/t/ideas-for-improving-the-getting-started-experience/666"&gt;this Discourse thread&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;All the best,&lt;br&gt;
-Yehuda Katz &amp;amp; Tom Dale&lt;/p&gt;
 </content>
   </entry>
 </feed>

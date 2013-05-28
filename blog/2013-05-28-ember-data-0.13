@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ember.js - Ember Data 0.13</title>
+    <link rel="shortcut icon" href="/images/favicon.png" />
+    <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://emberjs.com/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+      _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+      _gaq.push(['_setAccount', 'UA-27675533-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
+
+    <script type="text/javascript">
+      $(function() {
+        var backToTop = $('#back-to-top');
+        var doc = $(document);
+        var offset = backToTop.offset();
+        var marginTop = 90;
+        var showing = false;
+
+        positionBackToTop = function(reset) {
+          if (reset) {
+            backToTop.css({
+              top: '',
+              position: ''
+            });
+            offset = backToTop.offset();
+          }
+
+          if (!showing && doc.scrollTop() > offset.top+200) {
+            showing = true;
+            backToTop.css({
+              position: 'fixed',
+              top: 20,
+              left: offset.left,
+              display:' block'
+            });
+          } else if (showing && doc.scrollTop() <= offset.top+200) {
+            showing = false;
+            backToTop.css({
+              display:'none'
+            });
+          }
+        };
+
+        if (backToTop.length) {
+          backToTop.on('click', function(evt) {
+            $('html,body').animate({scrollTop: 0}, 200);
+            return false;
+          });
+
+          doc.on('scroll', function() {
+            positionBackToTop();
+          });
+        }
+
+        $('.bx-wrapper, .bx-window').width(940);
+      });
+    </script>
+
+    
+  </head>
+
+  <body class="blog blog_2013-05-28-ember-data-0">
+    <div id="header">
+      <div id="wrapper">
+        <a id="logo" href="/">&nbsp;</a>
+        <ul id="nav">
+          <li><a href="/about">about</a></li>
+          <li><a href="/guides">guides</a></li>
+          <li><a href="/api">api</a></li>
+          <li><a href="/community">community</a></li>
+          <li><a href="/blog">blog</a></li>
+        </ul>
+        <div id="github">
+          <a href="https://github.com/emberjs/ember.js"><img src="/images/fork-us.png">Fork Us!</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="content-wrapper">
+      
+      
+      <div id="content" >
+        <p>Today, we are pleased to announce the release of Ember Data 0.13.</p>
+
+<p>Ember Data 0.13 is the first official release of Ember Data. This should
+make it easier for people to synchronize Ember.js and Ember Data
+versions, and make reasoning about the upgrade process much easier.</p>
+<h3 class='anchorable-toc' id='toc_ember-data-0-13'>Ember Data 0.13</h3>
+<p>In the past few months, Ember Data has stabilized a lot. We still consider
+it alpha, and recommend it for production use only to those who like to
+live on the bleeding edge and contribute back to the project. To make life
+easier for those folks, though, we will be cutting regular releases like we
+do with Ember.js.</p>
+
+<p>A few of the many folks involved in the changes in this release include
+Tom Dale, Yehuda Katz, Cyril Fluck, Igor Terzic, Stefan Penner, Paul Chavard,
+Gordon Hempton, Peter Wagenet. Thank you to you all and everyone else who
+has contributed code and others.</p>
+<h4 class='anchorable-toc' id='toc_api-revision-removal'>API Revision Removal</h4>
+<p>Now that we are doing regular releases, the API revision check has been
+removed. You no longer need to provide the API revision number when
+defining your store:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>App.Store = DS.Store.extend({
+  <span class="comment">// Delete this!</span>
+  <span class="key">revision</span>: <span class="integer">13</span>
+});
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_ember-data-future-plans'>Ember Data Future Plans</h3>
+<p>Our immediate goals for Ember Data are stabilization, bug fixes, and
+documentation. There are only two major areas of improvement planned
+before we beging promoting builds to prerelease and RC versions:</p>
+<h4 class='anchorable-toc' id='toc_promises'>Promises</h4>
+<p>Currently, most Ember Data APIs return objects that also implement a
+<code>then()</code> method, allowing them to be used interchangeably as either
+models or promises.</p>
+
+<p>While this flexibility was convenient, it unfortunately caused confusing
+semantics. Specifically, because a resolved promise stays resolved,
+operations like reloading became very confusing.</p>
+
+<p>While not in this release, you should expect that future releases of
+Ember Data will shift to an entirely promise-based API. This both
+resolves the issues with confusing semantics as well as allows us to
+implement some exciting features, like more powerful polymorphism.</p>
+
+<p>Thanks to Stefan Penner for leading the charge on this.</p>
+<h4 class='anchorable-toc' id='toc_error-handling'>Error Handling</h4>
+<p>We want to make error handling and dealing with client and server
+conflicts rock solid. A <a href="https://github.com/emberjs/data/pull/958">pull request from Paul Chavard</a>
+is currently open and looks like a solid starting point for error
+handling. You should see much more development on this in the near
+future.</p>
+
+      </div>
+    </div>
+
+    <div id="footer">
+      <div id="footer-wrapper">
+        <div class="info">
+          Copyright 2013 <a href="http://tilde.io">Tilde Inc.</a><br>
+          Design by <a href="http://www.heropixel.com">HeroPixel</a></br>
+          <a href="/team">Core Team</a> | <a href="/sponsors">Project Sponsors</a>
+        </div>
+        <div class="statement">Ember.js is free, open source and always will be.</div>
+        <div class="links">
+          <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
+          <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

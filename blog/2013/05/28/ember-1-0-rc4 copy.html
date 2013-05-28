@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Ember 1.0 RC</title>
+    <title>Ember.js - Ember 1.0 RC4 and Ember Data 0.13</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
@@ -77,7 +77,7 @@
     
   </head>
 
-  <body class="blog blog_2013 blog_2013_02 blog_2013_02_15 blog_2013_02_15_ember-1-0-rc">
+  <body class="blog blog_2013 blog_2013_05 blog_2013_05_28 blog_2013_05_28_ember-1-0-rc4 copy">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -160,21 +160,26 @@
       
       <div id="content" class="has-sidebar">
           <article class="blog-post">
-    <h1>Ember 1.0 RC</h1>
+    <h1>Ember 1.0 RC4 and Ember Data 0.13</h1>
     
-      <h3 class="blog-post-author">Posted By: Peter Wagenet &ndash; <time>Feb 15, 2013</time></h3>
+      <h3 class="blog-post-author">Posted By: Tom Dale &ndash; <time>May 28, 2013</time></h3>
     
 
-    <p>Today at Ember Camp, we announced the release of Ember.js 1.0 RC1.</p>
+    <p>Today, we are pleased to announce Ember.js 1.0 RC4:</p>
 
-<p>This release is all about fixing bugs from the <code>pre4</code> release, and
-gets us that much closer to a final 1.0 release. Between this release
-and the 1.0 final, we will mostly be focusing on stability and documentation.</p>
+<p>This RC4 release of Ember puts us very close to the final 1.0 release.
+If everything goes to plan, we anticipate one more possible RC release
+before we&#39;re ready to put the &quot;all done&quot; stamp on it.</p>
+<h3 class='anchorable-toc' id='toc_ember-js-1-0-rc4'>Ember.js 1.0 RC4</h3>
+<p>As we approach 1.0 final, our focus continues to be on bugfixes, performance, and
+reliability.</p>
+<h4 class='anchorable-toc' id='toc_breaking-change-controller-model-setup'>BREAKING CHANGE: Controller/Model Setup</h4>
+<p>One of the roles of <code>Route</code> objects in an Ember application is to tell
+controllers which model they should represent.</p>
 
-<p>If you discover any blocking bugs or undocumented areas, please file tickets at
-the emberjs/ember.js repo on GitHub and consider helping out.</p>
-<h3 class='anchorable-toc' id='toc_route-replacement'>Route Replacement</h3>
-<p>You can now transition to a new route without creating an entry in the history:</p>
+<p>By default, the object that you return from a route&#39;s <code>model</code> hook is
+set as the <code>model</code> property on the corresponding controller. So, for
+example, if you have this route:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
@@ -182,112 +187,142 @@ the emberjs/ember.js repo on GitHub and consider helping out.</p>
 4
 5
 </pre></td>
-  <td class="code"><pre><span class="comment">// instead of this, which creates a history entry</span>
-router.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">index</span><span class="delimiter">'</span></span>);
-
-<span class="comment">// do this</span>
-router.replaceWith(<span class="string"><span class="delimiter">'</span><span class="content">index</span><span class="delimiter">'</span></span>);
+  <td class="code"><pre>App.PhotosRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> App.Photo.find();
+  }
+});
 </pre></td>
 </tr></table>
 </div></div>
-<p>In the <code>redirect</code> hook, you can just use <code>replaceWith</code> and Ember won&#39;t create
-a history entry.</p>
+<p>The array returned from <code>model</code> would be set as the <code>model</code> property of
+the <code>App.PhotosController</code>. This tells the controller that it should
+present that model to its template.</p>
 
-<p>In a controller, you can use <code>replaceRoute</code> (instead of <code>transitionToRoute</code>)
-to do the same thing.</p>
-<h3 class='anchorable-toc' id='toc_item-controller'>Item Controller</h3>
-<p>If you want every item in a <code>{{#each}}</code> to be wrapped in an <code>ObjectController</code>,
-you can do so easily:</p>
+<p>What if you need to set up additional controllers, beyond the primary
+controller associated with that route? In that case, you can implement
+the <code>setupController</code> hook:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
+4
+5
+6
+7
+8
+9
 </pre></td>
-  <td class="code"><pre>{{<span class="error">#</span>each posts itemController=<span class="string"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>}}
-  {{!-- <span class="error">`</span><span class="local-variable">this</span><span class="error">`</span> <span class="keyword">in</span> here is each post wrapped <span class="keyword">in</span> an App.PostController --}}
-{{<span class="regexp"><span class="delimiter">/</span><span class="content">each}}
-</span></span></pre></td>
-</tr></table>
-</div></div><h3 class='anchorable-toc' id='toc_register-and-inject'>Register and Inject</h3>
-<p>Internally, Ember uses a &quot;container&quot; to instantiate your controllers and other
-objects.</p>
+  <td class="code"><pre>App.PhotosRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> App.Photo.find();
+  },
 
-<p>As of Ember 1.0 RC1, you can use <code>App.register</code> to override the default lookup
-for controllers and other objects. For example:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-</pre></td>
-  <td class="code"><pre>App.register(<span class="string"><span class="delimiter">'</span><span class="content">controller:post</span><span class="delimiter">'</span></span>, Ember.ObjectController.extend());
+  <span class="function">setupController</span>: <span class="keyword">function</span>(controller, model) {
+    <span class="local-variable">this</span>.controllerFor(<span class="string"><span class="delimiter">'</span><span class="content">application</span><span class="delimiter">'</span></span>).set(<span class="string"><span class="delimiter">'</span><span class="content">showingPhotos</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
+  }
+});
 </pre></td>
 </tr></table>
 </div></div>
-<p>In general, you should use the default naming conventions, which Ember will use
-to find objects, but you can use this API for advanced usages.</p>
+<p>This is all well and good, but what if you wanted to <strong>prevent</strong> a model
+from being set on the <code>PhotosController</code> at all?</p>
 
-<p>Similarly, you can use <code>App.inject</code> to tell Ember to automatically inject
-objects into other Ember objects.</p>
+<p>In RC3, <em>preventing this default behavior was impossible</em>. In RC4,
+<strong>implementing the <code>setupController</code> hook prevents the default behavior
+from happening. This is a potentially breaking change.</strong></p>
+
+<p>If your route implements the <code>setupController</code> hook <em>and</em> you want to
+preserve default behavior, <strong>make sure you call <code>_super()</code> from within
+the hook</strong>:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
 </pre></td>
-  <td class="code"><pre>App.register(<span class="string"><span class="delimiter">'</span><span class="content">network:main</span><span class="delimiter">'</span></span>, App.NetworkAdapter);
-App.inject(<span class="string"><span class="delimiter">'</span><span class="content">controller</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">network</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">network:main</span><span class="delimiter">'</span></span>);
+  <td class="code"><pre>App.PhotosRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> App.Photo.find();
+  },
+
+  <span class="function">setupController</span>: <span class="keyword">function</span>(controller, model) {
+    <span class="comment">// Call _super for default behavior</span>
+    <span class="local-variable">this</span>._super(controller, model);
+    <span class="local-variable">this</span>.controllerFor(<span class="string"><span class="delimiter">'</span><span class="content">application</span><span class="delimiter">'</span></span>).set(<span class="string"><span class="delimiter">'</span><span class="content">showingPhotos</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
+  }
+});
 </pre></td>
 </tr></table>
 </div></div>
-<p>This will create a single instance of <code>App.NetworkAdapter</code> and give it to every
-controller created over the course of building your application. Internally,
-Ember Data uses this API to give every controller the application&#39;s store:</p>
-<h3 class='anchorable-toc' id='toc_router-activate-and-deactivate'>Router Activate and Deactivate</h3>
-<p>Currently, many people are using the undocumented and private <code>enter</code> and
-<code>exit</code> hooks to run code whenever Ember activates a route handler or
-deactivates it.</p>
+<p>Thanks to Kris Selden and Luke Melia for pulling together PRs from
+Paul Chavard, Rob Harper and input from others into a cohesive change.
+We don&#39;t take breaking changes lightly at this stage of the release
+process, but this one is worthwhile.</p>
+<h4 class='anchorable-toc' id='toc_rsvp-2-0'>RSVP 2.0</h4>
+<p>Ember now embeds version 2.0 of
+<a href="https://github.com/tildeio/rsvp.js">RSVP.js</a>, a microlibrary for
+<a href="http://promises-aplus.github.io/promises-spec/">Promises/A+ compatible
+promises</a>.</p>
 
-<p>As of Ember 1.0 RC1, there are public hooks: <code>activate</code> and <code>deactivate</code>. Note
-that the <code>activate</code> hook will run only when a route handler is activated for
-the first time. If a route handler&#39;s context changes, the <code>setupController</code>
-hook will run again, but not the <code>activate</code> hook.</p>
-<h3 class='anchorable-toc' id='toc_app-reset'>App.reset()</h3>
-<p>If you are trying to run integration tests with Ember, you might have noticed
-that there is no good way to reset all of an application&#39;s state.</p>
+<p>All of the Ember.js APIs that return promises use this library to
+ensure compatible behavior.</p>
 
-<p>No more!</p>
+<p>A big, big thanks to Stefan Penner for all of his work on improving the
+promises story across both Ember and Ember Data.</p>
+<h4 class='anchorable-toc' id='toc_run-loop-extracted-to-backburner-js'>Run Loop Extracted to Backburner.js</h4>
+<p>Erik Bryn has extracted the run loop into the
+<a href="https://github.com/ebryn/backburner.js">Backburner.js</a> microlibrary,
+which Ember now uses.</p>
 
-<p>As of Ember 1.0 RC1, you can call <code>App.reset()</code> to destroy all objects created
-for the application, and bring the application back to <code>/</code>.</p>
-<h3 class='anchorable-toc' id='toc_big-list-of-changes'>Big List of Changes</h3>
-<p>Since <code>.pre4</code>, we&#39;ve added these features:</p>
+<p>This will allow other frameworks and libraries that use
+Backburner to benefit from using a deferred event queue, and hopefully
+we can share our work to make the web platform faster for everyone.</p>
+<h4 class='anchorable-toc' id='toc_handlebars-rc4-compatibility'>Handlebars RC4 Compatibility</h4>
+<p>Ember.js RC4 requires the latest release of Handlebars, which is also at RC4.</p>
+<h4 class='anchorable-toc' id='toc_improved-route-redirection'>Improved Route Redirection</h4>
+<p>Routes provide a <code>redirect</code> hook that allow them to conditionally redirect to
+a different route. For example, you may redirect the user to a login
+route if you detect that they do not have an authentication token saved.</p>
 
-<ul>
-<li>Added the ability to replace the current route without adding a history
-entry, using <code>router.replaceWith</code></li>
-<li>Added support for String literals in <code>{{action}}</code> and <code>{{linkTo}}</code> to
-differentiate between static String parameters and properties on the current
-context</li>
-<li>Allow redirection from routes that are not the final resting route</li>
-<li>Fix a bug where using named outlets would confuse where child templates should
-be rendered into</li>
-<li>Add <code>itemController</code>, which allows a <code>{{#each}}</code> to wrap each iterated element
-in a controller that can be used to store transient state</li>
-<li>Fix a bug involving {{else}} templates only working a single time</li>
-<li>Add <code>intersection</code> to <code>EnumerableUtils</code></li>
-<li>Added <code>App.register</code> and <code>App.inject</code> to control the default application&#39;s
-dependency injection container</li>
-<li>Fixes regressions in jQuery 1.9 to address changes made to .attr and .prop</li>
-<li>Add support for <code>{{unbound helper}}</code> where <code>helper</code> is a custom helper
-registered via <code>Ember.Handlebars.registerBoundHelper</code></li>
-<li>Added <code>Ember.debug</code> to print debug-level warnings and use it to print the
-current version of Ember and its dependencies on boot</li>
-<li>Fix a bug where changing the model property passed to <code>{{render}}</code> does not
-update the rendered template</li>
-<li>Added public <code>activate</code> and <code>deactivate</code> hooks in the router. If you were
-using the private <code>enter</code> and <code>exit</code> methods, please switch!</li>
-<li>Added <code>Application#reset</code> to help with integration tests</li>
-<li>Several fixes for the Ember Inspector</li>
-<li>Many bug and performance fixes</li>
-</ul>
+<p>Many improvements to the <code>redirect</code> hook have been made to make it more
+reliable. Additionally, you can now implement this hook in the
+<code>ApplicationRoute</code>, which previously would not work.</p>
 
-<p>You can see the full changelog at <a href="https://github.com/emberjs/ember.js/blob/master/CHANGELOG">the official CHANGELOG</a>.</p>
+<p>Props to Tom Dale for this work.</p>
+<h4 class='anchorable-toc' id='toc_linkto-now-generates-routeto-events'>linkTo now generates routeTo events</h4>
+<p>Previously, the <code>{{linkTo}}</code> helper caused the router to transition without
+any hooks to affect that behavior. Thanks to the work of Alex Matchneer,
+the <code>{{linkTo}}</code> helper now generates a routeTo event that can be handled
+just like any other event in a controller or a route&#39;s <code>events</code> object. The
+default behavior of transitioning to the specified route remains unchanged.</p>
+<h4 class='anchorable-toc' id='toc_ember-testing-improvements'>ember-testing Improvements</h4>
+<p>The <code>ember-testing</code> package, included in Ember.js, is the
+officially-supported library for writing unit and integration tests for
+Ember apps. Introduced in RC3, this has continued to be improved, with
+many bug fixes and performance improvements landing in RC4.</p>
+
+<p>A huge thanks to Teddy Zeeny for driving many of these improvements.</p>
+<h4 class='anchorable-toc' id='toc_code-disabledwhen-code-linkto-option'><code>disabledWhen</code> {{linkTo}} Option</h4>
+<p>The <code>{{#linkTo}}</code> Handlebars helper now has a <code>disabledWhen</code> option that
+can be bound to conditionally disable a link:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">'</span><span class="attribute-name">upgradeAccount</span><span class="error">'</span> <span class="attribute-name">disabledWhen</span>=<span class="attribute-value">isPremiumUser</span><span class="inline-delimiter">}}</span></span>Upgrade
+Account<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Thanks to Trek Glowacki for this improvement.</p>
 
 
     <hr>
