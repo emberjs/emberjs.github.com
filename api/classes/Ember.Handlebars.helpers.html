@@ -1,0 +1,4147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ember.js - Ember.Handlebars.helpers</title>
+    <link rel="shortcut icon" href="/images/favicon.png" />
+    <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://emberjs.com/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+      _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+      _gaq.push(['_setAccount', 'UA-27675533-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
+
+    <script type="text/javascript">
+      $(function() {
+        var backToTop = $('#back-to-top');
+        var doc = $(document);
+        var offset = backToTop.offset();
+        var marginTop = 90;
+        var showing = false;
+
+        positionBackToTop = function(reset) {
+          if (reset) {
+            backToTop.css({
+              top: '',
+              position: ''
+            });
+            offset = backToTop.offset();
+          }
+
+          if (!showing && doc.scrollTop() > offset.top+200) {
+            showing = true;
+            backToTop.css({
+              position: 'fixed',
+              top: 20,
+              left: offset.left,
+              display:' block'
+            });
+          } else if (showing && doc.scrollTop() <= offset.top+200) {
+            showing = false;
+            backToTop.css({
+              display:'none'
+            });
+          }
+        };
+
+        if (backToTop.length) {
+          backToTop.on('click', function(evt) {
+            $('html,body').animate({scrollTop: 0}, 200);
+            return false;
+          });
+
+          doc.on('scroll', function() {
+            positionBackToTop();
+          });
+        }
+
+        $('.bx-wrapper, .bx-window').width(940);
+      });
+    </script>
+
+    
+    <script>
+      $(function() {
+        var ls = window['localStorage'];
+
+        // Restoring method visibility preference from localStorage
+        function initApiOptions() {
+          var type = this.getAttribute('data-type'),
+            checked = ls ? ls.getItem('api-options-' + type) : undefined;
+
+          if (checked != undefined) {
+            // Bools are stored as strings in localStorage
+            checked = checked == 'true';
+            $(this).attr('checked', checked);
+          }
+        };
+
+        // Type toggling
+        function toggleType() {
+          var type = this.getAttribute('data-type');
+
+          $('.'+type).toggle(this.checked);
+
+          if(ls)
+            ls.setItem('api-options-' + type, this.checked);
+        }
+
+        $('#api-options input').each(initApiOptions);
+        $('#api-options input').each(toggleType);
+        $('#api-options input').on('change', toggleType);
+
+        // Tabs
+        $('.tabs .pane').hide();
+        $('.tabs .pane:first').show();
+        $('.tabs ul li:first').addClass('active');
+
+        function showPane($tabs, href) {
+          var $ul = $tabs.find('> ul'),
+              $tab = $ul.find('a[href='+href+']'),
+              $pane = $(href);
+
+          $ul.find('li').removeClass('active');
+          $tab.parent().addClass('active');
+          $tabs.find('.pane').hide();
+
+          $pane.show();
+        }
+
+        $('.tabs > ul li a').click(function(){
+          var $el = $(this),
+              $tabs = $el.parents('.tabs'),
+              href = $el.attr('href');
+
+          showPane($tabs, href);
+
+          return false;
+        });
+
+        // Auto tab
+        function checkHash() {
+          var hash = window.location.hash;
+          var $el = $(hash);
+          if ($el.length > 0 && !$el.is(':visible')) {
+            showPane($el.parents('.tabs'), '#'+$el.parents('.pane').attr('id'));
+            $("html, body").scrollTop($el.offset().top);
+          } else if ($el.length == 0) {
+            showPane($('.tabs'), '#index');
+          }
+        }
+
+        $(window).on('hashchange', checkHash);
+        checkHash();
+      });
+    $(function(){
+      $("#toc-list .level-1 > a").not('[target=_blank]').click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
+      });
+
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.data('id') || toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
+    });
+    </script>
+  
+  </head>
+
+  <body class="api api_classes api_classes_Ember">
+    <div id="header">
+      <div id="wrapper">
+        <a id="logo" href="/">&nbsp;</a>
+        <ul id="nav">
+          <li><a href="/about">about</a></li>
+          <li><a href="/guides">guides</a></li>
+          <li class="active"><a href="/api">api</a></li>
+          <li><a href="/community">community</a></li>
+          <li><a href="/blog">blog</a></li>
+        </ul>
+        <div id="github">
+          <a href="https://github.com/emberjs/ember.js"><img src="/images/fork-us.png">Fork Us!</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="content-wrapper">
+      
+      
+        <div id="sidebar">
+          
+    <ol id='toc-list'>
+      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commit/v1.0.0-rc.4" target="_blank"> Tag: v1.0.0-rc.4</a></li>
+
+      
+          <li class="level-1 ">
+          
+        <a href='#'>Modules</a>
+        
+          <ol class="">
+          
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/modules/ember.html">ember</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/modules/ember-application.html">ember-application</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/modules/ember-debug.html">ember-debug</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/modules/ember-handlebars.html">ember-handlebars</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/modules/ember-metal.html">ember-metal</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/modules/ember-routing.html">ember-routing</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/modules/ember-runtime.html">ember-runtime</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/modules/ember-states.html">ember-states</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/modules/ember-views.html">ember-views</a>
+            
+          </li>
+        
+          
+        
+          </ol>
+        
+      
+          </li>
+        
+
+      
+          <li class="level-1 ">
+          
+        <a href='#'>Namespaces</a>
+        
+          <ol class="">
+          
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.html">Ember</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Instrumentation.html">Ember.Instrumentation</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Location.html">Ember.Location</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.String.html">Ember.String</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.platform.html">Ember.platform</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.run.html">Ember.run</a>
+            
+          </li>
+        
+          
+        
+          </ol>
+        
+      
+          </li>
+        
+
+      
+          <li class="level-1 selected">
+          
+        <a href='#'>Classes</a>
+        
+          <ol class="selected">
+          
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Application.html">Ember.Application</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Array.html">Ember.Array</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.ArrayController.html">Ember.ArrayController</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.ArrayProxy.html">Ember.ArrayProxy</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Binding.html">Ember.Binding</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Button.html">Ember.Button</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Checkbox.html">Ember.Checkbox</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.CollectionView.html">Ember.CollectionView</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Comparable.html">Ember.Comparable</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.ComputedProperty.html">Ember.ComputedProperty</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.ContainerView.html">Ember.ContainerView</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Controller.html">Ember.Controller</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.ControllerMixin.html">Ember.ControllerMixin</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Copyable.html">Ember.Copyable</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.CoreObject.html">Ember.CoreObject</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.DefaultResolver.html">Ember.DefaultResolver</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Deferred.html">Ember.Deferred</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Descriptor.html">Ember.Descriptor</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.EachProxy.html">Ember.EachProxy</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Enumerable.html">Ember.Enumerable</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Error.html">Ember.Error</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.EventDispatcher.html">Ember.EventDispatcher</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Evented.html">Ember.Evented</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Freezable.html">Ember.Freezable</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Handlebars.html">Ember.Handlebars</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 sub-selected">
+          
+              <a href="/api/classes/Ember.Handlebars.helpers.html">Ember.Handlebars.helpers</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.HashLocation.html">Ember.HashLocation</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.HistoryLocation.html">Ember.HistoryLocation</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.LinkView.html">Ember.LinkView</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Logger.html">Ember.Logger</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Map.html">Ember.Map</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.MapWithDefault.html">Ember.MapWithDefault</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Mixin.html">Ember.Mixin</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.MutableArray.html">Ember.MutableArray</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.MutableEnumerable.html">Ember.MutableEnumerable</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Namespace.html">Ember.Namespace</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.NativeArray.html">Ember.NativeArray</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.NoneLocation.html">Ember.NoneLocation</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Object.html">Ember.Object</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.ObjectController.html">Ember.ObjectController</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.ObjectProxy.html">Ember.ObjectProxy</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Observable.html">Ember.Observable</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.OrderedSet.html">Ember.OrderedSet</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.RSVP.html">Ember.RSVP</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.RenderBuffer.html">Ember.RenderBuffer</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Route.html">Ember.Route</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Router.html">Ember.Router</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Select.html">Ember.Select</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Set.html">Ember.Set</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.SortableMixin.html">Ember.SortableMixin</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.State.html">Ember.State</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.StateManager.html">Ember.StateManager</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.TargetActionSupport.html">Ember.TargetActionSupport</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.TextArea.html">Ember.TextArea</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.TextField.html">Ember.TextField</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.TextSupport.html">Ember.TextSupport</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.View.html">Ember.View</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.ViewTargetActionSupport.html">Ember.ViewTargetActionSupport</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember._HandlebarsBoundView.html">Ember._HandlebarsBoundView</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember._Metamorph.html">Ember._Metamorph</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember._MetamorphView.html">Ember._MetamorphView</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember._SimpleMetamorphView.html">Ember._SimpleMetamorphView</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Function.html">Function</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/String.html">String</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Transition.html">Transition</a>
+            
+          </li>
+        
+          
+        
+          </ol>
+        
+      
+          </li>
+        
+  
+          <div id="back-to-top"><a id="back-top-top" href="#">&#11014; Back to Top</a></div>
+        </div>
+      
+      <div id="content" class="has-sidebar">
+          
+
+  
+  <h1>
+  Ember.Handlebars.helpers Class
+  
+</h1>
+
+
+<div class="class-info">
+  
+
+  
+
+  
+
+  
+    <p>Module: <a href="/api/modules/ember-handlebars.html">ember-handlebars</a></p>
+  
+</div>
+
+
+
+  <div class="tabs">
+    <ul>
+      <li><a href="#index">Index</a></li>
+      
+        <li><a href="#methods">Methods</a></li>
+      
+    </ul>
+    <div class="pane" id="index">
+      <div id='api-options'>
+  Show:
+  <label>
+    <input type='checkbox' data-type='inherited' checked>
+    Inherited
+  </label>
+  <label>
+    <input type='checkbox' data-type='protected'>
+    Protected
+  </label>
+  <label>
+    <input type='checkbox' data-type='private'>
+    Private
+  </label>
+  <label>
+    <input type='checkbox' data-type='deprecated'>
+    Deprecated
+  </label>
+</div>
+
+      
+        <p><h2>Methods</h2></p>
+        <ul class="index-list">
+          
+            <li class="method private">
+              <a href="#method__triageMustache">_triageMustache</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_action">action</a>
+            </li>
+          
+            <li class="method private">
+              <a href="#method_bind">bind</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_bindAttr">bindAttr</a>
+            </li>
+          
+            <li class="method private">
+              <a href="#method_boundIf">boundIf</a>
+            </li>
+          
+            <li class="method deprecated">
+              <a href="#method_collection">collection</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_control">control</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_debugger">debugger</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_each">each</a>
+            </li>
+          
+            <li class="method private">
+              <a href="#method_helperMissing">helperMissing</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_if">if</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_input">input</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_linkTo">linkTo</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_log">log</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_outlet">outlet</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_partial">partial</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_render">render</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_template">template</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_textarea">textarea</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_unbound">unbound</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_unless">unless</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_view">view</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_with">with</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_yield">yield</a>
+            </li>
+          
+        </ul>
+      
+    </div>
+  
+    <div class="pane" id="methods">
+      <div id='api-options'>
+  Show:
+  <label>
+    <input type='checkbox' data-type='inherited' checked>
+    Inherited
+  </label>
+  <label>
+    <input type='checkbox' data-type='protected'>
+    Protected
+  </label>
+  <label>
+    <input type='checkbox' data-type='private'>
+    Private
+  </label>
+  <label>
+    <input type='checkbox' data-type='deprecated'>
+    Deprecated
+  </label>
+</div>
+
+      
+        
+<div id="method__triageMustache" class="method private item-entry">
+  <h3 data-id="method__triageMustache" class="name anchorable-toc"><code>_triageMustache</code></h3>
+  <span class="args">
+    (property, fn)
+  </span>
+
+  <span class="type"><a href="/api/classes/String.html">String</a></span>
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-handlebars/lib/helpers/binding.js#L139">packages/ember-handlebars/lib/helpers/binding.js:139</a>
+
+    
+
+    
+  </div>
+
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>property</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>Property/helperID to triage</dd>
+        
+          <dt><strong>fn</strong> <span class="type"><a href="/api/classes/Function.html">Function</a></span></dt>
+          <dd>Context to provide for rendering</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/String.html">String</a></span>
+        <dd> HTML string</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
+<div id="method_action" class="method  item-entry">
+  <h3 data-id="method_action" class="name anchorable-toc"><code>action</code></h3>
+  <span class="args">
+    (actionName, context, options)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-routing/lib/helpers/action.js#L93">packages/ember-routing/lib/helpers/action.js:93</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>The <code>{{action}}</code> helper registers an HTML element within a template for DOM
+event handling and forwards that interaction to the view&#39;s controller
+or supplied <code>target</code> option (see &#39;Specifying a Target&#39;).</p>
+
+<p>If the view&#39;s controller does not implement the event, the event is sent
+to the current route, and it bubbles up the route hierarchy from there.</p>
+
+<p>User interaction with that element will invoke the supplied action name on
+the appropriate target.</p>
+
+<p>Given the following Handlebars template on the page</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
+<span class="inline">  &lt;div </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">anActionName</span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span>
+    click me
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/script&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>And application code</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+</pre></td>
+  <td class="code"><pre>AController = Ember.Controller.extend({
+  <span class="function">anActionName</span>: <span class="keyword">function</span>() {}
+});
+
+AView = Ember.View.extend({
+  <span class="key">controller</span>: AController.create(),
+  <span class="key">templateName</span>: <span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span>
+});
+
+aView = AView.create();
+aView.appendTo(<span class="string"><span class="delimiter">'</span><span class="content">body</span><span class="delimiter">'</span></span>);
+</pre></td>
+</tr></table>
+</div></div>
+<p>Will result in the following rendered HTML</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attribute-name">data-ember-action</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    click me
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Clicking &quot;click me&quot; will trigger the <code>anActionName</code> method of the
+<code>AController</code>. In this case, no additional parameters will be passed.</p>
+
+<p>If you provide additional parameters to the helper:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">'</span><span class="attribute-name">edit</span><span class="error">'</span> <span class="attribute-name">post</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>Edit<span class="tag">&lt;/button&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Those parameters will be passed along as arguments to the JavaScript
+function implementing the action.</p>
+
+<h3>Event Propagation</h3>
+
+<p>Events triggered through the action helper will automatically have
+<code>.preventDefault()</code> called on them. You do not need to do so in your event
+handlers.</p>
+
+<p>To also disable bubbling, pass <code>bubbles=false</code> to the helper:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">'</span><span class="attribute-name">edit</span><span class="error">'</span> <span class="attribute-name">post</span> <span class="attribute-name">bubbles</span>=<span class="attribute-value">false</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>Edit<span class="tag">&lt;/button&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>If you need the default handler to trigger you should either register your
+own event handler, or use event methods on your view class. See <code>Ember.View</code>
+&#39;Responding to Browser Events&#39; for more information.</p>
+
+<h3>Specifying DOM event type</h3>
+
+<p>By default the <code>{{action}}</code> helper registers for DOM <code>click</code> events. You can
+supply an <code>on</code> option to the helper to specify a different DOM event name:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
+<span class="inline">  &lt;div </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">anActionName</span> <span class="attribute-name">on</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">doubleClick</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span>
+    click me
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/script&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>See <code>Ember.View</code> &#39;Responding to Browser Events&#39; for a list of
+acceptable DOM event names.</p>
+
+<p>NOTE: Because <code>{{action}}</code> depends on Ember&#39;s event dispatch system it will
+only function if an <code>Ember.EventDispatcher</code> instance is available. An
+<code>Ember.EventDispatcher</code> instance will be created when a new <code>Ember.Application</code>
+is created. Having an instance of <code>Ember.Application</code> will satisfy this
+requirement.</p>
+
+<h3>Specifying whitelisted modifier keys</h3>
+
+<p>By default the <code>{{action}}</code> helper will ignore click event with pressed modifier
+keys. You can supply an <code>allowedKeys</code> option to specify which keys should not be ignored.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
+<span class="inline">  &lt;div </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">anActionName</span> <span class="attribute-name">allowedKeys</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">alt</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span>
+    click me
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/script&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>This way the <code>{{action}}</code> will fire when clicking with the alt key pressed down.</p>
+
+<h3>Specifying a Target</h3>
+
+<p>There are several possible target objects for <code>{{action}}</code> helpers:</p>
+
+<p>In a typical Ember application, where views are managed through use of the
+<code>{{outlet}}</code> helper, actions will bubble to the current controller, then
+to the current route, and then up the route hierarchy.</p>
+
+<p>Alternatively, a <code>target</code> option can be provided to the helper to change
+which object will receive the method call. This option must be a path
+path to an object, accessible in the current context:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
+<span class="inline">  &lt;div </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">anActionName</span> <span class="attribute-name">target</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">MyApplication.someObject</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span>
+    click me
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/script&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Clicking &quot;click me&quot; in the rendered HTML of the above template will trigger
+the  <code>anActionName</code> method of the object at <code>MyApplication.someObject</code>.</p>
+
+<p>If an action&#39;s target does not implement a method that matches the supplied
+action name an error will be thrown.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
+<span class="inline">  &lt;div </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">aMethodNameThatIsMissing</span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span>
+    click me
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/script&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>With the following application code</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre>AView = Ember.View.extend({
+  templateName; <span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span>,
+  <span class="comment">// note: no method 'aMethodNameThatIsMissing'</span>
+  <span class="function">anActionName</span>: <span class="keyword">function</span>(event) {}
+});
+
+aView = AView.create();
+aView.appendTo(<span class="string"><span class="delimiter">'</span><span class="content">body</span><span class="delimiter">'</span></span>);
+</pre></td>
+</tr></table>
+</div></div>
+<p>Will throw <code>Uncaught TypeError: Cannot call method &#39;call&#39; of undefined</code> when
+&quot;click me&quot; is clicked.</p>
+
+<h3>Additional Parameters</h3>
+
+<p>You may specify additional parameters to the <code>{{action}}</code> helper. These
+parameters are passed along as the arguments to the JavaScript function
+implementing the action.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
+<span class="inline">  </span><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">person</span> <span class="attribute-name">in</span> <span class="attribute-name">people</span><span class="inline-delimiter">}}</span></span>
+    <span class="tag">&lt;div</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">edit</span> <span class="attribute-name">person</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+      click me
+    <span class="tag">&lt;/div&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/script&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Clicking &quot;click me&quot; will trigger the <code>edit</code> method on the current view&#39;s
+controller with the current person as a parameter.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>actionName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd></dd>
+        
+          <dt><strong>context</strong> <span class="type">Object</span></dt>
+          <dd></dd>
+        
+          <dt><strong>options</strong> <span class="type">Hash</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
+<div id="method_bind" class="method private item-entry">
+  <h3 data-id="method_bind" class="name anchorable-toc"><code>bind</code></h3>
+  <span class="args">
+    (property, fn)
+  </span>
+
+  <span class="type"><a href="/api/classes/String.html">String</a></span>
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-handlebars/lib/helpers/binding.js#L165">packages/ember-handlebars/lib/helpers/binding.js:165</a>
+
+    
+
+    
+  </div>
+
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>property</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>Property to bind</dd>
+        
+          <dt><strong>fn</strong> <span class="type"><a href="/api/classes/Function.html">Function</a></span></dt>
+          <dd>Context to provide for rendering</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/String.html">String</a></span>
+        <dd> HTML string</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
+<div id="method_bindAttr" class="method  item-entry">
+  <h3 data-id="method_bindAttr" class="name anchorable-toc"><code>bindAttr</code></h3>
+  <span class="args">
+    (options)
+  </span>
+
+  <span class="type"><a href="/api/classes/String.html">String</a></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-handlebars/lib/helpers/binding.js#L314">packages/ember-handlebars/lib/helpers/binding.js:314</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p><code>bindAttr</code> allows you to create a binding between DOM element attributes and
+Ember objects. For example:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;img</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bindAttr</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">imageUrl</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">alt</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">imageTitle</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>The above handlebars template will fill the <code>&lt;img&gt;</code>&#39;s <code>src</code> attribute will
+the value of the property referenced with <code>&quot;imageUrl&quot;</code> and its <code>alt</code>
+attribute with the value of the property referenced with <code>&quot;imageTitle&quot;</code>.</p>
+
+<p>If the rendering context of this template is the following object:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key">imageUrl</span>: <span class="string"><span class="delimiter">'</span><span class="content">http://lolcats.info/haz-a-funny</span><span class="delimiter">'</span></span>,
+  <span class="key">imageTitle</span>: <span class="string"><span class="delimiter">'</span><span class="content">A humorous image of a cat</span><span class="delimiter">'</span></span>
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>The resulting HTML output will be:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;img</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://lolcats.info/haz-a-funny</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">alt</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">A humorous image of a cat</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p><code>bindAttr</code> cannot redeclare existing DOM element attributes. The use of <code>src</code>
+in the following <code>bindAttr</code> example will be ignored and the hard coded value
+of <code>src=&quot;/failwhale.gif&quot;</code> will take precedence:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;img</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/failwhale.gif</span><span class="delimiter">&quot;</span></span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bindAttr</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">imageUrl</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">alt</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">imageTitle</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<h3><code>bindAttr</code> and the <code>class</code> attribute</h3>
+
+<p><code>bindAttr</code> supports a special syntax for handling a number of cases unique
+to the <code>class</code> DOM element attribute. The <code>class</code> attribute combines
+multiple discreet values into a single attribute as a space-delimited
+list of strings. Each string can be:</p>
+
+<ul>
+<li>a string return value of an object&#39;s property.</li>
+<li>a boolean return value of an object&#39;s property</li>
+<li>a hard-coded value</li>
+</ul>
+
+<p>A string return value works identically to other uses of <code>bindAttr</code>. The
+return value of the property will become the value of the attribute. For
+example, the following view and template:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>  AView = Ember.View.extend({
+    <span class="function">someProperty</span>: <span class="keyword">function</span>(){
+      <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">aValue</span><span class="delimiter">&quot;</span></span>;
+    }.property()
+  })
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;img</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bindAttr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">view.someProperty</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Result in the following rendered output:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;img</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">aValue</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>A boolean return value will insert a specified class name if the property
+returns <code>true</code> and remove the class name if the property returns <code>false</code>.</p>
+
+<p>A class name is provided via the syntax
+<code>somePropertyName:class-name-if-true</code>.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>AView = Ember.View.extend({
+  <span class="key">someBool</span>: <span class="predefined-constant">true</span>
+})
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;img</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bindAttr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">view.someBool:class-name-if-true</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Result in the following rendered output:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;img</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">class-name-if-true</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>An additional section of the binding can be provided if you want to
+replace the existing class instead of removing it when the boolean
+value changes:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;img</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bindAttr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">view.someBool:class-name-if-true:class-name-if-false</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>A hard-coded value can be used by prepending <code>:</code> to the desired
+class name: <code>:class-name-to-always-apply</code>.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;img</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bindAttr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">:class-name-to-always-apply</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Results in the following rendered output:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;img</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">class-name-to-always-apply</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>All three strategies - string return value, boolean return value, and
+hard-coded value – can be combined in a single declaration:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;img</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bindAttr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">:class-name-to-always-apply view.someBool:class-name-if-true view.someProperty</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>options</strong> <span class="type">Hash</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/String.html">String</a></span>
+        <dd> HTML string</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
+<div id="method_boundIf" class="method private item-entry">
+  <h3 data-id="method_boundIf" class="name anchorable-toc"><code>boundIf</code></h3>
+  <span class="args">
+    (property, fn)
+  </span>
+
+  <span class="type"><a href="/api/classes/String.html">String</a></span>
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-handlebars/lib/helpers/binding.js#L201">packages/ember-handlebars/lib/helpers/binding.js:201</a>
+
+    
+
+    
+  </div>
+
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>property</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>Property to bind</dd>
+        
+          <dt><strong>fn</strong> <span class="type"><a href="/api/classes/Function.html">Function</a></span></dt>
+          <dd>Context to provide for rendering</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/String.html">String</a></span>
+        <dd> HTML string</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
+<div id="method_collection" class="method deprecated item-entry">
+  <h3 data-id="method_collection" class="name anchorable-toc"><code>collection</code></h3>
+  <span class="args">
+    (path, options)
+  </span>
+
+  <span class="type"><a href="/api/classes/String.html">String</a></span>
+
+
+  
+  <span class="flag deprecated">deprecated</span>
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-handlebars/lib/helpers/collection.js#L14">packages/ember-handlebars/lib/helpers/collection.js:14</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p><code>{{collection}}</code> is a <code>Ember.Handlebars</code> helper for adding instances of
+<code>Ember.CollectionView</code> to a template. See <code>Ember.CollectionView</code> for
+additional information on how a <code>CollectionView</code> functions.</p>
+
+<p><code>{{collection}}</code>&#39;s primary use is as a block helper with a <code>contentBinding</code>
+option pointing towards an <code>Ember.Array</code>-compatible object. An <code>Ember.View</code>
+instance will be created for each item in its <code>content</code> property. Each view
+will have its own <code>content</code> property set to the appropriate item in the
+collection.</p>
+
+<p>The provided block will be applied as the template for each item&#39;s view.</p>
+
+<p>Given an empty <code>&lt;body&gt;</code> the following template:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">collection</span> <span class="attribute-name">contentBinding</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">App.items</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+  Hi <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view.content.name</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">collection</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>And the following application code</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre>App = Ember.Application.create()
+App.items = [
+  Ember.Object.create({<span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Dave</span><span class="delimiter">'</span></span>}),
+  Ember.Object.create({<span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Mary</span><span class="delimiter">'</span></span>}),
+  Ember.Object.create({<span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Sara</span><span class="delimiter">'</span></span>})
+]
+</pre></td>
+</tr></table>
+</div></div>
+<p>Will result in the HTML structure below</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Hi Dave<span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Hi Mary<span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Hi Sara<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<h3>Blockless Use</h3>
+
+<p>If you provide an <code>itemViewClass</code> option that has its own <code>template</code> you can
+omit the block.</p>
+
+<p>The following template:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">collection</span> <span class="attribute-name">contentBinding</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">App.items</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">itemViewClass</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">App.AnItemView</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>And application code</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre>App = Ember.Application.create();
+App.items = [
+  Ember.Object.create({<span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Dave</span><span class="delimiter">'</span></span>}),
+  Ember.Object.create({<span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Mary</span><span class="delimiter">'</span></span>}),
+  Ember.Object.create({<span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Sara</span><span class="delimiter">'</span></span>})
+];
+
+App.AnItemView = Ember.View.extend({
+  <span class="key">template</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">&quot;</span><span class="content">Greetings {{view.content.name}}</span><span class="delimiter">&quot;</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Will result in the HTML structure below</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Greetings Dave<span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Greetings Mary<span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Greetings Sara<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<h3>Specifying a CollectionView subclass</h3>
+
+<p>By default the <code>{{collection}}</code> helper will create an instance of
+<code>Ember.CollectionView</code>. You can supply a <code>Ember.CollectionView</code> subclass to
+the helper by passing it as the first argument:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">collection</span> <span class="attribute-name">App.MyCustomCollectionClass</span> <span class="attribute-name">contentBinding</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">App.items</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+  Hi <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view.content.name</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">collection</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<h3>Forwarded <code>item.*</code>-named Options</h3>
+
+<p>As with the <code>{{view}}</code>, helper options passed to the <code>{{collection}}</code> will be
+set on the resulting <code>Ember.CollectionView</code> as properties. Additionally,
+options prefixed with <code>item</code> will be applied to the views rendered for each
+item (note the camelcasing):</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">collection</span> <span class="attribute-name">contentBinding</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">App.items</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">itemTagName</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">p</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">itemClassNames</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">greeting</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+  Howdy <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view.content.name</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">collection</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Will result in the following HTML structure:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;p</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view greeting</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Howdy Dave<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;p</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view greeting</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Howdy Mary<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;p</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view greeting</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Howdy Sara<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>path</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd></dd>
+        
+          <dt><strong>options</strong> <span class="type">Hash</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/String.html">String</a></span>
+        <dd> HTML string</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
+<div id="method_control" class="method  item-entry">
+  <h3 data-id="method_control" class="name anchorable-toc"><code>control</code></h3>
+  <span class="args">
+    (path, modelPath, options)
+  </span>
+
+  <span class="type"><a href="/api/classes/String.html">String</a></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-routing/lib/helpers/control.js#L9">packages/ember-routing/lib/helpers/control.js:9</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>The control helper is currently under development and is considered experimental.
+To enable it, set <code>ENV.EXPERIMENTAL_CONTROL_HELPER = true</code> before requiring Ember.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>path</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd></dd>
+        
+          <dt><strong>modelPath</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd></dd>
+        
+          <dt><strong>options</strong> <span class="type">Hash</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/String.html">String</a></span>
+        <dd> HTML string</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
+<div id="method_debugger" class="method  item-entry">
+  <h3 data-id="method_debugger" class="name anchorable-toc"><code>debugger</code></h3>
+  <span class="args">
+    (property)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-handlebars/lib/helpers/debug.js#L33">packages/ember-handlebars/lib/helpers/debug.js:33</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Execute the <code>debugger</code> statement in the current context.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">debugger</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>property</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
+<div id="method_each" class="method  item-entry">
+  <h3 data-id="method_each" class="name anchorable-toc"><code>each</code></h3>
+  <span class="args">
+    (name, path, options)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-handlebars/lib/helpers/each.js#L186">packages/ember-handlebars/lib/helpers/each.js:186</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>The <code>{{#each}}</code> helper loops over elements in a collection, rendering its
+block once for each item. It is an extension of the base Handlebars <code>{{#each}}</code>
+helper:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre>Developers = [{<span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Yehuda</span><span class="delimiter">'</span></span>},{<span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Tom</span><span class="delimiter">'</span></span>}, {<span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Paul</span><span class="delimiter">'</span></span>}];
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">Developers</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">name</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p><code>{{each}}</code> supports an alternative syntax with element naming:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">person</span> <span class="attribute-name">in</span> <span class="attribute-name">Developers</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">person.name</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>When looping over objects that do not have properties, <code>{{this}}</code> can be used
+to render the object:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre>DeveloperNames = [<span class="string"><span class="delimiter">'</span><span class="content">Yehuda</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Tom</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Paul</span><span class="delimiter">'</span></span>]
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">DeveloperNames</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">this</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<h3>{{else}} condition</h3>
+
+<p><code>{{#each}}</code> can have a matching <code>{{else}}</code>. The contents of this block will render
+if the collection is empty.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>{{<span class="error">#</span>each person <span class="keyword">in</span> Developers}}
+  {{person.name}}
+{{<span class="keyword">else</span>}}
+  <span class="tag">&lt;p&gt;</span>Sorry, nobody is available for this task.<span class="tag">&lt;/p&gt;</span>
+{{<span class="regexp"><span class="delimiter">/</span><span class="content">each}}
+</span></span></pre></td>
+</tr></table>
+</div></div>
+<h3>Specifying a View class for items</h3>
+
+<p>If you provide an <code>itemViewClass</code> option that references a view class
+with its own <code>template</code> you can omit the block.</p>
+
+<p>The following template:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">view</span> <span class="attribute-name">App.MyView</span> <span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">each</span> <span class="attribute-name">view.items</span> <span class="attribute-name">itemViewClass</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">App.AnItemView</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">view</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>And application code</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+</pre></td>
+  <td class="code"><pre>App = Ember.Application.create({
+  <span class="key">MyView</span>: Ember.View.extend({
+    <span class="key">items</span>: [
+      Ember.Object.create({<span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Dave</span><span class="delimiter">'</span></span>}),
+      Ember.Object.create({<span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Mary</span><span class="delimiter">'</span></span>}),
+      Ember.Object.create({<span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Sara</span><span class="delimiter">'</span></span>})
+    ]
+  })
+});
+
+App.AnItemView = Ember.View.extend({
+  <span class="key">template</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">&quot;</span><span class="content">Greetings {{name}}</span><span class="delimiter">&quot;</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Will result in the HTML structure below</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Greetings Dave<span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Greetings Mary<span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Greetings Sara<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<h3>Representing each item with a Controller.</h3>
+
+<p>By default the controller lookup within an <code>{{#each}}</code> block will be
+the controller of the template where the <code>{{#each}}</code> was used. If each
+item needs to be presented by a custom controller you can provide a
+<code>itemController</code> option which references a controller by lookup name.
+Each item in the loop will be wrapped in an instance of this controller
+and the item itself will be set to the <code>content</code> property of that controller.</p>
+
+<p>This is useful in cases where properties of model objects need transformation
+or synthesis for display:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.DeveloperController = Ember.ObjectController.extend({
+  <span class="function">isAvailableForHire</span>: <span class="keyword">function</span>(){
+    <span class="keyword">return</span> !<span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">content.isEmployed</span><span class="delimiter">'</span></span>) &amp;&amp; <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">content.isSeekingWork</span><span class="delimiter">'</span></span>);
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">isEmployed</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">isSeekingWork</span><span class="delimiter">'</span></span>)
+})
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">person</span> <span class="attribute-name">in</span> <span class="attribute-name">developers</span> <span class="attribute-name">itemController</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">developer</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">person.name</span><span class="inline-delimiter">}}</span></span> <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">person.isAvailableForHire</span><span class="inline-delimiter">}}</span></span>Hire me!<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Each itemController will receive a reference to the current controller as
+a <code>parentController</code> property.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>name for item (used with `in`)</dd>
+        
+          <dt><strong>path</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>path</dd>
+        
+          <dt><strong>options</strong> <span class="type">Object</span></dt>
+          <dd>Handlebars key/value pairs of options</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
+<div id="method_helperMissing" class="method private item-entry">
+  <h3 data-id="method_helperMissing" class="name anchorable-toc"><code>helperMissing</code></h3>
+  <span class="args">
+    (path, options)
+  </span>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-handlebars/lib/ext.js#L116">packages/ember-handlebars/lib/ext.js:116</a>
+
+    
+
+    
+  </div>
+
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>path</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd></dd>
+        
+          <dt><strong>options</strong> <span class="type">Hash</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
+<div id="method_if" class="method  item-entry">
+  <h3 data-id="method_if" class="name anchorable-toc"><code>if</code></h3>
+  <span class="args">
+    (context, options)
+  </span>
+
+  <span class="type"><a href="/api/classes/String.html">String</a></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-handlebars/lib/helpers/binding.js#L279">packages/ember-handlebars/lib/helpers/binding.js:279</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>See <code>boundIf</code></p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>context</strong> <span class="type"><a href="/api/classes/Function.html">Function</a></span></dt>
+          <dd></dd>
+        
+          <dt><strong>options</strong> <span class="type">Hash</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/String.html">String</a></span>
+        <dd> HTML string</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
+<div id="method_input" class="method  item-entry">
+  <h3 data-id="method_input" class="name anchorable-toc"><code>input</code></h3>
+  <span class="args">
+    (options)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-handlebars/lib/controls.js#L16">packages/ember-handlebars/lib/controls.js:16</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p><code>{{input}}</code> inserts a new instance of either Ember.TextField or
+Ember.Checkbox, depending on the <code>type</code> option passed in. If no <code>type</code>
+is supplied it defaults to Ember.TextField.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>options</strong> <span class="type">Hash</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
+<div id="method_linkTo" class="method  item-entry">
+  <h3 data-id="method_linkTo" class="name anchorable-toc"><code>linkTo</code></h3>
+  <span class="args">
+    (routeName, context)
+  </span>
+
+  <span class="type"><a href="/api/classes/String.html">String</a></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-routing/lib/helpers/link_to.js#L122">packages/ember-routing/lib/helpers/link_to.js:122</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>The <code>{{linkTo}}</code> helper renders a link to the supplied
+<code>routeName</code> passing an optionally supplied model to the
+route as its <code>model</code> context of the route. The block
+for <code>{{linkTo}}</code> becomes the innerHTML of the rendered
+element:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="attribute-name">photoGallery</span><span class="inline-delimiter">}}</span></span>
+  Great Hamster Photos
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div><div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/hamster-photos</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  Great Hamster Photos
+<span class="tag">&lt;/a&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<h3>Supplying a tagName</h3>
+
+<p>By default <code>{{linkTo}}</code> renders an <code>&lt;a&gt;</code> element. This can
+be overridden for a single use of <code>{{linkTo}}</code> by supplying
+a <code>tagName</code> option:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="attribute-name">photoGallery</span> <span class="attribute-name">tagName</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">li</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+  Great Hamster Photos
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div><div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;li&gt;</span>
+  Great Hamster Photos
+<span class="tag">&lt;/li&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>To override this option for your entire application, see 
+&quot;Overriding Application-wide Defaults&quot;.</p>
+
+<h3>Handling <code>href</code></h3>
+
+<p><code>{{linkTo}}</code> will use your application&#39;s Router to
+fill the element&#39;s <code>href</code> property with a url that
+matches the path to the supplied <code>routeName</code> for your
+routers&#39;s configured <code>Location</code> scheme, which defaults
+to Ember.HashLocation.</p>
+
+<h3>Handling current route</h3>
+
+<p><code>{{linkTo}}</code> will apply a CSS class name of &#39;active&#39;
+when the application&#39;s current route matches
+the supplied routeName. For example, if the application&#39;s
+current route is &#39;photoGallery.recent&#39; the following
+use of <code>{{linkTo}}</code>:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="attribute-name">photoGallery.recent</span><span class="inline-delimiter">}}</span></span>
+  Great Hamster Photos from the last week
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>will result in</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/hamster-photos/this-week</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">active</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  Great Hamster Photos
+<span class="tag">&lt;/a&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>The CSS class name used for active classes can be customized
+for a single use of <code>{{linkTo}}</code> by passing an <code>activeClass</code>
+option:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="attribute-name">photoGallery.recent</span> <span class="attribute-name">activeClass</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">current-url</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+  Great Hamster Photos from the last week
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div><div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/hamster-photos/this-week</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">current-url</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  Great Hamster Photos
+<span class="tag">&lt;/a&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>To override this option for your entire application, see 
+&quot;Overriding Application-wide Defaults&quot;.</p>
+
+<h3>Supplying a model</h3>
+
+<p>An optional model argument can be used for routes whose
+paths contain dynamic segments. This argument will become
+the model context of the linked route:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>(){
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">&quot;</span><span class="content">photoGallery</span><span class="delimiter">&quot;</span></span>, {<span class="key">path</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">hamster-photos/:photo_id</span><span class="delimiter">&quot;</span></span>});
+})
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="attribute-name">photoGallery</span> <span class="attribute-name">aPhoto</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">aPhoto.title</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div><div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/hamster-photos/42</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  Tomster
+<span class="tag">&lt;/a&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<h3>Supplying multiple models</h3>
+
+<p>For deep-linking to route paths that contain multiple
+dynamic segments, multiple model arguments can be used.
+As the router transitions through the route path, each
+supplied model argument will become the context for the
+route with the dynamic segments:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>(){
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">&quot;</span><span class="content">photoGallery</span><span class="delimiter">&quot;</span></span>, {<span class="key">path</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">hamster-photos/:photo_id</span><span class="delimiter">&quot;</span></span>}, <span class="keyword">function</span>(){
+    <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">&quot;</span><span class="content">comment</span><span class="delimiter">&quot;</span></span>, {<span class="key">path</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">comments/:comment_id</span><span class="delimiter">&quot;</span></span>});
+  });
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>This argument will become the model context of the linked route:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="attribute-name">photoGallery.comment</span> <span class="attribute-name">aPhoto</span> <span class="attribute-name">comment</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">comment.body</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div><div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/hamster-photos/42/comment/718</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  A+++ would snuggle again.
+<span class="tag">&lt;/a&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<h3>Overriding Application-wide Defaults</h3>
+
+<p><code>{{linkTo}}</code> creates an instance of Ember.LinkView
+for rendering. To override options for your entire
+application, reopen Ember.LinkView and supply the
+desired values:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>Ember.LinkView.reopen({
+  <span class="key">activeClass</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">is-active</span><span class="delimiter">&quot;</span></span>,
+  <span class="key">tagName</span>: <span class="string"><span class="delimiter">'</span><span class="content">li</span><span class="delimiter">'</span></span>
+})
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>routeName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd></dd>
+        
+          <dt><strong>context</strong> <span class="type">Object</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/String.html">String</a></span>
+        <dd> HTML string</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
+<div id="method_log" class="method  item-entry">
+  <h3 data-id="method_log" class="name anchorable-toc"><code>log</code></h3>
+  <span class="args">
+    (property)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-handlebars/lib/helpers/debug.js#L12">packages/ember-handlebars/lib/helpers/debug.js:12</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p><code>log</code> allows you to output the value of a value in the current rendering
+context.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">log</span> <span class="attribute-name">myVariable</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>property</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
+<div id="method_outlet" class="method  item-entry">
+  <h3 data-id="method_outlet" class="name anchorable-toc"><code>outlet</code></h3>
+  <span class="args">
+    (property)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-routing/lib/helpers/outlet.js#L18">packages/ember-routing/lib/helpers/outlet.js:18</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>The <code>outlet</code> helper is a placeholder that the router will fill in with
+the appropriate template based on the current state of the application.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>By default, a template based on Ember&#39;s naming conventions will be rendered
+into the <code>outlet</code> (e.g. <code>App.PostsRoute</code> will render the <code>posts</code> template).</p>
+
+<p>You can render a different template by using the <code>render()</code> method in the
+route&#39;s <code>renderTemplate</code> hook. The following will render the <code>favoritePost</code>
+template into the <code>outlet</code>.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.PostsRoute = Ember.Route.extend({
+  <span class="function">renderTemplate</span>: <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.render(<span class="string"><span class="delimiter">'</span><span class="content">favoritePost</span><span class="delimiter">'</span></span>);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>You can create custom named outlets for more control.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span> <span class="attribute-name">favoritePost</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span> <span class="attribute-name">posts</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Then you can define what template is rendered into each outlet in your
+route.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre>App.PostsRoute = Ember.Route.extend({
+  <span class="function">renderTemplate</span>: <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.render(<span class="string"><span class="delimiter">'</span><span class="content">favoritePost</span><span class="delimiter">'</span></span>, { <span class="key">outlet</span>: <span class="string"><span class="delimiter">'</span><span class="content">favoritePost</span><span class="delimiter">'</span></span> });
+    <span class="local-variable">this</span>.render(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>, { <span class="key">outlet</span>: <span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span> });
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>You can specify the view class that the outlet uses to contain and manage the
+templates rendered into it.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span> <span class="attribute-name">viewClass</span>=<span class="attribute-value">App.SectionContainer</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>App.SectionContainer = Ember.ContainerView.extend({
+  <span class="key">tagName</span>: <span class="string"><span class="delimiter">'</span><span class="content">section</span><span class="delimiter">'</span></span>,
+  <span class="key">classNames</span>: [<span class="string"><span class="delimiter">'</span><span class="content">special</span><span class="delimiter">'</span></span>]
+});
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>property</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>the property on the controller
+  that holds the view for this outlet</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
+<div id="method_partial" class="method  item-entry">
+  <h3 data-id="method_partial" class="name anchorable-toc"><code>partial</code></h3>
+  <span class="args">
+    (partialName)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-handlebars/lib/helpers/partial.js#L8">packages/ember-handlebars/lib/helpers/partial.js:8</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p><code>partial</code> renders a template directly using the current context.
+If needed the context can be set using the <code>{{#with foo}}</code> helper.</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">header_bar</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="inline">  {{<span class="error">#</span><span class="keyword">with</span> currentUser}}
+    {{partial user_info}}
+  {{<span class="regexp"><span class="delimiter">/</span><span class="content">with}}</span></span></span>
+<span class="tag">&lt;/script&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>The <code>data-template-name</code> attribute of a partial template
+is prefixed with an underscore.</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">_user_info</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="inline">  <span class="tag">&lt;span&gt;</span>Hello {{username}}!<span class="tag">&lt;/span&gt;</span></span>
+<span class="tag">&lt;/script&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>partialName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>the name of the template to render minus the leading underscore</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
+<div id="method_render" class="method  item-entry">
+  <h3 data-id="method_render" class="name anchorable-toc"><code>render</code></h3>
+  <span class="args">
+    (name, contextString, options)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-routing/lib/helpers/render.js#L12">packages/ember-routing/lib/helpers/render.js:12</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Renders the named template in the current context with the same-named
+controller.</p>
+
+<p>If a view class with the same name exists, the view class will be used.</p>
+
+<p>The optional second argument is a property path that will be bound
+to the <code>model</code> property of the controller.</p>
+
+<p>If a <code>model</code> property path is specified, then a new instance of the
+controller will be created.</p>
+
+<p>If no <code>model</code> property path is provided, then the helper will use the
+singleton instance of the controller. A given controller may only be used
+one time in your app in this manner.</p>
+
+<p>The default target for <code>{{action}}</code>s in the rendered template is the
+controller.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd></dd>
+        
+          <dt><strong>contextString</strong> <span class="type">Object?</span></dt>
+          <dd></dd>
+        
+          <dt><strong>options</strong> <span class="type">Hash</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
+<div id="method_template" class="method  item-entry">
+  <h3 data-id="method_template" class="name anchorable-toc"><code>template</code></h3>
+  <span class="args">
+    (templateName)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-handlebars/lib/helpers/template.js#L8">packages/ember-handlebars/lib/helpers/template.js:8</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p><code>template</code> allows you to render a template from inside another template.
+This allows you to re-use the same template in multiple places. For example:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">logged_in_user</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="inline">  {{<span class="error">#</span><span class="keyword">with</span> loggedInUser}}
+    Last Login: {{lastLogin}}
+    User Info: {{template <span class="string"><span class="delimiter">&quot;</span><span class="content">user_info</span><span class="delimiter">&quot;</span></span>}}
+  {{<span class="regexp"><span class="delimiter">/</span><span class="content">with}}</span></span></span>
+<span class="tag">&lt;/script&gt;</span>
+</pre></td>
+</tr></table>
+</div></div><div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">user_info</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="inline">  Name: <span class="tag">&lt;em&gt;</span>{{name}}<span class="tag">&lt;/em&gt;</span>
+  Karma: <span class="tag">&lt;em&gt;</span>{{karma}}<span class="tag">&lt;/em&gt;</span></span>
+<span class="tag">&lt;/script&gt;</span>
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">isUser</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">template</span> <span class="error">&quot;</span><span class="attribute-name">user_info</span><span class="error">&quot;</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">else</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">template</span> <span class="error">&quot;</span><span class="attribute-name">unlogged_user_info</span><span class="error">&quot;</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>This helper looks for templates in the global <code>Ember.TEMPLATES</code> hash. If you
+add <code>&lt;script&gt;</code> tags to your page with the <code>data-template-name</code> attribute set,
+they will be compiled and placed in this hash automatically.</p>
+
+<p>You can also manually register templates by adding them to the hash:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre>Ember.TEMPLATES[<span class="string"><span class="delimiter">&quot;</span><span class="content">my_cool_template</span><span class="delimiter">&quot;</span></span>] = Ember.Handlebars.compile(<span class="string"><span class="delimiter">'</span><span class="content">&lt;b&gt;{{user}}&lt;/b&gt;</span><span class="delimiter">'</span></span>);
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>templateName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>the template to render</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
+<div id="method_textarea" class="method  item-entry">
+  <h3 data-id="method_textarea" class="name anchorable-toc"><code>textarea</code></h3>
+  <span class="args">
+    (options)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-handlebars/lib/controls.js#L47">packages/ember-handlebars/lib/controls.js:47</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p><code>{{textarea}}</code> inserts a new instance of Ember.TextArea into the template
+passing its options to <code>Ember.TextArea</code>&#39;s <code>create</code> method.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>options</strong> <span class="type">Hash</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
+<div id="method_unbound" class="method  item-entry">
+  <h3 data-id="method_unbound" class="name anchorable-toc"><code>unbound</code></h3>
+  <span class="args">
+    (property)
+  </span>
+
+  <span class="type"><a href="/api/classes/String.html">String</a></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-handlebars/lib/helpers/unbound.js#L12">packages/ember-handlebars/lib/helpers/unbound.js:12</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p><code>unbound</code> allows you to output a property without binding. <em>Important:</em> The
+output will not be updated if the property changes. Use with caution.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">unbound</span> <span class="attribute-name">somePropertyThatDoesntChange</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p><code>unbound</code> can also be used in conjunction with a bound helper to
+render it in its unbound form:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">unbound</span> <span class="attribute-name">helperName</span> <span class="attribute-name">somePropertyThatDoesntChange</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>property</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/String.html">String</a></span>
+        <dd> HTML string</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
+<div id="method_unless" class="method  item-entry">
+  <h3 data-id="method_unless" class="name anchorable-toc"><code>unless</code></h3>
+  <span class="args">
+    (context, options)
+  </span>
+
+  <span class="type"><a href="/api/classes/String.html">String</a></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-handlebars/lib/helpers/binding.js#L295">packages/ember-handlebars/lib/helpers/binding.js:295</a>
+
+    
+
+    
+  </div>
+
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>context</strong> <span class="type"><a href="/api/classes/Function.html">Function</a></span></dt>
+          <dd></dd>
+        
+          <dt><strong>options</strong> <span class="type">Hash</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/String.html">String</a></span>
+        <dd> HTML string</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
+<div id="method_view" class="method  item-entry">
+  <h3 data-id="method_view" class="name anchorable-toc"><code>view</code></h3>
+  <span class="args">
+    (path, options)
+  </span>
+
+  <span class="type"><a href="/api/classes/String.html">String</a></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-handlebars/lib/helpers/view.js#L152">packages/ember-handlebars/lib/helpers/view.js:152</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p><code>{{view}}</code> inserts a new instance of <code>Ember.View</code> into a template passing its
+options to the <code>Ember.View</code>&#39;s <code>create</code> method and using the supplied block as
+the view&#39;s own template.</p>
+
+<p>An empty <code>&lt;body&gt;</code> and the following template:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>A span:
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">view</span> <span class="attribute-name">tagName</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">span</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+  hello.
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">view</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Will result in HTML structure:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;body&gt;</span>
+  <span class="comment">&lt;!-- Note: the handlebars template script
+       also results in a rendered Ember.View
+       which is the outer &lt;div&gt; here --&gt;</span>
+
+  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    A span:
+    <span class="tag">&lt;span</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+      Hello.
+    <span class="tag">&lt;/span&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<h3><code>parentView</code> setting</h3>
+
+<p>The <code>parentView</code> property of the new <code>Ember.View</code> instance created through
+<code>{{view}}</code> will be set to the <code>Ember.View</code> instance of the template where
+<code>{{view}}</code> was called.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>aView = Ember.View.create({
+  <span class="key">template</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">&quot;</span><span class="content">{{#view}} my parent: {{parentView.elementId}} {{/view}}</span><span class="delimiter">&quot;</span></span>)
+});
+
+aView.appendTo(<span class="string"><span class="delimiter">'</span><span class="content">body</span><span class="delimiter">'</span></span>);
+</pre></td>
+</tr></table>
+</div></div>
+<p>Will result in HTML structure:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember2</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    my parent: ember1
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<h3>Setting CSS id and class attributes</h3>
+
+<p>The HTML <code>id</code> attribute can be set on the <code>{{view}}</code>&#39;s resulting element with
+the <code>id</code> option. This option will <em>not</em> be passed to <code>Ember.View.create</code>.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">view</span> <span class="attribute-name">tagName</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">span</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">a-custom-id</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+  hello.
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">view</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Results in the following HTML structure:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;span</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">a-custom-id</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    hello.
+  <span class="tag">&lt;/span&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>The HTML <code>class</code> attribute can be set on the <code>{{view}}</code>&#39;s resulting element
+with the <code>class</code> or <code>classNameBindings</code> options. The <code>class</code> option will
+directly set the CSS <code>class</code> attribute and will not be passed to
+<code>Ember.View.create</code>. <code>classNameBindings</code> will be passed to <code>create</code> and use
+<code>Ember.View</code>&#39;s class name binding functionality:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">view</span> <span class="attribute-name">tagName</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">span</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">a-custom-class</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+  hello.
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">view</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Results in the following HTML structure:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;span</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember2</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view a-custom-class</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    hello.
+  <span class="tag">&lt;/span&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<h3>Supplying a different view class</h3>
+
+<p><code>{{view}}</code> can take an optional first argument before its supplied options to
+specify a path to a custom view class.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">view</span> <span class="error">&quot;</span><span class="attribute-name">MyApp.CustomView</span><span class="error">&quot;</span><span class="inline-delimiter">}}</span></span>
+  hello.
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">view</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>The first argument can also be a relative path accessible from the current
+context.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre>MyApp = Ember.Application.create({});
+MyApp.OuterView = Ember.View.extend({
+  <span class="key">innerViewClass</span>: Ember.View.extend({
+    <span class="key">classNames</span>: [<span class="string"><span class="delimiter">'</span><span class="content">a-custom-view-class-as-property</span><span class="delimiter">'</span></span>]
+  }),
+  <span class="key">template</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">'</span><span class="content">{{#view &quot;view.innerViewClass&quot;}} hi {{/view}}</span><span class="delimiter">'</span></span>)
+});
+
+MyApp.OuterView.create().appendTo(<span class="string"><span class="delimiter">'</span><span class="content">body</span><span class="delimiter">'</span></span>);
+</pre></td>
+</tr></table>
+</div></div>
+<p>Will result in the following HTML:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember2</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view a-custom-view-class-as-property</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    hi
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<h3>Blockless use</h3>
+
+<p>If you supply a custom <code>Ember.View</code> subclass that specifies its own template
+or provide a <code>templateName</code> option to <code>{{view}}</code> it can be used without
+supplying a block. Attempts to use both a <code>templateName</code> option and supply a
+block will throw an error.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="error">&quot;</span><span class="attribute-name">MyApp.ViewWithATemplateDefined</span><span class="error">&quot;</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<h3><code>viewName</code> property</h3>
+
+<p>You can supply a <code>viewName</code> option to <code>{{view}}</code>. The <code>Ember.View</code> instance
+will be referenced as a property of its parent view by this name.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre>aView = Ember.View.create({
+  <span class="key">template</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">'</span><span class="content">{{#view viewName=&quot;aChildByName&quot;}} hi {{/view}}</span><span class="delimiter">'</span></span>)
+});
+
+aView.appendTo(<span class="string"><span class="delimiter">'</span><span class="content">body</span><span class="delimiter">'</span></span>);
+aView.get(<span class="string"><span class="delimiter">'</span><span class="content">aChildByName</span><span class="delimiter">'</span></span>) <span class="comment">// the instance of Ember.View created by {{view}} helper</span>
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>path</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd></dd>
+        
+          <dt><strong>options</strong> <span class="type">Hash</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/String.html">String</a></span>
+        <dd> HTML string</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
+<div id="method_with" class="method  item-entry">
+  <h3 data-id="method_with" class="name anchorable-toc"><code>with</code></h3>
+  <span class="args">
+    (context, options)
+  </span>
+
+  <span class="type"><a href="/api/classes/String.html">String</a></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-handlebars/lib/helpers/binding.js#L235">packages/ember-handlebars/lib/helpers/binding.js:235</a>
+
+    
+
+    
+  </div>
+
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>context</strong> <span class="type"><a href="/api/classes/Function.html">Function</a></span></dt>
+          <dd></dd>
+        
+          <dt><strong>options</strong> <span class="type">Hash</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/String.html">String</a></span>
+        <dd> HTML string</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
+<div id="method_yield" class="method  item-entry">
+  <h3 data-id="method_yield" class="name anchorable-toc"><code>yield</code></h3>
+  <span class="args">
+    (options)
+  </span>
+
+  <span class="type"><a href="/api/classes/String.html">String</a></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.4/packages/ember-handlebars/lib/helpers/yield.js#L8">packages/ember-handlebars/lib/helpers/yield.js:8</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>When used in a Handlebars template that is assigned to an <code>Ember.View</code>
+instance&#39;s <code>layout</code> property Ember will render the layout template first,
+inserting the view&#39;s own rendered output at the <code>{{yield}}</code> location.</p>
+
+<p>An empty <code>&lt;body&gt;</code> and the following application code:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre>AView = Ember.View.extend({
+  <span class="key">classNames</span>: [<span class="string"><span class="delimiter">'</span><span class="content">a-view-with-layout</span><span class="delimiter">'</span></span>],
+  <span class="key">layout</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">'</span><span class="content">&lt;div class=&quot;wrapper&quot;&gt;{{yield}}&lt;/div&gt;</span><span class="delimiter">'</span></span>),
+  <span class="key">template</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">'</span><span class="content">&lt;span&gt;I am wrapped&lt;/span&gt;</span><span class="delimiter">'</span></span>)
+});
+
+aView = AView.create();
+aView.appendTo(<span class="string"><span class="delimiter">'</span><span class="content">body</span><span class="delimiter">'</span></span>);
+</pre></td>
+</tr></table>
+</div></div>
+<p>Will result in the following HTML output:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;body&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">'</span><span class="content">ember-view a-view-with-layout</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">wrapper</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+      <span class="tag">&lt;span&gt;</span>I am wrapped<span class="tag">&lt;/span&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>The <code>yield</code> helper cannot be used outside of a template assigned to an
+<code>Ember.View</code>&#39;s <code>layout</code> property and will throw an error if attempted.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre>BView = Ember.View.extend({
+  <span class="key">classNames</span>: [<span class="string"><span class="delimiter">'</span><span class="content">a-view-with-layout</span><span class="delimiter">'</span></span>],
+  <span class="key">template</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">'</span><span class="content">{{yield}}</span><span class="delimiter">'</span></span>)
+});
+
+bView = BView.create();
+bView.appendTo(<span class="string"><span class="delimiter">'</span><span class="content">body</span><span class="delimiter">'</span></span>);
+
+<span class="comment">// throws</span>
+<span class="comment">// Uncaught Error: assertion failed: You called yield in a template that was not a layout</span>
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>options</strong> <span class="type">Hash</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/String.html">String</a></span>
+        <dd> HTML string</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+    </div>
+  
+  </div>
+
+
+      </div>
+    </div>
+
+    <div id="footer">
+      <div id="footer-wrapper">
+        <div class="info">
+          Copyright 2013 <a href="http://tilde.io">Tilde Inc.</a><br>
+          Design by <a href="http://www.heropixel.com">HeroPixel</a></br>
+          <a href="/team">Core Team</a> | <a href="/sponsors">Project Sponsors</a>
+        </div>
+        <div class="statement">Ember.js is free, open source and always will be.</div>
+        <div class="links">
+          <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
+          <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
