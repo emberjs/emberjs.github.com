@@ -504,7 +504,7 @@
 3
 4
 </pre></td>
-  <td class="code"><pre>Ember.Handlebars.registerBoundHelper(<span class="string"><span class="delimiter">'</span><span class="content">highlight</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(value, options) {
+  <td class="code"><pre>Ember.Handlebars.helper(<span class="string"><span class="delimiter">'</span><span class="content">highlight</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(value, options) {
   <span class="keyword">var</span> escaped = Handlebars.Utils.escapeExpression(value);
   <span class="keyword">return</span> <span class="keyword">new</span> Handlebars.SafeString(<span class="string"><span class="delimiter">'</span><span class="content">&lt;span class=&quot;highlight&quot;&gt;</span><span class="delimiter">'</span></span> + escaped + <span class="string"><span class="delimiter">'</span><span class="content">&lt;/span&gt;</span><span class="delimiter">'</span></span>);
 });
@@ -543,7 +543,7 @@ or if the <code>firstName</code> or <code>lastName</code> properties change.</p>
 2
 3
 </pre></td>
-  <td class="code"><pre>Ember.Handlebars.registerBoundHelper(<span class="string"><span class="delimiter">'</span><span class="content">fullName</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(person) {
+  <td class="code"><pre>Ember.Handlebars.helper(<span class="string"><span class="delimiter">'</span><span class="content">fullName</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(person) {
   <span class="keyword">return</span> person.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + person.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
 }, <span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
 </pre></td>
@@ -562,7 +562,37 @@ or if the <code>firstName</code> or <code>lastName</code> properties change.</p>
 
 <p>Both the path passed to the <code>fullName</code> helper and its dependent keys may
 be full <em>property paths</em> (e.g. <code>person.address.country</code>).</p>
+<h3 class='anchorable-toc' id='toc_custom-view-helpers'>Custom View Helpers</h3>
+<p>You may also find yourself rendering your view classes in multiple
+places using the <code>{{view}}</code> helper. In this case, you can save yourself
+some typing by registering a custom view helper.</p>
 
+<p>For example, let’s say you have a view called <code>App.CalendarView</code>.
+You can register a helper like this:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre>Ember.Handlebars.helper(<span class="string"><span class="delimiter">'</span><span class="content">calendar</span><span class="delimiter">'</span></span>, App.CalendarView);
+</pre></td>
+</tr></table>
+</div></div>
+<p>Using <code>App.CalendarView</code> in a template then becomes as simple as:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">calendar</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Which is functionally equivalent to, and accepts all the same
+arguments as:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="attribute-name">App.CalendarView</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
     
       <footer>
         
