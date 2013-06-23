@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Ember.EventDispatcher</title>
+    <title>Ember.js - Ember.CoreView</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
@@ -509,7 +509,7 @@
         
           
             
-          <li class="level-3 ">
+          <li class="level-3 sub-selected">
           
               <a href="/api/classes/Ember.CoreView.html">Ember.CoreView</a>
             
@@ -565,7 +565,7 @@
         
           
             
-          <li class="level-3 sub-selected">
+          <li class="level-3 ">
           
               <a href="/api/classes/Ember.EventDispatcher.html">Ember.EventDispatcher</a>
             
@@ -931,22 +931,26 @@
 
   
   <h1>
-  Ember.EventDispatcher Class
+  Ember.CoreView Class
   
-    <a class="edit-page" target="_blank" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-views/lib/system/event_dispatcher.js#L8">packages/ember-views/lib/system/event_dispatcher.js:8</a>
+    <a class="edit-page" target="_blank" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-views/lib/views/view.js#L50">packages/ember-views/lib/views/view.js:50</a>
   
 </h1>
 
-<p>PRIVATE</p>
+
 <div class="class-info">
   
     <p>Extends: <a href="/api/classes/Ember.Object.html">Ember.Object</a></p>
   
 
   
+    
+      <p>Uses: <a href="/api/classes/Ember.Evented.html">Ember.Evented</a></p>
+    
+  
 
   
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-views/lib/system/event_dispatcher.js#L8">packages/ember-views/lib/system/event_dispatcher.js:8</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-views/lib/views/view.js#L50">packages/ember-views/lib/views/view.js:50</a></p>
   
 
   
@@ -955,10 +959,7 @@
 </div>
 
   <div class="description">
-    <p><code>Ember.EventDispatcher</code> handles delegating browser events to their
-corresponding <code>Ember.Views.</code> For example, when you click on a view,
-<code>Ember.EventDispatcher</code> ensures that that view&#39;s <code>mouseDown</code> method gets
-called.</p>
+    <p><code>Ember.CoreView</code> is</p>
 
   </div>
 
@@ -1058,6 +1059,10 @@ called.</p>
             </li>
           
             <li class="method inherited">
+              <a href="#method_has">has</a>
+            </li>
+          
+            <li class="method inherited">
               <a href="#method_hasObserverFor">hasObserverFor</a>
             </li>
           
@@ -1078,6 +1083,18 @@ called.</p>
             </li>
           
             <li class="method inherited">
+              <a href="#method_off">off</a>
+            </li>
+          
+            <li class="method inherited">
+              <a href="#method_on">on</a>
+            </li>
+          
+            <li class="method inherited">
+              <a href="#method_one">one</a>
+            </li>
+          
+            <li class="method inherited">
               <a href="#method_propertyDidChange">propertyDidChange</a>
             </li>
           
@@ -1087,6 +1104,10 @@ called.</p>
           
             <li class="method inherited">
               <a href="#method_removeObserver">removeObserver</a>
+            </li>
+          
+            <li class="method private">
+              <a href="#method_renderToBuffer">renderToBuffer</a>
             </li>
           
             <li class="method inherited">
@@ -1105,20 +1126,16 @@ called.</p>
               <a href="#method_setProperties">setProperties</a>
             </li>
           
-            <li class="method private">
-              <a href="#method_setup">setup</a>
-            </li>
-          
-            <li class="method private">
-              <a href="#method_setupHandler">setupHandler</a>
-            </li>
-          
             <li class="method inherited">
               <a href="#method_toString">toString</a>
             </li>
           
             <li class="method inherited">
               <a href="#method_toggleProperty">toggleProperty</a>
+            </li>
+          
+            <li class="method private">
+              <a href="#method_trigger">trigger</a>
             </li>
           
         </ul>
@@ -1130,10 +1147,6 @@ called.</p>
               <a href="#property_concatenatedProperties">concatenatedProperties</a>
             </li>
           
-            <li class="property ">
-              <a href="#property_events">events</a>
-            </li>
-          
             <li class="property inherited">
               <a href="#property_isDestroyed">isDestroyed</a>
             </li>
@@ -1142,8 +1155,8 @@ called.</p>
               <a href="#property_isDestroying">isDestroying</a>
             </li>
           
-            <li class="property private">
-              <a href="#property_rootElement">rootElement</a>
+            <li class="property ">
+              <a href="#property_parentView">parentView</a>
             </li>
           
         </ul>
@@ -2288,6 +2301,74 @@ property returns <code>undefined</code>.</p>
 
       
         
+<div id="method_has" class="method inherited item-entry">
+  <h3 data-id="method_has" class="name anchorable-toc"><code>has</code></h3>
+  <span class="args">
+    (name)
+  </span>
+
+  <span class="type">Boolean</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.Evented.html#method_has">Ember.Evented</a>
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-runtime/lib/mixins/evented.js#L139">packages/ember-runtime/lib/mixins/evented.js:139</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Checks to see if object has any subscriptions for named event.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>The name of the event</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Boolean</span>
+        <dd> does the object have a subscription for event</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
 <div id="method_hasObserverFor" class="method inherited item-entry">
   <h3 data-id="method_hasObserverFor" class="name anchorable-toc"><code>hasObserverFor</code></h3>
   <span class="args">
@@ -2676,6 +2757,249 @@ succession.</p>
 
       
         
+<div id="method_off" class="method inherited item-entry">
+  <h3 data-id="method_off" class="name anchorable-toc"><code>off</code></h3>
+  <span class="args">
+    (name, target, method)
+  </span>
+
+  <span class="type"></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.Evented.html#method_off">Ember.Evented</a>
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-runtime/lib/mixins/evented.js#L125">packages/ember-runtime/lib/mixins/evented.js:125</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Cancels subscription for give name, target, and method.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>The name of the event</dd>
+        
+          <dt><strong>target</strong> <span class="type">Object</span></dt>
+          <dd>The target of the subscription</dd>
+        
+          <dt><strong>method</strong> <span class="type"><a href="/api/classes/Function.html">Function</a></span></dt>
+          <dd>The function of the subscription</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"></span>
+        <dd> this</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
+<div id="method_on" class="method inherited item-entry">
+  <h3 data-id="method_on" class="name anchorable-toc"><code>on</code></h3>
+  <span class="args">
+    (name, target, method)
+  </span>
+
+  <span class="type"></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.Evented.html#method_on">Ember.Evented</a>
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-runtime/lib/mixins/evented.js#L44">packages/ember-runtime/lib/mixins/evented.js:44</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Subscribes to a named event with given function.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>person.on(<span class="string"><span class="delimiter">'</span><span class="content">didLoad</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+  <span class="comment">// fired once the person has loaded</span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>An optional target can be passed in as the 2nd argument that will
+be set as the &quot;this&quot; for the callback. This is a good way to give your
+function access to the object triggering the event. When the target
+parameter is used the callback becomes the third argument.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>The name of the event</dd>
+        
+          <dt><strong>target</strong> <span class="type">Object</span></dt>
+          <dd>The "this" binding for the callback</dd>
+        
+          <dt><strong>method</strong> <span class="type"><a href="/api/classes/Function.html">Function</a></span></dt>
+          <dd>The callback to execute</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"></span>
+        <dd> this</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
+<div id="method_one" class="method inherited item-entry">
+  <h3 data-id="method_one" class="name anchorable-toc"><code>one</code></h3>
+  <span class="args">
+    (name, target, method)
+  </span>
+
+  <span class="type"></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.Evented.html#method_one">Ember.Evented</a>
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-runtime/lib/mixins/evented.js#L69">packages/ember-runtime/lib/mixins/evented.js:69</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Subscribes a function to a named event and then cancels the subscription
+after the first time the event is triggered. It is good to use <code>one</code> when
+you only care about the first time an event has taken place.</p>
+
+<p>This function takes an optional 2nd argument that will become the &quot;this&quot;
+value for the callback. If this argument is passed then the 3rd argument
+becomes the function.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>The name of the event</dd>
+        
+          <dt><strong>target</strong> <span class="type">Object</span></dt>
+          <dd>The "this" binding for the callback</dd>
+        
+          <dt><strong>method</strong> <span class="type"><a href="/api/classes/Function.html">Function</a></span></dt>
+          <dd>The callback to execute</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"></span>
+        <dd> this</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
 <div id="method_propertyDidChange" class="method inherited item-entry">
   <h3 data-id="method_propertyDidChange" class="name anchorable-toc"><code>propertyDidChange</code></h3>
   <span class="args">
@@ -2905,6 +3229,64 @@ target will no longer receive notifications.</p>
         <dd> receiver</dd>
       </dl>
     </div>
+  
+</div>
+
+      
+        
+<div id="method_renderToBuffer" class="method private item-entry">
+  <h3 data-id="method_renderToBuffer" class="name anchorable-toc"><code>renderToBuffer</code></h3>
+  <span class="args">
+    (buffer)
+  </span>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-views/lib/views/view.js#L103">packages/ember-views/lib/views/view.js:103</a>
+
+    
+
+    
+  </div>
+
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>buffer</strong> <span class="type"><a href="/api/classes/Ember.RenderBuffer.html">Ember.RenderBuffer</a></span></dt>
+          <dd>the render buffer. If no buffer is
+  passed, a default buffer, using the current view's `tagName`, will
+  be used.</dd>
+        
+      </dl>
+    </div>
+  
+
   
 </div>
 
@@ -3220,124 +3602,6 @@ with a Hash:</p>
 
       
         
-<div id="method_setup" class="method private item-entry">
-  <h3 data-id="method_setup" class="name anchorable-toc"><code>setup</code></h3>
-  <span class="args">
-    (addedEvents)
-  </span>
-
-
-
-
-  <span class="flag private">private</span>
-
-
-
-
-
-  <div class="meta">
-      
-        
-          
-            Defined in
-          
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-views/lib/system/event_dispatcher.js#L79">packages/ember-views/lib/system/event_dispatcher.js:79</a>
-
-    
-
-    
-  </div>
-
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-        
-          <dt><strong>addedEvents</strong> <span class="type">Hash</span></dt>
-          <dd></dd>
-        
-      </dl>
-    </div>
-  
-
-  
-</div>
-
-      
-        
-<div id="method_setupHandler" class="method private item-entry">
-  <h3 data-id="method_setupHandler" class="name anchorable-toc"><code>setupHandler</code></h3>
-  <span class="args">
-    (rootElement, event, eventName)
-  </span>
-
-
-
-
-  <span class="flag private">private</span>
-
-
-
-
-
-  <div class="meta">
-      
-        
-          
-            Defined in
-          
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-views/lib/system/event_dispatcher.js#L119">packages/ember-views/lib/system/event_dispatcher.js:119</a>
-
-    
-
-    
-  </div>
-
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-        
-          <dt><strong>rootElement</strong> <span class="type">Element</span></dt>
-          <dd></dd>
-        
-          <dt><strong>event</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
-          <dd>the browser-originated event to listen to</dd>
-        
-          <dt><strong>eventName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
-          <dd>the name of the method to call on the view</dd>
-        
-      </dl>
-    </div>
-  
-
-  
-</div>
-
-      
-        
 <div id="method_toString" class="method inherited item-entry">
   <h3 data-id="method_toString" class="name anchorable-toc"><code>toString</code></h3>
 
@@ -3512,6 +3776,62 @@ current value.</p>
 </div>
 
       
+        
+<div id="method_trigger" class="method private item-entry">
+  <h3 data-id="method_trigger" class="name anchorable-toc"><code>trigger</code></h3>
+  <span class="args">
+    (name)
+  </span>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+      
+        Inherited from
+        <a href="/api/classes/Ember.Evented.html#method_trigger">Ember.Evented</a>
+        
+          but overwritten in
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-views/lib/views/view.js#L153">packages/ember-views/lib/views/view.js:153</a>
+
+    
+
+    
+  </div>
+
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
     </div>
   
     <div class="pane" id="properties">
@@ -3668,58 +3988,6 @@ although typical app developers are likely to use it infrequently.</p>
 
       
         
-<div id="property_events" class="property  item-entry">
-  <h3 data-id="property_events" class="name anchorable-toc"><code>events</code></h3>
-
-
-  <span class="type">Object</span>
-
-
-
-
-
-
-
-  <div class="meta">
-      
-        
-          
-            Defined in
-          
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-views/lib/system/event_dispatcher.js#L21">packages/ember-views/lib/system/event_dispatcher.js:21</a>
-
-    
-
-    
-  </div>
-
-  
-    <div class="description">
-      <p>The set of events names (and associated handler function names) to be setup
-and dispatched by the <code>EventDispatcher</code>. Custom events can added to this list at setup
-time, generally via the <code>Ember.Application.customEvents</code> hash. Only override this
-default set to prevent the EventDispatcher from listening on some events all together.</p>
-
-<p>This set will be modified by <code>setup</code> to also include any events added at that time.</p>
-
-    </div>
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-
-  
-</div>
-
-      
-        
 <div id="property_isDestroyed" class="property inherited item-entry">
   <h3 data-id="property_isDestroyed" class="name anchorable-toc"><code>isDestroyed</code></h3>
 
@@ -3820,14 +4088,13 @@ the <code>isDestroyed</code> flag is set.</p>
 
       
         
-<div id="property_rootElement" class="property private item-entry">
-  <h3 data-id="property_rootElement" class="name anchorable-toc"><code>rootElement</code></h3>
+<div id="property_parentView" class="property  item-entry">
+  <h3 data-id="property_parentView" class="name anchorable-toc"><code>parentView</code></h3>
 
 
-  <span class="type">DOMElement</span>
+  <span class="type"><a href="/api/classes/Ember.View.html">Ember.View</a></span>
 
 
-  <span class="flag private">private</span>
 
 
 
@@ -3841,7 +4108,7 @@ the <code>isDestroyed</code> flag is set.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-views/lib/system/event_dispatcher.js#L62">packages/ember-views/lib/system/event_dispatcher.js:62</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-views/lib/views/view.js#L69">packages/ember-views/lib/views/view.js:69</a>
 
     
 
@@ -3849,10 +4116,16 @@ the <code>isDestroyed</code> flag is set.</p>
   </div>
 
   
+    <div class="description">
+      <p>If the view is currently inserted into the DOM of a parent view, this
+property will point to the parent of the view.</p>
+
+    </div>
+  
 
   <p>
     
-      <strong>Default:</strong> <code>'body'</code>
+      <strong>Default:</strong> <code>null</code>
     
   </p>
 

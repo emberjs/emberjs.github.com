@@ -220,7 +220,7 @@
         <div id="sidebar">
           
     <ol id='toc-list'>
-      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commit/v1.0.0-rc.5" target="_blank"> Tag: v1.0.0-rc.5</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6" target="_blank"> Tag: v1.0.0-rc.6</a></li>
 
       
           <li class="level-1 ">
@@ -455,6 +455,14 @@
             
           <li class="level-3 ">
           
+              <a href="/api/classes/Ember.Component.html">Ember.Component</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
               <a href="/api/classes/Ember.ComputedProperty.html">Ember.ComputedProperty</a>
             
           </li>
@@ -496,6 +504,14 @@
           <li class="level-3 ">
           
               <a href="/api/classes/Ember.CoreObject.html">Ember.CoreObject</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.CoreView.html">Ember.CoreView</a>
             
           </li>
         
@@ -917,7 +933,7 @@
   <h1>
   Ember.run Namespace
   
-    <a class="edit-page" target="_blank" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.5/packages/ember-metal/lib/run_loop.js#L27">packages/ember-metal/lib/run_loop.js:27</a>
+    <a class="edit-page" target="_blank" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-metal/lib/run_loop.js#L27">packages/ember-metal/lib/run_loop.js:27</a>
   
 </h1>
 
@@ -928,7 +944,7 @@
   
 
   
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.5/packages/ember-metal/lib/run_loop.js#L27">packages/ember-metal/lib/run_loop.js:27</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-metal/lib/run_loop.js#L27">packages/ember-metal/lib/run_loop.js:27</a></p>
   
 
   
@@ -999,6 +1015,10 @@ call.</p>
           
             <li class="method ">
               <a href="#method_cancel">cancel</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_debounce">debounce</a>
             </li>
           
             <li class="method ">
@@ -1089,7 +1109,7 @@ call.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.5/packages/ember-metal/lib/run_loop.js#L126">packages/ember-metal/lib/run_loop.js:126</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-metal/lib/run_loop.js#L126">packages/ember-metal/lib/run_loop.js:126</a>
 
     
 
@@ -1159,7 +1179,7 @@ Ember.run.end();
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.5/packages/ember-metal/lib/run_loop.js#L405">packages/ember-metal/lib/run_loop.js:405</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-metal/lib/run_loop.js#L407">packages/ember-metal/lib/run_loop.js:407</a>
 
     
 
@@ -1238,6 +1258,115 @@ Ember.run.cancel(runOnce);
 
       
         
+<div id="method_debounce" class="method  item-entry">
+  <h3 data-id="method_debounce" class="name anchorable-toc"><code>debounce</code></h3>
+  <span class="args">
+    (target, method, args*, wait)
+  </span>
+
+  <span class="type">Void</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-metal/lib/run_loop.js#L436">packages/ember-metal/lib/run_loop.js:436</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Execute the passed method in a specified amount of time, reset timer
+upon additional calls.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre>  <span class="keyword">var</span> <span class="function">myFunc</span> = <span class="keyword">function</span>() { console.log(<span class="local-variable">this</span>.name + <span class="string"><span class="delimiter">'</span><span class="content"> ran.</span><span class="delimiter">'</span></span>); };
+  <span class="keyword">var</span> myContext = {<span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">debounce</span><span class="delimiter">'</span></span>};
+
+  Ember.run.debounce(myContext, myFunc, <span class="integer">150</span>);
+
+  <span class="comment">// less than 150ms passes</span>
+
+  Ember.run.debounce(myContext, myFunc, <span class="integer">150</span>);
+
+  <span class="comment">// 150ms passes</span>
+  <span class="comment">// myFunc is invoked with context myContext</span>
+  <span class="comment">// console logs 'debounce ran.' one time.</span>
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>target</strong> <span class="type">Object</span></dt>
+          <dd>target of method to invoke</dd>
+        
+          <dt><strong>method</strong> <span class="type">Function|String</span></dt>
+          <dd>The method to invoke.
+  May be a function or a string. If you pass a string
+  then it will be looked up on the passed target.</dd>
+        
+          <dt><strong>args*</strong> <span class="type">Object</span></dt>
+          <dd>Optional arguments to pass to the timeout.</dd>
+        
+          <dt><strong>wait</strong> <span class="type">Number</span></dt>
+          <dd>Number of milliseconds to wait.</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Void</span>
+        <dd> </dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
 <div id="method_end" class="method  item-entry">
   <h3 data-id="method_end" class="name anchorable-toc"><code>end</code></h3>
 
@@ -1258,7 +1387,7 @@ Ember.run.cancel(runOnce);
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.5/packages/ember-metal/lib/run_loop.js#L144">packages/ember-metal/lib/run_loop.js:144</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-metal/lib/run_loop.js#L144">packages/ember-metal/lib/run_loop.js:144</a>
 
     
 
@@ -1328,7 +1457,7 @@ Ember.run.end();
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.5/packages/ember-metal/lib/run_loop.js#L70">packages/ember-metal/lib/run_loop.js:70</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-metal/lib/run_loop.js#L70">packages/ember-metal/lib/run_loop.js:70</a>
 
     
 
@@ -1393,7 +1522,7 @@ Alternatively, if called within an existing run loop:
       <h3>Returns:</h3>
       <dl>
         <dt><span class="type">Object</span>
-        <dd> return value from invoking the passed function. Please note, 
+        <dd> return value from invoking the passed function. Please note,
   when called within an existing loop, no return value is possible.</dd>
       </dl>
     </div>
@@ -1425,7 +1554,7 @@ Alternatively, if called within an existing run loop:
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.5/packages/ember-metal/lib/run_loop.js#L244">packages/ember-metal/lib/run_loop.js:244</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-metal/lib/run_loop.js#L246">packages/ember-metal/lib/run_loop.js:246</a>
 
     
 
@@ -1523,7 +1652,7 @@ together, which is often more efficient than using a real setTimeout.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.5/packages/ember-metal/lib/run_loop.js#L342">packages/ember-metal/lib/run_loop.js:342</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-metal/lib/run_loop.js#L344">packages/ember-metal/lib/run_loop.js:344</a>
 
     
 
@@ -1663,7 +1792,7 @@ outside of the current run loop, i.e. with <code>Ember.run.next</code>.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.5/packages/ember-metal/lib/run_loop.js#L274">packages/ember-metal/lib/run_loop.js:274</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-metal/lib/run_loop.js#L276">packages/ember-metal/lib/run_loop.js:276</a>
 
     
 
@@ -1741,7 +1870,7 @@ to calling <code>scheduleOnce</code> with the &quot;actions&quot; queue.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.5/packages/ember-metal/lib/run_loop.js#L173">packages/ember-metal/lib/run_loop.js:173</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-metal/lib/run_loop.js#L173">packages/ember-metal/lib/run_loop.js:173</a>
 
     
 
@@ -1859,7 +1988,7 @@ Ember.run.schedule(<span class="string"><span class="delimiter">'</span><span cl
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.5/packages/ember-metal/lib/run_loop.js#L293">packages/ember-metal/lib/run_loop.js:293</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-metal/lib/run_loop.js#L295">packages/ember-metal/lib/run_loop.js:295</a>
 
     
 
@@ -1984,7 +2113,7 @@ scheduleIt();
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.5/packages/ember-metal/lib/run_loop.js#L224">packages/ember-metal/lib/run_loop.js:224</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-metal/lib/run_loop.js#L224">packages/ember-metal/lib/run_loop.js:224</a>
 
     
 
@@ -2075,7 +2204,7 @@ in the later &#39;render&#39; queue added by the <code>ember-views</code> packag
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.5/packages/ember-metal/lib/run_loop.js#L162">packages/ember-metal/lib/run_loop.js:162</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.6/packages/ember-metal/lib/run_loop.js#L162">packages/ember-metal/lib/run_loop.js:162</a>
 
     
 

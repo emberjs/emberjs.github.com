@@ -164,7 +164,7 @@
             </li>
           
             <li class="level-3">
-              <a href="/guides/getting-started/displaying-a-models-completeness">Displaying a Models's Complete State</a>
+              <a href="/guides/getting-started/displaying-a-models-completeness">Displaying a Model's Complete State</a>
             </li>
           
             <li class="level-3">
@@ -794,6 +794,46 @@ return <code>App.Post.find(params.post_id)</code> automatically.</p>
 <p>Not coincidentally, this is exactly what Ember Data expects. So if you
 use the Ember router with Ember Data, your dynamic segments will work
 as expected out of the box.</p>
+
+<p>If your model does not use the <code>id</code> property in the url, you should
+define a serialize method on your route:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+</pre></td>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, {<span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">/posts/:post_slug</span><span class="delimiter">'</span></span>});
+});
+
+App.PostRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>(params) {
+    <span class="comment">// the server returns `{ slug: 'foo-post' }`</span>
+    <span class="keyword">return</span> jQuery.getJSON(<span class="string"><span class="delimiter">&quot;</span><span class="content">/posts/</span><span class="delimiter">&quot;</span></span> + params.post_slug);
+  },
+
+  <span class="function">serialize</span>: <span class="keyword">function</span>(model) {
+    <span class="comment">// this will make the URL `/posts/foo-post`</span>
+    <span class="keyword">return</span> { <span class="key">post_slug</span>: model.slug };
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>The default <code>serialize</code> method inserts the model&#39;s <code>id</code> into the route&#39;s
+dynamic segment (in this case, <code>:post_id</code>).</p>
 <h3 class='anchorable-toc' id='toc_nested-resources'>Nested Resources</h3>
 <p>You cannot nest routes, but you can nest resources:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
