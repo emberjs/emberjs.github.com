@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Routing: Rendering a Template</title>
+    <title>Ember.js - Templates: The Application Template</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
@@ -78,7 +78,7 @@
     
   </head>
 
-  <body class="guides guides_routing guides_routing_rendering-a-template guides_routing_rendering-a-template_index">
+  <body class="guides guides_templates guides_templates_the-application-template guides_templates_the-application-template_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -243,11 +243,11 @@
               <a href="/guides/application">Introduction</a>
             </li>
           </ol></li>
-          <li class="level-1">
+          <li class="level-1 selected">
             <a href="/guides/templates/the-application-template">Templates</a>
-            <ol>
+            <ol class='selected'>
         
-            <li class="level-3">
+            <li class="level-3 sub-selected">
               <a href="/guides/templates/the-application-template">The Application Template</a>
             </li>
           
@@ -291,9 +291,9 @@
               <a href="/guides/templates/writing-helpers">Writing Helpers</a>
             </li>
           </ol></li>
-          <li class="level-1 selected">
+          <li class="level-1">
             <a href="/guides/routing">Routing</a>
-            <ol class='selected'>
+            <ol>
         
             <li class="level-3">
               <a href="/guides/routing">Introduction</a>
@@ -315,7 +315,7 @@
               <a href="/guides/routing/setting-up-a-controller">Setting Up a Controller</a>
             </li>
           
-            <li class="level-3 sub-selected">
+            <li class="level-3">
               <a href="/guides/routing/rendering-a-template">Rendering a Template</a>
             </li>
           
@@ -493,99 +493,24 @@
   
   <div class="chapter">
     
-        <h1>Rendering a Template 
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/routing/rendering-a-template.md" target="_blank" class="edit-page">
+        <h1>The Application Template 
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/templates/the-application-template.md" target="_blank" class="edit-page">
             Edit Page</a>
         </h1>
       
-    <h2 class='anchorable-toc' id='toc_rendering-a-template'>Rendering a Template</h2>
-<p>One of the most important jobs of a route handler is rendering the
-appropriate template to the screen.</p>
+    <h2 class='anchorable-toc' id='toc_the-application-template'>The Application Template</h2>
+<p>The application template is the default template that is rendered when
+your application starts. </p>
 
-<p>By default, a route handler will render the template into the closest
-parent with a template.</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
-  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>);
-});
+<p>You should put your header, footer, and any other decorative content
+here. Additionally, you should have at least one <code>{{outlet}}</code>:
+a placeholder that the router will fill in with the appropriate template,
+based on the current URL.</p>
 
-App.PostsRoute = Ember.Route.extend();
-</pre></td>
-</tr></table>
-</div></div>
-<p>If you want to render a template other than the one associated with the
-route handler, implement the <code>renderTemplate</code> hook:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre>App.PostsRoute = Ember.Route.extend({
-  <span class="function">renderTemplate</span>: <span class="keyword">function</span>() {
-    <span class="local-variable">this</span>.render(<span class="string"><span class="delimiter">'</span><span class="content">favoritePost</span><span class="delimiter">'</span></span>);
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>If you want to use a different controller than the route handler&#39;s
-controller, pass the controller&#39;s name in the <code>controller</code> option:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre>App.PostsRoute = Ember.Route.extend({
-  <span class="function">renderTemplate</span>: <span class="keyword">function</span>() {
-    <span class="local-variable">this</span>.render({ <span class="key">controller</span>: <span class="string"><span class="delimiter">'</span><span class="content">favoritePost</span><span class="delimiter">'</span></span> });
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Ember allows you to name your outlets. For instance, this code allows
-you to specify two outlets with distinct names:</p>
+<p>Here&#39;s an example template:</p>
 <div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">toolbar</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span> <span class="attribute-name">toolbar</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/div&gt;</span>
-<span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">sidebar</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span> <span class="attribute-name">sidebar</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/div&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>So, if you want to render your posts into the <code>sidebar</code> outlet, use code
-like this:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre>App.PostsRoute = Ember.Route.extend({
-  <span class="function">renderTemplate</span>: <span class="keyword">function</span>() {
-    <span class="local-variable">this</span>.render({ <span class="key">outlet</span>: <span class="string"><span class="delimiter">'</span><span class="content">sidebar</span><span class="delimiter">'</span></span> });
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>All of the options described above can be used together in whatever
-combination you&#39;d like:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-2
 3
 4
 5
@@ -595,81 +520,57 @@ combination you&#39;d like:</p>
 9
 <strong>10</strong>
 11
-12
-13
 </pre></td>
-  <td class="code"><pre>App.PostsRoute = Ember.Route.extend({
-  <span class="function">renderTemplate</span>: <span class="keyword">function</span>() {
-    <span class="keyword">var</span> controller = <span class="local-variable">this</span>.controllerFor(<span class="string"><span class="delimiter">'</span><span class="content">favoritePost</span><span class="delimiter">'</span></span>);
+  <td class="code"><pre><span class="tag">&lt;header&gt;</span>
+  <span class="tag">&lt;h1&gt;</span>Igor's Blog<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;/header&gt;</span>
 
-    <span class="comment">// Render the `favoritePost` template into</span>
-    <span class="comment">// the outlet `posts`, and display the `favoritePost`</span>
-    <span class="comment">// controller.</span>
-    <span class="local-variable">this</span>.render(<span class="string"><span class="delimiter">'</span><span class="content">favoritePost</span><span class="delimiter">'</span></span>, {
-      <span class="key">outlet</span>: <span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>,
-      <span class="key">controller</span>: controller
-    });
-  }
-});
+<span class="tag">&lt;div&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/div&gt;</span>
+
+<span class="tag">&lt;footer&gt;</span>
+  <span class="entity">&amp;copy;</span>2013 Igor's Publishing, Inc.
+<span class="tag">&lt;/footer&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
-<p>If you want to render two different templates into outlets of two different rendered templates of a route:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>The header and footer will always be displayed on screen, but the
+contents of the <code>&lt;div&gt;</code> will change depending on if the user is
+currently at <code>/posts</code> or <code>/posts/15</code>, for example.</p>
+
+<p>If you are keeping your templates in HTML, create a <code>&lt;script&gt;</code> tag
+without a template name. It will automatically be compiled and appended
+to the screen.</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
 4
 5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
-14
 </pre></td>
-  <td class="code"><pre>App.PostRoute = App.Route.extend({
-  <span class="function">renderTemplate</span>: <span class="keyword">function</span>() {
-    <span class="local-variable">this</span>.render(<span class="string"><span class="delimiter">'</span><span class="content">favoritePost</span><span class="delimiter">'</span></span>, {   <span class="comment">// the template to render</span>
-      <span class="key">into</span>: <span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>,                <span class="comment">// the template to render into</span>
-      <span class="key">outlet</span>: <span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>,              <span class="comment">// the name of the outlet in that template</span>
-      <span class="key">controller</span>: <span class="string"><span class="delimiter">'</span><span class="content">blogPost</span><span class="delimiter">'</span></span>        <span class="comment">// the controller to use for the template</span>
-    });
-    <span class="local-variable">this</span>.render(<span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>, {
-      <span class="key">into</span>: <span class="string"><span class="delimiter">'</span><span class="content">favoritePost</span><span class="delimiter">'</span></span>,
-      <span class="key">outlet</span>: <span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>,
-      <span class="key">controller</span>: <span class="string"><span class="delimiter">'</span><span class="content">blogPost</span><span class="delimiter">'</span></span>
-    });
-  }
-});
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="inline">  <span class="tag">&lt;div&gt;</span>
+    {{outlet}}
+  <span class="tag">&lt;/div&gt;</span></span>
+<span class="tag">&lt;/script&gt;</span>
 </pre></td>
 </tr></table>
-</div></div><h2 class='anchorable-toc' id='toc_rendering-warning'>Rendering Warning</h2>
-<p>When a template tries to render, and the parent route did not render a
-template, then you will see this warning:</p>
+</div></div>
+<p>If you&#39;re using build tools to load your templates, make sure you name
+the template <code>application</code>.</p>
 
-<p>&quot;The immediate parent route did not render into the main outlet ...&quot;</p>
-
-<p>This means that the current route tried to render into the parent
-route&#39;s template, but the parent route didn&#39;t render a template, or, if
-it did, that the template which the parent route provided did not render
-into the main template (i.e., a default <code>{{outlet}}</code>).</p>
-
-<p>Ember provides this warning because it expects that you will want to
-render into the main template.</p>
+<p>For more information, see <a href="/guides/templates/handlebars-basics">Templates</a> and <a href="/guides/routing/">Routing</a>.</p>
 
     
       <footer>
         
-          <a class="previous-guide" href="/guides/routing/setting-up-a-controller">
-            ← Setting Up a Controller
+          <a class="previous-guide" href="/guides/application">
+             ← Application: Introduction
           </a>
          
-        <a class="next-guide" href="/guides/routing/redirection">
-          Redirecting →
+        <a class="next-guide" href="/guides/templates/handlebars-basics">
+          Handlebars Basics →
         </a>
       
       </footer>

@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Application: The Application Template</title>
+    <title>Ember.js - Configuring Ember.js: Embedding Applications</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
@@ -78,7 +78,7 @@
     
   </head>
 
-  <body class="guides guides_application guides_application_the-application-template guides_application_the-application-template_index">
+  <body class="guides guides_configuring-ember guides_configuring-ember_embedding-applications guides_configuring-ember_embedding-applications_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -235,22 +235,22 @@
               <a href="/guides/concepts/naming-conventions">Naming Conventions</a>
             </li>
           </ol></li>
-          <li class="level-1 selected">
+          <li class="level-1">
             <a href="/guides/application">Application</a>
-            <ol class='selected'>
+            <ol>
         
             <li class="level-3">
               <a href="/guides/application">Introduction</a>
             </li>
-          
-            <li class="level-3 sub-selected">
-              <a href="/guides/application/the-application-template">The Application Template</a>
-            </li>
           </ol></li>
           <li class="level-1">
-            <a href="/guides/templates/handlebars-basics">Templates</a>
+            <a href="/guides/templates/the-application-template">Templates</a>
             <ol>
         
+            <li class="level-3">
+              <a href="/guides/templates/the-application-template">The Application Template</a>
+            </li>
+          
             <li class="level-3">
               <a href="/guides/templates/handlebars-basics">Handlebars Basics</a>
             </li>
@@ -455,12 +455,16 @@
               <a href="/guides/enumerables">Introduction</a>
             </li>
           </ol></li>
-          <li class="level-1">
+          <li class="level-1 selected">
             <a href="/guides/configuring-ember/disabling-prototype-extensions">Configuring Ember.js</a>
-            <ol>
+            <ol class='selected'>
         
             <li class="level-3">
               <a href="/guides/configuring-ember/disabling-prototype-extensions">Disabling Prototype Extensions</a>
+            </li>
+          
+            <li class="level-3 sub-selected">
+              <a href="/guides/configuring-ember/embedding-applications">Embedding Applications</a>
             </li>
           </ol></li>
           <li class="level-1">
@@ -489,84 +493,62 @@
   
   <div class="chapter">
     
-        <h1>The Application Template 
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/application/the-application-template.md" target="_blank" class="edit-page">
+        <h1>Embedding Applications 
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/configuring-ember/embedding-applications.md" target="_blank" class="edit-page">
             Edit Page</a>
         </h1>
       
-    <h2 class='anchorable-toc' id='toc_the-application-template'>The Application Template</h2>
-<p>The application template is the default template that is rendered when
-your application starts. </p>
+    <h2 class='anchorable-toc' id='toc_embedding-applications'>Embedding Applications</h2>
+<p>In most cases, your application&#39;s entire UI will be created by templates
+that are managed by the router.</p>
 
-<p>You should put your header, footer, and any other decorative content
-here. Additionally, you should have at least one <code>{{outlet}}</code>:
-a placeholder that the router will fill in with the appropriate template,
-based on the current state of the application.</p>
+<p>But what if you have an Ember.js app that you need to embed into an
+existing page, or run alongside other JavaScript frameworks?</p>
+<h3 class='anchorable-toc' id='toc_changing-the-root-element'>Changing the Root Element</h3>
+<p>By default, your application will render the <a href="/guides/application/the-application-template">application
+template</a> and attach it to
+the document&#39;s <code>body</code> element.</p>
 
-<p>Here&#39;s an example template:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>You can tell the application to append the application template to a
+different element by specifying its <code>rootElement</code> property:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;header&gt;</span>
-  <span class="tag">&lt;h1&gt;</span>Igor's Blog<span class="tag">&lt;/h1&gt;</span>
-<span class="tag">&lt;/header&gt;</span>
-
-<span class="tag">&lt;div&gt;</span>
-  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span><span class="inline-delimiter">}}</span></span>
-<span class="tag">&lt;/div&gt;</span>
-
-<span class="tag">&lt;footer&gt;</span>
-  <span class="entity">&amp;copy;</span>2013 Igor's Publishing, Inc.
-<span class="tag">&lt;/footer&gt;</span>
+  <td class="code"><pre>App = Ember.Application.create({
+  <span class="key">rootElement</span>: <span class="string"><span class="delimiter">'</span><span class="content">#app</span><span class="delimiter">'</span></span>
+});
 </pre></td>
 </tr></table>
 </div></div>
-<p>The header and footer will always be displayed on screen, but the
-contents of the <code>&lt;div&gt;</code> will change depending on if the user is
-currently at <code>/posts</code> or <code>/posts/15</code>, for example.</p>
-
-<p>If you are keeping your templates in HTML, create a <code>&lt;script&gt;</code> tag
-without a template name. It will automatically be compiled and appended
-to the screen.</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>This property can be specified as either an element or a
+<a href="http://api.jquery.com/category/selectors/">jQuery-compatible selector
+string</a>.</p>
+<h3 class='anchorable-toc' id='toc_disabling-url-management'>Disabling URL Management</h3>
+<p>You can prevent Ember from making changes to the URL by <a href="/guides/routing/specifying-the-location-api">changing the
+router&#39;s <code>location</code></a> to
+<code>none</code>:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
-4
-5
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-<span class="inline">  <span class="tag">&lt;div&gt;</span>
-    {{outlet}}
-  <span class="tag">&lt;/div&gt;</span></span>
-<span class="tag">&lt;/script&gt;</span>
+  <td class="code"><pre>App.Router = Ember.Router.extend({
+  <span class="key">location</span>: <span class="string"><span class="delimiter">'</span><span class="content">none</span><span class="delimiter">'</span></span>
+});
 </pre></td>
 </tr></table>
 </div></div>
-<p>If you&#39;re using build tools to load your templates, make sure you name
-the template <code>application</code>.</p>
-
-<p>For more information, see <a href="/guides/templates/handlebars-basics">Templates</a> and <a href="/guides/routing/">Routing</a>.</p>
-
     
       <footer>
         
-          <a class="previous-guide" href="/guides/application">
-            ← Introduction
+          <a class="previous-guide" href="/guides/configuring-ember/disabling-prototype-extensions">
+            ← Disabling Prototype Extensions
           </a>
          
-          <a class="next-guide" href="/guides/templates/handlebars-basics">
-             We're done with Application. Next up: Templates - Handlebars Basics →
+          <a class="next-guide" href="/guides/understanding-ember/the-view-layer">
+             We're done with Configuring Ember.js. Next up: Understanding Ember.js - The View Layer →
           </a>
         
       </footer>

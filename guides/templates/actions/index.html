@@ -242,15 +242,15 @@
             <li class="level-3">
               <a href="/guides/application">Introduction</a>
             </li>
-          
-            <li class="level-3">
-              <a href="/guides/application/the-application-template">The Application Template</a>
-            </li>
           </ol></li>
           <li class="level-1 selected">
-            <a href="/guides/templates/handlebars-basics">Templates</a>
+            <a href="/guides/templates/the-application-template">Templates</a>
             <ol class='selected'>
         
+            <li class="level-3">
+              <a href="/guides/templates/the-application-template">The Application Template</a>
+            </li>
+          
             <li class="level-3">
               <a href="/guides/templates/handlebars-basics">Handlebars Basics</a>
             </li>
@@ -462,6 +462,10 @@
             <li class="level-3">
               <a href="/guides/configuring-ember/disabling-prototype-extensions">Disabling Prototype Extensions</a>
             </li>
+          
+            <li class="level-3">
+              <a href="/guides/configuring-ember/embedding-applications">Embedding Applications</a>
+            </li>
           </ol></li>
           <li class="level-1">
             <a href="/guides/understanding-ember/the-view-layer">Understanding Ember.js</a>
@@ -495,14 +499,14 @@
         </h1>
       
     <h2 class='anchorable-toc' id='toc_actions-the-code-action-code-helper'>Actions (The <code>{{action}}</code> Helper)</h2>
-<p>You may want to trigger high level events in response to a simple user
-event (like a click).</p>
+<p>Your app will often need a way to let users interact with controls that
+change application state. For example, imagine that you have a template
+that shows a blog post, and supports expanding the post with additional
+information.</p>
 
-<p>In general, these events will manipulate some property on the
-controller, which will change the current template via bindings.</p>
-
-<p>For example, imagine that you have a template that shows a blog post,
-and supports expanding the post with additional information.</p>
+<p>You can use the <code>{{action}}</code> helper to make an HTML element clickable.
+When a user clicks the element, the named event will be sent to your
+application.</p>
 <div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
@@ -525,16 +529,13 @@ and supports expanding the post with additional information.</p>
 
 <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">isExpanded</span><span class="inline-delimiter">}}</span></span>
   <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">'</span><span class="content">body</span><span class="delimiter">'</span></span><span class="tag">&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">body</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/div&gt;</span>
-  <span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">contract</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>Contract<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">'</span><span class="attribute-name">contract</span><span class="error">'</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>Contract<span class="tag">&lt;/button&gt;</span>
 <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">else</span><span class="inline-delimiter">}}</span></span>
-  <span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">expand</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>Show More...<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">'</span><span class="attribute-name">expand</span><span class="error">'</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>Show More...<span class="tag">&lt;/button&gt;</span>
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
-</div></div>
-<p>In this case, the <code>post</code> controller would be an <code>Ember.ObjectController</code>
-whose <code>model</code> is an instance of <code>App.Post</code>.</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
 3
@@ -562,14 +563,84 @@ whose <code>model</code> is an instance of <code>App.Post</code>.</p>
 });
 </pre></td>
 </tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_event-bubbling'>Event Bubbling</h3>
+<p>By default, the <code>{{action}}</code> helper triggers a method on the template&#39;s
+controller, as illustrated above.</p>
+
+<p>If the controller does not implement a method with the same name as the
+event, the event will be sent to the template&#39;s route.</p>
+
+<p>Note that routes that handle events <strong>must place event handlers inside
+an <code>events</code> hash</strong>. Even if a route has a method with the same name as
+the event, it will not be triggered unless it is inside an <code>events</code> hash.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+</pre></td>
+  <td class="code"><pre>App.PostRoute = Ember.Route.extend({
+  <span class="key">events</span>: {
+    <span class="function">expand</span>: <span class="keyword">function</span>() {
+      <span class="local-variable">this</span>.controllerFor(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>).set(<span class="string"><span class="delimiter">'</span><span class="content">isExpanded</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
+    },
+
+    <span class="function">contract</span>: <span class="keyword">function</span>() {
+      <span class="local-variable">this</span>.controllerFor(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>).set(<span class="string"><span class="delimiter">'</span><span class="content">isExpanded</span><span class="delimiter">'</span></span>, <span class="predefined-constant">false</span>);
+    }
+  }
+});
+</pre></td>
+</tr></table>
 </div></div>
-<p>By default, the <code>{{action}}</code> helper triggers a method on the current
-controller. You can also pass parameter paths to the method. The following
-will call <code>controller.select( context.post )</code> when clicked:</p>
+<p>If neither the template&#39;s controller nor its associated route implement
+a handler, the event will continue to bubble to any parent routes.
+Finally, if an <code>ApplicationRoute</code> is defined, it will have an
+opportunity to handle the event.</p>
+
+<p>If a handler for the event is not implemented in the controller, the
+route, any parent routes, or the <code>ApplicationRoute</code>, an exception will
+be thrown.</p>
+
+<p><img src="/images/template-guide/event-bubbling.png" alt="Event Bubbling"></p>
+<h3 class='anchorable-toc' id='toc_event-parameters'>Event Parameters</h3>
+<p>You can optionally pass arguments to the event handler. Any values
+passed to the <code>{{action}}</code> helper after the event name will be passed to
+the handler as arguments.</p>
+
+<p>For example, if the <code>post</code> argument was passed:</p>
 <div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 </pre></td>
   <td class="code"><pre><span class="tag">&lt;p&gt;</span><span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">select</span><span class="error">&quot;</span> <span class="attribute-name">post</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>✓<span class="tag">&lt;/button&gt;</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">post.title</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/p&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>The route&#39;s <code>select</code> event handler would be called with a single argument
+containing the post model:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>App.PostController = Ember.ObjectController.extend({
+  <span class="key">events</span>: {
+    <span class="function">select</span>: <span class="keyword">function</span>(post) {
+      console.log(post.get(<span class="string"><span class="delimiter">'</span><span class="content">title</span><span class="delimiter">'</span></span>));
+    }
+  }
+});
 </pre></td>
 </tr></table>
 </div></div><h3 class='anchorable-toc' id='toc_specifying-the-type-of-event'>Specifying the Type of Event</h3>
@@ -670,18 +741,6 @@ where you are in the application. For example, you might want to have a
 button in a sidebar that does one thing if you are somewhere inside of
 the <code>/posts</code> route, and another thing if you are inside of the <code>/about</code>
 route.</p>
-<h3 class='anchorable-toc' id='toc_view-action-handling-target'>View Action Handling (Target)</h3>
-<p>In some cases (when creating custom components) it may be necessary to
-handle actions in your view class. This can be done by specifying the
-target of your action.</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">expand</span> <span class="attribute-name">target</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">view</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>Show More...<span class="tag">&lt;/button&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>Now the view will be checked to see if it can handle this action.</p>
 
     
       <footer>
