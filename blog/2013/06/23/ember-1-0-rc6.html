@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Ember 1.0 Prerelease 2</title>
+    <title>Ember.js - Ember 1.0 RC6</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
@@ -77,7 +77,7 @@
     
   </head>
 
-  <body class="blog blog_2012 blog_2012_10 blog_2012_10_25 blog_2012_10_25_ember-1-0-pre2">
+  <body class="blog blog_2013 blog_2013_06 blog_2013_06_23 blog_2013_06_23_ember-1-0-rc6">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -198,56 +198,60 @@
       
       <div id="content" class="has-sidebar">
           <article class="blog-post">
-    <h1>Ember 1.0 Prerelease 2</h1>
+    <h1>Ember 1.0 RC6</h1>
     
-      <h3 class="blog-post-author">Posted By: Peter Wagenet &ndash; <time>Oct 25, 2012</time></h3>
+      <h3 class="blog-post-author">Posted By: Michael Madrid &ndash; <time>Jun 23, 2013</time></h3>
     
 
-    <p>Ember 1.0 Prerelease 2 is out now. This is mainly a bug fix release
-after 1.0.pre. However, there are a few things you should be aware of
-and we&#39;ll go over those a bit below. We&#39;re still pushing hard toward the a 1.0 beta release but wanted to make some of our bug fixes available in a more formal way. If you want to go ahead and
-download now, you can grab it over on the <a href="https://github.com/emberjs/ember.js/downloads">Github Download Page</a>.  </p>
+    <p>Ember.js 1.0 RC6 has been released and is available from the
+main website and at <a href="http://builds.emberjs.com">builds.emberjs.com</a>.  This
+release features two big changes: 1) router update 2) Ember Components.</p>
 
-<p></p>
-<h2 class='anchorable-toc' id='toc_what-s-changed-now'>What&#39;s Changed Now</h2>
-<p>Other than bug fixes, there are a few things we&#39;ve changed that
-could affect your 1.0.pre apps.</p>
+<p><strong><em>Router Update</em></strong></p>
+
+<p>The biggest change is router update (aka &quot;router facelift&quot;), which addresses
+two major issues. The first was inconsistent semantics between URL-based transitions
+and <code>transitionTo</code>. The second was spotty async support which made it difficult to
+prevent or delay route entry in cases such as authentication and async code-loading.</p>
+
+<p>We have now harmonized URL changes and <code>transitionTo</code> semantics and more fully embraced
+asynchrony using promises.</p>
+
+<p>Additionally, router transitions have become first-class citizens and there are
+new hooks to prevent or decorate transitions:</p>
+
+<p><code>willTransition</code>: fires on current routes whenever a transition is about to take place
+ <code>beforeModel</code>/<code>model</code>/<code>afterModel</code>: hooks fired during the async validation phase</p>
+
+<p>Finally there is an <code>error</code> event which fires whenever there is a rejected promise or
+error thrown in any of the <code>beforeModel</code>/<code>model</code>/<code>afterModel</code> hooks.</p>
+
+<p>For more on new router features, see:</p>
 
 <ul>
-<li><code>{{outlet}}</code> now creates a Metamorph rather than a <code>&lt;div&gt;</code>. This makes
-it less obtrusive, but you may have to change your HTML or CSS if you 
-were relying on the <code>&lt;div&gt;</code>.</li>
-<li>We have removed <code>CP_DEFAULT_CACHEABLE</code> and <code>VIEW_PRESERVES_CONTEXT</code>
-flags. Both behaviors are now always on.</li>
-<li>Inline Handlebars templates must always be named now. The default name
-is &#39;application&#39;. This means that <code>&lt;script type=&quot;text/x-handlebars&quot;&gt;</code>
-behaves exactly the same as
-<code>&lt;script type=&quot;text/x-handlebars&quot; data-template-name=&quot;application&quot;&gt;</code>.</li>
-<li>Using the <code>{{collection}}</code> helper without a class has been deprecated,
-use the <code>{{each}}</code> helper instead. The <code>{{each}}</code> helper also now
-supports <code>itemViewClass</code> which was the main benefit to using
-<code>{{collection}}</code>.</li>
-<li><code>Ember.ViewState</code> has been removed.</li>
+<li><a href="https://machty.s3.amazonaws.com/ember-facelift-presentation/index.html#/1">New router overview given by Alex Matchneer&#39;s at the June Ember NYC Meetup </a></li>
+<li><a href="https://gist.github.com/machty/5647589">Usage Examples</a></li>
+<li><a href="http://www.embercasts.com/episodes/client-side-authentication-part-2">Client-side Authentication Part 2 Embercast</a></li>
 </ul>
 
-<p>For more information on what&#39;s been changing in Ember, take a look at
-Bradley Priest&#39;s <a href="http://bradleypriest.com/tags.html#ember-wrapup-ref">What&#39;s New in EmberJS</a>.</p>
-<h2 class='anchorable-toc' id='toc_what-will-change-later'>What Will Change Later</h2>
-<p>There are still some things that we want to take care of before we do a
-beta release. Here are a few of them:</p>
+<p>Special thanks to Alex Matchneer for his work on this!</p>
 
-<ul>
-<li>New Router API: This is mostly finalized but has not yet been
-implemented.</li>
-<li>New Computed Property API: We&#39;re working on a new API for Computed 
-Property getters and setters. Don&#39;t worry, we expect to support
-the existing one for the foreseeable future.</li>
-<li>Asynchronous Observers: Currently observers are fired immediately
-whereas bindings are synchronized with the RunLoop. In most cases
-observers can and should be delayed for optimal performance. We plan
-to change the existing behavior and add a new API for the cases where
-immediate execution really is needed.</li>
-</ul>
+<p><strong><em>Ember Components</em></strong></p>
+
+<p>The other major change is the introduction of Ember Components, which shares Web
+Components&#39; goal of facilitating creation of reusable higher-level page elements.</p>
+
+<p>Ember Components will generally consist of a <code>template</code> and a <code>view</code> which encapsulate the <code>template</code>&#39;s
+property access and actions.  Any reference to outside constructs is handled through context
+info passed into the <code>view</code>.  Components can be customized through subclassing.</p>
+
+<p>Ember Components naming conventions are: 1) the <code>template</code>&#39;s name begins with &#39;component/&#39;, and 2) the
+Component&#39;s name must include a &#39;-&#39; (this latter convention is consistent with Web Components standards,
+and prevents name collisions with built-in controls that wrap HTML elements). As an example, a component
+might be named <code>&#39;radio-button&#39;</code>.  Its <code>template</code> would be <code>&#39;components/radio-button&#39;</code> and you would call
+it as <code>{{radio-button}}</code> in other <code>templates</code>.</p>
+
+<p>Stay tuned for more docs and examples of this exciting new feature.</p>
 
 
     <hr>
