@@ -568,11 +568,12 @@ application.</p>
 controller, as illustrated above.</p>
 
 <p>If the controller does not implement a method with the same name as the
-event, the event will be sent to the template&#39;s route.</p>
+event, the event will be sent to the router, where the currently active
+leaf route will be given a chance to handle the event.</p>
 
-<p>Note that routes that handle events <strong>must place event handlers inside
-an <code>events</code> hash</strong>. Even if a route has a method with the same name as
-the event, it will not be triggered unless it is inside an <code>events</code> hash.</p>
+<p>Routes that handle events <strong>must place event handlers inside an <code>events</code>
+hash</strong>. Even if a route has a method with the same name as the event,
+it will not be triggered unless it is inside an <code>events</code> hash.</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == '') ? 'none' : '' }"><pre>1
 2
@@ -589,25 +590,28 @@ the event, it will not be triggered unless it is inside an <code>events</code> h
   <td class="code"><pre>App.PostRoute = Ember.Route.extend({
   <span class="key">events</span>: {
     <span class="function">expand</span>: <span class="keyword">function</span>() {
-      <span class="local-variable">this</span>.controllerFor(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>).set(<span class="string"><span class="delimiter">'</span><span class="content">isExpanded</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
+      <span class="local-variable">this</span>.controller.set(<span class="string"><span class="delimiter">'</span><span class="content">isExpanded</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
     },
 
     <span class="function">contract</span>: <span class="keyword">function</span>() {
-      <span class="local-variable">this</span>.controllerFor(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>).set(<span class="string"><span class="delimiter">'</span><span class="content">isExpanded</span><span class="delimiter">'</span></span>, <span class="predefined-constant">false</span>);
+      <span class="local-variable">this</span>.controller.set(<span class="string"><span class="delimiter">'</span><span class="content">isExpanded</span><span class="delimiter">'</span></span>, <span class="predefined-constant">false</span>);
     }
   }
 });
 </pre></td>
 </tr></table>
 </div></div>
-<p>If neither the template&#39;s controller nor its associated route implement
-a handler, the event will continue to bubble to any parent routes.
-Finally, if an <code>ApplicationRoute</code> is defined, it will have an
+<p>As you can see in this example, the event handlers are called such
+that when executed, <code>this</code> is the route, not the <code>events</code> hash.</p>
+
+<p>If neither the template&#39;s controller nor the currently active route
+implements a handler, the event will continue to bubble to any parent
+routes. Ultimately, if an <code>ApplicationRoute</code> is defined, it will have an
 opportunity to handle the event.</p>
 
-<p>If a handler for the event is not implemented in the controller, the
-route, any parent routes, or the <code>ApplicationRoute</code>, an exception will
-be thrown.</p>
+<p>When an action is triggered, but no matching event handler is
+implemented on the controller, the current route, or any of the
+current route&#39;s ancestors, an error will be thrown.</p>
 
 <p><img src="/images/template-guide/event-bubbling.png" alt="Event Bubbling"></p>
 <h3 class='anchorable-toc' id='toc_event-parameters'>Event Parameters</h3>
