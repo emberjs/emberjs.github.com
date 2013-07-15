@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Guides</title>
+    <title>Ember.js - Testing: Integration Testing</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
@@ -78,7 +78,7 @@
     
   </head>
 
-  <body class="guides guides_concepts guides_concepts_what-is-ember-js guides_concepts_what-is-ember-js_index">
+  <body class="guides guides_testing guides_testing_integration guides_testing_integration_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -223,9 +223,9 @@
               <a href="/guides/getting-started/using-other-adapters">Replacing the Fixture Adapter with Another Adapter</a>
             </li>
           </ol></li>
-          <li class="level-1 selected">
+          <li class="level-1">
             <a href="/guides/concepts/core-concepts">Concepts</a>
-            <ol class='selected'>
+            <ol>
         
             <li class="level-3">
               <a href="/guides/concepts/core-concepts">Core Concepts</a>
@@ -459,11 +459,11 @@
               <a href="/guides/enumerables">Introduction</a>
             </li>
           </ol></li>
-          <li class="level-1">
+          <li class="level-1 selected">
             <a href="/guides/testing/integration">Testing</a>
-            <ol>
+            <ol class='selected'>
         
-            <li class="level-3">
+            <li class="level-3 sub-selected">
               <a href="/guides/testing/integration">Integration Testing</a>
             </li>
           </ol></li>
@@ -505,82 +505,106 @@
   
   <div class="chapter">
     
-    <h2 class='anchorable-toc' id='toc_what-is-ember-js'>What is Ember.js?</h2>
-<p>Ember.js is a JavaScript framework for creating ambitious web
-applications. It helps you:</p>
+        <h1>Integration Testing 
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/testing/integration.md" target="_blank" class="edit-page">
+            Edit Page</a>
+        </h1>
+      
+    <p>Ember includes several helpers to facilitate integration testing. These helpers are &quot;aware&quot; of (and wait for) asynchronous behavior within your application, making it much easier to write deterministic tests.</p>
 
-<ol>
-<li>Write less code with templates that automatically update.</li>
-<li>Retrieve models, with rich relationships, from your server.</li>
-<li>Conventional app structure helps your app grow without messy code.</li>
-</ol>
-<h3 class='anchorable-toc' id='toc_enhancing-javascript'>Enhancing JavaScript</h3><h3 class='anchorable-toc' id='toc_eliminating-boilerplate'>Eliminating Boilerplate</h3>
-<p>There are some things that every web app developer has to do. For
-example, everyone has written code that loads data from a server,
-renders it to the screen, then updates if it changes.</p>
-
-<p>Since the tools provided to do this by the browser are quite primitive,
-you end up writing the same code over and over. Ember.js provides tools
-that let you focus on your app instead of writing the same code you&#39;ve
-written a hundred times.</p>
-
-<p>Because we&#39;ve built many applications ourselves, we&#39;ve extracted
-patterns that go beyond low-level event-driven abstractions. We&#39;ve
-eliminated much of the boilerplate associated with propagating changes
-throughout your application, and especially into the DOM itself.</p>
-
-<p>For example, to help manage changes in the view, Ember.js comes with a
-templating engine that will automatically update the DOM when the
-object it is bound to changes.</p>
-
-<p>For a simple example, consider this template:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p><a href="http://qunitjs.com/">QUnit</a> is the default testing framework for this package, but others are supported through third-party adapters.</p>
+<h3 class='anchorable-toc' id='toc_setup'>Setup</h3>
+<p>In order to integration test the Ember application, you need to run the app within your test framework. Set the root element of the application to an arbitrary element you know will exist. It is useful, as an aid to test-driven development, if the root element is visible while the tests run. Note: Do not use #qunit-fixture.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
-2
-3
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">with</span> <span class="attribute-name">person</span><span class="inline-delimiter">}}</span></span>
-  User <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">name</span><span class="inline-delimiter">}}</span></span> is <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">age</span><span class="inline-delimiter">}}</span></span> years old.
-<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">with</span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre>App.rootElement = <span class="string"><span class="delimiter">'</span><span class="content">#arbitrary-element-to-contain-ember-application</span><span class="delimiter">'</span></span>;
 </pre></td>
 </tr></table>
 </div></div>
-<p>As with any templating system, when the template is initially rendered,
-it will reflect the current state of the person.  In Ember.js, though,
-we also update the DOM automatically for you if the person&#39;s name or age
-changes—no re-render or update code needed. Just specify your template
-once, and Ember makes sure it stays up-to-date.</p>
+<p>This hook defers the readiness of the application, so that you can start the app when your tests are ready to run. It also sets the router&#39;s location to &#39;none&#39;, so that the window&#39;s location will not be modified (preventing both accidental leaking of state between tests and interference with your testing framework).</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>App.setupForTesting();
+</pre></td>
+</tr></table>
+</div></div>
+<p>This injects the test helpers into the window&#39;s scope.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>App.injectTestHelpers();
+</pre></td>
+</tr></table>
+</div></div>
+<p>With QUnit, <code>setup</code> and <code>teardown</code> functions are defined in each test module&#39;s configuration. These functions are called for each test in the module. If you are using a framework other than QUnit, use the hook that is called before each individual test.</p>
 
-<p>Templates are just one example. As you read through these guides, you&#39;ll
-see how Ember.js allows you to forget about stuff that you&#39;d have to
-handle manually in other frameworks—from data persistence to memory
-management.</p>
-<h3 class='anchorable-toc' id='toc_application-architecture'>Application Architecture</h3>
-<p>Since web applications evolved from web pages, which were nothing more
-than static documents, the primitive APIs supplied by the browser give
-you just enough rope to hang yourself with.</p>
+<p>Before each test, reset the application: <code>App.reset()</code> completely resets the state of the application.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>module(<span class="string"><span class="delimiter">&quot;</span><span class="content">Integration Tests</span><span class="delimiter">&quot;</span></span>, {
+  <span class="function">setup</span>: <span class="keyword">function</span>() {
+    App.reset();
+  }
+});
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_helpers'>Helpers</h3>
+<ul>
+<li><code>visit(url)</code>
 
-<p>Ember.js helps you build your app with a clear separation of concerns in
-mind, leading to code that is more modular, more testable, and more
-consistent.</p>
+<ul>
+<li>Visits the given route and returns a promise that resolves when all resulting async behavior is complete.</li>
+</ul></li>
+<li><code>find(selector, context)</code>
 
-<p>We also supply built-in support for state management, so you&#39;ll have
-a way to describe how your application moves through various nested states
-(like signed-out, signed-in, viewing-post, and viewing-comment) out of the box.</p>
-<h3 class='anchorable-toc' id='toc_ember-js-at-a-glance'>Ember.js at a Glance</h3>
-<p>These are the three features that make Ember a joy to use:</p>
+<ul>
+<li>Finds an element within the app&#39;s root element and within the context (optional). Scoping to the root element is especially useful to avoid conflicts with the test framework&#39;s reporter.</li>
+</ul></li>
+<li><code>fillIn(input_selector, text)</code>
 
-<ol>
-<li>Bindings</li>
-<li>Computed properties</li>
-<li>Auto-updating templates</li>
-</ol>
-<h4 class='anchorable-toc' id='toc_bindings'>Bindings</h4>
-<p>Use bindings to keep properties between two different objects in sync. You just
-declare a binding once, and Ember will make sure changes get propagated in either
-direction.</p>
+<ul>
+<li>Fills in the selected input with the given text and returns a promise that resolves when all resulting async behavior is complete.</li>
+</ul></li>
+<li><code>click(selector)</code>
 
-<p>Here&#39;s how you create a binding between two objects:</p>
+<ul>
+<li>Clicks an element and triggers any actions triggered by the element&#39;s <code>click</code> event and returns a promise that resolves when all resulting async behavior is complete.</li>
+</ul></li>
+<li><code>wait()</code>
+
+<ul>
+<li>Returns a promise that resolves when all async behavior is complete.</li>
+</ul></li>
+</ul>
+<h3 class='anchorable-toc' id='toc_writing-tests'>Writing tests</h3>
+<p>Almost every test has a pattern of visiting a route, interacting with the page (using the helpers), and checking for expected changes in the DOM.</p>
+
+<p>Examples:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre>test(<span class="string"><span class="delimiter">&quot;</span><span class="content">root lists first page of posts</span><span class="delimiter">&quot;</span></span>, <span class="keyword">function</span>(){
+  visit(<span class="string"><span class="delimiter">&quot;</span><span class="content">/</span><span class="delimiter">&quot;</span></span>).then(<span class="keyword">function</span>() {
+    equal(find(<span class="string"><span class="delimiter">&quot;</span><span class="content">.post</span><span class="delimiter">&quot;</span></span>).length, <span class="integer">5</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">The first page should have 5 posts</span><span class="delimiter">&quot;</span></span>);
+    <span class="comment">// Assuming we know that 5 posts display per page and that there are more than 5 posts</span>
+  });
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>The helpers that perform actions return a promise that resolves when all asynchronous behavior has completed.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -594,28 +618,23 @@ direction.</p>
 <strong>10</strong>
 11
 12
-13
 </pre></td>
-  <td class="code"><pre>MyApp.president = Ember.Object.create({
-  <span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Barack Obama</span><span class="delimiter">&quot;</span></span>
+  <td class="code"><pre>test(<span class="string"><span class="delimiter">&quot;</span><span class="content">creating a post displays the new post</span><span class="delimiter">&quot;</span></span>, <span class="keyword">function</span>(){
+  visit(<span class="string"><span class="delimiter">&quot;</span><span class="content">/posts/new</span><span class="delimiter">&quot;</span></span>).then(<span class="keyword">function</span>() {
+    <span class="keyword">return</span> fillIn(<span class="string"><span class="delimiter">&quot;</span><span class="content">.post-title</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">A new post</span><span class="delimiter">&quot;</span></span>);
+  }).then(<span class="keyword">function</span>() {
+    <span class="keyword">return</span> fillIn(<span class="string"><span class="delimiter">&quot;</span><span class="content">.post-author</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">John Doe</span><span class="delimiter">&quot;</span></span>);
+  }).then(<span class="keyword">function</span>() {
+    <span class="keyword">return</span> click(<span class="string"><span class="delimiter">&quot;</span><span class="content">button.create</span><span class="delimiter">&quot;</span></span>);
+  }).then(<span class="keyword">function</span>() {
+    ok(find(<span class="string"><span class="delimiter">&quot;</span><span class="content">h1:contains('A new post')</span><span class="delimiter">&quot;</span></span>).length, <span class="string"><span class="delimiter">&quot;</span><span class="content">The post's title should display</span><span class="delimiter">&quot;</span></span>);
+    ok(find(<span class="string"><span class="delimiter">&quot;</span><span class="content">a[rel=author]:contains('John Doe')</span><span class="delimiter">&quot;</span></span>).length, <span class="string"><span class="delimiter">&quot;</span><span class="content">A link to the author should display</span><span class="delimiter">&quot;</span></span>);
+  });
 });
-
-MyApp.country = Ember.Object.create({
-  <span class="comment">// Ending a property with 'Binding' tells Ember to</span>
-  <span class="comment">// create a binding to the presidentName property.</span>
-  <span class="key">presidentNameBinding</span>: <span class="string"><span class="delimiter">'</span><span class="content">MyApp.president.name</span><span class="delimiter">'</span></span>
-});
-
-<span class="comment">// Later, after Ember has resolved bindings...</span>
-MyApp.country.get(<span class="string"><span class="delimiter">'</span><span class="content">presidentName</span><span class="delimiter">'</span></span>);
-<span class="comment">// &quot;Barack Obama&quot;</span>
 </pre></td>
 </tr></table>
 </div></div>
-<p>Bindings allow you to architect your application using the MVC (Model-View-Controller)
-pattern, then rest easy knowing that data will always flow correctly from layer to layer.</p>
-<h4 class='anchorable-toc' id='toc_computed-properties'>Computed Properties</h4>
-<p>Computed properties allow you to treat a function like a property:</p>
+<p>For convenience, helpers can be chained:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -627,32 +646,24 @@ pattern, then rest easy knowing that data will always flow correctly from layer 
 8
 9
 <strong>10</strong>
-11
-12
-13
 </pre></td>
-  <td class="code"><pre>MyApp.president = Ember.Object.create({
-  <span class="key">firstName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Barack</span><span class="delimiter">&quot;</span></span>,
-  <span class="key">lastName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Obama</span><span class="delimiter">&quot;</span></span>,
-
-  <span class="function">fullName</span>: <span class="keyword">function</span>() {
-    <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
-
-  <span class="comment">// Call this flag to mark the function as a property</span>
-  }.property()
+  <td class="code"><pre>test(<span class="string"><span class="delimiter">&quot;</span><span class="content">creating a post displays the new post</span><span class="delimiter">&quot;</span></span>, <span class="keyword">function</span>() {
+  visit(<span class="string"><span class="delimiter">&quot;</span><span class="content">/posts/new</span><span class="delimiter">&quot;</span></span>)
+  .fillIn(<span class="string"><span class="delimiter">&quot;</span><span class="content">.post-title</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">A new post</span><span class="delimiter">&quot;</span></span>)
+  .fillIn(<span class="string"><span class="delimiter">&quot;</span><span class="content">.post-author</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">John Doe</span><span class="delimiter">&quot;</span></span>)
+  .click(<span class="string"><span class="delimiter">&quot;</span><span class="content">button.create</span><span class="delimiter">&quot;</span></span>)
+  .then(<span class="keyword">function</span>() {
+    ok(find(<span class="string"><span class="delimiter">&quot;</span><span class="content">h1:contains('A new post')</span><span class="delimiter">&quot;</span></span>).length, <span class="string"><span class="delimiter">&quot;</span><span class="content">The post's title should display</span><span class="delimiter">&quot;</span></span>);
+    ok(find(<span class="string"><span class="delimiter">&quot;</span><span class="content">a[rel=author]:contains('John Doe')</span><span class="delimiter">&quot;</span></span>).length, <span class="string"><span class="delimiter">&quot;</span><span class="content">A link to the author should display</span><span class="delimiter">&quot;</span></span>);
+  });
 });
-
-MyApp.president.get(<span class="string"><span class="delimiter">'</span><span class="content">fullName</span><span class="delimiter">'</span></span>);
-<span class="comment">// &quot;Barack Obama&quot;</span>
 </pre></td>
 </tr></table>
-</div></div>
-<p>Computed properties are useful because they can work with bindings, just
-like any other property.</p>
+</div></div><h3 class='anchorable-toc' id='toc_creating-your-own-test-helpers'>Creating your own test helpers</h3>
+<p><code>Ember.Test.registerHelper</code> is used to register a test helper that will be injected when <code>App.injectTestHelpers</code> is called.
+The helper method will always be called with the current Application as the first parameter. Helpers that cause asynchronous behavior should return <code>wait()</code> to return a promise that will resolve when that asynchronous behavior is complete.</p>
 
-<p>Many computed properties have dependencies on other properties. For example, in the above
-example, the <code>fullName</code> property depends on <code>firstName</code> and <code>lastName</code> to determine its value.
-You can tell Ember about these dependencies like this:</p>
+<p>For example:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -661,82 +672,28 @@ You can tell Ember about these dependencies like this:</p>
 5
 6
 7
-8
-9
-<strong>10</strong>
-11
 </pre></td>
-  <td class="code"><pre>MyApp.president = Ember.Object.create({
-  <span class="key">firstName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Barack</span><span class="delimiter">&quot;</span></span>,
-  <span class="key">lastName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Obama</span><span class="delimiter">&quot;</span></span>,
-
-  <span class="function">fullName</span>: <span class="keyword">function</span>() {
-    <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
-
-  <span class="comment">// Tell Ember that this computed property depends on firstName</span>
-  <span class="comment">// and lastName</span>
-  }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
+  <td class="code"><pre>Ember.Test.registerHelper(<span class="string"><span class="delimiter">'</span><span class="content">dblclick</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(app, selector, context) {
+  <span class="keyword">var</span> <span class="predefined">$el</span> = findWithAssert(selector, context);
+  Ember.run(<span class="keyword">function</span>() {
+    <span class="predefined">$el</span>.dblclick();
+  });
+  <span class="keyword">return</span> wait();
 });
 </pre></td>
 </tr></table>
 </div></div>
-<p>Make sure you list these dependencies so Ember knows when to update bindings that connect
-to a computed property.</p>
-<h4 class='anchorable-toc' id='toc_auto-updating-templates'>Auto-updating Templates</h4>
-<p>Ember uses Handlebars, a semantic templating library. To take data from your JavaScript application
-and put it into the DOM, create a <code>&lt;script&gt;</code> tag and put it into your HTML, wherever you&#39;d like the
-value to appear:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-<span class="inline">  The President of the United States is {{MyApp.president.fullName}}.</span>
-<span class="tag">&lt;/script&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>Here&#39;s the best part: templates are bindings-aware. That means that if you ever change the value of
-the property that you told us to display, we&#39;ll update it for you automatically. And because you&#39;ve
-specified dependencies, changes to <em>those</em> properties are reflected as well.</p>
-
-<p>Hopefully you can see how all three of these powerful tools work together: start with some primitive
-properties, then start building up more sophisticated properties and their dependencies using computed
-properties. Once you&#39;ve described the data, you only have to say how it gets displayed once, and Ember
-takes care of the rest. It doesn&#39;t matter how the underlying data changes, whether from an XHR request
-or the user performing an action; your user interface always stays up-to-date. This eliminates entire
-categories of edge cases that developers struggle with every day.</p>
-<h3 class='anchorable-toc' id='toc_differences-from-server-side-mvc'>Differences from Server-Side MVC</h3>
-<p>A common misconception about Ember.js&#39;s MVC implementation is that it must be similar to that of Ruby on Rails. This is incorrect. </p>
-
-<p>The reason for this difference is due to Ruby on Rails being a server-side framework, whereas Ember is a client-side framework.[1]</p>
-
-<p>Ember runs in the browser, so it can detect and respond to browser events such as mouse clicks, finger taps, scrolling, key presses, etc. The view objects that receive these events can then send them to controller objects, which can work with the data model to save changes. Everything happens client-side, in the browser, and ember-data takes care of sending and receiving appropriate data to and from the server API.</p>
-
-<figure>
-  <img alt="Ember.js MVC Diagram" src="/images/ember_mvc/embermvc.png">
-</figure>
-
-<p>Rails, on the other hand, runs on the server. As such, it can only communicate with the client through HTTP requests. Rather than receive direct user events, the server takes HTTP requests as input (GET /, POST /user/1, etc.), reads the route and maps it to a controller action. The controller then interacts with the model and the view templates to construct a response (usually in the form of an HTML document) to send back over HTTP. The user is always interacting with what is basically a flat page, assembled on demand for them based on their requests.</p>
-
-<figure>
-  <img alt="Rails MVC Diagram" src="/images/ember_mvc/railsmvc.png">
-</figure>
-
-<p>It is important to keep this difference in mind when architecting your applications. </p>
-
-<p>[1] Although it is possible to use Ember.js on the server side, that is beyond the scope of this guide.</p>
+<p><strong>(Please note: Only development builds of Ember include the testing package.)</strong></p>
 
     
       <footer>
         
-          <a class="previous-guide" href="/guides/getting-started/using-other-adapters">
-             ← Getting Started: Replacing the Fixture Adapter with Another Adapter
+          <a class="previous-guide" href="/guides/enumerables">
+             ← Enumerables: Introduction
           </a>
          
-          <a class="next-guide" href="/guides/application">
-             We're done with Concepts. Next up: Application - Introduction →
+          <a class="next-guide" href="/guides/configuring-ember/disabling-prototype-extensions">
+             We're done with Testing. Next up: Configuring Ember.js - Disabling Prototype Extensions →
           </a>
         
       </footer>
