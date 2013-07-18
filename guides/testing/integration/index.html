@@ -494,6 +494,10 @@
             <li class="level-3">
               <a href="/guides/understanding-ember/keeping-templates-up-to-date">Keeping Templates Up-to-Date</a>
             </li>
+          
+            <li class="level-3">
+              <a href="/guides/understanding-ember/debugging">Debugging</a>
+            </li>
           </ol></li></ol>
   
           <div id="back-to-top"><a id="back-top-top" href="#">&#11014; Back to Top</a></div>
@@ -514,7 +518,7 @@
 
 <p><a href="http://qunitjs.com/">QUnit</a> is the default testing framework for this package, but others are supported through third-party adapters.</p>
 <h3 class='anchorable-toc' id='toc_setup'>Setup</h3>
-<p>In order to integration test the Ember application, you need to run the app within your test framework. Set the root element of the application to an arbitrary element you know will exist. It is useful, as an aid to test-driven development, if the root element is visible while the tests run. Note: Do not use #qunit-fixture.</p>
+<p>In order to integration test the Ember application, you need to run the app within your test framework. Set the root element of the application to an arbitrary element you know will exist. It is useful, as an aid to test-driven development, if the root element is visible while the tests run. You can potentially use #qunit-fixture, typically used to contain fixture html for use in tests, but you will need to override css to make it visible.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
@@ -560,7 +564,7 @@
 <li><code>visit(url)</code>
 
 <ul>
-<li>Visits the given route and returns a promise that resolves when all resulting async behavior is complete.</li>
+<li>Visits the given route and returns a promise that fulfills when all resulting async behavior is complete.</li>
 </ul></li>
 <li><code>find(selector, context)</code>
 
@@ -570,17 +574,22 @@
 <li><code>fillIn(input_selector, text)</code>
 
 <ul>
-<li>Fills in the selected input with the given text and returns a promise that resolves when all resulting async behavior is complete.</li>
+<li>Fills in the selected input with the given text and returns a promise that fulfills when all resulting async behavior is complete.</li>
 </ul></li>
 <li><code>click(selector)</code>
 
 <ul>
-<li>Clicks an element and triggers any actions triggered by the element&#39;s <code>click</code> event and returns a promise that resolves when all resulting async behavior is complete.</li>
+<li>Clicks an element and triggers any actions triggered by the element&#39;s <code>click</code> event and returns a promise that fulfills when all resulting async behavior is complete.</li>
+</ul></li>
+<li><code>keyDown(selector, type, keyCode)</code>
+
+<ul>
+<li>Simulates a key event type, e.g. <code>keypress</code>, <code>keydown</code>, <code>keyup</code> with the desired keyCode on element found by the selector.</li>
 </ul></li>
 <li><code>wait()</code>
 
 <ul>
-<li>Returns a promise that resolves when all async behavior is complete.</li>
+<li>Returns a promise that fulfills when all async behavior is complete.</li>
 </ul></li>
 </ul>
 <h3 class='anchorable-toc' id='toc_writing-tests'>Writing tests</h3>
@@ -604,7 +613,7 @@
 </pre></td>
 </tr></table>
 </div></div>
-<p>The helpers that perform actions return a promise that resolves when all asynchronous behavior has completed.</p>
+<p>The helpers that perform actions return a promise that fulfills when all asynchronous behavior has completed.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2

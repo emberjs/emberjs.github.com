@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Models: Modifying Attributes</title>
+    <title>Ember.js - Understanding Ember.js: Debugging</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
@@ -78,7 +78,7 @@
     
   </head>
 
-  <body class="guides guides_models guides_models_modifying-attributes guides_models_modifying-attributes_index">
+  <body class="guides guides_understanding-ember guides_understanding-ember_debugging guides_understanding-ember_debugging_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -347,9 +347,9 @@
               <a href="/guides/controllers/dependencies-between-controllers">Managing Dependencies Between Controllers</a>
             </li>
           </ol></li>
-          <li class="level-1 selected">
+          <li class="level-1">
             <a href="/guides/models">Models</a>
-            <ol class='selected'>
+            <ol>
         
             <li class="level-3">
               <a href="/guides/models">Introduction</a>
@@ -367,7 +367,7 @@
               <a href="/guides/models/finding-models">Finding Models</a>
             </li>
           
-            <li class="level-3 sub-selected">
+            <li class="level-3">
               <a href="/guides/models/modifying-attributes">Modifying Attributes</a>
             </li>
           
@@ -479,9 +479,9 @@
               <a href="/guides/configuring-ember/embedding-applications">Embedding Applications</a>
             </li>
           </ol></li>
-          <li class="level-1">
+          <li class="level-1 selected">
             <a href="/guides/understanding-ember/the-view-layer">Understanding Ember.js</a>
-            <ol>
+            <ol class='selected'>
         
             <li class="level-3">
               <a href="/guides/understanding-ember/the-view-layer">The View Layer</a>
@@ -495,7 +495,7 @@
               <a href="/guides/understanding-ember/keeping-templates-up-to-date">Keeping Templates Up-to-Date</a>
             </li>
           
-            <li class="level-3">
+            <li class="level-3 sub-selected">
               <a href="/guides/understanding-ember/debugging">Debugging</a>
             </li>
           </ol></li></ol>
@@ -507,56 +507,70 @@
           
 
   
-    
-          <div class="under_construction_warning">
-            <h1>
-              <div class="msg">
-                Warning: ember-data is a work in progress and under rapid development.
-                <br/>
-                <span class="more_caution">Use with caution!!!</span>
-              </div>
-            </h1>
-          </div>
-        
-  
   <div class="chapter">
     
-        <h1>Modifying Attributes 
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/models/modifying-attributes.md" target="_blank" class="edit-page">
+        <h1>Debugging 
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/understanding-ember/debugging.md" target="_blank" class="edit-page">
             Edit Page</a>
         </h1>
       
-    <h2 class='anchorable-toc' id='toc_modifying-attributes'>Modifying Attributes</h2>
-<p>Once a record has been loaded, you can begin making changes to its
-attributes. Attributes behave just like normal properties in Ember.js
-objects. Making changes is as simple as setting the attribute you
-want to change:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+    <h3 class='anchorable-toc' id='toc_debugging-ember-and-ember-data'>Debugging Ember and Ember Data</h3>
+<p>Here are some tips you can use to help debug your Ember application.</p>
+<h4 class='anchorable-toc' id='toc_log-router-transitions'>Log router transitions</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> tyrion = App.Person.find(<span class="integer">1</span>);
-<span class="comment">// ...after the record has loaded</span>
-tyrion.set(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Yollo</span><span class="delimiter">&quot;</span></span>);
+  <td class="code"><pre>window.App = Ember.Application.create({
+  <span class="key">LOG_TRANSITIONS</span>: <span class="predefined-constant">true</span>,
+});
 </pre></td>
 </tr></table>
-</div></div>
-<p>All of the Ember.js conveniences are available for
-modifying attributes. For example, you can use <code>Ember.Object</code>&#39;s
-<code>incrementProperty</code> helper:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><h4 class='anchorable-toc' id='toc_log-object-bindings'>Log object bindings</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>Ember.LOG_BINDING = <span class="predefined-constant">true</span>
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_view-all-registered-routes'>View all registered routes</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre> Ember.keys(App.Router.router.recognizer.names)
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_view-all-registered-templates'>View all registered templates</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>Ember.keys(Ember.TEMPLATES)
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_get-the-state-history-of-an-ember-data-record'>Get the state history of an ember-data record</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>record.stateManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentPath</span><span class="delimiter">'</span></span>)
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_get-the-view-object-for-a-generated-ember-code-div-code-by-its-div-id'>Get the View object for a generated ember <code>div</code> by its div id</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>Ember.View.views[<span class="string"><span class="delimiter">'</span><span class="content">ember605</span><span class="delimiter">'</span></span>]
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_log-state-transitions'>Log state transitions</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>record.set(<span class="string"><span class="delimiter">&quot;</span><span class="content">stateManager.enableLogging</span><span class="delimiter">&quot;</span></span>, <span class="predefined-constant">true</span>)
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_view-an-instance-of-something-from-the-container'>View an instance of something from the container</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 </pre></td>
-  <td class="code"><pre>person.incrementProperty(<span class="string"><span class="delimiter">'</span><span class="content">age</span><span class="delimiter">'</span></span>);
-<span class="comment">// Happy birthday!</span>
+  <td class="code"><pre>App.__container__.lookup(<span class="string"><span class="delimiter">&quot;</span><span class="content">controller:posts</span><span class="delimiter">&quot;</span></span>)
+App.__container__.lookup(<span class="string"><span class="delimiter">&quot;</span><span class="content">route:application</span><span class="delimiter">&quot;</span></span>)
 </pre></td>
 </tr></table>
-</div></div>
-<p>You can tell if a record has outstanding changes that have not yet been
-saved by checking its <code>isDirty</code> property.</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><h4 class='anchorable-toc' id='toc_view-ember-data-s-identity-map'>View ember-data&#39;s identity map</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -564,33 +578,64 @@ saved by checking its <code>isDirty</code> property.</p>
 5
 6
 7
+8
 </pre></td>
-  <td class="code"><pre>person.get(<span class="string"><span class="delimiter">'</span><span class="content">isDirty</span><span class="delimiter">'</span></span>);
-<span class="comment">//=&gt; false</span>
+  <td class="code"><pre><span class="comment">// all records in memory</span>
+App.__container__.lookup(<span class="string"><span class="delimiter">'</span><span class="content">store:main</span><span class="delimiter">'</span></span>).recordCache 
 
-person.set(<span class="string"><span class="delimiter">'</span><span class="content">isAdmin</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
+<span class="comment">// attributes</span>
+App.__container__.lookup(<span class="string"><span class="delimiter">'</span><span class="content">store:main</span><span class="delimiter">'</span></span>).recordCache[<span class="integer">2</span>].get(<span class="string"><span class="delimiter">'</span><span class="content">data.attributes</span><span class="delimiter">'</span></span>)
 
-person.get(<span class="string"><span class="delimiter">'</span><span class="content">isDirty</span><span class="delimiter">'</span></span>);
-<span class="comment">//=&gt; true</span>
+<span class="comment">// loaded associations</span>
+App.__container__.lookup(<span class="string"><span class="delimiter">'</span><span class="content">store:main</span><span class="delimiter">'</span></span>).recordCache[<span class="integer">2</span>].get(<span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>)
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_see-all-observers-for-a-object-key'>See all observers for a object, key</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>Ember.observersFor(comments, keyName);
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_dealing-with-deprecations'>Dealing with deprecations</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre>Ember.ENV.RAISE_ON_DEPRECATION = <span class="predefined-constant">true</span>
+Ember.LOG_STACKTRACE_ON_DEPRECATION = <span class="predefined-constant">true</span>
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_handlebars'>Handlebars</h4><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">debugger</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">log</span> <span class="attribute-name">record</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_implement-a-code-ember-onerror-code-hook-to-log-all-errors-in-production'>Implement a <code>Ember.onerror</code> hook to log all errors in production</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre>Ember.<span class="function">onerror</span> = <span class="keyword">function</span>(error) {
+  Em.<span class="predefined">$</span>.ajax(<span class="string"><span class="delimiter">'</span><span class="content">/error-notification</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">POST</span><span class="delimiter">'</span></span>, {
+    <span class="key">stack</span>: error.stack,
+    <span class="key">otherInformation</span>: <span class="string"><span class="delimiter">'</span><span class="content">exception message</span><span class="delimiter">'</span></span>
+  });
+}
 </pre></td>
 </tr></table>
 </div></div>
-<p>Make sure that a record has finished loading before you try to modify.
-If you attempt to modify a record before it has finished loading, Ember
-Data will raise an exception. For more information, see <a href="/guides/models/model-lifecycle">Model
-Lifecycle</a>.</p>
-
     
       <footer>
         
-          <a class="previous-guide" href="/guides/models/finding-models">
-            ← Finding Models
+          <a class="previous-guide" href="/guides/understanding-ember/keeping-templates-up-to-date">
+            ← Keeping Templates Up-to-Date
           </a>
          
-        <a class="next-guide" href="/guides/models/model-lifecycle">
-          Model Lifecycle →
-        </a>
-      
       </footer>
       
   </div>
