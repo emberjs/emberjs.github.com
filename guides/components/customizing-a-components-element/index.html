@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Application: Introduction</title>
+    <title>Ember.js - Components: Customizing a Component's Element</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
@@ -78,7 +78,7 @@
     
   </head>
 
-  <body class="guides guides_application guides_application_index">
+  <body class="guides guides_components guides_components_customizing-a-components-element guides_components_customizing-a-components-element_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -235,11 +235,11 @@
               <a href="/guides/concepts/naming-conventions">Naming Conventions</a>
             </li>
           </ol></li>
-          <li class="level-1 selected">
+          <li class="level-1">
             <a href="/guides/application">Application</a>
-            <ol class='selected'>
+            <ol>
         
-            <li class="level-3 sub-selected">
+            <li class="level-3">
               <a href="/guides/application">Introduction</a>
             </li>
           </ol></li>
@@ -291,9 +291,9 @@
               <a href="/guides/templates/writing-helpers">Writing Helpers</a>
             </li>
           </ol></li>
-          <li class="level-1">
+          <li class="level-1 selected">
             <a href="/guides/components">Components</a>
-            <ol>
+            <ol class='selected'>
         
             <li class="level-3">
               <a href="/guides/components">Introduction</a>
@@ -307,7 +307,7 @@
               <a href="/guides/components/passing-properties-to-a-component">Passing Properties to a Component</a>
             </li>
           
-            <li class="level-3">
+            <li class="level-3 sub-selected">
               <a href="/guides/components/customizing-a-components-element">Customizing a Component's Element</a>
             </li>
           </ol></li>
@@ -529,52 +529,243 @@
   
   <div class="chapter">
     
-        <h1>Introduction 
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/application.md" target="_blank" class="edit-page">
+        <h1>Customizing a Component's Element 
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/components/customizing-a-components-element.md" target="_blank" class="edit-page">
             Edit Page</a>
         </h1>
       
     <hr>
-    <h2 class='anchorable-toc' id='toc_creating-an-application'>Creating an Application</h2>
-<p>The first step to creating an Ember.js application is to make an
-instance of <code>Ember.Application</code> and assign it to a global variable.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+    <p>By default, each component is backed by a <code>&lt;div&gt;</code> element. If you were
+to look at a rendered component in your developer tools, you would see
+a DOM representation that looked something like:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
+2
+3
 </pre></td>
-  <td class="code"><pre>window.App = Ember.Application.create();
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember180</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;h1&gt;</span>My Component<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
-<p>Most people call their application <code>App</code>, but you can call it whatever
-makes the most sense to you. Just make sure it starts with a capital
-letter.</p>
+<p>You can customize what type of element Ember generates for your
+component, including its attributes and class names, by creating a
+subclass of <code>Ember.Component</code> in your JavaScript.</p>
+<h3 class='anchorable-toc' id='toc_customizing-the-element'>Customizing the Element</h3>
+<p>To use a tag other than <code>div</code>, subclass <code>Ember.Component</code> and assign it
+a <code>tagName</code> property. This property can be any valid HTML5 tag name as a
+string.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>App.NavigationBarComponent = Ember.Component.extend({
+  <span class="key">tagName</span>: <span class="string"><span class="delimiter">'</span><span class="content">nav</span><span class="delimiter">'</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="comment">{{! templates/components/navigation-bar }}</span>
+<span class="tag">&lt;ul&gt;</span>
+  <span class="tag">&lt;li&gt;</span><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">'</span><span class="attribute-name">home</span><span class="error">'</span><span class="inline-delimiter">}}</span></span>Home<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">'</span><span class="attribute-name">about</span><span class="error">'</span><span class="inline-delimiter">}}</span></span>About<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">about</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span>
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_customizing-class-names'>Customizing Class Names</h3>
+<p>You can also specify which class names are applied to the component&#39;s
+element by setting its <code>classNames</code> property to an array of strings:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>App.NavigationBarComponent = Ember.Component.extend({
+  <span class="key">classNames</span>: [<span class="string"><span class="delimiter">'</span><span class="content">primary</span><span class="delimiter">'</span></span>]
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>If you want class names to be determined by properties of the component,
+you can use class name bindings. If you bind to a Boolean property, the
+class name will be added or removed depending on the value:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>App.TodoItemComponent = Ember.Component.extend({
+  <span class="key">classNameBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">isUrgent</span><span class="delimiter">'</span></span>],
+  <span class="key">isUrgent</span>: <span class="predefined-constant">true</span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>This component would render the following:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view is-urgent</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>If <code>isUrgent</code> is changed to <code>false</code>, then the <code>is-urgent</code> class name will be removed.</p>
 
-<p>What does creating an <code>Ember.Application</code> instance get you?</p>
+<p>By default, the name of the Boolean property is dasherized. You can customize the class name
+applied by delimiting it with a colon:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>App.TodoItemComponent = Ember.Component.extend({
+  <span class="key">classNameBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">isUrgent:urgent</span><span class="delimiter">'</span></span>],
+  <span class="key">isUrgent</span>: <span class="predefined-constant">true</span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>This would render this HTML:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view urgent</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Besides the custom class name for the value being <code>true</code>, you can also specify a class name which is used when the value is <code>false</code>:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>App.TodoItemComponent = Ember.Component.extend({
+  <span class="key">classNameBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">isEnabled:enabled:disabled</span><span class="delimiter">'</span></span>],
+  <span class="key">isEnabled</span>: <span class="predefined-constant">false</span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>This would render this HTML:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view disabled</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>You can also specify a class should only be added when the property is
+<code>false</code> by declaring <code>classNameBindings</code> like this:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>App.TodoItemComponent = Ember.Component.extend({
+  <span class="key">classNameBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">isEnabled::disabled</span><span class="delimiter">'</span></span>],
+  <span class="key">isEnabled</span>: <span class="predefined-constant">false</span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>This would render this HTML:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view disabled</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>If the <code>isEnabled</code> property is set to <code>true</code>, no class name is added:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>If the bound value is a string, that value will be added as a class name without
+modification:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>App.TodoItemComponent = Ember.Component.extend({
+  <span class="key">classNameBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">priority</span><span class="delimiter">'</span></span>],
+  <span class="key">priority</span>: <span class="string"><span class="delimiter">'</span><span class="content">highestPriority</span><span class="delimiter">'</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>This would render this HTML:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view highestPriority</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_customizing-attributes'>Customizing Attributes</h3>
+<p>You can bind attributes to the DOM element that represents a component
+by using <code>attributeBindings</code>:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.LinkItemComponent = Ember.Component.extend({
+  <span class="key">tagName</span>: <span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>,
+  <span class="key">attributeBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">href</span><span class="delimiter">'</span></span>],
+  <span class="key">href</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">http://emberjs.com</span><span class="delimiter">&quot;</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>You can also bind these attributes to differently named properties:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.LinkItemComponent = Ember.Component.extend({
+  <span class="key">tagName</span>: <span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>,
+  <span class="key">attributeBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">customHref:href</span><span class="delimiter">'</span></span>],
+  <span class="key">customHref</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">http://emberjs.com</span><span class="delimiter">&quot;</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_example'>Example</h3>
+<p>Here is an example todo application that shows completed todos with a
+red background:</p>
 
-<ol>
-<li>It is your application&#39;s namespace. All of the classes in your
-application will be defined as properties on this object (e.g.,
-<code>App.PostsView</code> and <code>App.PostsController</code>). This helps to prevent
-polluting of the global scope.</li>
-<li>It adds event listeners to the document and is responsible for
-delegating events to your views. (See <a href="/guides/understanding-ember/the-view-layer">The View
-Layer</a>
-for a detailed description.)</li>
-<li>It automatically renders the <a href="/guides/templates/the-application-template">application
-template</a>.</li>
-<li>It automatically creates a router and begins routing, choosing which
-template and model to display based on the current URL.</li>
-</ol>
+<p><a class="jsbin-embed" href="http://jsbin.com/utonef/1/embed?live">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 
     
       <footer>
         
-          <a class="previous-guide" href="/guides/concepts/naming-conventions">
-             ← Concepts: Naming Conventions
+          <a class="previous-guide" href="/guides/components/passing-properties-to-a-component">
+            ← Passing Properties to a Component
           </a>
          
-          <a class="next-guide" href="/guides/templates/the-application-template">
-             We're done with Application. Next up: Templates - The Application Template →
+          <a class="next-guide" href="/guides/routing">
+             We're done with Components. Next up: Routing - Introduction →
           </a>
         
       </footer>

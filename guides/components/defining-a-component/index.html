@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Application: Introduction</title>
+    <title>Ember.js - Components: Defining a Component</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
@@ -78,7 +78,7 @@
     
   </head>
 
-  <body class="guides guides_application guides_application_index">
+  <body class="guides guides_components guides_components_defining-a-component guides_components_defining-a-component_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -235,11 +235,11 @@
               <a href="/guides/concepts/naming-conventions">Naming Conventions</a>
             </li>
           </ol></li>
-          <li class="level-1 selected">
+          <li class="level-1">
             <a href="/guides/application">Application</a>
-            <ol class='selected'>
+            <ol>
         
-            <li class="level-3 sub-selected">
+            <li class="level-3">
               <a href="/guides/application">Introduction</a>
             </li>
           </ol></li>
@@ -291,15 +291,15 @@
               <a href="/guides/templates/writing-helpers">Writing Helpers</a>
             </li>
           </ol></li>
-          <li class="level-1">
+          <li class="level-1 selected">
             <a href="/guides/components">Components</a>
-            <ol>
+            <ol class='selected'>
         
             <li class="level-3">
               <a href="/guides/components">Introduction</a>
             </li>
           
-            <li class="level-3">
+            <li class="level-3 sub-selected">
               <a href="/guides/components/defining-a-component">Defining a Component</a>
             </li>
           
@@ -529,54 +529,107 @@
   
   <div class="chapter">
     
-        <h1>Introduction 
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/application.md" target="_blank" class="edit-page">
+        <h1>Defining a Component 
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/components/defining-a-component.md" target="_blank" class="edit-page">
             Edit Page</a>
         </h1>
       
     <hr>
-    <h2 class='anchorable-toc' id='toc_creating-an-application'>Creating an Application</h2>
-<p>The first step to creating an Ember.js application is to make an
-instance of <code>Ember.Application</code> and assign it to a global variable.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+    <p>To define a component, create a template whose name starts with
+<code>component/</code>. To define a new component <code>{{blog-post}}</code>, for example,
+create a <code>components/blog-post</code> template.</p>
+
+<p>If you are including your Handlebars templates inside an HTML file via
+<code>&lt;script&gt;</code> tags, it would look like this:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
+2
+3
+4
 </pre></td>
-  <td class="code"><pre>window.App = Ember.Application.create();
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">components/blog-post</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="inline">  <span class="tag">&lt;h1&gt;</span>Blog Post<span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;p&gt;</span>Lorem ipsum dolor sit amet.<span class="tag">&lt;/p&gt;</span></span>
+<span class="tag">&lt;/script&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
-<p>Most people call their application <code>App</code>, but you can call it whatever
-makes the most sense to you. Just make sure it starts with a capital
-letter.</p>
+<p>If you&#39;re using build tools, create a Handlebars file at
+<code>templates/components/blog-post.handlebars</code>.</p>
 
-<p>What does creating an <code>Ember.Application</code> instance get you?</p>
+<p>Having a template whose name starts with <code>components/</code> creates a
+component of the same name. Given the above template, you can now use the
+<code>{{blog-post}}</code> custom element:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;h1&gt;</span>My Blog<span class="tag">&lt;/h1&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">blog-post</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p><a class="jsbin-embed" href="http://jsbin.com/ifuxey/1/embed?live,html">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 
-<ol>
-<li>It is your application&#39;s namespace. All of the classes in your
-application will be defined as properties on this object (e.g.,
-<code>App.PostsView</code> and <code>App.PostsController</code>). This helps to prevent
-polluting of the global scope.</li>
-<li>It adds event listeners to the document and is responsible for
-delegating events to your views. (See <a href="/guides/understanding-ember/the-view-layer">The View
-Layer</a>
-for a detailed description.)</li>
-<li>It automatically renders the <a href="/guides/templates/the-application-template">application
-template</a>.</li>
-<li>It automatically creates a router and begins routing, choosing which
-template and model to display based on the current URL.</li>
-</ol>
+<p>Each component, under the hood, is backed by an element. By default,
+Ember will use a <code>&lt;div&gt;</code> element to contain your component&#39;s template.
+To learn how to change the element Ember uses for your component, see
+<a href="/guides/customizing-a-components-element">Customizing a Component&#39;s
+Element</a>.</p>
+<h3 class='anchorable-toc' id='toc_defining-a-component-subclass'>Defining a Component Subclass</h3>
+<p>Often times, your components will just encapsulate certain snippets of
+Handlebars templates that you find yourself using over and over. In
+those cases, you do not need to write any JavaScript at all. Just define
+the Handlebars template as described above and use the component that is
+created.</p>
+
+<p>If you need to customize the behavior of the component, however, you&#39;ll
+need to define a subclass of `Ember.Component. For example, you would
+need a custom subclass if you wanted to change a component&#39;s element,
+respond to actions from the component&#39;s template, or manually make
+changes to the component&#39;s element using JavaScript.</p>
+
+<p>Ember knows which subclass powers a component based on its name. For
+example, if you have a component called <code>blog-post</code>, you would create a
+subclass called <code>App.BlogPostComponent</code>. If your component was called
+<code>audio-player-controls</code>, the class name would be
+<code>App.AudioPlayerControlsComponent</code>.</p>
+
+<p>In other words, Ember will look for a class with the camelized name of
+the component, followed by <code>Component</code>.</p>
+
+<table>
+  <thead>
+  <tr>
+    <th>Component Name</th>
+    <th>Component Class</th>
+  </tr>
+  </thead>
+  <tr>
+    <td><code>blog-post</code></td>
+    <td><code>App.BlogPostComponent</code></td>
+  </tr>
+  <tr>
+    <td><code>audio-player-controls</code></td>
+    <td><code>App.AudioPlayerControlsComponent</code></td>
+  </tr>
+</table>
 
     
       <footer>
         
-          <a class="previous-guide" href="/guides/concepts/naming-conventions">
-             ← Concepts: Naming Conventions
+          <a class="previous-guide" href="/guides/components">
+            ← Introduction
           </a>
          
-          <a class="next-guide" href="/guides/templates/the-application-template">
-             We're done with Application. Next up: Templates - The Application Template →
-          </a>
-        
+        <a class="next-guide" href="/guides/components/passing-properties-to-a-component">
+          Passing Properties to a Component →
+        </a>
+      
       </footer>
       
   </div>

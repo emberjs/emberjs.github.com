@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Application: Introduction</title>
+    <title>Ember.js - Components: Passing Properties to a Component</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
@@ -78,7 +78,7 @@
     
   </head>
 
-  <body class="guides guides_application guides_application_index">
+  <body class="guides guides_components guides_components_passing-properties-to-a-component guides_components_passing-properties-to-a-component_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -235,11 +235,11 @@
               <a href="/guides/concepts/naming-conventions">Naming Conventions</a>
             </li>
           </ol></li>
-          <li class="level-1 selected">
+          <li class="level-1">
             <a href="/guides/application">Application</a>
-            <ol class='selected'>
+            <ol>
         
-            <li class="level-3 sub-selected">
+            <li class="level-3">
               <a href="/guides/application">Introduction</a>
             </li>
           </ol></li>
@@ -291,9 +291,9 @@
               <a href="/guides/templates/writing-helpers">Writing Helpers</a>
             </li>
           </ol></li>
-          <li class="level-1">
+          <li class="level-1 selected">
             <a href="/guides/components">Components</a>
-            <ol>
+            <ol class='selected'>
         
             <li class="level-3">
               <a href="/guides/components">Introduction</a>
@@ -303,7 +303,7 @@
               <a href="/guides/components/defining-a-component">Defining a Component</a>
             </li>
           
-            <li class="level-3">
+            <li class="level-3 sub-selected">
               <a href="/guides/components/passing-properties-to-a-component">Passing Properties to a Component</a>
             </li>
           
@@ -529,54 +529,136 @@
   
   <div class="chapter">
     
-        <h1>Introduction 
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/application.md" target="_blank" class="edit-page">
+        <h1>Passing Properties to a Component 
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/components/passing-properties-to-a-component.md" target="_blank" class="edit-page">
             Edit Page</a>
         </h1>
       
     <hr>
-    <h2 class='anchorable-toc' id='toc_creating-an-application'>Creating an Application</h2>
-<p>The first step to creating an Ember.js application is to make an
-instance of <code>Ember.Application</code> and assign it to a global variable.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+    <p>By default, a component does not have access to properties in the
+template scope in which it is used.</p>
+
+<p>For example, imagine you have a <code>blog-post</code> component that is used to
+display a blog post:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
+2
+3
+4
 </pre></td>
-  <td class="code"><pre>window.App = Ember.Application.create();
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">components/blog-post</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="inline">  &lt;h1&gt;Component: </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">title</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;p&gt;</span>Lorem ipsum dolor sit amet.<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/script&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
-<p>Most people call their application <code>App</code>, but you can call it whatever
-makes the most sense to you. Just make sure it starts with a capital
-letter.</p>
+<p>You can see that it has a <code>{{title}}</code> Handlebars expression to print the
+value of the <code>title</code> property inside the <code>&lt;h1&gt;</code>.</p>
 
-<p>What does creating an <code>Ember.Application</code> instance get you?</p>
+<p>Now imagine we have the following template and route:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>App.IndexRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> {
+      <span class="key">title</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is omakase</span><span class="delimiter">&quot;</span></span>
+    };
+  }
+});
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="comment">{{! index.handlebars }}</span>
+<span class="tag">&lt;h1&gt;</span>Template: <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">title</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/h1&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">blog-post</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Running this code, you will see that the first <code>&lt;h1&gt;</code> (from the outer
+template) displays the <code>title</code> property, but the second <code>&lt;h1&gt;</code> (from
+inside the component) is empty.</p>
 
-<ol>
-<li>It is your application&#39;s namespace. All of the classes in your
-application will be defined as properties on this object (e.g.,
-<code>App.PostsView</code> and <code>App.PostsController</code>). This helps to prevent
-polluting of the global scope.</li>
-<li>It adds event listeners to the document and is responsible for
-delegating events to your views. (See <a href="/guides/understanding-ember/the-view-layer">The View
-Layer</a>
-for a detailed description.)</li>
-<li>It automatically renders the <a href="/guides/templates/the-application-template">application
-template</a>.</li>
-<li>It automatically creates a router and begins routing, choosing which
-template and model to display based on the current URL.</li>
-</ol>
+<p><a class="jsbin-embed" href="http://jsbin.com/ufedet/2/embed?live">JS Bin</a></p>
+
+<p>We can fix this by making the <code>title</code> property available to the
+component:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">blog-post</span> <span class="attribute-name">title</span>=<span class="attribute-value">title</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>This will make the <code>title</code> property in the outer template scope
+available inside the component&#39;s template using the same name, <code>title</code>.</p>
+
+<p><a class="jsbin-embed" href="http://jsbin.com/ufedet/3/embed?live">JS Bin</a>
+<script src="http://static.jsbin.com/js/embed.js"></script></p>
+
+<p>If, in the above example, the model&#39;s <code>title</code> property was instead
+called <code>name</code>, we would change the component usage to:</p>
+<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>{{blog-post title=name}}
+</pre></td>
+</tr></table>
+</div></div>
+<p><a class="jsbin-embed" href="http://jsbin.com/ufedet/4/embed?live">JS Bin</a>
+<script src="http://static.jsbin.com/js/embed.js"></script></p>
+
+<p>In other words, you are binding a named property from the outer scope to
+a named property in the component scope, with the syntax
+<code>componentProperty=outerProperty</code>.</p>
+
+<p>It is important to note that the value of these properties is bound.
+Whether you change the value on the model or inside the component, the
+values stay in sync. In the following example, type some text in the
+text field either in the outer template or inside the component and note
+how they stay in sync.</p>
+
+<p><a class="jsbin-embed" href="http://jsbin.com/ufedet/5/embed?live">JS Bin</a>
+<script src="http://static.jsbin.com/js/embed.js"></script></p>
+
+<p>You can also bind properties from inside an <code>{{#each}}</code> loop. This will
+create a component for each item and bind it to each model in the loop.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">blog-post</span> <span class="attribute-name">title</span>=<span class="attribute-value">title</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p><a class="jsbin-embed" href="http://jsbin.com/ifuxey/2/embed?live">JS Bin</a>
+<script src="http://static.jsbin.com/js/embed.js"></script></p>
 
     
       <footer>
         
-          <a class="previous-guide" href="/guides/concepts/naming-conventions">
-             ← Concepts: Naming Conventions
+          <a class="previous-guide" href="/guides/components/defining-a-component">
+            ← Defining a Component
           </a>
          
-          <a class="next-guide" href="/guides/templates/the-application-template">
-             We're done with Application. Next up: Templates - The Application Template →
-          </a>
-        
+        <a class="next-guide" href="/guides/components/customizing-a-components-element">
+          Customizing a Component's Element →
+        </a>
+      
       </footer>
       
   </div>
