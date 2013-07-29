@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Getting Started: Transitioning to Show Only Incomplete Todos</title>
+    <title>Ember.js - Components: Wrapping Content in a Component</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
@@ -78,7 +78,7 @@
     
   </head>
 
-  <body class="guides guides_getting-started guides_getting-started_show-only-incomplete-todos guides_getting-started_show-only-incomplete-todos_index">
+  <body class="guides guides_components guides_components_wrapping-content-in-a-component guides_components_wrapping-content-in-a-component_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -127,9 +127,9 @@
         <div id="sidebar">
           
     <ol id="toc-list">
-          <li class="level-1 selected">
+          <li class="level-1">
             <a href="/guides/getting-started">Getting Started</a>
-            <ol class='selected'>
+            <ol>
         
             <li class="level-3">
               <a href="/guides/getting-started">Getting Started</a>
@@ -195,7 +195,7 @@
               <a href="/guides/getting-started/adding-child-routes">Adding Child Routes</a>
             </li>
           
-            <li class="level-3 sub-selected">
+            <li class="level-3">
               <a href="/guides/getting-started/show-only-incomplete-todos">Transitioning to Show Only Incomplete Todos</a>
             </li>
           
@@ -327,9 +327,9 @@
               <a href="/guides/routing/specifying-the-location-api">Specifying the URL Type</a>
             </li>
           </ol></li>
-          <li class="level-1">
+          <li class="level-1 selected">
             <a href="/guides/components">Components</a>
-            <ol>
+            <ol class='selected'>
         
             <li class="level-3">
               <a href="/guides/components">Introduction</a>
@@ -343,7 +343,7 @@
               <a href="/guides/components/passing-properties-to-a-component">Passing Properties to a Component</a>
             </li>
           
-            <li class="level-3">
+            <li class="level-3 sub-selected">
               <a href="/guides/components/wrapping-content-in-a-component">Wrapping Content in a Component</a>
             </li>
           
@@ -533,112 +533,112 @@
   
   <div class="chapter">
     
-        <h1>Transitioning to Show Only Incomplete Todos 
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/getting-started/show-only-incomplete-todos.md" target="_blank" class="edit-page">
+        <h1>Wrapping Content in a Component 
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/components/wrapping-content-in-a-component.md" target="_blank" class="edit-page">
             Edit Page</a>
         </h1>
       
     <hr>
-    <h2 class='anchorable-toc' id='toc_transitioning-to-show-only-incomplete-todos'>Transitioning to show only incomplete todos</h2>
-<p>Next we&#39;ll update the application so a user can navigate to a url where only todos that are not complete are displayed.</p>
+    <p>Sometimes, you may want to define a component that wraps content
+provided by other templates.</p>
 
-<p>In <code>index.html</code> convert the <code>&lt;a&gt;</code> tag for &#39;Active&#39; todos into a Handlebars <code>{{linkTo}}</code> helper:</p>
+<p>For example, imagine we are building a <code>blog-post</code> component that we can
+use in our application to display a blog post:</p>
 <div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
 </pre></td>
-  <td class="code"><pre><span class="comment">&lt;!--- ... additional lines truncated for brevity ... --&gt;</span>
-<span class="tag">&lt;li&gt;</span>
-  <span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">all</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">selected</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>All<span class="tag">&lt;/a&gt;</span>
-<span class="tag">&lt;/li&gt;</span>
-<span class="tag">&lt;li&gt;</span>
-  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">'</span><span class="attribute-name">todos.active</span><span class="error">'</span> <span class="attribute-name">activeClass</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">selected</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>Active<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
-<span class="tag">&lt;/li&gt;</span>
-<span class="tag">&lt;li&gt;</span>
-  <span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">completed</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Completed<span class="tag">&lt;/a&gt;</span>
-<span class="tag">&lt;/li&gt;</span>
-<span class="comment">&lt;!--- ... additional lines truncated for brevity ... --&gt;</span>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">components/blog-post</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="inline">  &lt;h1&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">title</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">body</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">body</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/script&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
-<p>In <code>js/router.js</code> update the router to recognize this new path and implement a matching route:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>Now, we can use the <code>{{blog-post}}</code> component and pass it properties
+in another template:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">blog-post</span> <span class="attribute-name">title</span>=<span class="attribute-value">title</span> <span class="attribute-name">body</span>=<span class="attribute-value">body</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p><a class="jsbin-embed" href="http://jsbin.com/obogub/1/embed?live">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+
+<p>(See <a href="/guides/components/passing-proprties-to-a-component/">Passing Properties to a
+Component</a> for
+more.)</p>
+
+<p>In this case, the content we wanted to display came from the model. But
+what if we want the developer using our component to be able to provide custom
+HTML content?</p>
+
+<p>In addition to the simple form you&#39;ve learned so far, components also
+support being used in <strong>block form</strong>. In block form, components can be
+passed a Handlebars template that is rendered inside the component&#39;s
+template wherever the <code>{{yield}}</code> expression appears.</p>
+
+<p>To use the block form, add a <code>#</code> character to the
+beginning of the component name, then make sure to add a closing tag.
+(See the Handlebars documentation on <a href="http://handlebarsjs.com/#block-expressions">block expressions</a> for more.)</p>
+
+<p>In that case, we can use the <code>{{blog-post}}</code> component in <strong>block form</strong>
+and tell Ember where the block content should be rendered using the
+<code>{{yield}}</code> helper. To update the example above, we&#39;ll first change the component&#39;s
+template:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
-14
-15
-16
-17
-18
-19
 </pre></td>
-  <td class="code"><pre>Todos.Router.map(<span class="keyword">function</span> () {
-  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">todos</span><span class="delimiter">'</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span> }, <span class="keyword">function</span> () {
-    <span class="comment">// additional child routes    </span>
-    <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">active</span><span class="delimiter">'</span></span>);
-  });
-});
-
-<span class="comment">// ... additional lines truncated for brevity ...</span>
-
-Todos.TodosActiveRoute = Ember.Route.extend({
-  <span class="function">model</span>: <span class="keyword">function</span>(){
-    <span class="keyword">return</span> Todos.Todo.filter(<span class="keyword">function</span> (todo) {
-      <span class="keyword">if</span> (!todo.get(<span class="string"><span class="delimiter">'</span><span class="content">isCompleted</span><span class="delimiter">'</span></span>)) { <span class="keyword">return</span> <span class="predefined-constant">true</span>; }
-    });
-  },
-  <span class="function">renderTemplate</span>: <span class="keyword">function</span>(controller){
-    <span class="local-variable">this</span>.render(<span class="string"><span class="delimiter">'</span><span class="content">todos/index</span><span class="delimiter">'</span></span>, {<span class="key">controller</span>: controller});
-  }
-});
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">components/blog-post</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="inline">  &lt;h1&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">title</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">body</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">yield</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/script&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
-<p>The model data for this route is the collection of todos whose <code>isCompleted</code> property is <code>false</code>. When a todo&#39;s <code>isCompleted</code> property changes this collection will automatically update to add or remove the todo appropriately.</p>
+<p>You can see that we&#39;ve replaced <code>{{body}}</code> with <code>{{yield}}</code>. This tells
+Ember that this content will be provided when the component is used.</p>
 
-<p>Normally transitioning into a new route changes the template rendered into the parent <code>{{outlet}}</code>, but in this case we&#39;d like to reuse the existing <code>todos/index</code> template. We can accomplish this by implementing the <code>renderTemplate</code> method and calling <code>render</code> ourselves with the specific template and controller options.</p>
+<p>Next, we&#39;ll update the template using the component to use the block
+form:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">blog-post</span> <span class="attribute-name">title</span>=<span class="attribute-value">title</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;p</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">author</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>by <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">author</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/p&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">body</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">blog-post</span><span class="inline-delimiter">}}</span></span> 
+</pre></td>
+</tr></table>
+</div></div>
+<p><a class="jsbin-embed" href="http://jsbin.com/osulic/1/embed?live">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 
-<p>Reload your web browser to ensure that there are no errors and the behavior described above occurs.</p>
-<h3 class='anchorable-toc' id='toc_live-preview'>Live Preview</h3>
-<p><a class="jsbin-embed" href="http://jsbin.com/asixij/2/embed?live">Ember.js • TodoMVC</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
-<h3 class='anchorable-toc' id='toc_additional-resources'>Additional Resources</h3>
-<ul>
-<li><a href="https://github.com/emberjs/quickstart-code-sample/commit/88d7880e8f7f68c8dc7e6b933d099bf10b191dd6">Changes in this step in <code>diff</code> format</a></li>
-<li><a href="/api/classes/Ember.Handlebars.helpers.html#method_linkTo">linkTo API documentation</a></li>
-<li><a href="/api/classes/Ember.Route.html#method_renderTemplate">Route#renderTemplate API documentation</a></li>
-<li><a href="/api/classes/Ember.Route.html#method_render">Route#render API documentation</a></li>
-<li><a href="/guides/routing">Ember Router Guide</a></li>
-</ul>
+<p>It&#39;s important to note that the template scope inside the component
+block is the same as outside. If a property is available in the template
+outside the component, it is also available inside the component block.</p>
+
+<p>This JSBin illustrates the concept:</p>
+
+<p><a class="jsbin-embed" href="http://jsbin.com/iqocuf/1/embed?live">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 
     
       <footer>
         
-          <a class="previous-guide" href="/guides/getting-started/adding-child-routes">
-            ← Adding Child Routes
+          <a class="previous-guide" href="/guides/components/passing-properties-to-a-component">
+            ← Passing Properties to a Component
           </a>
          
-        <a class="next-guide" href="/guides/getting-started/show-only-complete-todos">
-          Transitioning to Show Only Complete Todos →
+        <a class="next-guide" href="/guides/components/customizing-a-components-element">
+          Customizing a Component's Element →
         </a>
       
       </footer>
