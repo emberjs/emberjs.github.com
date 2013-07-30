@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Views: Adding Layouts to Views</title>
+    <title>Ember.js - Components: Handling User Interaction with Actions</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
@@ -78,7 +78,7 @@
     
   </head>
 
-  <body class="guides guides_views guides_views_adding-layouts-to-views guides_views_adding-layouts-to-views_index">
+  <body class="guides guides_components guides_components_handling-user-interaction-with-actions guides_components_handling-user-interaction-with-actions_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -327,9 +327,9 @@
               <a href="/guides/routing/specifying-the-location-api">Specifying the URL Type</a>
             </li>
           </ol></li>
-          <li class="level-1">
+          <li class="level-1 selected">
             <a href="/guides/components">Components</a>
-            <ol>
+            <ol class='selected'>
         
             <li class="level-3">
               <a href="/guides/components">Introduction</a>
@@ -351,7 +351,7 @@
               <a href="/guides/components/customizing-a-components-element">Customizing a Component's Element</a>
             </li>
           
-            <li class="level-3">
+            <li class="level-3 sub-selected">
               <a href="/guides/components/handling-user-interaction-with-actions">Handling User Interaction with Actions</a>
             </li>
           </ol></li>
@@ -411,9 +411,9 @@
               <a href="/guides/models/the-rest-adapter">The REST Adapter</a>
             </li>
           </ol></li>
-          <li class="level-1 selected">
+          <li class="level-1">
             <a href="/guides/views">Views</a>
-            <ol class='selected'>
+            <ol>
         
             <li class="level-3">
               <a href="/guides/views">Introduction</a>
@@ -431,7 +431,7 @@
               <a href="/guides/views/inserting-views-in-templates">Inserting Views in Templates</a>
             </li>
           
-            <li class="level-3 sub-selected">
+            <li class="level-3">
               <a href="/guides/views/adding-layouts-to-views">Adding Layouts to Views</a>
             </li>
           
@@ -537,152 +537,81 @@
   
   <div class="chapter">
     
-        <h1>Adding Layouts to Views 
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/views/adding-layouts-to-views.md" target="_blank" class="edit-page">
+        <h1>Handling User Interaction with Actions 
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/components/handling-user-interaction-with-actions.md" target="_blank" class="edit-page">
             Edit Page</a>
         </h1>
       
     <hr>
-    <h2 class='anchorable-toc' id='toc_adding-layouts-to-views'>Adding Layouts to Views</h2>
-<p>Views can have a secondary template that wraps their main template. Like templates,
-layouts are Handlebars templates that will be inserted inside the
-view&#39;s tag.</p>
+    <p>Components allow you to define controls that you can reuse throughout
+your application. If they&#39;re generic enough, they can also be shared
+with others and used in multiple applications.</p>
 
-<p>To tell a view which layout template to use, set its <code>layoutName</code> property.</p>
+<p>To make a reusable control useful, however, you first need to allow
+users of your application to interact with it.</p>
 
-<p>To tell the layout template where to insert the main template, use the Handlebars <code>{{yield}}</code> helper.
-The HTML contents of a view&#39;s rendered <code>template</code> will be inserted where the <code>{{yield}}</code> helper is.</p>
+<p>You can make elements in your component interactive by using the
+<code>{{action}}</code> helper. This is the <a href="/guides/templates/actions">same <code>{{action}}</code> helper you use in
+application templates</a>, but it has an
+important difference when used inside a component.</p>
 
-<p>First, you define the following layout template:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">my_layout</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-<span class="inline">  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">content-wrapper</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    {{yield}}
-  <span class="tag">&lt;/div&gt;</span></span>
-<span class="tag">&lt;/script&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>And then the following main template:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">my_content</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-<span class="inline">  Hello, <span class="tag">&lt;b&gt;</span>{{view.name}}<span class="tag">&lt;/b&gt;</span>!</span>
-<span class="tag">&lt;/script&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>Finally, you define a view, and instruct it to wrap the template with the defined layout:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre>AViewWithLayout = Ember.View.extend({
-  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Teddy</span><span class="delimiter">'</span></span>,
-  <span class="key">layoutName</span>: <span class="string"><span class="delimiter">'</span><span class="content">my_layout</span><span class="delimiter">'</span></span>,
-  <span class="key">templateName</span>: <span class="string"><span class="delimiter">'</span><span class="content">my_content</span><span class="delimiter">'</span></span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>This will result in view instances containing the following HTML</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">content-wrapper</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-  Hello, <span class="tag">&lt;b&gt;</span>Teddy<span class="tag">&lt;/b&gt;</span>!
-<span class="tag">&lt;/div&gt;</span>
-</pre></td>
-</tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_applying-layouts-in-practice'>Applying Layouts in Practice</h4>
-<p>Layouts are extremely useful when you have a view with a common wrapper and behavior, but its main template might change.
-One possible scenario is a Popup View.</p>
+<p>Instead of sending an action to the template&#39;s controller, then bubbling
+up the route hierarchy, actions sent from inside a component are sent
+directly to the component&#39;s <code>Ember.Component</code> instance, and do not
+bubble.</p>
 
-<p>You can define your popup layout template:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>For example, imagine the following component that shows a post&#39;s title.
+When the title is clicked, the entire post body is shown:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
 6
-7
-8
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">popup</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-<span class="inline">  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">popup</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    <span class="tag">&lt;button</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">popup-dismiss</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>x<span class="tag">&lt;/button&gt;</span>
-    <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">popup-content</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    {{yield}}
-    <span class="tag">&lt;/div&gt;</span>
-  &lt;<span class="regexp"><span class="delimiter">/</span><span class="content">div&gt;</span></span></span>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">components/post-summary</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="inline">  &lt;h3 </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">toggleBody</span><span class="error">&quot;</span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">title</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/h3&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">isShowingBody</span><span class="inline-delimiter">}}</span></span>
+    <span class="tag">&lt;p&gt;</span><span class="inline"><span class="inline-delimiter">{{{</span><span class="attribute-name">body</span><span class="inline-delimiter">}}}</span></span><span class="tag">&lt;/p&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
 <span class="tag">&lt;/script&gt;</span>
 </pre></td>
 </tr></table>
-</div></div>
-<p>Then define your popup view:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre>App.PopupView = Ember.View.extend({
-  <span class="key">layoutName</span>: <span class="string"><span class="delimiter">'</span><span class="content">popup</span><span class="delimiter">'</span></span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Now you can re-use your popup with different templates:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
-6
-7
-8
-9
-<strong>10</strong>
 </pre></td>
-  <td class="code"><pre>{{#view App.PopupView}}
-  <span class="tag">&lt;form&gt;</span>
-    <span class="tag">&lt;label</span> <span class="attribute-name">for</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Name:<span class="tag">&lt;/label&gt;</span>
-    <span class="tag">&lt;input</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-  <span class="tag">&lt;/form&gt;</span>
-{{/view}}
-
-{{#view App.PopupView}}
-  <span class="tag">&lt;p&gt;</span> Thank you for signing up! <span class="tag">&lt;/p&gt;</span>
-{{/view}}
+  <td class="code"><pre>App.PostSummaryComponent = Ember.Component.extend({
+  <span class="function">toggleBody</span>: <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.toggleProperty(<span class="string"><span class="delimiter">'</span><span class="content">isShowingBody</span><span class="delimiter">'</span></span>);
+  }
+});
 </pre></td>
 </tr></table>
 </div></div>
+<p><a class="jsbin-embed" href="http://jsbin.com/uyibis/1/embed?live">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+
+<p>The <code>{{action}}</code> helper can accept arguments, listen for different event
+types, control how action bubbling occurs, and more.</p>
+
+<p>For details about using the <code>{{action}}</code> helper, see the <a href="/guides/templates/actions">Actions
+section</a> of the Templates chapter.</p>
+
     
       <footer>
         
-          <a class="previous-guide" href="/guides/views/inserting-views-in-templates">
-            ← Inserting Views in Templates
+          <a class="previous-guide" href="/guides/components/customizing-a-components-element">
+            ← Customizing a Component's Element
           </a>
          
-        <a class="next-guide" href="/guides/views/customizing-a-views-element">
-          Customizing a View's Element →
-        </a>
-      
+          <a class="next-guide" href="/guides/controllers">
+             We're done with Components. Next up: Controllers - Introduction →
+          </a>
+        
       </footer>
       
   </div>
