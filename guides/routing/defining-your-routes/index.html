@@ -977,6 +977,70 @@ dynamic segment (in this case, <code>:post_id</code>).</p>
 <p>The <code>comments</code> template will be rendered in the <code>post</code> outlet.
 All templates under <code>comments</code> (<code>comments/index</code> and <code>comments/new</code>) will be rendered in the <code>comments</code> outlet.</p>
 
+<p>You are also able to create deeply nested resources in order to preserve the namespace on your routes:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">foo.bar</span><span class="delimiter">'</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">/bar</span><span class="delimiter">'</span></span> }, <span class="keyword">function</span>() {
+      <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">baz</span><span class="delimiter">'</span></span>); <span class="comment">// This will be foo.bar.baz</span>
+    });
+  });
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>This router creates following routes:</p>
+
+<div style="overflow: auto">
+  <table>
+    <thead>
+    <tr>
+      <th>URL</th>
+      <th>Route Name</th>
+      <th>Controller</th>
+      <th>Route</th>
+      <th>Template</th>
+    </tr>
+    </thead>
+    <tr>
+      <td><code>/</code></td>
+      <td><code>index</code></td>
+      <td><code>App.IndexController</code></td>
+      <td><code>App.IndexRoute</code></td>
+      <td><code>index</code></td>
+    </tr>
+    <tr>
+      <td><code>/foo</code></td>
+      <td><code>foo.index</code></td>
+      <td><code>App.FooIndexController</code></td>
+      <td><code>App.FooIndexRoute</code></td>
+      <td><code>foo/index</code></td>
+    </tr>
+    <tr>
+      <td><code>/foo/bar</code></td>
+      <td><code>foo.bar.index</code></td>
+      <td><code>App.FooBarIndexController</code></td>
+      <td><code>App.FooBarIndexRoute</code></td>
+      <td><code>foo/bar/index</code></td>
+    </tr>
+    <tr>
+      <td><code>/foo/bar/baz</code></td>
+      <td><code>foo.bar.baz</code></td>
+      <td><code>App.FooBarBazController</code></td>
+      <td><code>App.FooBarBazRoute</code></td>
+      <td><code>foo/bar/baz</code></td>
+    </tr>
+  </table>
+</div>
+
     
       <footer>
         
