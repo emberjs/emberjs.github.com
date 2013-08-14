@@ -195,7 +195,8 @@
 <h3 class='anchorable-toc' id='toc_important-changes'>Important Changes</h3><h4 class='anchorable-toc' id='toc_code-route-controllerfor-code-no-longer-auto-generates-controllers'><code>Route#controllerFor</code> no longer auto generates controllers</h4>
 <p>In some cases, people have been relying on <code>controllerFor</code> to access controllers for routes that have not yet been entered, relying on its auto-generation ability. Unfortunately, this can actually lead to subtle bugs. When entering a route, Ember looks for a controller with a matching name. If that controller isn’t found, Ember generates one according to the type of the route’s model. If the model is an array, we generate an <code>ArrayController</code>; if it’s an object, an <code>ObjectController</code>; if neither, a standard <code>Controller</code>. In most cases, people using <code>controllerFor</code> outside of the route are not providing a model and Ember will create the basic <code>Controller</code>. If the route is later entered, the controller will not be re-created and the type of the controller may not match the provided model.</p>
 
-<p>Due to this, we removed the auto-generation abilities of <code>controllerFor</code>. In most applications, this will not be an issue, but if you were relying on this behaviors, you will need to update your application. If you do have a controller that’s not associated with a route, you can use the new <code>Route#generateController</code> method to generate it before using <code>controllerFor</code> for subsequent access.</p>
+<p>Due to this, we removed the auto-generation abilities of <code>controllerFor</code>. In most applications, this will not be an issue, but if you were relying on this behaviors, you will need to update your application. If you do have a controller that’s not associated with a route, you should explicitly define the controller&#39;s class instead of relying on
+auto generation.</p>
 <h4 class='anchorable-toc' id='toc_removed-code-old-router-code'>Removed <code>old-router</code></h4>
 <p>Ember’s old router was deprecated prior to the first RC and while it’s never been included in standard RC builds, some users have still been relying on it. Despite this, it’s become time to cut the ties. Increasingly, new features we are adding, especially containers, are incompatible with the old router. Because of this, we’ve removed the old router code from Ember’s repo and you are no longer able to make custom Ember builds with it. We strongly encourage everyone still using the old router to upgrade. However, if anyone is interested in maintaining an old router library independent of the main Ember repo, please let us know.</p>
 <h3 class='anchorable-toc' id='toc_other-changes'>Other changes</h3>
@@ -208,6 +209,8 @@
 <li><p>Add <code>Ember.Route#disconnectOutlet</code>, to allow for clearing a previously rendered outlet.</p></li>
 <li><p>Added functionality to Router.map to allow it to be called multiple times without the map being overwritten. Allows routes to be added at runtime.</p></li>
 </ul>
+
+<p><em>UPDATE:</em> The post previously recommended the use of <code>Route#generateController</code> for cases where the controller was not associated with a route. We are now directing users to just explicitly declare the controller&#39;s class instead of relying on generation.</p>
 
 
     <hr>
