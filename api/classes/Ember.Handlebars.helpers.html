@@ -1037,6 +1037,10 @@
             </li>
           
             <li class="method ">
+              <a href="#method_loc">loc</a>
+            </li>
+          
+            <li class="method ">
               <a href="#method_log">log</a>
             </li>
           
@@ -1052,7 +1056,7 @@
               <a href="#method_render">render</a>
             </li>
           
-            <li class="method ">
+            <li class="method deprecated">
               <a href="#method_template">template</a>
             </li>
           
@@ -1657,7 +1661,7 @@ example, the following view and template:</p>
 5
 </pre></td>
   <td class="code"><pre>  AView = Ember.View.extend({
-    <span class="function">someProperty</span>: <span class="keyword">function</span>(){
+    <span class="function">someProperty</span>: <span class="keyword">function</span>() {
       <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">aValue</span><span class="delimiter">&quot;</span></span>;
     }.property()
   })
@@ -2249,7 +2253,7 @@ To enable it, set <code>ENV.EXPERIMENTAL_CONTROL_HELPER = true</code> before req
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-handlebars/lib/helpers/each.js#L186">packages/ember-handlebars/lib/helpers/each.js:186</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-handlebars/lib/helpers/each.js#L191">packages/ember-handlebars/lib/helpers/each.js:191</a>
 
     
 
@@ -2393,6 +2397,12 @@ App.AnItemView = Ember.View.extend({
 </pre></td>
 </tr></table>
 </div></div>
+<p>If an <code>itemViewClass</code> is defined on the helper, and therefore the helper is not
+being used as a block, an <code>emptyViewClass</code> can also be provided optionally.
+The <code>emptyViewClass</code> will match the behavior of the <code>{{else}}</code> condition
+described above. That is, the <code>emptyViewClass</code> will render if the collection
+is empty.</p>
+
 <h3>Representing each item with a Controller.</h3>
 
 <p>By default the controller lookup within an <code>{{#each}}</code> block will be
@@ -2412,7 +2422,7 @@ or synthesis for display:</p>
 5
 </pre></td>
   <td class="code"><pre>App.DeveloperController = Ember.ObjectController.extend({
-  <span class="function">isAvailableForHire</span>: <span class="keyword">function</span>(){
+  <span class="function">isAvailableForHire</span>: <span class="keyword">function</span>() {
     <span class="keyword">return</span> !<span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">content.isEmployed</span><span class="delimiter">'</span></span>) &amp;&amp; <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">content.isSeekingWork</span><span class="delimiter">'</span></span>);
   }.property(<span class="string"><span class="delimiter">'</span><span class="content">isEmployed</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">isSeekingWork</span><span class="delimiter">'</span></span>)
 })
@@ -2681,7 +2691,7 @@ is supplied it defaults to Ember.TextField.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/helpers/link_to.js#L228">packages/ember-routing/lib/helpers/link_to.js:228</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/helpers/link_to.js#L323">packages/ember-routing/lib/helpers/link_to.js:323</a>
 
     
 
@@ -2700,7 +2710,7 @@ element:</p>
 2
 3
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="attribute-name">photoGallery</span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">'</span><span class="attribute-name">photoGallery</span><span class="error">'</span><span class="inline-delimiter">}}</span></span>
   Great Hamster Photos
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
@@ -2726,7 +2736,7 @@ a <code>tagName</code> option:</p>
 2
 3
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="attribute-name">photoGallery</span> <span class="attribute-name">tagName</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">li</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">'</span><span class="attribute-name">photoGallery</span><span class="error">'</span> <span class="attribute-name">tagName</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">li</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
   Great Hamster Photos
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
@@ -2742,7 +2752,7 @@ a <code>tagName</code> option:</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>To override this option for your entire application, see 
+<p>To override this option for your entire application, see
 &quot;Overriding Application-wide Defaults&quot;.</p>
 
 <h3>Handling <code>href</code></h3>
@@ -2765,7 +2775,7 @@ use of <code>{{linkTo}}</code>:</p>
 2
 3
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="attribute-name">photoGallery.recent</span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">'</span><span class="attribute-name">photoGallery.recent</span><span class="error">'</span><span class="inline-delimiter">}}</span></span>
   Great Hamster Photos from the last week
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
@@ -2791,7 +2801,7 @@ option:</p>
 2
 3
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="attribute-name">photoGallery.recent</span> <span class="attribute-name">activeClass</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">current-url</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">'</span><span class="attribute-name">photoGallery.recent</span><span class="error">'</span> <span class="attribute-name">activeClass</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">current-url</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
   Great Hamster Photos from the last week
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
@@ -2807,7 +2817,7 @@ option:</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>To override this option for your entire application, see 
+<p>To override this option for your entire application, see
 &quot;Overriding Application-wide Defaults&quot;.</p>
 
 <h3>Supplying a model</h3>
@@ -2820,7 +2830,7 @@ the model context of the linked route:</p>
 2
 3
 </pre></td>
-  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>(){
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
   <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">&quot;</span><span class="content">photoGallery</span><span class="delimiter">&quot;</span></span>, {<span class="key">path</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">hamster-photos/:photo_id</span><span class="delimiter">&quot;</span></span>});
 })
 </pre></td>
@@ -2830,7 +2840,7 @@ the model context of the linked route:</p>
 2
 3
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="attribute-name">photoGallery</span> <span class="attribute-name">aPhoto</span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">'</span><span class="attribute-name">photoGallery</span><span class="error">'</span> <span class="attribute-name">aPhoto</span><span class="inline-delimiter">}}</span></span>
   <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">aPhoto.title</span><span class="inline-delimiter">}}</span></span>
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
@@ -2860,8 +2870,8 @@ route with the dynamic segments:</p>
 4
 5
 </pre></td>
-  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>(){
-  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">&quot;</span><span class="content">photoGallery</span><span class="delimiter">&quot;</span></span>, {<span class="key">path</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">hamster-photos/:photo_id</span><span class="delimiter">&quot;</span></span>}, <span class="keyword">function</span>(){
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">&quot;</span><span class="content">photoGallery</span><span class="delimiter">&quot;</span></span>, {<span class="key">path</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">hamster-photos/:photo_id</span><span class="delimiter">&quot;</span></span>}, <span class="keyword">function</span>() {
     <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">&quot;</span><span class="content">comment</span><span class="delimiter">&quot;</span></span>, {<span class="key">path</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">comments/:comment_id</span><span class="delimiter">&quot;</span></span>});
   });
 });
@@ -2874,7 +2884,7 @@ route with the dynamic segments:</p>
 2
 3
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="attribute-name">photoGallery.comment</span> <span class="attribute-name">aPhoto</span> <span class="attribute-name">comment</span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">'</span><span class="attribute-name">photoGallery.comment</span><span class="error">'</span> <span class="attribute-name">aPhoto</span> <span class="attribute-name">comment</span><span class="inline-delimiter">}}</span></span>
   <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">comment.body</span><span class="inline-delimiter">}}</span></span>
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
@@ -2960,6 +2970,80 @@ this manner:</p>
 
       
         
+<div id="method_loc" class="method  item-entry">
+  <h3 data-id="method_loc" class="name anchorable-toc"><code>loc</code></h3>
+  <span class="args">
+    (str)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-handlebars/lib/helpers/loc.js#L8">packages/ember-handlebars/lib/helpers/loc.js:8</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p><code>loc</code> looks up the string in the localized strings hash.
+This is a convenient way to localize text. For example:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">home</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="inline">  {{loc welcome}}</span>
+<span class="tag">&lt;/script&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Take note that <code>welcome</code> is a string and not an object
+reference.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>str</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>The string to format</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
 <div id="method_log" class="method  item-entry">
   <h3 data-id="method_log" class="name anchorable-toc"><code>log</code></h3>
   <span class="args">
@@ -2991,7 +3075,7 @@ this manner:</p>
 
   
     <div class="description">
-      <p><code>log</code> allows you to output the value of a value in the current rendering
+      <p><code>log</code> allows you to output the value of a variable in the current rendering
 context.</p>
 <div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -3336,7 +3420,7 @@ controller.</p>
 
       
         
-<div id="method_template" class="method  item-entry">
+<div id="method_template" class="method deprecated item-entry">
   <h3 data-id="method_template" class="name anchorable-toc"><code>template</code></h3>
   <span class="args">
     (templateName)
@@ -3344,6 +3428,8 @@ controller.</p>
 
 
 
+  
+  <span class="flag deprecated">deprecated</span>
 
 
 
@@ -3687,7 +3773,7 @@ render it in its unbound form:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-handlebars/lib/helpers/view.js#L152">packages/ember-handlebars/lib/helpers/view.js:152</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-handlebars/lib/helpers/view.js#L165">packages/ember-handlebars/lib/helpers/view.js:165</a>
 
     
 

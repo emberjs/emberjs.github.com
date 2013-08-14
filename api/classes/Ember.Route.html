@@ -1009,8 +1009,12 @@ the <a href="http://emberjs.com/guides/routing/">routing guide</a> for documenta
               <a href="#method_addObserver">addObserver</a>
             </li>
           
-            <li class="method inherited">
-              <a href="#method_apply">apply</a>
+            <li class="method ">
+              <a href="#method_afterModel">afterModel</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_beforeModel">beforeModel</a>
             </li>
           
             <li class="method inherited">
@@ -1033,6 +1037,10 @@ the <a href="http://emberjs.com/guides/routing/">routing guide</a> for documenta
               <a href="#method_create">create</a>
             </li>
           
+            <li class="method inherited">
+              <a href="#method_createWithMixins">createWithMixins</a>
+            </li>
+          
             <li class="method ">
               <a href="#method_deactivate">deactivate</a>
             </li>
@@ -1045,8 +1053,8 @@ the <a href="http://emberjs.com/guides/routing/">routing guide</a> for documenta
               <a href="#method_destroy">destroy</a>
             </li>
           
-            <li class="method inherited">
-              <a href="#method_detect">detect</a>
+            <li class="method ">
+              <a href="#method_disconnectOutlet">disconnectOutlet</a>
             </li>
           
             <li class="method inherited">
@@ -1063,6 +1071,10 @@ the <a href="http://emberjs.com/guides/routing/">routing guide</a> for documenta
           
             <li class="method private">
               <a href="#method_exit">exit</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_generateController">generateController</a>
             </li>
           
             <li class="method inherited">
@@ -1133,10 +1145,6 @@ the <a href="http://emberjs.com/guides/routing/">routing guide</a> for documenta
               <a href="#method_renderTemplate">renderTemplate</a>
             </li>
           
-            <li class="method inherited">
-              <a href="#method_reopen">reopen</a>
-            </li>
-          
             <li class="method ">
               <a href="#method_replaceWith">replaceWith</a>
             </li>
@@ -1175,6 +1183,10 @@ the <a href="http://emberjs.com/guides/routing/">routing guide</a> for documenta
           
             <li class="method ">
               <a href="#method_transitionTo">transitionTo</a>
+            </li>
+          
+            <li class="method inherited">
+              <a href="#method_willDestroy">willDestroy</a>
             </li>
           
         </ul>
@@ -1244,7 +1256,7 @@ the <a href="http://emberjs.com/guides/routing/">routing guide</a> for documenta
           <a href="/api/classes/Ember.Object.html#method__scheduledDestroy">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/system/core_object.js#L311">packages/ember-runtime/lib/system/core_object.js:311</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/system/core_object.js#L315">packages/ember-runtime/lib/system/core_object.js:315</a>
 
     
 
@@ -1285,7 +1297,7 @@ the <a href="http://emberjs.com/guides/routing/">routing guide</a> for documenta
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L167">packages/ember-routing/lib/system/route.js:167</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L202">packages/ember-routing/lib/system/route.js:202</a>
 
     
 
@@ -1335,7 +1347,7 @@ It is not executed when the model for the route changes.</p>
           <a href="/api/classes/Ember.Object.html#method_addObserver">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L318">packages/ember-runtime/lib/mixins/observable.js:318</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L317">packages/ember-runtime/lib/mixins/observable.js:317</a>
 
     
 
@@ -1430,13 +1442,13 @@ any of these values, to write an observer that has no parameters at all.</p>
 
       
         
-<div id="method_apply" class="method inherited item-entry">
-  <h3 data-id="method_apply" class="name anchorable-toc"><code>apply</code></h3>
+<div id="method_afterModel" class="method  item-entry">
+  <h3 data-id="method_afterModel" class="name anchorable-toc"><code>afterModel</code></h3>
   <span class="args">
-    (obj)
+    (resolvedModel, transition)
   </span>
 
-  <span class="type"></span>
+  <span class="type">Promise</span>
 
 
 
@@ -1448,17 +1460,50 @@ any of these values, to write an observer that has no parameters at all.</p>
   <div class="meta">
       
         
-          Inherited from
-          <a href="/api/classes/Ember.Object.html#method_apply">Ember.Object</a>
+          
+            Defined in
+          
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-metal/lib/mixin.js#L465">packages/ember-metal/lib/mixin.js:465</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L371">packages/ember-routing/lib/system/route.js:371</a>
 
     
 
     
   </div>
 
+  
+    <div class="description">
+      <p>This hook is called after this route&#39;s model has resolved.
+It follows identical async/promise semantics to <code>beforeModel</code>
+but is provided the route&#39;s resolved model in addition to
+the <code>transition</code>, and is therefore suited to performing
+logic that can only take place after the model has already
+resolved.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>App.PostRoute = Ember.Route.extend({
+  <span class="function">afterModel</span>: <span class="keyword">function</span>(posts, transition) {
+    <span class="keyword">if</span> (posts.length === <span class="integer">1</span>) {
+      <span class="local-variable">this</span>.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">post.show</span><span class="delimiter">'</span></span>, posts[<span class="integer">0</span>]);
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Refer to documentation for <code>beforeModel</code> for a description
+of transition-pausing semantics when a promise is returned
+from this hook.</p>
+
+    </div>
   
 
   <p>
@@ -1473,7 +1518,11 @@ any of these values, to write an observer that has no parameters at all.</p>
 
       <dl>
         
-          <dt><strong>obj</strong> <span class="type"></span></dt>
+          <dt><strong>resolvedModel</strong> <span class="type">Object</span></dt>
+          <dd>the value returned from `model`,
+  or its resolved value if it was a promise</dd>
+        
+          <dt><strong>transition</strong> <span class="type"><a href="/api/classes/Transition.html">Transition</a></span></dt>
           <dd></dd>
         
       </dl>
@@ -1484,8 +1533,180 @@ any of these values, to write an observer that has no parameters at all.</p>
     <div class="return">
       <h3>Returns:</h3>
       <dl>
-        <dt><span class="type"></span>
-        <dd> applied object</dd>
+        <dt><span class="type">Promise</span>
+        <dd> if the value returned from this hook is
+  a promise, the transition will pause until the transition
+  resolves. Otherwise, non-promise return values are not
+  utilized in any way.</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
+<div id="method_beforeModel" class="method  item-entry">
+  <h3 data-id="method_beforeModel" class="name anchorable-toc"><code>beforeModel</code></h3>
+  <span class="args">
+    (transition)
+  </span>
+
+  <span class="type">Promise</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L293">packages/ember-routing/lib/system/route.js:293</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>This hook is the first of the route entry validation hooks
+called when an attempt is made to transition into a route
+or one of its children. It is called before <code>model</code> and
+<code>afterModel</code>, and is appropriate for cases when:</p>
+
+<p>1) A decision can be made to redirect elsewhere without
+   needing to resolve the model first.
+2) Any async operations need to occur first before the
+   model is attempted to be resolved.</p>
+
+<p>This hook is provided the current <code>transition</code> attempt
+as a parameter, which can be used to <code>.abort()</code> the transition,
+save it for a later <code>.retry()</code>, or retrieve values set
+on it from a previous hook. You can also just call
+<code>this.transitionTo</code> to another route to implicitly
+abort the <code>transition</code>.</p>
+
+<p>You can return a promise from this hook to pause the
+transition until the promise resolves (or rejects). This could
+be useful, for instance, for retrieving async code from
+the server that is required to enter a route.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>App.PostRoute = Ember.Route.extend({
+  <span class="function">beforeModel</span>: <span class="keyword">function</span>(transition) {
+    <span class="keyword">if</span> (!App.Post) {
+      <span class="keyword">return</span> Ember.<span class="predefined">$</span>.getScript(<span class="string"><span class="delimiter">'</span><span class="content">/models/post.js</span><span class="delimiter">'</span></span>);
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>If <code>App.Post</code> doesn&#39;t exist in the above example,
+<code>beforeModel</code> will use jQuery&#39;s <code>getScript</code>, which
+returns a promise that resolves after the server has
+successfully retrieved and executed the code from the
+server. Note that if an error were to occur, it would
+be passed to the <code>error</code> hook on <code>Ember.Route</code>, but
+it&#39;s also possible to handle errors specific to
+<code>beforeModel</code> right from within the hook (to distinguish
+from the shared error handling behavior of the <code>error</code>
+hook):</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+22
+</pre></td>
+  <td class="code"><pre>App.PostRoute = Ember.Route.extend({
+  <span class="function">beforeModel</span>: <span class="keyword">function</span>(transition) {
+    <span class="keyword">if</span> (!App.Post) {
+      <span class="keyword">var</span> self = <span class="local-variable">this</span>;
+      <span class="keyword">return</span> Ember.<span class="predefined">$</span>.getScript(<span class="string"><span class="delimiter">'</span><span class="content">post.js</span><span class="delimiter">'</span></span>).then(<span class="predefined-constant">null</span>, <span class="keyword">function</span>(e) {
+        self.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">help</span><span class="delimiter">'</span></span>);
+
+        <span class="comment">// Note that the above transitionTo will implicitly</span>
+        <span class="comment">// halt the transition. If you were to return</span>
+        <span class="comment">// nothing from this promise reject handler,</span>
+        <span class="comment">// according to promise semantics, that would</span>
+        <span class="comment">// convert the reject into a resolve and the</span>
+        <span class="comment">// transition would continue. To propagate the</span>
+        <span class="comment">// error so that it'd be handled by the `error`</span>
+        <span class="comment">// hook, you would have to either</span>
+        <span class="keyword">return</span> Ember.RSVP.reject(e);
+        <span class="comment">// or</span>
+        <span class="keyword">throw</span> e;
+      });
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>transition</strong> <span class="type"><a href="/api/classes/Transition.html">Transition</a></span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Promise</span>
+        <dd> if the value returned from this hook is
+  a promise, the transition will pause until the transition
+  resolves. Otherwise, non-promise return values are not
+  utilized in any way.</dd>
       </dl>
     </div>
   
@@ -1512,7 +1733,7 @@ any of these values, to write an observer that has no parameters at all.</p>
           <a href="/api/classes/Ember.Object.html#method_beginPropertyChanges">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L217">packages/ember-runtime/lib/mixins/observable.js:217</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L216">packages/ember-runtime/lib/mixins/observable.js:216</a>
 
     
 
@@ -1577,7 +1798,7 @@ deferring.</p>
           <a href="/api/classes/Ember.Object.html#method_cacheFor">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L494">packages/ember-runtime/lib/mixins/observable.js:494</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L495">packages/ember-runtime/lib/mixins/observable.js:495</a>
 
     
 
@@ -1646,7 +1867,7 @@ generated lazily.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L364">packages/ember-routing/lib/system/route.js:364</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L407">packages/ember-routing/lib/system/route.js:407</a>
 
     
 
@@ -1671,7 +1892,7 @@ generated lazily.</p>
 <div id="method_controllerFor" class="method  item-entry">
   <h3 data-id="method_controllerFor" class="name anchorable-toc"><code>controllerFor</code></h3>
   <span class="args">
-    (name, model)
+    (name)
   </span>
 
   <span class="type"><a href="/api/classes/Ember.Controller.html">Ember.Controller</a></span>
@@ -1691,7 +1912,7 @@ generated lazily.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L521">packages/ember-routing/lib/system/route.js:521</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L568">packages/ember-routing/lib/system/route.js:568</a>
 
     
 
@@ -1718,9 +1939,6 @@ generated lazily.</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>By default, the controller for <code>post</code> is the shared instance of
-<code>App.PostController</code>.</p>
-
     </div>
   
 
@@ -1738,9 +1956,6 @@ generated lazily.</p>
         
           <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
           <dd>the name of the route</dd>
-        
-          <dt><strong>model</strong> <span class="type">Object</span></dt>
-          <dd>the model associated with the route (optional)</dd>
         
       </dl>
     </div>
@@ -1781,7 +1996,7 @@ generated lazily.</p>
           <a href="/api/classes/Ember.Object.html#method_create">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-metal/lib/mixin.js#L386">packages/ember-metal/lib/mixin.js:386</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/system/core_object.js#L432">packages/ember-runtime/lib/system/core_object.js:432</a>
 
     
 
@@ -1835,7 +2050,68 @@ noName.helloWorld(); <span class="comment">// alerts undefined</span>
 </div></div>
 <p>NOTE: For performance reasons, you cannot declare methods or computed
 properties during <code>create</code>. You should instead declare methods and computed
-properties when using <code>extend</code>.</p>
+properties when using <code>extend</code> or use the <code>createWithMixins</code> shorthand.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>arguments</strong> <span class="type"></span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
+<div id="method_createWithMixins" class="method inherited item-entry">
+  <h3 data-id="method_createWithMixins" class="name anchorable-toc"><code>createWithMixins</code></h3>
+  <span class="args">
+    (arguments)
+  </span>
+
+
+
+
+
+
+  <span class="flag static">static</span>
+
+
+
+  <div class="meta">
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.Object.html#method_createWithMixins">Ember.Object</a>
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/system/core_object.js#L418">packages/ember-runtime/lib/system/core_object.js:418</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Equivalent to doing <code>extend(arguments).create()</code>.
+If possible use the normal <code>create</code> method instead.</p>
 
     </div>
   
@@ -1883,7 +2159,7 @@ properties when using <code>extend</code>.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L159">packages/ember-routing/lib/system/route.js:159</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L194">packages/ember-routing/lib/system/route.js:194</a>
 
     
 
@@ -2009,7 +2285,7 @@ orc.decrementProperty(<span class="string"><span class="delimiter">'</span><span
           <a href="/api/classes/Ember.Object.html#method_destroy">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/system/core_object.js#L284">packages/ember-runtime/lib/system/core_object.js:284</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/system/core_object.js#L286">packages/ember-runtime/lib/system/core_object.js:286</a>
 
     
 
@@ -2051,13 +2327,12 @@ happen immediately.  It will set an isDestroying flag immediately.</p>
 
       
         
-<div id="method_detect" class="method inherited item-entry">
-  <h3 data-id="method_detect" class="name anchorable-toc"><code>detect</code></h3>
+<div id="method_disconnectOutlet" class="method  item-entry">
+  <h3 data-id="method_disconnectOutlet" class="name anchorable-toc"><code>disconnectOutlet</code></h3>
   <span class="args">
-    (obj)
+    (options)
   </span>
 
-  <span class="type">Boolean</span>
 
 
 
@@ -2069,17 +2344,69 @@ happen immediately.  It will set an isDestroying flag immediately.</p>
   <div class="meta">
       
         
-          Inherited from
-          <a href="/api/classes/Ember.Object.html#method_detect">Ember.Object</a>
+          
+            Defined in
+          
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-metal/lib/mixin.js#L492">packages/ember-metal/lib/mixin.js:492</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L742">packages/ember-routing/lib/system/route.js:742</a>
 
     
 
     
   </div>
 
+  
+    <div class="description">
+      <p>Disconnects a view that has been rendered into an outlet.</p>
+
+<p>You may pass any or all of the following options to <code>disconnectOutlet</code>:</p>
+
+<ul>
+<li><code>outlet</code>: the name of the outlet to clear (default: &#39;main&#39;)</li>
+<li><code>parentView</code>: the name of the view containing the outlet to clear
+(default: the view rendered by the parent route)</li>
+</ul>
+
+<p>Example:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+</pre></td>
+  <td class="code"><pre>App.ApplicationRoute = App.Route.extend({
+  <span class="key">events</span>: {
+    <span class="function">showModal</span>: <span class="keyword">function</span>(evt) {
+      <span class="local-variable">this</span>.render(evt.modalName, {
+        <span class="key">outlet</span>: <span class="string"><span class="delimiter">'</span><span class="content">modal</span><span class="delimiter">'</span></span>,
+        <span class="key">into</span>: <span class="string"><span class="delimiter">'</span><span class="content">application</span><span class="delimiter">'</span></span>
+      });
+    },
+    <span class="function">hideModal</span>: <span class="keyword">function</span>(evt) {
+      <span class="local-variable">this</span>.disconnectOutlet({
+        <span class="key">outlet</span>: <span class="string"><span class="delimiter">'</span><span class="content">modal</span><span class="delimiter">'</span></span>,
+        <span class="key">parentView</span>: <span class="string"><span class="delimiter">'</span><span class="content">application</span><span class="delimiter">'</span></span>
+      });
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
   
 
   <p>
@@ -2094,21 +2421,13 @@ happen immediately.  It will set an isDestroying flag immediately.</p>
 
       <dl>
         
-          <dt><strong>obj</strong> <span class="type"></span></dt>
-          <dd></dd>
+          <dt><strong>options</strong> <span class="type">Object</span></dt>
+          <dd>the options</dd>
         
       </dl>
     </div>
   
 
-  
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type">Boolean</span>
-        <dd> </dd>
-      </dl>
-    </div>
   
 </div>
 
@@ -2135,7 +2454,7 @@ happen immediately.  It will set an isDestroying flag immediately.</p>
           <a href="/api/classes/Ember.Object.html#method_eachComputedProperty">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/system/core_object.js#L485">packages/ember-runtime/lib/system/core_object.js:485</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/system/core_object.js#L534">packages/ember-runtime/lib/system/core_object.js:534</a>
 
     
 
@@ -2196,7 +2515,7 @@ and any associated metadata (see <code>metaForProperty</code>) to the callback.<
           <a href="/api/classes/Ember.Object.html#method_endPropertyChanges">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L236">packages/ember-runtime/lib/mixins/observable.js:236</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L235">packages/ember-runtime/lib/mixins/observable.js:235</a>
 
     
 
@@ -2322,6 +2641,72 @@ deliver the deferred change notifications and end deferring.</p>
 
       
         
+<div id="method_generateController" class="method  item-entry">
+  <h3 data-id="method_generateController" class="name anchorable-toc"><code>generateController</code></h3>
+  <span class="args">
+    (name, model)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L596">packages/ember-routing/lib/system/route.js:596</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Generates a controller for a route.</p>
+
+<p>If the optional model is passed then the controller type is determined automatically,
+e.g., an ArrayController for arrays.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>the name of the controller</dd>
+        
+          <dt><strong>model</strong> <span class="type">Object</span></dt>
+          <dd>the model to infer the type of the controller (optional)</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
 <div id="method_get" class="method inherited item-entry">
   <h3 data-id="method_get" class="name anchorable-toc"><code>get</code></h3>
   <span class="args">
@@ -2344,7 +2729,7 @@ deliver the deferred change notifications and end deferring.</p>
           <a href="/api/classes/Ember.Object.html#method_get">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L76">packages/ember-runtime/lib/mixins/observable.js:76</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L75">packages/ember-runtime/lib/mixins/observable.js:75</a>
 
     
 
@@ -2449,7 +2834,7 @@ not defined upfront.</p>
           <a href="/api/classes/Ember.Object.html#method_getPath">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L399">packages/ember-runtime/lib/mixins/observable.js:399</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L398">packages/ember-runtime/lib/mixins/observable.js:398</a>
 
     
 
@@ -2512,7 +2897,7 @@ not defined upfront.</p>
           <a href="/api/classes/Ember.Object.html#method_getProperties">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L118">packages/ember-runtime/lib/mixins/observable.js:118</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L117">packages/ember-runtime/lib/mixins/observable.js:117</a>
 
     
 
@@ -2595,7 +2980,7 @@ with a list of strings or an array:</p>
           <a href="/api/classes/Ember.Object.html#method_getWithDefault">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L422">packages/ember-runtime/lib/mixins/observable.js:422</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L421">packages/ember-runtime/lib/mixins/observable.js:421</a>
 
     
 
@@ -2673,7 +3058,7 @@ property returns <code>undefined</code>.</p>
           <a href="/api/classes/Ember.Object.html#method_hasObserverFor">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L385">packages/ember-runtime/lib/mixins/observable.js:385</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L384">packages/ember-runtime/lib/mixins/observable.js:384</a>
 
     
 
@@ -2744,7 +3129,7 @@ on the object.</p>
           <a href="/api/classes/Ember.Object.html#method_incrementProperty">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L439">packages/ember-runtime/lib/mixins/observable.js:439</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L438">packages/ember-runtime/lib/mixins/observable.js:438</a>
 
     
 
@@ -2819,7 +3204,7 @@ team.incrementProperty(<span class="string"><span class="delimiter">'</span><spa
           <a href="/api/classes/Ember.Object.html#method_init">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/system/core_object.js#L166">packages/ember-runtime/lib/system/core_object.js:166</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/system/core_object.js#L168">packages/ember-runtime/lib/system/core_object.js:168</a>
 
     
 
@@ -2904,7 +3289,7 @@ application.</p>
           <a href="/api/classes/Ember.Object.html#method_metaForProperty">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/system/core_object.js#L451">packages/ember-runtime/lib/system/core_object.js:451</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/system/core_object.js#L500">packages/ember-runtime/lib/system/core_object.js:500</a>
 
     
 
@@ -2973,9 +3358,10 @@ property from your class like this:</p>
 <div id="method_model" class="method  item-entry">
   <h3 data-id="method_model" class="name anchorable-toc"><code>model</code></h3>
   <span class="args">
-    (params)
+    (params, transition)
   </span>
 
+  <span class="type">Object|Promise</span>
 
 
 
@@ -2992,7 +3378,7 @@ property from your class like this:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L375">packages/ember-routing/lib/system/route.js:375</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L418">packages/ember-routing/lib/system/route.js:418</a>
 
     
 
@@ -3034,7 +3420,7 @@ execute the model hook.</p>
 
 <p>This hook follows the asynchronous/promise semantics
 described in the documentation for <code>beforeModel</code>. In particular,
-if a promise returned from <code>model</code> fails, the error will be 
+if a promise returned from <code>model</code> fails, the error will be
 handled by the <code>error</code> hook on <code>Ember.Route</code>.</p>
 
     </div>
@@ -3055,10 +3441,24 @@ handled by the <code>error</code> hook on <code>Ember.Route</code>.</p>
           <dt><strong>params</strong> <span class="type">Object</span></dt>
           <dd>the parameters extracted from the URL</dd>
         
+          <dt><strong>transition</strong> <span class="type"><a href="/api/classes/Transition.html">Transition</a></span></dt>
+          <dd></dd>
+        
       </dl>
     </div>
   
 
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Object|Promise</span>
+        <dd> the model for this route. If
+  a promise is returned, the transition will pause until 
+  the promise resolves, and the resolved value of the promise
+  will be used as the model for this route.</dd>
+      </dl>
+    </div>
   
 </div>
 
@@ -3087,7 +3487,7 @@ handled by the <code>error</code> hook on <code>Ember.Route</code>.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L556">packages/ember-routing/lib/system/route.js:556</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L614">packages/ember-routing/lib/system/route.js:614</a>
 
     
 
@@ -3158,7 +3558,7 @@ in question.</p>
           <a href="/api/classes/Ember.Object.html#method_notifyPropertyChange">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L300">packages/ember-runtime/lib/mixins/observable.js:300</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L299">packages/ember-runtime/lib/mixins/observable.js:299</a>
 
     
 
@@ -3227,7 +3627,7 @@ succession.</p>
           <a href="/api/classes/Ember.Object.html#method_propertyDidChange">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L277">packages/ember-runtime/lib/mixins/observable.js:277</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L276">packages/ember-runtime/lib/mixins/observable.js:276</a>
 
     
 
@@ -3306,7 +3706,7 @@ like.</p>
           <a href="/api/classes/Ember.Object.html#method_propertyWillChange">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L254">packages/ember-runtime/lib/mixins/observable.js:254</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L253">packages/ember-runtime/lib/mixins/observable.js:253</a>
 
     
 
@@ -3387,7 +3787,7 @@ like.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L238">packages/ember-routing/lib/system/route.js:238</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L277">packages/ember-routing/lib/system/route.js:277</a>
 
     
 
@@ -3442,7 +3842,7 @@ like.</p>
           <a href="/api/classes/Ember.Object.html#method_removeObserver">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L370">packages/ember-runtime/lib/mixins/observable.js:370</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L369">packages/ember-runtime/lib/mixins/observable.js:369</a>
 
     
 
@@ -3518,7 +3918,7 @@ target will no longer receive notifications.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L601">packages/ember-routing/lib/system/route.js:601</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L659">packages/ember-routing/lib/system/route.js:659</a>
 
     
 
@@ -3648,7 +4048,7 @@ this case, the default model will be <code>App.Post.find(params.post_id)</code>.
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L583">packages/ember-routing/lib/system/route.js:583</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L641">packages/ember-routing/lib/system/route.js:641</a>
 
     
 
@@ -3696,60 +4096,6 @@ alternative templates.</p>
 
       
         
-<div id="method_reopen" class="method inherited item-entry">
-  <h3 data-id="method_reopen" class="name anchorable-toc"><code>reopen</code></h3>
-  <span class="args">
-    (arguments)
-  </span>
-
-
-
-
-
-
-
-
-
-  <div class="meta">
-      
-        
-          Inherited from
-          <a href="/api/classes/Ember.Object.html#method_reopen">Ember.Object</a>
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-metal/lib/mixin.js#L431">packages/ember-metal/lib/mixin.js:431</a>
-
-    
-
-    
-  </div>
-
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-        
-          <dt><strong>arguments</strong> <span class="type"></span></dt>
-          <dd></dd>
-        
-      </dl>
-    </div>
-  
-
-  
-</div>
-
-      
-        
 <div id="method_replaceWith" class="method  item-entry">
   <h3 data-id="method_replaceWith" class="name anchorable-toc"><code>replaceWith</code></h3>
   <span class="args">
@@ -3772,7 +4118,7 @@ alternative templates.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L189">packages/ember-routing/lib/system/route.js:189</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L224">packages/ember-routing/lib/system/route.js:224</a>
 
     
 
@@ -3840,7 +4186,7 @@ this behavior.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L431">packages/ember-routing/lib/system/route.js:431</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L478">packages/ember-routing/lib/system/route.js:478</a>
 
     
 
@@ -3953,7 +4299,7 @@ in order to populate the URL.</p>
           <a href="/api/classes/Ember.Object.html#method_set">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L148">packages/ember-runtime/lib/mixins/observable.js:148</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L147">packages/ember-runtime/lib/mixins/observable.js:147</a>
 
     
 
@@ -4068,7 +4414,7 @@ itself so you can do chaining like this:</p>
           <a href="/api/classes/Ember.Object.html#method_setPath">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L410">packages/ember-runtime/lib/mixins/observable.js:410</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L409">packages/ember-runtime/lib/mixins/observable.js:409</a>
 
     
 
@@ -4134,7 +4480,7 @@ itself so you can do chaining like this:</p>
           <a href="/api/classes/Ember.Object.html#method_setProperties">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L201">packages/ember-runtime/lib/mixins/observable.js:201</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L200">packages/ember-runtime/lib/mixins/observable.js:200</a>
 
     
 
@@ -4207,7 +4553,7 @@ with a Hash:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L209">packages/ember-routing/lib/system/route.js:209</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L244">packages/ember-routing/lib/system/route.js:244</a>
 
     
 
@@ -4248,7 +4594,7 @@ with a Hash:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L479">packages/ember-routing/lib/system/route.js:479</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L526">packages/ember-routing/lib/system/route.js:526</a>
 
     
 
@@ -4331,7 +4677,7 @@ instance would be used.</p>
           <a href="/api/classes/Ember.Object.html#method_toString">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/system/core_object.js#L331">packages/ember-runtime/lib/system/core_object.js:331</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/system/core_object.js#L335">packages/ember-runtime/lib/system/core_object.js:335</a>
 
     
 
@@ -4379,7 +4725,7 @@ included in the output.</p>
 7
 </pre></td>
   <td class="code"><pre>App.Teacher = App.Person.extend({
-  <span class="function">toStringExtension</span>: <span class="keyword">function</span>(){
+  <span class="function">toStringExtension</span>: <span class="keyword">function</span>() {
     <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">fullName</span><span class="delimiter">'</span></span>);
   }
 });
@@ -4434,7 +4780,7 @@ teacher.toString(); <span class="comment">//=&gt; &quot;&lt;App.Teacher:ember102
           <a href="/api/classes/Ember.Object.html#method_toggleProperty">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L477">packages/ember-runtime/lib/mixins/observable.js:477</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/mixins/observable.js#L478">packages/ember-runtime/lib/mixins/observable.js:478</a>
 
     
 
@@ -4509,7 +4855,7 @@ current value.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L175">packages/ember-routing/lib/system/route.js:175</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-routing/lib/system/route.js#L210">packages/ember-routing/lib/system/route.js:210</a>
 
     
 
@@ -4545,6 +4891,51 @@ using the <code>serialize</code> hook.</p>
         
       </dl>
     </div>
+  
+
+  
+</div>
+
+      
+        
+<div id="method_willDestroy" class="method inherited item-entry">
+  <h3 data-id="method_willDestroy" class="name anchorable-toc"><code>willDestroy</code></h3>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          Inherited from
+          <a href="/api/classes/Ember.Object.html#method_willDestroy">Ember.Object</a>
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/system/core_object.js#L308">packages/ember-runtime/lib/system/core_object.js:308</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Override to implement teardown.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
   
 
   
@@ -4595,7 +4986,7 @@ using the <code>serialize</code> hook.</p>
           <a href="/api/classes/Ember.Object.html#method_concatenatedProperties">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/system/core_object.js#L197">packages/ember-runtime/lib/system/core_object.js:197</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/system/core_object.js#L199">packages/ember-runtime/lib/system/core_object.js:199</a>
 
     
 
@@ -4743,9 +5134,64 @@ action targets.</p>
 from within a template and the application&#39;s current route is this route.</p>
 
 <p>Events can also be invoked from other parts of your application via <code>Route#send</code>
-or <code>Controller#send</code>.</p>
+or <code>Controller#send</code>. </p>
 
-<p>The context of the event will be this route.</p>
+<p>The <code>events</code> hash will inherit event handlers from
+the <code>events</code> hash defined on extended Route parent classes
+or mixins rather than just replace the entire hash, e.g.:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+</pre></td>
+  <td class="code"><pre>App.CanDisplayBanner = Ember.Mixin.create({
+  <span class="key">events</span>: {
+    <span class="function">displayBanner</span>: <span class="keyword">function</span>(msg) {
+      <span class="comment">// ...</span>
+    }
+  }
+});
+
+App.WelcomeRoute = Ember.Route.extend(App.CanDisplayBanner, {
+  <span class="key">events</span>: {
+    <span class="function">playMusic</span>: <span class="keyword">function</span>() {
+      <span class="comment">// ...</span>
+    }
+  }
+});
+
+<span class="comment">// `WelcomeRoute`, when active, will be able to respond</span>
+<span class="comment">// to both events, since the events hash is merged rather</span>
+<span class="comment">// then replaced when extending mixins / parent classes.</span>
+<span class="local-variable">this</span>.send(<span class="string"><span class="delimiter">'</span><span class="content">displayBanner</span><span class="delimiter">'</span></span>);
+<span class="local-variable">this</span>.send(<span class="string"><span class="delimiter">'</span><span class="content">playMusic</span><span class="delimiter">'</span></span>);
+</pre></td>
+</tr></table>
+</div></div>
+<p>It is also possible to call <code>this._super()</code> from within an
+event handler if it overrides a handle defined on a parent
+class or mixin.</p>
+
+<p>Within a route&#39;s event handler, the value of the <code>this</code> context 
+is the Route object.</p>
 
 <h2>Bubbling</h2>
 
@@ -4793,7 +5239,7 @@ half-filled out:</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>You can also redirect elsewhere by calling 
+<p>You can also redirect elsewhere by calling
 <code>this.transitionTo(&#39;elsewhere&#39;)</code> from within <code>willTransition</code>.
 Note that <code>willTransition</code> will not be fired for the
 redirecting <code>transitionTo</code>, since <code>willTransition</code> doesn&#39;t
@@ -4808,7 +5254,7 @@ transition, you must first explicitly call
 may throw an error, or return a promise that rejects, at which
 point an <code>error</code> event will be fired on the partially-entered
 routes, allowing for per-route error handling logic, or shared
-error handling logic defined on a parent route. </p>
+error handling logic defined on a parent route.</p>
 
 <p>Here is an example of an error handler that will be invoked
 for rejected promises / thrown errors from the various hooks
@@ -4850,9 +5296,9 @@ routes:</p>
     <span class="function">error</span>: <span class="keyword">function</span>(error, transition) {
       <span class="comment">// Assuming we got here due to the error in `beforeModel`,</span>
       <span class="comment">// we can expect that error === &quot;bad things!&quot;,</span>
-      <span class="comment">// but a promise model rejecting would also </span>
+      <span class="comment">// but a promise model rejecting would also</span>
       <span class="comment">// call this hook, as would any errors encountered</span>
-      <span class="comment">// in `afterModel`. </span>
+      <span class="comment">// in `afterModel`.</span>
 
       <span class="comment">// The `error` hook is also provided the failed</span>
       <span class="comment">// `transition`, which can be stored and later</span>
@@ -4865,9 +5311,9 @@ routes:</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p><code>error</code> events that bubble up all the way to <code>ApplicationRoute</code> 
+<p><code>error</code> events that bubble up all the way to <code>ApplicationRoute</code>
 will fire a default error handler that logs the error. You can
-specify your own global default error handler by overriding the 
+specify your own global default error handler by overriding the
 <code>error</code> handler on <code>ApplicationRoute</code>:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -4924,7 +5370,7 @@ specify your own global default error handler by overriding the
           <a href="/api/classes/Ember.Object.html#method_isDestroyed">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/system/core_object.js#L262">packages/ember-runtime/lib/system/core_object.js:262</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/system/core_object.js#L264">packages/ember-runtime/lib/system/core_object.js:264</a>
 
     
 
@@ -4974,7 +5420,7 @@ removed by the effect of calling the <code>destroy()</code> method.</p>
           <a href="/api/classes/Ember.Object.html#method_isDestroying">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/system/core_object.js#L273">packages/ember-runtime/lib/system/core_object.js:273</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0-rc.7/packages/ember-runtime/lib/system/core_object.js#L275">packages/ember-runtime/lib/system/core_object.js:275</a>
 
     
 
