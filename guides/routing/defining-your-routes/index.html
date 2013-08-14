@@ -561,9 +561,14 @@ defined.</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>When the user visits <code>/</code>, Ember.js will render the <code>index</code> template.
-Visiting <code>/about</code> renders the <code>about</code> template, and <code>/favs</code> renders the
-<code>favorites</code> template.</p>
+<p>Now, when the user visits <code>/about</code>, Ember.js will render the <code>about</code> 
+template. Visiting <code>/favs</code> will render the <code>favorites</code> template.</p>
+
+<p><aside>
+<strong>Heads up!</strong> You get a few routes for free: the <code>ApplicationRoute</code>, the <code>IndexRoute</code> 
+(corresponding to the <code>/</code> path), and the <code>LoadingRoute</code> (useful for 
+AJAX requests). <a href="#toc_initial-routes">See below</a> for more details.
+</aside></p>
 
 <p>Note that you can leave off the path if it is the same as the route
 name. In this case, the following is equivalent to the above example:</p>
@@ -1040,6 +1045,46 @@ All templates under <code>comments</code> (<code>comments/index</code> and <code
     </tr>
   </table>
 </div>
+<h3 class='anchorable-toc' id='toc_initial-routes'>Initial routes</h3>
+<p>A few routes are immediately available within your application:  </p>
+
+<ul>
+<li><p><code>App.ApplicationRoute</code> is entered when your app first boots up. It renders 
+the <code>application</code> template.  </p></li>
+<li><p><code>App.IndexRoute</code> is the default route, and will render the <code>index</code> template 
+when the user visits <code>/</code> (unless <code>/</code> has been overridden by your own 
+custom route).  </p></li>
+<li><p><code>App.LoadingRoute</code> will render the <code>loading</code> template each time your app
+transitions from one route to another that involves a promise - for 
+example, during an AJAX request. To enable this route, redefine it within 
+your app:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="comment">// app.js</span>
+App.LoadingRoute = Ember.Route.extend({});
+
+<span class="comment">// index.html</span>
+<span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">loading</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="inline">  <span class="tag">&lt;h1&gt;</span>Loading...<span class="tag">&lt;/h1&gt;</span></span>
+<span class="tag">&lt;/script&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>By default, the route will append the template to the <code>&lt;body&gt;</code> element of 
+the DOM. For different behavior, like <a href="http://emberjs.com/guides/routing/rendering-a-template/">rendering the template to a named 
+outlet</a>, override 
+the <code>renderTemplate</code> method of the <code>LoadingRoute</code>.</p></li>
+</ul>
+
+<p>Remember, these routes are part of every application, so you don&#39;t need to 
+specify them in <code>App.Router.map</code>.</p>
 
     
       <footer>
