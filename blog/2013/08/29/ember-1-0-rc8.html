@@ -1,0 +1,966 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ember.js - Ember 1.0 RC8 Released</title>
+    <link rel="shortcut icon" href="/images/favicon.png" />
+    <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://emberjs.com/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+      _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+      _gaq.push(['_setAccount', 'UA-27675533-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
+
+    <script type="text/javascript">
+      $(function() {
+        var backToTop = $('#back-to-top');
+        var doc = $(document);
+        var offset = backToTop.offset();
+        var marginTop = 90;
+        var showing = false;
+
+        positionBackToTop = function(reset) {
+          if (reset) {
+            backToTop.css({
+              top: '',
+              position: ''
+            });
+            offset = backToTop.offset();
+          }
+
+          if (!showing && doc.scrollTop() > offset.top+200) {
+            showing = true;
+            backToTop.css({
+              position: 'fixed',
+              top: 20,
+              left: offset.left,
+              display:' block'
+            });
+          } else if (showing && doc.scrollTop() <= offset.top+200) {
+            showing = false;
+            backToTop.css({
+              display:'none'
+            });
+          }
+        };
+
+        if (backToTop.length) {
+          backToTop.on('click', function(evt) {
+            $('html,body').animate({scrollTop: 0}, 200);
+            return false;
+          });
+
+          doc.on('scroll', function() {
+            positionBackToTop();
+          });
+        }
+
+        $('.bx-wrapper, .bx-window').width(940);
+      });
+    </script>
+
+    
+  </head>
+
+  <body class="blog blog_2013 blog_2013_08 blog_2013_08_29 blog_2013_08_29_ember-1-0-rc8">
+    <div id="header">
+      <div id="wrapper">
+        <a id="logo" href="/">&nbsp;</a>
+        <ul id="nav">
+          <li><a href="/about">about</a></li>
+          <li><a href="/guides">guides</a></li>
+          <li><a href="/api">api</a></li>
+          <li><a href="/community">community</a></li>
+          <li class="active"><a href="/blog">blog</a></li>
+
+          <li id="search">
+            <form>
+              <input type="text" id="st-search-input" class="st-search-input" />
+            </form>
+            <div id="st-results-container"></div>
+            <script type="text/javascript">
+              var Swiftype = window.Swiftype || {};
+              (function() {
+                Swiftype.key = 'HTNahKf4xmo8GgFbTz4n';
+                Swiftype.inputElement = '#st-search-input';
+                Swiftype.resultContainingElement = '#st-results-container';
+                Swiftype.attachElement = '#st-search-input';
+                Swiftype.renderStyle = "overlay";
+
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.async = true;
+                script.src = "//swiftype.com/embed.js";
+                var entry = document.getElementsByTagName('script')[0];
+                entry.parentNode.insertBefore(script, entry);
+              }());
+            </script>
+          </li>
+
+        </ul>
+
+        <div id="github">
+          <a href="https://github.com/emberjs/ember.js"><img src="/images/fork-us.png">Fork Us!</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="content-wrapper">
+      
+      
+        <div id="sidebar">
+          <ol id='toc-list'>
+  
+  <li class='level-1'>
+    <a href="/blog/tags/recent-posts.html">Recent Posts</a>
+    <ol style="display:block">
+      
+      <li class='level-3'><a href="/blog/2013/08/29/ember-1-0-rc8.html">Ember 1.0 RC8 Released</a></li>
+    
+      <li class='level-3'><a href="/blog/2013/08/14/ember-1-0-rc7.html">Ember 1.0 RC7 Released</a></li>
+    
+      <li class='level-3'><a href="/blog/2013/07/25/ember-1-0-rc6-1-rc5-1-rc4-1-rc3-1-rc2-1-and-rc1-1-released.html">Ember 1.0 RC6.1, RC5.1, RC4.1, RC3.1, RC2.1 RC1.1 Released</a></li>
+    
+    </ol>
+  </li>
+  
+  <li class='level-1'>
+    <a href="/blog/tags/releases.html">Releases</a>
+    <ol style="display:block">
+      
+      <li class='level-3'><a href="/blog/2013/08/29/ember-1-0-rc8.html">Ember 1.0 RC8 Released</a></li>
+    
+      <li class='level-3'><a href="/blog/2013/08/14/ember-1-0-rc7.html">Ember 1.0 RC7 Released</a></li>
+    
+      <li class='level-3'><a href="/blog/2013/07/25/ember-1-0-rc6-1-rc5-1-rc4-1-rc3-1-rc2-1-and-rc1-1-released.html">Ember 1.0 RC6.1, RC5.1, RC4.1, RC3.1, RC2.1 RC1.1 Released</a></li>
+    
+      <li class='level-3'><a href="/blog/2013/06/23/ember-1-0-rc6.html">Ember 1.0 RC6</a></li>
+    
+      <li class='level-3'><a href="/blog/2013/06/01/ember-1-0-rc5.html">Ember 1.0 RC5</a></li>
+    
+      <li class='level-3'><a href="/blog/2013/05/28/ember-1-0-rc4.html">Ember 1.0 RC4</a></li>
+    
+      <li class='level-3'><a href="/blog/2013/05/28/ember-data-0-13.html">Ember Data 0.13</a></li>
+    
+      <li class='level-3'><a href="/blog/2013/04/21/ember-1-0-rc3.html">Ember 1.0 RC3</a></li>
+    
+      <li class='level-3'><a href="/blog/2013/03/30/ember-1-0-rc2.html">Ember 1.0 RC2</a></li>
+    
+      <li class='level-3'><a href="/blog/2013/02/15/ember-1-0-rc.html">Ember 1.0 RC</a></li>
+    
+      <li class='level-3'><a href="/blog/2012/10/25/ember-1-0-pre2.html">Ember 1.0 Prerelease 2</a></li>
+    
+      <li class='level-3'><a href="/blog/2012/08/03/ember-1-0-prerelease.html">Ember 1.0 Prerelease</a></li>
+    
+    </ol>
+  </li>
+  <li class='level-1'>
+    <a href="/blog/tags/ember-data.html">Ember Data</a>
+    <ol style="display:block">
+      
+      <li class='level-3'><a href="/blog/2013/05/28/ember-data-0-13.html">Ember Data 0.13</a></li>
+    
+      <li class='level-3'><a href="/blog/2013/05/03/ember-data-progress-update.html">Ember Data Progress Update</a></li>
+    
+      <li class='level-3'><a href="/blog/2013/03/22/stabilizing-ember-data.html">Stabilizing Ember Data</a></li>
+    
+    </ol>
+  </li>
+</ol>
+
+          <div id="back-to-top"><a id="back-top-top" href="#">&#11014; Back to Top</a></div>
+        </div>
+      
+      <div id="content" class="has-sidebar">
+          <article class="blog-post">
+    <h1>Ember 1.0 RC8 Released</h1>
+    
+      <h3 class="blog-post-author">Posted By: Tom Dale, Yehuda Katz, Peter Wagenet, and Alex Machtneer &ndash; <time>Aug 29, 2013</time></h3>
+    
+
+    <hr>
+
+    <p>With Ember 1.0 RC8, we have reached the final RC before 1.0 final, which
+we hope to release this weekend if all goes well.</p>
+
+<p>This final release candidate comes with a couple of small breaking
+changes that we are making before 1.0 because they should have a small
+impact on application code but a large impact on performance.</p>
+
+<p>We normally would not make changes of this nature this close to the 1.0
+final release date. However, the performance improvements were so
+dramatic we did not want to wait until Ember.js 2.0 to introduce the
+change, and we are serious in our commitment to not breaking the API
+post-1.0. This was our last chance to get these changes in before
+putting the final stamp on the 1.0.</p>
+
+<p>Both of the changes are related to observers. If you find yourself
+writing code with lots of observers, you may be writing non-idiomatic
+code. In general, you should only need to use observers when you are
+bridging Ember code to other libraries that do not support bindings or
+computed properties.</p>
+
+<p>For example, if you were writing a component that wrapped a jQuery UI
+widget, you might use an observer to watch for changes on the component
+and reflect them on to the widget.</p>
+
+<p>In your application code, however, you should be relying almost entirely
+on computed properties.</p>
+
+<p>If you are having trouble upgrading your application, please join us in
+the IRC channel or post on StackOverflow for help.</p>
+<h4 class='anchorable-toc' id='toc_declarative-event-listeners'>Declarative Event Listeners</h4>
+<p>There is now a way to declaratively add event listeners to Ember
+classes. This is easier than manually setting up the listeners in
+<code>init</code>.</p>
+
+<p>Instead of:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+</pre></td>
+  <td class="code"><pre>App.Person = DS.Model.extend({
+  <span class="function">init</span>: <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.on(<span class="string"><span class="delimiter">'</span><span class="content">didLoad</span><span class="delimiter">'</span></span>, <span class="local-variable">this</span>, <span class="keyword">function</span>() {
+      <span class="local-variable">this</span>.finishedLoading();
+    });
+  },
+
+  <span class="function">finishedLoading</span>: <span class="keyword">function</span>() {
+    <span class="comment">// do stuff</span>
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>You can just do this:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.Person = DS.Model.extend({
+  <span class="function">finishedLoading</span>: <span class="keyword">function</span>() {
+    <span class="comment">// do stuff</span>
+  }.on(<span class="string"><span class="delimiter">'</span><span class="content">didLoad</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_array-computed'>Array Computed</h4>
+<p>Thanks to the tremendous work of David Hamilton, there is now a
+convenient and robust way to build a computed property based on an array
+that will only perform calculations on the updated portion.</p>
+
+<p>For example, say that you have an array of people, and you want to
+create a computed property that returns an Array of their ages.</p>
+
+<p>Currently, the easiest way to do that is:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.Person = Ember.Object.extend({
+  <span class="function">childAges</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">children</span><span class="delimiter">'</span></span>).mapProperty(<span class="string"><span class="delimiter">'</span><span class="content">age</span><span class="delimiter">'</span></span>);
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">children.@each.age</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>This is pretty terse, but it must recalculate the entire array any time
+a single element is added or removed. This works OK for small arrays,
+but for larger arrays, or when these kinds of computed properties are
+chained or doing expensive work, it can add up.</p>
+
+<p>Enter Array Computed properties:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>App.Person = Ember.Object.extend({
+  <span class="key">childAges</span>: Ember.computed.mapProperty(<span class="string"><span class="delimiter">'</span><span class="content">children</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">age</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>You can also chain these Array computed properties together:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>App.Person = Ember.Object.extend({
+  <span class="key">childAges</span>: Ember.computed.mapProperty(<span class="string"><span class="delimiter">'</span><span class="content">children</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">age</span><span class="delimiter">'</span></span>),
+  <span class="key">maxChildAge</span>: Ember.computed.max(<span class="string"><span class="delimiter">'</span><span class="content">childAges</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>When an element is added or removed, the computation is only done once.
+In this example, if a child is added, their age is appended to
+<code>childAges</code>, and if that age is larger than the <code>maxChildAge</code>, that
+property is updated.</p>
+
+<p>These computed properties are always up to date, efficient, and
+completely managed by Ember.</p>
+<h4 class='anchorable-toc' id='toc_ember-extension'>Ember Extension</h4>
+<p>After months of testing, and tons of work by Teddy Zeenny, we&#39;re finally
+ready to put the Ember Inspector in the Chrome Web Store.</p>
+
+<p>Most recently, Teddy added support for loaded data. It already has
+support for Ember Data, and Ember Model is actively working on adding
+support.</p>
+
+<p><img src="/images/blog/rc8-ember-data.png"></p>
+
+<p>Teddy has also significantly improved the object inspector, adding
+support for objects to group properties as they wish (e.g. attributes,
+has many, belongs to in Ember Data) and editing records in the inspector
+itself.</p>
+
+<p><img src="/images/blog/rc8-editing.png"></p>
+
+<p>You can also see a list of all routes in your app, along with the naming
+you should use for associated objects. This should make remembering the
+naming conventions a lot easier.</p>
+
+<p><img src="/images/blog/rc8-routes.png"></p>
+
+<p>And finally, a view tree that shows an overlay in your app with the
+associated controller and model for your application&#39;s templates.</p>
+
+<p><img src="/images/blog/rc8-view-tree.png"></p>
+
+<p>It should be in the web store in the next day or so, so keep an eye out.
+Follow @emberjs on Twitter to get the latest!</p>
+<h4 class='anchorable-toc' id='toc_release-cycle'>Release Cycle</h4>
+<p>We know that the Ember 1.0 RC cycle was a <strong>bit</strong> long. In truth, we
+released RC1 too early. We&#39;re sorry if the release names caused
+confusion.</p>
+
+<p>Going forward, we plan to seriously tighten up our release process. We
+will have a blog post outlining the new process together with the final
+Ember 1.0 release.</p>
+<h4 class='anchorable-toc' id='toc_other-improvements'>Other Improvements</h4>
+<ul>
+<li>Several improvements to <code>yield</code> to make sure it always yields back to
+the calling context [@kselden]</li>
+<li>Performance improvement to range updates by not using the W3C range
+API even if it&#39;s available [@eviltrout]</li>
+<li>Completion of the 1.0 documentation audit [@trek]</li>
+<li>Better error message if you try to use the same template name multiple
+times by using <code>&lt;script&gt;</code> tags [@locks]</li>
+<li>Add <code>currentRouteName</code> to <code>ApplicationController</code>, which you can use
+in <code>link-to</code>, <code>transitionTo</code>, etc. [@machty]</li>
+<li>Alias <code>linkTo</code> to <code>link-to</code> and <code>bindAttr</code> to <code>bind-attr</code> for
+consistency with HTML naming. Old names remain but are soft-deprecated
+[@ebryn]</li>
+</ul>
+<h4 class='anchorable-toc' id='toc_changes-tl-dr'>Changes TL;DR</h4><h5 class='anchorable-toc' id='toc_observers-don-t-fire-during-construction'>Observers Don&#39;t Fire During Construction</h5>
+<p>Previously, observers would not fire for properties passed into
+<code>create</code> or specified on the prototype, but they would fire if you <code>set</code>
+a property in <code>init</code>.</p>
+
+<p>Now, observers <strong>never</strong> fire until after <code>init</code>.</p>
+
+<p>If you need an observer to fire as part of the initialization process,
+you can no longer rely on the side effect of <code>set</code>. Instead, specify
+that the observer should also run after <code>init</code> by using
+<code>.on(&#39;init&#39;)</code>.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre>App.Person = Ember.Object.extend({
+  <span class="function">init</span>: <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">salutation</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Mr/Ms</span><span class="delimiter">&quot;</span></span>);
+  },
+
+  <span class="function">salutationDidChange</span>: <span class="keyword">function</span>() {
+    <span class="comment">// some side effect of salutation changing</span>
+  }.observes(<span class="string"><span class="delimiter">'</span><span class="content">salutation</span><span class="delimiter">'</span></span>).on(<span class="string"><span class="delimiter">'</span><span class="content">init</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div><h5 class='anchorable-toc' id='toc_unconsumed-computed-properties-do-not-trigger-observers'>Unconsumed Computed Properties Do Not Trigger Observers</h5>
+<p>If you never <code>get</code> a computed property, its observers will not fire even
+if its dependent keys change. You can think of the value changing from
+one unknown value to another.</p>
+
+<p>This doesn&#39;t usually affect application code because computed properties
+are almost always observed at the same time as they are fetched. For
+example, you get the value of a computed property, put it in DOM (or
+draw it with D3), and then observe it so you can update the DOM once the
+property changes.</p>
+
+<p>If you need to observe a computed property but aren&#39;t currently
+retrieving it, just <code>get</code> it in your <code>init</code> method.</p>
+<h5 class='anchorable-toc' id='toc_new-actions-hash-for-routes-controllers-and-views'>New Actions Hash for Routes, Controllers, and Views</h5>
+<p>Previously, you could define actions for your routes in their <code>events</code> hash. In controllers and views however, actions were defined directly as methods on the instance. Not only was this inconsistent, it also lead to awkward naming conflicts. For instance, attempting to name your action <code>destroy</code> would conflict with the built-in <code>destroy</code> method and very bad things would happen.</p>
+
+<p>To make things consistent and give more flexibility in action naming, we&#39;ve standardized around using a hash called <code>actions</code>. When extending a class with <code>actions</code> defined, we&#39;ll merge the <code>actions</code> defined on the subclass or instance with those on the parent. We also support <code>_super</code> so you won&#39;t lose any flexibility with this approach.</p>
+
+<p>The old behavior will continue to work for the time being but is now deprecated. In the event that you had a controller that was proxying to a model with an existing <code>actions</code> property, we internally rename the property to <code>_actions</code> to avoid any conflicts.</p>
+<h5 class='anchorable-toc' id='toc_enforce-quoted-strings-in-handlebars-helpers'>Enforce Quoted Strings in Handlebars Helpers</h5>
+<p>In the past, we were loose with our requirements for quoting strings in Handlebars helpers. Unfortunately, this meant we were unable to distinguish between string values and property paths. We are now strictly enforcing quoting if you want the value to be treated as a string. This means that for <code>link-to</code> the route names must be quotes. In the reverse direction, if you had custom bound helpers and were passing a property path as a quoted string, this will no longer work. Again, quotes for strings, no quotes for paths.</p>
+<h4 class='anchorable-toc' id='toc_setting-properties-in-code-init-code'>Setting Properties in <code>init</code></h4>
+<p>Currently, there is an inconsistency between properties set when passing
+a hash to <code>create</code> and setting those same properties in <code>init</code>.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>App.Person = Ember.Object.extend({
+  <span class="function">firstNameDidChange</span>: <span class="keyword">function</span>() {
+    <span class="comment">// this observer does not fire</span>
+  }.observes(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>)
+});
+
+App.Person.create({ <span class="key">firstName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Tom</span><span class="delimiter">&quot;</span></span>, <span class="key">lastName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Dale</span><span class="delimiter">&quot;</span></span> });
+</pre></td>
+</tr></table>
+</div></div>
+<p>In this case, because the properties were set by passing a hash to
+<code>create</code>, the observers are not fired.</p>
+
+<p>But let&#39;s look at what happens in RC7 when the same initialization is
+done via the <code>init</code> method:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+</pre></td>
+  <td class="code"><pre><span class="comment">// WARNING: OLD BEHAVIOR</span>
+
+App.Person = Ember.Object.extend({
+  <span class="function">init</span>: <span class="keyword">function</span>() {
+    <span class="keyword">if</span> (!<span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>)) {
+      <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Tom</span><span class="delimiter">&quot;</span></span>);
+    }
+  },
+  <span class="function">firstNameDidChange</span>: <span class="keyword">function</span>() {
+    <span class="comment">// this observer fires</span>
+  }.observes(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>)
+});
+
+App.Person.create({ <span class="key">lastName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Dale</span><span class="delimiter">&quot;</span></span> });
+</pre></td>
+</tr></table>
+</div></div>
+<p>In this case, the old behavior would trigger the observers if
+<code>firstName</code> was not provided.</p>
+
+<p>We intended the design of the object model to trigger observers only
+after construction, which is why <code>create</code> behaves the way it does.</p>
+
+<p>Also, because the only way to define initial properties that have arrays
+or objects as values is in <code>init</code>, there is a further inconsistency:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre><span class="comment">// WARNING: OLD BEHAVIOR</span>
+
+App.Person = Ember.Object.extend({
+  <span class="comment">// initial property value, does not trigger an initialization observer</span>
+  <span class="key">salutation</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Mr.</span><span class="delimiter">&quot;</span></span>,
+
+  <span class="function">init</span>: <span class="keyword">function</span>() {
+    <span class="comment">// also initial property value, triggers an observer on</span>
+    <span class="comment">// initialization</span>
+    <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">children</span><span class="delimiter">'</span></span>, []);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>In short, properties that get set during initialization, whether they
+were already set on the prototype, passed as a hash to <code>create</code>, or set
+in <code>init</code>, do not trigger observers.</p>
+
+<p>If you have some code that you want to run both on initialization and
+when a property changes, just mark it as a method that should also run
+when initialization is done by using <code>.on(&#39;init&#39;)</code>. This will also be
+more resiliant to refactoring, and not rely on a side effect of an
+<code>init</code>-time <code>set</code>.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.Person = Ember.Object.extend({
+  <span class="function">firstNameDidChange</span>: <span class="keyword">function</span>() {
+    <span class="comment">// some side effect that happens when first name changes</span>
+  }.observes(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>).on(<span class="string"><span class="delimiter">'</span><span class="content">init</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_computed-property-performance-improvements'>Computed Property Performance Improvements</h4>
+<p>The latest release of Ember.js contains a change to the way that observers and
+computed properties interact. This may be a breaking change in apps that
+relied on the previous behavior.</p>
+
+<p>To understand the change, let&#39;s first look at an example of a computed
+property.  Imagine we are trying to model <a href="http://en.wikipedia.org/wiki/Schr%C3%B6dinger&#x27;s_cat">Schrödinger&#39;s famous
+cat</a> using an Ember.js
+object.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>App.Cat = Ember.Object.extend({
+  <span class="function">isDead</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> Math.rand() &gt; <span class="float">0.5</span>;
+  }.property()
+});
+
+<span class="keyword">var</span> cat = App.Cat.create();
+</pre></td>
+</tr></table>
+</div></div>
+<p>Given this cat object, is it alive or is it dead? Well, that&#39;s determined at random.
+Before observing the cat, we might say that it&#39;s <em>both</em> alive <em>and</em> dead, or
+perhaps neither.</p>
+
+<p>In reality, whether or not our cat has shuffled off this mortal coil is only
+determined the first time we ask for it:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>cat.get(<span class="string"><span class="delimiter">'</span><span class="content">isDead</span><span class="delimiter">'</span></span>);
+<span class="comment">// true</span>
+<span class="comment">// …or false, half the time</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>After we have asked the cat object for its <code>isDead</code> property, we can
+categorically say which it is. But before we ask, the value of the
+computed property doesn&#39;t really <em>exist</em>.</p>
+
+<p>Now, let&#39;s introduce observers into the mix. If the value of a computed
+property doesn&#39;t exist yet, should observers fire if one of its
+dependent keys changes?</p>
+
+<p>In previous versions of Ember.js, the answer was &quot;yes.&quot; For example,
+given this class:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+</pre></td>
+  <td class="code"><pre>App.Person = Ember.Object.extend({
+  <span class="key">observerCount</span>: <span class="integer">0</span>,
+
+  <span class="function">fullName</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>),
+
+  <span class="function">fullNameDidChange</span>: <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.incrementProperty(<span class="string"><span class="delimiter">'</span><span class="content">observerCount</span><span class="delimiter">'</span></span>);
+  }.observes(<span class="string"><span class="delimiter">'</span><span class="content">fullName</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Changing any of the dependent keys would trigger the observer:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+</pre></td>
+  <td class="code"><pre><span class="comment">// WARNING: OLD BEHAVIOR DO NOT RELY ON THIS</span>
+
+<span class="keyword">var</span> person = App.Person.create({
+  <span class="key">firstName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Yehuda</span><span class="delimiter">&quot;</span></span>,
+  <span class="key">lastName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Katz</span><span class="delimiter">&quot;</span></span>
+});
+
+person.get(<span class="string"><span class="delimiter">'</span><span class="content">observerCount</span><span class="delimiter">'</span></span>); <span class="comment">// =&gt; 0</span>
+
+person.set(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Tomhuda</span><span class="delimiter">&quot;</span></span>);
+person.get(<span class="string"><span class="delimiter">'</span><span class="content">observerCount</span><span class="delimiter">'</span></span>); <span class="comment">// =&gt; 1</span>
+
+person.set(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Katzdale</span><span class="delimiter">&quot;</span></span>);
+person.get(<span class="string"><span class="delimiter">'</span><span class="content">observerCount</span><span class="delimiter">'</span></span>); <span class="comment">// =&gt; 2</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>However, because the <code>fullName</code> property doesn&#39;t really &quot;exist&quot; until
+it&#39;s requested, it is unclear if firing an observer is the correct
+behavior.</p>
+
+<p>A related problem affects computed properties if their dependent
+keys contain a path. (Remember that dependent keys are just the property
+names you pass to <code>.property()</code> when defining a CP.)</p>
+
+<p>For example, imagine we are building a model to represent a blog post
+that lazily loads the post&#39;s comments if they are used (in a template,
+for instance).</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+</pre></td>
+  <td class="code"><pre>App.BlogPost = Ember.Object.extend({
+  <span class="function">comments</span>: <span class="keyword">function</span>() {
+    <span class="keyword">var</span> comments = [];
+    <span class="keyword">var</span> url = <span class="string"><span class="delimiter">'</span><span class="content">/post/</span><span class="delimiter">'</span></span> + <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">id</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">'</span><span class="content">/comments.json</span><span class="delimiter">'</span></span>);
+
+    <span class="predefined">$</span>.getJSON(url) + <span class="string"><span class="delimiter">'</span><span class="content">/comments.json</span><span class="delimiter">'</span></span>).then(<span class="keyword">function</span>(data) {
+      data.forEach(<span class="keyword">function</span>(comment) {
+        comments.pushObject(comment);
+      });
+    });
+
+    <span class="keyword">return</span> comments;
+  }.property()
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Awesome! This will work as expected—a post&#39;s comments will only be loaded
+over the network the first time we do <code>post.get(&#39;comments&#39;)</code> or use it
+in a template:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;ul&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">comments</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;li&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">title</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/li&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/ul&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>However, now we want to add a computed property that selects the first
+comment from the array of loaded comments:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+</pre></td>
+  <td class="code"><pre>App.BlogPost = Ember.Object.extend({
+  <span class="function">comments</span>: <span class="keyword">function</span>() {
+    <span class="keyword">var</span> comments = [];
+    <span class="keyword">var</span> url = <span class="string"><span class="delimiter">'</span><span class="content">/post/</span><span class="delimiter">'</span></span> + <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">id</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">'</span><span class="content">/comments.json</span><span class="delimiter">'</span></span>;
+
+    <span class="predefined">$</span>.getJSON(url).then(<span class="keyword">function</span>(data) {
+      data.forEach(<span class="keyword">function</span>(comment) {
+        comments.pushObject(comment);
+      });
+    });
+
+    <span class="keyword">return</span> comments;
+  }.property(),
+
+  <span class="function">firstComment</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">comments.firstObject</span><span class="delimiter">'</span></span>);
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">comments.firstObject</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Now we have a problem! Because the <code>firstComment</code> computed property has
+a dependency on <code>comments.firstObject</code>, it will <code>get()</code> the <code>comments</code>
+property in order to set up an observer on <code>firstObject</code>.</p>
+
+<p>As you can see, just adding this computed property now means that the
+comments are loaded for <em>all</em> blog posts in the app—whether their
+comments are ever used or not!</p>
+
+<p>To determine what to do, we spent some time looking at real-world
+Ember.js apps. What we discovered is that <strong>this behavior carried with
+it signficant performance penalties.</strong></p>
+
+<ol>
+<li>Firing observers on unmaterialized computed properties means we have
+to set up listeners on all computed properties ahead of time, instead
+of lazily the first time they are computed.</li>
+<li>Many computed properties that never get used are nonetheless computed
+because of path dependent keys.</li>
+</ol>
+
+<p>To fix these issues, <strong>RC8 makes the following changes</strong>:</p>
+
+<ol>
+<li>Observers that observe a computed property only fire after that
+property has been used at least once.</li>
+<li>Observing a path (<code>&quot;foo.bar.baz&quot;</code>), or using a path as a dependent key,
+will not cause any parts of the path that are uncomputed to become
+computed.</li>
+</ol>
+
+<p>The majority of Ember.js applications should not be affected by this
+change, since:</p>
+
+<ol>
+<li>Most apps that observe computed properties also <code>get()</code> those
+properties at object initialization time, thus triggering the correct
+behavior.</li>
+<li>In the case of computed property dependent keys, the new behavior is
+what developers were expecting to happen all along.</li>
+</ol>
+
+<p>If your applications are affected by this change, the fix is
+straightforward: just <code>get()</code> the computed property in your class&#39;s
+<code>init</code> method.</p>
+
+<p>For example, to update the observer example above, we can retain the
+pre-RC8 behavior by &quot;precomputing&quot; the <code>fullName</code> property:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+</pre></td>
+  <td class="code"><pre>App.Person = Ember.Object.extend({
+  <span class="function">init</span>: <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">fullName</span><span class="delimiter">'</span></span>);
+    <span class="local-variable">this</span>._super();
+  },
+
+  <span class="key">observerCount</span>: <span class="integer">0</span>,
+
+  <span class="function">fullName</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>),
+
+  <span class="function">fullNameDidChange</span>: <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.incrementProperty(<span class="string"><span class="delimiter">'</span><span class="content">observerCount</span><span class="delimiter">'</span></span>);
+  }.observes(<span class="string"><span class="delimiter">'</span><span class="content">fullName</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_code-link-to-code-bound-parameters'><code>link-to</code> Bound Parameters</h4>
+<p>The <code>link-to</code> helper (formerly <code>linkTo</code>, see above) now treats
+all unquoted parameters (and non-numeric parameters)
+as bound property paths, which means that when a property passed to
+<code>link-to</code> changes, the <code>href</code> of the link will change. This includes
+the first parameter (the destination route name) and any of the context
+parameters that follow.</p>
+
+<p>The following example template will look up the <code>destinationRoute</code> on the
+current context (usually a controller) and use it to determine the
+<code>href</code> of the link and the route that will be transitioned to when
+the link is clicked.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">link-to</span> <span class="attribute-name">destinationRoute</span><span class="inline-delimiter">}}</span></span>Link Text<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">link-to</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>The following example template will always point to the <code>articles.show</code>
+route (since the route name parameter is in quotes), but when the value
+of <code>article</code> changes, the link&#39;s <code>href</code> will update to the URL that
+corresponds to the new value of <code>article</code>.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">link-to</span> <span class="error">'</span><span class="attribute-name">articles.show</span><span class="error">'</span> <span class="attribute-name">article</span><span class="inline-delimiter">}}</span></span>Read More...<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">link-to</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>This might cause a few surprises in your app if you haven&#39;t been
+distinguishing between quoted strings and property paths, so make sure
+that any static string <code>link-to</code> parameters (such as route names) are
+properly quoted in your templates when you upgrade to RC8.</p>
+<h4 class='anchorable-toc' id='toc_bound-helpers-quoted-strings-numbers-and-paths'>Bound Helpers: Quoted Strings, Numbers, and Paths</h4>
+<p>Invoking a custom bound helper (e.g. one defined via <code>Ember.Handlebars.helper</code>)
+with quoted strings or raw numbers will pass that raw value directly
+into the helper function you&#39;ve defined, rather than treating everything
+like a bound property path that will re-render the helper when changed.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>Pass the string 'hello' to myHelper:
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">myHelper</span> <span class="error">'</span><span class="attribute-name">hello</span><span class="error">'</span><span class="inline-delimiter">}}</span></span>
+
+Pass the property pointed-to by the path 'hello' to myHelper:
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">myHelper</span> <span class="attribute-name">hello</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>This might cause a few surprises in your app if you&#39;ve been invoking
+bound helpers with quoted strings and expecting them to be treated as
+bound property paths, so make sure that the only time you&#39;re passing
+quoted strings to custom helpers is when you really intend to pass raw
+strings (rather than the values of properties) to the helper.</p>
+
+
+    <hr>
+
+    <div id="disqus_thread"></div> 
+    <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'emberblog'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  </article>
+
+      </div>
+    </div>
+
+    <div id="footer">
+      <div id="footer-wrapper">
+        <div class="info">
+          Copyright 2013 <a href="http://tilde.io">Tilde Inc.</a><br>
+          Design by <a href="http://www.heropixel.com">HeroPixel</a></br>
+          <a href="/team">Core Team</a> | <a href="/sponsors">Project Sponsors</a>
+        </div>
+        <div class="statement">Ember.js is free, open source and always will be.</div>
+        <div class="links">
+          <a class="twitter" href="http://twitter.com/emberjs">Twitter</a>
+          <a class="github" href="https://github.com/emberjs/ember.js">GitHub</a>
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">Google+</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -598,7 +598,8 @@ later when we discuss bindings and observers.</p>
 <h3 class='anchorable-toc' id='toc_setting-computed-properties'>Setting Computed Properties</h3>
 <p>You can also define what Ember should do when setting a computed
 property. If you try to set a computed property, it will be invoked
-with the key and value you want to set it to.</p>
+with the key (property name), the value you want to set it to, and the previous
+value.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -629,13 +630,15 @@ with the key and value you want to set it to.</p>
 27
 28
 29
+<strong>30</strong>
+31
 </pre></td>
   <td class="code"><pre>Person = Ember.Object.extend({
   <span class="comment">// these will be supplied by `create`</span>
   <span class="key">firstName</span>: <span class="predefined-constant">null</span>,
   <span class="key">lastName</span>: <span class="predefined-constant">null</span>,
 
-  <span class="function">fullName</span>: <span class="keyword">function</span>(key, value) {
+  <span class="function">fullName</span>: <span class="keyword">function</span>(key, value, oldValue) {
     <span class="comment">// getter</span>
     <span class="keyword">if</span> (<span class="local-variable">arguments</span>.length === <span class="integer">1</span>) {
       <span class="keyword">var</span> firstName = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>);
@@ -645,6 +648,8 @@ with the key and value you want to set it to.</p>
 
     <span class="comment">// setter</span>
     } <span class="keyword">else</span> {
+      <span class="keyword">if</span> (oldValue === value) { <span class="keyword">return</span> value; }
+
       <span class="keyword">var</span> name = value.split(<span class="string"><span class="delimiter">&quot;</span><span class="content"> </span><span class="delimiter">&quot;</span></span>);
 
       <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, name[<span class="integer">0</span>]);

@@ -593,32 +593,40 @@ application.</p>
 <strong>10</strong>
 11
 12
+13
+14
 </pre></td>
   <td class="code"><pre>App.PostController = Ember.ObjectController.extend({
   <span class="comment">// initial value</span>
   <span class="key">isExpanded</span>: <span class="predefined-constant">false</span>,
 
-  <span class="function">expand</span>: <span class="keyword">function</span>() {
-    <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">isExpanded</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
-  },
+  <span class="key">actions</span>: {
+    <span class="function">expand</span>: <span class="keyword">function</span>() {
+      <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">isExpanded</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
+    },
 
-  <span class="function">contract</span>: <span class="keyword">function</span>() {
-    <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">isExpanded</span><span class="delimiter">'</span></span>, <span class="predefined-constant">false</span>);
+    <span class="function">contract</span>: <span class="keyword">function</span>() {
+      <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">isExpanded</span><span class="delimiter">'</span></span>, <span class="predefined-constant">false</span>);
+    }
   }
 });
 </pre></td>
 </tr></table>
-</div></div><h3 class='anchorable-toc' id='toc_event-bubbling'>Event Bubbling</h3>
+</div></div><h3 class='anchorable-toc' id='toc_action-bubbling'>Action Bubbling</h3>
 <p>By default, the <code>{{action}}</code> helper triggers a method on the template&#39;s
 controller, as illustrated above.</p>
 
 <p>If the controller does not implement a method with the same name as the
-event, the event will be sent to the router, where the currently active
-leaf route will be given a chance to handle the event.</p>
+action in its actions object, the action will be sent to the router, where
+the currently active leaf route will be given a chance to handle the action.</p>
 
-<p>Routes that handle events <strong>must place event handlers inside an <code>events</code>
-hash</strong>. Even if a route has a method with the same name as the event,
-it will not be triggered unless it is inside an <code>events</code> hash.</p>
+<p>Routes and controllers that handle actions <strong>must place action handlers
+inside an <code>actions</code> hash</strong>. Even if a route has a method with the same name
+as the actions, it will not be triggered unless it is inside an <code>actions</code> hash.
+In the case of a controller, while there is deprecated support for triggering
+a method directly on the controller, it is strongly recommended that you
+put your action handling methods inside an <code>actions</code> hash for forward
+compatibility.</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -633,7 +641,7 @@ it will not be triggered unless it is inside an <code>events</code> hash.</p>
 11
 </pre></td>
   <td class="code"><pre>App.PostRoute = Ember.Route.extend({
-  <span class="key">events</span>: {
+  <span class="key">actions</span>: {
     <span class="function">expand</span>: <span class="keyword">function</span>() {
       <span class="local-variable">this</span>.controller.set(<span class="string"><span class="delimiter">'</span><span class="content">isExpanded</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
     },
@@ -646,22 +654,22 @@ it will not be triggered unless it is inside an <code>events</code> hash.</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>As you can see in this example, the event handlers are called such
-that when executed, <code>this</code> is the route, not the <code>events</code> hash.</p>
+<p>As you can see in this example, the action handlers are called such
+that when executed, <code>this</code> is the route, not the <code>actions</code> hash.</p>
 
 <p>If neither the template&#39;s controller nor the currently active route
-implements a handler, the event will continue to bubble to any parent
+implements a handler, the action will continue to bubble to any parent
 routes. Ultimately, if an <code>ApplicationRoute</code> is defined, it will have an
-opportunity to handle the event.</p>
+opportunity to handle the action.</p>
 
-<p>When an action is triggered, but no matching event handler is
+<p>When an action is triggered, but no matching action handler is
 implemented on the controller, the current route, or any of the
 current route&#39;s ancestors, an error will be thrown.</p>
 
-<p><img src="/images/template-guide/event-bubbling.png" alt="Event Bubbling"></p>
-<h3 class='anchorable-toc' id='toc_event-parameters'>Event Parameters</h3>
-<p>You can optionally pass arguments to the event handler. Any values
-passed to the <code>{{action}}</code> helper after the event name will be passed to
+<p><img src="/images/template-guide/action-bubbling.png" alt="Action Bubbling"></p>
+<h3 class='anchorable-toc' id='toc_action-parameters'>Action Parameters</h3>
+<p>You can optionally pass arguments to the action handler. Any values
+passed to the <code>{{action}}</code> helper after the action name will be passed to
 the handler as arguments.</p>
 
 <p>For example, if the <code>post</code> argument was passed:</p>
@@ -672,7 +680,7 @@ the handler as arguments.</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>The route&#39;s <code>select</code> event handler would be called with a single argument
+<p>The route&#39;s <code>select</code> action handler would be called with a single argument
 containing the post model:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -680,10 +688,14 @@ containing the post model:</p>
 3
 4
 5
+6
+7
 </pre></td>
   <td class="code"><pre>App.PostController = Ember.ObjectController.extend({
-  <span class="function">select</span>: <span class="keyword">function</span>(post) {
-    console.log(post.get(<span class="string"><span class="delimiter">'</span><span class="content">title</span><span class="delimiter">'</span></span>));
+  <span class="key">actions</span>: {
+    <span class="function">select</span>: <span class="keyword">function</span>(post) {
+      console.log(post.get(<span class="string"><span class="delimiter">'</span><span class="content">title</span><span class="delimiter">'</span></span>));
+    }
   }
 });
 </pre></td>
@@ -743,10 +755,10 @@ clicked.</p>
 3
 4
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">'</span><span class="attribute-name">post</span><span class="error">'</span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">link-to</span> <span class="error">'</span><span class="attribute-name">post</span><span class="error">'</span><span class="inline-delimiter">}}</span></span>
   Post
   <span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">close</span> <span class="attribute-name">bubbles</span>=<span class="attribute-value">false</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>✗<span class="tag">&lt;/button&gt;</span>
-<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">link-to</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -761,7 +773,7 @@ the event.</p>
 to the current route handler. From there, it will bubble up to parent
 route handlers until it reaches the application route.</p>
 
-<p>Define actions on the route&#39;s <code>events</code> property.</p>
+<p>Define actions on the route&#39;s <code>actions</code> property.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -772,7 +784,7 @@ route handlers until it reaches the application route.</p>
 7
 </pre></td>
   <td class="code"><pre>App.PostsIndexRoute = Ember.Route.extend({
-  <span class="key">events</span>: {
+  <span class="key">actions</span>: {
     <span class="function">myCoolAction</span>: <span class="keyword">function</span>() {
       <span class="comment">// do your business.</span>
     }
@@ -786,7 +798,46 @@ where you are in the application. For example, you might want to have a
 button in a sidebar that does one thing if you are somewhere inside of
 the <code>/posts</code> route, and another thing if you are inside of the <code>/about</code>
 route.</p>
+<h3 class='anchorable-toc' id='toc_specifying-a-target'>Specifying a Target</h3>
+<p>By default, the <code>{{action}}</code> helper will send the action to the view&#39;s
+target, which is generally the view&#39;s controller. (Note: in the case of
+an Ember.Component, the default target is the component itself.)</p>
 
+<p>You can specify an alternative target by using the <code>target</code> option. This
+is most commonly used to send actions to a view instead of a controller.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;p&gt;</span>
+  <span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">select</span><span class="error">&quot;</span> <span class="attribute-name">post</span> <span class="attribute-name">target</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">view</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>✓<span class="tag">&lt;/button&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">post.title</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/p&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>You would handle it this in an <code>actions</code> hash on your view.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>App.PostsIndexView = Ember.View.extend({
+  <span class="key">actions</span>: {
+    <span class="function">select</span>: <span class="keyword">function</span>(post) {
+      <span class="comment">// do your business.</span>
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
     
       <footer>
         

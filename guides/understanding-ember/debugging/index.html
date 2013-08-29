@@ -545,17 +545,77 @@
     <hr>
     <h3 class='anchorable-toc' id='toc_debugging-ember-and-ember-data'>Debugging Ember and Ember Data</h3>
 <p>Here are some tips you can use to help debug your Ember application.</p>
-<h4 class='anchorable-toc' id='toc_log-router-transitions'>Log router transitions</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+
+<p>Also, check out the
+<a href="https://github.com/tildeio/ember-extension">ember-extension</a>
+project, which adds an Ember tab to Chrome DevTools that allows you
+to inspect Ember objects in your application.</p>
+<h2 class='anchorable-toc' id='toc_routing'>Routing</h2><h4 class='anchorable-toc' id='toc_log-router-transitions'>Log router transitions</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
 </pre></td>
   <td class="code"><pre>window.App = Ember.Application.create({
-  <span class="key">LOG_TRANSITIONS</span>: <span class="predefined-constant">true</span>
+  <span class="comment">// Basic logging, e.g. &quot;Transitioned into 'post'&quot;</span>
+  <span class="key">LOG_TRANSITIONS</span>: <span class="predefined-constant">true</span>, 
+
+  <span class="comment">// Extremely detailed logging, highlighting every internal</span>
+  <span class="comment">// step made while transitioning into a route, including</span>
+  <span class="comment">// `beforeModel`, `model`, and `afterModel` hooks, and</span>
+  <span class="comment">// information about redirects and aborted transitions</span>
+  <span class="key">LOG_TRANSITIONS_INTERNAL</span>: <span class="predefined-constant">true</span>
 });
 </pre></td>
 </tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_log-view-lookups'>Log view lookups</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><h4 class='anchorable-toc' id='toc_view-all-registered-routes'>View all registered routes</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>Ember.keys(App.Router.router.recognizer.names)
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_get-current-route-name-path'>Get current route name / path</h4>
+<p>Ember installs the current route name and path on your
+app&#39;s <code>ApplicationController</code> as the properties
+<code>currentRouteName</code> and <code>currentPath</code>. <code>currentRouteName</code>&#39;s
+value (e.g. <code>&quot;comments.edit&quot;</code>) can be used as the destination parameter of 
+<code>transitionTo</code> and the <code>{{linkTo}}</code> Handlebars helper, while 
+<code>currentPath</code> serves as a full descriptor of each
+parent route that has been entered (e.g.
+<code>&quot;admin.posts.show.comments.edit&quot;</code>).</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+</pre></td>
+  <td class="code"><pre><span class="comment">// From within a Route</span>
+<span class="local-variable">this</span>.controllerFor(<span class="string"><span class="delimiter">&quot;</span><span class="content">application</span><span class="delimiter">&quot;</span></span>).get(<span class="string"><span class="delimiter">&quot;</span><span class="content">currentRouteName</span><span class="delimiter">&quot;</span></span>);
+<span class="local-variable">this</span>.controllerFor(<span class="string"><span class="delimiter">&quot;</span><span class="content">application</span><span class="delimiter">&quot;</span></span>).get(<span class="string"><span class="delimiter">&quot;</span><span class="content">currentPath</span><span class="delimiter">&quot;</span></span>);
+
+<span class="comment">// From within a controller, after specifying `needs: ['application']`</span>
+<span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">controllers.application.currentRouteName</span><span class="delimiter">'</span></span>);
+<span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">controllers.application.currentPath</span><span class="delimiter">'</span></span>);
+
+<span class="comment">// From the console:</span>
+App.__container__.lookup(<span class="string"><span class="delimiter">&quot;</span><span class="content">controller:application</span><span class="delimiter">&quot;</span></span>).get(<span class="string"><span class="delimiter">&quot;</span><span class="content">currentRouteName</span><span class="delimiter">&quot;</span></span>)
+App.__container__.lookup(<span class="string"><span class="delimiter">&quot;</span><span class="content">controller:application</span><span class="delimiter">&quot;</span></span>).get(<span class="string"><span class="delimiter">&quot;</span><span class="content">currentPath</span><span class="delimiter">&quot;</span></span>)
+</pre></td>
+</tr></table>
+</div></div><h2 class='anchorable-toc' id='toc_views-templates'>Views / Templates</h2><h4 class='anchorable-toc' id='toc_log-view-lookups'>Log view lookups</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -565,7 +625,27 @@
 });
 </pre></td>
 </tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_log-generated-controller'>LOG generated controller</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><h4 class='anchorable-toc' id='toc_get-the-view-object-from-its-dom-element-s-id'>Get the View object from its DOM Element&#39;s ID</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>Ember.View.views[<span class="string"><span class="delimiter">'</span><span class="content">ember605</span><span class="delimiter">'</span></span>]
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_view-all-registered-templates'>View all registered templates</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>Ember.keys(Ember.TEMPLATES)
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_handlebars-debugging-helpers'>Handlebars Debugging Helpers</h4><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">debugger</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">log</span> <span class="attribute-name">record</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div><h2 class='anchorable-toc' id='toc_controllers'>Controllers</h2><h4 class='anchorable-toc' id='toc_log-generated-controller'>Log generated controller</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -575,48 +655,16 @@
 });
 </pre></td>
 </tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_log-object-bindings'>Log object bindings</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre>Ember.LOG_BINDINGS = <span class="predefined-constant">true</span>
-</pre></td>
-</tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_view-all-registered-routes'>View all registered routes</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre> Ember.keys(App.Router.router.recognizer.names)
-</pre></td>
-</tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_view-all-registered-templates'>View all registered templates</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre>Ember.keys(Ember.TEMPLATES)
-</pre></td>
-</tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_get-the-state-history-of-an-ember-data-record'>Get the state history of an ember-data record</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><h2 class='anchorable-toc' id='toc_ember-data'>Ember Data</h2><h4 class='anchorable-toc' id='toc_get-the-state-history-of-an-ember-data-record'>Get the state history of an ember-data record</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
   <td class="code"><pre>record.stateManager.get(<span class="string"><span class="delimiter">'</span><span class="content">currentPath</span><span class="delimiter">'</span></span>)
-</pre></td>
-</tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_get-the-view-object-for-a-generated-ember-code-div-code-by-its-div-id'>Get the View object for a generated ember <code>div</code> by its div id</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre>Ember.View.views[<span class="string"><span class="delimiter">'</span><span class="content">ember605</span><span class="delimiter">'</span></span>]
 </pre></td>
 </tr></table>
 </div></div><h4 class='anchorable-toc' id='toc_log-state-transitions'>Log state transitions</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
   <td class="code"><pre>record.set(<span class="string"><span class="delimiter">&quot;</span><span class="content">stateManager.enableLogging</span><span class="delimiter">&quot;</span></span>, <span class="predefined-constant">true</span>)
-</pre></td>
-</tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_view-an-instance-of-something-from-the-container'>View an instance of something from the container</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-</pre></td>
-  <td class="code"><pre>App.__container__.lookup(<span class="string"><span class="delimiter">&quot;</span><span class="content">controller:posts</span><span class="delimiter">&quot;</span></span>)
-App.__container__.lookup(<span class="string"><span class="delimiter">&quot;</span><span class="content">route:application</span><span class="delimiter">&quot;</span></span>)
 </pre></td>
 </tr></table>
 </div></div><h4 class='anchorable-toc' id='toc_view-ember-data-s-identity-map'>View ember-data&#39;s identity map</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -639,10 +687,24 @@ App.__container__.lookup(<span class="string"><span class="delimiter">'</span><s
 App.__container__.lookup(<span class="string"><span class="delimiter">'</span><span class="content">store:main</span><span class="delimiter">'</span></span>).recordCache[<span class="integer">2</span>].get(<span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>)
 </pre></td>
 </tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_see-all-observers-for-a-object-key'>See all observers for a object, key</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><h2 class='anchorable-toc' id='toc_observers-binding'>Observers / Binding</h2><h4 class='anchorable-toc' id='toc_see-all-observers-for-a-object-key'>See all observers for a object, key</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
   <td class="code"><pre>Ember.observersFor(comments, keyName);
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_log-object-bindings'>Log object bindings</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>Ember.LOG_BINDINGS = <span class="predefined-constant">true</span>
+</pre></td>
+</tr></table>
+</div></div><h2 class='anchorable-toc' id='toc_miscellaneous'>Miscellaneous</h2><h4 class='anchorable-toc' id='toc_view-an-instance-of-something-from-the-container'>View an instance of something from the container</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre>App.__container__.lookup(<span class="string"><span class="delimiter">&quot;</span><span class="content">controller:posts</span><span class="delimiter">&quot;</span></span>)
+App.__container__.lookup(<span class="string"><span class="delimiter">&quot;</span><span class="content">route:application</span><span class="delimiter">&quot;</span></span>)
 </pre></td>
 </tr></table>
 </div></div><h4 class='anchorable-toc' id='toc_dealing-with-deprecations'>Dealing with deprecations</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -651,14 +713,6 @@ App.__container__.lookup(<span class="string"><span class="delimiter">'</span><s
 </pre></td>
   <td class="code"><pre>Ember.ENV.RAISE_ON_DEPRECATION = <span class="predefined-constant">true</span>
 Ember.LOG_STACKTRACE_ON_DEPRECATION = <span class="predefined-constant">true</span>
-</pre></td>
-</tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_handlebars'>Handlebars</h4><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-</pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">debugger</span><span class="inline-delimiter">}}</span></span>
-<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">log</span> <span class="attribute-name">record</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div><h4 class='anchorable-toc' id='toc_implement-a-code-ember-onerror-code-hook-to-log-all-errors-in-production'>Implement a <code>Ember.onerror</code> hook to log all errors in production</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
