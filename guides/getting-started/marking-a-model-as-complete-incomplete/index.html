@@ -498,7 +498,7 @@
     <hr>
     <p>In this step we&#39;ll update our application to allow a user to mark a todo as complete or incomplete and persist the updated information.</p>
 
-<p>In <code>index.html</code> update your template to wrap each todo in its own controller by adding an <code>itemController</code> argument to the <code>{{each}}</code> Handlebars helper. Then convert our static <code>&lt;input type=&quot;checkbox&quot;&gt;</code> into an <code>Ember.Checkbox</code>:</p>
+<p>In <code>index.html</code> update your template to wrap each todo in its own controller by adding an <code>itemController</code> argument to the <code>{{each}}</code> Handlebars helper. Then convert our static <code>&lt;input type=&quot;checkbox&quot;&gt;</code> into a <code>{{input}}</code> helper:</p>
 <div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -510,9 +510,9 @@
 8
 </pre></td>
   <td class="code"><pre><span class="comment">&lt;!--- ... additional lines truncated for brevity ... --&gt;</span>
-<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">controller</span> <span class="attribute-name">itemController</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">todo</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">itemController</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">todo</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
   <span class="tag">&lt;li</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bind-attr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">isCompleted:completed</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
-    <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="attribute-name">Ember.Checkbox</span> <span class="attribute-name">checkedBinding</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">isCompleted</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">toggle</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+    <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">input</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">checkbox</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">checked</span>=<span class="attribute-value">isCompleted</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">toggle</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
     <span class="tag">&lt;label&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">title</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/label&gt;</span><span class="tag">&lt;button</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">destroy</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/button&gt;</span>
   <span class="tag">&lt;/li&gt;</span>
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
@@ -520,7 +520,7 @@
 </pre></td>
 </tr></table>
 </div></div>
-<p>When this <code>Ember.Checkbox</code> is rendered it will ask for the current value of the controller&#39;s <code>isCompleted</code> property. When a user clicks this input, it will call the controller&#39;s <code>isCompleted</code> property with an argument of either <code>true</code> or <code>false</code> depending on the new checked value of the input.</p>
+<p>When this <code>{{input}}</code> is rendered it will ask for the current value of the controller&#39;s <code>isCompleted</code> property. When a user clicks this input, it will call the controller&#39;s <code>isCompleted</code> property with an argument of either <code>true</code> or <code>false</code> depending on the new checked value of the input.</p>
 
 <p>Implement the controller for each todo by matching the name used as the <code>itemController</code> value to a class in your application <code>Todos.TodoController</code>. Create a new file at <code>js/controllers/todo_controller.js</code> for this code. You may place this file anywhere you like (even just putting all code into the same file), but this guide will assume you have created the file and named it as indicated.</p>
 
@@ -550,7 +550,7 @@
       <span class="comment">// property being used as a getter</span>
       <span class="keyword">return</span> model.get(<span class="string"><span class="delimiter">'</span><span class="content">isCompleted</span><span class="delimiter">'</span></span>);
     } <span class="keyword">else</span> {
-      <span class="comment">// property being used as a setter</span>
+      <span class="comment">// property being used as  setter</span>
       model.set(<span class="string"><span class="delimiter">'</span><span class="content">isCompleted</span><span class="delimiter">'</span></span>, value);
       model.save();
       <span class="keyword">return</span> value;
@@ -560,7 +560,7 @@
 </pre></td>
 </tr></table>
 </div></div>
-<p>When called from the template to display the current <code>isCompleted</code> state of the todo, this property will proxy that question to its underlying <code>model</code>. When called with a value because a user has toggled the checkbox in the template, this property will set the <code>isCompleted</code> property of its <code>model</code> to the passed value (<code>true</code> or <code>false</code>), persist the model update, and return the passed value so the checkbox will display correct.</p>
+<p>When called from the template to display the current <code>isCompleted</code> state of the todo, this property will proxy that question to its underlying <code>model</code>. When called with a value because a user has toggled the checkbox in the template, this property will set the <code>isCompleted</code> property of its <code>model</code> to the passed value (<code>true</code> or <code>false</code>), persist the model update, and return the passed value so the checkbox will display correctly.</p>
 
 <p>In <code>index.html</code> include <code>js/controllers/todo_controller.js</code> as a dependency:</p>
 <div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -582,10 +582,10 @@
 </div></div>
 <p>Reload your web browser to ensure that all files have been referenced correctly and no errors occur. You should now be able to change the <code>isCompleted</code> property of a todo.</p>
 <h3 class='anchorable-toc' id='toc_live-preview'>Live Preview</h3>
-<p><a class="jsbin-embed" href="http://jsbin.com/asayac/3/embed?live">Ember.js • TodoMVC</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/UDoPajA/1/embed?live">Ember.js • TodoMVC</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <h3 class='anchorable-toc' id='toc_additional-resources'>Additional Resources</h3>
 <ul>
-<li><a href="https://github.com/emberjs/quickstart-code-sample/commit/44e76869476691787957c0ef919b35cbd3f7d0f4">Changes in this step in <code>diff</code> format</a></li>
+<li><a href="https://github.com/emberjs/quickstart-code-sample/commit/8d469c04c237f39a58903a3856409a2592cc18a9">Changes in this step in <code>diff</code> format</a></li>
 <li><a href="/api/classes/Ember.Checkbox.html">Ember.Checkbox API documentation</a></li>
 <li><a href="/guides/controllers">Ember Controller Guide</a></li>
 <li><a href="/guides/object-model/computed-properties/">Computed Properties Guide</a></li>

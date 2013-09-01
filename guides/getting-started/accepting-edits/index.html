@@ -498,6 +498,8 @@
     <hr>
     <p>In the previous step we updated TodoMVC to allow a user to toggle the display of a text <code>&lt;input&gt;</code> for editing a todo&#39;s title. Next, we&#39;ll add the behavior that immediately focuses the <code>&lt;input&gt;</code> when it appears, accepts user input and, when the user presses the <code>&lt;enter&gt;</code> key or moves focus away from the editing <code>&lt;input&gt;</code> element, persists these changes, then redisplays the todo with its newly updated text.</p>
 
+<p>To accomplish this, we&#39;ll create a new custom component and register it with Handelbars to make it available to our templates.</p>
+
 <p>Create a new file <code>js/views/edit_todo_view.js</code>. You may place this file anywhere you like (even just putting all code into the same file), but this guide will assume you have created the file and named it as indicated.</p>
 
 <p>In <code>js/views/edit_todo_view.js</code> create an extension of <code>Ember.TextField</code>:</p>
@@ -509,30 +511,14 @@
 5
 6
 7
-8
-9
-<strong>10</strong>
-11
-12
-13
-14
-15
 </pre></td>
   <td class="code"><pre>Todos.EditTodoView = Ember.TextField.extend({
-  <span class="key">classNames</span>: [<span class="string"><span class="delimiter">'</span><span class="content">edit</span><span class="delimiter">'</span></span>],
-
-  <span class="function">insertNewline</span>: <span class="keyword">function</span> () {
-    <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">controller</span><span class="delimiter">'</span></span>).acceptChanges();
-  },
-
-  <span class="function">focusOut</span>: <span class="keyword">function</span> () {
-    <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">controller</span><span class="delimiter">'</span></span>).acceptChanges();
-  },
-
   <span class="function">didInsertElement</span>: <span class="keyword">function</span> () {
     <span class="local-variable">this</span>.<span class="predefined">$</span>().focus();
   }
 });
+
+Ember.Handlebars.helper(<span class="string"><span class="delimiter">'</span><span class="content">edit-todo</span><span class="delimiter">'</span></span>, Todos.EditTodoView);
 </pre></td>
 </tr></table>
 </div></div>
@@ -552,27 +538,29 @@
 </pre></td>
 </tr></table>
 </div></div>
-<p>This view implements the <code>&lt;input&gt;</code> behavior described above. When the <code>&lt;input&gt;</code> is inserted into the page, it will immediately gain focus through its <code>didInsertElement</code> event. Pressing the <code>&lt;enter&gt;</code> key  will trigger the <code>insertNewline</code> event, calling a method <code>acceptChanges</code> on this view&#39;s instance of <code>TodoController</code>. Moving focus away from from the <code>&lt;input&gt;</code> will trigger the <code>focusOut</code> event, calling a method <code>acceptChanges</code> on this view&#39;s instance of <code>TodoController</code>.</p>
-
-<p>A CSS class <code>edit</code> is applied for styling.</p>
-
-<p>In <code>index.html</code> replace the static <code>&lt;input&gt;</code> element with <code>Todos.EditTodoView</code> and connect the <code>value</code>:</p>
+<p>In <code>index.html</code> replace the static <code>&lt;input&gt;</code> element with our custom <code>{{edit-todo}}</code> component, connecting the <code>value</code> property, and actions:</p>
 <div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
+6
 </pre></td>
   <td class="code"><pre><span class="comment">&lt;!--- ... additional lines truncated for brevity ... --&gt;</span>
 <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">isEditing</span><span class="inline-delimiter">}}</span></span>
-  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="attribute-name">Todos.EditTodoView</span> <span class="attribute-name">valueBinding</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">edit-todo</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">edit</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="attribute-value">title</span> <span class="attribute-name">focus-out</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">acceptChanges</span><span class="delimiter">&quot;</span></span> 
+                           <span class="attribute-name">insert-newline</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">acceptChanges</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
 <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">else</span><span class="inline-delimiter">}}</span></span>
 <span class="comment">&lt;!--- ... additional lines truncated for brevity ... --&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
-<p>This will insert an <code>&lt;input&gt;</code> element into our page with the behaviors we added above. Additionally, it will bind the <code>value</code> property of this <code>&lt;input&gt;</code> to the <code>title</code> property of this instance of <code>TodoController</code>. We will not implement a <code>title</code> property on the controller so it will retain the default behavior of proxying all requests to its <code>model</code>. </p>
+<p>Pressing the <code>&lt;enter&gt;</code> key  will trigger the <code>acceptChanges</code> event on the instance of <code>TodoController</code>. Moving focus away from from the <code>&lt;input&gt;</code> will trigger the <code>focus-out</code> event, calling a method <code>acceptChanges</code> on this view&#39;s instance of <code>TodoController</code>.</p>
+
+<p>Additionally, we connect the <code>value</code> property of this <code>&lt;input&gt;</code> to the <code>title</code> property of this instance of <code>TodoController</code>. We will not implement a <code>title</code> property on the controller so it will retain the default behavior of proxying all requests to its <code>model</code>. </p>
+
+<p>A CSS class <code>edit</code> is applied for styling.</p>
 
 <p>In <code>js/controllers/todo_controller.js</code>, add the method <code>acceptChanges</code> that we called from <code>EditTodoView</code>:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -582,22 +570,32 @@
 4
 5
 6
+7
+8
+9
+<strong>10</strong>
+11
 </pre></td>
   <td class="code"><pre><span class="comment">// ... additional lines truncated for brevity ...</span>
-<span class="function">acceptChanges</span>: <span class="keyword">function</span> () {
-  <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">isEditing</span><span class="delimiter">'</span></span>, <span class="predefined-constant">false</span>);
-  <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">model</span><span class="delimiter">'</span></span>).save();
-},
+actions: {
+   <span class="function">editTodo</span>: <span class="keyword">function</span> () {
+     <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">isEditing</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
+   },
+   <span class="function">acceptChanges</span>: <span class="keyword">function</span> () {
+     <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">isEditing</span><span class="delimiter">'</span></span>, <span class="predefined-constant">false</span>);
+     <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">model</span><span class="delimiter">'</span></span>).save();
+   }
+}
 <span class="comment">// ... additional lines truncated for brevity ...</span>
 </pre></td>
 </tr></table>
 </div></div>
 <p>This method will set the controller&#39;s <code>isEditing</code> property to false and commit all changes made to the todo.</p>
 <h3 class='anchorable-toc' id='toc_live-preview'>Live Preview</h3>
-<p><a class="jsbin-embed" href="http://jsbin.com/ecicok/2/embed?live">Ember.js • TodoMVC</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/USOlAna/1/embed?live">Ember.js • TodoMVC</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <h3 class='anchorable-toc' id='toc_additional-resources'>Additional Resources</h3>
 <ul>
-<li><a href="https://github.com/emberjs/quickstart-code-sample/commit/70eb45e2e69e6bbc30a7d8b69812c6696bbc8cd3">Changes in this step in <code>diff</code> format</a></li>
+<li><a href="https://github.com/emberjs/quickstart-code-sample/commit/a7e2f40da4d75342358acdfcbda7a05ccc90f348">Changes in this step in <code>diff</code> format</a></li>
 <li><a href="/guides/controllers">Controller Guide</a></li>
 <li><a href="/api/classes/Ember.TextField.html">Ember.TextField API documentation</a></li>
 </ul>

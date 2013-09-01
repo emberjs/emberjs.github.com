@@ -514,12 +514,12 @@
 12
 </pre></td>
   <td class="code"><pre> <span class="comment">&lt;!--- ... additional lines truncated for brevity ... --&gt;</span>
-<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">controller</span> <span class="attribute-name">itemController</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">todo</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">itemController</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">todo</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
   <span class="tag">&lt;li</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bind-attr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">isCompleted:completed isEditing:editing</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
     <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">isEditing</span><span class="inline-delimiter">}}</span></span>
       <span class="tag">&lt;input</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">'</span><span class="content">edit</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
     <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">else</span><span class="inline-delimiter">}}</span></span>
-      <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="attribute-name">Ember.Checkbox</span> <span class="attribute-name">checkedBinding</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">isCompleted</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">toggle</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+      <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">input</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">checkbox</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">checked</span>=<span class="attribute-value">isCompleted</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">toggle</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
       <span class="tag">&lt;label</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">editTodo</span><span class="error">&quot;</span> <span class="attribute-name">on</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">doubleClick</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">title</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/label&gt;</span><span class="tag">&lt;button</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">destroy</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/button&gt;</span>
     <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
   <span class="tag">&lt;/li&gt;</span>
@@ -540,13 +540,19 @@ this todo&#39;s controller. Finally, we wrap our todo in a Handlebars <code>{{if
 5
 6
 7
+8
+9
+<strong>10</strong>
 </pre></td>
   <td class="code"><pre><span class="comment">// ... additional lines truncated for brevity ...</span>
-isEditing: <span class="predefined-constant">false</span>,
+actions: {
+   <span class="function">editTodo</span>: <span class="keyword">function</span> () {
+     <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">isEditing</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
+   }
+ },
 
-<span class="function">editTodo</span>: <span class="keyword">function</span> () {
-  <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">isEditing</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
-},
+<span class="key">isEditing</span>: <span class="predefined-constant">false</span>,
+
 <span class="comment">// ... additional lines truncated for brevity ...</span>
 </pre></td>
 </tr></table>
@@ -555,10 +561,10 @@ isEditing: <span class="predefined-constant">false</span>,
 
 <p>Reload your web browser to ensure that no errors occur. You can now double-click a todo to edit it.</p>
 <h3 class='anchorable-toc' id='toc_live-preview'>Live Preview</h3>
-<p><a class="jsbin-embed" href="http://jsbin.com/ururuc/2/embed?live">Ember.js • TodoMVC</a><script src="http://static.jsbin.com/js/embed.js"></script> </p>
+<p><a class="jsbin-embed" href="http://jsbin.com/usiXemu/1/embed?live">Ember.js • TodoMVC</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <h3 class='anchorable-toc' id='toc_additional-resources'>Additional Resources</h3>
 <ul>
-<li><a href="https://github.com/emberjs/quickstart-code-sample/commit/7eb87f8f987714385e8381197ec7c77215df8cf9">Changes in this step in <code>diff</code> format</a></li>
+<li><a href="https://github.com/emberjs/quickstart-code-sample/commit/616bc4f22900bbaa2bf9bdb8de53ba41209d8cc0">Changes in this step in <code>diff</code> format</a></li>
 <li><a href="/guides/templates/conditionals">Handlebars Conditionals Guide</a></li>
 <li><a href="/api/classes/Ember.Handlebars.helpers.html#method_bind-attr">bind-attr API documentation</a></li>
 <li><a href="/api/classes/Ember.Handlebars.helpers.html#method_action">action API documentation</a></li>

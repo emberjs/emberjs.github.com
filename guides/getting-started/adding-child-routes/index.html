@@ -517,12 +517,12 @@
 </pre></td>
   <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">todos/index</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
 <span class="inline"><span class="tag">&lt;ul</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">todo-list</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-  {{#each controller itemController=&quot;todo&quot;}}
+  {{#each itemController=&quot;todo&quot;}}
     <span class="tag">&lt;li</span> <span class="error">{</span><span class="error">{</span><span class="attribute-name">bind-attr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">isCompleted:completed isEditing:editing</span><span class="delimiter">&quot;</span></span><span class="error">}</span><span class="error">}</span><span class="tag">&gt;</span>
       {{#if isEditing}}
-        {{view Todos.EditTodoView valueBinding=&quot;title&quot;}}
+        {{edit-todo class=&quot;edit&quot; value=title focus-out=&quot;acceptChanges&quot; insert-newline=&quot;acceptChanges&quot;}}
       {{else}}
-        {{view Ember.Checkbox checkedBinding=&quot;isCompleted&quot; class=&quot;toggle&quot;}}
+        {{input type=&quot;checkbox&quot; checked=isCompleted class=&quot;toggle&quot;}}
         <span class="tag">&lt;label</span> <span class="error">{</span><span class="error">{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">editTodo</span><span class="error">&quot;</span> <span class="attribute-name">on</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">doubleClick</span><span class="delimiter">&quot;</span></span><span class="error">}</span><span class="error">}</span><span class="tag">&gt;</span>{{title}}<span class="tag">&lt;/label&gt;</span><span class="tag">&lt;button</span> <span class="error">{</span><span class="error">{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">removeTodo</span><span class="error">&quot;</span><span class="error">}</span><span class="error">}</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">destroy</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/button&gt;</span>
       {{/if}}
     <span class="tag">&lt;/li&gt;</span>
@@ -580,20 +580,21 @@
 
 Todos.TodosIndexRoute = Ember.Route.extend({
   <span class="function">model</span>: <span class="keyword">function</span> () {
-    <span class="keyword">return</span> Todos.Todo.find();
+    <span class="keyword">return</span> <span class="local-variable">this</span>.modelFor(<span class="string"><span class="delimiter">'</span><span class="content">todos</span><span class="delimiter">'</span></span>);
   }
 });
 </pre></td>
 </tr></table>
 </div></div>
-<p>When the application loads at the url <code>&#39;/&#39;</code> Ember.js will enter the <code>todos</code> route and render the <code>todos</code> template as before. It will also transition into the <code>todos.index</code> route and fill the <code>{{outlet}}</code> in the <code>todos</code> template with the <code>todos/index</code> template.  The model data for this template is the result of the <code>model</code> method of <code>TodosIndexRoute</code>.</p>
+<p>When the application loads at the url <code>&#39;/&#39;</code> Ember.js will enter the <code>todos</code> route and render the <code>todos</code> template as before. It will also transition into the <code>todos.index</code> route and fill the <code>{{outlet}}</code> in the <code>todos</code> template with the <code>todos/index</code> template.  The model data for this template is the result of the <code>model</code> method of <code>TodosIndexRoute</code>, which indicates that the 
+model for this route is the same model for the <code>TodosRoute</code>.</p>
 
 <p>This mapping is described in more detail in the <a href="/guides/concepts/naming-conventions">Naming Conventions Guide</a>.</p>
 <h3 class='anchorable-toc' id='toc_live-preview'>Live Preview</h3>
-<p><a class="jsbin-embed" href="http://jsbin.com/ogelup/2/embed?live">Ember.js • TodoMVC</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/oweNovo/1/embed?live">Ember.js • TodoMVC</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <h3 class='anchorable-toc' id='toc_additional-resources'>Additional Resources</h3>
 <ul>
-<li><a href="https://github.com/emberjs/quickstart-code-sample/commit/ddcb1b480837144c4051d098c476811de81beded">Changes in this step in <code>diff</code> format</a></li>
+<li><a href="https://github.com/emberjs/quickstart-code-sample/commit/3bab8f1519ffc1ca2d5a12d1de35e4c764c91f05">Changes in this step in <code>diff</code> format</a></li>
 <li><a href="/guides/routing">Ember Router Guide</a></li>
 <li><a href="/guides/controllers">Ember Controller Guide</a></li>
 <li><a href="/api/classes/Ember.Handlebars.helpers.html#method_outlet">outlet API documentation</a></li>
