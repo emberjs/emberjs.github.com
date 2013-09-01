@@ -22,15 +22,152 @@
       })();
     </script>
 
-<!--[if lt IE 9]>
-    <script type="text/javascript" src="/javascripts/common-old-ie.js"></script>
-<![endif]-->
-<!--[if gte IE 9]><!-->
-    <script type="text/javascript" src="/javascripts/common-modern.js"></script>
-<!--<![endif]-->
+    <script type="text/javascript" src="/javascripts/jquery-2.0.2.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
+
+    <script type="text/javascript">
+      $(function() {
+        var backToTop = $('#back-to-top');
+        var doc = $(document);
+        var offset = backToTop.offset();
+        var marginTop = 90;
+        var showing = false;
+
+        positionBackToTop = function(reset) {
+          if (reset) {
+            backToTop.css({
+              top: '',
+              position: ''
+            });
+            offset = backToTop.offset();
+          }
+
+          if (!showing && doc.scrollTop() > offset.top+200) {
+            showing = true;
+            backToTop.css({
+              position: 'fixed',
+              top: 20,
+              left: offset.left,
+              display:' block'
+            });
+          } else if (showing && doc.scrollTop() <= offset.top+200) {
+            showing = false;
+            backToTop.css({
+              display:'none'
+            });
+          }
+        };
+
+        if (backToTop.length) {
+          backToTop.on('click', function(evt) {
+            $('html,body').animate({scrollTop: 0}, 200);
+            return false;
+          });
+
+          doc.on('scroll', function() {
+            positionBackToTop();
+          });
+        }
+
+        $('.bx-wrapper, .bx-window').width(940);
+      });
+    </script>
 
     
-    <script type="text/javascript" src="/javascripts/api.js"></script>
+    <script>
+      $(function() {
+        var ls = window['localStorage'];
+
+        // Restoring method visibility preference from localStorage
+        function initApiOptions() {
+          var type = this.getAttribute('data-type'),
+            checked = ls ? ls.getItem('api-options-' + type) : undefined;
+
+          if (checked != undefined) {
+            // Bools are stored as strings in localStorage
+            checked = checked == 'true';
+            $(this).attr('checked', checked);
+          }
+        };
+
+        // Type toggling
+        function toggleType() {
+          var type = this.getAttribute('data-type');
+
+          $('.'+type).toggle(this.checked);
+
+          if(ls)
+            ls.setItem('api-options-' + type, this.checked);
+        }
+
+        $('#api-options input').each(initApiOptions);
+        $('#api-options input').each(toggleType);
+        $('#api-options input').on('change', toggleType);
+
+        // Tabs
+        $('.tabs .pane').hide();
+        $('.tabs .pane:first').show();
+        $('.tabs ul li:first').addClass('active');
+
+        function showPane($tabs, href) {
+          var $ul = $tabs.find('> ul'),
+              $tab = $ul.find('a[href='+href+']'),
+              $pane = $(href);
+
+          $ul.find('li').removeClass('active');
+          $tab.parent().addClass('active');
+          $tabs.find('.pane').hide();
+
+          $pane.show();
+        }
+
+        $('.tabs > ul li a').click(function(){
+          var $el = $(this),
+              $tabs = $el.parents('.tabs'),
+              href = $el.attr('href');
+
+          showPane($tabs, href);
+
+          return false;
+        });
+
+        // Auto tab
+        function checkHash() {
+          var hash = window.location.hash;
+          var $el = $(hash);
+          if ($el.length > 0 && !$el.is(':visible')) {
+            showPane($el.parents('.tabs'), '#'+$el.parents('.pane').attr('id'));
+            $("html, body").scrollTop($el.offset().top);
+          } else if ($el.length == 0) {
+            showPane($('.tabs'), '#index');
+          }
+        }
+
+        $(window).on('hashchange', checkHash);
+        checkHash();
+      });
+    $(function(){
+      $("#toc-list .level-1 > a").not('[target=_blank]').click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
+      });
+
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.data('id') || toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
+    });
+    </script>
   
   </head>
 
@@ -44,13 +181,31 @@
           <li class="active"><a href="/api">api</a></li>
           <li><a href="/community">community</a></li>
           <li><a href="/blog">blog</a></li>
-          <li><a href="/builds">builds</a></li>
+
           <li id="search">
             <form>
               <input type="text" id="st-search-input" class="st-search-input" />
             </form>
             <div id="st-results-container"></div>
+            <script type="text/javascript">
+              var Swiftype = window.Swiftype || {};
+              (function() {
+                Swiftype.key = 'HTNahKf4xmo8GgFbTz4n';
+                Swiftype.inputElement = '#st-search-input';
+                Swiftype.resultContainingElement = '#st-results-container';
+                Swiftype.attachElement = '#st-search-input';
+                Swiftype.renderStyle = "overlay";
+
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.async = true;
+                script.src = "//swiftype.com/embed.js";
+                var entry = document.getElementsByTagName('script')[0];
+                entry.parentNode.insertBefore(script, entry);
+              }());
+            </script>
           </li>
+
         </ul>
 
         <div id="github">
@@ -65,7 +220,7 @@
         <div id="sidebar">
           
     <ol id='toc-list'>
-      <li class='level-1'><a href="https://github.com/emberjs/ember.js/tree/v1.0.0" target="_blank"> Tag: v1.0.0</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/ember.js/tree/9d266a8" target="_blank"> Tag: 9d266a8</a></li>
 
       
           <li class="level-1 ">
@@ -110,14 +265,6 @@
             
           <li class="level-3 ">
           
-              <a href="/api/modules/ember-handlebars-compiler.html">ember-handlebars-compiler</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/modules/ember-metal.html">ember-metal</a>
             
           </li>
@@ -135,14 +282,6 @@
           <li class="level-3 ">
           
               <a href="/api/modules/ember-runtime.html">ember-runtime</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/modules/ember-testing.html">ember-testing</a>
             
           </li>
         
@@ -236,14 +375,6 @@
             
           <li class="level-3 ">
           
-              <a href="/api/classes/Ember.ActionHandler.html">Ember.ActionHandler</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/classes/Ember.Application.html">Ember.Application</a>
             
           </li>
@@ -277,6 +408,14 @@
           <li class="level-3 ">
           
               <a href="/api/classes/Ember.Binding.html">Ember.Binding</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Button.html">Ember.Button</a>
             
           </li>
         
@@ -452,22 +591,6 @@
             
           <li class="level-3 ">
           
-              <a href="/api/classes/Ember.Handlebars.Compiler.html">Ember.Handlebars.Compiler</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.Handlebars.JavaScriptCompiler.html">Ember.Handlebars.JavaScriptCompiler</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/classes/Ember.Handlebars.helpers.html">Ember.Handlebars.helpers</a>
             
           </li>
@@ -612,23 +735,7 @@
             
           <li class="level-3 ">
           
-              <a href="/api/classes/Ember.PromiseProxyMixin.html">Ember.PromiseProxyMixin</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/classes/Ember.RSVP.html">Ember.RSVP</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.ReduceComputedProperty.html">Ember.ReduceComputedProperty</a>
             
           </li>
         
@@ -684,39 +791,7 @@
             
           <li class="level-3 ">
           
-              <a href="/api/classes/Ember.SubArray.html">Ember.SubArray</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/classes/Ember.TargetActionSupport.html">Ember.TargetActionSupport</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.Test.html">Ember.Test</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.Test.Adapter.html">Ember.Test.Adapter</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.Test.QUnitAdapter.html">Ember.Test.QUnitAdapter</a>
             
           </li>
         
@@ -741,14 +816,6 @@
           <li class="level-3 ">
           
               <a href="/api/classes/Ember.TextSupport.html">Ember.TextSupport</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.TrackedArray.html">Ember.TrackedArray</a>
             
           </li>
         
@@ -834,7 +901,7 @@
   <h1 class="api-header">
   Ember.ControllerMixin Class
   
-    <a class="edit-page" target="_blank" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-views/lib/system/controller.js#L11">packages/ember-views/lib/system/controller.js:11</a>
+    <a class="edit-page" target="_blank" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-views/lib/system/controller.js#L11">packages/ember-views/lib/system/controller.js:11</a>
   
 </h1>
 
@@ -847,7 +914,7 @@
   
 
   
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-views/lib/system/controller.js#L11">packages/ember-views/lib/system/controller.js:11</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-views/lib/system/controller.js#L11">packages/ember-views/lib/system/controller.js:11</a></p>
   
 
   
@@ -895,10 +962,6 @@
         <p><h2>Methods</h2></p>
         <ul class="index-list">
           
-            <li class="method ">
-              <a href="#method_replaceRoute">replaceRoute</a>
-            </li>
-          
             <li class="method deprecated">
               <a href="#method_replaceWith">replaceWith</a>
             </li>
@@ -915,14 +978,6 @@
       
         <p><h2>Properties</h2></p>
         <ul class="index-list">
-          
-            <li class="property ">
-              <a href="#property_controllers">controllers</a>
-            </li>
-          
-            <li class="property ">
-              <a href="#property_needs">needs</a>
-            </li>
           
             <li class="property ">
               <a href="#property_target">target</a>
@@ -955,88 +1010,6 @@
 
       
         
-<div id="method_replaceRoute" class="method  item-entry">
-  <h3 data-id="method_replaceRoute" class="name anchorable-toc"><code>replaceRoute</code></h3>
-  <span class="args">
-    (name, models)
-  </span>
-
-
-
-
-
-
-
-
-
-  <div class="meta">
-      
-        
-          
-            Defined in
-          
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/ext/controller.js#L48">packages/ember-routing/lib/ext/controller.js:48</a>
-
-    
-
-    
-  </div>
-
-  
-    <div class="description">
-      <p>Alernative to <code>transitionToRoute</code>.  Transition the application into another route. The route may
-be either a single route or route path:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-</pre></td>
-  <td class="code"><pre>  aController.replaceRoute(<span class="string"><span class="delimiter">'</span><span class="content">blogPosts</span><span class="delimiter">'</span></span>);
-  aController.replaceRoute(<span class="string"><span class="delimiter">'</span><span class="content">blogPosts.recentEntries</span><span class="delimiter">'</span></span>);
-</pre></td>
-</tr></table>
-</div></div>
-<p>Optionally supply a model for the route in question. The model
-will be serialized into the URL using the <code>serialize</code> hook of
-the route:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre>  aController.replaceRoute(<span class="string"><span class="delimiter">'</span><span class="content">blogPost</span><span class="delimiter">'</span></span>, aPost);
-</pre></td>
-</tr></table>
-</div></div>
-    </div>
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-        
-          <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
-          <dd>the name of the route</dd>
-        
-          <dt><strong>models</strong> <span class="type">...Object</span></dt>
-          <dd>the</dd>
-        
-      </dl>
-    </div>
-  
-
-  
-</div>
-
-      
-        
 <div id="method_replaceWith" class="method deprecated item-entry">
   <h3 data-id="method_replaceWith" class="name anchorable-toc"><code>replaceWith</code></h3>
 
@@ -1058,7 +1031,7 @@ the route:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/ext/controller.js#L77">packages/ember-routing/lib/ext/controller.js:77</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-routing/lib/ext/controller.js#L55">packages/ember-routing/lib/ext/controller.js:55</a>
 
     
 
@@ -1101,7 +1074,7 @@ the route:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/ext/controller.js#L38">packages/ember-routing/lib/ext/controller.js:38</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-routing/lib/ext/controller.js#L38">packages/ember-routing/lib/ext/controller.js:38</a>
 
     
 
@@ -1145,7 +1118,7 @@ the route:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/ext/controller.js#L9">packages/ember-routing/lib/ext/controller.js:9</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-routing/lib/ext/controller.js#L9">packages/ember-routing/lib/ext/controller.js:9</a>
 
     
 
@@ -1229,150 +1202,6 @@ the route:</p>
 
       
         
-<div id="property_controllers" class="property  item-entry">
-  <h3 data-id="property_controllers" class="name anchorable-toc"><code>controllers</code></h3>
-
-
-  <span class="type">Object</span>
-
-
-
-
-
-
-
-  <div class="meta">
-      
-        
-          
-            Defined in
-          
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-application/lib/ext/controller.js#L78">packages/ember-application/lib/ext/controller.js:78</a>
-
-    
-
-    
-  </div>
-
-  
-    <div class="description">
-      <p>Stores the instances of other controllers available from within
-this controller. Any controller listed by name in the <code>needs</code>
-property will be accessible by name through this property.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>App.CommentsController = Ember.ArrayController.extend({
-  <span class="key">needs</span>: [<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>],
-  <span class="function">postTitle</span>: <span class="keyword">function</span>(){
-    <span class="keyword">var</span> currentPost = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">controllers.post</span><span class="delimiter">'</span></span>); <span class="comment">// instance of App.PostController</span>
-    <span class="keyword">return</span> currentPost.get(<span class="string"><span class="delimiter">'</span><span class="content">title</span><span class="delimiter">'</span></span>);
-  }.property(<span class="string"><span class="delimiter">'</span><span class="content">controllers.post.title</span><span class="delimiter">'</span></span>)
-});
-</pre></td>
-</tr></table>
-</div></div>
-    </div>
-  
-
-  <p>
-    
-      <strong>Default:</strong> <code>null</code>
-    
-  </p>
-
-  
-
-  
-
-  
-</div>
-
-      
-        
-<div id="property_needs" class="property  item-entry">
-  <h3 data-id="property_needs" class="name anchorable-toc"><code>needs</code></h3>
-
-
-  <span class="type">Array</span>
-
-
-
-
-
-
-
-  <div class="meta">
-      
-        
-          
-            Defined in
-          
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-application/lib/ext/controller.js#L31">packages/ember-application/lib/ext/controller.js:31</a>
-
-    
-
-    
-  </div>
-
-  
-    <div class="description">
-      <p>An array of other controller objects available inside
-instances of this controller via the <code>controllers</code>
-property:</p>
-
-<p>For example, when you define a controller:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre>App.CommentsController = Ember.ArrayController.extend({
-  <span class="key">needs</span>: [<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>]
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>The application&#39;s single instance of these other
-controllers are accessible by name through the
-<code>controllers</code> property:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">controllers.post</span><span class="delimiter">'</span></span>); <span class="comment">// instance of App.PostController</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>This is only available for singleton controllers.</p>
-
-    </div>
-  
-
-  <p>
-    
-      <strong>Default:</strong> <code>[]</code>
-    
-  </p>
-
-  
-
-  
-
-  
-</div>
-
-      
-        
 <div id="property_target" class="property  item-entry">
   <h3 data-id="property_target" class="name anchorable-toc"><code>target</code></h3>
 
@@ -1392,7 +1221,7 @@ controllers are accessible by name through the
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/controllers/controller.js#L23">packages/ember-runtime/lib/controllers/controller.js:23</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/controllers/controller.js#L44">packages/ember-runtime/lib/controllers/controller.js:44</a>
 
     
 
@@ -1401,10 +1230,10 @@ controllers are accessible by name through the
 
   
     <div class="description">
-      <p>The object to which actions from the view should be sent.</p>
+      <p>The object to which events from the view should be sent.</p>
 
 <p>For example, when a Handlebars template uses the <code>{{action}}</code> helper,
-it will attempt to send the action to the view&#39;s controller&#39;s <code>target</code>.</p>
+it will attempt to send the event to the view&#39;s controller&#39;s <code>target</code>.</p>
 
 <p>By default, a controller&#39;s <code>target</code> is set to the router after it is
 instantiated by <code>Ember.Application#initialize</code>.</p>

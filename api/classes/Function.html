@@ -22,15 +22,152 @@
       })();
     </script>
 
-<!--[if lt IE 9]>
-    <script type="text/javascript" src="/javascripts/common-old-ie.js"></script>
-<![endif]-->
-<!--[if gte IE 9]><!-->
-    <script type="text/javascript" src="/javascripts/common-modern.js"></script>
-<!--<![endif]-->
+    <script type="text/javascript" src="/javascripts/jquery-2.0.2.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
+
+    <script type="text/javascript">
+      $(function() {
+        var backToTop = $('#back-to-top');
+        var doc = $(document);
+        var offset = backToTop.offset();
+        var marginTop = 90;
+        var showing = false;
+
+        positionBackToTop = function(reset) {
+          if (reset) {
+            backToTop.css({
+              top: '',
+              position: ''
+            });
+            offset = backToTop.offset();
+          }
+
+          if (!showing && doc.scrollTop() > offset.top+200) {
+            showing = true;
+            backToTop.css({
+              position: 'fixed',
+              top: 20,
+              left: offset.left,
+              display:' block'
+            });
+          } else if (showing && doc.scrollTop() <= offset.top+200) {
+            showing = false;
+            backToTop.css({
+              display:'none'
+            });
+          }
+        };
+
+        if (backToTop.length) {
+          backToTop.on('click', function(evt) {
+            $('html,body').animate({scrollTop: 0}, 200);
+            return false;
+          });
+
+          doc.on('scroll', function() {
+            positionBackToTop();
+          });
+        }
+
+        $('.bx-wrapper, .bx-window').width(940);
+      });
+    </script>
 
     
-    <script type="text/javascript" src="/javascripts/api.js"></script>
+    <script>
+      $(function() {
+        var ls = window['localStorage'];
+
+        // Restoring method visibility preference from localStorage
+        function initApiOptions() {
+          var type = this.getAttribute('data-type'),
+            checked = ls ? ls.getItem('api-options-' + type) : undefined;
+
+          if (checked != undefined) {
+            // Bools are stored as strings in localStorage
+            checked = checked == 'true';
+            $(this).attr('checked', checked);
+          }
+        };
+
+        // Type toggling
+        function toggleType() {
+          var type = this.getAttribute('data-type');
+
+          $('.'+type).toggle(this.checked);
+
+          if(ls)
+            ls.setItem('api-options-' + type, this.checked);
+        }
+
+        $('#api-options input').each(initApiOptions);
+        $('#api-options input').each(toggleType);
+        $('#api-options input').on('change', toggleType);
+
+        // Tabs
+        $('.tabs .pane').hide();
+        $('.tabs .pane:first').show();
+        $('.tabs ul li:first').addClass('active');
+
+        function showPane($tabs, href) {
+          var $ul = $tabs.find('> ul'),
+              $tab = $ul.find('a[href='+href+']'),
+              $pane = $(href);
+
+          $ul.find('li').removeClass('active');
+          $tab.parent().addClass('active');
+          $tabs.find('.pane').hide();
+
+          $pane.show();
+        }
+
+        $('.tabs > ul li a').click(function(){
+          var $el = $(this),
+              $tabs = $el.parents('.tabs'),
+              href = $el.attr('href');
+
+          showPane($tabs, href);
+
+          return false;
+        });
+
+        // Auto tab
+        function checkHash() {
+          var hash = window.location.hash;
+          var $el = $(hash);
+          if ($el.length > 0 && !$el.is(':visible')) {
+            showPane($el.parents('.tabs'), '#'+$el.parents('.pane').attr('id'));
+            $("html, body").scrollTop($el.offset().top);
+          } else if ($el.length == 0) {
+            showPane($('.tabs'), '#index');
+          }
+        }
+
+        $(window).on('hashchange', checkHash);
+        checkHash();
+      });
+    $(function(){
+      $("#toc-list .level-1 > a").not('[target=_blank]').click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
+      });
+
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.data('id') || toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
+    });
+    </script>
   
   </head>
 
@@ -44,13 +181,31 @@
           <li class="active"><a href="/api">api</a></li>
           <li><a href="/community">community</a></li>
           <li><a href="/blog">blog</a></li>
-          <li><a href="/builds">builds</a></li>
+
           <li id="search">
             <form>
               <input type="text" id="st-search-input" class="st-search-input" />
             </form>
             <div id="st-results-container"></div>
+            <script type="text/javascript">
+              var Swiftype = window.Swiftype || {};
+              (function() {
+                Swiftype.key = 'HTNahKf4xmo8GgFbTz4n';
+                Swiftype.inputElement = '#st-search-input';
+                Swiftype.resultContainingElement = '#st-results-container';
+                Swiftype.attachElement = '#st-search-input';
+                Swiftype.renderStyle = "overlay";
+
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.async = true;
+                script.src = "//swiftype.com/embed.js";
+                var entry = document.getElementsByTagName('script')[0];
+                entry.parentNode.insertBefore(script, entry);
+              }());
+            </script>
           </li>
+
         </ul>
 
         <div id="github">
@@ -65,7 +220,7 @@
         <div id="sidebar">
           
     <ol id='toc-list'>
-      <li class='level-1'><a href="https://github.com/emberjs/ember.js/tree/v1.0.0" target="_blank"> Tag: v1.0.0</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/ember.js/tree/9d266a8" target="_blank"> Tag: 9d266a8</a></li>
 
       
           <li class="level-1 ">
@@ -110,14 +265,6 @@
             
           <li class="level-3 ">
           
-              <a href="/api/modules/ember-handlebars-compiler.html">ember-handlebars-compiler</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/modules/ember-metal.html">ember-metal</a>
             
           </li>
@@ -135,14 +282,6 @@
           <li class="level-3 ">
           
               <a href="/api/modules/ember-runtime.html">ember-runtime</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/modules/ember-testing.html">ember-testing</a>
             
           </li>
         
@@ -236,14 +375,6 @@
             
           <li class="level-3 ">
           
-              <a href="/api/classes/Ember.ActionHandler.html">Ember.ActionHandler</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/classes/Ember.Application.html">Ember.Application</a>
             
           </li>
@@ -277,6 +408,14 @@
           <li class="level-3 ">
           
               <a href="/api/classes/Ember.Binding.html">Ember.Binding</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Button.html">Ember.Button</a>
             
           </li>
         
@@ -452,22 +591,6 @@
             
           <li class="level-3 ">
           
-              <a href="/api/classes/Ember.Handlebars.Compiler.html">Ember.Handlebars.Compiler</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.Handlebars.JavaScriptCompiler.html">Ember.Handlebars.JavaScriptCompiler</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/classes/Ember.Handlebars.helpers.html">Ember.Handlebars.helpers</a>
             
           </li>
@@ -612,23 +735,7 @@
             
           <li class="level-3 ">
           
-              <a href="/api/classes/Ember.PromiseProxyMixin.html">Ember.PromiseProxyMixin</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/classes/Ember.RSVP.html">Ember.RSVP</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.ReduceComputedProperty.html">Ember.ReduceComputedProperty</a>
             
           </li>
         
@@ -684,39 +791,7 @@
             
           <li class="level-3 ">
           
-              <a href="/api/classes/Ember.SubArray.html">Ember.SubArray</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/classes/Ember.TargetActionSupport.html">Ember.TargetActionSupport</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.Test.html">Ember.Test</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.Test.Adapter.html">Ember.Test.Adapter</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.Test.QUnitAdapter.html">Ember.Test.QUnitAdapter</a>
             
           </li>
         
@@ -741,14 +816,6 @@
           <li class="level-3 ">
           
               <a href="/api/classes/Ember.TextSupport.html">Ember.TextSupport</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.TrackedArray.html">Ember.TrackedArray</a>
             
           </li>
         
@@ -894,10 +961,6 @@
             </li>
           
             <li class="method ">
-              <a href="#method_observesImmediately">observesImmediately</a>
-            </li>
-          
-            <li class="method ">
               <a href="#method_on">on</a>
             </li>
           
@@ -951,7 +1014,7 @@
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/ext/function.js#L77">packages/ember-runtime/lib/ext/function.js:77</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/ext/function.js#L72">packages/ember-runtime/lib/ext/function.js:72</a>
 
     
 
@@ -974,7 +1037,7 @@ For example:</p>
 4
 5
 </pre></td>
-  <td class="code"><pre>Ember.Object.extend({
+  <td class="code"><pre>Ember.Object.create({
   <span class="function">valueObserver</span>: <span class="keyword">function</span>() {
     <span class="comment">// Executes whenever the &quot;value&quot; property changes</span>
   }.observes(<span class="string"><span class="delimiter">'</span><span class="content">value</span><span class="delimiter">'</span></span>)
@@ -982,10 +1045,7 @@ For example:</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>In the future this method may become asynchronous. If you want to ensure
-synchronous behavior, use <code>observesImmediately</code>.</p>
-
-<p>See <code>Ember.observer</code>.</p>
+<p>See <code>Ember.observes</code>.</p>
 
     </div>
   
@@ -1022,7 +1082,7 @@ synchronous behavior, use <code>observesImmediately</code>.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/ext/function.js#L141">packages/ember-runtime/lib/ext/function.js:141</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/ext/function.js#L99">packages/ember-runtime/lib/ext/function.js:99</a>
 
     
 
@@ -1035,7 +1095,7 @@ synchronous behavior, use <code>observesImmediately</code>.</p>
 available when <code>Ember.EXTEND_PROTOTYPES</code> or
 <code>Ember.EXTEND_PROTOTYPES.Function</code> is true, which is the default.</p>
 
-<p>You can get notified when a property change is about to happen by
+<p>You can get notified when a property changes is about to happen by
 by adding the <code>observesBefore</code> call to the end of your method
 declarations in classes that you write. For example:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -1045,7 +1105,7 @@ declarations in classes that you write. For example:</p>
 4
 5
 </pre></td>
-  <td class="code"><pre>Ember.Object.extend({
+  <td class="code"><pre>Ember.Object.create({
   <span class="function">valueObserver</span>: <span class="keyword">function</span>() {
     <span class="comment">// Executes whenever the &quot;value&quot; property is about to change</span>
   }.observesBefore(<span class="string"><span class="delimiter">'</span><span class="content">value</span><span class="delimiter">'</span></span>)
@@ -1053,78 +1113,7 @@ declarations in classes that you write. For example:</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>See <code>Ember.beforeObserver</code>.</p>
-
-    </div>
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-
-  
-</div>
-
-      
-        
-<div id="method_observesImmediately" class="method  item-entry">
-  <h3 data-id="method_observesImmediately" class="name anchorable-toc"><code>observesImmediately</code></h3>
-
-
-
-
-
-
-
-
-
-  <div class="meta">
-      
-        
-          
-            Defined in
-          
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/ext/function.js#L107">packages/ember-runtime/lib/ext/function.js:107</a>
-
-    
-
-    
-  </div>
-
-  
-    <div class="description">
-      <p>The <code>observesImmediately</code> extension of Javascript&#39;s Function prototype is
-available when <code>Ember.EXTEND_PROTOTYPES</code> or
-<code>Ember.EXTEND_PROTOTYPES.Function</code> is true, which is the default.</p>
-
-<p>You can observe property changes simply by adding the <code>observesImmediately</code>
-call to the end of your method declarations in classes that you write.
-For example:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre>Ember.Object.extend({
-  <span class="function">valueObserver</span>: <span class="keyword">function</span>() {
-    <span class="comment">// Executes immediately after the &quot;value&quot; property changes</span>
-  }.observesImmediately(<span class="string"><span class="delimiter">'</span><span class="content">value</span><span class="delimiter">'</span></span>)
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>In the future, <code>observes</code> may become asynchronous. In this event,
-<code>observesImmediately</code> will maintain the synchronous behavior.</p>
-
-<p>See <code>Ember.immediateObserver</code>.</p>
+<p>See <code>Ember.observesBefore</code>.</p>
 
     </div>
   
@@ -1161,7 +1150,7 @@ For example:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/ext/function.js#L168">packages/ember-runtime/lib/ext/function.js:168</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/ext/function.js#L126">packages/ember-runtime/lib/ext/function.js:126</a>
 
     
 
@@ -1228,7 +1217,7 @@ your method declarations in classes or mixins that you write. For example:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/ext/function.js#L12">packages/ember-runtime/lib/ext/function.js:12</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/ext/function.js#L12">packages/ember-runtime/lib/ext/function.js:12</a>
 
     
 
@@ -1255,15 +1244,10 @@ when <code>Ember.EXTEND_PROTOTYPES</code> or <code>Ember.EXTEND_PROTOTYPES.Funct
 <strong>10</strong>
 11
 12
-13
-14
-15
-16
-17
 </pre></td>
-  <td class="code"><pre>MyApp.President = Ember.Object.extend({
-  <span class="key">firstName</span>: <span class="string"><span class="delimiter">'</span><span class="delimiter">'</span></span>,
-  <span class="key">lastName</span>:  <span class="string"><span class="delimiter">'</span><span class="delimiter">'</span></span>,
+  <td class="code"><pre>MyApp.president = Ember.Object.create({
+  <span class="key">firstName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Barack</span><span class="delimiter">&quot;</span></span>,
+  <span class="key">lastName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Obama</span><span class="delimiter">&quot;</span></span>,
 
   <span class="function">fullName</span>: <span class="keyword">function</span>() {
     <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
@@ -1272,12 +1256,7 @@ when <code>Ember.EXTEND_PROTOTYPES</code> or <code>Ember.EXTEND_PROTOTYPES.Funct
   }.property()
 });
 
-<span class="keyword">var</span> president = MyApp.President.create({
-  <span class="key">firstName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Barack</span><span class="delimiter">&quot;</span></span>,
-  <span class="key">lastName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Obama</span><span class="delimiter">&quot;</span></span>
-});
-
-president.get(<span class="string"><span class="delimiter">'</span><span class="content">fullName</span><span class="delimiter">'</span></span>);    <span class="comment">// &quot;Barack Obama&quot;</span>
+MyApp.president.get(<span class="string"><span class="delimiter">'</span><span class="content">fullName</span><span class="delimiter">'</span></span>);    <span class="comment">// &quot;Barack Obama&quot;</span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -1301,9 +1280,9 @@ about these dependencies like this:</p>
 <strong>10</strong>
 11
 </pre></td>
-  <td class="code"><pre>MyApp.President = Ember.Object.extend({
-  <span class="key">firstName</span>: <span class="string"><span class="delimiter">'</span><span class="delimiter">'</span></span>,
-  <span class="key">lastName</span>:  <span class="string"><span class="delimiter">'</span><span class="delimiter">'</span></span>,
+  <td class="code"><pre>MyApp.president = Ember.Object.create({
+  <span class="key">firstName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Barack</span><span class="delimiter">&quot;</span></span>,
+  <span class="key">lastName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Obama</span><span class="delimiter">&quot;</span></span>,
 
   <span class="function">fullName</span>: <span class="keyword">function</span>() {
     <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
@@ -1321,7 +1300,7 @@ will not immediately trigger an update of the computed property, but
 will instead clear the cache so that it is updated when the next <code>get</code>
 is called on the property.</p>
 
-<p>See <a href="/api/classes/Ember.ComputedProperty.html">Ember.ComputedProperty</a>, <a href="/api/#method_computed">Ember.computed</a>.</p>
+<p>See <code>Ember.ComputedProperty</code>, <code>Ember.computed</code>.</p>
 
     </div>
   

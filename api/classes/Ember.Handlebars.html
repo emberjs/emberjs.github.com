@@ -22,15 +22,152 @@
       })();
     </script>
 
-<!--[if lt IE 9]>
-    <script type="text/javascript" src="/javascripts/common-old-ie.js"></script>
-<![endif]-->
-<!--[if gte IE 9]><!-->
-    <script type="text/javascript" src="/javascripts/common-modern.js"></script>
-<!--<![endif]-->
+    <script type="text/javascript" src="/javascripts/jquery-2.0.2.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
+
+    <script type="text/javascript">
+      $(function() {
+        var backToTop = $('#back-to-top');
+        var doc = $(document);
+        var offset = backToTop.offset();
+        var marginTop = 90;
+        var showing = false;
+
+        positionBackToTop = function(reset) {
+          if (reset) {
+            backToTop.css({
+              top: '',
+              position: ''
+            });
+            offset = backToTop.offset();
+          }
+
+          if (!showing && doc.scrollTop() > offset.top+200) {
+            showing = true;
+            backToTop.css({
+              position: 'fixed',
+              top: 20,
+              left: offset.left,
+              display:' block'
+            });
+          } else if (showing && doc.scrollTop() <= offset.top+200) {
+            showing = false;
+            backToTop.css({
+              display:'none'
+            });
+          }
+        };
+
+        if (backToTop.length) {
+          backToTop.on('click', function(evt) {
+            $('html,body').animate({scrollTop: 0}, 200);
+            return false;
+          });
+
+          doc.on('scroll', function() {
+            positionBackToTop();
+          });
+        }
+
+        $('.bx-wrapper, .bx-window').width(940);
+      });
+    </script>
 
     
-    <script type="text/javascript" src="/javascripts/api.js"></script>
+    <script>
+      $(function() {
+        var ls = window['localStorage'];
+
+        // Restoring method visibility preference from localStorage
+        function initApiOptions() {
+          var type = this.getAttribute('data-type'),
+            checked = ls ? ls.getItem('api-options-' + type) : undefined;
+
+          if (checked != undefined) {
+            // Bools are stored as strings in localStorage
+            checked = checked == 'true';
+            $(this).attr('checked', checked);
+          }
+        };
+
+        // Type toggling
+        function toggleType() {
+          var type = this.getAttribute('data-type');
+
+          $('.'+type).toggle(this.checked);
+
+          if(ls)
+            ls.setItem('api-options-' + type, this.checked);
+        }
+
+        $('#api-options input').each(initApiOptions);
+        $('#api-options input').each(toggleType);
+        $('#api-options input').on('change', toggleType);
+
+        // Tabs
+        $('.tabs .pane').hide();
+        $('.tabs .pane:first').show();
+        $('.tabs ul li:first').addClass('active');
+
+        function showPane($tabs, href) {
+          var $ul = $tabs.find('> ul'),
+              $tab = $ul.find('a[href='+href+']'),
+              $pane = $(href);
+
+          $ul.find('li').removeClass('active');
+          $tab.parent().addClass('active');
+          $tabs.find('.pane').hide();
+
+          $pane.show();
+        }
+
+        $('.tabs > ul li a').click(function(){
+          var $el = $(this),
+              $tabs = $el.parents('.tabs'),
+              href = $el.attr('href');
+
+          showPane($tabs, href);
+
+          return false;
+        });
+
+        // Auto tab
+        function checkHash() {
+          var hash = window.location.hash;
+          var $el = $(hash);
+          if ($el.length > 0 && !$el.is(':visible')) {
+            showPane($el.parents('.tabs'), '#'+$el.parents('.pane').attr('id'));
+            $("html, body").scrollTop($el.offset().top);
+          } else if ($el.length == 0) {
+            showPane($('.tabs'), '#index');
+          }
+        }
+
+        $(window).on('hashchange', checkHash);
+        checkHash();
+      });
+    $(function(){
+      $("#toc-list .level-1 > a").not('[target=_blank]').click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
+      });
+
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.data('id') || toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
+    });
+    </script>
   
   </head>
 
@@ -44,13 +181,31 @@
           <li class="active"><a href="/api">api</a></li>
           <li><a href="/community">community</a></li>
           <li><a href="/blog">blog</a></li>
-          <li><a href="/builds">builds</a></li>
+
           <li id="search">
             <form>
               <input type="text" id="st-search-input" class="st-search-input" />
             </form>
             <div id="st-results-container"></div>
+            <script type="text/javascript">
+              var Swiftype = window.Swiftype || {};
+              (function() {
+                Swiftype.key = 'HTNahKf4xmo8GgFbTz4n';
+                Swiftype.inputElement = '#st-search-input';
+                Swiftype.resultContainingElement = '#st-results-container';
+                Swiftype.attachElement = '#st-search-input';
+                Swiftype.renderStyle = "overlay";
+
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.async = true;
+                script.src = "//swiftype.com/embed.js";
+                var entry = document.getElementsByTagName('script')[0];
+                entry.parentNode.insertBefore(script, entry);
+              }());
+            </script>
           </li>
+
         </ul>
 
         <div id="github">
@@ -65,7 +220,7 @@
         <div id="sidebar">
           
     <ol id='toc-list'>
-      <li class='level-1'><a href="https://github.com/emberjs/ember.js/tree/v1.0.0" target="_blank"> Tag: v1.0.0</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/ember.js/tree/9d266a8" target="_blank"> Tag: 9d266a8</a></li>
 
       
           <li class="level-1 ">
@@ -110,14 +265,6 @@
             
           <li class="level-3 ">
           
-              <a href="/api/modules/ember-handlebars-compiler.html">ember-handlebars-compiler</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/modules/ember-metal.html">ember-metal</a>
             
           </li>
@@ -135,14 +282,6 @@
           <li class="level-3 ">
           
               <a href="/api/modules/ember-runtime.html">ember-runtime</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/modules/ember-testing.html">ember-testing</a>
             
           </li>
         
@@ -236,14 +375,6 @@
             
           <li class="level-3 ">
           
-              <a href="/api/classes/Ember.ActionHandler.html">Ember.ActionHandler</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/classes/Ember.Application.html">Ember.Application</a>
             
           </li>
@@ -277,6 +408,14 @@
           <li class="level-3 ">
           
               <a href="/api/classes/Ember.Binding.html">Ember.Binding</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Button.html">Ember.Button</a>
             
           </li>
         
@@ -452,22 +591,6 @@
             
           <li class="level-3 ">
           
-              <a href="/api/classes/Ember.Handlebars.Compiler.html">Ember.Handlebars.Compiler</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.Handlebars.JavaScriptCompiler.html">Ember.Handlebars.JavaScriptCompiler</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/classes/Ember.Handlebars.helpers.html">Ember.Handlebars.helpers</a>
             
           </li>
@@ -612,23 +735,7 @@
             
           <li class="level-3 ">
           
-              <a href="/api/classes/Ember.PromiseProxyMixin.html">Ember.PromiseProxyMixin</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/classes/Ember.RSVP.html">Ember.RSVP</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.ReduceComputedProperty.html">Ember.ReduceComputedProperty</a>
             
           </li>
         
@@ -684,39 +791,7 @@
             
           <li class="level-3 ">
           
-              <a href="/api/classes/Ember.SubArray.html">Ember.SubArray</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/classes/Ember.TargetActionSupport.html">Ember.TargetActionSupport</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.Test.html">Ember.Test</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.Test.Adapter.html">Ember.Test.Adapter</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.Test.QUnitAdapter.html">Ember.Test.QUnitAdapter</a>
             
           </li>
         
@@ -741,14 +816,6 @@
           <li class="level-3 ">
           
               <a href="/api/classes/Ember.TextSupport.html">Ember.TextSupport</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.TrackedArray.html">Ember.TrackedArray</a>
             
           </li>
         
@@ -834,8 +901,6 @@
   <h1 class="api-header">
   Ember.Handlebars Class
   
-    <a class="edit-page" target="_blank" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars-compiler/lib/main.js#L21">packages/ember-handlebars-compiler/lib/main.js:21</a>
-  
 </h1>
 
 <hr>
@@ -847,26 +912,12 @@
   
 
   
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars-compiler/lib/main.js#L21">packages/ember-handlebars-compiler/lib/main.js:21</a></p>
-  
 
   
-    <p>Module: <a href="/api/modules/ember-handlebars-compiler.html">ember-handlebars-compiler</a></p>
+    <p>Module: <a href="/api/modules/ember-handlebars.html">ember-handlebars</a></p>
   
 </div>
 
-  <div class="description">
-    <p>Prepares the Handlebars templating library for use inside Ember&#39;s view
-system.</p>
-
-<p>The <code>Ember.Handlebars</code> object is the standard Handlebars library, extended to
-use Ember&#39;s <code>get()</code> method instead of direct property access, which allows
-computed properties to be used inside templates.</p>
-
-<p>To create an <code>Ember.Handlebars</code> template, call <code>Ember.Handlebars.compile()</code>.
-This will return a function that can be used by <code>Ember.View</code> for rendering.</p>
-
-  </div>
 
 
   <div class="tabs">
@@ -909,8 +960,8 @@ This will return a function that can be used by <code>Ember.View</code> for rend
               <a href="#method_bootstrap">bootstrap</a>
             </li>
           
-            <li class="method ">
-              <a href="#method_compile">compile</a>
+            <li class="method private">
+              <a href="#method_evaluateMultiPropertyBoundHelper">evaluateMultiPropertyBoundHelper</a>
             </li>
           
             <li class="method private">
@@ -919,14 +970,6 @@ This will return a function that can be used by <code>Ember.View</code> for rend
           
             <li class="method ">
               <a href="#method_get">get</a>
-            </li>
-          
-            <li class="method ">
-              <a href="#method_helper">helper</a>
-            </li>
-          
-            <li class="method ">
-              <a href="#method_precompile">precompile</a>
             </li>
           
             <li class="method ">
@@ -988,7 +1031,7 @@ This will return a function that can be used by <code>Ember.View</code> for rend
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/helpers/binding.js#L535">packages/ember-handlebars/lib/helpers/binding.js:535</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/helpers/binding.js#L523">packages/ember-handlebars/lib/helpers/binding.js:523</a>
 
     
 
@@ -1064,7 +1107,7 @@ This will return a function that can be used by <code>Ember.View</code> for rend
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/loader.js#L10">packages/ember-handlebars/lib/loader.js:10</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/loader.js#L10">packages/ember-handlebars/lib/loader.js:10</a>
 
     
 
@@ -1097,19 +1140,18 @@ This will return a function that can be used by <code>Ember.View</code> for rend
 
       
         
-<div id="method_compile" class="method  item-entry">
-  <h3 data-id="method_compile" class="name anchorable-toc"><code>compile</code></h3>
+<div id="method_evaluateMultiPropertyBoundHelper" class="method private item-entry">
+  <h3 data-id="method_evaluateMultiPropertyBoundHelper" class="name anchorable-toc"><code>evaluateMultiPropertyBoundHelper</code></h3>
   <span class="args">
-    (string)
+    (fn, context, normalizedProperties, options)
   </span>
 
-  <span class="type"><a href="/api/classes/Function.html">Function</a></span>
 
 
 
+  <span class="flag private">private</span>
 
 
-  <span class="flag static">static</span>
 
 
 
@@ -1121,20 +1163,13 @@ This will return a function that can be used by <code>Ember.View</code> for rend
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars-compiler/lib/main.js#L243">packages/ember-handlebars-compiler/lib/main.js:243</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/ext.js#L326">packages/ember-handlebars/lib/ext.js:326</a>
 
     
 
     
   </div>
 
-  
-    <div class="description">
-      <p>The entry point for Ember Handlebars. This replaces the default
-<code>Handlebars.compile</code> and turns on template-local data and String
-parameters.</p>
-
-    </div>
   
 
   <p>
@@ -1149,21 +1184,22 @@ parameters.</p>
 
       <dl>
         
-          <dt><strong>string</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
-          <dd>The template to compile</dd>
+          <dt><strong>fn</strong> <span class="type"><a href="/api/classes/Function.html">Function</a></span></dt>
+          <dd></dd>
+        
+          <dt><strong>context</strong> <span class="type">Object</span></dt>
+          <dd></dd>
+        
+          <dt><strong>normalizedProperties</strong> <span class="type">Array</span></dt>
+          <dd></dd>
+        
+          <dt><strong>options</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd></dd>
         
       </dl>
     </div>
   
 
-  
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type"><a href="/api/classes/Function.html">Function</a></span>
-        <dd> </dd>
-      </dl>
-    </div>
   
 </div>
 
@@ -1192,7 +1228,7 @@ parameters.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/ext.js#L366">packages/ember-handlebars/lib/ext.js:366</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/ext.js#L388">packages/ember-handlebars/lib/ext.js:388</a>
 
     
 
@@ -1256,7 +1292,7 @@ parameters.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/ext.js#L48">packages/ember-handlebars/lib/ext.js:48</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/ext.js#L48">packages/ember-handlebars/lib/ext.js:48</a>
 
     
 
@@ -1302,190 +1338,6 @@ template&#39;s data hash and used to resolve the path.</p>
 
       
         
-<div id="method_helper" class="method  item-entry">
-  <h3 data-id="method_helper" class="name anchorable-toc"><code>helper</code></h3>
-  <span class="args">
-    (name, function, dependentKeys)
-  </span>
-
-
-
-
-
-
-
-
-
-  <div class="meta">
-      
-        
-          
-            Defined in
-          
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars-compiler/lib/main.js#L51">packages/ember-handlebars-compiler/lib/main.js:51</a>
-
-    
-
-    
-  </div>
-
-  
-    <div class="description">
-      <p>Register a bound helper or custom view helper.</p>
-
-<h2>Simple bound helper example</h2>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre>Ember.Handlebars.helper(<span class="string"><span class="delimiter">'</span><span class="content">capitalize</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(value) {
-  <span class="keyword">return</span> value.toUpperCase();
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>The above bound helper can be used inside of templates as follows:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">capitalize</span> <span class="attribute-name">name</span><span class="inline-delimiter">}}</span></span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>In this case, when the <code>name</code> property of the template&#39;s context changes,
-the rendered value of the helper will update to reflect this change.</p>
-
-<p>For more examples of bound helpers, see documentation for
-<code>Ember.Handlebars.registerBoundHelper</code>.</p>
-
-<h2>Custom view helper example</h2>
-
-<p>Assuming a view subclass named <code>App.CalendarView</code> were defined, a helper
-for rendering instances of this view could be registered as follows:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre>Ember.Handlebars.helper(<span class="string"><span class="delimiter">'</span><span class="content">calendar</span><span class="delimiter">'</span></span>, App.CalendarView):
-</pre></td>
-</tr></table>
-</div></div>
-<p>The above bound helper can be used inside of templates as follows:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">calendar</span><span class="inline-delimiter">}}</span></span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>Which is functionally equivalent to:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="attribute-name">App.CalendarView</span><span class="inline-delimiter">}}</span></span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>Options in the helper will be passed to the view in exactly the same
-manner as with the <code>view</code> helper.</p>
-
-    </div>
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-        
-          <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
-          <dd></dd>
-        
-          <dt><strong>function</strong> <span class="type">Function|Ember.View</span></dt>
-          <dd>or view class constructor</dd>
-        
-          <dt><strong>dependentKeys</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
-          <dd></dd>
-        
-      </dl>
-    </div>
-  
-
-  
-</div>
-
-      
-        
-<div id="method_precompile" class="method  item-entry">
-  <h3 data-id="method_precompile" class="name anchorable-toc"><code>precompile</code></h3>
-  <span class="args">
-    (string)
-  </span>
-
-
-
-
-
-
-  <span class="flag static">static</span>
-
-
-
-  <div class="meta">
-      
-        
-          
-            Defined in
-          
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars-compiler/lib/main.js#L212">packages/ember-handlebars-compiler/lib/main.js:212</a>
-
-    
-
-    
-  </div>
-
-  
-    <div class="description">
-      <p>Used for precompilation of Ember Handlebars templates. This will not be used
-during normal app execution.</p>
-
-    </div>
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-        
-          <dt><strong>string</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
-          <dd>The template to precompile</dd>
-        
-      </dl>
-    </div>
-  
-
-  
-</div>
-
-      
-        
 <div id="method_registerBoundHelper" class="method  item-entry">
   <h3 data-id="method_registerBoundHelper" class="name anchorable-toc"><code>registerBoundHelper</code></h3>
   <span class="args">
@@ -1508,7 +1360,7 @@ during normal app execution.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/ext.js#L141">packages/ember-handlebars/lib/ext.js:141</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/ext.js#L141">packages/ember-handlebars/lib/ext.js:141</a>
 
     
 
@@ -1705,7 +1557,7 @@ the addition of child views of any kind.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/ext.js#L393">packages/ember-handlebars/lib/ext.js:393</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/ext.js#L415">packages/ember-handlebars/lib/ext.js:415</a>
 
     
 

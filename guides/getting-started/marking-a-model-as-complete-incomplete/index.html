@@ -24,16 +24,58 @@
       })();
     </script>
 
-<!--[if lt IE 9]>
-    <script type="text/javascript" src="/javascripts/common-old-ie.js"></script>
-<![endif]-->
-<!--[if gte IE 9]><!-->
-    <script type="text/javascript" src="/javascripts/common-modern.js"></script>
-<!--<![endif]-->
+    <script type="text/javascript" src="/javascripts/jquery-2.0.2.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
+
+    <script type="text/javascript">
+      $(function() {
+        var backToTop = $('#back-to-top');
+        var doc = $(document);
+        var offset = backToTop.offset();
+        var marginTop = 90;
+        var showing = false;
+
+        positionBackToTop = function(reset) {
+          if (reset) {
+            backToTop.css({
+              top: '',
+              position: ''
+            });
+            offset = backToTop.offset();
+          }
+
+          if (!showing && doc.scrollTop() > offset.top+200) {
+            showing = true;
+            backToTop.css({
+              position: 'fixed',
+              top: 20,
+              left: offset.left,
+              display:' block'
+            });
+          } else if (showing && doc.scrollTop() <= offset.top+200) {
+            showing = false;
+            backToTop.css({
+              display:'none'
+            });
+          }
+        };
+
+        if (backToTop.length) {
+          backToTop.on('click', function(evt) {
+            $('html,body').animate({scrollTop: 0}, 200);
+            return false;
+          });
+
+          doc.on('scroll', function() {
+            positionBackToTop();
+          });
+        }
+
+        $('.bx-wrapper, .bx-window').width(940);
+      });
+    </script>
 
     
-    <script type="text/javascript" src="/javascripts/guides.js"></script>
-  
   </head>
 
   <body class="guides guides_getting-started guides_getting-started_marking-a-model-as-complete-incomplete guides_getting-started_marking-a-model-as-complete-incomplete_index">
@@ -46,13 +88,31 @@
           <li><a href="/api">api</a></li>
           <li><a href="/community">community</a></li>
           <li><a href="/blog">blog</a></li>
-          <li><a href="/builds">builds</a></li>
+
           <li id="search">
             <form>
               <input type="text" id="st-search-input" class="st-search-input" />
             </form>
             <div id="st-results-container"></div>
+            <script type="text/javascript">
+              var Swiftype = window.Swiftype || {};
+              (function() {
+                Swiftype.key = 'HTNahKf4xmo8GgFbTz4n';
+                Swiftype.inputElement = '#st-search-input';
+                Swiftype.resultContainingElement = '#st-results-container';
+                Swiftype.attachElement = '#st-search-input';
+                Swiftype.renderStyle = "overlay";
+
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.async = true;
+                script.src = "//swiftype.com/embed.js";
+                var entry = document.getElementsByTagName('script')[0];
+                entry.parentNode.insertBefore(script, entry);
+              }());
+            </script>
           </li>
+
         </ul>
 
         <div id="github">
@@ -96,7 +156,7 @@
             </li>
           
             <li class="level-3">
-              <a href="/guides/getting-started/using-fixtures">Using Fixtures</a>
+              <a href="/guides/getting-started/using-fixutres">Using Fixtures</a>
             </li>
           
             <li class="level-3">
@@ -266,14 +326,6 @@
             <li class="level-3">
               <a href="/guides/routing/specifying-the-location-api">Specifying the URL Type</a>
             </li>
-          
-            <li class="level-3">
-              <a href="/guides/routing/asynchronous-routing">Asynchronous Routing</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/routing/preventing-and-retrying-transitions">Preventing and Retrying Transitions</a>
-            </li>
           </ol></li>
           <li class="level-1">
             <a href="/guides/components">Components</a>
@@ -301,10 +353,6 @@
           
             <li class="level-3">
               <a href="/guides/components/handling-user-interaction-with-actions">Handling User Interaction with Actions</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/components/sending-actions-from-components-to-your-application">Sending Actions from Components to Your Application</a>
             </li>
           </ol></li>
           <li class="level-1">
@@ -460,6 +508,38 @@
             </li>
           </ol></li>
           <li class="level-1">
+            <a href="/guides/cookbook/contributing">Cookbook</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/cookbook/contributing">Contributing</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/cookbook/user_interface_and_interaction">User Interface and Interaction</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/cookbook/event_handling_and_data_binding">Event Handling & Data Binding</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/cookbook/client_server_interaction">Client/Server Interaction</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/cookbook/helpers_and_components">Helpers & Components</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/cookbook/working_with_objects">Working with Objects</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/cookbook/debugging_and_configuration">Debugging & Configuration</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
             <a href="/guides/understanding-ember/the-view-layer">Understanding Ember.js</a>
             <ol>
         
@@ -485,8 +565,19 @@
       
       <div id="content" class="has-sidebar">
           
-  
 
+  
+    
+          <div class="under_construction_warning">
+            <h1>
+              <div class="msg">
+                Warning: ember-data is a work in progress and under rapid development.
+                <br/>
+                <span class="more_caution">Use with caution!!!</span>
+              </div>
+            </h1>
+          </div>
+        
   
   <div class="chapter">
     
@@ -496,9 +587,10 @@
         </h1>
       
     <hr>
-    <p>In this step we&#39;ll update our application to allow a user to mark a todo as complete or incomplete and persist the updated information.</p>
+    <h2 class='anchorable-toc' id='toc_marking-a-model-as-complete-or-incomplete'>Marking a Model as Complete or Incomplete</h2>
+<p>In this step we&#39;ll update our application to allow a user to mark a todo as complete or incomplete and persist the updated information.</p>
 
-<p>In <code>index.html</code> update your template to wrap each todo in its own controller by adding an <code>itemController</code> argument to the <code>{{each}}</code> Handlebars helper. Then convert our static <code>&lt;input type=&quot;checkbox&quot;&gt;</code> into a <code>{{input}}</code> helper:</p>
+<p>In <code>index.html</code> update your template to wrap each todo in its own controller by adding an <code>itemController</code> argument to the <code>{{each}}</code> Handlebars helper. Then convert our static <code>&lt;input type=&quot;checkbox&quot;&gt;</code> into an <code>Ember.Checkbox</code>:</p>
 <div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -510,9 +602,9 @@
 8
 </pre></td>
   <td class="code"><pre><span class="comment">&lt;!--- ... additional lines truncated for brevity ... --&gt;</span>
-<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">itemController</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">todo</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">controller</span> <span class="attribute-name">itemController</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">todo</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
   <span class="tag">&lt;li</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bind-attr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">isCompleted:completed</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
-    <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">input</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">checkbox</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">checked</span>=<span class="attribute-value">isCompleted</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">toggle</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+    <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="attribute-name">Ember.Checkbox</span> <span class="attribute-name">checkedBinding</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">isCompleted</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">toggle</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
     <span class="tag">&lt;label&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">title</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/label&gt;</span><span class="tag">&lt;button</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">destroy</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/button&gt;</span>
   <span class="tag">&lt;/li&gt;</span>
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
@@ -520,7 +612,7 @@
 </pre></td>
 </tr></table>
 </div></div>
-<p>When this <code>{{input}}</code> is rendered it will ask for the current value of the controller&#39;s <code>isCompleted</code> property. When a user clicks this input, it will call the controller&#39;s <code>isCompleted</code> property with an argument of either <code>true</code> or <code>false</code> depending on the new checked value of the input.</p>
+<p>When this <code>Ember.Checkbox</code> is rendered it will ask for the current value of the controller&#39;s <code>isCompleted</code> property. When a user clicks this input, it will call the controller&#39;s <code>isCompleted</code> property with an argument of either <code>true</code> or <code>false</code> depending on the new checked value of the input.</p>
 
 <p>Implement the controller for each todo by matching the name used as the <code>itemController</code> value to a class in your application <code>Todos.TodoController</code>. Create a new file at <code>js/controllers/todo_controller.js</code> for this code. You may place this file anywhere you like (even just putting all code into the same file), but this guide will assume you have created the file and named it as indicated.</p>
 
@@ -550,7 +642,7 @@
       <span class="comment">// property being used as a getter</span>
       <span class="keyword">return</span> model.get(<span class="string"><span class="delimiter">'</span><span class="content">isCompleted</span><span class="delimiter">'</span></span>);
     } <span class="keyword">else</span> {
-      <span class="comment">// property being used as  setter</span>
+      <span class="comment">// property being used as a setter</span>
       model.set(<span class="string"><span class="delimiter">'</span><span class="content">isCompleted</span><span class="delimiter">'</span></span>, value);
       model.save();
       <span class="keyword">return</span> value;
@@ -560,7 +652,7 @@
 </pre></td>
 </tr></table>
 </div></div>
-<p>When called from the template to display the current <code>isCompleted</code> state of the todo, this property will proxy that question to its underlying <code>model</code>. When called with a value because a user has toggled the checkbox in the template, this property will set the <code>isCompleted</code> property of its <code>model</code> to the passed value (<code>true</code> or <code>false</code>), persist the model update, and return the passed value so the checkbox will display correctly.</p>
+<p>When called from the template to display the current <code>isCompleted</code> state of the todo, this property will proxy that question to its underlying <code>model</code>. When called with a value because a user has toggled the checkbox in the template, this property will set the <code>isCompleted</code> property of its <code>model</code> to the passed value (<code>true</code> or <code>false</code>), persist the model update, and return the passed value so the checkbox will display correct.</p>
 
 <p>In <code>index.html</code> include <code>js/controllers/todo_controller.js</code> as a dependency:</p>
 <div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -582,10 +674,10 @@
 </div></div>
 <p>Reload your web browser to ensure that all files have been referenced correctly and no errors occur. You should now be able to change the <code>isCompleted</code> property of a todo.</p>
 <h3 class='anchorable-toc' id='toc_live-preview'>Live Preview</h3>
-<p><a class="jsbin-embed" href="http://jsbin.com/UDoPajA/1/embed?live">Ember.js • TodoMVC</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/asayac/3/embed?live">Ember.js • TodoMVC</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <h3 class='anchorable-toc' id='toc_additional-resources'>Additional Resources</h3>
 <ul>
-<li><a href="https://github.com/emberjs/quickstart-code-sample/commit/8d469c04c237f39a58903a3856409a2592cc18a9">Changes in this step in <code>diff</code> format</a></li>
+<li><a href="https://github.com/emberjs/quickstart-code-sample/commit/44e76869476691787957c0ef919b35cbd3f7d0f4">Changes in this step in <code>diff</code> format</a></li>
 <li><a href="/api/classes/Ember.Checkbox.html">Ember.Checkbox API documentation</a></li>
 <li><a href="/guides/controllers">Ember Controller Guide</a></li>
 <li><a href="/guides/object-model/computed-properties/">Computed Properties Guide</a></li>
@@ -606,6 +698,30 @@
       </footer>
       
   </div>
+
+  <script>
+    $(function(){
+      $("#toc-list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
+      });
+
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
+    });
+  </script>
 
       </div>
     </div>

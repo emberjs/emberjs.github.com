@@ -24,16 +24,58 @@
       })();
     </script>
 
-<!--[if lt IE 9]>
-    <script type="text/javascript" src="/javascripts/common-old-ie.js"></script>
-<![endif]-->
-<!--[if gte IE 9]><!-->
-    <script type="text/javascript" src="/javascripts/common-modern.js"></script>
-<!--<![endif]-->
+    <script type="text/javascript" src="/javascripts/jquery-2.0.2.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
+
+    <script type="text/javascript">
+      $(function() {
+        var backToTop = $('#back-to-top');
+        var doc = $(document);
+        var offset = backToTop.offset();
+        var marginTop = 90;
+        var showing = false;
+
+        positionBackToTop = function(reset) {
+          if (reset) {
+            backToTop.css({
+              top: '',
+              position: ''
+            });
+            offset = backToTop.offset();
+          }
+
+          if (!showing && doc.scrollTop() > offset.top+200) {
+            showing = true;
+            backToTop.css({
+              position: 'fixed',
+              top: 20,
+              left: offset.left,
+              display:' block'
+            });
+          } else if (showing && doc.scrollTop() <= offset.top+200) {
+            showing = false;
+            backToTop.css({
+              display:'none'
+            });
+          }
+        };
+
+        if (backToTop.length) {
+          backToTop.on('click', function(evt) {
+            $('html,body').animate({scrollTop: 0}, 200);
+            return false;
+          });
+
+          doc.on('scroll', function() {
+            positionBackToTop();
+          });
+        }
+
+        $('.bx-wrapper, .bx-window').width(940);
+      });
+    </script>
 
     
-    <script type="text/javascript" src="/javascripts/guides.js"></script>
-  
   </head>
 
   <body class="guides guides_models guides_models_index">
@@ -46,13 +88,31 @@
           <li><a href="/api">api</a></li>
           <li><a href="/community">community</a></li>
           <li><a href="/blog">blog</a></li>
-          <li><a href="/builds">builds</a></li>
+
           <li id="search">
             <form>
               <input type="text" id="st-search-input" class="st-search-input" />
             </form>
             <div id="st-results-container"></div>
+            <script type="text/javascript">
+              var Swiftype = window.Swiftype || {};
+              (function() {
+                Swiftype.key = 'HTNahKf4xmo8GgFbTz4n';
+                Swiftype.inputElement = '#st-search-input';
+                Swiftype.resultContainingElement = '#st-results-container';
+                Swiftype.attachElement = '#st-search-input';
+                Swiftype.renderStyle = "overlay";
+
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.async = true;
+                script.src = "//swiftype.com/embed.js";
+                var entry = document.getElementsByTagName('script')[0];
+                entry.parentNode.insertBefore(script, entry);
+              }());
+            </script>
           </li>
+
         </ul>
 
         <div id="github">
@@ -96,7 +156,7 @@
             </li>
           
             <li class="level-3">
-              <a href="/guides/getting-started/using-fixtures">Using Fixtures</a>
+              <a href="/guides/getting-started/using-fixutres">Using Fixtures</a>
             </li>
           
             <li class="level-3">
@@ -266,14 +326,6 @@
             <li class="level-3">
               <a href="/guides/routing/specifying-the-location-api">Specifying the URL Type</a>
             </li>
-          
-            <li class="level-3">
-              <a href="/guides/routing/asynchronous-routing">Asynchronous Routing</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/routing/preventing-and-retrying-transitions">Preventing and Retrying Transitions</a>
-            </li>
           </ol></li>
           <li class="level-1">
             <a href="/guides/components">Components</a>
@@ -301,10 +353,6 @@
           
             <li class="level-3">
               <a href="/guides/components/handling-user-interaction-with-actions">Handling User Interaction with Actions</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/components/sending-actions-from-components-to-your-application">Sending Actions from Components to Your Application</a>
             </li>
           </ol></li>
           <li class="level-1">
@@ -460,6 +508,38 @@
             </li>
           </ol></li>
           <li class="level-1">
+            <a href="/guides/cookbook/contributing">Cookbook</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/cookbook/contributing">Contributing</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/cookbook/user_interface_and_interaction">User Interface and Interaction</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/cookbook/event_handling_and_data_binding">Event Handling & Data Binding</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/cookbook/client_server_interaction">Client/Server Interaction</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/cookbook/helpers_and_components">Helpers & Components</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/cookbook/working_with_objects">Working with Objects</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/cookbook/debugging_and_configuration">Debugging & Configuration</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
             <a href="/guides/understanding-ember/the-view-layer">Understanding Ember.js</a>
             <ol>
         
@@ -485,7 +565,6 @@
       
       <div id="content" class="has-sidebar">
           
-  
 
   
     
@@ -552,6 +631,30 @@ passing build from the &quot;master&quot; branch from <a href="http://builds.emb
       </footer>
       
   </div>
+
+  <script>
+    $(function(){
+      $("#toc-list .level-1 > a").click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
+      });
+
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
+    });
+  </script>
 
       </div>
     </div>

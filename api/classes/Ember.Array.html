@@ -22,15 +22,152 @@
       })();
     </script>
 
-<!--[if lt IE 9]>
-    <script type="text/javascript" src="/javascripts/common-old-ie.js"></script>
-<![endif]-->
-<!--[if gte IE 9]><!-->
-    <script type="text/javascript" src="/javascripts/common-modern.js"></script>
-<!--<![endif]-->
+    <script type="text/javascript" src="/javascripts/jquery-2.0.2.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
+
+    <script type="text/javascript">
+      $(function() {
+        var backToTop = $('#back-to-top');
+        var doc = $(document);
+        var offset = backToTop.offset();
+        var marginTop = 90;
+        var showing = false;
+
+        positionBackToTop = function(reset) {
+          if (reset) {
+            backToTop.css({
+              top: '',
+              position: ''
+            });
+            offset = backToTop.offset();
+          }
+
+          if (!showing && doc.scrollTop() > offset.top+200) {
+            showing = true;
+            backToTop.css({
+              position: 'fixed',
+              top: 20,
+              left: offset.left,
+              display:' block'
+            });
+          } else if (showing && doc.scrollTop() <= offset.top+200) {
+            showing = false;
+            backToTop.css({
+              display:'none'
+            });
+          }
+        };
+
+        if (backToTop.length) {
+          backToTop.on('click', function(evt) {
+            $('html,body').animate({scrollTop: 0}, 200);
+            return false;
+          });
+
+          doc.on('scroll', function() {
+            positionBackToTop();
+          });
+        }
+
+        $('.bx-wrapper, .bx-window').width(940);
+      });
+    </script>
 
     
-    <script type="text/javascript" src="/javascripts/api.js"></script>
+    <script>
+      $(function() {
+        var ls = window['localStorage'];
+
+        // Restoring method visibility preference from localStorage
+        function initApiOptions() {
+          var type = this.getAttribute('data-type'),
+            checked = ls ? ls.getItem('api-options-' + type) : undefined;
+
+          if (checked != undefined) {
+            // Bools are stored as strings in localStorage
+            checked = checked == 'true';
+            $(this).attr('checked', checked);
+          }
+        };
+
+        // Type toggling
+        function toggleType() {
+          var type = this.getAttribute('data-type');
+
+          $('.'+type).toggle(this.checked);
+
+          if(ls)
+            ls.setItem('api-options-' + type, this.checked);
+        }
+
+        $('#api-options input').each(initApiOptions);
+        $('#api-options input').each(toggleType);
+        $('#api-options input').on('change', toggleType);
+
+        // Tabs
+        $('.tabs .pane').hide();
+        $('.tabs .pane:first').show();
+        $('.tabs ul li:first').addClass('active');
+
+        function showPane($tabs, href) {
+          var $ul = $tabs.find('> ul'),
+              $tab = $ul.find('a[href='+href+']'),
+              $pane = $(href);
+
+          $ul.find('li').removeClass('active');
+          $tab.parent().addClass('active');
+          $tabs.find('.pane').hide();
+
+          $pane.show();
+        }
+
+        $('.tabs > ul li a').click(function(){
+          var $el = $(this),
+              $tabs = $el.parents('.tabs'),
+              href = $el.attr('href');
+
+          showPane($tabs, href);
+
+          return false;
+        });
+
+        // Auto tab
+        function checkHash() {
+          var hash = window.location.hash;
+          var $el = $(hash);
+          if ($el.length > 0 && !$el.is(':visible')) {
+            showPane($el.parents('.tabs'), '#'+$el.parents('.pane').attr('id'));
+            $("html, body").scrollTop($el.offset().top);
+          } else if ($el.length == 0) {
+            showPane($('.tabs'), '#index');
+          }
+        }
+
+        $(window).on('hashchange', checkHash);
+        checkHash();
+      });
+    $(function(){
+      $("#toc-list .level-1 > a").not('[target=_blank]').click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
+      });
+
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.data('id') || toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
+    });
+    </script>
   
   </head>
 
@@ -44,13 +181,31 @@
           <li class="active"><a href="/api">api</a></li>
           <li><a href="/community">community</a></li>
           <li><a href="/blog">blog</a></li>
-          <li><a href="/builds">builds</a></li>
+
           <li id="search">
             <form>
               <input type="text" id="st-search-input" class="st-search-input" />
             </form>
             <div id="st-results-container"></div>
+            <script type="text/javascript">
+              var Swiftype = window.Swiftype || {};
+              (function() {
+                Swiftype.key = 'HTNahKf4xmo8GgFbTz4n';
+                Swiftype.inputElement = '#st-search-input';
+                Swiftype.resultContainingElement = '#st-results-container';
+                Swiftype.attachElement = '#st-search-input';
+                Swiftype.renderStyle = "overlay";
+
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.async = true;
+                script.src = "//swiftype.com/embed.js";
+                var entry = document.getElementsByTagName('script')[0];
+                entry.parentNode.insertBefore(script, entry);
+              }());
+            </script>
           </li>
+
         </ul>
 
         <div id="github">
@@ -65,7 +220,7 @@
         <div id="sidebar">
           
     <ol id='toc-list'>
-      <li class='level-1'><a href="https://github.com/emberjs/ember.js/tree/v1.0.0" target="_blank"> Tag: v1.0.0</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/ember.js/tree/9d266a8" target="_blank"> Tag: 9d266a8</a></li>
 
       
           <li class="level-1 ">
@@ -110,14 +265,6 @@
             
           <li class="level-3 ">
           
-              <a href="/api/modules/ember-handlebars-compiler.html">ember-handlebars-compiler</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/modules/ember-metal.html">ember-metal</a>
             
           </li>
@@ -135,14 +282,6 @@
           <li class="level-3 ">
           
               <a href="/api/modules/ember-runtime.html">ember-runtime</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/modules/ember-testing.html">ember-testing</a>
             
           </li>
         
@@ -236,14 +375,6 @@
             
           <li class="level-3 ">
           
-              <a href="/api/classes/Ember.ActionHandler.html">Ember.ActionHandler</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/classes/Ember.Application.html">Ember.Application</a>
             
           </li>
@@ -277,6 +408,14 @@
           <li class="level-3 ">
           
               <a href="/api/classes/Ember.Binding.html">Ember.Binding</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Button.html">Ember.Button</a>
             
           </li>
         
@@ -452,22 +591,6 @@
             
           <li class="level-3 ">
           
-              <a href="/api/classes/Ember.Handlebars.Compiler.html">Ember.Handlebars.Compiler</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.Handlebars.JavaScriptCompiler.html">Ember.Handlebars.JavaScriptCompiler</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/classes/Ember.Handlebars.helpers.html">Ember.Handlebars.helpers</a>
             
           </li>
@@ -612,23 +735,7 @@
             
           <li class="level-3 ">
           
-              <a href="/api/classes/Ember.PromiseProxyMixin.html">Ember.PromiseProxyMixin</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/classes/Ember.RSVP.html">Ember.RSVP</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.ReduceComputedProperty.html">Ember.ReduceComputedProperty</a>
             
           </li>
         
@@ -684,39 +791,7 @@
             
           <li class="level-3 ">
           
-              <a href="/api/classes/Ember.SubArray.html">Ember.SubArray</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/classes/Ember.TargetActionSupport.html">Ember.TargetActionSupport</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.Test.html">Ember.Test</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.Test.Adapter.html">Ember.Test.Adapter</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.Test.QUnitAdapter.html">Ember.Test.QUnitAdapter</a>
             
           </li>
         
@@ -741,14 +816,6 @@
           <li class="level-3 ">
           
               <a href="/api/classes/Ember.TextSupport.html">Ember.TextSupport</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.TrackedArray.html">Ember.TrackedArray</a>
             
           </li>
         
@@ -834,7 +901,7 @@
   <h1 class="api-header">
   Ember.Array Class
   
-    <a class="edit-page" target="_blank" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/array.js#L17">packages/ember-runtime/lib/mixins/array.js:17</a>
+    <a class="edit-page" target="_blank" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/array.js#L17">packages/ember-runtime/lib/mixins/array.js:17</a>
   
 </h1>
 
@@ -851,7 +918,7 @@
   
 
   
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/array.js#L17">packages/ember-runtime/lib/mixins/array.js:17</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/array.js#L17">packages/ember-runtime/lib/mixins/array.js:17</a></p>
   
 
   
@@ -1178,7 +1245,7 @@ mixin. All <code>Ember.Array</code>-like objects are also enumerable.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/array.js#L240">packages/ember-runtime/lib/mixins/array.js:240</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/array.js#L240">packages/ember-runtime/lib/mixins/array.js:240</a>
 
     
 
@@ -1267,7 +1334,7 @@ target.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_addEnumerableObserver">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L838">packages/ember-runtime/lib/mixins/enumerable.js:838</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L838">packages/ember-runtime/lib/mixins/enumerable.js:838</a>
 
     
 
@@ -1339,7 +1406,7 @@ mixin.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_any">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L578">packages/ember-runtime/lib/mixins/enumerable.js:578</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L578">packages/ember-runtime/lib/mixins/enumerable.js:578</a>
 
     
 
@@ -1441,7 +1508,7 @@ to give your iterator function access to the current object.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_anyBy">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L653">packages/ember-runtime/lib/mixins/enumerable.js:653</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L653">packages/ember-runtime/lib/mixins/enumerable.js:653</a>
 
     
 
@@ -1514,7 +1581,7 @@ the enumerable. This method is often simpler/faster than using a callback.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/array.js#L353">packages/ember-runtime/lib/mixins/array.js:353</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/array.js#L353">packages/ember-runtime/lib/mixins/array.js:353</a>
 
     
 
@@ -1594,7 +1661,7 @@ as well as a delta of the amounts to change.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/array.js#L309">packages/ember-runtime/lib/mixins/array.js:309</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/array.js#L309">packages/ember-runtime/lib/mixins/array.js:309</a>
 
     
 
@@ -1670,7 +1737,7 @@ as well as a delta of the amounts to change.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_compact">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L760">packages/ember-runtime/lib/mixins/enumerable.js:760</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L760">packages/ember-runtime/lib/mixins/enumerable.js:760</a>
 
     
 
@@ -1735,7 +1802,7 @@ arr.compact();  <span class="comment">// [&quot;a&quot;, &quot;c&quot;]</span>
           <a href="/api/classes/Ember.Enumerable.html#method_contains">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L168">packages/ember-runtime/lib/mixins/enumerable.js:168</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L168">packages/ember-runtime/lib/mixins/enumerable.js:168</a>
 
     
 
@@ -1814,7 +1881,7 @@ arr.contains(<span class="string"><span class="delimiter">&quot;</span><span cla
           <a href="/api/classes/Ember.Enumerable.html#method_enumerableContentDidChange">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L927">packages/ember-runtime/lib/mixins/enumerable.js:927</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L927">packages/ember-runtime/lib/mixins/enumerable.js:927</a>
 
     
 
@@ -1886,7 +1953,7 @@ notify range observers.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_enumerableContentWillChange">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L891">packages/ember-runtime/lib/mixins/enumerable.js:891</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L891">packages/ember-runtime/lib/mixins/enumerable.js:891</a>
 
     
 
@@ -1953,7 +2020,7 @@ to be removed or added if available or just a count.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_every">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L515">packages/ember-runtime/lib/mixins/enumerable.js:515</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L515">packages/ember-runtime/lib/mixins/enumerable.js:515</a>
 
     
 
@@ -2054,7 +2121,7 @@ to give your iterator function access to the current object.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_everyBy">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L553">packages/ember-runtime/lib/mixins/enumerable.js:553</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L553">packages/ember-runtime/lib/mixins/enumerable.js:553</a>
 
     
 
@@ -2128,7 +2195,7 @@ the enumerable. This method is often simpler/faster than using a callback.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_everyProperty">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L566">packages/ember-runtime/lib/mixins/enumerable.js:566</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L566">packages/ember-runtime/lib/mixins/enumerable.js:566</a>
 
     
 
@@ -2200,7 +2267,7 @@ the enumerable. This method is often simpler/faster than using a callback.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_filter">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L316">packages/ember-runtime/lib/mixins/enumerable.js:316</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L316">packages/ember-runtime/lib/mixins/enumerable.js:316</a>
 
     
 
@@ -2295,7 +2362,7 @@ to give your iterator function access to the current object.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_filterBy">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L382">packages/ember-runtime/lib/mixins/enumerable.js:382</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L382">packages/ember-runtime/lib/mixins/enumerable.js:382</a>
 
     
 
@@ -2370,7 +2437,7 @@ this will match any property that evaluates to <code>true</code>.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_filterProperty">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L396">packages/ember-runtime/lib/mixins/enumerable.js:396</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L396">packages/ember-runtime/lib/mixins/enumerable.js:396</a>
 
     
 
@@ -2443,7 +2510,7 @@ this will match any property that evaluates to <code>true</code>.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_find">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L440">packages/ember-runtime/lib/mixins/enumerable.js:440</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L440">packages/ember-runtime/lib/mixins/enumerable.js:440</a>
 
     
 
@@ -2538,7 +2605,7 @@ to give your iterator function access to the current object.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_findBy">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L484">packages/ember-runtime/lib/mixins/enumerable.js:484</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L484">packages/ember-runtime/lib/mixins/enumerable.js:484</a>
 
     
 
@@ -2615,7 +2682,7 @@ this will match any property that evaluates to <code>true</code>.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_findProperty">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L500">packages/ember-runtime/lib/mixins/enumerable.js:500</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L500">packages/ember-runtime/lib/mixins/enumerable.js:500</a>
 
     
 
@@ -2690,7 +2757,7 @@ this will match any property that evaluates to <code>true</code>.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_forEach">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L187">packages/ember-runtime/lib/mixins/enumerable.js:187</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L187">packages/ember-runtime/lib/mixins/enumerable.js:187</a>
 
     
 
@@ -2782,7 +2849,7 @@ to give your iterator function access to the current object.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_getEach">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L228">packages/ember-runtime/lib/mixins/enumerable.js:228</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L228">packages/ember-runtime/lib/mixins/enumerable.js:228</a>
 
     
 
@@ -2851,7 +2918,7 @@ to give your iterator function access to the current object.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/array.js#L170">packages/ember-runtime/lib/mixins/array.js:170</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/array.js#L170">packages/ember-runtime/lib/mixins/array.js:170</a>
 
     
 
@@ -2943,7 +3010,7 @@ arr.indexOf(<span class="string"><span class="delimiter">&quot;</span><span clas
           <a href="/api/classes/Ember.Enumerable.html#method_invoke">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L723">packages/ember-runtime/lib/mixins/enumerable.js:723</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L723">packages/ember-runtime/lib/mixins/enumerable.js:723</a>
 
     
 
@@ -3017,7 +3084,7 @@ Prototype 1.6.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/array.js#L203">packages/ember-runtime/lib/mixins/array.js:203</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/array.js#L203">packages/ember-runtime/lib/mixins/array.js:203</a>
 
     
 
@@ -3109,7 +3176,7 @@ arr.lastIndexOf(<span class="string"><span class="delimiter">&quot;</span><span 
           <a href="/api/classes/Ember.Enumerable.html#method_map">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L256">packages/ember-runtime/lib/mixins/enumerable.js:256</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L256">packages/ember-runtime/lib/mixins/enumerable.js:256</a>
 
     
 
@@ -3202,7 +3269,7 @@ to give your iterator function access to the current object.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_mapBy">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L290">packages/ember-runtime/lib/mixins/enumerable.js:290</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L290">packages/ember-runtime/lib/mixins/enumerable.js:290</a>
 
     
 
@@ -3273,7 +3340,7 @@ property on all items in the enumeration.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_mapProperty">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L304">packages/ember-runtime/lib/mixins/enumerable.js:304</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L304">packages/ember-runtime/lib/mixins/enumerable.js:304</a>
 
     
 
@@ -3342,7 +3409,7 @@ property on all items in the enumeration.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_nextObject">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L74">packages/ember-runtime/lib/mixins/enumerable.js:74</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L74">packages/ember-runtime/lib/mixins/enumerable.js:74</a>
 
     
 
@@ -3441,7 +3508,7 @@ This works great on any Array-like objects.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/array.js#L59">packages/ember-runtime/lib/mixins/array.js:59</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/array.js#L59">packages/ember-runtime/lib/mixins/array.js:59</a>
 
     
 
@@ -3532,7 +3599,7 @@ arr.objectAt(<span class="integer">5</span>);   <span class="comment">// undefin
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/array.js#L86">packages/ember-runtime/lib/mixins/array.js:86</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/array.js#L86">packages/ember-runtime/lib/mixins/array.js:86</a>
 
     
 
@@ -3610,7 +3677,7 @@ arr.objectsAt([<span class="integer">2</span>, <span class="integer">3</span>, <
           <a href="/api/classes/Ember.Enumerable.html#method_reduce">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L678">packages/ember-runtime/lib/mixins/enumerable.js:678</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L678">packages/ember-runtime/lib/mixins/enumerable.js:678</a>
 
     
 
@@ -3712,7 +3779,7 @@ spec. Sorry.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_reject">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L352">packages/ember-runtime/lib/mixins/enumerable.js:352</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L352">packages/ember-runtime/lib/mixins/enumerable.js:352</a>
 
     
 
@@ -3805,7 +3872,7 @@ to give your iterator function access to the current object.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_rejectBy">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L409">packages/ember-runtime/lib/mixins/enumerable.js:409</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L409">packages/ember-runtime/lib/mixins/enumerable.js:409</a>
 
     
 
@@ -3880,7 +3947,7 @@ this will match any property that evaluates to false.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_rejectProperty">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L427">packages/ember-runtime/lib/mixins/enumerable.js:427</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L427">packages/ember-runtime/lib/mixins/enumerable.js:427</a>
 
     
 
@@ -3954,7 +4021,7 @@ this will match any property that evaluates to false.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/array.js#L276">packages/ember-runtime/lib/mixins/array.js:276</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/array.js#L276">packages/ember-runtime/lib/mixins/array.js:276</a>
 
     
 
@@ -4028,7 +4095,7 @@ have no effect.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_removeEnumerableObserver">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L859">packages/ember-runtime/lib/mixins/enumerable.js:859</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L859">packages/ember-runtime/lib/mixins/enumerable.js:859</a>
 
     
 
@@ -4099,7 +4166,7 @@ have no effect.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_setEach">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L239">packages/ember-runtime/lib/mixins/enumerable.js:239</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L239">packages/ember-runtime/lib/mixins/enumerable.js:239</a>
 
     
 
@@ -4174,7 +4241,7 @@ it will be set directly. <code>null</code> objects are skipped.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/array.js#L138">packages/ember-runtime/lib/mixins/array.js:138</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/array.js#L138">packages/ember-runtime/lib/mixins/array.js:138</a>
 
     
 
@@ -4261,7 +4328,7 @@ arr.slice(<span class="integer">1</span>, <span class="integer">100</span>);  <s
           <a href="/api/classes/Ember.Enumerable.html#method_some">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L617">packages/ember-runtime/lib/mixins/enumerable.js:617</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L617">packages/ember-runtime/lib/mixins/enumerable.js:617</a>
 
     
 
@@ -4365,7 +4432,7 @@ to give your iterator function access to the current object.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_someProperty">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L666">packages/ember-runtime/lib/mixins/enumerable.js:666</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L666">packages/ember-runtime/lib/mixins/enumerable.js:666</a>
 
     
 
@@ -4434,7 +4501,7 @@ the enumerable. This method is often simpler/faster than using a callback.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_toArray">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L747">packages/ember-runtime/lib/mixins/enumerable.js:747</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L747">packages/ember-runtime/lib/mixins/enumerable.js:747</a>
 
     
 
@@ -4489,7 +4556,7 @@ guaranteed. Corresponds to the method implemented by Prototype.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_uniq">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L798">packages/ember-runtime/lib/mixins/enumerable.js:798</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L798">packages/ember-runtime/lib/mixins/enumerable.js:798</a>
 
     
 
@@ -4555,7 +4622,7 @@ arr.uniq();  <span class="comment">// [&quot;a&quot;, &quot;b&quot;]</span>
           <a href="/api/classes/Ember.Enumerable.html#method_without">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L775">packages/ember-runtime/lib/mixins/enumerable.js:775</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L775">packages/ember-runtime/lib/mixins/enumerable.js:775</a>
 
     
 
@@ -4654,7 +4721,7 @@ arr.without(<span class="string"><span class="delimiter">&quot;</span><span clas
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/array.js#L409">packages/ember-runtime/lib/mixins/array.js:409</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/array.js#L409">packages/ember-runtime/lib/mixins/array.js:409</a>
 
     
 
@@ -4667,9 +4734,6 @@ arr.without(<span class="string"><span class="delimiter">&quot;</span><span clas
 on the array. Just get an equivalent property on this object and it will
 return an enumerable that maps automatically to the named key on the
 member objects.</p>
-
-<p>If you merely want to watch for any items being added or removed to the array,
-use the <code>[]</code> property instead of <code>@each</code>.</p>
 
     </div>
   
@@ -4706,7 +4770,7 @@ use the <code>[]</code> property instead of <code>@each</code>.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/array.js#L299">packages/ember-runtime/lib/mixins/array.js:299</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/array.js#L299">packages/ember-runtime/lib/mixins/array.js:299</a>
 
     
 
@@ -4754,7 +4818,7 @@ on the array.</p>
           but overwritten in
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/array.js#L109">packages/ember-runtime/lib/mixins/array.js:109</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/array.js#L109">packages/ember-runtime/lib/mixins/array.js:109</a>
 
     
 
@@ -4812,7 +4876,7 @@ array, it will replace the current content.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_firstObject">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L109">packages/ember-runtime/lib/mixins/enumerable.js:109</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L109">packages/ember-runtime/lib/mixins/enumerable.js:109</a>
 
     
 
@@ -4887,7 +4951,7 @@ arr.get(<span class="string"><span class="delimiter">'</span><span class="conten
           <a href="/api/classes/Ember.Enumerable.html#method_hasEnumerableObservers">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L879">packages/ember-runtime/lib/mixins/enumerable.js:879</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L879">packages/ember-runtime/lib/mixins/enumerable.js:879</a>
 
     
 
@@ -4934,7 +4998,7 @@ on the array.</p>
           <a href="/api/classes/Ember.Enumerable.html#method_lastObject">Ember.Enumerable</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/enumerable.js#L140">packages/ember-runtime/lib/mixins/enumerable.js:140</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/enumerable.js#L140">packages/ember-runtime/lib/mixins/enumerable.js:140</a>
 
     
 
@@ -5005,7 +5069,7 @@ arr.get(<span class="string"><span class="delimiter">'</span><span class="conten
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/array.js#L51">packages/ember-runtime/lib/mixins/array.js:51</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/array.js#L51">packages/ember-runtime/lib/mixins/array.js:51</a>
 
     
 

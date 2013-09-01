@@ -22,15 +22,152 @@
       })();
     </script>
 
-<!--[if lt IE 9]>
-    <script type="text/javascript" src="/javascripts/common-old-ie.js"></script>
-<![endif]-->
-<!--[if gte IE 9]><!-->
-    <script type="text/javascript" src="/javascripts/common-modern.js"></script>
-<!--<![endif]-->
+    <script type="text/javascript" src="/javascripts/jquery-2.0.2.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
+
+    <script type="text/javascript">
+      $(function() {
+        var backToTop = $('#back-to-top');
+        var doc = $(document);
+        var offset = backToTop.offset();
+        var marginTop = 90;
+        var showing = false;
+
+        positionBackToTop = function(reset) {
+          if (reset) {
+            backToTop.css({
+              top: '',
+              position: ''
+            });
+            offset = backToTop.offset();
+          }
+
+          if (!showing && doc.scrollTop() > offset.top+200) {
+            showing = true;
+            backToTop.css({
+              position: 'fixed',
+              top: 20,
+              left: offset.left,
+              display:' block'
+            });
+          } else if (showing && doc.scrollTop() <= offset.top+200) {
+            showing = false;
+            backToTop.css({
+              display:'none'
+            });
+          }
+        };
+
+        if (backToTop.length) {
+          backToTop.on('click', function(evt) {
+            $('html,body').animate({scrollTop: 0}, 200);
+            return false;
+          });
+
+          doc.on('scroll', function() {
+            positionBackToTop();
+          });
+        }
+
+        $('.bx-wrapper, .bx-window').width(940);
+      });
+    </script>
 
     
-    <script type="text/javascript" src="/javascripts/api.js"></script>
+    <script>
+      $(function() {
+        var ls = window['localStorage'];
+
+        // Restoring method visibility preference from localStorage
+        function initApiOptions() {
+          var type = this.getAttribute('data-type'),
+            checked = ls ? ls.getItem('api-options-' + type) : undefined;
+
+          if (checked != undefined) {
+            // Bools are stored as strings in localStorage
+            checked = checked == 'true';
+            $(this).attr('checked', checked);
+          }
+        };
+
+        // Type toggling
+        function toggleType() {
+          var type = this.getAttribute('data-type');
+
+          $('.'+type).toggle(this.checked);
+
+          if(ls)
+            ls.setItem('api-options-' + type, this.checked);
+        }
+
+        $('#api-options input').each(initApiOptions);
+        $('#api-options input').each(toggleType);
+        $('#api-options input').on('change', toggleType);
+
+        // Tabs
+        $('.tabs .pane').hide();
+        $('.tabs .pane:first').show();
+        $('.tabs ul li:first').addClass('active');
+
+        function showPane($tabs, href) {
+          var $ul = $tabs.find('> ul'),
+              $tab = $ul.find('a[href='+href+']'),
+              $pane = $(href);
+
+          $ul.find('li').removeClass('active');
+          $tab.parent().addClass('active');
+          $tabs.find('.pane').hide();
+
+          $pane.show();
+        }
+
+        $('.tabs > ul li a').click(function(){
+          var $el = $(this),
+              $tabs = $el.parents('.tabs'),
+              href = $el.attr('href');
+
+          showPane($tabs, href);
+
+          return false;
+        });
+
+        // Auto tab
+        function checkHash() {
+          var hash = window.location.hash;
+          var $el = $(hash);
+          if ($el.length > 0 && !$el.is(':visible')) {
+            showPane($el.parents('.tabs'), '#'+$el.parents('.pane').attr('id'));
+            $("html, body").scrollTop($el.offset().top);
+          } else if ($el.length == 0) {
+            showPane($('.tabs'), '#index');
+          }
+        }
+
+        $(window).on('hashchange', checkHash);
+        checkHash();
+      });
+    $(function(){
+      $("#toc-list .level-1 > a").not('[target=_blank]').click(function() {
+        $(this).parent().find('> ol').slideToggle(function() {
+          positionBackToTop(true);
+        });
+
+        return false;
+      });
+
+      $(function(){
+        $('.anchorable-toc').each(function(){
+          var toc = $(this),
+          id = toc.data('id') || toc.attr('id'),
+          href = "#" + id,
+          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
+
+          toc.prepend(anchor);
+        });
+      });
+
+    });
+    </script>
   
   </head>
 
@@ -44,13 +181,31 @@
           <li class="active"><a href="/api">api</a></li>
           <li><a href="/community">community</a></li>
           <li><a href="/blog">blog</a></li>
-          <li><a href="/builds">builds</a></li>
+
           <li id="search">
             <form>
               <input type="text" id="st-search-input" class="st-search-input" />
             </form>
             <div id="st-results-container"></div>
+            <script type="text/javascript">
+              var Swiftype = window.Swiftype || {};
+              (function() {
+                Swiftype.key = 'HTNahKf4xmo8GgFbTz4n';
+                Swiftype.inputElement = '#st-search-input';
+                Swiftype.resultContainingElement = '#st-results-container';
+                Swiftype.attachElement = '#st-search-input';
+                Swiftype.renderStyle = "overlay";
+
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.async = true;
+                script.src = "//swiftype.com/embed.js";
+                var entry = document.getElementsByTagName('script')[0];
+                entry.parentNode.insertBefore(script, entry);
+              }());
+            </script>
           </li>
+
         </ul>
 
         <div id="github">
@@ -65,7 +220,7 @@
         <div id="sidebar">
           
     <ol id='toc-list'>
-      <li class='level-1'><a href="https://github.com/emberjs/ember.js/tree/v1.0.0" target="_blank"> Tag: v1.0.0</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/ember.js/tree/9d266a8" target="_blank"> Tag: 9d266a8</a></li>
 
       
           <li class="level-1 ">
@@ -110,14 +265,6 @@
             
           <li class="level-3 ">
           
-              <a href="/api/modules/ember-handlebars-compiler.html">ember-handlebars-compiler</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/modules/ember-metal.html">ember-metal</a>
             
           </li>
@@ -135,14 +282,6 @@
           <li class="level-3 ">
           
               <a href="/api/modules/ember-runtime.html">ember-runtime</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/modules/ember-testing.html">ember-testing</a>
             
           </li>
         
@@ -236,14 +375,6 @@
             
           <li class="level-3 ">
           
-              <a href="/api/classes/Ember.ActionHandler.html">Ember.ActionHandler</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/classes/Ember.Application.html">Ember.Application</a>
             
           </li>
@@ -277,6 +408,14 @@
           <li class="level-3 ">
           
               <a href="/api/classes/Ember.Binding.html">Ember.Binding</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Button.html">Ember.Button</a>
             
           </li>
         
@@ -452,22 +591,6 @@
             
           <li class="level-3 ">
           
-              <a href="/api/classes/Ember.Handlebars.Compiler.html">Ember.Handlebars.Compiler</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.Handlebars.JavaScriptCompiler.html">Ember.Handlebars.JavaScriptCompiler</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/classes/Ember.Handlebars.helpers.html">Ember.Handlebars.helpers</a>
             
           </li>
@@ -612,23 +735,7 @@
             
           <li class="level-3 ">
           
-              <a href="/api/classes/Ember.PromiseProxyMixin.html">Ember.PromiseProxyMixin</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/classes/Ember.RSVP.html">Ember.RSVP</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.ReduceComputedProperty.html">Ember.ReduceComputedProperty</a>
             
           </li>
         
@@ -684,39 +791,7 @@
             
           <li class="level-3 ">
           
-              <a href="/api/classes/Ember.SubArray.html">Ember.SubArray</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
               <a href="/api/classes/Ember.TargetActionSupport.html">Ember.TargetActionSupport</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.Test.html">Ember.Test</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.Test.Adapter.html">Ember.Test.Adapter</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.Test.QUnitAdapter.html">Ember.Test.QUnitAdapter</a>
             
           </li>
         
@@ -741,14 +816,6 @@
           <li class="level-3 ">
           
               <a href="/api/classes/Ember.TextSupport.html">Ember.TextSupport</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.TrackedArray.html">Ember.TrackedArray</a>
             
           </li>
         
@@ -834,7 +901,7 @@
   <h1 class="api-header">
   Ember.HistoryLocation Class
   
-    <a class="edit-page" target="_blank" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/location/history_location.js#L10">packages/ember-routing/lib/location/history_location.js:10</a>
+    <a class="edit-page" target="_blank" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-routing/lib/location/history_location.js#L10">packages/ember-routing/lib/location/history_location.js:10</a>
   
 </h1>
 
@@ -849,7 +916,7 @@
   
 
   
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/location/history_location.js#L10">packages/ember-routing/lib/location/history_location.js:10</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-routing/lib/location/history_location.js#L10">packages/ember-routing/lib/location/history_location.js:10</a></p>
   
 
   
@@ -1010,14 +1077,6 @@ history.pushState API.</p>
               <a href="#method_removeObserver">removeObserver</a>
             </li>
           
-            <li class="method inherited">
-              <a href="#method_reopen">reopen</a>
-            </li>
-          
-            <li class="method inherited">
-              <a href="#method_reopenClass">reopenClass</a>
-            </li>
-          
             <li class="method private">
               <a href="#method_replaceState">replaceState</a>
             </li>
@@ -1050,7 +1109,7 @@ history.pushState API.</p>
               <a href="#method_toggleProperty">toggleProperty</a>
             </li>
           
-            <li class="method private">
+            <li class="method inherited">
               <a href="#method_willDestroy">willDestroy</a>
             </li>
           
@@ -1121,7 +1180,7 @@ history.pushState API.</p>
           <a href="/api/classes/Ember.Object.html#method__scheduledDestroy">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/system/core_object.js#L318">packages/ember-runtime/lib/system/core_object.js:318</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/system/core_object.js#L317">packages/ember-runtime/lib/system/core_object.js:317</a>
 
     
 
@@ -1165,7 +1224,7 @@ history.pushState API.</p>
           <a href="/api/classes/Ember.Object.html#method_addObserver">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/observable.js#L312">packages/ember-runtime/lib/mixins/observable.js:312</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/observable.js#L317">packages/ember-runtime/lib/mixins/observable.js:317</a>
 
     
 
@@ -1279,7 +1338,7 @@ any of these values, to write an observer that has no parameters at all.</p>
           <a href="/api/classes/Ember.Object.html#method_beginPropertyChanges">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/observable.js#L211">packages/ember-runtime/lib/mixins/observable.js:211</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/observable.js#L216">packages/ember-runtime/lib/mixins/observable.js:216</a>
 
     
 
@@ -1344,7 +1403,7 @@ deferring.</p>
           <a href="/api/classes/Ember.Object.html#method_cacheFor">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/observable.js#L490">packages/ember-runtime/lib/mixins/observable.js:490</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/observable.js#L495">packages/ember-runtime/lib/mixins/observable.js:495</a>
 
     
 
@@ -1415,7 +1474,7 @@ generated lazily.</p>
           <a href="/api/classes/Ember.Object.html#method_create">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/system/core_object.js#L435">packages/ember-runtime/lib/system/core_object.js:435</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/system/core_object.js#L434">packages/ember-runtime/lib/system/core_object.js:434</a>
 
     
 
@@ -1520,7 +1579,7 @@ properties when using <code>extend</code> or use the <code>createWithMixins</cod
           <a href="/api/classes/Ember.Object.html#method_createWithMixins">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/system/core_object.js#L421">packages/ember-runtime/lib/system/core_object.js:421</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/system/core_object.js#L420">packages/ember-runtime/lib/system/core_object.js:420</a>
 
     
 
@@ -1581,7 +1640,7 @@ If possible use the normal <code>create</code> method instead.</p>
           <a href="/api/classes/Ember.Object.html#method_decrementProperty">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/observable.js#L453">packages/ember-runtime/lib/mixins/observable.js:453</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/observable.js#L458">packages/ember-runtime/lib/mixins/observable.js:458</a>
 
     
 
@@ -1657,7 +1716,7 @@ orc.decrementProperty(<span class="string"><span class="delimiter">'</span><span
           <a href="/api/classes/Ember.Object.html#method_destroy">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/system/core_object.js#L289">packages/ember-runtime/lib/system/core_object.js:289</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/system/core_object.js#L288">packages/ember-runtime/lib/system/core_object.js:288</a>
 
     
 
@@ -1720,7 +1779,7 @@ happen immediately.  It will set an isDestroying flag immediately.</p>
           <a href="/api/classes/Ember.Object.html#method_eachComputedProperty">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/system/core_object.js#L590">packages/ember-runtime/lib/system/core_object.js:590</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/system/core_object.js#L536">packages/ember-runtime/lib/system/core_object.js:536</a>
 
     
 
@@ -1781,7 +1840,7 @@ and any associated metadata (see <code>metaForProperty</code>) to the callback.<
           <a href="/api/classes/Ember.Object.html#method_endPropertyChanges">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/observable.js#L230">packages/ember-runtime/lib/mixins/observable.js:230</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/observable.js#L235">packages/ember-runtime/lib/mixins/observable.js:235</a>
 
     
 
@@ -1829,7 +1888,6 @@ deliver the deferred change notifications and end deferring.</p>
     (url)
   </span>
 
-  <span class="type"><a href="/api/classes/String.html">String</a></span>
 
 
 
@@ -1847,7 +1905,7 @@ deliver the deferred change notifications and end deferring.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/location/history_location.js#L179">packages/ember-routing/lib/location/history_location.js:179</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-routing/lib/location/history_location.js#L177">packages/ember-routing/lib/location/history_location.js:177</a>
 
     
 
@@ -1876,14 +1934,6 @@ deliver the deferred change notifications and end deferring.</p>
   
 
   
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type"><a href="/api/classes/String.html">String</a></span>
-        <dd> formatted url</dd>
-      </dl>
-    </div>
-  
 </div>
 
       
@@ -1910,7 +1960,7 @@ deliver the deferred change notifications and end deferring.</p>
           <a href="/api/classes/Ember.Object.html#method_get">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/observable.js#L78">packages/ember-runtime/lib/mixins/observable.js:78</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/observable.js#L75">packages/ember-runtime/lib/mixins/observable.js:75</a>
 
     
 
@@ -2015,7 +2065,7 @@ not defined upfront.</p>
           <a href="/api/classes/Ember.Object.html#method_getPath">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/observable.js#L393">packages/ember-runtime/lib/mixins/observable.js:393</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/observable.js#L398">packages/ember-runtime/lib/mixins/observable.js:398</a>
 
     
 
@@ -2078,7 +2128,7 @@ not defined upfront.</p>
           <a href="/api/classes/Ember.Object.html#method_getProperties">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/observable.js#L120">packages/ember-runtime/lib/mixins/observable.js:120</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/observable.js#L117">packages/ember-runtime/lib/mixins/observable.js:117</a>
 
     
 
@@ -2142,7 +2192,6 @@ with a list of strings or an array:</p>
 <div id="method_getState" class="method private item-entry">
   <h3 data-id="method_getState" class="name anchorable-toc"><code>getState</code></h3>
 
-  <span class="type">Object</span>
 
 
 
@@ -2160,7 +2209,7 @@ with a list of strings or an array:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/location/history_location.js#L98">packages/ember-routing/lib/location/history_location.js:98</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-routing/lib/location/history_location.js#L97">packages/ember-routing/lib/location/history_location.js:97</a>
 
     
 
@@ -2177,14 +2226,6 @@ with a list of strings or an array:</p>
 
   
 
-  
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type">Object</span>
-        <dd> state</dd>
-      </dl>
-    </div>
   
 </div>
 
@@ -2193,7 +2234,6 @@ with a list of strings or an array:</p>
 <div id="method_getURL" class="method private item-entry">
   <h3 data-id="method_getURL" class="name anchorable-toc"><code>getURL</code></h3>
 
-  <span class="type"><a href="/api/classes/String.html">String</a></span>
 
 
 
@@ -2211,7 +2251,7 @@ with a list of strings or an array:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/location/history_location.js#L45">packages/ember-routing/lib/location/history_location.js:45</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-routing/lib/location/history_location.js#L45">packages/ember-routing/lib/location/history_location.js:45</a>
 
     
 
@@ -2228,14 +2268,6 @@ with a list of strings or an array:</p>
 
   
 
-  
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type"><a href="/api/classes/String.html">String</a></span>
-        <dd> url</dd>
-      </dl>
-    </div>
   
 </div>
 
@@ -2263,7 +2295,7 @@ with a list of strings or an array:</p>
           <a href="/api/classes/Ember.Object.html#method_getWithDefault">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/observable.js#L416">packages/ember-runtime/lib/mixins/observable.js:416</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/observable.js#L421">packages/ember-runtime/lib/mixins/observable.js:421</a>
 
     
 
@@ -2341,7 +2373,7 @@ property returns <code>undefined</code>.</p>
           <a href="/api/classes/Ember.Object.html#method_hasObserverFor">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/observable.js#L379">packages/ember-runtime/lib/mixins/observable.js:379</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/observable.js#L384">packages/ember-runtime/lib/mixins/observable.js:384</a>
 
     
 
@@ -2412,7 +2444,7 @@ on the object.</p>
           <a href="/api/classes/Ember.Object.html#method_incrementProperty">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/observable.js#L433">packages/ember-runtime/lib/mixins/observable.js:433</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/observable.js#L438">packages/ember-runtime/lib/mixins/observable.js:438</a>
 
     
 
@@ -2487,7 +2519,7 @@ team.incrementProperty(<span class="string"><span class="delimiter">'</span><spa
           <a href="/api/classes/Ember.Object.html#method_init">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/system/core_object.js#L171">packages/ember-runtime/lib/system/core_object.js:171</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/system/core_object.js#L170">packages/ember-runtime/lib/system/core_object.js:170</a>
 
     
 
@@ -2571,7 +2603,7 @@ application.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/location/history_location.js#L25">packages/ember-routing/lib/location/history_location.js:25</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-routing/lib/location/history_location.js#L25">packages/ember-routing/lib/location/history_location.js:25</a>
 
     
 
@@ -2614,7 +2646,7 @@ application.</p>
           <a href="/api/classes/Ember.Object.html#method_metaForProperty">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/system/core_object.js#L556">packages/ember-runtime/lib/system/core_object.js:556</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/system/core_object.js#L502">packages/ember-runtime/lib/system/core_object.js:502</a>
 
     
 
@@ -2702,7 +2734,7 @@ property from your class like this:</p>
           <a href="/api/classes/Ember.Object.html#method_notifyPropertyChange">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/observable.js#L294">packages/ember-runtime/lib/mixins/observable.js:294</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/observable.js#L299">packages/ember-runtime/lib/mixins/observable.js:299</a>
 
     
 
@@ -2772,7 +2804,7 @@ succession.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/location/history_location.js#L156">packages/ember-routing/lib/location/history_location.js:156</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-routing/lib/location/history_location.js#L154">packages/ember-routing/lib/location/history_location.js:154</a>
 
     
 
@@ -2827,7 +2859,7 @@ succession.</p>
           <a href="/api/classes/Ember.Object.html#method_propertyDidChange">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/observable.js#L271">packages/ember-runtime/lib/mixins/observable.js:271</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/observable.js#L276">packages/ember-runtime/lib/mixins/observable.js:276</a>
 
     
 
@@ -2906,7 +2938,7 @@ like.</p>
           <a href="/api/classes/Ember.Object.html#method_propertyWillChange">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/observable.js#L248">packages/ember-runtime/lib/mixins/observable.js:248</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/observable.js#L253">packages/ember-runtime/lib/mixins/observable.js:253</a>
 
     
 
@@ -2986,7 +3018,7 @@ like.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/location/history_location.js#L112">packages/ember-routing/lib/location/history_location.js:112</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-routing/lib/location/history_location.js#L110">packages/ember-routing/lib/location/history_location.js:110</a>
 
     
 
@@ -3041,7 +3073,7 @@ like.</p>
           <a href="/api/classes/Ember.Object.html#method_removeObserver">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/observable.js#L364">packages/ember-runtime/lib/mixins/observable.js:364</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/observable.js#L369">packages/ember-runtime/lib/mixins/observable.js:369</a>
 
     
 
@@ -3095,166 +3127,6 @@ target will no longer receive notifications.</p>
 
       
         
-<div id="method_reopen" class="method inherited item-entry">
-  <h3 data-id="method_reopen" class="name anchorable-toc"><code>reopen</code></h3>
-
-
-
-
-
-
-
-
-
-  <div class="meta">
-      
-        
-          Inherited from
-          <a href="/api/classes/Ember.Object.html#method_reopen">Ember.Object</a>
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/system/core_object.js#L478">packages/ember-runtime/lib/system/core_object.js:478</a>
-
-    
-
-    
-  </div>
-
-  
-    <div class="description">
-      <p>Augments a constructor&#39;s prototype with additional
-    properties and functions:
-```javascript
-    MyObject = Ember.Object.extend({
-      name: &#39;an object&#39;
-    });</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
-14
-</pre></td>
-  <td class="code"><pre>o = MyObject.create();
-o.get(<span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>); <span class="comment">// 'an object'</span>
-
-MyObject.reopen({
-  <span class="function">say</span>: <span class="keyword">function</span>(msg){
-    console.log(msg);
-  }
-})
-
-o2 = MyObject.create();
-o2.say(<span class="string"><span class="delimiter">&quot;</span><span class="content">hello</span><span class="delimiter">&quot;</span></span>); <span class="comment">// logs &quot;hello&quot;</span>
-
-o.say(<span class="string"><span class="delimiter">&quot;</span><span class="content">goodbye</span><span class="delimiter">&quot;</span></span>); <span class="comment">// logs &quot;goodbye&quot;</span>
-<span class="error">`</span><span class="error">`</span><span class="error">`</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>To add functions and properties to the constructor itself,
-    see <code>reopenClass</code></p>
-
-    </div>
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-
-  
-</div>
-
-      
-        
-<div id="method_reopenClass" class="method inherited item-entry">
-  <h3 data-id="method_reopenClass" class="name anchorable-toc"><code>reopenClass</code></h3>
-
-
-
-
-
-
-
-
-
-  <div class="meta">
-      
-        
-          Inherited from
-          <a href="/api/classes/Ember.Object.html#method_reopenClass">Ember.Object</a>
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/system/core_object.js#L514">packages/ember-runtime/lib/system/core_object.js:514</a>
-
-    
-
-    
-  </div>
-
-  
-    <div class="description">
-      <p>Augments a constructor&#39;s own properties and functions:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-</pre></td>
-  <td class="code"><pre>MyObject = Ember.Object.extend({
-  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">an object</span><span class="delimiter">'</span></span>
-});
-
-
-MyObject.reopenClass({
-  <span class="key">canBuild</span>: <span class="predefined-constant">false</span>
-});
-
-MyObject.canBuild; <span class="comment">// false</span>
-o = MyObject.create();
-</pre></td>
-</tr></table>
-</div></div>
-<p>To add functions and properties to instances of
-a constructor by extending the constructor&#39;s prototype
-see <code>reopen</code></p>
-
-    </div>
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-
-  
-</div>
-
-      
-        
 <div id="method_replaceState" class="method private item-entry">
   <h3 data-id="method_replaceState" class="name anchorable-toc"><code>replaceState</code></h3>
   <span class="args">
@@ -3278,7 +3150,7 @@ see <code>reopen</code></p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/location/history_location.js#L134">packages/ember-routing/lib/location/history_location.js:134</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-routing/lib/location/history_location.js#L132">packages/ember-routing/lib/location/history_location.js:132</a>
 
     
 
@@ -3334,7 +3206,7 @@ see <code>reopen</code></p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/location/history_location.js#L80">packages/ember-routing/lib/location/history_location.js:80</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-routing/lib/location/history_location.js#L79">packages/ember-routing/lib/location/history_location.js:79</a>
 
     
 
@@ -3389,7 +3261,7 @@ see <code>reopen</code></p>
           <a href="/api/classes/Ember.Object.html#method_set">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/observable.js#L142">packages/ember-runtime/lib/mixins/observable.js:142</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/observable.js#L147">packages/ember-runtime/lib/mixins/observable.js:147</a>
 
     
 
@@ -3402,7 +3274,7 @@ see <code>reopen</code></p>
 
 <p>This method is generally very similar to calling <code>object[key] = value</code> or
 <code>object.key = value</code>, except that it provides support for computed
-properties, the <code>setUnknownProperty()</code> method and property observers.</p>
+properties, the <code>unknownProperty()</code> method and property observers.</p>
 
 <h3>Computed Properties</h3>
 
@@ -3416,9 +3288,9 @@ properties.</p>
 <h3>Unknown Properties</h3>
 
 <p>If you try to set a value on a key that is undefined in the target
-object, then the <code>setUnknownProperty()</code> handler will be called instead. This
+object, then the <code>unknownProperty()</code> handler will be called instead. This
 gives you an opportunity to implement complex &quot;virtual&quot; properties that
-are not predefined on the object. If <code>setUnknownProperty()</code> returns
+are not predefined on the object. If <code>unknownProperty()</code> returns
 undefined, then <code>set()</code> will simply set the value on the object.</p>
 
 <h3>Property Observers</h3>
@@ -3504,7 +3376,7 @@ itself so you can do chaining like this:</p>
           <a href="/api/classes/Ember.Object.html#method_setPath">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/observable.js#L404">packages/ember-runtime/lib/mixins/observable.js:404</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/observable.js#L409">packages/ember-runtime/lib/mixins/observable.js:409</a>
 
     
 
@@ -3570,7 +3442,7 @@ itself so you can do chaining like this:</p>
           <a href="/api/classes/Ember.Object.html#method_setProperties">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/observable.js#L195">packages/ember-runtime/lib/mixins/observable.js:195</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/observable.js#L200">packages/ember-runtime/lib/mixins/observable.js:200</a>
 
     
 
@@ -3646,7 +3518,7 @@ with a Hash:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/location/history_location.js#L63">packages/ember-routing/lib/location/history_location.js:63</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-routing/lib/location/history_location.js#L62">packages/ember-routing/lib/location/history_location.js:62</a>
 
     
 
@@ -3698,7 +3570,7 @@ with a Hash:</p>
           <a href="/api/classes/Ember.Object.html#method_toString">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/system/core_object.js#L338">packages/ember-runtime/lib/system/core_object.js:338</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/system/core_object.js#L337">packages/ember-runtime/lib/system/core_object.js:337</a>
 
     
 
@@ -3801,7 +3673,7 @@ teacher.toString(); <span class="comment">//=&gt; &quot;&lt;App.Teacher:ember102
           <a href="/api/classes/Ember.Object.html#method_toggleProperty">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/mixins/observable.js#L473">packages/ember-runtime/lib/mixins/observable.js:473</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/mixins/observable.js#L478">packages/ember-runtime/lib/mixins/observable.js:478</a>
 
     
 
@@ -3854,13 +3726,12 @@ current value.</p>
 
       
         
-<div id="method_willDestroy" class="method private item-entry">
+<div id="method_willDestroy" class="method inherited item-entry">
   <h3 data-id="method_willDestroy" class="name anchorable-toc"><code>willDestroy</code></h3>
 
 
 
 
-  <span class="flag private">private</span>
 
 
 
@@ -3868,19 +3739,23 @@ current value.</p>
 
   <div class="meta">
       
-        Inherited from
-        <a href="/api/classes/Ember.CoreObject.html#method_willDestroy">Ember.CoreObject</a>
         
-          but overwritten in
+          Inherited from
+          <a href="/api/classes/Ember.Object.html#method_willDestroy">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/location/history_location.js#L198">packages/ember-routing/lib/location/history_location.js:198</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/system/core_object.js#L310">packages/ember-runtime/lib/system/core_object.js:310</a>
 
     
 
     
   </div>
 
+  
+    <div class="description">
+      <p>Override to implement teardown.</p>
+
+    </div>
   
 
   <p>
@@ -3939,7 +3814,7 @@ current value.</p>
           <a href="/api/classes/Ember.Object.html#method_concatenatedProperties">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/system/core_object.js#L202">packages/ember-runtime/lib/system/core_object.js:202</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/system/core_object.js#L201">packages/ember-runtime/lib/system/core_object.js:201</a>
 
     
 
@@ -4069,7 +3944,7 @@ although typical app developers are likely to use it infrequently.</p>
           <a href="/api/classes/Ember.Object.html#method_isDestroyed">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/system/core_object.js#L267">packages/ember-runtime/lib/system/core_object.js:267</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/system/core_object.js#L266">packages/ember-runtime/lib/system/core_object.js:266</a>
 
     
 
@@ -4119,7 +3994,7 @@ removed by the effect of calling the <code>destroy()</code> method.</p>
           <a href="/api/classes/Ember.Object.html#method_isDestroying">Ember.Object</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-runtime/lib/system/core_object.js#L278">packages/ember-runtime/lib/system/core_object.js:278</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-runtime/lib/system/core_object.js#L277">packages/ember-runtime/lib/system/core_object.js:277</a>
 
     
 
@@ -4170,7 +4045,7 @@ the <code>isDestroyed</code> flag is set.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/location/history_location.js#L37">packages/ember-routing/lib/location/history_location.js:37</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-routing/lib/location/history_location.js#L37">packages/ember-routing/lib/location/history_location.js:37</a>
 
     
 
