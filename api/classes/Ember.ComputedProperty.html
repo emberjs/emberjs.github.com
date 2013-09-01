@@ -22,152 +22,15 @@
       })();
     </script>
 
-    <script type="text/javascript" src="/javascripts/jquery-2.0.2.js"></script>
-    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
-
-    <script type="text/javascript">
-      $(function() {
-        var backToTop = $('#back-to-top');
-        var doc = $(document);
-        var offset = backToTop.offset();
-        var marginTop = 90;
-        var showing = false;
-
-        positionBackToTop = function(reset) {
-          if (reset) {
-            backToTop.css({
-              top: '',
-              position: ''
-            });
-            offset = backToTop.offset();
-          }
-
-          if (!showing && doc.scrollTop() > offset.top+200) {
-            showing = true;
-            backToTop.css({
-              position: 'fixed',
-              top: 20,
-              left: offset.left,
-              display:' block'
-            });
-          } else if (showing && doc.scrollTop() <= offset.top+200) {
-            showing = false;
-            backToTop.css({
-              display:'none'
-            });
-          }
-        };
-
-        if (backToTop.length) {
-          backToTop.on('click', function(evt) {
-            $('html,body').animate({scrollTop: 0}, 200);
-            return false;
-          });
-
-          doc.on('scroll', function() {
-            positionBackToTop();
-          });
-        }
-
-        $('.bx-wrapper, .bx-window').width(940);
-      });
-    </script>
+<!--[if lt IE 9]>
+    <script type="text/javascript" src="/javascripts/common-old-ie.js"></script>
+<![endif]-->
+<!--[if gte IE 9]><!-->
+    <script type="text/javascript" src="/javascripts/common-modern.js"></script>
+<!--<![endif]-->
 
     
-    <script>
-      $(function() {
-        var ls = window['localStorage'];
-
-        // Restoring method visibility preference from localStorage
-        function initApiOptions() {
-          var type = this.getAttribute('data-type'),
-            checked = ls ? ls.getItem('api-options-' + type) : undefined;
-
-          if (checked != undefined) {
-            // Bools are stored as strings in localStorage
-            checked = checked == 'true';
-            $(this).attr('checked', checked);
-          }
-        };
-
-        // Type toggling
-        function toggleType() {
-          var type = this.getAttribute('data-type');
-
-          $('.'+type).toggle(this.checked);
-
-          if(ls)
-            ls.setItem('api-options-' + type, this.checked);
-        }
-
-        $('#api-options input').each(initApiOptions);
-        $('#api-options input').each(toggleType);
-        $('#api-options input').on('change', toggleType);
-
-        // Tabs
-        $('.tabs .pane').hide();
-        $('.tabs .pane:first').show();
-        $('.tabs ul li:first').addClass('active');
-
-        function showPane($tabs, href) {
-          var $ul = $tabs.find('> ul'),
-              $tab = $ul.find('a[href='+href+']'),
-              $pane = $(href);
-
-          $ul.find('li').removeClass('active');
-          $tab.parent().addClass('active');
-          $tabs.find('.pane').hide();
-
-          $pane.show();
-        }
-
-        $('.tabs > ul li a').click(function(){
-          var $el = $(this),
-              $tabs = $el.parents('.tabs'),
-              href = $el.attr('href');
-
-          showPane($tabs, href);
-
-          return false;
-        });
-
-        // Auto tab
-        function checkHash() {
-          var hash = window.location.hash;
-          var $el = $(hash);
-          if ($el.length > 0 && !$el.is(':visible')) {
-            showPane($el.parents('.tabs'), '#'+$el.parents('.pane').attr('id'));
-            $("html, body").scrollTop($el.offset().top);
-          } else if ($el.length == 0) {
-            showPane($('.tabs'), '#index');
-          }
-        }
-
-        $(window).on('hashchange', checkHash);
-        checkHash();
-      });
-    $(function(){
-      $("#toc-list .level-1 > a").not('[target=_blank]').click(function() {
-        $(this).parent().find('> ol').slideToggle(function() {
-          positionBackToTop(true);
-        });
-
-        return false;
-      });
-
-      $(function(){
-        $('.anchorable-toc').each(function(){
-          var toc = $(this),
-          id = toc.data('id') || toc.attr('id'),
-          href = "#" + id,
-          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
-
-          toc.prepend(anchor);
-        });
-      });
-
-    });
-    </script>
+    <script type="text/javascript" src="/javascripts/api.js"></script>
   
   </head>
 
@@ -181,31 +44,13 @@
           <li class="active"><a href="/api">api</a></li>
           <li><a href="/community">community</a></li>
           <li><a href="/blog">blog</a></li>
-
+          <li><a href="/builds">builds</a></li>
           <li id="search">
             <form>
               <input type="text" id="st-search-input" class="st-search-input" />
             </form>
             <div id="st-results-container"></div>
-            <script type="text/javascript">
-              var Swiftype = window.Swiftype || {};
-              (function() {
-                Swiftype.key = 'HTNahKf4xmo8GgFbTz4n';
-                Swiftype.inputElement = '#st-search-input';
-                Swiftype.resultContainingElement = '#st-results-container';
-                Swiftype.attachElement = '#st-search-input';
-                Swiftype.renderStyle = "overlay";
-
-                var script = document.createElement('script');
-                script.type = 'text/javascript';
-                script.async = true;
-                script.src = "//swiftype.com/embed.js";
-                var entry = document.getElementsByTagName('script')[0];
-                entry.parentNode.insertBefore(script, entry);
-              }());
-            </script>
           </li>
-
         </ul>
 
         <div id="github">
@@ -220,7 +65,7 @@
         <div id="sidebar">
           
     <ol id='toc-list'>
-      <li class='level-1'><a href="https://github.com/emberjs/ember.js/tree/9d266a8" target="_blank"> Tag: 9d266a8</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/ember.js/tree/v1.0.0" target="_blank"> Tag: v1.0.0</a></li>
 
       
           <li class="level-1 ">
@@ -265,6 +110,14 @@
             
           <li class="level-3 ">
           
+              <a href="/api/modules/ember-handlebars-compiler.html">ember-handlebars-compiler</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
               <a href="/api/modules/ember-metal.html">ember-metal</a>
             
           </li>
@@ -282,6 +135,14 @@
           <li class="level-3 ">
           
               <a href="/api/modules/ember-runtime.html">ember-runtime</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/modules/ember-testing.html">ember-testing</a>
             
           </li>
         
@@ -375,6 +236,14 @@
             
           <li class="level-3 ">
           
+              <a href="/api/classes/Ember.ActionHandler.html">Ember.ActionHandler</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
               <a href="/api/classes/Ember.Application.html">Ember.Application</a>
             
           </li>
@@ -408,14 +277,6 @@
           <li class="level-3 ">
           
               <a href="/api/classes/Ember.Binding.html">Ember.Binding</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.Button.html">Ember.Button</a>
             
           </li>
         
@@ -591,6 +452,22 @@
             
           <li class="level-3 ">
           
+              <a href="/api/classes/Ember.Handlebars.Compiler.html">Ember.Handlebars.Compiler</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Handlebars.JavaScriptCompiler.html">Ember.Handlebars.JavaScriptCompiler</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
               <a href="/api/classes/Ember.Handlebars.helpers.html">Ember.Handlebars.helpers</a>
             
           </li>
@@ -735,7 +612,23 @@
             
           <li class="level-3 ">
           
+              <a href="/api/classes/Ember.PromiseProxyMixin.html">Ember.PromiseProxyMixin</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
               <a href="/api/classes/Ember.RSVP.html">Ember.RSVP</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.ReduceComputedProperty.html">Ember.ReduceComputedProperty</a>
             
           </li>
         
@@ -791,7 +684,39 @@
             
           <li class="level-3 ">
           
+              <a href="/api/classes/Ember.SubArray.html">Ember.SubArray</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
               <a href="/api/classes/Ember.TargetActionSupport.html">Ember.TargetActionSupport</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Test.html">Ember.Test</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Test.Adapter.html">Ember.Test.Adapter</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Test.QUnitAdapter.html">Ember.Test.QUnitAdapter</a>
             
           </li>
         
@@ -816,6 +741,14 @@
           <li class="level-3 ">
           
               <a href="/api/classes/Ember.TextSupport.html">Ember.TextSupport</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.TrackedArray.html">Ember.TrackedArray</a>
             
           </li>
         
@@ -901,7 +834,7 @@
   <h1 class="api-header">
   Ember.ComputedProperty Class
   
-    <a class="edit-page" target="_blank" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-metal/lib/computed.js#L101">packages/ember-metal/lib/computed.js:101</a>
+    <a class="edit-page" target="_blank" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-metal/lib/computed.js#L101">packages/ember-metal/lib/computed.js:101</a>
   
 </h1>
 
@@ -916,7 +849,7 @@
   
 
   
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-metal/lib/computed.js#L101">packages/ember-metal/lib/computed.js:101</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-metal/lib/computed.js#L101">packages/ember-metal/lib/computed.js:101</a></p>
   
 
   
@@ -924,6 +857,134 @@
   
 </div>
 
+  <div class="description">
+    <p>A computed property transforms an objects function into a property.</p>
+
+<p>By default the function backing the computed property will only be called
+once and the result will be cached. You can specify various properties
+that your computed property is dependent on. This will force the cached
+result to be recomputed if the dependencies are modified.</p>
+
+<p>In the following example we declare a computed property (by calling
+<code>.property()</code> on the fullName function) and setup the properties
+dependencies (depending on firstName and lastName). The fullName function
+will be called once (regardless of how many times it is accessed) as long
+as it&#39;s dependencies have not been changed. Once firstName or lastName are updated
+any future calls (or anything bound) to fullName will incorporate the new
+values.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre></td>
+  <td class="code"><pre>Person = Ember.Object.extend({
+  <span class="comment">// these will be supplied by `create`</span>
+  <span class="key">firstName</span>: <span class="predefined-constant">null</span>,
+  <span class="key">lastName</span>: <span class="predefined-constant">null</span>,
+
+  <span class="function">fullName</span>: <span class="keyword">function</span>() {
+    <span class="keyword">var</span> firstName = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>);
+    <span class="keyword">var</span> lastName = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
+
+   <span class="keyword">return</span> firstName + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + lastName;
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
+});
+
+<span class="keyword">var</span> tom = Person.create({
+  <span class="key">firstName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Tom</span><span class="delimiter">&quot;</span></span>,
+  <span class="key">lastName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Dale</span><span class="delimiter">&quot;</span></span>
+});
+
+tom.get(<span class="string"><span class="delimiter">'</span><span class="content">fullName</span><span class="delimiter">'</span></span>) <span class="comment">// &quot;Tom Dale&quot;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>You can also define what Ember should do when setting a computed property.
+If you try to set a computed property, it will be invoked with the key and
+value you want to set it to. You can also accept the previous value as the
+third parameter.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+22
+23
+24
+25
+26
+27
+28
+29
+<strong>30</strong>
+</pre></td>
+  <td class="code"><pre>
+ Person = Ember.Object.extend({
+  <span class="comment">// these will be supplied by `create`</span>
+  <span class="key">firstName</span>: <span class="predefined-constant">null</span>,
+  <span class="key">lastName</span>: <span class="predefined-constant">null</span>,
+
+  <span class="function">fullName</span>: <span class="keyword">function</span>(key, value, oldValue) {
+    <span class="comment">// getter</span>
+    <span class="keyword">if</span> (<span class="local-variable">arguments</span>.length === <span class="integer">1</span>) {
+      <span class="keyword">var</span> firstName = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>);
+      <span class="keyword">var</span> lastName = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
+
+      <span class="keyword">return</span> firstName + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + lastName;
+
+    <span class="comment">// setter</span>
+    } <span class="keyword">else</span> {
+      <span class="keyword">var</span> name = value.split(<span class="string"><span class="delimiter">&quot;</span><span class="content"> </span><span class="delimiter">&quot;</span></span>);
+
+      <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, name[<span class="integer">0</span>]);
+      <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, name[<span class="integer">1</span>]);
+
+      <span class="keyword">return</span> value;
+    }
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
+});
+
+<span class="keyword">var</span> person = Person.create();
+person.set(<span class="string"><span class="delimiter">'</span><span class="content">fullName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Peter Wagenet</span><span class="delimiter">&quot;</span></span>);
+person.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>) <span class="comment">// Peter</span>
+person.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>) <span class="comment">// Wagenet</span>
+</pre></td>
+</tr></table>
+</div></div>
+  </div>
 
 
   <div class="tabs">
@@ -959,6 +1020,14 @@
         <ul class="index-list">
           
             <li class="method ">
+              <a href="#method_cacheable">cacheable</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_get">get</a>
+            </li>
+          
+            <li class="method ">
               <a href="#method_meta">meta</a>
             </li>
           
@@ -968,6 +1037,10 @@
           
             <li class="method ">
               <a href="#method_readOnly">readOnly</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_set">set</a>
             </li>
           
             <li class="method ">
@@ -1001,6 +1074,187 @@
 
       
         
+<div id="method_cacheable" class="method  item-entry">
+  <h3 data-id="method_cacheable" class="name anchorable-toc"><code>cacheable</code></h3>
+  <span class="args">
+    (aFlag)
+  </span>
+
+  <span class="type"><a href="/api/classes/Ember.ComputedProperty.html">Ember.ComputedProperty</a></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-metal/lib/computed.js#L195">packages/ember-metal/lib/computed.js:195</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Properties are cacheable by default. Computed property will automatically
+cache the return value of your function until one of the dependent keys changes.</p>
+
+<p>Call <code>volatile()</code> to set it into non-cached mode. When in this mode
+the computed property will not automatically cache the return value.</p>
+
+<p>However, if a property is properly observable, there is no reason to disable
+caching.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>aFlag</strong> <span class="type">Boolean</span></dt>
+          <dd>optional set to `false` to disable caching</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/Ember.ComputedProperty.html">Ember.ComputedProperty</a></span>
+        <dd> this</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
+<div id="method_get" class="method  item-entry">
+  <h3 data-id="method_get" class="name anchorable-toc"><code>get</code></h3>
+  <span class="args">
+    (keyName)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-metal/lib/computed.js#L341">packages/ember-metal/lib/computed.js:341</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Access the value of the function backing the computed property.
+If this property has already been cached, return the cached result.
+Otherwise, call the function passing the property name as an argument.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+</pre></td>
+  <td class="code"><pre>Person = Ember.Object.extend({
+  <span class="function">fullName</span>: <span class="keyword">function</span>(keyName) {
+    <span class="comment">// the keyName parameter is 'fullName' in this case.</span>
+
+    <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
+});
+
+
+<span class="keyword">var</span> tom = Person.create({
+  <span class="key">firstName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Tom</span><span class="delimiter">&quot;</span></span>,
+  <span class="key">lastName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Dale</span><span class="delimiter">&quot;</span></span>
+});
+
+tom.get(<span class="string"><span class="delimiter">'</span><span class="content">fullName</span><span class="delimiter">'</span></span>) <span class="comment">// &quot;Tom Dale&quot;</span>
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>keyName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>The key being accessed.</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Object</span>
+        <dd> The return value of the function backing the CP.</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
 <div id="method_meta" class="method  item-entry">
   <h3 data-id="method_meta" class="name anchorable-toc"><code>meta</code></h3>
   <span class="args">
@@ -1023,7 +1277,7 @@
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-metal/lib/computed.js#L212">packages/ember-metal/lib/computed.js:212</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-metal/lib/computed.js#L287">packages/ember-metal/lib/computed.js:287</a>
 
     
 
@@ -1106,7 +1360,7 @@ via the <code>metaForProperty()</code> function.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-metal/lib/computed.js#L183">packages/ember-metal/lib/computed.js:183</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-metal/lib/computed.js#L258">packages/ember-metal/lib/computed.js:258</a>
 
     
 
@@ -1193,7 +1447,7 @@ arguments containing key paths that this computed property depends on.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-metal/lib/computed.js#L160">packages/ember-metal/lib/computed.js:160</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-metal/lib/computed.js#L235">packages/ember-metal/lib/computed.js:235</a>
 
     
 
@@ -1247,6 +1501,87 @@ MyApp.person.set(<span class="string"><span class="delimiter">'</span><span clas
 
       
         
+<div id="method_set" class="method  item-entry">
+  <h3 data-id="method_set" class="name anchorable-toc"><code>set</code></h3>
+  <span class="args">
+    (keyName, newValue, oldValue)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-metal/lib/computed.js#L384">packages/ember-metal/lib/computed.js:384</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Set the value of a computed property. If the function that backs your
+computed property does not accept arguments then the default action for
+setting would be to define the property on the current object, and set
+the value of the property to the value being set.</p>
+
+<p>Generally speaking if you intend for your computed property to be set
+your backing function should accept either two or three arguments.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>keyName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>The key being accessed.</dd>
+        
+          <dt><strong>newValue</strong> <span class="type">Object</span></dt>
+          <dd>The new value being assigned.</dd>
+        
+          <dt><strong>oldValue</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>The old value being replaced.</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Object</span>
+        <dd> The return value of the function backing the CP.</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
 <div id="method_volatile" class="method  item-entry">
   <h3 data-id="method_volatile" class="name anchorable-toc"><code>volatile</code></h3>
 
@@ -1267,7 +1602,7 @@ MyApp.person.set(<span class="string"><span class="delimiter">'</span><span clas
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-metal/lib/computed.js#L140">packages/ember-metal/lib/computed.js:140</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-metal/lib/computed.js#L215">packages/ember-metal/lib/computed.js:215</a>
 
     
 

@@ -22,152 +22,15 @@
       })();
     </script>
 
-    <script type="text/javascript" src="/javascripts/jquery-2.0.2.js"></script>
-    <script type="text/javascript" src="/javascripts/jquery.bxSlider.min.js"></script>
-
-    <script type="text/javascript">
-      $(function() {
-        var backToTop = $('#back-to-top');
-        var doc = $(document);
-        var offset = backToTop.offset();
-        var marginTop = 90;
-        var showing = false;
-
-        positionBackToTop = function(reset) {
-          if (reset) {
-            backToTop.css({
-              top: '',
-              position: ''
-            });
-            offset = backToTop.offset();
-          }
-
-          if (!showing && doc.scrollTop() > offset.top+200) {
-            showing = true;
-            backToTop.css({
-              position: 'fixed',
-              top: 20,
-              left: offset.left,
-              display:' block'
-            });
-          } else if (showing && doc.scrollTop() <= offset.top+200) {
-            showing = false;
-            backToTop.css({
-              display:'none'
-            });
-          }
-        };
-
-        if (backToTop.length) {
-          backToTop.on('click', function(evt) {
-            $('html,body').animate({scrollTop: 0}, 200);
-            return false;
-          });
-
-          doc.on('scroll', function() {
-            positionBackToTop();
-          });
-        }
-
-        $('.bx-wrapper, .bx-window').width(940);
-      });
-    </script>
+<!--[if lt IE 9]>
+    <script type="text/javascript" src="/javascripts/common-old-ie.js"></script>
+<![endif]-->
+<!--[if gte IE 9]><!-->
+    <script type="text/javascript" src="/javascripts/common-modern.js"></script>
+<!--<![endif]-->
 
     
-    <script>
-      $(function() {
-        var ls = window['localStorage'];
-
-        // Restoring method visibility preference from localStorage
-        function initApiOptions() {
-          var type = this.getAttribute('data-type'),
-            checked = ls ? ls.getItem('api-options-' + type) : undefined;
-
-          if (checked != undefined) {
-            // Bools are stored as strings in localStorage
-            checked = checked == 'true';
-            $(this).attr('checked', checked);
-          }
-        };
-
-        // Type toggling
-        function toggleType() {
-          var type = this.getAttribute('data-type');
-
-          $('.'+type).toggle(this.checked);
-
-          if(ls)
-            ls.setItem('api-options-' + type, this.checked);
-        }
-
-        $('#api-options input').each(initApiOptions);
-        $('#api-options input').each(toggleType);
-        $('#api-options input').on('change', toggleType);
-
-        // Tabs
-        $('.tabs .pane').hide();
-        $('.tabs .pane:first').show();
-        $('.tabs ul li:first').addClass('active');
-
-        function showPane($tabs, href) {
-          var $ul = $tabs.find('> ul'),
-              $tab = $ul.find('a[href='+href+']'),
-              $pane = $(href);
-
-          $ul.find('li').removeClass('active');
-          $tab.parent().addClass('active');
-          $tabs.find('.pane').hide();
-
-          $pane.show();
-        }
-
-        $('.tabs > ul li a').click(function(){
-          var $el = $(this),
-              $tabs = $el.parents('.tabs'),
-              href = $el.attr('href');
-
-          showPane($tabs, href);
-
-          return false;
-        });
-
-        // Auto tab
-        function checkHash() {
-          var hash = window.location.hash;
-          var $el = $(hash);
-          if ($el.length > 0 && !$el.is(':visible')) {
-            showPane($el.parents('.tabs'), '#'+$el.parents('.pane').attr('id'));
-            $("html, body").scrollTop($el.offset().top);
-          } else if ($el.length == 0) {
-            showPane($('.tabs'), '#index');
-          }
-        }
-
-        $(window).on('hashchange', checkHash);
-        checkHash();
-      });
-    $(function(){
-      $("#toc-list .level-1 > a").not('[target=_blank]').click(function() {
-        $(this).parent().find('> ol').slideToggle(function() {
-          positionBackToTop(true);
-        });
-
-        return false;
-      });
-
-      $(function(){
-        $('.anchorable-toc').each(function(){
-          var toc = $(this),
-          id = toc.data('id') || toc.attr('id'),
-          href = "#" + id,
-          anchor = '<a class="toc-anchor" href="'+href+'"></a>';
-
-          toc.prepend(anchor);
-        });
-      });
-
-    });
-    </script>
+    <script type="text/javascript" src="/javascripts/api.js"></script>
   
   </head>
 
@@ -181,31 +44,13 @@
           <li class="active"><a href="/api">api</a></li>
           <li><a href="/community">community</a></li>
           <li><a href="/blog">blog</a></li>
-
+          <li><a href="/builds">builds</a></li>
           <li id="search">
             <form>
               <input type="text" id="st-search-input" class="st-search-input" />
             </form>
             <div id="st-results-container"></div>
-            <script type="text/javascript">
-              var Swiftype = window.Swiftype || {};
-              (function() {
-                Swiftype.key = 'HTNahKf4xmo8GgFbTz4n';
-                Swiftype.inputElement = '#st-search-input';
-                Swiftype.resultContainingElement = '#st-results-container';
-                Swiftype.attachElement = '#st-search-input';
-                Swiftype.renderStyle = "overlay";
-
-                var script = document.createElement('script');
-                script.type = 'text/javascript';
-                script.async = true;
-                script.src = "//swiftype.com/embed.js";
-                var entry = document.getElementsByTagName('script')[0];
-                entry.parentNode.insertBefore(script, entry);
-              }());
-            </script>
           </li>
-
         </ul>
 
         <div id="github">
@@ -220,7 +65,7 @@
         <div id="sidebar">
           
     <ol id='toc-list'>
-      <li class='level-1'><a href="https://github.com/emberjs/ember.js/tree/9d266a8" target="_blank"> Tag: 9d266a8</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/ember.js/tree/v1.0.0" target="_blank"> Tag: v1.0.0</a></li>
 
       
           <li class="level-1 ">
@@ -265,6 +110,14 @@
             
           <li class="level-3 ">
           
+              <a href="/api/modules/ember-handlebars-compiler.html">ember-handlebars-compiler</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
               <a href="/api/modules/ember-metal.html">ember-metal</a>
             
           </li>
@@ -282,6 +135,14 @@
           <li class="level-3 ">
           
               <a href="/api/modules/ember-runtime.html">ember-runtime</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/modules/ember-testing.html">ember-testing</a>
             
           </li>
         
@@ -375,6 +236,14 @@
             
           <li class="level-3 ">
           
+              <a href="/api/classes/Ember.ActionHandler.html">Ember.ActionHandler</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
               <a href="/api/classes/Ember.Application.html">Ember.Application</a>
             
           </li>
@@ -408,14 +277,6 @@
           <li class="level-3 ">
           
               <a href="/api/classes/Ember.Binding.html">Ember.Binding</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.Button.html">Ember.Button</a>
             
           </li>
         
@@ -589,6 +450,22 @@
         
           
             
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Handlebars.Compiler.html">Ember.Handlebars.Compiler</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Handlebars.JavaScriptCompiler.html">Ember.Handlebars.JavaScriptCompiler</a>
+            
+          </li>
+        
+          
+            
           <li class="level-3 sub-selected">
           
               <a href="/api/classes/Ember.Handlebars.helpers.html">Ember.Handlebars.helpers</a>
@@ -735,7 +612,23 @@
             
           <li class="level-3 ">
           
+              <a href="/api/classes/Ember.PromiseProxyMixin.html">Ember.PromiseProxyMixin</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
               <a href="/api/classes/Ember.RSVP.html">Ember.RSVP</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.ReduceComputedProperty.html">Ember.ReduceComputedProperty</a>
             
           </li>
         
@@ -791,7 +684,39 @@
             
           <li class="level-3 ">
           
+              <a href="/api/classes/Ember.SubArray.html">Ember.SubArray</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
               <a href="/api/classes/Ember.TargetActionSupport.html">Ember.TargetActionSupport</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Test.html">Ember.Test</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Test.Adapter.html">Ember.Test.Adapter</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Test.QUnitAdapter.html">Ember.Test.QUnitAdapter</a>
             
           </li>
         
@@ -816,6 +741,14 @@
           <li class="level-3 ">
           
               <a href="/api/classes/Ember.TextSupport.html">Ember.TextSupport</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.TrackedArray.html">Ember.TrackedArray</a>
             
           </li>
         
@@ -901,6 +834,8 @@
   <h1 class="api-header">
   Ember.Handlebars.helpers Class
   
+    <a class="edit-page" target="_blank" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars-compiler/lib/main.js#L118">packages/ember-handlebars-compiler/lib/main.js:118</a>
+  
 </h1>
 
 <hr>
@@ -912,9 +847,11 @@
   
 
   
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars-compiler/lib/main.js#L118">packages/ember-handlebars-compiler/lib/main.js:118</a></p>
+  
 
   
-    <p>Module: <a href="/api/modules/ember-handlebars.html">ember-handlebars</a></p>
+    <p>Module: <a href="/api/modules/ember-handlebars-compiler.html">ember-handlebars-compiler</a></p>
   
 </div>
 
@@ -953,6 +890,14 @@
         <ul class="index-list">
           
             <li class="method private">
+              <a href="#method__finishDisconnections">_finishDisconnections</a>
+            </li>
+          
+            <li class="method private">
+              <a href="#method__hasEquivalentView">_hasEquivalentView</a>
+            </li>
+          
+            <li class="method private">
               <a href="#method__triageMustache">_triageMustache</a>
             </li>
           
@@ -965,6 +910,10 @@
             </li>
           
             <li class="method ">
+              <a href="#method_bind-attr">bind-attr</a>
+            </li>
+          
+            <li class="method deprecated">
               <a href="#method_bindAttr">bindAttr</a>
             </li>
           
@@ -977,11 +926,19 @@
             </li>
           
             <li class="method ">
+              <a href="#method_connectOutlet">connectOutlet</a>
+            </li>
+          
+            <li class="method ">
               <a href="#method_control">control</a>
             </li>
           
             <li class="method ">
               <a href="#method_debugger">debugger</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_disconnectOutlet">disconnectOutlet</a>
             </li>
           
             <li class="method ">
@@ -997,10 +954,18 @@
             </li>
           
             <li class="method ">
+              <a href="#method_init">init</a>
+            </li>
+          
+            <li class="method ">
               <a href="#method_input">input</a>
             </li>
           
             <li class="method ">
+              <a href="#method_link-to">link-to</a>
+            </li>
+          
+            <li class="method deprecated">
               <a href="#method_linkTo">linkTo</a>
             </li>
           
@@ -1079,6 +1044,116 @@
 
       
         
+<div id="method__finishDisconnections" class="method private item-entry">
+  <h3 data-id="method__finishDisconnections" class="name anchorable-toc"><code>_finishDisconnections</code></h3>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/ext/view.js#L127">packages/ember-routing/lib/ext/view.js:127</a>
+
+    
+
+    
+  </div>
+
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+
+  
+</div>
+
+      
+        
+<div id="method__hasEquivalentView" class="method private item-entry">
+  <h3 data-id="method__hasEquivalentView" class="name anchorable-toc"><code>_hasEquivalentView</code></h3>
+  <span class="args">
+    (outletName, view)
+  </span>
+
+  <span class="type">Boolean</span>
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/ext/view.js#L69">packages/ember-routing/lib/ext/view.js:69</a>
+
+    
+
+    
+  </div>
+
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>outletName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>The name of the outlet we are checking</dd>
+        
+          <dt><strong>view</strong> <span class="type">Object</span></dt>
+          <dd>An Ember.View</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Boolean</span>
+        <dd> </dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
 <div id="method__triageMustache" class="method private item-entry">
   <h3 data-id="method__triageMustache" class="name anchorable-toc"><code>_triageMustache</code></h3>
   <span class="args">
@@ -1103,7 +1178,7 @@
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/helpers/binding.js#L139">packages/ember-handlebars/lib/helpers/binding.js:139</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/helpers/binding.js#L139">packages/ember-handlebars/lib/helpers/binding.js:139</a>
 
     
 
@@ -1169,7 +1244,7 @@
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-routing/lib/helpers/action.js#L93">packages/ember-routing/lib/helpers/action.js:93</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/helpers/action.js#L93">packages/ember-routing/lib/helpers/action.js:93</a>
 
     
 
@@ -1193,14 +1268,10 @@ the appropriate target.</p>
   <td class="line-numbers"><pre>1
 2
 3
-4
-5
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
-<span class="inline">  &lt;div </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">anActionName</span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span>
-    click me
-  <span class="tag">&lt;/div&gt;</span>
-<span class="tag">&lt;/script&gt;</span>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">'</span><span class="attribute-name">anActionName</span><span class="error">'</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+  click me
+<span class="tag">&lt;/div&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -1277,7 +1348,7 @@ handlers.</p>
 </tr></table>
 </div></div>
 <p>If you need the default handler to trigger you should either register your
-own event handler, or use event methods on your view class. See <code>Ember.View</code>
+own event handler, or use event methods on your view class. See <a href="/api/classes/Ember.View.html">Ember.View</a>
 &#39;Responding to Browser Events&#39; for more information.</p>
 
 <h3>Specifying DOM event type</h3>
@@ -1292,7 +1363,7 @@ supply an <code>on</code> option to the helper to specify a different DOM event 
 5
 </pre></td>
   <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
-<span class="inline">  &lt;div </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">anActionName</span> <span class="attribute-name">on</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">doubleClick</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span>
+<span class="inline">  &lt;div </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">'</span><span class="attribute-name">anActionName</span><span class="error">'</span> <span class="attribute-name">on</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">doubleClick</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span>
     click me
   <span class="tag">&lt;/div&gt;</span>
 <span class="tag">&lt;/script&gt;</span>
@@ -1320,7 +1391,7 @@ keys. You can supply an <code>allowedKeys</code> option to specify which keys sh
 5
 </pre></td>
   <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
-<span class="inline">  &lt;div </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">anActionName</span> <span class="attribute-name">allowedKeys</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">alt</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span>
+<span class="inline">  &lt;div </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">'</span><span class="attribute-name">anActionName</span><span class="error">'</span> <span class="attribute-name">allowedKeys</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">alt</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span>
     click me
   <span class="tag">&lt;/div&gt;</span>
 <span class="tag">&lt;/script&gt;</span>
@@ -1348,7 +1419,7 @@ to an object, accessible in the current context:</p>
 5
 </pre></td>
   <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
-<span class="inline">  &lt;div </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">anActionName</span> <span class="attribute-name">target</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">MyApplication.someObject</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span>
+<span class="inline">  &lt;div </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">'</span><span class="attribute-name">anActionName</span><span class="error">'</span> <span class="attribute-name">target</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">MyApplication.someObject</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span>
     click me
   <span class="tag">&lt;/div&gt;</span>
 <span class="tag">&lt;/script&gt;</span>
@@ -1368,7 +1439,7 @@ action name an error will be thrown.</p>
 5
 </pre></td>
   <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
-<span class="inline">  &lt;div </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">aMethodNameThatIsMissing</span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span>
+<span class="inline">  &lt;div </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">'</span><span class="attribute-name">aMethodNameThatIsMissing</span><span class="error">'</span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span>
     click me
   <span class="tag">&lt;/div&gt;</span>
 <span class="tag">&lt;/script&gt;</span>
@@ -1416,7 +1487,7 @@ implementing the action.</p>
 </pre></td>
   <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
 <span class="inline">  </span><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">person</span> <span class="attribute-name">in</span> <span class="attribute-name">people</span><span class="inline-delimiter">}}</span></span>
-    <span class="tag">&lt;div</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">edit</span> <span class="attribute-name">person</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;div</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">'</span><span class="attribute-name">edit</span><span class="error">'</span> <span class="attribute-name">person</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
       click me
     <span class="tag">&lt;/div&gt;</span>
   <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
@@ -1484,7 +1555,7 @@ controller with the current person as a parameter.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/helpers/binding.js#L165">packages/ember-handlebars/lib/helpers/binding.js:165</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/helpers/binding.js#L165">packages/ember-handlebars/lib/helpers/binding.js:165</a>
 
     
 
@@ -1528,8 +1599,8 @@ controller with the current person as a parameter.</p>
 
       
         
-<div id="method_bindAttr" class="method  item-entry">
-  <h3 data-id="method_bindAttr" class="name anchorable-toc"><code>bindAttr</code></h3>
+<div id="method_bind-attr" class="method  item-entry">
+  <h3 data-id="method_bind-attr" class="name anchorable-toc"><code>bind-attr</code></h3>
   <span class="args">
     (options)
   </span>
@@ -1551,7 +1622,7 @@ controller with the current person as a parameter.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/helpers/binding.js#L314">packages/ember-handlebars/lib/helpers/binding.js:314</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/helpers/binding.js#L314">packages/ember-handlebars/lib/helpers/binding.js:314</a>
 
     
 
@@ -1560,12 +1631,12 @@ controller with the current person as a parameter.</p>
 
   
     <div class="description">
-      <p><code>bindAttr</code> allows you to create a binding between DOM element attributes and
+      <p><code>bind-attr</code> allows you to create a binding between DOM element attributes and
 Ember objects. For example:</p>
 <div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;img</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bindAttr</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">imageUrl</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">alt</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">imageTitle</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+  <td class="code"><pre><span class="tag">&lt;img</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bind-attr</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">imageUrl</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">alt</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">imageTitle</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -1595,19 +1666,19 @@ attribute with the value of the property referenced with <code>&quot;imageTitle&
 </pre></td>
 </tr></table>
 </div></div>
-<p><code>bindAttr</code> cannot redeclare existing DOM element attributes. The use of <code>src</code>
-in the following <code>bindAttr</code> example will be ignored and the hard coded value
+<p><code>bind-attr</code> cannot redeclare existing DOM element attributes. The use of <code>src</code>
+in the following <code>bind-attr</code> example will be ignored and the hard coded value
 of <code>src=&quot;/failwhale.gif&quot;</code> will take precedence:</p>
 <div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;img</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/failwhale.gif</span><span class="delimiter">&quot;</span></span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bindAttr</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">imageUrl</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">alt</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">imageTitle</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+  <td class="code"><pre><span class="tag">&lt;img</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/failwhale.gif</span><span class="delimiter">&quot;</span></span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bind-attr</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">imageUrl</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">alt</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">imageTitle</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
-<h3><code>bindAttr</code> and the <code>class</code> attribute</h3>
+<h3><code>bind-attr</code> and the <code>class</code> attribute</h3>
 
-<p><code>bindAttr</code> supports a special syntax for handling a number of cases unique
+<p><code>bind-attr</code> supports a special syntax for handling a number of cases unique
 to the <code>class</code> DOM element attribute. The <code>class</code> attribute combines
 multiple discreet values into a single attribute as a space-delimited
 list of strings. Each string can be:</p>
@@ -1618,7 +1689,7 @@ list of strings. Each string can be:</p>
 <li>a hard-coded value</li>
 </ul>
 
-<p>A string return value works identically to other uses of <code>bindAttr</code>. The
+<p>A string return value works identically to other uses of <code>bind-attr</code>. The
 return value of the property will become the value of the attribute. For
 example, the following view and template:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -1638,7 +1709,7 @@ example, the following view and template:</p>
 </div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;img</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bindAttr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">view.someProperty</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+  <td class="code"><pre><span class="tag">&lt;img</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bind-attr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">view.someProperty</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -1668,7 +1739,7 @@ returns <code>true</code> and remove the class name if the property returns <cod
 </div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;img</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bindAttr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">view.someBool:class-name-if-true</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+  <td class="code"><pre><span class="tag">&lt;img</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bind-attr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">view.someBool:class-name-if-true</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -1686,7 +1757,7 @@ value changes:</p>
 <div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;img</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bindAttr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">view.someBool:class-name-if-true:class-name-if-false</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+  <td class="code"><pre><span class="tag">&lt;img</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bind-attr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">view.someBool:class-name-if-true:class-name-if-false</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -1695,7 +1766,7 @@ class name: <code>:class-name-to-always-apply</code>.</p>
 <div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;img</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bindAttr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">:class-name-to-always-apply</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+  <td class="code"><pre><span class="tag">&lt;img</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bind-attr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">:class-name-to-always-apply</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -1712,7 +1783,7 @@ hard-coded value – can be combined in a single declaration:</p>
 <div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;img</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bindAttr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">:class-name-to-always-apply view.someBool:class-name-if-true view.someProperty</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+  <td class="code"><pre><span class="tag">&lt;img</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bind-attr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">:class-name-to-always-apply view.someBool:class-name-if-true view.someProperty</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -1730,6 +1801,80 @@ hard-coded value – can be combined in a single declaration:</p>
       <h3>Parameters:</h3>
 
       <dl>
+        
+          <dt><strong>options</strong> <span class="type">Hash</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/String.html">String</a></span>
+        <dd> HTML string</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
+<div id="method_bindAttr" class="method deprecated item-entry">
+  <h3 data-id="method_bindAttr" class="name anchorable-toc"><code>bindAttr</code></h3>
+  <span class="args">
+    (context, options)
+  </span>
+
+  <span class="type"><a href="/api/classes/String.html">String</a></span>
+
+
+  
+  <span class="flag deprecated">deprecated</span>
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/helpers/binding.js#L523">packages/ember-handlebars/lib/helpers/binding.js:523</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>See <code>bind-attr</code></p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>context</strong> <span class="type"><a href="/api/classes/Function.html">Function</a></span></dt>
+          <dd></dd>
         
           <dt><strong>options</strong> <span class="type">Hash</span></dt>
           <dd></dd>
@@ -1775,7 +1920,7 @@ hard-coded value – can be combined in a single declaration:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/helpers/binding.js#L201">packages/ember-handlebars/lib/helpers/binding.js:201</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/helpers/binding.js#L201">packages/ember-handlebars/lib/helpers/binding.js:201</a>
 
     
 
@@ -1844,7 +1989,7 @@ hard-coded value – can be combined in a single declaration:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/helpers/collection.js#L14">packages/ember-handlebars/lib/helpers/collection.js:14</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/helpers/collection.js#L14">packages/ember-handlebars/lib/helpers/collection.js:14</a>
 
     
 
@@ -1854,8 +1999,8 @@ hard-coded value – can be combined in a single declaration:</p>
   
     <div class="description">
       <p><code>{{collection}}</code> is a <code>Ember.Handlebars</code> helper for adding instances of
-<code>Ember.CollectionView</code> to a template. See <code>Ember.CollectionView</code> for
-additional information on how a <code>CollectionView</code> functions.</p>
+<code>Ember.CollectionView</code> to a template. See <a href="/api/classes/Ember.CollectionView.html">Ember.CollectionView</a>
+ for additional information on how a <code>CollectionView</code> functions.</p>
 
 <p><code>{{collection}}</code>&#39;s primary use is as a block helper with a <code>contentBinding</code>
 option pointing towards an <code>Ember.Array</code>-compatible object. An <code>Ember.View</code>
@@ -2057,6 +2202,106 @@ item (note the camelcasing):</p>
 
       
         
+<div id="method_connectOutlet" class="method  item-entry">
+  <h3 data-id="method_connectOutlet" class="name anchorable-toc"><code>connectOutlet</code></h3>
+  <span class="args">
+    (outletName, view)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/ext/view.js#L20">packages/ember-routing/lib/ext/view.js:20</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Manually fill any of a view&#39;s <code>{{outlet}}</code> areas with the
+supplied view.</p>
+
+<p>Example</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> MyView = Ember.View.extend({
+  <span class="key">template</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">'</span><span class="content">Child view: {{outlet &quot;main&quot;}} </span><span class="delimiter">'</span></span>)
+});
+<span class="keyword">var</span> myView = MyView.create();
+myView.appendTo(<span class="string"><span class="delimiter">'</span><span class="content">body</span><span class="delimiter">'</span></span>);
+<span class="comment">// The html for myView now looks like:</span>
+<span class="comment">// &lt;div id=&quot;ember228&quot; class=&quot;ember-view&quot;&gt;Child view: &lt;/div&gt;</span>
+
+myView.connectOutlet(<span class="string"><span class="delimiter">'</span><span class="content">main</span><span class="delimiter">'</span></span>, Ember.View.extend({
+  <span class="key">template</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">'</span><span class="content">&lt;h1&gt;Foo&lt;/h1&gt; </span><span class="delimiter">'</span></span>)
+}));
+<span class="comment">// The html for myView now looks like:</span>
+<span class="comment">// &lt;div id=&quot;ember228&quot; class=&quot;ember-view&quot;&gt;Child view:</span>
+<span class="comment">//   &lt;div id=&quot;ember234&quot; class=&quot;ember-view&quot;&gt;&lt;h1&gt;Foo&lt;/h1&gt; &lt;/div&gt;</span>
+<span class="comment">// &lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>outletName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>A unique name for the outlet</dd>
+        
+          <dt><strong>view</strong> <span class="type">Object</span></dt>
+          <dd>An Ember.View</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
 <div id="method_control" class="method  item-entry">
   <h3 data-id="method_control" class="name anchorable-toc"><code>control</code></h3>
   <span class="args">
@@ -2080,7 +2325,7 @@ item (note the camelcasing):</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-routing/lib/helpers/control.js#L9">packages/ember-routing/lib/helpers/control.js:9</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/helpers/control.js#L9">packages/ember-routing/lib/helpers/control.js:9</a>
 
     
 
@@ -2089,9 +2334,41 @@ item (note the camelcasing):</p>
 
   
     <div class="description">
-      <p>The control helper is currently under development and is considered experimental.
-To enable it, set <code>ENV.EXPERIMENTAL_CONTROL_HELPER = true</code> before requiring Ember.</p>
+      <p><code>{{control}}</code> works like render, except it uses a new controller instance for every call, instead of reusing the singleton controller.</p>
 
+<p>The control helper is currently under development and is considered experimental.
+ To enable it, set <code>ENV.EXPERIMENTAL_CONTROL_HELPER = true</code> before requiring Ember.</p>
+
+<p>For example if you had this <code>author</code> template.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">author</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  Written by <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">firstName</span><span class="inline-delimiter">}}</span></span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">lastName</span><span class="inline-delimiter">}}</span></span>.
+  Total Posts: <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">postCount</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>You could render it inside the <code>post</code> template using the <code>control</code> helper.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;h1&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">title</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;div&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">body</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/div&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">control</span> <span class="error">&quot;</span><span class="attribute-name">author</span><span class="error">&quot;</span> <span class="attribute-name">author</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
     </div>
   
 
@@ -2155,7 +2432,7 @@ To enable it, set <code>ENV.EXPERIMENTAL_CONTROL_HELPER = true</code> before req
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/helpers/debug.js#L33">packages/ember-handlebars/lib/helpers/debug.js:33</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/helpers/debug.js#L33">packages/ember-handlebars/lib/helpers/debug.js:33</a>
 
     
 
@@ -2199,6 +2476,110 @@ To enable it, set <code>ENV.EXPERIMENTAL_CONTROL_HELPER = true</code> before req
 
       
         
+<div id="method_disconnectOutlet" class="method  item-entry">
+  <h3 data-id="method_disconnectOutlet" class="name anchorable-toc"><code>disconnectOutlet</code></h3>
+  <span class="args">
+    (outletName)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/ext/view.js#L89">packages/ember-routing/lib/ext/view.js:89</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Removes an outlet from the view.</p>
+
+<p>Example</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> MyView = Ember.View.extend({
+  <span class="key">template</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">'</span><span class="content">Child view: {{outlet &quot;main&quot;}} </span><span class="delimiter">'</span></span>)
+});
+<span class="keyword">var</span> myView = MyView.create();
+myView.appendTo(<span class="string"><span class="delimiter">'</span><span class="content">body</span><span class="delimiter">'</span></span>);
+<span class="comment">// myView's html:</span>
+<span class="comment">// &lt;div id=&quot;ember228&quot; class=&quot;ember-view&quot;&gt;Child view: &lt;/div&gt;</span>
+
+myView.connectOutlet(<span class="string"><span class="delimiter">'</span><span class="content">main</span><span class="delimiter">'</span></span>, Ember.View.extend({
+  <span class="key">template</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">'</span><span class="content">&lt;h1&gt;Foo&lt;/h1&gt; </span><span class="delimiter">'</span></span>)
+}));
+<span class="comment">// myView's html:</span>
+<span class="comment">// &lt;div id=&quot;ember228&quot; class=&quot;ember-view&quot;&gt;Child view:</span>
+<span class="comment">//   &lt;div id=&quot;ember234&quot; class=&quot;ember-view&quot;&gt;&lt;h1&gt;Foo&lt;/h1&gt; &lt;/div&gt;</span>
+<span class="comment">// &lt;/div&gt;</span>
+
+myView.disconnectOutlet(<span class="string"><span class="delimiter">'</span><span class="content">main</span><span class="delimiter">'</span></span>);
+<span class="comment">// myView's html:</span>
+<span class="comment">// &lt;div id=&quot;ember228&quot; class=&quot;ember-view&quot;&gt;Child view: &lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>outletName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>The name of the outlet to be removed</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
 <div id="method_each" class="method  item-entry">
   <h3 data-id="method_each" class="name anchorable-toc"><code>each</code></h3>
   <span class="args">
@@ -2221,7 +2602,7 @@ To enable it, set <code>ENV.EXPERIMENTAL_CONTROL_HELPER = true</code> before req
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/helpers/each.js#L191">packages/ember-handlebars/lib/helpers/each.js:191</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/helpers/each.js#L206">packages/ember-handlebars/lib/helpers/each.js:206</a>
 
     
 
@@ -2410,6 +2791,68 @@ or synthesis for display:</p>
 <p>Each itemController will receive a reference to the current controller as
 a <code>parentController</code> property.</p>
 
+<h3>(Experimental) Grouped Each</h3>
+
+<p>When used in conjunction with the experimental <a href="https://github.com/emberjs/group-helper">group helper</a>,
+you can inform Handlebars to re-render an entire group of items instead of
+re-rendering them one at a time (in the event that they are changed en masse
+or an item is added/removed).</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">group</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">people</span><span class="inline-delimiter">}}</span></span>
+    <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">firstName</span><span class="inline-delimiter">}}</span></span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">lastName</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">group</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>This can be faster than the normal way that Handlebars re-renders items
+in some cases.</p>
+
+<p>If for some reason you have a group with more than one <code>#each</code>, you can make
+one of the collections be updated in normal (non-grouped) fashion by setting
+the option <code>groupedRows=true</code> (counter-intuitive, I know).</p>
+
+<p>For example,</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">dealershipName</span><span class="inline-delimiter">}}</span></span>
+
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">group</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">dealers</span><span class="inline-delimiter">}}</span></span>
+    <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">firstName</span><span class="inline-delimiter">}}</span></span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">lastName</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+
+  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">car</span> <span class="attribute-name">in</span> <span class="attribute-name">cars</span> <span class="attribute-name">groupedRows</span>=<span class="attribute-value">true</span><span class="inline-delimiter">}}</span></span>
+    <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">car.make</span><span class="inline-delimiter">}}</span></span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">car.model</span><span class="inline-delimiter">}}</span></span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">car.color</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">group</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Any change to <code>dealershipName</code> or the <code>dealers</code> collection will cause the
+entire group to be re-rendered. However, changes to the <code>cars</code> collection
+will be re-rendered individually (as normal).</p>
+
+<p>Note that <code>group</code> behavior is also disabled by specifying an <code>itemViewClass</code>.</p>
+
     </div>
   
 
@@ -2466,7 +2909,7 @@ a <code>parentController</code> property.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/ext.js#L116">packages/ember-handlebars/lib/ext.js:116</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/ext.js#L116">packages/ember-handlebars/lib/ext.js:116</a>
 
     
 
@@ -2525,7 +2968,7 @@ a <code>parentController</code> property.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/helpers/binding.js#L279">packages/ember-handlebars/lib/helpers/binding.js:279</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/helpers/binding.js#L279">packages/ember-handlebars/lib/helpers/binding.js:279</a>
 
     
 
@@ -2534,7 +2977,7 @@ a <code>parentController</code> property.</p>
 
   
     <div class="description">
-      <p>See <code>boundIf</code></p>
+      <p>See <a href="/api/classes/Ember.Handlebars.helpers.html#method_boundIf">boundIf</a></p>
 
     </div>
   
@@ -2574,6 +3017,52 @@ a <code>parentController</code> property.</p>
 
       
         
+<div id="method_init" class="method  item-entry">
+  <h3 data-id="method_init" class="name anchorable-toc"><code>init</code></h3>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/ext/view.js#L10">packages/ember-routing/lib/ext/view.js:10</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Sets the private <code>_outlets</code> object on the view.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+
+  
+</div>
+
+      
+        
 <div id="method_input" class="method  item-entry">
   <h3 data-id="method_input" class="name anchorable-toc"><code>input</code></h3>
   <span class="args">
@@ -2596,7 +3085,7 @@ a <code>parentController</code> property.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/controls.js#L16">packages/ember-handlebars/lib/controls.js:16</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/controls.js#L21">packages/ember-handlebars/lib/controls.js:21</a>
 
     
 
@@ -2605,9 +3094,103 @@ a <code>parentController</code> property.</p>
 
   
     <div class="description">
-      <p><code>{{input}}</code> inserts a new instance of either Ember.TextField or
-Ember.Checkbox, depending on the <code>type</code> option passed in. If no <code>type</code>
-is supplied it defaults to Ember.TextField.</p>
+      <p>The <code>{{input}}</code> helper inserts an HTML <code>&lt;input&gt;</code> tag into the template,
+  with a <code>type</code> value of either <code>text</code> or <code>checkbox</code>. If no <code>type</code> is provided,
+  <code>text</code> will be the default value applied. The attributes of <code>{{input}}</code>
+  match those of the native HTML tag as closely as possible for these two types.</p>
+
+<h2>Use as text field</h2>
+
+<p>An <code>{{input}}</code> with no <code>type</code> or a <code>type</code> of <code>text</code> will render an HTML text input.
+  The following HTML attributes can be set via the helper:
+  * <code>value</code>
+    * <code>size</code>
+    * <code>name</code>
+    * <code>pattern</code>
+    * <code>placeholder</code>
+    * <code>disabled</code>
+    * <code>maxlength</code>
+    * <code>tabindex</code>
+When set to a quoted string, these values will be directly applied to the HTML
+  element. When left unquoted, these values will be bound to a property on the
+  template&#39;s current rendering context (most typically a controller instance).
+Unbound:
+<code>handlebars
+  {{input value=&quot;http://www.facebook.com&quot;}}
+</code>
+<code>html
+  &lt;input type=&quot;text&quot; value=&quot;http://www.facebook.com&quot;/&gt;
+</code>
+Bound:
+<code>javascript
+  App.ApplicationController = Ember.Controller.extend({
+    firstName: &quot;Stanley&quot;,
+    entryNotAllowed: true
+  });
+</code>
+<code>handlebars
+  {{input type=&quot;text&quot; value=firstName disabled=entryNotAllowed size=&quot;50&quot;}}
+</code>
+<code>html
+  &lt;input type=&quot;text&quot; value=&quot;Stanley&quot; disabled=&quot;disabled&quot; size=&quot;50&quot;/&gt;
+</code></p>
+
+<h3>Extension</h3>
+
+<p>Internally, <code>{{input type=&quot;text&quot;}}</code> creates an instance of <code>Ember.TextField</code>, passing
+  arguments from the helper to <code>Ember.TextField</code>&#39;s <code>create</code> method. You can extend the
+  capablilties of text inputs in your applications by reopening this class. For example,
+  if you are deploying to browsers where the <code>required</code> attribute is used, you
+  can add this to the <code>TextField</code>&#39;s <code>attributeBindings</code> property:
+<code>javascript
+  Ember.TextField.reopen({
+    attributeBindings: [&#39;required&#39;]
+  });
+</code></p>
+
+<h2>Use as checkbox</h2>
+
+<p>An <code>{{input}}</code> with a <code>type</code> of <code>checkbox</code> will render an HTML checkbox input.
+  The following HTML attributes can be set via the helper:
+  * <code>checked</code>
+    * <code>disabled</code>
+    * <code>tabindex</code>
+    * <code>indeterminate</code>
+    * <code>name</code>
+When set to a quoted string, these values will be directly applied to the HTML
+  element. When left unquoted, these values will be bound to a property on the
+  template&#39;s current rendering context (most typically a controller instance).
+Unbound:
+<code>handlebars
+  {{input type=&quot;checkbox&quot; name=&quot;isAdmin&quot;}}
+</code>
+<code>html
+  &lt;input type=&quot;checkbox&quot; name=&quot;isAdmin&quot; /&gt;
+</code>
+Bound:
+<code>javascript
+  App.ApplicationController = Ember.Controller.extend({
+    isAdmin: true
+  });
+</code>
+<code>handlebars
+  {{input type=&quot;checkbox&quot; checked=isAdmin }}
+</code>
+<code>html
+  &lt;input type=&quot;checkbox&quot; checked=&quot;checked&quot; /&gt;
+</code></p>
+
+<h3>Extension</h3>
+
+<p>Internally, <code>{{input type=&quot;checkbox&quot;}}</code> creates an instance of <code>Ember.Checkbox</code>, passing
+  arguments from the helper to <code>Ember.Checkbox</code>&#39;s <code>create</code> method. You can extend the
+  capablilties of checkbox inputs in your applications by reopening this class. For example,
+  if you wanted to add a css class to all checkboxes in your application:
+<code>javascript
+  Ember.Checkbox.reopen({
+    classNames: [&#39;my-app-checkbox&#39;]
+  });
+</code></p>
 
     </div>
   
@@ -2636,10 +3219,10 @@ is supplied it defaults to Ember.TextField.</p>
 
       
         
-<div id="method_linkTo" class="method  item-entry">
-  <h3 data-id="method_linkTo" class="name anchorable-toc"><code>linkTo</code></h3>
+<div id="method_link-to" class="method  item-entry">
+  <h3 data-id="method_link-to" class="name anchorable-toc"><code>link-to</code></h3>
   <span class="args">
-    (routeName, context)
+    (routeName, context, options)
   </span>
 
   <span class="type"><a href="/api/classes/String.html">String</a></span>
@@ -2659,7 +3242,7 @@ is supplied it defaults to Ember.TextField.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-routing/lib/helpers/link_to.js#L323">packages/ember-routing/lib/helpers/link_to.js:323</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/helpers/link_to.js#L401">packages/ember-routing/lib/helpers/link_to.js:401</a>
 
     
 
@@ -2668,19 +3251,19 @@ is supplied it defaults to Ember.TextField.</p>
 
   
     <div class="description">
-      <p>The <code>{{linkTo}}</code> helper renders a link to the supplied
+      <p>The <code>{{link-to}}</code> helper renders a link to the supplied
 <code>routeName</code> passing an optionally supplied model to the
 route as its <code>model</code> context of the route. The block
-for <code>{{linkTo}}</code> becomes the innerHTML of the rendered
+for <code>{{link-to}}</code> becomes the innerHTML of the rendered
 element:</p>
 <div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">'</span><span class="attribute-name">photoGallery</span><span class="error">'</span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">link-to</span> <span class="error">'</span><span class="attribute-name">photoGallery</span><span class="error">'</span><span class="inline-delimiter">}}</span></span>
   Great Hamster Photos
-<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">link-to</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div><div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -2696,17 +3279,17 @@ element:</p>
 </div></div>
 <h3>Supplying a tagName</h3>
 
-<p>By default <code>{{linkTo}}</code> renders an <code>&lt;a&gt;</code> element. This can
-be overridden for a single use of <code>{{linkTo}}</code> by supplying
+<p>By default <code>{{link-to}}</code> renders an <code>&lt;a&gt;</code> element. This can
+be overridden for a single use of <code>{{link-to}}</code> by supplying
 a <code>tagName</code> option:</p>
 <div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">'</span><span class="attribute-name">photoGallery</span><span class="error">'</span> <span class="attribute-name">tagName</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">li</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">link-to</span> <span class="error">'</span><span class="attribute-name">photoGallery</span><span class="error">'</span> <span class="attribute-name">tagName</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">li</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
   Great Hamster Photos
-<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">link-to</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div><div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -2725,7 +3308,7 @@ a <code>tagName</code> option:</p>
 
 <h3>Handling <code>href</code></h3>
 
-<p><code>{{linkTo}}</code> will use your application&#39;s Router to
+<p><code>{{link-to}}</code> will use your application&#39;s Router to
 fill the element&#39;s <code>href</code> property with a url that
 matches the path to the supplied <code>routeName</code> for your
 routers&#39;s configured <code>Location</code> scheme, which defaults
@@ -2733,19 +3316,19 @@ to Ember.HashLocation.</p>
 
 <h3>Handling current route</h3>
 
-<p><code>{{linkTo}}</code> will apply a CSS class name of &#39;active&#39;
+<p><code>{{link-to}}</code> will apply a CSS class name of &#39;active&#39;
 when the application&#39;s current route matches
 the supplied routeName. For example, if the application&#39;s
 current route is &#39;photoGallery.recent&#39; the following
-use of <code>{{linkTo}}</code>:</p>
+use of <code>{{link-to}}</code>:</p>
 <div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">'</span><span class="attribute-name">photoGallery.recent</span><span class="error">'</span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">link-to</span> <span class="error">'</span><span class="attribute-name">photoGallery.recent</span><span class="error">'</span><span class="inline-delimiter">}}</span></span>
   Great Hamster Photos from the last week
-<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">link-to</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -2762,16 +3345,16 @@ use of <code>{{linkTo}}</code>:</p>
 </tr></table>
 </div></div>
 <p>The CSS class name used for active classes can be customized
-for a single use of <code>{{linkTo}}</code> by passing an <code>activeClass</code>
+for a single use of <code>{{link-to}}</code> by passing an <code>activeClass</code>
 option:</p>
 <div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">'</span><span class="attribute-name">photoGallery.recent</span><span class="error">'</span> <span class="attribute-name">activeClass</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">current-url</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">link-to</span> <span class="error">'</span><span class="attribute-name">photoGallery.recent</span><span class="error">'</span> <span class="attribute-name">activeClass</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">current-url</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
   Great Hamster Photos from the last week
-<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">link-to</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div><div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -2808,9 +3391,9 @@ the model context of the linked route:</p>
 2
 3
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">'</span><span class="attribute-name">photoGallery</span><span class="error">'</span> <span class="attribute-name">aPhoto</span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">link-to</span> <span class="error">'</span><span class="attribute-name">photoGallery</span><span class="error">'</span> <span class="attribute-name">aPhoto</span><span class="inline-delimiter">}}</span></span>
   <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">aPhoto.title</span><span class="inline-delimiter">}}</span></span>
-<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">link-to</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div><div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -2852,9 +3435,9 @@ route with the dynamic segments:</p>
 2
 3
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">linkTo</span> <span class="error">'</span><span class="attribute-name">photoGallery.comment</span><span class="error">'</span> <span class="attribute-name">aPhoto</span> <span class="attribute-name">comment</span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">link-to</span> <span class="error">'</span><span class="attribute-name">photoGallery.comment</span><span class="error">'</span> <span class="attribute-name">aPhoto</span> <span class="attribute-name">comment</span><span class="inline-delimiter">}}</span></span>
   <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">comment.body</span><span class="inline-delimiter">}}</span></span>
-<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">linkTo</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">link-to</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div><div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -2868,21 +3451,50 @@ route with the dynamic segments:</p>
 </pre></td>
 </tr></table>
 </div></div>
-<h3>Overriding Application-wide Defaults</h3>
+<h3>Overriding attributes</h3>
 
-<p><code>{{linkTo}}</code> creates an instance of Ember.LinkView
-for rendering. To override options for your entire
-application, reopen Ember.LinkView and supply the
-desired values:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>You can override any given property of the Ember.LinkView
+that is generated by the <code>{{link-to}}</code> helper by passing
+key/value pairs, like so:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
 </pre></td>
-  <td class="code"><pre>Ember.LinkView.reopen({
-  <span class="key">activeClass</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">is-active</span><span class="delimiter">&quot;</span></span>,
-  <span class="key">tagName</span>: <span class="string"><span class="delimiter">'</span><span class="content">li</span><span class="delimiter">'</span></span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">link-to</span>  <span class="attribute-name">aPhoto</span> <span class="attribute-name">tagName</span>=<span class="string"><span class="delimiter">'</span><span class="content">li</span><span class="delimiter">'</span></span> <span class="attribute-name">title</span>=<span class="string"><span class="delimiter">'</span><span class="content">Following this link will change your life</span><span class="delimiter">'</span></span> <span class="attribute-name">classNames</span>=<span class="error">[</span><span class="string"><span class="delimiter">'</span><span class="content">pic</span><span class="delimiter">'</span></span><span class="error">,</span> <span class="error">'</span><span class="attribute-name">sweet</span><span class="error">'</span><span class="error">]</span><span class="inline-delimiter">}}</span></span>
+  Uh-mazing!
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">link-to</span><span class="inline-delimiter">}}</span></span>
+
+See <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">crossLink</span> <span class="error">&quot;</span><span class="attribute-name">Ember.LinkView</span><span class="error">&quot;</span><span class="inline-delimiter">}}</span></span><span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">crossLink</span><span class="inline-delimiter">}}</span></span> for a
+complete list of overrideable properties. Be sure to also
+check out inherited properties of `LinkView`.
+
+### Overriding Application-wide Defaults
+``<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">link-to</span><span class="inline-delimiter">}}</span></span>`` creates an instance of Ember.LinkView
+for rendering. To override options for your entire
+application, reopen Ember.LinkView and supply the
+desired values:
+
+``` javascript
+Ember.LinkView.reopen({
+  activeClass: &quot;is-active&quot;,
+  tagName: 'li'
 })
 </pre></td>
 </tr></table>
@@ -2900,6 +3512,83 @@ this manner:</p>
 </pre></td>
 </tr></table>
 </div></div>
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>routeName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd></dd>
+        
+          <dt><strong>context</strong> <span class="type">Object</span></dt>
+          <dd></dd>
+        
+          <dt><strong>options</strong> <span class="type">Object</span></dt>
+          <dd>Handlebars key/value pairs of options, you can over-ride any property of {{#crossLink "Ember.LinkView"}}{{/crossLink}}</dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/String.html">String</a></span>
+        <dd> HTML string</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
+<div id="method_linkTo" class="method deprecated item-entry">
+  <h3 data-id="method_linkTo" class="name anchorable-toc"><code>linkTo</code></h3>
+  <span class="args">
+    (routeName, context)
+  </span>
+
+  <span class="type"><a href="/api/classes/String.html">String</a></span>
+
+
+  
+  <span class="flag deprecated">deprecated</span>
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/helpers/link_to.js#L597">packages/ember-routing/lib/helpers/link_to.js:597</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>See <code>link-to</code></p>
+
     </div>
   
 
@@ -2960,7 +3649,7 @@ this manner:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/helpers/loc.js#L8">packages/ember-handlebars/lib/helpers/loc.js:8</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/helpers/loc.js#L8">packages/ember-handlebars/lib/helpers/loc.js:8</a>
 
     
 
@@ -2977,12 +3666,12 @@ This is a convenient way to localize text. For example:</p>
 3
 </pre></td>
   <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">home</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-<span class="inline">  {{loc welcome}}</span>
+<span class="inline">  {{loc <span class="string"><span class="delimiter">&quot;</span><span class="content">welcome</span><span class="delimiter">&quot;</span></span>}}</span>
 <span class="tag">&lt;/script&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
-<p>Take note that <code>welcome</code> is a string and not an object
+<p>Take note that <code>&quot;welcome&quot;</code> is a string and not an object
 reference.</p>
 
     </div>
@@ -3034,7 +3723,7 @@ reference.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/helpers/debug.js#L12">packages/ember-handlebars/lib/helpers/debug.js:12</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/helpers/debug.js#L12">packages/ember-handlebars/lib/helpers/debug.js:12</a>
 
     
 
@@ -3085,6 +3774,7 @@ context.</p>
     (property)
   </span>
 
+  <span class="type"><a href="/api/classes/String.html">String</a></span>
 
 
 
@@ -3101,7 +3791,7 @@ context.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-routing/lib/helpers/outlet.js#L18">packages/ember-routing/lib/helpers/outlet.js:18</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/helpers/outlet.js#L18">packages/ember-routing/lib/helpers/outlet.js:18</a>
 
     
 
@@ -3145,8 +3835,8 @@ template into the <code>outlet</code>.</p>
   <td class="line-numbers"><pre>1
 2
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span> <span class="attribute-name">favoritePost</span><span class="inline-delimiter">}}</span></span>
-<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span> <span class="attribute-name">posts</span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span> <span class="error">'</span><span class="attribute-name">favoritePost</span><span class="error">'</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span> <span class="error">'</span><span class="attribute-name">posts</span><span class="error">'</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -3214,6 +3904,14 @@ templates rendered into it.</p>
   
 
   
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/String.html">String</a></span>
+        <dd> HTML string</dd>
+      </dl>
+    </div>
+  
 </div>
 
       
@@ -3240,7 +3938,7 @@ templates rendered into it.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/helpers/partial.js#L8">packages/ember-handlebars/lib/helpers/partial.js:8</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/helpers/partial.js#L8">packages/ember-handlebars/lib/helpers/partial.js:8</a>
 
     
 
@@ -3312,6 +4010,7 @@ is prefixed with an underscore.</p>
     (name, contextString, options)
   </span>
 
+  <span class="type"><a href="/api/classes/String.html">String</a></span>
 
 
 
@@ -3328,7 +4027,7 @@ is prefixed with an underscore.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-routing/lib/helpers/render.js#L12">packages/ember-routing/lib/helpers/render.js:12</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-routing/lib/helpers/render.js#L12">packages/ember-routing/lib/helpers/render.js:12</a>
 
     
 
@@ -3337,24 +4036,95 @@ is prefixed with an underscore.</p>
 
   
     <div class="description">
-      <p>Renders the named template in the current context with the same-named
-controller.</p>
+      <p>Calling <code>{{render}}</code> from within a template will insert another 
+template that matches the provided name. The inserted template will
+access its properties on its own controller (rather than the controller
+of the parent template).</p>
 
-<p>If a view class with the same name exists, the view class will be used.</p>
+<p>If a view class with the same name exists, the view class also will be used.</p>
 
-<p>The optional second argument is a property path that will be bound
-to the <code>model</code> property of the controller.</p>
+<p>Note: A given controller may only be used <em>once</em> in your app in this manner.
+A singleton instance of the controller will be created for you.</p>
+
+<p>Example:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>App.NavigationController = Ember.Controller.extned({
+  <span class="key">who</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">world</span><span class="delimiter">&quot;</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handelbars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre>&lt;!-- navigation.hbs --&gt;
+Hello, {{who}}.
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handelbars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>&lt;!-- applications.hbs --&gt;
+&lt;h1&gt;My great app&lt;/h1&gt;
+{{render navigaton}}
+</pre></td>
+</tr></table>
+</div></div><div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;h1&gt;</span>My great app<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">'</span><span class="content">ember-view</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
+  Hello, world.
+<span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Optionally you may provide a  second argument: a property path
+that will be bound to the <code>model</code> property of the controller.</p>
 
 <p>If a <code>model</code> property path is specified, then a new instance of the
-controller will be created.</p>
+controller will be created and <code>{{render}}</code> can be used multiple times
+with the same name.</p>
 
-<p>If no <code>model</code> property path is provided, then the helper will use the
-singleton instance of the controller. A given controller may only be used
-one time in your app in this manner.</p>
-
-<p>The default target for <code>{{action}}</code>s in the rendered template is the
-controller.</p>
-
+<p>For example if you had this <code>author</code> template.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">author</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  Written by <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">firstName</span><span class="inline-delimiter">}}</span></span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">lastName</span><span class="inline-delimiter">}}</span></span>.
+  Total Posts: <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">postCount</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>You could render it inside the <code>post</code> template using the <code>render</code> helper.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;h1&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">title</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;div&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">body</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/div&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">render</span> <span class="error">&quot;</span><span class="attribute-name">author</span><span class="error">&quot;</span> <span class="attribute-name">author</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
     </div>
   
 
@@ -3384,6 +4154,14 @@ controller.</p>
   
 
   
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/String.html">String</a></span>
+        <dd> HTML string</dd>
+      </dl>
+    </div>
+  
 </div>
 
       
@@ -3412,7 +4190,7 @@ controller.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/helpers/template.js#L8">packages/ember-handlebars/lib/helpers/template.js:8</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/helpers/template.js#L8">packages/ember-handlebars/lib/helpers/template.js:8</a>
 
     
 
@@ -3527,7 +4305,7 @@ they will be compiled and placed in this hash automatically.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/controls.js#L47">packages/ember-handlebars/lib/controls.js:47</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/controls.js#L163">packages/ember-handlebars/lib/controls.js:163</a>
 
     
 
@@ -3536,9 +4314,203 @@ they will be compiled and placed in this hash automatically.</p>
 
   
     <div class="description">
-      <p><code>{{textarea}}</code> inserts a new instance of Ember.TextArea into the template
-passing its options to <code>Ember.TextArea</code>&#39;s <code>create</code> method.</p>
+      <p><code>{{textarea}}</code> inserts a new instance of <code>&lt;textarea&gt;</code> tag into the template.
+The attributes of <code>{{textarea}}</code> match those of the native HTML tags as
+closely as possible.</p>
 
+<p>The following HTML attributes can be set:</p>
+
+<ul>
+<li><code>value</code></li>
+<li><code>name</code></li>
+<li><code>rows</code></li>
+<li><code>cols</code></li>
+<li><code>placeholder</code></li>
+<li><code>disabled</code></li>
+<li><code>maxlength</code></li>
+<li><code>tabindex</code></li>
+</ul>
+
+<p>When set to a quoted string, these value will be directly applied to the HTML
+element. When left unquoted, these values will be bound to a property on the
+template&#39;s current rendering context (most typically a controller instance).</p>
+
+<p>Unbound:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">textarea</span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Lots of static text that ISN'T bound</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Would result in the following HTML:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;textarea</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-text-area</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  Lots of static text that ISN'T bound
+<span class="tag">&lt;/textarea&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Bound:</p>
+
+<p>In the following example, the <code>writtenWords</code> property on <code>App.ApplicationController</code>
+will be updated live as the user types &#39;Lots of text that IS bound&#39; into
+the text area of their browser&#39;s window.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>App.ApplicationController = Ember.Controller.extend({
+  <span class="key">writtenWords</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Lots of text that IS bound</span><span class="delimiter">&quot;</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">textarea</span> <span class="attribute-name">value</span>=<span class="attribute-value">writtenWords</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Would result in the following HTML:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;textarea</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-text-area</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  Lots of text that IS bound
+<span class="tag">&lt;/textarea&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>If you wanted a one way binding between the text area and a div tag
+somewhere else on your screen, you could use <code>Ember.computed.oneWay</code>:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>App.ApplicationController = Ember.Controller.extend({
+  <span class="key">writtenWords</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Lots of text that IS bound</span><span class="delimiter">&quot;</span></span>,
+  <span class="key">outputWrittenWords</span>: Ember.computed.oneWay(<span class="string"><span class="delimiter">&quot;</span><span class="content">writtenWords</span><span class="delimiter">&quot;</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">textarea</span> <span class="attribute-name">value</span>=<span class="attribute-value">writtenWords</span><span class="inline-delimiter">}}</span></span>
+
+<span class="tag">&lt;div&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outputWrittenWords</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Would result in the following HTML:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;textarea</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-text-area</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  Lots of text that IS bound
+<span class="tag">&lt;/textarea&gt;</span>
+
+<span class="tag">&lt;--</span> <span class="attribute-name">the</span> <span class="attribute-name">following</span> <span class="attribute-name">div</span> <span class="attribute-name">will</span> <span class="attribute-name">be</span> <span class="attribute-name">updated</span> <span class="attribute-name">in</span> <span class="attribute-name">real</span> <span class="attribute-name">time</span> <span class="attribute-name">as</span> <span class="attribute-name">you</span> <span class="attribute-name">type</span> <span class="attribute-name">--</span><span class="tag">&gt;</span>
+
+<span class="tag">&lt;div&gt;</span>
+  Lots of text that IS bound
+<span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Finally, this example really shows the power and ease of Ember when two
+properties are bound to eachother via <code>Ember.computed.alias</code>. Type into
+either text area box and they&#39;ll both stay in sync. Note that
+<code>Ember.computed.alias</code> costs more in terms of performance, so only use it when
+your really binding in both directions:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>App.ApplicationController = Ember.Controller.extend({
+  <span class="key">writtenWords</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Lots of text that IS bound</span><span class="delimiter">&quot;</span></span>,
+  <span class="key">twoWayWrittenWords</span>: Ember.computed.alias(<span class="string"><span class="delimiter">&quot;</span><span class="content">writtenWords</span><span class="delimiter">&quot;</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">textarea</span> <span class="attribute-name">value</span>=<span class="attribute-value">writtenWords</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">textarea</span> <span class="attribute-name">value</span>=<span class="attribute-value">twoWayWrittenWords</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div><div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;textarea</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-text-area</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  Lots of text that IS bound
+<span class="tag">&lt;/textarea&gt;</span>
+
+<span class="tag">&lt;--</span> <span class="attribute-name">both</span> <span class="attribute-name">updated</span> <span class="attribute-name">in</span> <span class="attribute-name">real</span> <span class="attribute-name">time</span> <span class="attribute-name">--</span><span class="tag">&gt;</span>
+
+<span class="tag">&lt;textarea</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember2</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-text-area</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  Lots of text that IS bound
+<span class="tag">&lt;/textarea&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<h3>Extension</h3>
+
+<p>Internally, <code>{{textarea}}</code> creates an instance of <code>Ember.TextArea</code>, passing
+arguments from the helper to <code>Ember.TextArea</code>&#39;s <code>create</code> method. You can
+extend the capabilities of text areas in your application by reopening this
+class. For example, if you are deploying to browsers where the <code>required</code>
+attribute is used, you can globally add support for the <code>required</code> attribute
+on all {{textarea}}&#39;s&#39; in your app by reopening <code>Ember.TextArea</code> or
+<code>Ember.TextSupport</code> and adding it to the <code>attributeBindings</code> concatenated
+property:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>Ember.TextArea.reopen({
+  <span class="key">attributeBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">required</span><span class="delimiter">'</span></span>]
+});
+</pre></td>
+</tr></table>
+</div></div>
     </div>
   
 
@@ -3589,7 +4561,7 @@ passing its options to <code>Ember.TextArea</code>&#39;s <code>create</code> met
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/helpers/unbound.js#L12">packages/ember-handlebars/lib/helpers/unbound.js:12</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/helpers/unbound.js#L12">packages/ember-handlebars/lib/helpers/unbound.js:12</a>
 
     
 
@@ -3674,7 +4646,7 @@ render it in its unbound form:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/helpers/binding.js#L295">packages/ember-handlebars/lib/helpers/binding.js:295</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/helpers/binding.js#L295">packages/ember-handlebars/lib/helpers/binding.js:295</a>
 
     
 
@@ -3741,7 +4713,7 @@ render it in its unbound form:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/helpers/view.js#L165">packages/ember-handlebars/lib/helpers/view.js:165</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/helpers/view.js#L165">packages/ember-handlebars/lib/helpers/view.js:165</a>
 
     
 
@@ -4048,7 +5020,7 @@ aView.get(<span class="string"><span class="delimiter">'</span><span class="cont
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/helpers/binding.js#L235">packages/ember-handlebars/lib/helpers/binding.js:235</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/helpers/binding.js#L235">packages/ember-handlebars/lib/helpers/binding.js:235</a>
 
     
 
@@ -4115,7 +5087,7 @@ aView.get(<span class="string"><span class="delimiter">'</span><span class="cont
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/9d266a8/packages/ember-handlebars/lib/helpers/yield.js#L8">packages/ember-handlebars/lib/helpers/yield.js:8</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.0.0/packages/ember-handlebars/lib/helpers/yield.js#L8">packages/ember-handlebars/lib/helpers/yield.js:8</a>
 
     
 
@@ -4124,79 +5096,71 @@ aView.get(<span class="string"><span class="delimiter">'</span><span class="cont
 
   
     <div class="description">
-      <p>When used in a Handlebars template that is assigned to an <code>Ember.View</code>
-instance&#39;s <code>layout</code> property Ember will render the layout template first,
-inserting the view&#39;s own rendered output at the <code>{{yield}}</code> location.</p>
+      <p><code>{{yield}}</code> denotes an area of a template that will be rendered inside
+  of another template. It has two main uses:</p>
 
-<p>An empty <code>&lt;body&gt;</code> and the following application code:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-</pre></td>
-  <td class="code"><pre>AView = Ember.View.extend({
-  <span class="key">classNames</span>: [<span class="string"><span class="delimiter">'</span><span class="content">a-view-with-layout</span><span class="delimiter">'</span></span>],
-  <span class="key">layout</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">'</span><span class="content">&lt;div class=&quot;wrapper&quot;&gt;{{yield}}&lt;/div&gt;</span><span class="delimiter">'</span></span>),
-  <span class="key">template</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">'</span><span class="content">&lt;span&gt;I am wrapped&lt;/span&gt;</span><span class="delimiter">'</span></span>)
-});
+<h3>Use with <code>layout</code></h3>
 
+<p>When used in a Handlebars template that is assigned to an <code>Ember.View</code>
+  instance&#39;s <code>layout</code> property Ember will render the layout template first,
+  inserting the view&#39;s own rendered output at the <code>{{yield}}</code> location.
+An empty <code>&lt;body&gt;</code> and the following application code:
+<code>javascript
+  AView = Ember.View.extend({
+    classNames: [&#39;a-view-with-layout&#39;],
+    layout: Ember.Handlebars.compile(&#39;&lt;div class=&quot;wrapper&quot;&gt;{{yield}}&lt;/div&gt;&#39;),
+    template: Ember.Handlebars.compile(&#39;&lt;span&gt;I am wrapped&lt;/span&gt;&#39;)
+  });
 aView = AView.create();
-aView.appendTo(<span class="string"><span class="delimiter">'</span><span class="content">body</span><span class="delimiter">'</span></span>);
-</pre></td>
-</tr></table>
-</div></div>
-<p>Will result in the following HTML output:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;body&gt;</span>
-  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">'</span><span class="content">ember-view a-view-with-layout</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
-    <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">wrapper</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-      <span class="tag">&lt;span&gt;</span>I am wrapped<span class="tag">&lt;/span&gt;</span>
-    <span class="tag">&lt;/div&gt;</span>
-  <span class="tag">&lt;/div&gt;</span>
-<span class="tag">&lt;/body&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>The <code>yield</code> helper cannot be used outside of a template assigned to an
-<code>Ember.View</code>&#39;s <code>layout</code> property and will throw an error if attempted.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-</pre></td>
-  <td class="code"><pre>BView = Ember.View.extend({
-  <span class="key">classNames</span>: [<span class="string"><span class="delimiter">'</span><span class="content">a-view-with-layout</span><span class="delimiter">'</span></span>],
-  <span class="key">template</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">'</span><span class="content">{{yield}}</span><span class="delimiter">'</span></span>)
-});
-
+  aView.appendTo(&#39;body&#39;);
+</code>
+Will result in the following HTML output:
+<code>html
+  &lt;body&gt;
+    &lt;div class=&#39;ember-view a-view-with-layout&#39;&gt;
+      &lt;div class=&quot;wrapper&quot;&gt;
+        &lt;span&gt;I am wrapped&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+</code>
+The <code>yield</code> helper cannot be used outside of a template assigned to an
+  <code>Ember.View</code>&#39;s <code>layout</code> property and will throw an error if attempted.
+<code>javascript
+  BView = Ember.View.extend({
+    classNames: [&#39;a-view-with-layout&#39;],
+    template: Ember.Handlebars.compile(&#39;{{yield}}&#39;)
+  });
 bView = BView.create();
-bView.appendTo(<span class="string"><span class="delimiter">'</span><span class="content">body</span><span class="delimiter">'</span></span>);
+  bView.appendTo(&#39;body&#39;);
+// throws
+  // Uncaught Error: assertion failed:
+  // You called yield in a template that was not a layout
+</code></p>
 
-<span class="comment">// throws</span>
-<span class="comment">// Uncaught Error: assertion failed: You called yield in a template that was not a layout</span>
-</pre></td>
-</tr></table>
-</div></div>
+<h3>Use with Ember.Component</h3>
+
+<p>When designing components <code>{{yield}}</code> is used to denote where, inside the component&#39;s
+  template, an optional block passed to the component should render:
+<code>handlebars
+  &lt;!-- application.hbs --&gt;
+  {{#labeled-textfield value=someProperty}}
+    First name:
+  {{/my-component}}
+</code>
+<code>handlebars
+  &lt;!-- components/my-component.hbs --&gt;
+  &lt;label&gt;
+    {{yield}} {{input value=value}}
+  &lt;/label&gt;
+</code>
+Result:
+<code>html
+  &lt;label&gt;
+    First name: &lt;input type=&quot;text&quot; /&gt;
+  &lt;label&gt;
+</code></p>
+
     </div>
   
 
