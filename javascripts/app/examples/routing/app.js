@@ -1,0 +1,2 @@
+// Model
+App.Mailbox=Em.Object.extend(),App.Mailbox.reopenClass({find:function(e){return e?App.FIXTURES.findBy("id",e):App.FIXTURES}}),App.Router.map(function(){return this.resource("mailbox",{path:"/:mailbox_id"},function(){return this.resource("mail",{path:"/:message_id"})})}),App.ApplicationRoute=Em.Route.extend({model:function(){return App.Mailbox.find()}}),App.MailRoute=Em.Route.extend({model:function(e){return this.modelFor("mailbox").messages.findBy("id",e.message_id)}}),Ember.Handlebars.registerBoundHelper("date",function(e){return moment(e).format("MMM Do")});
