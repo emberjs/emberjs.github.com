@@ -73,12 +73,11 @@
       <li class="level-1">
         <a>Channels</a>
         <ol style="display:block">
-          <li class="level-3">{{#link-to 'release'}}Release{{/link-to}}</li>
-          <li class="level-3">{{#link-to 'beta'}}Beta{{/link-to}}</li>
-          <li class="level-3">{{#link-to 'canary'}}Canary{{/link-to}}</li>
+          <li class="level-3">{{#link-to 'release.latest'}}Release{{/link-to}}</li>
+          <li class="level-3">{{#link-to 'beta.latest'}}Beta{{/link-to}}</li>
+          <li class="level-3">{{#link-to 'canary.latest'}}Canary{{/link-to}}</li>
         </ol>
       </li>
-      <li class="level-1">{{#link-to 'daily'}}Daily Builds{{/link-to}}</li>
     </ol>
   </div>
 
@@ -92,21 +91,21 @@
 <script type="text/x-handlebars" data-template-name="index">
   <div class="features section">
     <div class="feature">
-      {{#link-to 'release'}}
+      {{#link-to 'release.latest'}}
       <img class="tomster" src="/images/tomster-sm.png" alt="Release Builds">
       {{/link-to}}
       <h2>Release</h2>
       <p>Release builds have been hardened through our multi-tiered release process. These builds are perfect for use in production environments.</p>
     </div>
     <div class="feature">
-      {{#link-to 'beta'}}
+      {{#link-to 'beta.latest'}}
       <img class="tomster" src="/images/tomster-beta-sm.png" alt="Beta Builds">
       {{/link-to}}
       <h2>Beta</h2>
       <p>Beta builds will incorporate new features that are ready for more review. They will include new features that have been more thoroughly tested. We do not recommend using Beta builds in production.</p>
     </div>
     <div class="feature">
-      {{#link-to 'canary'}}
+      {{#link-to 'canary.latest'}}
       <img class="tomster" src="/images/tomster-under-construction-sm.png" alt="Canary Builds">
       {{/link-to}}
       <h2>Canary</h2>
@@ -147,18 +146,70 @@
   {{/if}}
 </script>
 
-<script type="text/x-handlebars" data-template-name="release">
+<script type="text/x-handlebars" data-template-name="release/latest">
   <h2>{{title}}</h2>
+  <div class="tabs">
+    <ul>
+      <li class="active">{{#link-to 'release.latest'}}Latest{{/link-to}}</li>
+      <li>{{#link-to 'release.daily' }}Daily{{/link-to}}</li>
+    </ul>
+  </div>
   {{partial 'fileListing'}}
 </script>
 
-<script type="text/x-handlebars" data-template-name="beta">
+<script type="text/x-handlebars" data-template-name="release/daily">
   <h2>{{title}}</h2>
+  {{build-type-selector latest="release.latest" daily="release.daily"}}
+  <div class="tabs">
+    <ul>
+      <li>{{#link-to 'release.latest'}}Latest{{/link-to}}</li>
+      <li class="active">{{#link-to 'release.daily' }}Daily{{/link-to}}</li>
+    </ul>
+  </div>
   {{partial 'fileListing'}}
 </script>
 
-<script type="text/x-handlebars" data-template-name="canary">
+<script type="text/x-handlebars" data-template-name="beta/latest">
   <h2>{{title}}</h2>
+  <div class="tabs">
+    <ul>
+      <li class="active">{{#link-to 'beta.latest'}}Latest{{/link-to}}</li>
+      <li>{{#link-to 'beta.daily' }}Daily{{/link-to}}</li>
+    </ul>
+  </div>
+  {{partial 'fileListing'}}
+</script>
+
+<script type="text/x-handlebars" data-template-name="beta/daily">
+  <h2>{{title}}</h2>
+  <div class="tabs">
+    <ul>
+      <li>{{#link-to 'beta.latest'}}Latest{{/link-to}}</li>
+      <li class="active">{{#link-to 'beta.daily' }}Daily{{/link-to}}</li>
+    </ul>
+  </div>
+  {{partial 'fileListing'}}
+</script>
+
+<script type="text/x-handlebars" data-template-name="canary/latest">
+  <h2>{{title}}</h2>
+  <div class="tabs">
+    <ul>
+      <li class="active">{{#link-to 'canary.latest'}}Latest{{/link-to}}</li>
+      <li>{{#link-to 'canary.daily' }}Daily{{/link-to}}</li>
+    </ul>
+  </div>
+  {{partial 'fileListing'}}
+</script>
+
+<script type="text/x-handlebars" data-template-name="canary/daily">
+  <h2>{{title}}</h2>
+  <div class="tabs">
+    <ul>
+      <li>{{#link-to 'canary.latest'}}Latest{{/link-to}}</li>
+      <li class="active">{{#link-to 'canary.daily' }}Daily{{/link-to}}</li>
+    </ul>
+  </div>
   {{partial 'fileListing'}}
 </script>
 
