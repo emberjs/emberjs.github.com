@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Models: Modifying Attributes</title>
+    <title>Ember.js - Models: Frequently Asked Questions</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
@@ -36,7 +36,7 @@
   
   </head>
 
-  <body class="guides guides_models guides_models_modifying-attributes guides_models_modifying-attributes_index">
+  <body class="guides guides_models guides_models_frequently-asked-questions guides_models_frequently-asked-questions_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -340,7 +340,7 @@
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/defining-a-store">Defining a Store</a>
+              <a href="/guides/models/using-the-store">Using the Store</a>
             </li>
           
             <li class="level-3">
@@ -348,23 +348,31 @@
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/finding-models">Finding Models</a>
+              <a href="/guides/models/finding-a-record">Finding a Record</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/finding-all-records-of-a-type">Finding All Records of a Type</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/pushing-records-into-the-store">Pushing Records into the Store</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/querying-the-server-for-records">Querying the Server for Records</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/working-with-records">Working with Records</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/connecting-to-an-http-server">Connecting to an HTTP Server</a>
             </li>
           
             <li class="level-3 sub-selected">
-              <a href="/guides/models/modifying-attributes">Modifying Attributes</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/models/model-lifecycle">Model Lifecycle</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/models/the-fixture-adapter">The Fixture Adapter</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/models/the-rest-adapter">The REST Adapter</a>
+              <a href="/guides/models/frequently-asked-questions">Frequently Asked Questions</a>
             </li>
           </ol></li>
           <li class="level-1">
@@ -492,55 +500,77 @@
   
 
   
-    
-          <div class="under_construction_warning">
-            <h3>
-              <div class="msg">
-                Warning: ember-data is a work in progress and under rapid development.
-                <br/>
-                <span class="more_caution">Use with caution!!!</span>
-              </div>
-            </h3>
-          </div>
-        
-  
   <div class="chapter">
     
-        <h1>Modifying Attributes 
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/models/modifying-attributes.md" target="_blank" class="edit-page">
+        <h1>Frequently Asked Questions 
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/models/frequently-asked-questions.md" target="_blank" class="edit-page">
             Edit Page</a>
         </h1>
       
     <hr>
-    <p>Once a record has been loaded, you can begin making changes to its
-attributes. Attributes behave just like normal properties in Ember.js
-objects. Making changes is as simple as setting the attribute you
-want to change:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre><span class="keyword">var</span> tyrion = App.Person.find(<span class="integer">1</span>);
-<span class="comment">// ...after the record has loaded</span>
-tyrion.set(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Yollo</span><span class="delimiter">&quot;</span></span>);
-</pre></td>
-</tr></table>
-</div></div>
-<p>All of the Ember.js conveniences are available for
-modifying attributes. For example, you can use <code>Ember.Object</code>&#39;s
-<code>incrementProperty</code> helper:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-</pre></td>
-  <td class="code"><pre>person.incrementProperty(<span class="string"><span class="delimiter">'</span><span class="content">age</span><span class="delimiter">'</span></span>);
-<span class="comment">// Happy birthday!</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>You can tell if a record has outstanding changes that have not yet been
-saved by checking its <code>isDirty</code> property.</p>
+    <h4 class='anchorable-toc' id='toc_should-i-use-a-query-or-a-filter-to-search-records'>Should I use a query or a filter to search records?</h4>
+<p>It depends on how many records you want to search and whether they have
+been loaded into the store.</p>
+
+<p><em>Queries</em> are useful for doing searches of hundreds, thousands, or even
+millions of records. You just hand the search options to your server,
+and it is responsible for handing you back the list of records that
+match. Because the response from the server includes the ID of all of
+the records that matched, it doesn&#39;t matter if the store hadn&#39;t loaded
+them previously; it sees that they are not in the cache and can request
+the records by ID if necessary.</p>
+
+<p>The downside of queries is that they do not live update, they are
+slower, and they require that your server support the kind of queries
+that you wish to perform.</p>
+
+<p>Because the server decides which records match the query, not the store,
+queries do not live update. If you want to update them, you must
+manually call <code>reload()</code> and wait for the server to respond. If you
+create a new record on the client, it will not show up in the results
+until you both save the new record to the server and reload the query
+results.</p>
+
+<p>Because the store must confer with your server to determine the results
+of a query, it necessitates a network request. This can feel slow to
+users, especially if they are on a slow connection or your server is
+slow to respond. The typical speed of JavaScript web applications can
+heighten the perceived slowness when the server must be consulted.</p>
+
+<p>Lastly, performing queries requires collaboration between the store and
+your server. By default, Ember Data will send the search options that
+you pass as the body of an HTTP request to your server. If your server
+does not support requests in this format, you will need to either change
+your server to do so, or customize how queries are sent by creating a
+custom adapter.</p>
+
+<p><em>Filters</em>, on the other hand, perform a live search of all of the records
+in the store&#39;s cache. As soon as a new record is loaded into the store,
+the filter will check to see if the record matches, and if so, add it to
+the array of search results. If that array is displayed in a template,
+it will update automatically.</p>
+
+<p>Filters also take into account newly created records that have not been
+saved, and records that have been modified but not yet saved. If you
+want records to show up in search results as soon as they are created or
+modified on the client, you should use a filter.</p>
+
+<p>Keep in mind that records will not show up in a filter if the store
+doesn&#39;t know about them. You can ensure that a record is in the store by
+using the store&#39;s <code>push()</code> method.</p>
+
+<p>There is also a limit to how many records you can reasonably keep in
+memory and search before you start hitting performance issues.</p>
+
+<p>Finally, keep in mind that you can combine queries and filters to take
+advantage of their respective strengths and weaknesses. Remember that
+records returned by a query to the server are cached in the store. You
+can use this fact to perform a query that starts matching records into
+the store, then create a filter that matches the same records.</p>
+
+<p>This will offload searching all of the possible records to the server,
+while still creating a live updating list that includes records created
+and modified on the client.</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -549,33 +579,52 @@ saved by checking its <code>isDirty</code> property.</p>
 5
 6
 7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
 </pre></td>
-  <td class="code"><pre>person.get(<span class="string"><span class="delimiter">'</span><span class="content">isDirty</span><span class="delimiter">'</span></span>);
-<span class="comment">//=&gt; false</span>
+  <td class="code"><pre>App.PostsFavoritedRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>() {
+    <span class="keyword">var</span> store = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">store</span><span class="delimiter">'</span></span>);
 
-person.set(<span class="string"><span class="delimiter">'</span><span class="content">isAdmin</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
+    <span class="comment">// Kick off a query to the server for all posts that</span>
+    <span class="comment">// the user has favorited. Note that we're ignoring the results</span>
+    <span class="comment">// of the query; we're just relying on the side-effect that they</span>
+    <span class="comment">// will be loaded into the store so we can filter them.</span>
+    store.query(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>, { <span class="key">favorited</span>: <span class="predefined-constant">true</span> });
 
-person.get(<span class="string"><span class="delimiter">'</span><span class="content">isDirty</span><span class="delimiter">'</span></span>);
-<span class="comment">//=&gt; true</span>
+    <span class="comment">// Create a filter for all favorited posts that will be displayed in</span>
+    <span class="comment">// the template. Any favorited posts that are already in the store</span>
+    <span class="comment">// will be displayed immediately; as // results from the above query are</span>
+    <span class="comment">// returned from the server, they will also begin to appear.</span>
+    <span class="keyword">return</span> store.filter(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(post) {
+      <span class="keyword">return</span> post.get(<span class="string"><span class="delimiter">'</span><span class="content">isFavorited</span><span class="delimiter">'</span></span>);
+    });
+  }
+});
 </pre></td>
 </tr></table>
 </div></div>
-<p>Make sure that a record has finished loading before you try to modify.
-If you attempt to modify a record before it has finished loading, Ember
-Data will raise an exception. For more information, see <a href="/guides/models/model-lifecycle">Model
-Lifecycle</a>.</p>
-
     
       <footer>
         
-          <a class="previous-guide" href="/guides/models/finding-models">
-            ← Finding Models
+          <a class="previous-guide" href="/guides/models/connecting-to-an-http-server">
+            ← Connecting to an HTTP Server
           </a>
          
-        <a class="next-guide" href="/guides/models/model-lifecycle">
-          Model Lifecycle →
-        </a>
-      
+          <a class="next-guide" href="/guides/views">
+             We're done with Models. Next up: Views - Introduction →
+          </a>
+        
       </footer>
       
   </div>

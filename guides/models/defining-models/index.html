@@ -340,7 +340,7 @@
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/defining-a-store">Defining a Store</a>
+              <a href="/guides/models/using-the-store">Using the Store</a>
             </li>
           
             <li class="level-3 sub-selected">
@@ -348,23 +348,31 @@
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/finding-models">Finding Models</a>
+              <a href="/guides/models/finding-a-record">Finding a Record</a>
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/modifying-attributes">Modifying Attributes</a>
+              <a href="/guides/models/finding-all-records-of-a-type">Finding All Records of a Type</a>
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/model-lifecycle">Model Lifecycle</a>
+              <a href="/guides/models/pushing-records-into-the-store">Pushing Records into the Store</a>
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/the-fixture-adapter">The Fixture Adapter</a>
+              <a href="/guides/models/querying-the-server-for-records">Querying the Server for Records</a>
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/the-rest-adapter">The REST Adapter</a>
+              <a href="/guides/models/working-with-records">Working with Records</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/connecting-to-an-http-server">Connecting to an HTTP Server</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/frequently-asked-questions">Frequently Asked Questions</a>
             </li>
           </ol></li>
           <li class="level-1">
@@ -492,18 +500,6 @@
   
 
   
-    
-          <div class="under_construction_warning">
-            <h3>
-              <div class="msg">
-                Warning: ember-data is a work in progress and under rapid development.
-                <br/>
-                <span class="more_caution">Use with caution!!!</span>
-              </div>
-            </h3>
-          </div>
-        
-  
   <div class="chapter">
     
         <h1>Defining Models 
@@ -512,18 +508,77 @@
         </h1>
       
     <hr>
-    <p>For every type of model you&#39;d like to represent, create a new subclass of
-<code>DS.Model</code>:</p>
+    <p>A model is a class that defines the properties and behavior of the
+data that you present to the user. Anything that the user expects to see
+if they leave your app and come back later (or if they refresh the page)
+should be represented by a model.</p>
+
+<p>For every model in your application, create a subclass of <code>DS.Model</code>:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
   <td class="code"><pre>App.Person = DS.Model.extend();
 </pre></td>
 </tr></table>
-</div></div><h3 class='anchorable-toc' id='toc_attributes'>Attributes</h3>
-<p>You can specify which attributes a model has by using <code>DS.attr</code>. You can
-use attributes just like any other property, including as part of a
-computed property.</p>
+</div></div>
+<p>After you have defined a model class, you can start finding and creating
+records of that type. When interacting with the store, you will need to
+specify a record&#39;s type using the model name. For example, the store&#39;s
+<code>find()</code> method expects a string as the first argument to tell it what
+type of record to find:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>store.find(<span class="string"><span class="delimiter">'</span><span class="content">person</span><span class="delimiter">'</span></span>, <span class="integer">1</span>);
+</pre></td>
+</tr></table>
+</div></div>
+<p>The table below shows how model names map to model classes.</p>
+
+<table>
+  <thead>
+  <tr>
+    <th>Model Name</th>
+    <th>Model Class</th>
+  </tr>
+  </thead>
+  <tr>
+    <td><code>photo</code></td>
+    <td><code>App.Photo</code></td>
+  </tr>
+  <tr>
+    <td><code>admin-user-profile</code></td>
+    <td><code>App.AdminUserProfile</code></td>
+  </tr>
+</table>
+<h3 class='anchorable-toc' id='toc_defining-attributes'>Defining Attributes</h3>
+<p>You can specify which attributes a model has by using <code>DS.attr</code>.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> attr = DS.attr;
+
+App.Person = DS.Model.extend({
+  <span class="key">firstName</span>: attr(),
+  <span class="key">lastName</span>: attr(),
+  <span class="key">birthday</span>: attr()
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Attributes are used when turning the JSON payload returned from your
+server into a record, and when serializing a record to save back to the
+server after it has been modified.</p>
+
+<p>You can use attributes just like any other property, including as part of a
+computed property. Frequently, you will want to define computed
+properties that combine or transform primitive attributes.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -534,11 +589,13 @@ computed property.</p>
 7
 8
 9
+<strong>10</strong>
 </pre></td>
-  <td class="code"><pre>App.Person = DS.Model.extend({
-  <span class="key">firstName</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
-  <span class="key">lastName</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
-  <span class="key">birthday</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">date</span><span class="delimiter">'</span></span>),
+  <td class="code"><pre><span class="keyword">var</span> attr = DS.attr;
+
+App.Person = DS.Model.extend({
+  <span class="key">firstName</span>: attr(),
+  <span class="key">lastName</span>: attr(),
 
   <span class="function">fullName</span>: <span class="keyword">function</span>() {
     <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
@@ -547,11 +604,28 @@ computed property.</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>By default, the REST adapter supports attribute types of <code>string</code>,
+<p>For more about adding computed properties to your classes, see <a href="/guides/object-model/computed-properties">Computed
+Properties</a>.</p>
+
+<p>If you don&#39;t specify the type of the attribute, it will be whatever was
+provided by the server. You can make sure that an attribute is always
+coerced into a particular type by passing a <code>type</code> option to <code>attr</code>:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>App.Person = DS.Model.extend({
+  <span class="key">birthday</span>: attr({ <span class="key">type</span>: Date })
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>The default adapter supports attribute types of <code>string</code>,
 <code>number</code>, <code>boolean</code>, and <code>date</code>. Custom adapters may offer additional
 attribute types, and new types can be registered as transforms. See the
 <a href="/guides/models/the-rest-adapter">documentation section on the REST Adapter</a>.</p>
-<h3 class='anchorable-toc' id='toc_relationships'>Relationships</h3>
+<h3 class='anchorable-toc' id='toc_defining-relationships'>Defining Relationships</h3>
 <p>Ember Data includes several built-in relationship types to help you
 define how your models relate to each other.</p>
 <h4 class='anchorable-toc' id='toc_one-to-one'>One-to-One</h4>
@@ -618,13 +692,15 @@ App.Tag = DS.Model.extend({
 </pre></td>
 </tr></table>
 </div></div><h4 class='anchorable-toc' id='toc_explicit-inverses'>Explicit Inverses</h4>
-<p>From <a href="http://emberjs.com/blog/2012/11/02/this-week-in-ember-js.html">This Week in Ember.JS, posted November 2, 2012</a></p>
+<p>Ember Data will do its best to discover which relationships map to one
+another. In the one-to-many code above, for example, Ember Data can figure out that
+changing the <code>comments</code> relationship should update the <code>post</code>
+relationship on the inverse because <code>post</code> is the only relationship to
+that model.</p>
 
-<p>Ember Data has always been smart enough to know that when you set a <code>belongsTo</code> relationship, the child record should be added to the parent&#39;s corresponding <code>hasMany</code> relationship.</p>
-
-<p>Unfortunately, it was pretty braindead about <em>which</em> <code>hasMany</code> relationship it would update. Before, it would just pick the first relationship it found with the same type as the child.</p>
-
-<p>Because it&#39;s reasonable for people to have multiple <code>belongsTo</code>/<code>hasMany</code>s for the same type, we added support for specifying an inverse:</p>
+<p>However, sometimes you may have multiple <code>belongsTo</code>/<code>hasMany</code>s for the
+same type. You can specify which property on the related model is the
+inverse using <code>DS.attr</code>&#39;s <code>inverse</code> option:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -639,17 +715,23 @@ App.Tag = DS.Model.extend({
 11
 12
 13
+14
+15
+16
 </pre></td>
-  <td class="code"><pre>App.Comment = DS.Model.extend({
-  <span class="key">onePost</span>: DS.belongsTo(<span class="string"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>),
-  <span class="key">twoPost</span>: DS.belongsTo(<span class="string"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>),
-  <span class="key">redPost</span>: DS.belongsTo(<span class="string"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>),
-  <span class="key">bluePost</span>: DS.belongsTo(<span class="string"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>)
+  <td class="code"><pre><span class="keyword">var</span> belongsTo = DS.belongsTo,
+    hasMany = DS.hasMany;
+
+App.Comment = DS.Model.extend({
+  <span class="key">onePost</span>: belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>),
+  <span class="key">twoPost</span>: belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>),
+  <span class="key">redPost</span>: belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>),
+  <span class="key">bluePost</span>: belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>)
 });
 
 
 App.Post = DS.Model.extend({
-  <span class="key">comments</span>: DS.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>, {
+  <span class="key">comments</span>: hasMany(<span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>, {
     <span class="key">inverse</span>: <span class="string"><span class="delimiter">'</span><span class="content">redPost</span><span class="delimiter">'</span></span>
   })
 });
@@ -687,12 +769,12 @@ App.Adapter.map(<span class="string"><span class="delimiter">'</span><span class
     
       <footer>
         
-          <a class="previous-guide" href="/guides/models/defining-a-store">
-            ← Defining a Store
+          <a class="previous-guide" href="/guides/models/using-the-store">
+            ← Using the Store
           </a>
          
-        <a class="next-guide" href="/guides/models/finding-models">
-          Finding Models →
+        <a class="next-guide" href="/guides/models/finding-a-record">
+          Finding a Record →
         </a>
       
       </footer>

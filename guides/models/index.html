@@ -340,7 +340,7 @@
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/defining-a-store">Defining a Store</a>
+              <a href="/guides/models/using-the-store">Using the Store</a>
             </li>
           
             <li class="level-3">
@@ -348,23 +348,31 @@
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/finding-models">Finding Models</a>
+              <a href="/guides/models/finding-a-record">Finding a Record</a>
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/modifying-attributes">Modifying Attributes</a>
+              <a href="/guides/models/finding-all-records-of-a-type">Finding All Records of a Type</a>
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/model-lifecycle">Model Lifecycle</a>
+              <a href="/guides/models/pushing-records-into-the-store">Pushing Records into the Store</a>
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/the-fixture-adapter">The Fixture Adapter</a>
+              <a href="/guides/models/querying-the-server-for-records">Querying the Server for Records</a>
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/the-rest-adapter">The REST Adapter</a>
+              <a href="/guides/models/working-with-records">Working with Records</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/connecting-to-an-http-server">Connecting to an HTTP Server</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/frequently-asked-questions">Frequently Asked Questions</a>
             </li>
           </ol></li>
           <li class="level-1">
@@ -492,18 +500,6 @@
   
 
   
-    
-          <div class="under_construction_warning">
-            <h3>
-              <div class="msg">
-                Warning: ember-data is a work in progress and under rapid development.
-                <br/>
-                <span class="more_caution">Use with caution!!!</span>
-              </div>
-            </h3>
-          </div>
-        
-  
   <div class="chapter">
     
         <h1>Introduction 
@@ -513,34 +509,195 @@
       
     <hr>
     <h2 class='anchorable-toc' id='toc_models'>Models</h2>
-<p>In most Ember.js apps, models are handled by <a href="https://github.com/emberjs/data">Ember Data</a>. Ember
-Data is a library, built with and for Ember.js, designed to make it easy to
-retrieve records from a server, make changes in the browser, then save
-those changes back to the server.</p>
+<p>In Ember, every route has an associated model. This model is set by
+implementing a route&#39;s <code>model</code> hook, by passing the model as an argument
+to <code>{{link-to}}</code>, or by calling a route&#39;s <code>transitionTo()</code> method.</p>
 
-<p>It provides many of the facilities you&#39;d find in server-side ORMs like
-ActiveRecord, but is designed specifically for the unique environment of
-JavaScript in the browser.</p>
+<p>See <a href="/guides/routing/specifying-a-routes-model">Specifying a Route&#39;s
+Model</a> for more information
+on setting a route&#39;s model.</p>
+
+<p>For simple applications, you can get by using jQuery to load JSON data
+from a server, then use those JSON objects as models.</p>
+
+<p>However, using a model library that manages finding models, making
+changes, and saving them back to the server can dramatically simplify
+your code while improving the robustness and performance of your
+application.</p>
+
+<p>Many Ember apps use <a href="https://github.com/emberjs/data">Ember Data</a> to handle this.
+Ember Data is a library that integrates tightly with Ember.js to make it
+easy to retrieve records from a server, cache them for performance,
+save updates back to the server, and create new records on the client.</p>
 
 <p>Without any configuration, Ember Data can load and save records and
-relationships served via a RESTful JSON API, provided it follows certain
-conventions.</p>
+their relationships served via a RESTful JSON API, provided it follows
+certain conventions.</p>
 
-<p>We also understand that there exist many web service APIs in the world,
-many of them crazy, inconsistent, and out of your control. Ember Data is
-designed to be configurable to work with whatever persistence layer you
-want, from the ordinary to the exotic.</p>
+<p>If you need to integrate your Ember.js app with existing JSON APIs that
+do not follow strong conventions, Ember Data is designed to be easily
+configurable to work with whatever data your server returns.</p>
 
-<p>Currently, Ember Data ships as a separate library from Ember.js, while
-we expand the adapter API to support more features. The API described in
-this section tends to be stable, however.  Until Ember Data is included
-as part of the standard distribution, you can get your copy of the latest
-passing build from the &quot;master&quot; branch from <a href="http://builds.emberjs.com">builds.emberjs.com</a>:</p>
+<p>Ember Data is also designed to work with streaming APIs like
+socket.io, Firebase, or WebSockets. You can open a socket to your server
+and push changes to records into the store whenever they occur.</p>
+
+<p>Currently, Ember Data ships as a separate library from Ember.js.  Until
+Ember Data is included as part of the standard distribution, you can get
+a copy of the latest passing build from
+<a href="http://builds.emberjs.com">builds.emberjs.com</a>:</p>
 
 <ul>
 <li><a href="http://builds.emberjs.com/latest/ember-data.js">Development</a></li>
 <li><a href="http://builds.emberjs.com/latest/ember-data.min.js">Minified</a></li>
 </ul>
+<h3 class='anchorable-toc' id='toc_core-concepts'>Core Concepts</h3>
+<p>Learning to use Ember Data is easiest once you understand some of the
+concepts that underpin its design.</p>
+<h4 class='anchorable-toc' id='toc_store'>Store</h4>
+<p>The <strong>store</strong> is the central repository of records in your application.
+Both your application&#39;s controllers and routes have access to this
+shared store; when they need to display or modify a record, they will
+first ask the store for it.</p>
+<h4 class='anchorable-toc' id='toc_models'>Models</h4>
+<p>A <strong>model</strong> is a class that defines the properties and behavior of the
+data that you present to the user. Anything that the user expects to see
+if they leave your app and come back later (or if they refresh the page)
+should be represented by a model.</p>
+
+<p>For example, if you were writing a web application for placing orders at
+a restaurant, you might have models like <code>Order</code>, <code>LineItem</code>, and
+<code>MenuItem</code>.</p>
+
+<p>Models define the type of data that will be provided by your server. For
+example, a <code>Person</code> model might have a <code>firstName</code> attribute that is a
+string, and a <code>birthday</code> attribute that is a date.</p>
+
+<p>A model also describes its relationships with other objects. For
+example, an <code>Order</code> may have many <code>LineItems</code>, and a <code>LineItem</code> may
+belong to a particular <code>Order</code>.</p>
+
+<p>Models don&#39;t have any data themselves; they just define the properties and
+behavior of specific instances, which are called <em>records</em>.</p>
+<h4 class='anchorable-toc' id='toc_records'>Records</h4>
+<p>A <strong>record</strong> is an instance of a model that contains data loaded from a
+server. Your application can also create new records and save them back
+to the server.</p>
+
+<p>Records are uniquely identified by two things:</p>
+
+<ol>
+<li>A model type.</li>
+<li>A globally unique ID.</li>
+</ol>
+
+<p>For example, if you were writing a contact management app, you might
+have a model called <code>Person</code>. An individual record in your app might
+have a type of <code>Person</code> and an ID of <code>1</code> or <code>steve-buscemi</code>.</p>
+
+<p>IDs are usually assigned by the server when you save them for the first
+time, but you can also generate IDs client-side.</p>
+<h4 class='anchorable-toc' id='toc_adapter'>Adapter</h4>
+<p>An <strong>adapter</strong> is an object that knows about your particular server
+backend and is responsible for translating requests for and changes to
+records into the appropriate calls to your server.</p>
+
+<p>For example, if your application asks for a <code>person</code> record with an ID
+of <code>1</code>, how should Ember Data load it? Is it over HTTP or a WebSocket?
+If it&#39;s HTTP, is the URL <code>/person/1</code> or <code>/resources/people/1</code>?</p>
+
+<p>The adapter is responsible for answering all of these questions.
+Whenever your app asks the store for a record that it doesn&#39;t have
+cached, it will ask the adapter for it. If you change a record and save
+it, the store will hand the record to the adapter to send the
+appropriate data to your server and confirm that the save was
+successful.</p>
+<h4 class='anchorable-toc' id='toc_serializer'>Serializer</h4>
+<p>A <strong>serializer</strong> is responsible for turning a raw JSON payload returned
+from your server into a record object.</p>
+
+<p>JSON APIs may represent attributes and relationships in many different
+ways. For example, some attribute names may be <code>camelCased</code> and others
+may be <code>under_scored</code>. Representing relationships is even more diverse:
+they may be encoded as an array of IDs, an array of embedded objects, or
+as foreign keys.</p>
+
+<p>When the adapter gets a payload back for a particular record, it will
+give that payload to the serializer to normalize into the form that
+Ember Data is expecting.</p>
+
+<p>While most people will use a serializer for normalizing JSON, because
+Ember Data treats these payloads as opaque objects, there&#39;s no reason
+they couldn&#39;t be binary data stored in a <code>Blob</code> or
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays/ArrayBuffer">ArrayBuffer</a>.</p>
+<h4 class='anchorable-toc' id='toc_automatic-caching'>Automatic Caching</h4>
+<p>The store will automatically caches records for you. If a record had already
+been loaded, asking for it a second time will always return the same
+object instance. This minimizes the number of round-trips to the
+server, and allows your application to render UI to the user as fast as
+possible.</p>
+
+<p>For example, the first time your application asks the store for a
+<code>person</code> record with an ID of <code>1</code>, it will fetch that information from
+your server.</p>
+
+<p>However, the next time your app asks for a <code>person</code> with ID <code>1</code>, the
+store will notice that it had already retrieved and cached that
+information from the server. Instead of sending another request for the
+same information, it will give your application the same record it had
+provided it the first time.  This feature—always returning the same
+record object, no matter how many times you look it up—is sometimes
+called an <em>identity map</em>.</p>
+
+<p>Using an identity map is important because it ensures that changes you
+make in one part of your UI are propagated to other parts of the UI. It
+also means that you don&#39;t have to manually keep records in sync—you can
+ask for a record by ID and not have to worry about whether other parts
+of your application have already asked for and loaded it.</p>
+<h3 class='anchorable-toc' id='toc_architecture-overview'>Architecture Overview</h3>
+<p>The first time your application asks the store for a record, the store
+sees that it doesn&#39;t have a local copy and requests it from your
+adapter. Your adapter will go and retrieve the record from your
+persistence layer; typically, this will be a JSON representation of the
+record served from an HTTP server.</p>
+
+<p><img src="/images/guides/models/finding-unloaded-record-step1-diagram.png" alt="Diagram showing process for finding an unloaded record"></p>
+
+<p>As illustrated in the diagram above, the adapter cannot always
+immediately return the requested record immediately. In this case, the
+adapter must make an <em>asynchronous</em> request to the server, and only when
+that request finishes loading can the record be created with its backing
+data.</p>
+
+<p>Because of this asynchronicity, the store immediately returns a
+<em>promise</em> from the <code>find()</code> method. Similarly, any requests that the
+store makes to the adapter also return promises.</p>
+
+<p>Once the request to the server returns with a JSON payload for the
+requested record, the adapter resolves the promise it returned to the
+store with the JSON.</p>
+
+<p>The store then takes that JSON, initializes the record with the
+JSON data, and resolves the promise returned to your application
+with the newly-loaded record.</p>
+
+<p><img src="/images/guides/models/finding-unloaded-record-step2-diagram.png" alt="Diagram showing process for finding an unloaded record after the payload has returned from the server"></p>
+
+<p>Let&#39;s look at what happens if you request a record that the store
+already has in its cache. </p>
+
+<p><img src="/images/guides/models/finding-loaded-record-diagram.png" alt="Diagram showing process for finding an unloaded record after the payload has returned from the server"></p>
+
+<p>In this case, because the store already knew about the record, it
+returns a promise that it resolves with the record immediately. It does
+not need to ask the adapter (and, therefore, the server) for a copy
+since it already has it saved locally.</p>
+
+<hr>
+
+<p>These are the core concepts you should understand to get the most out of
+Ember Data. The following sections go into more depth about each of
+these concepts, and how to use them together.</p>
 
     
       <footer>
@@ -549,8 +706,8 @@ passing build from the &quot;master&quot; branch from <a href="http://builds.emb
              ← Controllers: Managing Dependencies Between Controllers
           </a>
          
-        <a class="next-guide" href="/guides/models/defining-a-store">
-          Defining a Store →
+        <a class="next-guide" href="/guides/models/using-the-store">
+          Using the Store →
         </a>
       
       </footer>

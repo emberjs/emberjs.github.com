@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Models: Finding Models</title>
+    <title>Ember.js - Models: Working with Records</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
@@ -36,7 +36,7 @@
   
   </head>
 
-  <body class="guides guides_models guides_models_finding-models guides_models_finding-models_index">
+  <body class="guides guides_models guides_models_working-with-records guides_models_working-with-records_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -340,31 +340,39 @@
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/defining-a-store">Defining a Store</a>
+              <a href="/guides/models/using-the-store">Using the Store</a>
             </li>
           
             <li class="level-3">
               <a href="/guides/models/defining-models">Defining Models</a>
             </li>
           
+            <li class="level-3">
+              <a href="/guides/models/finding-a-record">Finding a Record</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/finding-all-records-of-a-type">Finding All Records of a Type</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/pushing-records-into-the-store">Pushing Records into the Store</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/querying-the-server-for-records">Querying the Server for Records</a>
+            </li>
+          
             <li class="level-3 sub-selected">
-              <a href="/guides/models/finding-models">Finding Models</a>
+              <a href="/guides/models/working-with-records">Working with Records</a>
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/modifying-attributes">Modifying Attributes</a>
+              <a href="/guides/models/connecting-to-an-http-server">Connecting to an HTTP Server</a>
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/model-lifecycle">Model Lifecycle</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/models/the-fixture-adapter">The Fixture Adapter</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/models/the-rest-adapter">The REST Adapter</a>
+              <a href="/guides/models/frequently-asked-questions">Frequently Asked Questions</a>
             </li>
           </ol></li>
           <li class="level-1">
@@ -492,83 +500,72 @@
   
 
   
-    
-          <div class="under_construction_warning">
-            <h3>
-              <div class="msg">
-                Warning: ember-data is a work in progress and under rapid development.
-                <br/>
-                <span class="more_caution">Use with caution!!!</span>
-              </div>
-            </h3>
-          </div>
-        
-  
   <div class="chapter">
     
-        <h1>Finding Models 
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/models/finding-models.md" target="_blank" class="edit-page">
+        <h1>Working with Records 
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/models/working-with-records.md" target="_blank" class="edit-page">
             Edit Page</a>
         </h1>
       
     <hr>
-    <p>You can retrieve a record by passing its unique ID to the <code>find()</code> method:</p>
+    <h3 class='anchorable-toc' id='toc_modifying-attributes'>Modifying Attributes</h3>
+<p>Once a record has been loaded, you can begin making changes to its
+attributes. Attributes behave just like normal properties in Ember.js
+objects. Making changes is as simple as setting the attribute you
+want to change:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
+2
+3
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> post = App.Post.find(<span class="integer">1</span>);
+  <td class="code"><pre><span class="keyword">var</span> tyrion = App.Person.find(<span class="integer">1</span>);
+<span class="comment">// ...after the record has loaded</span>
+tyrion.set(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Yollo</span><span class="delimiter">&quot;</span></span>);
 </pre></td>
 </tr></table>
 </div></div>
-<p>If a record with that ID has already been created, it will be returned
-immediately. This feature is sometimes called an <em>identity map</em>.</p>
-
-<p>Otherwise, a new record will be created and put into the loading
-state, then returned. Feel free to use this record in templates; because
-everything in Ember.js is bindings-aware, templates will automatically
-update as soon as the record finishes loading.</p>
-<h3 class='anchorable-toc' id='toc_finding-all-records'>Finding All Records</h3>
-<p>You can find all records for a given model by calling <code>find()</code> without
-arguments:</p>
+<p>All of the Ember.js conveniences are available for
+modifying attributes. For example, you can use <code>Ember.Object</code>&#39;s
+<code>incrementProperty</code> helper:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
+2
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> posts = App.Post.find();
+  <td class="code"><pre>person.incrementProperty(<span class="string"><span class="delimiter">'</span><span class="content">age</span><span class="delimiter">'</span></span>);
+<span class="comment">// Happy birthday!</span>
 </pre></td>
 </tr></table>
 </div></div>
-<p>This will return an instance of <code>DS.RecordArray</code>. Like with records, the
-record array will start in a loading state with a <code>length</code> of <code>0</code>, but
-you can immediately use it in your templates. When the server responds
-with results, the templates will watch for changes in the length of the
-array and update themselves automatically.</p>
-
-<p>Note: <code>DS.RecordArray</code> is not a JavaScript array, it is an object that
-implements <code>Ember.Enumerable</code>. If you want to, for example, retrieve
-records by index, you must use the <code>objectAt(index)</code> method. Since the
-object is not a JavaScript array, using the <code>[]</code> notation will not work.
-For more information, see <a href="http://emberjs.com/api/classes/Ember.Enumerable.html">Ember.Enumerable</a> and <a href="http://emberjs.com/api/classes/Ember.Array.html">Ember.Array</a>.</p>
-<h3 class='anchorable-toc' id='toc_queries'>Queries</h3>
-<p>You can query the server by passing a hash  to <code>find()</code>.</p>
+<p>You can tell if a record has outstanding changes that have not yet been
+saved by checking its <code>isDirty</code> property.</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> people = App.Person.find({ <span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Peter</span><span class="delimiter">&quot;</span></span> });
+  <td class="code"><pre>person.get(<span class="string"><span class="delimiter">'</span><span class="content">isDirty</span><span class="delimiter">'</span></span>);
+<span class="comment">//=&gt; false</span>
+
+person.set(<span class="string"><span class="delimiter">'</span><span class="content">isAdmin</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
+
+person.get(<span class="string"><span class="delimiter">'</span><span class="content">isDirty</span><span class="delimiter">'</span></span>);
+<span class="comment">//=&gt; true</span>
 </pre></td>
 </tr></table>
 </div></div>
-<p>The contents of the hash is opaque to Ember Data; it is up to your
-server to interpret it and return a list of records.</p>
-
     
       <footer>
         
-          <a class="previous-guide" href="/guides/models/defining-models">
-            ← Defining Models
+          <a class="previous-guide" href="/guides/models/querying-the-server-for-records">
+            ← Querying the Server for Records
           </a>
          
-        <a class="next-guide" href="/guides/models/modifying-attributes">
-          Modifying Attributes →
+        <a class="next-guide" href="/guides/models/connecting-to-an-http-server">
+          Connecting to an HTTP Server →
         </a>
       
       </footer>

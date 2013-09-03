@@ -340,7 +340,7 @@
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/defining-a-store">Defining a Store</a>
+              <a href="/guides/models/using-the-store">Using the Store</a>
             </li>
           
             <li class="level-3">
@@ -348,23 +348,31 @@
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/finding-models">Finding Models</a>
+              <a href="/guides/models/finding-a-record">Finding a Record</a>
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/modifying-attributes">Modifying Attributes</a>
+              <a href="/guides/models/finding-all-records-of-a-type">Finding All Records of a Type</a>
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/model-lifecycle">Model Lifecycle</a>
+              <a href="/guides/models/pushing-records-into-the-store">Pushing Records into the Store</a>
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/the-fixture-adapter">The Fixture Adapter</a>
+              <a href="/guides/models/querying-the-server-for-records">Querying the Server for Records</a>
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/the-rest-adapter">The REST Adapter</a>
+              <a href="/guides/models/working-with-records">Working with Records</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/connecting-to-an-http-server">Connecting to an HTTP Server</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/frequently-asked-questions">Frequently Asked Questions</a>
             </li>
           </ol></li>
           <li class="level-1">
@@ -500,14 +508,18 @@
         </h1>
       
     <hr>
-    <p>In the router, each URL is associated with one or more <em>route handlers</em>.
-The route handler is responsible for converting the URL into a model
-object, telling a controller to represent that model, then rendering a
-template bound to that controller.</p>
-<h3 class='anchorable-toc' id='toc_singleton-models'>Singleton Models</h3>
-<p>If a route does not have a dynamic segment, you can hardcode which model
-should be associated with that URL by implementing the route handler&#39;s
-<code>model</code> hook:</p>
+    <p>Templates in your application are backed by models. But how do templates
+know which model they should display?</p>
+
+<p>For example, if you have a <code>photos</code> template, how does it know which
+model to render?</p>
+
+<p>This is one of the jobs of an <code>Ember.Route</code>. You can tell a template
+which model it should render by defining a route with the same name as
+the template, and implementing its <code>model</code> hook.</p>
+
+<p>For example, to provide some model data to the <code>photos</code> template, we
+would define an <code>App.PhotosRoute</code> object:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -518,26 +530,182 @@ should be associated with that URL by implementing the route handler&#39;s
 7
 8
 9
+<strong>10</strong>
+11
 </pre></td>
-  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
-  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>);
-});
-
-App.PostsRoute = Ember.Route.extend({
+  <td class="code"><pre>App.PhotosRoute = Ember.Route.extend({
   <span class="function">model</span>: <span class="keyword">function</span>() {
-    <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">store</span><span class="delimiter">'</span></span>).find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>);
+    <span class="keyword">return</span> [{
+      <span class="key">title</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Tomster</span><span class="delimiter">&quot;</span></span>,
+      <span class="key">url</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">http://emberjs.com/images/about/ember-productivity-sm.png</span><span class="delimiter">&quot;</span></span>
+    }, {
+      <span class="key">title</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Eiffel Tower</span><span class="delimiter">&quot;</span></span>,
+      <span class="key">url</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">http://emberjs.com/images/about/ember-structure-sm.png</span><span class="delimiter">&quot;</span></span>
+    }];
   }
 });
 </pre></td>
 </tr></table>
 </div></div>
+<p><a class="jsbin-embed" href="http://jsbin.com/oLUTEd/1/embed?js">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<h3 class='anchorable-toc' id='toc_asynchronously-loading-models'>Asynchronously Loading Models</h3>
+<p>In the above example, the model data was returned synchronously from the
+<code>model</code> hook. This means that the data was available immediately and
+your application did not need to wait for it to load, in this case
+because we immediately returned an array of hardcoded data.</p>
+
+<p>Of course, this is not always realistic. Usually, the data will not be
+available synchronously, but instead must be loaded asynchronously over
+the network. For example, we may want to retrieve the list of photos
+from a JSON API available on our server.</p>
+
+<p>In cases where data is available asynchronously, you can just return a
+promise from the <code>model</code> hook, and Ember will wait until that promise is
+resolved before rendering the template.</p>
+
+<p>If you&#39;re unfamiliar with promises, the basic idea is that they are
+objects that represent eventual values. For example, if you use jQuery&#39;s
+<code>getJSON()</code> method, it will return a promise for the JSON that is
+eventually returned over the network. Ember uses this promise object to
+know when it has enough data to continue rendering.</p>
+
+<p>For more about promises, see <a href="/guides/routing/asynchronous-routing/#toc_a-word-on-promises">A Word on
+Promises</a>
+in the Asynchronous Routing guide.</p>
+
+<p>Let&#39;s look at an example in action. Here&#39;s a route that loads the most
+recent pull requests sent to Ember.js on GitHub:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.PullRequestsRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> Ember.<span class="predefined">$</span>.getJSON(<span class="string"><span class="delimiter">'</span><span class="content">https://api.github.com/repos/emberjs/ember.js/pulls</span><span class="delimiter">'</span></span>);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>While this example looks like it&#39;s synchronous, making it easy to read
+and reason about, it&#39;s actually completely asynchronous. That&#39;s because
+jQuery&#39;s <code>getJSON()</code> method returns a promise. Ember will detect the
+fact that you&#39;ve returned a promise from the <code>model</code> hook, and wait
+until that promise resolves to render the <code>pullRequest</code> template.</p>
+
+<p>(For more information on jQuery&#39;s XHR functionality, see
+<a href="http://api.jquery.com/jQuery.ajax/">jQuery.ajax</a> in the jQuery
+documentation.)</p>
+
+<p>Because Ember supports promises, it can work with any persistence
+library that uses them as part of its public API. You can also use many
+of the conveniences built in to promises to make your code even nicer.</p>
+
+<p>For example, imagine if we wanted to modify the above example so that
+the template only displayed the three most recent pull requests. We can
+rely on promise chaining to modify the data returned from the JSON
+request before it gets passed to the template:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre>App.PullRequestsRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>() {
+    <span class="keyword">var</span> url = <span class="string"><span class="delimiter">'</span><span class="content">https://api.github.com/repos/emberjs/ember.js/pulls</span><span class="delimiter">'</span></span>;
+    <span class="keyword">return</span> Ember.<span class="predefined">$</span>.getJSON(url).then(<span class="keyword">function</span>(data) {
+      <span class="keyword">return</span> data.splice(<span class="integer">0</span>, <span class="integer">3</span>);
+    });
+  }
+});
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_setting-up-controllers-with-the-model'>Setting Up Controllers with the Model</h3>
+<p>So what actually happens with the value you return from the <code>model</code>
+hook?</p>
+
 <p>By default, the value returned from your <code>model</code> hook will be assigned
-to the <code>model</code> property of the <code>posts</code> controller. You can change this
-behavior by implementing the <a href="/guides/routing/setting-up-a-controller">setupControllers hook</a>. The <code>posts</code>
-controller is the context for the <code>posts</code> template.</p>
+to the <code>model</code> property of the associated controller. For example, if your
+<code>App.PostsRoute</code> returns an object from its <code>model</code> hook, that object
+will be set as the <code>model</code> property of the <code>App.PostsController</code>.</p>
+
+<p>(This, under the hood, is how template&#39;s know which model to render: they
+look at their associated controller&#39;s <code>model</code> property. For example, the
+<code>photos</code> template will render whatever the <code>App.PhotosController</code>&#39;s
+<code>model</code> property is set to.)</p>
+
+<p>See the <a href="/guides/routing/setting-up-a-controller">Setting Up a Controller guide</a> to learn how to change this
+default behavior. Note that if you override the default behavior and do
+not set the <code>model</code> property on a controller, your template will not
+have any data to render!</p>
 <h3 class='anchorable-toc' id='toc_dynamic-models'>Dynamic Models</h3>
-<p>If a route has a dynamic segment, you will want to use the parameters to
-decide which model to use:</p>
+<p>Some routes always display the same model. For example, the <code>/photos</code>
+route will always display the same list of photos available in the
+application. If your user leaves this route and comes back later, the
+model does not change.</p>
+
+<p>However, you will often have a route whose model will change depending
+on user interaction. For example, imagine a photo viewer app. The
+<code>/photos</code> route will render the <code>photos</code> template with the list of
+photos as the model, which never changes. But when the user clicks on a
+particular photo, we want to display that model with the <code>photo</code>
+template. If the user goes back and clicks on a different photo, we want
+to display the <code>photo</code> template again, this time with a different model.</p>
+
+<p>In cases like this, it&#39;s important that we include some information in
+the URL about not only which template to display, but also which model.</p>
+
+<p>In Ember, this is accomplished by defining routes with <em>dynamic segments</em>.</p>
+
+<p>A dynamic segment is a part of the URL that is filled in by the current
+model&#39;s ID. Dynamic segments always start with a colon (<code>:</code>). Our photo
+example might have its <code>photo</code> route defined like this:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">photo</span><span class="delimiter">'</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">/photos/:photo_id</span><span class="delimiter">'</span></span> });
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>In this example, the <code>photo</code> route has a dynamic segment <code>:photo_id</code>.
+When the user goes to the <code>photo</code> route to display a particular photo
+model (usually via the <code>{{link-to}}</code> helper), that model&#39;s ID will be
+placed into the URL automatically.</p>
+
+<p>See <a href="/guides/templates/links">Links</a> for more information about linking
+to a route with a model using the <code>{{link-to}}</code> helper.</p>
+
+<p>For example, if you transitioned to the <code>photo</code> route with a model whose
+<code>id</code> property was <code>47</code>, the URL in the user&#39;s browser would be updated
+to:</p>
+<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>/photos/47
+</pre></td>
+</tr></table>
+</div></div>
+<p>What happens if the user visits your application directly with a URL
+that contains a dynamic segment? For example, they might reload the
+page, or send the link to a friend, who clicks on it. At that point,
+because we are starting the application up from scratch, the actual
+JavaScript model object to display has been lost; all we have is the ID
+from the URL.</p>
+
+<p>Luckily, Ember will extract any dynamic segments from the URL for
+you and pass them as a hash to the <code>model</code> hook as the first argument:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -550,34 +718,38 @@ decide which model to use:</p>
 9
 </pre></td>
   <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
-  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">/posts/:post_id</span><span class="delimiter">'</span></span> });
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">photo</span><span class="delimiter">'</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">/photos/:photo_id</span><span class="delimiter">'</span></span> });
 });
 
-App.PostRoute = Ember.Route.extend({
+App.PhotoRoute = Ember.Route.extend({
   <span class="function">model</span>: <span class="keyword">function</span>(params) {
-    <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">store</span><span class="delimiter">'</span></span>).find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, params.post_id);
+    <span class="keyword">return</span> Ember.<span class="predefined">$</span>.getJSON(<span class="string"><span class="delimiter">'</span><span class="content">/photos/</span><span class="delimiter">'</span></span>+params.photo_id);
   }
 });
 </pre></td>
 </tr></table>
 </div></div>
-<p>Because this pattern is so common, the above <code>model</code> hook is the
-default behavior.</p>
-
-<p>For example, if the dynamic segment is <code>:post_id</code>, Ember.js is smart
-enough to know that it should use the model <code>App.Post</code> (with the ID
-provided in the URL). Specifically, unless you override <code>model</code>, the route will
-return <code>App.Post.find(params.post_id)</code> automatically.</p>
-
-<p>Not coincidentally, this is exactly what Ember Data expects. So if you
-use the Ember router with Ember Data, your dynamic segments will work
-as expected out of the box.</p>
+<p>In the <code>model</code> hook for routes with dynamic segments, it&#39;s your job to
+turn the ID (something like <code>47</code> or <code>post-slug</code>) into a model that can
+be rendered by the route&#39;s template. In the above example, we use the
+photo&#39;s ID (<code>params.photo_id</code>) to construct a URL for the JSON
+representation of that photo. Once we have the URL, we use jQuery to
+return a promise for the JSON model data.</p>
 
 <p>Note: A route with a dynamic segment will only have its <code>model</code> hook called
 when it is entered via the URL. If the route is entered through a transition
 (e.g. when using the <a href="/guides/templates/links">link-to</a> Handlebars helper), then a model context is
 already provided and the hook is not executed. Routes without dynamic segments
 will always execute the model hook.</p>
+<h3 class='anchorable-toc' id='toc_ember-data'>Ember Data</h3>
+<p>Many Ember developers use a model library to make finding and saving
+records easier than manually managing Ajax calls. In particular, using a
+model library allows you to cache records that have been loaded,
+significantly improving the performance of your application.</p>
+
+<p>One popular model library built for Ember is Ember Data. To learn more
+about using Ember Data to manage your models, see the
+<a href="/guides/models">Models</a> guide.</p>
 
     
       <footer>
