@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Views: Adding Layouts to Views</title>
+    <title>Ember.js - Templates: Input Helpers</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
@@ -36,7 +36,7 @@
   
   </head>
 
-  <body class="guides guides_views guides_views_adding-layouts-to-views guides_views_adding-layouts-to-views_index">
+  <body class="guides guides_templates guides_templates_input-helpers guides_templates_input-helpers_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -183,9 +183,9 @@
               <a href="/guides/application">Introduction</a>
             </li>
           </ol></li>
-          <li class="level-1">
+          <li class="level-1 selected">
             <a href="/guides/templates/the-application-template">Templates</a>
-            <ol>
+            <ol class='selected'>
         
             <li class="level-3">
               <a href="/guides/templates/the-application-template">The Application Template</a>
@@ -223,7 +223,7 @@
               <a href="/guides/templates/actions">Actions</a>
             </li>
           
-            <li class="level-3">
+            <li class="level-3 sub-selected">
               <a href="/guides/templates/input-helpers">Input Helpers</a>
             </li>
           
@@ -367,9 +367,9 @@
               <a href="/guides/models/the-rest-adapter">The REST Adapter</a>
             </li>
           </ol></li>
-          <li class="level-1 selected">
+          <li class="level-1">
             <a href="/guides/views">Views</a>
-            <ol class='selected'>
+            <ol>
         
             <li class="level-3">
               <a href="/guides/views">Introduction</a>
@@ -387,7 +387,7 @@
               <a href="/guides/views/inserting-views-in-templates">Inserting Views in Templates</a>
             </li>
           
-            <li class="level-3 sub-selected">
+            <li class="level-3">
               <a href="/guides/views/adding-layouts-to-views">Adding Layouts to Views</a>
             </li>
           
@@ -494,149 +494,114 @@
   
   <div class="chapter">
     
-        <h1>Adding Layouts to Views 
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/views/adding-layouts-to-views.md" target="_blank" class="edit-page">
+        <h1>Input Helpers 
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/templates/input-helpers.md" target="_blank" class="edit-page">
             Edit Page</a>
         </h1>
       
     <hr>
-    <p>Views can have a secondary template that wraps their main template. Like templates,
-layouts are Handlebars templates that will be inserted inside the
-view&#39;s tag.</p>
-
-<p>To tell a view which layout template to use, set its <code>layoutName</code> property.</p>
-
-<p>To tell the layout template where to insert the main template, use the Handlebars <code>{{yield}}</code> helper.
-The HTML contents of a view&#39;s rendered <code>template</code> will be inserted where the <code>{{yield}}</code> helper is.</p>
-
-<p>First, you define the following layout template:</p>
+    <h2 class='anchorable-toc' id='toc_input-helpers'>Input Helpers</h2>
+<p>The <code>{{input}}</code> and <code>{{textarea}}</code> helpers in Ember are the easiest way to
+create common form controls. The <code>{{input}}</code> helper wraps the built-in
+<a href="/api/classes/Ember.TextField.html">Ember.TextField</a> and <a href="/api/classes/Ember.Checkbox.html">Ember.Checkbox</a> views, while <code>{{textarea}}</code> wraps
+<a href="/api/classes/Ember.TextArea.html">Ember.TextArea</a>. Using these helpers, you can create these views with
+declarations almost identical to how you&#39;d create a traditional <code>&lt;input&gt;</code> or
+<code>&lt;textarea&gt;</code> element.</p>
+<h3 class='anchorable-toc' id='toc_text-fields'>Text fields</h3><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">input</span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.facebook.com</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Will become:</p>
 <div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
-2
-3
-4
-5
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">my_layout</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-<span class="inline">  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">content-wrapper</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    {{yield}}
-  <span class="tag">&lt;/div&gt;</span></span>
-<span class="tag">&lt;/script&gt;</span>
+  <td class="code"><pre><span class="tag">&lt;input</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.facebook.com</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
-<p>And then the following main template:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">my_content</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-<span class="inline">  Hello, <span class="tag">&lt;b&gt;</span>{{view.name}}<span class="tag">&lt;/b&gt;</span>!</span>
-<span class="tag">&lt;/script&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>Finally, you define a view, and instruct it to wrap the template with the defined layout:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre>AViewWithLayout = Ember.View.extend({
-  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Teddy</span><span class="delimiter">'</span></span>,
-  <span class="key">layoutName</span>: <span class="string"><span class="delimiter">'</span><span class="content">my_layout</span><span class="delimiter">'</span></span>,
-  <span class="key">templateName</span>: <span class="string"><span class="delimiter">'</span><span class="content">my_content</span><span class="delimiter">'</span></span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>This will result in view instances containing the following HTML</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">content-wrapper</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-  Hello, <span class="tag">&lt;b&gt;</span>Teddy<span class="tag">&lt;/b&gt;</span>!
-<span class="tag">&lt;/div&gt;</span>
-</pre></td>
-</tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_applying-layouts-in-practice'>Applying Layouts in Practice</h4>
-<p>Layouts are extremely useful when you have a view with a common wrapper and behavior, but its main template might change.
-One possible scenario is a Popup View.</p>
+<p>You can pass the following standard <code>&lt;input&gt;</code> attributes within the input
+helper:</p>
 
-<p>You can define your popup layout template:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">popup</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-<span class="inline">  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">popup</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    <span class="tag">&lt;button</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">popup-dismiss</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>x<span class="tag">&lt;/button&gt;</span>
-    <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">popup-content</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    {{yield}}
-    <span class="tag">&lt;/div&gt;</span>
-  &lt;<span class="regexp"><span class="delimiter">/</span><span class="content">div&gt;</span></span></span>
-<span class="tag">&lt;/script&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>Then define your popup view:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre>App.PopupView = Ember.View.extend({
-  <span class="key">layoutName</span>: <span class="string"><span class="delimiter">'</span><span class="content">popup</span><span class="delimiter">'</span></span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Now you can re-use your popup with different templates:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-</pre></td>
-  <td class="code"><pre>{{#view App.PopupView}}
-  <span class="tag">&lt;form&gt;</span>
-    <span class="tag">&lt;label</span> <span class="attribute-name">for</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Name:<span class="tag">&lt;/label&gt;</span>
-    <span class="tag">&lt;input</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-  <span class="tag">&lt;/form&gt;</span>
-{{/view}}
+<ul>
+<li><code>value</code></li>
+<li><code>size</code></li>
+<li><code>name</code></li>
+<li><code>pattern</code></li>
+<li><code>placeholder</code></li>
+<li><code>disabled</code></li>
+<li><code>maxlength</code></li>
+<li><code>tabindex</code></li>
+</ul>
 
-{{#view App.PopupView}}
-  <span class="tag">&lt;p&gt;</span> Thank you for signing up! <span class="tag">&lt;/p&gt;</span>
-{{/view}}
+<p>If these attributes are set to a quoted string, their values will be set
+directly on the element, as in the previous example. However, when left
+unquoted, these values will be bound to a property on the template&#39;s current
+rendering context. For example:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">input</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="attribute-value">firstName</span> <span class="attribute-name">disabled</span>=<span class="attribute-value">entryNotAllowed</span> <span class="attribute-name">size</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">50</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>
+<p>Will bind the <code>disabled</code> attribute to the value of <code>entryNotAllowed</code> in the
+current context.</p>
+<h3 class='anchorable-toc' id='toc_checkboxes'>Checkboxes</h3>
+<p>You can also use the <code>{{input}}</code> helper to create a checkbox by setting its
+<code>type</code>:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">input</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">checkbox</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">isAdmin</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">checked</span>=<span class="attribute-value">isAdmin</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Checkboxes support the following properties:</p>
+
+<ul>
+<li><code>checked</code></li>
+<li><code>disabled</code></li>
+<li><code>tabindex</code></li>
+<li><code>indeterminate</code></li>
+<li><code>name</code></li>
+</ul>
+
+<p>Which can be bound or set as described in the previous section.</p>
+<h3 class='anchorable-toc' id='toc_text-areas'>Text Areas</h3><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">textarea</span> <span class="attribute-name">value</span>=<span class="attribute-value">name</span> <span class="attribute-name">cols</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">80</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">rows</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">6</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Will bind the value of the text area to <code>name</code> on the current context.</p>
+
+<p><code>{{textarea}}</code> supports binding and/or setting the following properties:</p>
+
+<ul>
+<li><code>rows</code></li>
+<li><code>cols</code></li>
+<li><code>placeholder</code></li>
+<li><code>disabled</code></li>
+<li><code>maxlength</code></li>
+<li><code>tabindex</code></li>
+</ul>
+<h3 class='anchorable-toc' id='toc_extending-built-in-controls'>Extending Built-In Controls</h3>
+<p>See the <a href="/guides/views/built-in-views">Built-in Views</a> section of these guides to learn how to further
+extend these views.</p>
+
     
       <footer>
         
-          <a class="previous-guide" href="/guides/views/inserting-views-in-templates">
-            ← Inserting Views in Templates
+          <a class="previous-guide" href="/guides/templates/actions">
+            ← Actions
           </a>
          
-        <a class="next-guide" href="/guides/views/customizing-a-views-element">
-          Customizing a View's Element →
+        <a class="next-guide" href="/guides/templates/rendering-with-helpers">
+          Rendering with Helpers →
         </a>
       
       </footer>
