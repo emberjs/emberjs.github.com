@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Guides</title>
+    <title>Ember.js - Contributing to Ember.js: Adding New Features</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
@@ -36,7 +36,7 @@
   
   </head>
 
-  <body class="guides guides_models guides_models_connecting-to-a-streaming-api guides_models_connecting-to-a-streaming-api_index">
+  <body class="guides guides_contributing guides_contributing_adding-new-features guides_contributing_adding-new-features_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -331,9 +331,9 @@
               <a href="/guides/controllers/dependencies-between-controllers">Managing Dependencies Between Controllers</a>
             </li>
           </ol></li>
-          <li class="level-1 selected">
+          <li class="level-1">
             <a href="/guides/models">Models</a>
-            <ol class='selected'>
+            <ol>
         
             <li class="level-3">
               <a href="/guides/models">Introduction</a>
@@ -491,11 +491,11 @@
               <a href="/guides/understanding-ember/debugging">Debugging</a>
             </li>
           </ol></li>
-          <li class="level-1">
+          <li class="level-1 selected">
             <a href="/guides/contributing/adding-new-features">Contributing to Ember.js</a>
-            <ol>
+            <ol class='selected'>
         
-            <li class="level-3">
+            <li class="level-3 sub-selected">
               <a href="/guides/contributing/adding-new-features">Adding New Features</a>
             </li>
           </ol></li></ol>
@@ -510,19 +510,165 @@
   
   <div class="chapter">
     
+        <h1>Adding New Features 
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/contributing/adding-new-features.md" target="_blank" class="edit-page">
+            Edit Page</a>
+        </h1>
+      
     <hr>
-    
+    <p>In general, new feature development should be done on master.</p>
+
+<p>Bugfixes should not introduce new APIs or break existing APIs, and do
+not need feature flags.</p>
+
+<p>Features can introduce new APIs, and need feature flags. They should not
+be applied to the release or beta branches, since SemVer requires
+bumping the minor version to introduce new features.</p>
+
+<p>Security fixes should not introduce new APIs, but may, if strictly
+necessary, break existing APIs. Such breakages should be as limited as
+possible.</p>
+<h3 class='anchorable-toc' id='toc_bug-fixes'>Bug Fixes</h3><h4 class='anchorable-toc' id='toc_urgent-bug-fixes'>Urgent Bug Fixes</h4>
+<p>Urgent bugfixes are bugfixes that need to be applied to the existing
+release branch. If possible, they should be made on master and prefixed
+with [BUGFIX release].</p>
+<h4 class='anchorable-toc' id='toc_beta-bug-fixes'>Beta Bug Fixes</h4>
+<p>Beta bugfixes are bugfixes that need to be applied to the beta branch.
+If possible, they should be made on master and tagged with [BUGFIX
+beta].</p>
+<h4 class='anchorable-toc' id='toc_security-fixes'>Security Fixes</h4>
+<p>Security fixes need to be applied to the beta branch, the current
+release branch, and the previous tag. If possible, they should be made
+on master and tagged with [SECURITY].</p>
+<h3 class='anchorable-toc' id='toc_features'>Features</h3>
+<p>Features must always be wrapped in a feature flag. Tests for the feature
+must also be wrapped in a feature flag.</p>
+
+<p>Because the build-tools will process feature-flags, flags must use
+precisely this format. We are choosing conditionals rather than a block
+form because functions change the surrounding scope and may introduce
+problems with early return.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="keyword">if</span> (Ember.FEATURES.isEnabled(<span class="string"><span class="delimiter">&quot;</span><span class="content">feature</span><span class="delimiter">&quot;</span></span>)) {
+  <span class="comment">// implementation</span>
+} 
+</pre></td>
+</tr></table>
+</div></div>
+<p>Tests will always run with all features on, so make sure that any tests
+for the feature are passing against the current state of the feature.</p>
+<h4 class='anchorable-toc' id='toc_commits'>Commits</h4>
+<p>Commits related to a specific feature should include  a prefix like
+[FEATURE htmlbars]. This will allow us to quickly identify all commits
+for a specific feature in the future. Features will never be applied to
+beta or release branches. Once a beta or release branch has been cut, it
+contains all of the new features it will ever have.</p>
+
+<p>If a feature has made it into beta or release, and you make a commit to
+master that fixes a bug in the feature, treat it like a bugfix as
+described above.</p>
+<h4 class='anchorable-toc' id='toc_feature-naming-conventions'>Feature Naming Conventions</h4><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>Ember.FEATURES[<span class="string"><span class="delimiter">&quot;</span><span class="content">&lt;packageName&gt;-&lt;feature&gt;</span><span class="delimiter">&quot;</span></span>] <span class="comment">// if package specific</span>
+Ember.FEATURES[<span class="string"><span class="delimiter">&quot;</span><span class="content">container-factory-injections</span><span class="delimiter">&quot;</span></span>]
+Ember.FEATURES[<span class="string"><span class="delimiter">&quot;</span><span class="content">htmlbars</span><span class="delimiter">&quot;</span></span>]
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_builds'>Builds</h3>
+<p>The Canary build, which is based off master, will include all features,
+guarded by the conditionals in the original source. This means that
+users of the canary build can enable whatever features they want by
+enabling them before creating their Ember.Application.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>Ember.FEATURES[<span class="string"><span class="delimiter">&quot;</span><span class="content">htmlbars</span><span class="delimiter">&quot;</span></span>] = <span class="predefined-constant">true</span>;
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_code-features-json-code'><code>features.json</code></h3>
+<p>The root of the repository will contain a features.json file, which will
+contain a list of features that should be enabled for beta or release
+builds.</p>
+
+<p>This file is populated when branching, and may not gain additional
+features after the original branch. It may remove features.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">htmlbars</span><span class="delimiter">&quot;</span></span>: <span class="predefined-constant">true</span>
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>The build process will remove any features not included in the list, and
+remove the conditionals for features in the list.</p>
+<h3 class='anchorable-toc' id='toc_travis-testing'>Travis Testing</h3>
+<p>For a new PR:</p>
+
+<ol>
+<li>Travis will test against master with all feature flags on.</li>
+<li>If a commit is tagged with [BUGFIX beta], Travis will also
+cherry-pick the commit into beta, and run the tests on that
+branch. If the commit doesn&#39;t apply cleanly or the tests fail, the
+tests will fail.</li>
+<li>If a commit is tagged with [BUGFIX release], Travis will also cherry-pick
+the commit into release, and run the test on that branch. If the commit
+doesn&#39;t apply cleanly or the tests fail, the tests will fail.</li>
+</ol>
+
+<p>For a new commit to master:</p>
+
+<ol>
+<li>Travis will run the tests as described above.</li>
+<li>If the build passes, Travis will cherry-pick the commits into the
+appropriate branches.</li>
+</ol>
+
+<p>The idea is that new commits should be submitted as PRs to ensure they
+apply cleanly, and once the merge button is pressed, Travis will apply
+them to the right branches.</p>
+<h3 class='anchorable-toc' id='toc_go-no-go-process'>Go/No-Go Process</h3>
+<p>Every six weeks, the core team goes through the following process.</p>
+<h4 class='anchorable-toc' id='toc_beta-branch'>Beta Branch</h4>
+<p>All remaining features on the beta branch are vetted for readiness. If
+any feature isn&#39;t ready, it is removed from features.json.</p>
+
+<p>Once this is done, the beta branch is tagged and merged into release.</p>
+<h4 class='anchorable-toc' id='toc_master-branch'>Master Branch</h4>
+<p>All features on the master branch are vetted for readiness. In order for
+a feature to be considered &quot;ready&quot; at this stage, it must be ready as-is
+with no blockers. Features are a no-go even if they are close and
+additional work on the beta branch would make it ready.</p>
+
+<p>Because this process happens every six weeks, there will be another
+opportunity for a feature to make it soon enough.</p>
+
+<p>Once this is done, the master branch is merged into beta. A
+<code>features.json</code> file is added with the features that are ready.</p>
+<h3 class='anchorable-toc' id='toc_beta-releases'>Beta Releases</h3>
+<p>Every week, we repeat the Go/No-Go process for the features that remain
+on the beta branch. Any feature that has become unready is removed from
+the features.json.</p>
+
+<p>Once this is done, a Beta release is tagged and pushed.</p>
+
     
       <footer>
         
-          <a class="previous-guide" href="/guides/controllers/dependencies-between-controllers">
-             ← Controllers: Managing Dependencies Between Controllers
+          <a class="previous-guide" href="/guides/understanding-ember/debugging">
+             ← Understanding Ember.js: Debugging
           </a>
          
-          <a class="next-guide" href="/guides/views">
-             We're done with Models. Next up: Views - Introduction →
-          </a>
-        
       </footer>
       
   </div>
