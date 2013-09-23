@@ -4409,11 +4409,11 @@ hampster.get(<span class="string"><span class="delimiter">'</span><span class="c
 });
 
 <span class="keyword">var</span> lordByron = App.Person.create({<span class="key">children</span>: []});
-lordByron.get(<span class="string"><span class="delimiter">'</span><span class="content">childAge</span><span class="delimiter">'</span></span>); <span class="comment">// []</span>
+lordByron.get(<span class="string"><span class="delimiter">'</span><span class="content">childAges</span><span class="delimiter">'</span></span>); <span class="comment">// []</span>
 lordByron.get(<span class="string"><span class="delimiter">'</span><span class="content">children</span><span class="delimiter">'</span></span>).pushObject({<span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Augusta Ada Byron</span><span class="delimiter">'</span></span>, <span class="key">age</span>: <span class="integer">7</span>});
-lordByron.get(<span class="string"><span class="delimiter">'</span><span class="content">childAge</span><span class="delimiter">'</span></span>); <span class="comment">// [7]</span>
+lordByron.get(<span class="string"><span class="delimiter">'</span><span class="content">childAges</span><span class="delimiter">'</span></span>); <span class="comment">// [7]</span>
 lordByron.get(<span class="string"><span class="delimiter">'</span><span class="content">children</span><span class="delimiter">'</span></span>).pushObjects([{<span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Allegra Byron</span><span class="delimiter">'</span></span>, <span class="key">age</span>: <span class="integer">5</span>}, {<span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Elizabeth Medora Leigh</span><span class="delimiter">'</span></span>, <span class="key">age</span>: <span class="integer">8</span>}]);
-lordByron.get(<span class="string"><span class="delimiter">'</span><span class="content">childAge</span><span class="delimiter">'</span></span>); <span class="comment">// [7, 5, 8]</span>
+lordByron.get(<span class="string"><span class="delimiter">'</span><span class="content">childAges</span><span class="delimiter">'</span></span>); <span class="comment">// [7, 5, 8]</span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -6788,7 +6788,7 @@ enabled.</p>
 convert the object into a useful string description.</p>
 
 <p>It is a pretty simple implementation. If you want something more robust,
-use something like JSDump: https://github.com/NV/jsDump</p>
+use something like JSDump: <a href="https://github.com/NV/jsDump">https://github.com/NV/jsDump</a></p>
 
     </div>
   
@@ -8021,7 +8021,7 @@ enabled.</p>
     <div class="description">
       <p>Define a property as a function that should be executed when
 a specified event or events are triggered.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -8030,13 +8030,13 @@ a specified event or events are triggered.</p>
 6
 7
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> Job = Ember.Object.extend({
-  <span class="key">logCompleted</span>: Ember.on(<span class="string"><span class="delimiter">'</span><span class="content">completed</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(){
-    console.log(<span class="string"><span class="delimiter">'</span><span class="content">Job completed!</span><span class="delimiter">'</span></span>);
+  <td class="code"><pre>var Job = Ember.Object.extend({
+  logCompleted: Ember.on('completed', function(){
+    console.log('Job completed!');
   })
 });
-<span class="keyword">var</span> job = Job.create();
-Ember.sendEvent(job, <span class="string"><span class="delimiter">'</span><span class="content">completed</span><span class="delimiter">'</span></span>); <span class="comment">// Logs &quot;Job completed!&quot;</span>
+var job = Job.create();
+Ember.sendEvent(job, 'completed'); // Logs &quot;Job completed!&quot;
 </pre></td>
 </tr></table>
 </div></div>
@@ -9630,7 +9630,7 @@ an object has been destroyed.</p>
 <p>Use this instead of the built-in <code>typeof</code> to get the type of an item.
 It will return the same result across all browsers and includes a bit
 more detail. Here is what will be returned:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -9647,17 +9647,17 @@ more detail. Here is what will be returned:</p>
 </pre></td>
   <td class="code"><pre>| Return Value  | Meaning                                              |
 |---------------|------------------------------------------------------|
-| <span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>      | String primitive                                     |
-| <span class="string"><span class="delimiter">'</span><span class="content">number</span><span class="delimiter">'</span></span>      | Number primitive                                     |
-| <span class="string"><span class="delimiter">'</span><span class="content">boolean</span><span class="delimiter">'</span></span>     | Boolean primitive                                    |
-| <span class="string"><span class="delimiter">'</span><span class="content">null</span><span class="delimiter">'</span></span>        | Null value                                           |
-| <span class="string"><span class="delimiter">'</span><span class="content">undefined</span><span class="delimiter">'</span></span>   | Undefined value                                      |
-| <span class="string"><span class="delimiter">'</span><span class="content">function</span><span class="delimiter">'</span></span>    | A <span class="keyword">function</span>                                           |
-| <span class="string"><span class="delimiter">'</span><span class="content">array</span><span class="delimiter">'</span></span>       | An instance of Array                                 |
-| <span class="string"><span class="delimiter">'</span><span class="content">class</span><span class="delimiter">'</span></span>       | An Ember <span class="reserved">class</span> (created using Ember.Object.extend()) |
-| <span class="string"><span class="delimiter">'</span><span class="content">instance</span><span class="delimiter">'</span></span>    | An Ember object instance                             |
-| <span class="string"><span class="delimiter">'</span><span class="content">error</span><span class="delimiter">'</span></span>       | An instance of the Error object                      |
-| <span class="string"><span class="delimiter">'</span><span class="content">object</span><span class="delimiter">'</span></span>      | A JavaScript object not inheriting from Ember.Object |
+| 'string'      | String primitive                                     |
+| 'number'      | Number primitive                                     |
+| 'boolean'     | Boolean primitive                                    |
+| 'null'        | Null value                                           |
+| 'undefined'   | Undefined value                                      |
+| 'function'    | A function                                           |
+| 'array'       | An instance of Array                                 |
+| 'class'       | An Ember class (created using Ember.Object.extend()) |
+| 'instance'    | An Ember object instance                             |
+| 'error'       | An instance of the Error object                      |
+| 'object'      | A JavaScript object not inheriting from Ember.Object |
 </pre></td>
 </tr></table>
 </div></div>

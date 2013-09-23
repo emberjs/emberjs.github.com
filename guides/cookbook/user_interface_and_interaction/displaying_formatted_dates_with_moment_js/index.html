@@ -546,18 +546,20 @@
       
     <hr>
     <h3 class='anchorable-toc' id='toc_problem'>Problem</h3>
-<p>You want to display JavaScript Date objects in a human readable format.</p>
+<p>Display JavaScript Date objects in human readable format.</p>
 <h3 class='anchorable-toc' id='toc_solution'>Solution</h3>
-<p>There are two ways of formating the value:
-+ create a Handlebars helper <code>{{format-date}}</code> and use it in your template
-+ create a computed property <code>formattedDate</code> that will return a transformed date</p>
+<p>There are two ways of formatting the value:</p>
+
+<ol>
+<li>Create a Handlebars helper <code>{{format-date}}</code> and use it in your template</li>
+<li>Create a computed property <code>formattedDate</code> that will return a transformed date</li>
+</ol>
 
 <p>We will use <a href="http://momentjs.com">MomentJs</a> for formatting dates.</p>
 
-<p>Let&#39;s look at a simple example. You&#39;re working on the web site for your
-client and one of the requirements is to have current date on the index page.
-(in human readble format). This is a perfect place to use
-handlebars helper that would just &quot;pretty print&quot; current date:</p>
+<p>Let&#39;s look at a simple example. You&#39;re working on a website for your
+client, and one of the requirements is to have the current date on the index page in human readble format. This is a perfect place to use a
+Handlebars helper that &quot;pretty prints&quot; the current date:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -569,30 +571,41 @@ handlebars helper that would just &quot;pretty print&quot; current date:</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>And then your template will look like:
-<code>html
-Today&#39;s date: {{currentDate}}  // Today&#39;s date: August 30 2013
-</code></p>
-
-<p>You can even enhance your code and pass in the date format to the helper:
-<code>javascript
-Ember.Handlebars.registerBoundHelper(&#39;currentDate&#39;, function(format) {
-  return moment().format(format);
+<p>Your template will look like:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>Today's date: {{currentDate}}  // Today's date: August 30 2013
+</pre></td>
+</tr></table>
+</div></div>
+<p>You can even enhance your code and pass in the date format to the helper:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>Ember.Handlebars.registerBoundHelper(<span class="string"><span class="delimiter">'</span><span class="content">currentDate</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(format) {
+  <span class="keyword">return</span> moment().format(format);
 });
-</code></p>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Now you would need to pass an additional parameter to the helper:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>Today's date: {{currentDate 'LL'}}  // Today's date: August 30 2013
+</pre></td>
+</tr></table>
+</div></div>
+<p>Let&#39;s look at another example. Say you need
+to create a simple control that allows you to type in a date and
+a date format. The date will be formatted accordingly.</p>
 
-<p>Now you would need to pass an additional parameter to the helper:
-<code>html
-Today&#39;s date: {{currentDate &#39;LL&#39;}}  // Today&#39;s date: August 30 2013
-</code></p>
-
-<p>Now, let&#39;s take a look at another example. Say you need
-to create a simple control that allows you to type in a date,
-a date format and it will show you this date formatted accordingly.</p>
-
-<p>Let&#39;s define <code>formattedDate</code> computed property that depends on
+<p>Define <code>formattedDate</code> computed property that depends on
 <code>date</code> and <code>format</code>. Computed property in this example does
-the same thing as handlebars helpers defined above.</p>
+the same thing as Handlebars helpers defined above.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -626,20 +639,20 @@ the same thing as handlebars helpers defined above.</p>
 </pre></td>
 </tr></table>
 </div></div><h3 class='anchorable-toc' id='toc_discussion'>Discussion</h3>
-<p>Both helper and computed property are going to format you date value. 
-Question is which one do I use and when? Good question.</p>
+<p>Both helper and computed property can format your date value. 
+Which one do I use and when?</p>
 
-<p>Handlebars helpers are a shorthand for cases where you want to format
-a value specifically for presentation but that value might be used 
-across multiple different models and controllers.</p>
+<p>Handlebars helpers are shorthand for cases where you want to format
+a value specifically for presentation. That value may be used 
+across different models and controllers.</p>
 
 <p>You can use <code>{{currentDate}}</code> across your application to format dates
 without making any changes to controllers.</p>
 
-<p>Computed property in the example above does the same thing as
-handlebars helper defined above with one big difference:
+<p>Computed property in the example above does the same thing as the
+Handlebars helper with one big difference:
 <code>formattedDate</code> can be consumed later without applying
-date format on date property again.</p>
+date format on the date property again.</p>
 <h4 class='anchorable-toc' id='toc_example'>Example</h4>
 <p><a class="jsbin-embed" href="http://emberjs.jsbin.com/iCaGUne/4/edit?output">JS Bin</a></p>
 

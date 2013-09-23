@@ -145,20 +145,12 @@
   {{#if lastRelease}}
   <div id="download">
     <div id="download-ember">
-      <a class="orange button" {{bind-attr href=lastReleaseDebugUrl}}>
-        Download {{lastRelease}}
-      </a>
+      <a class="orange button" {{bind-attr href=lastReleaseDebugUrl}}>Download {{lastRelease}}</a>
       <div class="info">
         {{lastRelease}}:
-        <a class="debug" {{bind-attr href=lastReleaseProdUrl}}>
-          production
-        </a>
-        <a class="debug" {{bind-attr href=lastReleaseMinUrl}}>
-          (min)
-        </a> |
-        <a class="debug" {{bind-attr href=lastReleaseDebugUrl}}>
-          debug
-        </a>
+        <a class="debug" {{bind-attr href=lastReleaseProdUrl}}>production</a>
+        <a class="debug" {{bind-attr href=lastReleaseMinUrl}}>(min)</a> |
+        <a class="debug" {{bind-attr href=lastReleaseDebugUrl}}>debug</a>
       </div>
     </div>
   </div>
@@ -169,7 +161,6 @@
       <tr>
         <th>File</th>
         <th>Modified</th>
-        <th>Size</th>
         <th>Quick Copy</th>
       </tr>
     </thead>
@@ -178,7 +169,6 @@
         <tr>
           <td><a {{bind-attr href=url }}>{{name}}</a></td>
           <td>{{format-date-time lastModified}}</td>
-          <td>{{format-bytes size}}</td>
           <td>{{copy-clipboard label="Link" text=url}} {{copy-clipboard label="Script Tag" text=scriptTag}}</td>
         </tr>
       {{/each}}
@@ -203,7 +193,11 @@
 </script>
 
 <script type="text/x-handlebars" data-template-name="components/copy-clipboard">
-  <button {{bind-attr data-clipboard-text=text}} {{bind-attr data-label=label}}>{{label}}</button>
+  {{#if hasFlash}}
+    <button {{bind-attr data-clipboard-text=text}} {{bind-attr data-label=label}}>{{label}}</button>
+  {{else}}
+    <input type="text" class="name-input" readonly="readonly" {{bind-attr value=text}}>
+  {{/if}}
 </script>
 
       </div>
