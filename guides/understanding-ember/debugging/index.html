@@ -741,6 +741,26 @@ Ember.LOG_STACKTRACE_ON_DEPRECATION = <span class="predefined-constant">true</sp
 };
 </pre></td>
 </tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_errors-within-an-code-rsvp-promise-code'>Errors within an <code>RSVP.Promise</code></h4>
+<p>There are times when dealing with promises that it seems like any errors
+are being &#39;swallowed&#39;, and not properly raised. This makes is extremely
+difficult to track down where a given issue is coming from. Thankfully,
+<code>RSVP</code> has a solution for this problem built in.</p>
+
+<p>You can provide an <code>onerror</code> function that will be called with the error
+details if any errors occur within your promise. This function can be anything
+but a common practice is to call <code>console.assert</code> to dump the error to the
+console.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>Ember.RSVP.configure(<span class="string"><span class="delimiter">'</span><span class="content">onerror</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(error) {
+  Ember.Logger.assert(<span class="predefined-constant">false</span>, error);
+});
+</pre></td>
+</tr></table>
 </div></div>
     
       <footer>
