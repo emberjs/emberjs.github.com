@@ -373,6 +373,10 @@
             </li>
           
             <li class="level-3">
+              <a href="/guides/models/handling-metadata">Handling Metadata</a>
+            </li>
+          
+            <li class="level-3">
               <a href="/guides/models/frequently-asked-questions">Frequently Asked Questions</a>
             </li>
           </ol></li>
@@ -624,6 +628,11 @@ Ember.Handlebars.helper(<span class="string"><span class="delimiter">'</span><sp
 9
 <strong>10</strong>
 11
+12
+13
+14
+15
+16
 </pre></td>
   <td class="code"><pre><span class="comment">// ... additional lines truncated for brevity ...</span>
 actions: {
@@ -631,8 +640,13 @@ actions: {
      <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">isEditing</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
    },
    <span class="function">acceptChanges</span>: <span class="keyword">function</span> () {
-     <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">isEditing</span><span class="delimiter">'</span></span>, <span class="predefined-constant">false</span>);
-     <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">model</span><span class="delimiter">'</span></span>).save();
+      <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">isEditing</span><span class="delimiter">'</span></span>, <span class="predefined-constant">false</span>);
+
+      <span class="keyword">if</span> (Ember.isEmpty(<span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">model.title</span><span class="delimiter">'</span></span>))) {
+        <span class="local-variable">this</span>.send(<span class="string"><span class="delimiter">'</span><span class="content">removeTodo</span><span class="delimiter">'</span></span>);
+      } <span class="keyword">else</span> {
+        <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">model</span><span class="delimiter">'</span></span>).save();
+      }
    }
 }
 <span class="comment">// ... additional lines truncated for brevity ...</span>

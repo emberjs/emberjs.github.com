@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Templates: Actions</title>
+    <title>Ember.js - Models: Handling Metadata</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
@@ -37,7 +37,7 @@
   
   </head>
 
-  <body class="guides guides_templates guides_templates_actions guides_templates_actions_index">
+  <body class="guides guides_models guides_models_handling-metadata guides_models_handling-metadata_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -184,9 +184,9 @@
               <a href="/guides/application">Introduction</a>
             </li>
           </ol></li>
-          <li class="level-1 selected">
+          <li class="level-1">
             <a href="/guides/templates/the-application-template">Templates</a>
-            <ol class='selected'>
+            <ol>
         
             <li class="level-3">
               <a href="/guides/templates/the-application-template">The Application Template</a>
@@ -220,7 +220,7 @@
               <a href="/guides/templates/links">Links</a>
             </li>
           
-            <li class="level-3 sub-selected">
+            <li class="level-3">
               <a href="/guides/templates/actions">Actions</a>
             </li>
           
@@ -332,9 +332,9 @@
               <a href="/guides/controllers/dependencies-between-controllers">Managing Dependencies Between Controllers</a>
             </li>
           </ol></li>
-          <li class="level-1">
+          <li class="level-1 selected">
             <a href="/guides/models">Models</a>
-            <ol>
+            <ol class='selected'>
         
             <li class="level-3">
               <a href="/guides/models">Introduction</a>
@@ -372,7 +372,7 @@
               <a href="/guides/models/connecting-to-an-http-server">Connecting to an HTTP Server</a>
             </li>
           
-            <li class="level-3">
+            <li class="level-3 sub-selected">
               <a href="/guides/models/handling-metadata">Handling Metadata</a>
             </li>
           
@@ -541,52 +541,44 @@
   
 
   
+    
+          <div class="under_construction_warning">
+            <h3>
+              <div class="msg">
+                WARNING: this guide refers to a feature only available in canary (nightly/unstable) builds of Ember Data.
+              </div>
+            </h3>
+          </div>
+        
+  
   <div class="chapter">
     
-        <h1>Actions 
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/templates/actions.md" target="_blank" class="edit-page">
+        <h1>Handling Metadata 
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/models/handling-metadata.md" target="_blank" class="edit-page">
             Edit Page</a>
         </h1>
       
     <hr>
-    <h2 class='anchorable-toc' id='toc_the-code-action-code-helper'>The <code>{{action}}</code> Helper</h2>
-<p>Your app will often need a way to let users interact with controls that
-change application state. For example, imagine that you have a template
-that shows a blog post, and supports expanding the post with additional
-information.</p>
+    <p>Along with the records returned from your store, you&#39;ll likely need to handle some kind of metadata. <em>Metadata</em> is data that goes along with a specific <em>model</em> or <em>type</em> instead of a record.</p>
 
-<p>You can use the <code>{{action}}</code> helper to make an HTML element clickable.
-When a user clicks the element, the named event will be sent to your
-application.</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>Pagination is a common example of using metadata. Imagine a blog with far more posts than you can display at once. You might query it like so:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
 </pre></td>
-  <td class="code"><pre><span class="comment">&lt;!-- post.handlebars --&gt;</span>
-
-<span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">'</span><span class="content">intro</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
-  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">intro</span><span class="inline-delimiter">}}</span></span>
-<span class="tag">&lt;/div&gt;</span>
-
-<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">isExpanded</span><span class="inline-delimiter">}}</span></span>
-  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">'</span><span class="content">body</span><span class="delimiter">'</span></span><span class="tag">&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">body</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/div&gt;</span>
-  <span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">'</span><span class="attribute-name">contract</span><span class="error">'</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>Contract<span class="tag">&lt;/button&gt;</span>
-<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">else</span><span class="inline-delimiter">}}</span></span>
-  <span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">'</span><span class="attribute-name">expand</span><span class="error">'</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>Show More...<span class="tag">&lt;/button&gt;</span>
-<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">store</span><span class="delimiter">&quot;</span></span>).findQuery(<span class="string"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>, {
+  <span class="key">limit</span>: <span class="integer">10</span>,
+  <span class="key">offset</span>: <span class="integer">0</span>
+});
 </pre></td>
 </tr></table>
-</div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div>
+<p>To get different <em>pages</em> of data, you&#39;d simply change your offset in increments of 100. So far, so good. But how do you know how many pages of data you have? Your server would need to return the total number of records as a piece of metadata.</p>
+
+<p>By default, Ember Data&#39;s JSON deserializer looks for a <code>meta</code> key:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -601,38 +593,55 @@ application.</p>
 12
 13
 14
+15
 </pre></td>
-  <td class="code"><pre>App.PostController = Ember.ObjectController.extend({
-  <span class="comment">// initial value</span>
-  <span class="key">isExpanded</span>: <span class="predefined-constant">false</span>,
-
-  <span class="key">actions</span>: {
-    <span class="function">expand</span>: <span class="keyword">function</span>() {
-      <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">isExpanded</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="integer">1</span>
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Progressive Enhancement is Dead</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">comments</span><span class="delimiter">&quot;</span></span>: [<span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">2</span><span class="delimiter">&quot;</span></span>],
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">_links</span><span class="delimiter">&quot;</span></span>: {
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">user</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">/people/tomdale</span><span class="delimiter">&quot;</span></span>
     },
+    <span class="comment">// ...</span>
+  },
 
-    <span class="function">contract</span>: <span class="keyword">function</span>() {
-      <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">isExpanded</span><span class="delimiter">'</span></span>, <span class="predefined-constant">false</span>);
-    }
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">meta</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">total</span><span class="delimiter">&quot;</span></span>: <span class="integer">100</span>
   }
-});
+}
 </pre></td>
 </tr></table>
-</div></div><h3 class='anchorable-toc' id='toc_action-bubbling'>Action Bubbling</h3>
-<p>By default, the <code>{{action}}</code> helper triggers a method on the template&#39;s
-controller, as illustrated above.</p>
+</div></div>
+<p>The metadata for a specific type is then set to the contents of <code>meta</code>. You can access it with <code>store.metadataFor</code>:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> meta = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">store</span><span class="delimiter">&quot;</span></span>).metadataFor(<span class="string"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>);
+</pre></td>
+</tr></table>
+</div></div>
+<p>Now, <code>meta.total</code> can be used to calculate how many pages of posts you&#39;ll have.</p>
 
-<p>If the controller does not implement a method with the same name as the
-action in its actions object, the action will be sent to the router, where
-the currently active leaf route will be given a chance to handle the action.</p>
-
-<p>Routes and controllers that handle actions <strong>must place action handlers
-inside an <code>actions</code> hash</strong>. Even if a route has a method with the same name
-as the actions, it will not be triggered unless it is inside an <code>actions</code> hash.
-In the case of a controller, while there is deprecated support for triggering
-a method directly on the controller, it is strongly recommended that you
-put your action handling methods inside an <code>actions</code> hash for forward
-compatibility.</p>
+<p>You can also customize metadata extraction by overriding the <code>extractMeta</code> method. For example, if instead of a <code>meta</code> object, your server simply returned:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: [
+    <span class="comment">// ...</span>
+  ],
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">total</span><span class="delimiter">&quot;</span></span>: <span class="integer">10</span>
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>You could extract it like so:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -642,178 +651,12 @@ compatibility.</p>
 6
 7
 8
-9
-<strong>10</strong>
-11
 </pre></td>
-  <td class="code"><pre>App.PostRoute = Ember.Route.extend({
-  <span class="key">actions</span>: {
-    <span class="function">expand</span>: <span class="keyword">function</span>() {
-      <span class="local-variable">this</span>.controller.set(<span class="string"><span class="delimiter">'</span><span class="content">isExpanded</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
-    },
-
-    <span class="function">contract</span>: <span class="keyword">function</span>() {
-      <span class="local-variable">this</span>.controller.set(<span class="string"><span class="delimiter">'</span><span class="content">isExpanded</span><span class="delimiter">'</span></span>, <span class="predefined-constant">false</span>);
-    }
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>As you can see in this example, the action handlers are called such
-that when executed, <code>this</code> is the route, not the <code>actions</code> hash.</p>
-
-<p>If neither the template&#39;s controller nor the currently active route
-implements a handler, the action will continue to bubble to any parent
-routes. Ultimately, if an <code>ApplicationRoute</code> is defined, it will have an
-opportunity to handle the action.</p>
-
-<p>When an action is triggered, but no matching action handler is
-implemented on the controller, the current route, or any of the
-current route&#39;s ancestors, an error will be thrown.</p>
-
-<p><img src="/images/template-guide/action-bubbling.png" alt="Action Bubbling"></p>
-
-<p>This allows you to create a button that has different behavior based on
-where you are in the application. For example, you might want to have a
-button in a sidebar that does one thing if you are somewhere inside of
-the <code>/posts</code> route, and another thing if you are inside of the <code>/about</code>
-route.</p>
-<h3 class='anchorable-toc' id='toc_action-parameters'>Action Parameters</h3>
-<p>You can optionally pass arguments to the action handler. Any values
-passed to the <code>{{action}}</code> helper after the action name will be passed to
-the handler as arguments.</p>
-
-<p>For example, if the <code>post</code> argument was passed:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;p&gt;</span><span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">select</span><span class="error">&quot;</span> <span class="attribute-name">post</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>✓<span class="tag">&lt;/button&gt;</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">post.title</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/p&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>The route&#39;s <code>select</code> action handler would be called with a single argument
-containing the post model:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>App.PostController = Ember.ObjectController.extend({
-  <span class="key">actions</span>: {
-    <span class="function">select</span>: <span class="keyword">function</span>(post) {
-      console.log(post.get(<span class="string"><span class="delimiter">'</span><span class="content">title</span><span class="delimiter">'</span></span>));
-    }
-  }
-});
-</pre></td>
-</tr></table>
-</div></div><h3 class='anchorable-toc' id='toc_specifying-the-type-of-event'>Specifying the Type of Event</h3>
-<p>By default, the <code>{{action}}</code> helper listens for click events and triggers
-the action when the user clicks on the element.</p>
-
-<p>You can specify an alternative event by using the <code>on</code> option.</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;p&gt;</span>
-  <span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">select</span><span class="error">&quot;</span> <span class="attribute-name">post</span> <span class="attribute-name">on</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">mouseUp</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>✓<span class="tag">&lt;/button&gt;</span>
-  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">post.title</span><span class="inline-delimiter">}}</span></span>
-<span class="tag">&lt;/p&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>You should use the normalized event names <a href="/guides/understanding-ember/the-view-layer/#toc_adding-new-events">listed in the View guide</a>.
-In general, two-word event names (like <code>keypress</code>) become <code>keyPress</code>.</p>
-<h3 class='anchorable-toc' id='toc_specifying-whitelisted-modifier-keys'>Specifying Whitelisted Modifier Keys</h3>
-<p>By default the <code>{{action}}</code> helper will ignore click events with
-pressed modifier keys. You can supply an <code>allowedKeys</code> option
-to specify which keys should not be ignored.</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">'</span><span class="content">a-template</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
-<span class="inline">  &lt;div </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">anActionName</span> <span class="attribute-name">allowedKeys</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">alt</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span>
-    click me
-  <span class="tag">&lt;/div&gt;</span>
-<span class="tag">&lt;/script&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>This way the <code>{{action}}</code> will fire when clicking with the alt key
-pressed down.</p>
-<h3 class='anchorable-toc' id='toc_stopping-event-propagation'>Stopping Event Propagation</h3>
-<p>By default, the <code>{{action}}</code> helper allows events it handles to bubble
-up to parent DOM nodes. If you want to stop propagation, you can disable
-propagation to the parent node.</p>
-
-<p>For example, if you have a <strong>✗</strong> button inside of a link, you will want
-to ensure that if the user clicks on the <strong>✗</strong>, that the link is not
-clicked.</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-</pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">link-to</span> <span class="error">'</span><span class="attribute-name">post</span><span class="error">'</span><span class="inline-delimiter">}}</span></span>
-  Post
-  <span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">close</span> <span class="attribute-name">bubbles</span>=<span class="attribute-value">false</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>✗<span class="tag">&lt;/button&gt;</span>
-<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">link-to</span><span class="inline-delimiter">}}</span></span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>Without <code>bubbles=false</code>, if the user clicked on the button, Ember.js
-will trigger the action, and then the browser will propagate the click
-to the link.</p>
-
-<p>With <code>bubbles=false</code>, Ember.js will stop the browser from propagating
-the event.</p>
-<h3 class='anchorable-toc' id='toc_specifying-a-target'>Specifying a Target</h3>
-<p>By default, the <code>{{action}}</code> helper will send the action to the view&#39;s
-target, which is generally the view&#39;s controller. (Note: in the case of
-an Ember.Component, the default target is the component itself.)</p>
-
-<p>You can specify an alternative target by using the <code>target</code> option. This
-is most commonly used to send actions to a view instead of a controller.</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;p&gt;</span>
-  <span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">select</span><span class="error">&quot;</span> <span class="attribute-name">post</span> <span class="attribute-name">target</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">view</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>✓<span class="tag">&lt;/button&gt;</span>
-  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">post.title</span><span class="inline-delimiter">}}</span></span>
-<span class="tag">&lt;/p&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>You would handle this in an <code>actions</code> hash on your view.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>App.PostsIndexView = Ember.View.extend({
-  <span class="key">actions</span>: {
-    <span class="function">select</span>: <span class="keyword">function</span>(post) {
-      <span class="comment">// do your business.</span>
+  <td class="code"><pre>App.ApplicationSerializer = DS.RESTSerializer.extend({
+  <span class="function">extractMeta</span>: <span class="keyword">function</span>(store, type, payload) {
+    <span class="keyword">if</span> (payload &amp;&amp; payload.total) {
+      store.metaForType(type, { <span class="key">total</span>: payload.total });  <span class="comment">// sets the metadata for &quot;post&quot;</span>
+      <span class="keyword">delete</span> payload.total;  <span class="comment">// keeps ember data from trying to parse &quot;total&quot; as a record</span>
     }
   }
 });
@@ -823,12 +666,12 @@ is most commonly used to send actions to a view instead of a controller.</p>
     
       <footer>
         
-          <a class="previous-guide" href="/guides/templates/links">
-            ← Links
+          <a class="previous-guide" href="/guides/models/connecting-to-an-http-server">
+            ← Connecting to an HTTP Server
           </a>
          
-        <a class="next-guide" href="/guides/templates/input-helpers">
-          Input Helpers →
+        <a class="next-guide" href="/guides/models/frequently-asked-questions">
+          Frequently Asked Questions →
         </a>
       
       </footer>
