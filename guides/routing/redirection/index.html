@@ -177,6 +177,38 @@
             </li>
           </ol></li>
           <li class="level-1">
+            <a href="/guides/object-model/classes-and-instances">The Object Model</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/object-model/classes-and-instances">Classes and Instances</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/computed-properties">Computed Properties</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/computed-properties-and-aggregate-data">Computed Properties and Aggregate Data with @each</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/observers">Observers</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/bindings">Bindings</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/reopening-classes-and-instances">Reopening Classes and Instances</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/what-do-i-use-when">Bindings, Observers, Computed Properties: What Do I Use When?</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
             <a href="/guides/application">Application</a>
             <ol>
         
@@ -417,38 +449,6 @@
             </li>
           </ol></li>
           <li class="level-1">
-            <a href="/guides/object-model/classes-and-instances">The Object Model</a>
-            <ol>
-        
-            <li class="level-3">
-              <a href="/guides/object-model/classes-and-instances">Classes and Instances</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/object-model/computed-properties">Computed Properties</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/object-model/computed-properties-and-aggregate-data">Computed Properties and Aggregate Data with @each</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/object-model/observers">Observers</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/object-model/bindings">Bindings</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/object-model/reopening-classes-and-instances">Reopening Classes and Instances</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/object-model/what-do-i-use-when">Bindings, Observers, Computed Properties: What Do I Use When?</a>
-            </li>
-          </ol></li>
-          <li class="level-1">
             <a href="/guides/enumerables">Enumerables</a>
             <ol>
         
@@ -549,8 +549,9 @@
         </h1>
       
     <hr>
-    <p>If you want to redirect from one route to another, simply implement the
-<code>redirect</code> hook in your route handler.</p>
+    <h3 class='anchorable-toc' id='toc_before-the-model-is-known'>Before the model is known</h3>
+<p>If you want to redirect from one route to another, you can do the transition in
+the <code>beforeModel</code> hook of your route handler.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -567,13 +568,52 @@
 });
 
 App.IndexRoute = Ember.Route.extend({
-  <span class="function">redirect</span>: <span class="keyword">function</span>() {
+  <span class="function">beforeModel</span>: <span class="keyword">function</span>() {
     <span class="local-variable">this</span>.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>);
   }
 });
 </pre></td>
 </tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_after-the-model-is-known'>After the model is known</h3>
+<p>If you need some information about the current model in order to decide about
+the redirection, you should either use the <code>afterModel</code> or the <code>redirect</code> hook. They
+receive the resolved model as the first parameter and the transition as the second one,
+and thus function as aliases. (In fact, the default implementation of <code>afterModel</code> just calls <code>redirect</code>.)</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+</pre></td>
+  <td class="code"><pre>
+App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>);
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">/post/:post_id</span><span class="delimiter">'</span></span> });
+});
+
+App.PostsRoute = Ember.Route.extend({
+  <span class="function">afterModel</span>: <span class="keyword">function</span>(posts, transition) {
+    <span class="keyword">if</span> (posts.length === <span class="integer">1</span>) {
+      <span class="local-variable">this</span>.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, posts[<span class="integer">0</span>]);
+    }
+  }
+});
+</pre></td>
+</tr></table>
 </div></div>
+<p>When transitioning to the <code>PostsRoute</code> it turns out that there is only one post,
+the current transition is aborted in favor of redirecting to the <code>PostRoute</code>
+with the single post object being its model.</p>
+<h3 class='anchorable-toc' id='toc_based-on-other-application-state'>Based on other application state</h3>
 <p>You can conditionally transition based on some other application state.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -617,7 +657,7 @@ App.IndexRoute = Ember.Route.extend({
 });
 
 App.TopChartsChooseRoute = Ember.Route.extend({
-  <span class="function">redirect</span>: <span class="keyword">function</span>() {
+  <span class="function">beforeModel</span>: <span class="keyword">function</span>() {
     <span class="keyword">var</span> lastFilter = <span class="local-variable">this</span>.controllerFor(<span class="string"><span class="delimiter">'</span><span class="content">application</span><span class="delimiter">'</span></span>).get(<span class="string"><span class="delimiter">'</span><span class="content">lastFilter</span><span class="delimiter">'</span></span>);
     <span class="local-variable">this</span>.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">topCharts.</span><span class="delimiter">'</span></span> + lastFilter || <span class="string"><span class="delimiter">'</span><span class="content">songs</span><span class="delimiter">'</span></span>);
   }
@@ -643,8 +683,9 @@ the last filter URL that the user was at. The first time, it transitions
 to the <code>/songs</code> URL.</p>
 
 <p>Your route can also choose to transition only in some cases. If the
-<code>redirect</code> hook does not transition to a new route, the remaining hooks
-(<code>model</code>, <code>setupController</code>, <code>renderTemplate</code>) will execute as usual.</p>
+<code>beforeModel</code> hook does not abort or transition to a new route, the remaining
+hooks (<code>model</code>, <code>afterModel</code>, <code>setupController</code>, <code>renderTemplate</code>) will execute
+as usual.</p>
 
     
       <footer>

@@ -177,6 +177,38 @@
             </li>
           </ol></li>
           <li class="level-1">
+            <a href="/guides/object-model/classes-and-instances">The Object Model</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/object-model/classes-and-instances">Classes and Instances</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/computed-properties">Computed Properties</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/computed-properties-and-aggregate-data">Computed Properties and Aggregate Data with @each</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/observers">Observers</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/bindings">Bindings</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/reopening-classes-and-instances">Reopening Classes and Instances</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/what-do-i-use-when">Bindings, Observers, Computed Properties: What Do I Use When?</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
             <a href="/guides/application">Application</a>
             <ol>
         
@@ -417,38 +449,6 @@
             </li>
           </ol></li>
           <li class="level-1">
-            <a href="/guides/object-model/classes-and-instances">The Object Model</a>
-            <ol>
-        
-            <li class="level-3">
-              <a href="/guides/object-model/classes-and-instances">Classes and Instances</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/object-model/computed-properties">Computed Properties</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/object-model/computed-properties-and-aggregate-data">Computed Properties and Aggregate Data with @each</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/object-model/observers">Observers</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/object-model/bindings">Bindings</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/object-model/reopening-classes-and-instances">Reopening Classes and Instances</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/object-model/what-do-i-use-when">Bindings, Observers, Computed Properties: What Do I Use When?</a>
-            </li>
-          </ol></li>
-          <li class="level-1">
             <a href="/guides/enumerables">Enumerables</a>
             <ol>
         
@@ -606,8 +606,9 @@ memory and search before you start hitting performance issues.</p>
 <p>Finally, keep in mind that you can combine queries and filters to take
 advantage of their respective strengths and weaknesses. Remember that
 records returned by a query to the server are cached in the store. You
-can use this fact to perform a query that starts matching records into
-the store, then create a filter that matches the same records.</p>
+can use this fact to perform a filter, passing it a query that starts
+matching records into the store, and a filter function that matches the 
+same records.</p>
 
 <p>This will offload searching all of the possible records to the server,
 while still creating a live updating list that includes records created
@@ -628,26 +629,18 @@ and modified on the client.</p>
 13
 14
 15
-16
-17
-18
-19
 </pre></td>
   <td class="code"><pre>App.PostsFavoritedRoute = Ember.Route.extend({
   <span class="function">model</span>: <span class="keyword">function</span>() {
     <span class="keyword">var</span> store = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">store</span><span class="delimiter">'</span></span>);
 
-    <span class="comment">// Kick off a query to the server for all posts that</span>
-    <span class="comment">// the user has favorited. Note that we're ignoring the results</span>
-    <span class="comment">// of the query; we're just relying on the side-effect that they</span>
-    <span class="comment">// will be loaded into the store so we can filter them.</span>
-    store.findQuery(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>, { <span class="key">favorited</span>: <span class="predefined-constant">true</span> });
-
     <span class="comment">// Create a filter for all favorited posts that will be displayed in</span>
     <span class="comment">// the template. Any favorited posts that are already in the store</span>
-    <span class="comment">// will be displayed immediately; as // results from the above query are</span>
+    <span class="comment">// will be displayed immediately;</span>
+    <span class="comment">// Kick off a query to the server for all posts that</span>
+    <span class="comment">// the user has favorited. As results from the query are</span>
     <span class="comment">// returned from the server, they will also begin to appear.</span>
-    <span class="keyword">return</span> store.filter(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(post) {
+    <span class="keyword">return</span> store.filter(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>, { <span class="key">favorited</span>: <span class="predefined-constant">true</span> }, <span class="keyword">function</span>(post) {
       <span class="keyword">return</span> post.get(<span class="string"><span class="delimiter">'</span><span class="content">isFavorited</span><span class="delimiter">'</span></span>);
     });
   }
