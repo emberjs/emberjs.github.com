@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Cookbook: Deciding If A Recipe is a Good Fit</title>
+    <title>Ember.js - Configuring Ember.js: Feature Flags</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -38,7 +38,7 @@
   
   </head>
 
-  <body class="guides guides_cookbook guides_cookbook_contributing guides_cookbook_contributing_deciding_if_a_recipe_is_a_good_fit guides_cookbook_contributing_deciding_if_a_recipe_is_a_good_fit_index">
+  <body class="guides guides_configuring-ember guides_configuring-ember_feature-flags guides_configuring-ember_feature-flags_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -465,9 +465,9 @@
               <a href="/guides/testing/integration">Integration Testing</a>
             </li>
           </ol></li>
-          <li class="level-1">
+          <li class="level-1 selected">
             <a href="/guides/configuring-ember/disabling-prototype-extensions">Configuring Ember.js</a>
-            <ol>
+            <ol class='selected'>
         
             <li class="level-3">
               <a href="/guides/configuring-ember/disabling-prototype-extensions">Disabling Prototype Extensions</a>
@@ -477,19 +477,19 @@
               <a href="/guides/configuring-ember/embedding-applications">Embedding Applications</a>
             </li>
           
-            <li class="level-3">
+            <li class="level-3 sub-selected">
               <a href="/guides/configuring-ember/feature-flags">Feature Flags</a>
             </li>
           </ol></li>
-          <li class="level-1 selected">
+          <li class="level-1">
             <a href="/guides/cookbook">Cookbook</a>
-            <ol class='selected'>
+            <ol>
         
             <li class="level-3">
               <a href="/guides/cookbook">Introduction</a>
             </li>
           
-            <li class="level-3 sub-selected">
+            <li class="level-3">
               <a href="/guides/cookbook/contributing">Contributing</a>
             </li>
           
@@ -548,41 +548,99 @@
   
   <div class="chapter">
     
-        <h1>Deciding If A Recipe is a Good Fit
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/cookbook/contributing/deciding_if_a_recipe_is_a_good_fit.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
+        <h1>Feature Flags
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/configuring-ember/feature-flags.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
         </h1>
       
     <hr>
-    <h3 class='anchorable-toc' id='toc_problem'>Problem</h3>
-<p>You have an idea for a recipe, but aren&#39;t sure it is a good fit for the Cookbook.</p>
-<h3 class='anchorable-toc' id='toc_solution'>Solution</h3>
-<p>Read existing cookbook solutions and compare them to yours. You may also want to borrow or buy a cookbook-style
-book for another technology to better understand the format.</p>
+    <h2 class='anchorable-toc' id='toc_about-features'>About Features</h2>
+<p>When a new feature is added to Ember they will be written in such a way that the
+feature can be conditionally included in the generated build output and enabled
+(or completely removed) based on whether a particular flag is present. This
+allows newly developed features to be selectively released when they are
+considered ready for production use.</p>
+<h2 class='anchorable-toc' id='toc_feature-life-cycle'>Feature Life-Cycle</h2>
+<p>When a new feature is flagged it is only available in canary builds (if enabled
+at runtime). When it is time for the next beta cycle to be started (generally
+6-12 week cycles) each feature will be evaluated and those features that are
+ready will be enabled in the next <code>beta</code> (and subsequently automatically enabled
+in all future canary builds).</p>
 
-<p>Cookbook recipes are usually quick answers to focused questions. Your recipe should be narrowly tailored to
-solve a single problem.</p>
-<h3 class='anchorable-toc' id='toc_discussion'>Discussion</h3>
-<p>The Cookbook format best serves beginners who have a basic knowledge of Ember.js and have ideally completed a
-small application of their own. Recipes in the Cookbook should teach intermediate and advanced topics, or present
-skills an Ember.js developer should know. Popular topics on StackOverflow are great examples of what a Cookbook
-recipe should cover.</p>
+<p>If a given feature is deemed unstable it will be disabled in the next beta point
+release, and not be included in the next stable release. It may still be included
+in the next beta cycle if the issues/concerns have been resolved.</p>
 
-<p>A good recipe solves a single problem. Topics like &quot;Syncing data with one-way bindings&quot; or &quot;Integrating Ember with
-moment.js&quot; make great recipes. Broader topics like &quot;Building an Ember application with Node.js&quot; or &quot;Creating a GridView
-with sortable fields and search&quot; are not. If your topic is too big, consider breaking it into multiple recipes (e.g.
-&quot;Organizing an Ember application,&quot; &quot;Responding to user events,&quot; &quot;Connecting to remote data&quot;).</p>
+<p>Once the beta cycle has completed the final release will include any features that
+were enabled during that cycle. At this point the feature flags will be removed from
+the canary and future beta branches, and the feature flag will no longer be used.</p>
+<h2 class='anchorable-toc' id='toc_flagging-details'>Flagging Details</h2>
+<p>The flag status in the generated build output is controlled by the <code>features.json</code>
+file in the root of the project. This file lists all features and their current
+status.</p>
 
+<p>A feature can have one of a few different statuses:</p>
+
+<ul>
+<li><code>true</code> - The feature is enabled: the code behind the flag is always enabled in
+the generated build.</li>
+<li><code>false</code> - The feature is disabled the code behind the flag is not present in
+the generated build at all.</li>
+<li><code>null</code> - The feature is present in the build output, but must be enabled at
+runtime (it is still behind feature flags).</li>
+</ul>
+
+<p>The process of removing the feature flags from the resulting build output is
+handled by <code>defeatureify</code>.</p>
+<h2 class='anchorable-toc' id='toc_feature-listing-a-href-https-github-com-emberjs-ember-js-blob-master-features-md-code-features-md-code-a'>Feature Listing (<a href="https://github.com/emberjs/ember.js/blob/master/FEATURES.md"><code>FEATURES.md</code></a>)</h2>
+<p>When a new feature is added to the <code>canary</code> channel (aka <code>master</code> branch), an
+entry is added to <a href="https://github.com/emberjs/ember.js/blob/master/FEATURES.md"><code>FEATURES.md</code></a>
+explaining what the feature does (and linking the originating pull request).
+This listing is kept current, and reflects what is available in each branch
+(<code>stable</code>,<code>beta</code>, and <code>master</code>).</p>
+<h2 class='anchorable-toc' id='toc_enabling-at-runtime'>Enabling At Runtime</h2>
+<p>Remember that the only time a feature can be enabled at runtime is if the
+<code>features.json</code> for that build contains <code>null</code> (technically, anything other
+than <code>true</code> or <code>false</code> will do, but <code>null</code> is the chosen value). If the feature
+is present in <code>features.json</code> with a <code>null</code> value there are a couple different
+ways to enable it at runtime.</p>
+<h3 class='anchorable-toc' id='toc_before-loading-ember'>Before Loading Ember</h3>
+<p>A global <code>ENV</code> object will be used to initialize the <code>Ember.ENV</code> object, and any
+feature flags that are enabled/disabled under <code>ENV.FEATURES</code> will be migrated to
+<code>Ember.FEATURES</code>, and that corresponding feature will be enabled based on the flag
+value.  Please note that Ember only reads the <code>ENV</code> value upon initial load so
+setting this value after Ember has been loaded will have no affect.</p>
+
+<p>Example:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>ENV = {<span class="key">FEATURES</span>: {<span class="key"><span class="delimiter">'</span><span class="content">link-to</span><span class="delimiter">'</span></span>: <span class="predefined-constant">true</span>}};
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_after-loading-ember'>After Loading Ember</h3>
+<p>Once Ember is fully loaded (once <code>Ember</code> is available to your code, not when your
+application is initialized) you will need to update the <code>Ember.FEATURES</code> object directly
+modify a features availability.</p>
+
+<p>Example:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>Ember.FEATURES[<span class="string"><span class="delimiter">'</span><span class="content">link-to</span><span class="delimiter">'</span></span>] = <span class="predefined-constant">true</span>;
+</pre></td>
+</tr></table>
+</div></div>
     
       <footer>
         
-          <a class="previous-guide" href="/guides/cookbook/contributing/participating_if_you_dont_know_ember">
-            ← Participating If You Don't Know Ember
+          <a class="previous-guide" href="/guides/configuring-ember/embedding-applications">
+            ← Embedding Applications
           </a>
          
-        <a class="next-guide" href="/guides/cookbook/contributing/suggesting_a_recipe">
-          Suggesting A Recipe →
-        </a>
-      
+          <a class="next-guide" href="/guides/cookbook">
+             We're done with Configuring Ember.js. Next up: Cookbook - Introduction →
+          </a>
+        
       </footer>
       
   </div>
