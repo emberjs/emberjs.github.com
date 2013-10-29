@@ -598,17 +598,16 @@ explaining what the feature does (and linking the originating pull request).
 This listing is kept current, and reflects what is available in each branch
 (<code>stable</code>,<code>beta</code>, and <code>master</code>).</p>
 <h2 class='anchorable-toc' id='toc_enabling-at-runtime'>Enabling At Runtime</h2>
-<p>Remember that the only time a feature can be enabled at runtime is if the
+<p>The only time a feature can be enabled at runtime is if the
 <code>features.json</code> for that build contains <code>null</code> (technically, anything other
-than <code>true</code> or <code>false</code> will do, but <code>null</code> is the chosen value). If the feature
-is present in <code>features.json</code> with a <code>null</code> value there are a couple different
-ways to enable it at runtime.</p>
-<h3 class='anchorable-toc' id='toc_before-loading-ember'>Before Loading Ember</h3>
-<p>A global <code>ENV</code> object will be used to initialize the <code>Ember.ENV</code> object, and any
-feature flags that are enabled/disabled under <code>ENV.FEATURES</code> will be migrated to
-<code>Ember.FEATURES</code>, and that corresponding feature will be enabled based on the flag
-value.  Please note that Ember only reads the <code>ENV</code> value upon initial load so
-setting this value after Ember has been loaded will have no affect.</p>
+than <code>true</code> or <code>false</code> will do, but <code>null</code> is the chosen value).</p>
+
+<p>A global <code>ENV</code> object will be used to initialize the <code>Ember.ENV</code>
+object, and any feature flags that are enabled/disabled under
+<code>ENV.FEATURES</code> will be migrated to <code>Ember.FEATURES</code>, those features
+will be enabled based on the flag value. <strong>Ember only reads</strong> the
+<code>ENV</code> value upon initial load so setting this value after Ember has
+been loaded will have no affect.</p>
 
 <p>Example:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -617,19 +616,10 @@ setting this value after Ember has been loaded will have no affect.</p>
   <td class="code"><pre>ENV = {<span class="key">FEATURES</span>: {<span class="key"><span class="delimiter">'</span><span class="content">link-to</span><span class="delimiter">'</span></span>: <span class="predefined-constant">true</span>}};
 </pre></td>
 </tr></table>
-</div></div><h3 class='anchorable-toc' id='toc_after-loading-ember'>After Loading Ember</h3>
-<p>Once Ember is fully loaded (once <code>Ember</code> is available to your code, not when your
-application is initialized) you will need to update the <code>Ember.FEATURES</code> object directly
-modify a features availability.</p>
-
-<p>Example:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre>Ember.FEATURES[<span class="string"><span class="delimiter">'</span><span class="content">link-to</span><span class="delimiter">'</span></span>] = <span class="predefined-constant">true</span>;
-</pre></td>
-</tr></table>
 </div></div>
+<p>Additionally you can define <code>ENV.ENABLE_ALL_FEATURES</code> to force all
+features to be enabled.</p>
+
     
       <footer>
         
