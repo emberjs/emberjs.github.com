@@ -1,0 +1,786 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ember.js - Models: Introduction</title>
+    <link rel="shortcut icon" href="/images/favicon.png" />
+    <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
+    <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://emberjs.com/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+      _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+      _gaq.push(['_setAccount', 'UA-27675533-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+
+<!--[if lt IE 9]>
+    <script type="text/javascript" src="/javascripts/common-old-ie.js"></script>
+<![endif]-->
+<!--[if gte IE 9]><!-->
+    <script type="text/javascript" src="/javascripts/common-modern.js"></script>
+<!--<![endif]-->
+
+    
+    <script type="text/javascript" src="/javascripts/guides.js"></script>
+    <script src="http://static.jsbin.com/js/embed.js"></script>
+  
+  </head>
+
+  <body class="guides guides_models guides_models_index">
+    <div id="header">
+      <div id="wrapper">
+        <a id="logo" href="/">&nbsp;</a>
+        <ul id="nav">
+          <li><a href="/about">about</a></li>
+          <li class="active"><a href="/guides">guides</a></li>
+          <li><a href="/api">api</a></li>
+          <li><a href="/community">community</a></li>
+          <li><a href="/blog">blog</a></li>
+          <li><a href="/builds">builds</a></li>
+          <li id="search">
+            <form>
+              <input type="text" id="st-search-input" class="st-search-input" />
+            </form>
+            <div id="st-results-container"></div>
+          </li>
+        </ul>
+
+        <div id="github">
+          <a href="https://github.com/emberjs/ember.js"><i class="icon-fork"></i>Fork Us!</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="content-wrapper">
+      
+      
+        <div id="sidebar">
+          
+    <ol id="toc-list">
+          <li class="level-1">
+            <a href="/guides/getting-started">Getting Started</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/getting-started">Getting Started</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/planning-the-application">Planning The Application</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/creating-a-static-mockup">Creating a Static Mockup</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/obtaining-emberjs-and-dependencies">Obtaining Ember.js and Dependencies</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/adding-a-route-and-template">Adding the First Route and Template</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/modeling-data">Modeling Data</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/using-fixtures">Using Fixtures</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/displaying-model-data">Displaying Model Data</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/displaying-a-models-completeness">Displaying a Model's Complete State</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/creating-a-new-model">Creating a New Model Instance</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/marking-a-model-as-complete-incomplete">Marking a Model as Complete or Incomplete</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/displaying-the-number-of-incomplete-todos">Displaying the Number of Incomplete Todos</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/toggle-todo-editing-state">Toggling between Showing and Editing States</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/accepting-edits">Accepting Edits</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/deleting-todos">Deleting a Model</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/adding-child-routes">Adding Child Routes</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/show-only-incomplete-todos">Transitioning to Show Only Incomplete Todos</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/show-only-complete-todos">Transitioning to Show Only Complete Todos</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/show-all-todos-again">Transitioning back to Show All Todos</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/display-a-button-to-remove-completed-todos">Displaying a Button to Remove All Completed Todos</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/show-when-all-todos-are-complete">Indicating When All Todos Are Complete</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/toggle-all-todos">Toggling All Todos Between Complete and Incomplete</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/using-other-adapters">Replacing the Fixture Adapter with Another Adapter</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/concepts/core-concepts">Concepts</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/concepts/core-concepts">Core Concepts</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/concepts/naming-conventions">Naming Conventions</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/object-model/classes-and-instances">The Object Model</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/object-model/classes-and-instances">Classes and Instances</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/computed-properties">Computed Properties</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/computed-properties-and-aggregate-data">Computed Properties and Aggregate Data with @each</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/observers">Observers</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/bindings">Bindings</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/reopening-classes-and-instances">Reopening Classes and Instances</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/what-do-i-use-when">Bindings, Observers, Computed Properties: What Do I Use When?</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/application">Application</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/application">Introduction</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/templates/the-application-template">Templates</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/templates/the-application-template">The Application Template</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/templates/handlebars-basics">Handlebars Basics</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/templates/conditionals">Conditionals</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/templates/displaying-a-list-of-items">Displaying a List of Items</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/templates/changing-scope">Changing Scope</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/templates/binding-element-attributes">Binding Element Attributes</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/templates/binding-element-class-names">Binding Element Class Names</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/templates/links">Links</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/templates/actions">Actions</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/templates/input-helpers">Input Helpers</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/templates/rendering-with-helpers">Rendering with Helpers</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/templates/writing-helpers">Writing Helpers</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/routing">Routing</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/routing">Introduction</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/routing/defining-your-routes">Defining Your Routes</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/routing/generated-objects">Generated Objects</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/routing/specifying-a-routes-model">Specifying a Route's Model</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/routing/setting-up-a-controller">Setting Up a Controller</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/routing/rendering-a-template">Rendering a Template</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/routing/redirection">Redirecting</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/routing/specifying-the-location-api">Specifying the URL Type</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/routing/asynchronous-routing">Asynchronous Routing</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/routing/preventing-and-retrying-transitions">Preventing and Retrying Transitions</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/components">Components</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/components">Introduction</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/components/defining-a-component">Defining a Component</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/components/passing-properties-to-a-component">Passing Properties to a Component</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/components/wrapping-content-in-a-component">Wrapping Content in a Component</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/components/customizing-a-components-element">Customizing a Component's Element</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/components/handling-user-interaction-with-actions">Handling User Interaction with Actions</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/components/sending-actions-from-components-to-your-application">Sending Actions from Components to Your Application</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/controllers">Controllers</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/controllers">Introduction</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/controllers/representing-a-single-model-with-objectcontroller">Representing a Single Model with ObjectController</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/controllers/representing-multiple-models-with-arraycontroller">Representing Multiple Models with ArrayController</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/controllers/dependencies-between-controllers">Managing Dependencies Between Controllers</a>
+            </li>
+          </ol></li>
+          <li class="level-1 selected">
+            <a href="/guides/models">Models</a>
+            <ol class='selected'>
+        
+            <li class="level-3 sub-selected">
+              <a href="/guides/models">Introduction</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/using-the-store">Using the Store</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/defining-models">Defining Models</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/finding-a-record">Finding a Record</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/finding-all-records-of-a-type">Finding All Records of a Type</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/pushing-records-into-the-store">Pushing Records into the Store</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/querying-the-server-for-records">Querying the Server for Records</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/working-with-records">Working with Records</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/connecting-to-an-http-server">Connecting to an HTTP Server</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/handling-metadata">Handling Metadata</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/frequently-asked-questions">Frequently Asked Questions</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/views">Views</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/views">Introduction</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/views/defining-a-view">Defining a View</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/views/handling-events">Handling Events</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/views/inserting-views-in-templates">Inserting Views in Templates</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/views/adding-layouts-to-views">Adding Layouts to Views</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/views/customizing-a-views-element">Customizing a View's Element</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/views/built-in-views">Built-in Views</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/views/manually-managing-view-hierarchy">Manually Managing View Hierarchy</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/enumerables">Enumerables</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/enumerables">Introduction</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/testing/integration">Testing</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/testing/integration">Integration Testing</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/configuring-ember/disabling-prototype-extensions">Configuring Ember.js</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/configuring-ember/disabling-prototype-extensions">Disabling Prototype Extensions</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/configuring-ember/embedding-applications">Embedding Applications</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/configuring-ember/feature-flags">Feature Flags</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/cookbook">Cookbook</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/cookbook">Introduction</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/cookbook/contributing">Contributing</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/cookbook/user_interface_and_interaction">User Interface and Interaction</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/cookbook/event_handling_and_data_binding">Event Handling & Data Binding</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/cookbook/helpers_and_components">Helpers & Components</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/cookbook/working_with_objects">Working with Objects</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/understanding-ember/the-view-layer">Understanding Ember.js</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/understanding-ember/the-view-layer">The View Layer</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/understanding-ember/managing-asynchrony">Managing Asynchrony</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/understanding-ember/keeping-templates-up-to-date">Keeping Templates Up-to-Date</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/understanding-ember/debugging">Debugging</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/contributing/adding-new-features">Contributing to Ember.js</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/contributing/adding-new-features">Adding New Features</a>
+            </li>
+          </ol></li></ol>
+  
+          <div id="back-to-top"><a id="back-top-top" href="#">&#11014; Back to Top</a></div>
+        </div>
+      
+      <div id="content" class="has-sidebar">
+          
+  
+
+  
+  <div class="chapter">
+    
+        <h1>Introduction
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/models.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
+        </h1>
+      
+    <hr>
+    <h2 class='anchorable-toc' id='toc_models'>Models</h2>
+<p>In Ember, every route has an associated model. This model is set by
+implementing a route&#39;s <code>model</code> hook, by passing the model as an argument
+to <code>{{link-to}}</code>, or by calling a route&#39;s <code>transitionTo()</code> method.</p>
+
+<p>See <a href="/guides/routing/specifying-a-routes-model">Specifying a Route&#39;s
+Model</a> for more information
+on setting a route&#39;s model.</p>
+
+<p>For simple applications, you can get by using jQuery to load JSON data
+from a server, then use those JSON objects as models.</p>
+
+<p>However, using a model library that manages finding models, making
+changes, and saving them back to the server can dramatically simplify
+your code while improving the robustness and performance of your
+application.</p>
+
+<p>Many Ember apps use <a href="https://github.com/emberjs/data">Ember Data</a> to handle this.
+Ember Data is a library that integrates tightly with Ember.js to make it
+easy to retrieve records from a server, cache them for performance,
+save updates back to the server, and create new records on the client.</p>
+
+<p>Without any configuration, Ember Data can load and save records and
+their relationships served via a RESTful JSON API, provided it follows
+certain conventions.</p>
+
+<p>If you need to integrate your Ember.js app with existing JSON APIs that
+do not follow strong conventions, Ember Data is designed to be easily
+configurable to work with whatever data your server returns.</p>
+
+<p>Ember Data is also designed to work with streaming APIs like
+socket.io, Firebase, or WebSockets. You can open a socket to your server
+and push changes to records into the store whenever they occur.</p>
+
+<p>Currently, Ember Data ships as a separate library from Ember.js.  Until
+Ember Data is included as part of the standard distribution, you can get
+a copy of the latest passing build from
+<a href="http://emberjs.com/builds">emberjs.com/builds</a>:</p>
+
+<ul>
+<li><a href="http://builds.emberjs.com/canary/ember-data.js">Development</a></li>
+<li><a href="http://builds.emberjs.com/canary/ember-data.min.js">Minified</a></li>
+</ul>
+<h3 class='anchorable-toc' id='toc_core-concepts'>Core Concepts</h3>
+<p>Learning to use Ember Data is easiest once you understand some of the
+concepts that underpin its design.</p>
+<h4 class='anchorable-toc' id='toc_store'>Store</h4>
+<p>The <strong>store</strong> is the central repository of records in your application.
+Both your application&#39;s controllers and routes have access to this
+shared store; when they need to display or modify a record, they will
+first ask the store for it.</p>
+<h4 class='anchorable-toc' id='toc_models'>Models</h4>
+<p>A <strong>model</strong> is a class that defines the properties and behavior of the
+data that you present to the user. Anything that the user expects to see
+if they leave your app and come back later (or if they refresh the page)
+should be represented by a model.</p>
+
+<p>For example, if you were writing a web application for placing orders at
+a restaurant, you might have models like <code>Order</code>, <code>LineItem</code>, and
+<code>MenuItem</code>.</p>
+
+<p>Models define the type of data that will be provided by your server. For
+example, a <code>Person</code> model might have a <code>firstName</code> attribute that is a
+string, and a <code>birthday</code> attribute that is a date.</p>
+
+<p>A model also describes its relationships with other objects. For
+example, an <code>Order</code> may have many <code>LineItems</code>, and a <code>LineItem</code> may
+belong to a particular <code>Order</code>.</p>
+
+<p>Models don&#39;t have any data themselves; they just define the properties and
+behavior of specific instances, which are called <em>records</em>.</p>
+<h4 class='anchorable-toc' id='toc_records'>Records</h4>
+<p>A <strong>record</strong> is an instance of a model that contains data loaded from a
+server. Your application can also create new records and save them back
+to the server.</p>
+
+<p>Records are uniquely identified by two things:</p>
+
+<ol>
+<li>A model type.</li>
+<li>A globally unique ID.</li>
+</ol>
+
+<p>For example, if you were writing a contact management app, you might
+have a model called <code>Person</code>. An individual record in your app might
+have a type of <code>Person</code> and an ID of <code>1</code> or <code>steve-buscemi</code>.</p>
+
+<p>IDs are usually assigned by the server when you save them for the first
+time, but you can also generate IDs client-side.</p>
+<h4 class='anchorable-toc' id='toc_adapter'>Adapter</h4>
+<p>An <strong>adapter</strong> is an object that knows about your particular server
+backend and is responsible for translating requests for and changes to
+records into the appropriate calls to your server.</p>
+
+<p>For example, if your application asks for a <code>person</code> record with an ID
+of <code>1</code>, how should Ember Data load it? Is it over HTTP or a WebSocket?
+If it&#39;s HTTP, is the URL <code>/person/1</code> or <code>/resources/people/1</code>?</p>
+
+<p>The adapter is responsible for answering all of these questions.
+Whenever your app asks the store for a record that it doesn&#39;t have
+cached, it will ask the adapter for it. If you change a record and save
+it, the store will hand the record to the adapter to send the
+appropriate data to your server and confirm that the save was
+successful.</p>
+<h4 class='anchorable-toc' id='toc_serializer'>Serializer</h4>
+<p>A <strong>serializer</strong> is responsible for turning a raw JSON payload returned
+from your server into a record object.</p>
+
+<p>JSON APIs may represent attributes and relationships in many different
+ways. For example, some attribute names may be <code>camelCased</code> and others
+may be <code>under_scored</code>. Representing relationships is even more diverse:
+they may be encoded as an array of IDs, an array of embedded objects, or
+as foreign keys.</p>
+
+<p>When the adapter gets a payload back for a particular record, it will
+give that payload to the serializer to normalize into the form that
+Ember Data is expecting.</p>
+
+<p>While most people will use a serializer for normalizing JSON, because
+Ember Data treats these payloads as opaque objects, there&#39;s no reason
+they couldn&#39;t be binary data stored in a <code>Blob</code> or
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays/ArrayBuffer">ArrayBuffer</a>.</p>
+<h4 class='anchorable-toc' id='toc_automatic-caching'>Automatic Caching</h4>
+<p>The store will automatically cache records for you. If a record had already
+been loaded, asking for it a second time will always return the same
+object instance. This minimizes the number of round-trips to the
+server, and allows your application to render UI to the user as fast as
+possible.</p>
+
+<p>For example, the first time your application asks the store for a
+<code>person</code> record with an ID of <code>1</code>, it will fetch that information from
+your server.</p>
+
+<p>However, the next time your app asks for a <code>person</code> with ID <code>1</code>, the
+store will notice that it had already retrieved and cached that
+information from the server. Instead of sending another request for the
+same information, it will give your application the same record it had
+provided it the first time.  This feature—always returning the same
+record object, no matter how many times you look it up—is sometimes
+called an <em>identity map</em>.</p>
+
+<p>Using an identity map is important because it ensures that changes you
+make in one part of your UI are propagated to other parts of the UI. It
+also means that you don&#39;t have to manually keep records in sync—you can
+ask for a record by ID and not have to worry about whether other parts
+of your application have already asked for and loaded it.</p>
+<h3 class='anchorable-toc' id='toc_architecture-overview'>Architecture Overview</h3>
+<p>The first time your application asks the store for a record, the store
+sees that it doesn&#39;t have a local copy and requests it from your
+adapter. Your adapter will go and retrieve the record from your
+persistence layer; typically, this will be a JSON representation of the
+record served from an HTTP server.</p>
+
+<p><img src="/images/guides/models/finding-unloaded-record-step1-diagram.png" alt="Diagram showing process for finding an unloaded record"></p>
+
+<p>As illustrated in the diagram above, the adapter cannot always return the 
+requested record immediately. In this case, the adapter must make an 
+<em>asynchronous</em> request to the server, and only when that request finishes 
+loading can the record be created with its backing data.</p>
+
+<p>Because of this asynchronicity, the store immediately returns a
+<em>promise</em> from the <code>find()</code> method. Similarly, any requests that the
+store makes to the adapter also return promises.</p>
+
+<p>Once the request to the server returns with a JSON payload for the
+requested record, the adapter resolves the promise it returned to the
+store with the JSON.</p>
+
+<p>The store then takes that JSON, initializes the record with the
+JSON data, and resolves the promise returned to your application
+with the newly-loaded record.</p>
+
+<p><img src="/images/guides/models/finding-unloaded-record-step2-diagram.png" alt="Diagram showing process for finding an unloaded record after the payload has returned from the server"></p>
+
+<p>Let&#39;s look at what happens if you request a record that the store
+already has in its cache. </p>
+
+<p><img src="/images/guides/models/finding-loaded-record-diagram.png" alt="Diagram showing process for finding an unloaded record after the payload has returned from the server"></p>
+
+<p>In this case, because the store already knew about the record, it
+returns a promise that it resolves with the record immediately. It does
+not need to ask the adapter (and, therefore, the server) for a copy
+since it already has it saved locally.</p>
+
+<hr>
+
+<p>These are the core concepts you should understand to get the most out of
+Ember Data. The following sections go into more depth about each of
+these concepts, and how to use them together.</p>
+
+    
+      <footer>
+        
+          <a class="previous-guide" href="/guides/controllers/dependencies-between-controllers">
+             ← Controllers: Managing Dependencies Between Controllers
+          </a>
+         
+        <a class="next-guide" href="/guides/models/using-the-store">
+          Using the Store →
+        </a>
+      
+      </footer>
+      
+  </div>
+
+      </div>
+    </div>
+
+    <div id="footer">
+      <div id="footer-wrapper">
+        <div class="info">
+          Copyright 2013 <a href="http://tilde.io">Tilde Inc.</a><br>
+          Design by <a href="http://www.heropixel.com">HeroPixel</a></br>
+          <a href="/team">Core Team</a> | <a href="/sponsors">Project Sponsors</a>
+        </div>
+        <div class="statement">Ember.js is free, open source and always will be.</div>
+        <div class="links">
+          <a class="twitter" href="http://twitter.com/emberjs">
+            <i class="icon-twitter"></i><span>Twitter</span>
+          </a>
+          <a class="github" href="https://github.com/emberjs/ember.js">
+            <i class="icon-github"></i><span>GitHub</span>
+          </a>
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">
+            <i class="icon-gplus"></i><span>Google+</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
