@@ -1,0 +1,795 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ember.js - Routing: Query Parameters</title>
+    <link rel="shortcut icon" href="/images/favicon.png" />
+    <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
+    <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="http://emberjs.com/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+      _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+      _gaq.push(['_setAccount', 'UA-27675533-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+
+<!--[if lt IE 9]>
+    <script type="text/javascript" src="/javascripts/common-old-ie.js"></script>
+<![endif]-->
+<!--[if gte IE 9]><!-->
+    <script type="text/javascript" src="/javascripts/common-modern.js"></script>
+<!--<![endif]-->
+
+    
+    <script type="text/javascript" src="/javascripts/guides.js"></script>
+    <script src="http://static.jsbin.com/js/embed.js"></script>
+  
+  </head>
+
+  <body class="guides guides_routing guides_routing_query-params guides_routing_query-params_index">
+    <div id="header">
+      <div id="wrapper">
+        <a id="logo" href="/">&nbsp;</a>
+        <ul id="nav">
+          <li><a href="/about">about</a></li>
+          <li class="active"><a href="/guides">guides</a></li>
+          <li><a href="/api">api</a></li>
+          <li><a href="/community">community</a></li>
+          <li><a href="/blog">blog</a></li>
+          <li><a href="/builds">builds</a></li>
+          <li id="search">
+            <form>
+              <input type="text" id="st-search-input" class="st-search-input" />
+            </form>
+            <div id="st-results-container"></div>
+          </li>
+        </ul>
+
+        <div id="github">
+          <a href="https://github.com/emberjs/ember.js"><i class="icon-fork"></i>Fork Us!</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="content-wrapper">
+      
+      
+        <div id="sidebar">
+          
+    <ol id="toc-list">
+          <li class="level-1">
+            <a href="/guides/getting-started">Getting Started</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/getting-started">Getting Started</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/planning-the-application">Planning The Application</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/creating-a-static-mockup">Creating a Static Mockup</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/obtaining-emberjs-and-dependencies">Obtaining Ember.js and Dependencies</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/adding-a-route-and-template">Adding the First Route and Template</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/modeling-data">Modeling Data</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/using-fixtures">Using Fixtures</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/displaying-model-data">Displaying Model Data</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/displaying-a-models-completeness">Displaying a Model's Complete State</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/creating-a-new-model">Creating a New Model Instance</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/marking-a-model-as-complete-incomplete">Marking a Model as Complete or Incomplete</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/displaying-the-number-of-incomplete-todos">Displaying the Number of Incomplete Todos</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/toggle-todo-editing-state">Toggling between Showing and Editing States</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/accepting-edits">Accepting Edits</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/deleting-todos">Deleting a Model</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/adding-child-routes">Adding Child Routes</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/show-only-incomplete-todos">Transitioning to Show Only Incomplete Todos</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/show-only-complete-todos">Transitioning to Show Only Complete Todos</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/show-all-todos-again">Transitioning back to Show All Todos</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/display-a-button-to-remove-completed-todos">Displaying a Button to Remove All Completed Todos</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/show-when-all-todos-are-complete">Indicating When All Todos Are Complete</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/toggle-all-todos">Toggling All Todos Between Complete and Incomplete</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/getting-started/using-other-adapters">Replacing the Fixture Adapter with Another Adapter</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/concepts/core-concepts">Concepts</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/concepts/core-concepts">Core Concepts</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/concepts/naming-conventions">Naming Conventions</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/object-model/classes-and-instances">The Object Model</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/object-model/classes-and-instances">Classes and Instances</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/computed-properties">Computed Properties</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/computed-properties-and-aggregate-data">Computed Properties and Aggregate Data with @each</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/observers">Observers</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/bindings">Bindings</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/reopening-classes-and-instances">Reopening Classes and Instances</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/object-model/what-do-i-use-when">Bindings, Observers, Computed Properties: What Do I Use When?</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/application">Application</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/application">Introduction</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/templates/the-application-template">Templates</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/templates/the-application-template">The Application Template</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/templates/handlebars-basics">Handlebars Basics</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/templates/conditionals">Conditionals</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/templates/displaying-a-list-of-items">Displaying a List of Items</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/templates/changing-scope">Changing Scope</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/templates/binding-element-attributes">Binding Element Attributes</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/templates/binding-element-class-names">Binding Element Class Names</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/templates/links">Links</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/templates/actions">Actions</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/templates/input-helpers">Input Helpers</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/templates/rendering-with-helpers">Rendering with Helpers</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/templates/writing-helpers">Writing Helpers</a>
+            </li>
+          </ol></li>
+          <li class="level-1 selected">
+            <a href="/guides/routing">Routing</a>
+            <ol class='selected'>
+        
+            <li class="level-3">
+              <a href="/guides/routing">Introduction</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/routing/defining-your-routes">Defining Your Routes</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/routing/generated-objects">Generated Objects</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/routing/specifying-a-routes-model">Specifying a Route's Model</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/routing/setting-up-a-controller">Setting Up a Controller</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/routing/rendering-a-template">Rendering a Template</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/routing/redirection">Redirecting</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/routing/specifying-the-location-api">Specifying the URL Type</a>
+            </li>
+          
+            <li class="level-3 sub-selected">
+              <a href="/guides/routing/query-params">Query Parameters</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/routing/asynchronous-routing">Asynchronous Routing</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/routing/preventing-and-retrying-transitions">Preventing and Retrying Transitions</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/components">Components</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/components">Introduction</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/components/defining-a-component">Defining a Component</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/components/passing-properties-to-a-component">Passing Properties to a Component</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/components/wrapping-content-in-a-component">Wrapping Content in a Component</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/components/customizing-a-components-element">Customizing a Component's Element</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/components/handling-user-interaction-with-actions">Handling User Interaction with Actions</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/components/sending-actions-from-components-to-your-application">Sending Actions from Components to Your Application</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/controllers">Controllers</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/controllers">Introduction</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/controllers/representing-a-single-model-with-objectcontroller">Representing a Single Model with ObjectController</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/controllers/representing-multiple-models-with-arraycontroller">Representing Multiple Models with ArrayController</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/controllers/dependencies-between-controllers">Managing Dependencies Between Controllers</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/models">Models</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/models">Introduction</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/using-the-store">Using the Store</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/defining-models">Defining Models</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/finding-a-record">Finding a Record</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/finding-all-records-of-a-type">Finding All Records of a Type</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/pushing-records-into-the-store">Pushing Records into the Store</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/querying-the-server-for-records">Querying the Server for Records</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/working-with-records">Working with Records</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/connecting-to-an-http-server">Connecting to an HTTP Server</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/handling-metadata">Handling Metadata</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/frequently-asked-questions">Frequently Asked Questions</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/views">Views</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/views">Introduction</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/views/defining-a-view">Defining a View</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/views/handling-events">Handling Events</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/views/inserting-views-in-templates">Inserting Views in Templates</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/views/adding-layouts-to-views">Adding Layouts to Views</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/views/customizing-a-views-element">Customizing a View's Element</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/views/built-in-views">Built-in Views</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/views/manually-managing-view-hierarchy">Manually Managing View Hierarchy</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/enumerables">Enumerables</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/enumerables">Introduction</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/testing/integration">Testing</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/testing/integration">Integration Testing</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/configuring-ember/disabling-prototype-extensions">Configuring Ember.js</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/configuring-ember/disabling-prototype-extensions">Disabling Prototype Extensions</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/configuring-ember/embedding-applications">Embedding Applications</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/configuring-ember/feature-flags">Feature Flags</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/cookbook">Cookbook</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/cookbook">Introduction</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/cookbook/contributing">Contributing</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/cookbook/user_interface_and_interaction">User Interface and Interaction</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/cookbook/event_handling_and_data_binding">Event Handling & Data Binding</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/cookbook/helpers_and_components">Helpers & Components</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/cookbook/working_with_objects">Working with Objects</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/understanding-ember/the-view-layer">Understanding Ember.js</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/understanding-ember/the-view-layer">The View Layer</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/understanding-ember/managing-asynchrony">Managing Asynchrony</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/understanding-ember/keeping-templates-up-to-date">Keeping Templates Up-to-Date</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/understanding-ember/debugging">Debugging</a>
+            </li>
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/contributing/adding-new-features">Contributing to Ember.js</a>
+            <ol>
+        
+            <li class="level-3">
+              <a href="/guides/contributing/adding-new-features">Adding New Features</a>
+            </li>
+          </ol></li></ol>
+  
+          <div id="back-to-top"><a id="back-top-top" href="#">&#11014; Back to Top</a></div>
+        </div>
+      
+      <div id="content" class="has-sidebar">
+          
+  
+
+  
+    
+          <div class="under_construction_warning">
+            <h3>
+              <div class="msg">
+                <strong>WARNING:</strong> query params are an experimental feature. You must be using a recent canary build of Ember, and enable the <code>query-params</code> feature flag. For more info on enabling feature flags visit <a href="http://emberjs.com/guides/configuring-ember/feature-flags/">the Feature Flags guide</a>
+              </div>
+            </h3>
+          </div>
+        
+  
+  <div class="chapter">
+    
+        <h1>Query Parameters
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/routing/query-params.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
+        </h1>
+      
+    <hr>
+    <p>In general, the dynamic segments of a URL are a serialized representation of a model, commonly for example the model&#39;s ID. However, sometimes you need to serialize other application state into the URL. This could be further parameters that affect the loading of the model from the server, e.g. what page of a result set you are viewing, or it could be information about client side state, e.g. sort order when the records are sorted on the client.</p>
+
+<p>There can also be more global information that you want to serialize into the url, for example if you want to store an auth token in the URL, or filter all models in your application globally. It&#39;s also possible that there is a lot of parameters that you want to serialize in the url that are inconvenient to store in normal dynamic segments. This might apply when you have a map view and need to store X, Y, and zoom coordinates along with a set of visible layers on the map. Although this is possible to do with dynamic segments, it can be inconvenient. For any of these use case, you can consider using query params instead.</p>
+<h3 class='anchorable-toc' id='toc_specifying-query-parameters'>Specifying Query Parameters</h3>
+<p>Query params are baked right into your routes. This is essential so that the router and helpers can know what valid transitions and query parameter states are. Here is an example of defining which query params some routes respond to:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>, {<span class="key">queryParams</span>: [<span class="string"><span class="delimiter">'</span><span class="content">sort</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">direction</span><span class="delimiter">'</span></span>]}, <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, {<span class="key">path</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">/:id</span><span class="delimiter">&quot;</span></span>, <span class="key">queryParams</span>: [<span class="string"><span class="delimiter">'</span><span class="content">showDetails</span><span class="delimiter">'</span></span>]});
+  });
+});
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_route-hooks'>Route Hooks</h3>
+<p>Query params are passed into the hooks on your routes when you have defined them. Only query params that have been defined to apply to the route in the router.map call will be passed in. If no query params are active for this route,
+an empty object <code>{}</code> is passed in.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>App.PostsRoute = Ember.Route.extend({
+  <span class="function">beforeModel</span>:      <span class="keyword">function</span>( queryParams, transition ) {},
+  <span class="function">model</span>:            <span class="keyword">function</span>( params, queryParams, transition ) {},
+  <span class="function">afterModel</span>:       <span class="keyword">function</span>( resolvedModel, queryParams, transition ) {},
+  <span class="function">setupController</span>:  <span class="keyword">function</span>( controller, context, queryParams ) {},
+  <span class="function">renderTemplate</span>:   <span class="keyword">function</span>( controller, context, queryParams ) {}
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Only the query parameters that you specify to apply to a route are passed in, even if the parameters apply to parent routes.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+22
+23
+24
+25
+26
+27
+28
+</pre></td>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>, {<span class="key">queryParams</span>: [<span class="string"><span class="delimiter">'</span><span class="content">sort</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">direction</span><span class="delimiter">'</span></span>]}, <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, {<span class="key">path</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">/:id</span><span class="delimiter">&quot;</span></span>, <span class="key">queryParams</span>: [<span class="string"><span class="delimiter">'</span><span class="content">showDetails</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">sort</span><span class="delimiter">'</span></span>]});
+  });
+});
+
+<span class="comment">// If the user visits the URL:</span>
+<span class="comment">// /posts/1?sort=name&amp;direction=asc&amp;showDetails=yes&amp;otherQueryParam=something</span>
+
+App.PostsRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>( params, queryParams, transition ) {
+
+    <span class="comment">// queryParams is {sort: 'name', direction: 'asc'}</span>
+    <span class="comment">// showDetails is not passed in because it's only registered on the child route</span>
+    <span class="comment">// otherQueryParam is not passed in because it's not registered on any route</span>
+
+  }
+});
+
+App.PostRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>( params, queryParams, transition ) {
+    <span class="comment">// queryParams is {sort: 'name', showDetails: 'yes'}</span>
+    <span class="comment">// direction is not passed in because it's only registered on the parent route</span>
+    <span class="comment">// otherQueryParam is not passed in because it's not registered on any route</span>
+  }
+});
+
+
+</pre></td>
+</tr></table>
+</div></div>
+<p><aside>
+  <strong>Note:</strong> If you don&#39;t specify query params for a given route, then the parameters passed in to the route hooks remains unchanged.
+</aside></p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre><span class="comment">// IndexRoute has no query params defined</span>
+
+App.IndexRoute = Ember.Route.extend({
+    <span class="function">beforeModel</span>:      <span class="keyword">function</span>( transition ) {},
+    <span class="function">model</span>:            <span class="keyword">function</span>( params, transition ) {},
+    <span class="function">afterModel</span>:       <span class="keyword">function</span>( resolvedModel, transition ) {},
+    <span class="function">setupController</span>:  <span class="keyword">function</span>( controller, context ) {},
+    <span class="function">renderTemplate</span>:   <span class="keyword">function</span>( controller, context ) {}
+});
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_transitioning-query-params'>Transitioning Query Params</h3>
+<p><code>transitionTo</code> now accepts a final argument, which is an object with the key <code>queryParams</code>.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="local-variable">this</span>.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, object, {<span class="key">queryParams</span>: {<span class="key">showDetails</span>: <span class="predefined-constant">true</span>}});
+<span class="local-variable">this</span>.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>, {<span class="key">queryParams</span>: {<span class="key">sort</span>: <span class="string"><span class="delimiter">'</span><span class="content">title</span><span class="delimiter">'</span></span>}});
+
+<span class="comment">// if you just want to transition the query parameters without changing the route</span>
+<span class="local-variable">this</span>.transitionTo({<span class="key">queryParams</span>: {<span class="key">direction</span>: <span class="string"><span class="delimiter">'</span><span class="content">asc</span><span class="delimiter">'</span></span>}});
+</pre></td>
+</tr></table>
+</div></div>
+<p>You can also use add query params to URL transitions:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="local-variable">this</span>.transitionTo(<span class="string"><span class="delimiter">&quot;</span><span class="content">/posts/1?sort=date&amp;showDetails=true</span><span class="delimiter">&quot;</span></span>);
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_link-to-helper'> link-to Helper</h3>
+<p>The link-to helper supports specifying query params.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">link-to</span> <span class="error">'</span><span class="attribute-name">posts</span><span class="error">'</span> <span class="attribute-name">direction</span>=<span class="attribute-value">asc</span><span class="inline-delimiter">}}</span></span>Sort<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">link-to</span><span class="inline-delimiter">}}</span></span>
+
+// Binding is also supported
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">link-to</span> <span class="error">'</span><span class="attribute-name">posts</span><span class="error">'</span> <span class="attribute-name">directionBinding</span>=<span class="attribute-value">otherDirection</span><span class="inline-delimiter">}}</span></span>Sort<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">link-to</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>The link-to helper takes into account query parameters when determining its &quot;active&quot; state, and will set the class appropriately. The active state is determined by working out if you clicked on the link, would the query params end up the same? You don&#39;t have to supply all of the current, active query params for this to be true.</p>
+<h3 class='anchorable-toc' id='toc_stickiness'>&quot;Stickiness&quot;</h3>
+<p>By default, query params are &quot;sticky&quot;. This means that if you are on a url like <code>/posts?sort=name</code>, and you executed <code>transitionTo({queryParams: {direction: &#39;desc&#39;}})</code> or clicked <code>{{#link-to &#39;posts&#39; direction=desc}}</code>, the resulting url will be <code>/posts?sort=name&amp;direction=desc</code>.</p>
+
+<p>To clear query params, give a falsy value (but <strong>not</strong> <code>undefined</code>), e.g.
+<code>transitionTo({queryParams: {direction: null}})</code> or <code>{{#link-to &#39;posts&#39; direction=false}}</code></p>
+
+<p>It&#39;s also possible to clear all query params by passing false, e.g. <code>transitionTo({queryParams: false})</code> or <code>{{#link-to &#39;posts&#39; queryParams=false}}</code></p>
+<h3 class='anchorable-toc' id='toc_boolean-query-params'>Boolean Query params</h3>
+<p>Boolean query params are serialized without the truth value, e.g. <code>transitionTo(&#39;posts&#39;, {queryParams: {sort: true}})</code> would result in the url <code>/posts?sort</code></p>
+
+<p>This is for two reasons:</p>
+
+<ol>
+<li>passing false is the way to clear query parameters</li>
+<li>The string &quot;false&quot; is truthy in javascript. i.e. <code>if (&quot;false&quot;) { alert(&#39;oops&#39;); }</code> will show an alert.</li>
+</ol>
+
+    
+      <footer>
+        
+          <a class="previous-guide" href="/guides/routing/specifying-the-location-api">
+            ← Specifying the URL Type
+          </a>
+         
+        <a class="next-guide" href="/guides/routing/asynchronous-routing">
+          Asynchronous Routing →
+        </a>
+      
+      </footer>
+      
+  </div>
+
+      </div>
+    </div>
+
+    <div id="footer">
+      <div id="footer-wrapper">
+        <div class="info">
+          Copyright 2013 <a href="http://tilde.io">Tilde Inc.</a><br>
+          Design by <a href="http://www.heropixel.com">HeroPixel</a></br>
+          <a href="/team">Core Team</a> | <a href="/sponsors">Project Sponsors</a>
+        </div>
+        <div class="statement">Ember.js is free, open source and always will be.</div>
+        <div class="links">
+          <a class="twitter" href="http://twitter.com/emberjs">
+            <i class="icon-twitter"></i><span>Twitter</span>
+          </a>
+          <a class="github" href="https://github.com/emberjs/ember.js">
+            <i class="icon-github"></i><span>GitHub</span>
+          </a>
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">
+            <i class="icon-gplus"></i><span>Google+</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
