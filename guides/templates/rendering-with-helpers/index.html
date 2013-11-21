@@ -378,19 +378,11 @@
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/using-the-store">Using the Store</a>
-            </li>
-          
-            <li class="level-3">
               <a href="/guides/models/defining-models">Defining Models</a>
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/finding-a-record">Finding a Record</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/models/finding-all-records-of-a-type">Finding All Records of a Type</a>
+              <a href="/guides/models/creating-and-deleting-records">Creating and Deleting Records</a>
             </li>
           
             <li class="level-3">
@@ -398,7 +390,11 @@
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/querying-the-server-for-records">Querying the Server for Records</a>
+              <a href="/guides/models/persisting-records">Persisting Records</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/finding-records">Finding Records</a>
             </li>
           
             <li class="level-3">
@@ -561,7 +557,7 @@
 <h3 class='anchorable-toc' id='toc_the-code-partial-code-helper'>The <code>{{partial}}</code> Helper</h3>
 <p><code>{{partial}}</code> takes the template to be rendered as an argument, and renders that template in place.</p>
 
-<p><code>{{partial}}</code> does not change context or scope.  It simply drops the given template into place with the current scope.  </p>
+<p><code>{{partial}}</code> does not change context or scope.  It simply drops the given template into place with the current scope.</p>
 <div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -618,7 +614,7 @@
   <span class="comment">// We are setting templateName manually here to the default value</span>
   <span class="key">templateName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">author</span><span class="delimiter">&quot;</span></span>,
 
-  <span class="comment">// A fullName property should probably go on App.Author, </span>
+  <span class="comment">// A fullName property should probably go on App.Author,</span>
   <span class="comment">// but we're doing it here for the example</span>
   <span class="key">fullName</span>: (<span class="keyword">function</span>() {
     <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">author</span><span class="delimiter">&quot;</span></span>).get(<span class="string"><span class="delimiter">&quot;</span><span class="content">firstName</span><span class="delimiter">&quot;</span></span>) + <span class="string"><span class="delimiter">&quot;</span><span class="content"> </span><span class="delimiter">&quot;</span></span> + <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">author</span><span class="delimiter">&quot;</span></span>).get(<span class="string"><span class="delimiter">&quot;</span><span class="content">lastName</span><span class="delimiter">&quot;</span></span>);
@@ -692,7 +688,7 @@
 <li>When no model is provided it gets the singleton instance of the corresponding controller</li>
 <li>When a model is provided it gets a unique instance of the corresponding controller</li>
 <li>Renders the named template using this controller</li>
-<li>Sets the model of the corresponding controller </li>
+<li>Sets the model of the corresponding controller</li>
 </ul>
 
 <p>Modifying the post / author example slightly:</p>
@@ -709,7 +705,7 @@
 <strong>10</strong>
 </pre></td>
   <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">'</span><span class="content">author</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
-<span class="inline">  Written by </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">firstName</span><span class="inline-delimiter">}}</span></span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">lastName</span><span class="inline-delimiter">}}</span></span>. 
+<span class="inline">  Written by </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">firstName</span><span class="inline-delimiter">}}</span></span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">lastName</span><span class="inline-delimiter">}}</span></span>.
   Total Posts: <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">postCount</span><span class="inline-delimiter">}}</span></span>
 <span class="tag">&lt;/script&gt;</span>
 
@@ -728,7 +724,7 @@
 5
 </pre></td>
   <td class="code"><pre>App.AuthorController = Ember.ObjectController.extend({
-  <span class="function">postCount</span>: <span class="keyword">function</span>() { 
+  <span class="function">postCount</span>: <span class="keyword">function</span>() {
     <span class="keyword">return</span> App.Post.countForAuthor(<span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">model</span><span class="delimiter">&quot;</span></span>));
   }.property(<span class="string"><span class="delimiter">&quot;</span><span class="content">model</span><span class="delimiter">&quot;</span></span>,<span class="string"><span class="delimiter">&quot;</span><span class="content">App.Post.@each.author</span><span class="delimiter">&quot;</span></span>)
 })
@@ -745,20 +741,14 @@
 <li>Render the template in place, with the context created in the previous steps.</li>
 </ul>
 
-<p><code>{{render}}</code> does not require the presence of a matching route.  </p>
+<p><code>{{render}}</code> does not require the presence of a matching route.</p>
 
 <p><code>{{render}}</code> is similar to <code>{{outlet}}</code>. Both tell Ember to devote this portion of the page to something.</p>
 
 <p><code>{{outlet}}</code>: The router determines the route and sets up the appropriate controllers/views/models.
 <code>{{render}}</code>: You specify (directly and indirectly) the appropriate controllers/views/models.</p>
 
-<p>Note: <code>{{render}}</code> cannot be called multiple times for the same route when not specifying a model.  For that you&#39;ll need <code>{{control}}</code>.</p>
-<h3 class='anchorable-toc' id='toc_the-code-control-code-helper'>The <code>{{control}}</code> Helper</h3>
-<p><code>{{control}}</code> works like render, except it uses a new controller instance for every call, instead of reusing the singleton controller.</p>
-
-<p>This helper is currently under heavy development, and will likely change soon.</p>
-
-<p>Note: The <code>{{control}}</code> helper is currently disabled by default. To enable it set <code>ENV.EXPERIMENTAL_CONTROL_HELPER = true</code> before requiring Ember.</p>
+<p>Note: <code>{{render}}</code> cannot be called multiple times for the same route when not specifying a model.</p>
 <h3 class='anchorable-toc' id='toc_comparison-table'>Comparison Table</h3><h4 class='anchorable-toc' id='toc_general'>General</h4>
 <table>
   <thead>

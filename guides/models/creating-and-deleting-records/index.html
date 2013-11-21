@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Models: Finding All Records of a Type</title>
+    <title>Ember.js - Models: Creating and Deleting Records</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -38,7 +38,7 @@
   
   </head>
 
-  <body class="guides guides_models guides_models_finding-all-records-of-a-type guides_models_finding-all-records-of-a-type_index">
+  <body class="guides guides_models guides_models_creating-and-deleting-records guides_models_creating-and-deleting-records_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -378,19 +378,11 @@
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/using-the-store">Using the Store</a>
-            </li>
-          
-            <li class="level-3">
               <a href="/guides/models/defining-models">Defining Models</a>
             </li>
           
-            <li class="level-3">
-              <a href="/guides/models/finding-a-record">Finding a Record</a>
-            </li>
-          
             <li class="level-3 sub-selected">
-              <a href="/guides/models/finding-all-records-of-a-type">Finding All Records of a Type</a>
+              <a href="/guides/models/creating-and-deleting-records">Creating and Deleting Records</a>
             </li>
           
             <li class="level-3">
@@ -398,7 +390,11 @@
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/querying-the-server-for-records">Querying the Server for Records</a>
+              <a href="/guides/models/persisting-records">Persisting Records</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/finding-records">Finding Records</a>
             </li>
           
             <li class="level-3">
@@ -552,37 +548,117 @@
   
   <div class="chapter">
     
-        <h1>Finding All Records of a Type
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/models/finding-all-records-of-a-type.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
+        <h1>Creating and Deleting Records
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/models/creating-and-deleting-records.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
         </h1>
       
     <hr>
-    <p>You can find all records for a given model by calling the store&#39;s
-<code>findAll()</code> method:</p>
+    <p>You can create records by calling the <code>createRecord</code> method on the store.</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
+2
+3
+4
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> posts = store.findAll(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>);
+  <td class="code"><pre>store.createRecord(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, {
+  <span class="key">title</span>: <span class="string"><span class="delimiter">'</span><span class="content">Rails is Omakase</span><span class="delimiter">'</span></span>,
+  <span class="key">body</span>: <span class="string"><span class="delimiter">'</span><span class="content">Lorem ipsum</span><span class="delimiter">'</span></span>
+});
 </pre></td>
 </tr></table>
 </div></div>
-<p>This will return an instance of <code>DS.RecordArray</code>. Like with records, the
-record array will start in a loading state with a <code>length</code> of <code>0</code>, but
-you can immediately use it in your templates. When the server responds
-with results, the templates will watch for changes in the length of the
-array and update themselves automatically.</p>
+<p>The store object is available in controllers and routes using <code>this.store</code>.</p>
 
-<p><strong>Note</strong> <code>DS.RecordArray</code> is not a JavaScript array, it is an object that
-implements <code>Ember.Enumerable</code>. If you want to, for example, retrieve
-records by index, you must use the <code>objectAt(index)</code> method. Since the
-object is not a JavaScript array, using the <code>[]</code> notation will not work.
-For more information, see <a href="http://emberjs.com/api/classes/Ember.Enumerable.html">Ember.Enumerable</a> and <a href="http://emberjs.com/api/classes/Ember.Array.html">Ember.Array</a>.</p>
+<p>Although <code>createRecord</code> is fairly straightforward, the only thing to watch out for
+is that you cannot assign a promise as a relationship, currently.</p>
 
+<p>For example, if you want to set the <code>author</code> property of a post, this would <strong>not</strong> work
+if the <code>user</code> with id isn&#39;t already loaded into the store:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> store = <span class="local-variable">this</span>.store;
+
+store.createRecord(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, {
+  <span class="key">title</span>: <span class="string"><span class="delimiter">'</span><span class="content">Rails is Omakase</span><span class="delimiter">'</span></span>,
+  <span class="key">body</span>: <span class="string"><span class="delimiter">'</span><span class="content">Lorem ipsum</span><span class="delimiter">'</span></span>,
+  <span class="key">author</span>: store.find(<span class="string"><span class="delimiter">'</span><span class="content">user</span><span class="delimiter">'</span></span>, <span class="integer">1</span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>However, you can easily set the relationship after the promise has fulfilled:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> store = <span class="local-variable">this</span>.store;
+
+<span class="keyword">var</span> post = store.createRecord(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, {
+  <span class="key">title</span>: <span class="string"><span class="delimiter">'</span><span class="content">Rails is Omakase</span><span class="delimiter">'</span></span>,
+  <span class="key">body</span>: <span class="string"><span class="delimiter">'</span><span class="content">Lorem ipsum</span><span class="delimiter">'</span></span>
+});
+
+store.find(<span class="string"><span class="delimiter">'</span><span class="content">user</span><span class="delimiter">'</span></span>, <span class="integer">1</span>).then(<span class="keyword">function</span>(user) {
+  post.set(<span class="string"><span class="delimiter">'</span><span class="content">author</span><span class="delimiter">'</span></span>, user);
+});
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_deleting-records'>Deleting Records</h3>
+<p>Deleting records is just as straightforward as creating records. Just call <code>deleteRecord()</code>
+on any instace of <code>DS.Model</code>. This flags the record as <code>isDeleted</code> and thus removes
+it from <code>all()</code> queries on the <code>store</code>. The deletion can then be persisted using <code>save()</code>.
+Alternatively, you can use the <code>destroyRecord</code> method to delete and persist at the same time.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> post = store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="integer">1</span>);
+
+post.deleteRecord();
+
+post.get(<span class="string"><span class="delimiter">'</span><span class="content">isDeleted</span><span class="delimiter">'</span></span>); <span class="comment">// =&gt; true</span>
+
+post.save(); <span class="comment">// =&gt; DELETE to /posts/1</span>
+
+<span class="comment">// OR</span>
+
+<span class="keyword">var</span> post = store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="integer">2</span>);
+
+post.destroyRecord(); <span class="comment">// =&gt; DELETE to /posts/1</span>
+</pre></td>
+</tr></table>
+</div></div>
     
       <footer>
         
-          <a class="previous-guide" href="/guides/models/finding-a-record">
-            ← Finding a Record
+          <a class="previous-guide" href="/guides/models/defining-models">
+            ← Defining Models
           </a>
          
         <a class="next-guide" href="/guides/models/pushing-records-into-the-store">

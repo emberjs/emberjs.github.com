@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Models: Querying the Server for Records</title>
+    <title>Ember.js - Models: Finding Records</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -38,7 +38,7 @@
   
   </head>
 
-  <body class="guides guides_models guides_models_querying-the-server-for-records guides_models_querying-the-server-for-records_index">
+  <body class="guides guides_models guides_models_finding-records guides_models_finding-records_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -378,27 +378,23 @@
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/using-the-store">Using the Store</a>
-            </li>
-          
-            <li class="level-3">
               <a href="/guides/models/defining-models">Defining Models</a>
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/finding-a-record">Finding a Record</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/models/finding-all-records-of-a-type">Finding All Records of a Type</a>
+              <a href="/guides/models/creating-and-deleting-records">Creating and Deleting Records</a>
             </li>
           
             <li class="level-3">
               <a href="/guides/models/pushing-records-into-the-store">Pushing Records into the Store</a>
             </li>
           
+            <li class="level-3">
+              <a href="/guides/models/persisting-records">Persisting Records</a>
+            </li>
+          
             <li class="level-3 sub-selected">
-              <a href="/guides/models/querying-the-server-for-records">Querying the Server for Records</a>
+              <a href="/guides/models/finding-records">Finding Records</a>
             </li>
           
             <li class="level-3">
@@ -552,23 +548,101 @@
   
   <div class="chapter">
     
-        <h1>Querying the Server for Records
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/models/querying-the-server-for-records.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
+        <h1>Finding Records
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/models/finding-records.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
         </h1>
       
     <hr>
-    <p>You can query the server by calling the store&#39;s <code>find()</code> method and
-passing a hash of search options. This method returns a promise that
-resolves to an array of the search results.</p>
+    <p><code>store.find()</code> allows you to find all records, single records, and query for records.
+The first argument to <code>store.find()</code> is always the type of record in question, e.g. <code>post</code>. The second
+argument is optional and can either be a plain object of search options or an id. Below are some examples:</p>
+<h3 class='anchorable-toc' id='toc_finding-all-records-of-a-type'>Finding All Records of a Type</h3><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> posts = <span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>);
+</pre></td>
+</tr></table>
+</div></div>
+<p>This will return an instance of <code>DS.RecordArray</code>. As with records, the
+record array will start in a loading state with a <code>length</code> of <code>0</code>.
+When the server responds with results, any references to the record array
+will update automatically.</p>
 
-<p>For example, we could search for all <code>person</code> models who had the name of
+<p><strong>Note</strong>: <code>DS.RecordArray</code> is not a JavaScript array, it is an object that
+implements <code>Ember.Enumerable</code>. If you want to, for example, retrieve
+records by index, you must use the <code>objectAt(index)</code> method. Since the
+object is not a JavaScript array, using the <code>[]</code> notation will not work.
+For more information, see <a href="http://emberjs.com/api/classes/Ember.Enumerable.html">Ember.Enumerable</a> and <a href="http://emberjs.com/api/classes/Ember.Array.html">Ember.Array</a>.</p>
+
+<p>To get a list of records already loaded into the store, without firing
+another network request, use <code>store.all(&#39;post&#39;)</code> instead.</p>
+<h3 class='anchorable-toc' id='toc_finding-a-single-record'>Finding a Single Record</h3>
+<p>You can retrieve a record by passing its model and unique ID to the <code>find()</code>
+method. The ID can be either a string or a number. This will return a promise that
+fulfills with the requested record:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="integer">1</span>).then(<span class="keyword">function</span>(post) {
+  post.set(<span class="string"><span class="delimiter">'</span><span class="content">title</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">My Dark Twisted Fantasy</span><span class="delimiter">&quot;</span></span>);
+});
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_integrating-with-the-route-s-model-hook'>Integrating with the Route&#39;s Model Hook</h4>
+<p>As discussed in <a href="/guides/routing/specifying-a-routes-model">Specifying a Route&#39;s
+Model</a>, routes are
+responsible for telling their template which model to render.</p>
+
+<p><code>Ember.Route</code>&#39;s <code>model</code> hook supports asynchronous values
+out-of-the-box. If you return a promise from the <code>model</code> hook, the
+router will wait until the promise has fulfilled to render the
+template.</p>
+
+<p>This makes it easy to write apps with asynchronous data using Ember
+Data. Just return the requested record from the <code>model</code> hook, and let
+Ember deal with figuring out whether a network request is needed or not:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">:post_id</span><span class="delimiter">'</span></span> });
+});
+
+App.PostRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>(params) {
+    <span class="keyword">return</span> <span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, params.post_id);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>In fact, this pattern is so common, the above <code>model</code> hook is the
+default implementation for routes with a dynamic segment. If you&#39;re
+using Ember Data, you only need to override the <code>model</code> hook if you need
+to return a model different from the record with the provided ID.</p>
+<h3 class='anchorable-toc' id='toc_querying-for-records'>Querying For Records</h3>
+<p>You can query the server by calling the store&#39;s <code>find()</code> method and
+passing a hash of search options. This method returns a promise that
+fulfills with an array of the search results.</p>
+
+<p>For example, we could search for all <code>person</code> models who have the name of
 <code>Peter</code>:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 </pre></td>
-  <td class="code"><pre>store.find(<span class="string"><span class="delimiter">'</span><span class="content">person</span><span class="delimiter">'</span></span>, { <span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Peter</span><span class="delimiter">&quot;</span></span> }).then(<span class="keyword">function</span>(people) {
+  <td class="code"><pre><span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">person</span><span class="delimiter">'</span></span>, { <span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Peter</span><span class="delimiter">&quot;</span></span> }).then(<span class="keyword">function</span>(people) {
   console.log(<span class="string"><span class="delimiter">&quot;</span><span class="content">Found </span><span class="delimiter">&quot;</span></span> + people.get(<span class="string"><span class="delimiter">'</span><span class="content">length</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">&quot;</span><span class="content"> people named Peter.</span><span class="delimiter">&quot;</span></span>);
 });
 </pre></td>
@@ -584,8 +658,8 @@ query responses.</strong></p>
     
       <footer>
         
-          <a class="previous-guide" href="/guides/models/pushing-records-into-the-store">
-            ← Pushing Records into the Store
+          <a class="previous-guide" href="/guides/models/persisting-records">
+            ← Persisting Records
           </a>
          
         <a class="next-guide" href="/guides/models/working-with-records">

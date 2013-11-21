@@ -378,19 +378,11 @@
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/using-the-store">Using the Store</a>
-            </li>
-          
-            <li class="level-3">
               <a href="/guides/models/defining-models">Defining Models</a>
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/finding-a-record">Finding a Record</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/models/finding-all-records-of-a-type">Finding All Records of a Type</a>
+              <a href="/guides/models/creating-and-deleting-records">Creating and Deleting Records</a>
             </li>
           
             <li class="level-3">
@@ -398,7 +390,11 @@
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/querying-the-server-for-records">Querying the Server for Records</a>
+              <a href="/guides/models/persisting-records">Persisting Records</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/models/finding-records">Finding Records</a>
             </li>
           
             <li class="level-3">
@@ -605,10 +601,34 @@ a copy of the latest passing build from
 concepts that underpin its design.</p>
 <h4 class='anchorable-toc' id='toc_store'>Store</h4>
 <p>The <strong>store</strong> is the central repository of records in your application.
-Both your application&#39;s controllers and routes have access to this
+You can think of the store as a cache of all of the records available in
+your app. Both your application&#39;s controllers and routes have access to this
 shared store; when they need to display or modify a record, they will
 first ask the store for it.</p>
-<h4 class='anchorable-toc' id='toc_models'>Models</h4>
+
+<p>This instance of <code>DS.Store</code> is created for you automatically and is shared
+among all of the objects in your application.</p>
+
+<p>You will use the store to retrieve records, as well to create new ones.
+For example, we might want to find an <code>App.Person</code> model with the ID of
+<code>1</code> from our route&#39;s <code>model</code> hook:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre>App.IndexRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>() {
+    <span class="keyword">var</span> store = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">store</span><span class="delimiter">'</span></span>);
+    <span class="keyword">return</span> store.find(<span class="string"><span class="delimiter">'</span><span class="content">person</span><span class="delimiter">'</span></span>, <span class="integer">1</span>)
+  }
+});
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_models'>Models</h4>
 <p>A <strong>model</strong> is a class that defines the properties and behavior of the
 data that you present to the user. Anything that the user expects to see
 if they leave your app and come back later (or if they refresh the page)
@@ -618,14 +638,52 @@ should be represented by a model.</p>
 a restaurant, you might have models like <code>Order</code>, <code>LineItem</code>, and
 <code>MenuItem</code>.</p>
 
+<p>Fetching orders becomes very easy:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">order</span><span class="delimiter">'</span></span>);
+</pre></td>
+</tr></table>
+</div></div>
 <p>Models define the type of data that will be provided by your server. For
 example, a <code>Person</code> model might have a <code>firstName</code> attribute that is a
-string, and a <code>birthday</code> attribute that is a date.</p>
-
+string, and a <code>birthday</code> attribute that is a date:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>App.Person = DS.Model.extend({
+  <span class="key">firstName</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">birthday</span>:  DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">date</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
 <p>A model also describes its relationships with other objects. For
 example, an <code>Order</code> may have many <code>LineItems</code>, and a <code>LineItem</code> may
 belong to a particular <code>Order</code>.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>App.LineItem = DS.Model.extend({
+    <span class="key">orders</span>: DS.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">order</span><span class="delimiter">'</span></span>)
+});
 
+App.Order = DS.Model.extend({
+  <span class="key">lineItems</span>: DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">lineItem</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
 <p>Models don&#39;t have any data themselves; they just define the properties and
 behavior of specific instances, which are called <em>records</em>.</p>
 <h4 class='anchorable-toc' id='toc_records'>Records</h4>
@@ -643,7 +701,13 @@ to the server.</p>
 <p>For example, if you were writing a contact management app, you might
 have a model called <code>Person</code>. An individual record in your app might
 have a type of <code>Person</code> and an ID of <code>1</code> or <code>steve-buscemi</code>.</p>
-
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">person</span><span class="delimiter">'</span></span>, <span class="integer">1</span>); <span class="comment">// =&gt; { id: 1, name: 'steve-buscemi' }</span>
+</pre></td>
+</tr></table>
+</div></div>
 <p>IDs are usually assigned by the server when you save them for the first
 time, but you can also generate IDs client-side.</p>
 <h4 class='anchorable-toc' id='toc_adapter'>Adapter</h4>
@@ -754,8 +818,8 @@ these concepts, and how to use them together.</p>
              ← Controllers: Managing Dependencies Between Controllers
           </a>
          
-        <a class="next-guide" href="/guides/models/using-the-store">
-          Using the Store →
+        <a class="next-guide" href="/guides/models/defining-models">
+          Defining Models →
         </a>
       
       </footer>

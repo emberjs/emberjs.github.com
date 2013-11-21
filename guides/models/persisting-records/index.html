@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Models: Using the Store</title>
+    <title>Ember.js - Models: Persisting Records</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -38,7 +38,7 @@
   
   </head>
 
-  <body class="guides guides_models guides_models_using-the-store guides_models_using-the-store_index">
+  <body class="guides guides_models guides_models_persisting-records guides_models_persisting-records_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -377,28 +377,24 @@
               <a href="/guides/models">Introduction</a>
             </li>
           
-            <li class="level-3 sub-selected">
-              <a href="/guides/models/using-the-store">Using the Store</a>
-            </li>
-          
             <li class="level-3">
               <a href="/guides/models/defining-models">Defining Models</a>
             </li>
           
             <li class="level-3">
-              <a href="/guides/models/finding-a-record">Finding a Record</a>
-            </li>
-          
-            <li class="level-3">
-              <a href="/guides/models/finding-all-records-of-a-type">Finding All Records of a Type</a>
+              <a href="/guides/models/creating-and-deleting-records">Creating and Deleting Records</a>
             </li>
           
             <li class="level-3">
               <a href="/guides/models/pushing-records-into-the-store">Pushing Records into the Store</a>
             </li>
           
+            <li class="level-3 sub-selected">
+              <a href="/guides/models/persisting-records">Persisting Records</a>
+            </li>
+          
             <li class="level-3">
-              <a href="/guides/models/querying-the-server-for-records">Querying the Server for Records</a>
+              <a href="/guides/models/finding-records">Finding Records</a>
             </li>
           
             <li class="level-3">
@@ -552,51 +548,16 @@
   
   <div class="chapter">
     
-        <h1>Using the Store
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/models/using-the-store.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
+        <h1>Persisting Records
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/models/persisting-records.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
         </h1>
       
     <hr>
-    <p>Before your application can display a model, it must first load it from
-the server. Of course, since network requests can be expensive, it is
-important to only request a given record once. </p>
+    <p>Records in Ember Data are persisted on a per-instance basis.
+Call <code>save()</code> on any instance of <code>DS.Model</code> and it will make a network request.</p>
 
-<p>To keep track of which records are loaded and which still need to be
-fetched, every controller and route in your application has access to a
-<strong>store</strong>. You can think of the store as a cache of all of the records
-available in your app.</p>
-<h3 class='anchorable-toc' id='toc_getting-records-into-the-store'>Getting Records into the Store</h3>
-<p>There are two ways of getting records into the store.</p>
-
-<p>First, you can manually push records into the store. This is useful if,
-for example, you have a streaming API that notifies your application of
-new records as soon as they are created.</p>
-
-<p>For more about pushing records into the store, see:</p>
-
-<ul>
-<li><a href="/guides/models/pushing-records-into-the-store">Pushing Records into the
-Store</a></li>
-</ul>
-
-<p>Second, you can ask the store for a record. If the store doesn&#39;t already
-have the record loaded, it will ask its <em>adapter</em> to load it from the
-server. The record that your server returns will be pushed into the
-store automatically.</p>
-
-<p>Note that if the record <em>has</em> been loaded, the store returns it
-immediately without making an unnecessary network request.</p>
-<h3 class='anchorable-toc' id='toc_accessing-the-store'>Accessing the Store</h3>
-<p>Once you include the Ember Data library in your application, all of your
-controllers and routes will automatically gain access to a new property
-called <code>store</code>. This instance of <code>DS.Store</code> is created for you
-automatically and is shared among all of the objects in your
-application.</p>
-
-<p>You will use the store to retrieve records, as well to create new ones.
-For example, we might want to find an <code>App.Person</code> model with the ID of
-<code>1</code> from our route&#39;s <code>model</code> hook:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>Here are a few examples:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -604,27 +565,156 @@ For example, we might want to find an <code>App.Person</code> model with the ID 
 5
 6
 </pre></td>
-  <td class="code"><pre>App.IndexRoute = Ember.Route.extend({
-  <span class="function">model</span>: <span class="keyword">function</span>() {
-    <span class="keyword">var</span> store = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">store</span><span class="delimiter">'</span></span>);
-    <span class="keyword">return</span> store.find(<span class="string"><span class="delimiter">'</span><span class="content">person</span><span class="delimiter">'</span></span>, <span class="integer">1</span>)
-  }
+  <td class="code"><pre><span class="keyword">var</span> post = store.createRecord(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, {
+  <span class="key">title</span>: <span class="string"><span class="delimiter">'</span><span class="content">Rails is Omakase</span><span class="delimiter">'</span></span>,
+  <span class="key">body</span>: <span class="string"><span class="delimiter">'</span><span class="content">Lorem ipsum</span><span class="delimiter">'</span></span>
 });
+
+post.save(); <span class="comment">// =&gt; POST to '/posts'</span>
+</pre></td>
+</tr></table>
+</div></div><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> post = store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="integer">1</span>);
+
+post.get(<span class="string"><span class="delimiter">'</span><span class="content">title</span><span class="delimiter">'</span></span>) <span class="comment">// =&gt; &quot;Rails is Omakase&quot;</span>
+
+post.set(<span class="string"><span class="delimiter">'</span><span class="content">title</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">A new post</span><span class="delimiter">'</span></span>);
+
+post.save(); <span class="comment">// =&gt; PUT to '/posts/1'</span>
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_promises'>Promises</h3>
+<p><code>save()</code> returns a promise, so it is extremely easy to handle success and failure scenarios.
+ Here&#39;s a common pattern:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> post = store.createRecord(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, {
+  <span class="key">title</span>: <span class="string"><span class="delimiter">'</span><span class="content">Rails is Omakase</span><span class="delimiter">'</span></span>,
+  <span class="key">body</span>: <span class="string"><span class="delimiter">'</span><span class="content">Lorem ipsum</span><span class="delimiter">'</span></span>
+});
+
+post.save().then(<span class="keyword">function</span>(post) {
+  <span class="local-variable">this</span>.transitionToRoute(<span class="string"><span class="delimiter">'</span><span class="content">posts/show</span><span class="delimiter">'</span></span>, post);
+});
+
+<span class="comment">// =&gt; POST to '/posts'</span>
+<span class="comment">// =&gt; transitioning to posts.show route</span>
 </pre></td>
 </tr></table>
 </div></div>
-<p>For more about finding records, see <a href="/guides/models/finding-a-record">Finding a
-Record</a>.</p>
+<p>Promises even make it easy to work with failed network requests:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> post = store.createRecord(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, {
+  <span class="key">title</span>: <span class="string"><span class="delimiter">'</span><span class="content">Rails is Omakase</span><span class="delimiter">'</span></span>,
+  <span class="key">body</span>: <span class="string"><span class="delimiter">'</span><span class="content">Lorem ipsum</span><span class="delimiter">'</span></span>
+});
 
+<span class="keyword">var</span> <span class="function">onSuccess</span> = <span class="keyword">function</span>(post) {
+  <span class="local-variable">this</span>.transitionToRoute(<span class="string"><span class="delimiter">'</span><span class="content">posts/show</span><span class="delimiter">'</span></span>, post);
+};
+
+<span class="keyword">var</span> <span class="function">onFail</span> = <span class="keyword">function</span>(post) {
+  <span class="comment">// deal with the failure here</span>
+};
+
+post.save().then(onSuccess, onFail);
+
+<span class="comment">// =&gt; POST to '/posts'</span>
+<span class="comment">// =&gt; transitioning to posts.show route</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>You can read more about promises <a href="https://github.com/tildeio/rsvp.js">here</a>, but here is another
+example showing how to retry persisting:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre></td>
+  <td class="code"><pre><span class="keyword">function</span> <span class="function">retry</span>(callback, nTimes) {
+  <span class="comment">// if the promise fails</span>
+  <span class="keyword">return</span> callback().fail(<span class="keyword">function</span>(reason) {
+    <span class="comment">// if we haven't hit the retry limit</span>
+    <span class="keyword">if</span> (nTimes-- &gt; <span class="integer">0</span>) {
+      <span class="comment">// retry again with the result of calling the retry callback</span>
+      <span class="comment">// and the new retry limit</span>
+      <span class="keyword">return</span> retry(callback, nTimes);
+    }
+
+    <span class="comment">// otherwise, if we hit the retry limit, rethrow the error</span>
+    <span class="keyword">throw</span> reason;
+  });
+}
+
+<span class="comment">// try to save the post up to 5 times</span>
+retry(<span class="keyword">function</span>() {
+  <span class="keyword">return</span> post.save();
+}, <span class="integer">5</span>);
+</pre></td>
+</tr></table>
+</div></div>
     
       <footer>
         
-          <a class="previous-guide" href="/guides/models">
-            ← Introduction
+          <a class="previous-guide" href="/guides/models/pushing-records-into-the-store">
+            ← Pushing Records into the Store
           </a>
          
-        <a class="next-guide" href="/guides/models/defining-models">
-          Defining Models →
+        <a class="next-guide" href="/guides/models/finding-records">
+          Finding Records →
         </a>
       
       </footer>
