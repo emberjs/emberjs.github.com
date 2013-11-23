@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Views: Handling Events</title>
+    <title>Ember.js - Routing: Loading / Error Substates</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -38,7 +38,7 @@
   
   </head>
 
-  <body class="guides guides_views guides_views_handling-events guides_views_handling-events_index">
+  <body class="guides guides_routing guides_routing_loading-and-error-substates guides_routing_loading-and-error-substates_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -269,9 +269,9 @@
               <a href="/guides/templates/writing-helpers">Writing Helpers</a>
             </li>
           </ol></li>
-          <li class="level-1">
+          <li class="level-1 selected">
             <a href="/guides/routing">Routing</a>
-            <ol>
+            <ol class='selected'>
         
             <li class="level-3">
               <a href="/guides/routing">Introduction</a>
@@ -313,7 +313,7 @@
               <a href="/guides/routing/asynchronous-routing">Asynchronous Routing</a>
             </li>
           
-            <li class="level-3">
+            <li class="level-3 sub-selected">
               <a href="/guides/routing/loading-and-error-substates">Loading / Error Substates</a>
             </li>
           
@@ -417,9 +417,9 @@
               <a href="/guides/models/frequently-asked-questions">Frequently Asked Questions</a>
             </li>
           </ol></li>
-          <li class="level-1 selected">
+          <li class="level-1">
             <a href="/guides/views">Views</a>
-            <ol class='selected'>
+            <ol>
         
             <li class="level-3">
               <a href="/guides/views">Introduction</a>
@@ -429,7 +429,7 @@
               <a href="/guides/views/defining-a-view">Defining a View</a>
             </li>
           
-            <li class="level-3 sub-selected">
+            <li class="level-3">
               <a href="/guides/views/handling-events">Handling Events</a>
             </li>
           
@@ -552,68 +552,112 @@
   
   <div class="chapter">
     
-        <h1>Handling Events
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/views/handling-events.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
+        <h1>Loading / Error Substates
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/routing/loading-and-error-substates.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
         </h1>
       
     <hr>
-    <p>Instead of having to register event listeners on elements you&#39;d like to
-respond to, simply implement the name of the event you want to respond to
-as a method on your view.</p>
+    <p>In addition to the techniques described in the
+<a href="http://emberjs.com/guides/routing/asynchronous-routing/">Asynchronous Routing Guide</a>,
+the Ember Router provides powerful yet overridable
+conventions for customizing asynchronous transitions
+between routes by making use of <code>error</code> and <code>loading</code>
+substates.</p>
+<h2 class='anchorable-toc' id='toc_code-loading-code-substates'><code>loading</code> substates</h2>
+<p>Consider the following:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">articles</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() { <span class="comment">// -&gt; ArticlesRoute</span>
+    <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">overview</span><span class="delimiter">'</span></span>);              <span class="comment">// -&gt; ArticlesOverviewRoute</span>
+  });
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>If you navigate to <code>articles/overview</code>, and in <code>ArticlesRoute#model</code>, 
+you return an AJAX query promise to load all of
+the articles that takes a long time to complete.
+During this time, your UI isn&#39;t really giving you any feedback as to
+what&#39;s happening; if you&#39;re entering this route after a full page
+refresh, your UI will be entirely blank, as you have not actually
+finished fully entering any route and haven&#39;t yet displayed any
+templates; if you&#39;re navigating to <code>articles/overview</code> from another
+route, you&#39;ll continue to see the templates from the previous route
+until the articles finish loading, and then, boom, suddenly all the
+templates for <code>articles/overview</code> load. </p>
 
-<p>For example, imagine we have a template like this:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">view</span> <span class="attribute-name">App.ClickableView</span><span class="inline-delimiter">}}</span></span>
-This is a clickable area!
-<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">view</span><span class="inline-delimiter">}}</span></span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>Let&#39;s implement <code>App.ClickableView</code> such that when it is
-clicked, an alert is displayed:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre>App.ClickableView = Ember.View.extend({
-  <span class="function">click</span>: <span class="keyword">function</span>(evt) {
-    alert(<span class="string"><span class="delimiter">&quot;</span><span class="content">ClickableView was clicked!</span><span class="delimiter">&quot;</span></span>);
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Events bubble up from the target view to each parent view in succession,
-until the root view. These values are read-only. If you want to
-manually manage views in JavaScript (instead of creating them using
-the <code>{{view}}</code> helper in Handlebars), see the <code>Ember.ContainerView</code>
-documentation below.</p>
-<h3 class='anchorable-toc' id='toc_sending-events'>Sending Events</h3>
-<p>To have the click event from <code>App.ClickableView</code> affect the state of your application, simply send an event to the view&#39;s controller:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>So, how can we provide some visual feedback during the transition?</p>
+<h3 class='anchorable-toc' id='toc_the-code-loading-code-event'>The <code>loading</code> event</h3>
+<p>Before going into detail about loading substates, it&#39;s important
+to understand the behavior of the <code>loading</code> event.</p>
+
+<p>The Ember Router allows you to return promises from the various
+<code>beforeModel</code>/<code>model</code>/<code>afterModel</code> hooks in the course of a transition
+(described <a href="http://emberjs.com/guides/routing/asynchronous-routing/">here</a>).
+These promises pause the transition until they fulfill, at which point
+the transition will resume. If you return a promise from
+one of these hooks, and it doesn&#39;t immediately resolve, a <code>loading</code>
+event will be fired on that route and bubble upward to
+<code>ApplicationRoute</code>. For example:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
 </pre></td>
-  <td class="code"><pre>App.ClickableView = Ember.View.extend({
-  <span class="function">click</span>: <span class="keyword">function</span>(evt) {
-    <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">controller</span><span class="delimiter">'</span></span>).send(<span class="string"><span class="delimiter">'</span><span class="content">turnItUp</span><span class="delimiter">'</span></span>, <span class="integer">11</span>);
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() { <span class="comment">// -&gt; FooRoute</span>
+    <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">slowModel</span><span class="delimiter">'</span></span>);        <span class="comment">// -&gt; FooSlowModelRoute</span>
+  });
+});
+
+App.FooSlowModelRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> somePromiseThatTakesAWhileToResolve();
+  },
+  <span class="key">actions</span>: {
+    <span class="function">loading</span>: <span class="keyword">function</span>(transition, originRoute) {
+      <span class="comment">// displayLoadingSpinner();</span>
+
+      <span class="comment">// Return true to bubble this event to `FooRoute`</span>
+      <span class="comment">// or `ApplicationRoute`.</span>
+      <span class="keyword">return</span> <span class="predefined-constant">true</span>;
+    }
   }
 });
 </pre></td>
 </tr></table>
 </div></div>
-<p>If the controller has an action handler called <code>turnItUp</code>, it will be called:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>If <code>FooRoute#model</code> had returned the slow promise, the <code>loading</code>
+event would have fired on <code>FooRoute</code> (and not <code>FooSlowModelRoute</code>).</p>
+<h3 class='anchorable-toc' id='toc_the-default-implementation-of-the-code-loading-code-event'>The default implementation of the <code>loading</code> event</h3>
+<p>So already, you have a hook to allow you to configure loading
+behavior in a hierarchical manner. But in addition to this, Ember
+provides a default implementation of the <code>loading</code> handler that implements
+the following loading substate behavior we&#39;ve been alluding to.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -622,18 +666,134 @@ documentation below.</p>
 6
 7
 </pre></td>
-  <td class="code"><pre>App.PlaybackController = Ember.ObjectController.extend({
-  <span class="key">actions</span>: {
-    <span class="function">turnItUp</span>: <span class="keyword">function</span>(level){
-      <span class="comment">//Do your thing</span>
-    }
-  }
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {   <span class="comment">// -&gt; FooRoute</span>
+    <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">bar</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() { <span class="comment">// -&gt; BarRoute</span>
+      <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">baz</span><span class="delimiter">'</span></span>);              <span class="comment">// -&gt; BarBazRoute</span>
+    });
+  });
 });
 </pre></td>
 </tr></table>
 </div></div>
-<p>If it doesn&#39;t, the message will be passed to the current route:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>If a route with the path <code>foo.bar.baz</code> returns a promise that doesn&#39;t immediately
+resolve, Ember will try to find a <code>loading</code> route in the hierarchy 
+above <code>foo.bar.baz</code> that it can transition into, starting with
+<code>foo.bar.baz</code>&#39;s sibling:</p>
+
+<ol>
+<li><code>foo.bar.loading</code></li>
+<li><code>foo.loading</code></li>
+<li><code>loading</code></li>
+</ol>
+
+<p>Ember will find a loading route at the above location if either a) a 
+Route subclass has been defined for such a route, e.g.</p>
+
+<ol>
+<li><code>App.BarLoadingRoute</code></li>
+<li><code>App.FooLoadingRoute</code></li>
+<li><code>App.LoadingRoute</code></li>
+</ol>
+
+<p>or b) a properly-named loading template has been found, e.g.</p>
+
+<ol>
+<li><code>bar/loading</code></li>
+<li><code>foo/loading</code></li>
+<li><code>loading</code></li>
+</ol>
+
+<p>During a slow asynchronous transition, Ember will transition into the
+first loading sub-state/route that it finds, if one exists. The
+intermediate transition into the loading substate happens immediately 
+(synchronously), the URL won&#39;t be updated, and, unlike other transitions
+that happen while another asynchronous transition is active, the
+currently active async transition won&#39;t be aborted.</p>
+
+<p>After transitioning into a loading substate, the corresponding template
+for that substate, if present, will be rendered into the main outlet of
+the parent route, e.g. <code>foo.bar.loading</code>&#39;s template would render into 
+<code>foo.bar</code>&#39;s outlet. (This isn&#39;t particular to loading routes; all
+routes behave this way by default.)</p>
+
+<p>Once the main async transition into <code>foo.bar.baz</code> completes, the loading
+substate will be exited, its template torn down, <code>foo.bar.baz</code> will be
+entered, and its templates rendered.</p>
+<h3 class='anchorable-toc' id='toc_eager-vs-lazy-async-transitions'>Eager vs. Lazy Async Transitions</h3>
+<p>Loading substates are optional, but if you provide one,
+you are essentially telling Ember that you
+want this async transition to be &quot;eager&quot;; in the absence of destination
+route loading substates, the router will &quot;lazily&quot; remain on the pre-transition route
+while all of the destination routes&#39; promises resolve, and only fully
+transition to the destination route (and renders its templates, etc.)
+once the transition is complete. But once you provide a destination
+route loading substate, you are opting into an &quot;eager&quot; transition, which
+is to say that, unlike the &quot;lazy&quot; default, you will eagerly exit the
+source routes (and tear down their templates, etc) in order to
+transition into this substate. </p>
+
+<p>This has implications on error handling, i.e. when a transition into
+another route fails, a lazy transition will (by default) just remain on the
+previous route, whereas an eager transition will have already left the
+pre-transition route to enter a loading substate.</p>
+<h2 class='anchorable-toc' id='toc_code-error-code-substates'><code>error</code> substates</h2>
+<p>Ember provides an analogous approach to <code>loading</code> events/substates in
+the case of errors encountered during a transition.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">articles</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() { <span class="comment">// -&gt; ArticlesRoute</span>
+    <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">overview</span><span class="delimiter">'</span></span>);              <span class="comment">// -&gt; ArticlesOverviewRoute</span>
+  });
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>If <code>ArticlesOverviewRoute#model</code> returns a promise that rejects (because, for
+instance, the server returned an error, or the user isn&#39;t logged in,
+etc.), an <code>error</code> event will fire on <code>ArticlesOverviewRoute</code> and bubble upward.
+This <code>error</code> event can be handled and used to display an error message,
+redirect to a login page, etc., but similar to how the default <code>loading</code>
+event handlers are implemented, the default <code>error</code> handlers
+will look for an appropriate error substate to
+enter, if one can be found.</p>
+
+<p>For instance, an error thrown or rejecting promise returned from
+<code>ArticlesOverviewRoute#model</code> (or <code>beforeModel</code> or <code>afterModel</code>) 
+will look for:</p>
+
+<ol>
+<li>Either <code>ArticlesErrorRoute</code> or <code>articles/error</code> template</li>
+<li>Either <code>ErrorRoute</code> or <code>error</code> template</li>
+</ol>
+
+<p>If one of the above is found, the router will immediately transition into
+that substate (without updating the URL). The &quot;reason&quot; for the error 
+(i.e. the exception thrown or the promise reject value) will be passed
+to that error state as its <code>model</code>.</p>
+
+<p>If no viable error substates can be found, an error message will be
+logged.</p>
+
+<p>The only way in which <code>loading</code>/<code>error</code> substate resolution differs is
+that <code>error</code> events will continue to bubble above a transition&#39;s pivot
+route.</p>
+<h2 class='anchorable-toc' id='toc_legacy-code-loadingroute-code'>Legacy <code>LoadingRoute</code></h2>
+<p>Previous versions of Ember (somewhat inadvertently) allowed you to define a global <code>LoadingRoute</code>
+which would be activated whenever a slow promise was encountered during
+a transition and exited upon completion of the transition. Because the
+<code>loading</code> template rendered as a top-level view and not within an
+outlet, it could be used for little more than displaying a loading
+spinner during slow transitions. Loading events/substates give you far
+more control, but if you&#39;d like to emulate something similar to legacy
+<code>LoadingRoute</code> behavior, you could do as follows:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -641,29 +801,44 @@ documentation below.</p>
 5
 6
 7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
 </pre></td>
-  <td class="code"><pre>App.PlaybackRoute = Ember.Route.extend({
+  <td class="code"><pre>App.ApplicationRoute = Ember.Route.extend({
   <span class="key">actions</span>: {
-    <span class="function">turnItUp</span>: <span class="keyword">function</span>(level){
-      <span class="comment">//This won't be called if it's defined on App.PlaybackController</span>
+    <span class="function">loading</span>: <span class="keyword">function</span>() {
+      <span class="keyword">var</span> view = Ember.View.create({
+        <span class="key">templateName</span>: <span class="string"><span class="delimiter">'</span><span class="content">global-loading</span><span class="delimiter">'</span></span>,
+        <span class="key">elementId</span>: <span class="string"><span class="delimiter">'</span><span class="content">global-loading</span><span class="delimiter">'</span></span>
+      }).append();
+
+      <span class="local-variable">this</span>.router.one(<span class="string"><span class="delimiter">'</span><span class="content">didTransition</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+        view.destroy();
+      });
     }
   }
 });
 </pre></td>
 </tr></table>
 </div></div>
-<p>To see a full listing of the <code>Ember.View</code> built-in events, see the
-documentation section on <a href="/api/classes/Ember.View.html#toc_event-names">Event Names</a>.</p>
+<p>This will, like legacy <code>LoadingRoute</code>, append a top-level view when the
+router goes into a loading state, and tear down the view once the
+transition finishes.</p>
 
     
       <footer>
         
-          <a class="previous-guide" href="/guides/views/defining-a-view">
-            ← Defining a View
+          <a class="previous-guide" href="/guides/routing/asynchronous-routing">
+            ← Asynchronous Routing
           </a>
          
-        <a class="next-guide" href="/guides/views/inserting-views-in-templates">
-          Inserting Views in Templates →
+        <a class="next-guide" href="/guides/routing/preventing-and-retrying-transitions">
+          Preventing and Retrying Transitions →
         </a>
       
       </footer>
