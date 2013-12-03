@@ -557,46 +557,60 @@
         </h1>
       
     <hr>
-    <p><code>store.find()</code> allows you to find all records, single records, and query for records.
-The first argument to <code>store.find()</code> is always the type of record in question, e.g. <code>post</code>. The second
-argument is optional and can either be a plain object of search options or an id. Below are some examples:</p>
-<h3 class='anchorable-toc' id='toc_finding-all-records-of-a-type'>Finding All Records of a Type</h3><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+    <p>The Ember Data store provides a simple interface for finding records of a single
+type through the <code>store</code> object&#39;s <code>find</code> method. Internally, the <code>store</code>
+uses <code>find</code>, <code>findAll</code>, and <code>findQuery</code> based on the supplied arguments.</p>
+
+<p>The first argument to <code>store.find()</code> is always the record type. The optional second
+argument determines if a request is made for all records, a single record, or a query.</p>
+<h3 class='anchorable-toc' id='toc_finding-all-records-of-a-type'>Finding All Records of a Type</h3><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> posts = <span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>);
+  <td class="code"><pre><span class="keyword">var</span> posts = <span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>); <span class="comment">// =&gt; GET /posts</span>
 </pre></td>
 </tr></table>
 </div></div>
-<p>This will return an instance of <code>DS.RecordArray</code>. As with records, the
-record array will start in a loading state with a <code>length</code> of <code>0</code>.
-When the server responds with results, any references to the record array
-will update automatically.</p>
-
-<p><strong>Note</strong>: <code>DS.RecordArray</code> is not a JavaScript array, it is an object that
-implements <code>Ember.Enumerable</code>. If you want to, for example, retrieve
-records by index, you must use the <code>objectAt(index)</code> method. Since the
-object is not a JavaScript array, using the <code>[]</code> notation will not work.
-For more information, see <a href="http://emberjs.com/api/classes/Ember.Enumerable.html">Ember.Enumerable</a> and <a href="http://emberjs.com/api/classes/Ember.Array.html">Ember.Array</a>.</p>
-
-<p>To get a list of records already loaded into the store, without firing
-another network request, use <code>store.all(&#39;post&#39;)</code> instead.</p>
-<h3 class='anchorable-toc' id='toc_finding-a-single-record'>Finding a Single Record</h3>
-<p>You can retrieve a record by passing its model and unique ID to the <code>find()</code>
-method. The ID can be either a string or a number. This will return a promise that
-fulfills with the requested record:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>To get a list of records already loaded into the store, without making
+another network request, use <code>all</code> instead.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
-2
-3
 </pre></td>
-  <td class="code"><pre><span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="integer">1</span>).then(<span class="keyword">function</span>(post) {
-  post.set(<span class="string"><span class="delimiter">'</span><span class="content">title</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">My Dark Twisted Fantasy</span><span class="delimiter">&quot;</span></span>);
-});
+  <td class="code"><pre><span class="keyword">var</span> posts = <span class="local-variable">this</span>.store.all(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>); <span class="comment">// =&gt; no network request</span>
 </pre></td>
 </tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_integrating-with-the-route-s-model-hook'>Integrating with the Route&#39;s Model Hook</h4>
-<p>As discussed in <a href="/guides/routing/specifying-a-routes-model">Specifying a Route&#39;s
-Model</a>, routes are
+</div></div>
+<p><code>find</code> returns a <code>DS.PromiseArray</code> that fulfills to a <code>DS.RecordArray</code> and <code>all</code>
+directly returns a <code>DS.RecordArray</code>.</p>
+
+<p>It&#39;s important to note that <code>DS.RecordArray</code> is not a JavaScript array.
+It is an object that implements <a href="http://emberjs.com/api/classes/Ember.Enumerable.html"><code>Ember.Enumerable</code></a>. This is important
+because, for example, if you want to retrieve records by index, the <code>[]</code> notation
+will not work--you&#39;ll have to use <code>objectAt(index)</code> instead.</p>
+<h3 class='anchorable-toc' id='toc_finding-a-single-record'>Finding a Single Record</h3>
+<p>If you provide an number or string as the second argument to <code>store.find()</code>,
+Ember Data will attempt to retrieve a record of that with that ID. This will
+return a promise that fulfills with the requested record:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> aSinglePost = <span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="integer">1</span>); <span class="comment">// =&gt; GET /posts/1</span>
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_querying-for-records'>Querying For Records</h3>
+<p>If you provide a plain object as the second argument to <code>find</code>, Ember Data will
+make a <code>GET</code> request with the object serialized as query params. This method returns
+<code>DS.PromiseArray</code> in the same way as <code>find</code> with no second argument.</p>
+
+<p>For example, we could search for all <code>person</code> models who have the name of
+<code>Peter</code>:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> peters = <span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">person</span><span class="delimiter">'</span></span>, { <span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Peter</span><span class="delimiter">&quot;</span></span> }); <span class="comment">// =&gt; GET to /persons?name='Peter'</span>
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_integrating-with-the-route-s-model-hook'>Integrating with the Route&#39;s Model Hook</h3>
+<p>As discussed in <a href="/guides/routing/specifying-a-routes-model">Specifying a Route&#39;s Model</a>, routes are
 responsible for telling their template which model to render.</p>
 
 <p><code>Ember.Route</code>&#39;s <code>model</code> hook supports asynchronous values
@@ -606,8 +620,8 @@ template.</p>
 
 <p>This makes it easy to write apps with asynchronous data using Ember
 Data. Just return the requested record from the <code>model</code> hook, and let
-Ember deal with figuring out whether a network request is needed or not:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+Ember deal with figuring out whether a network request is needed or not.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -617,48 +631,33 @@ Ember deal with figuring out whether a network request is needed or not:</p>
 7
 8
 9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
 </pre></td>
   <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>);
   <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">:post_id</span><span class="delimiter">'</span></span> });
+});
+
+App.PostsRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>);
+  }
 });
 
 App.PostRoute = Ember.Route.extend({
   <span class="function">model</span>: <span class="keyword">function</span>(params) {
     <span class="keyword">return</span> <span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, params.post_id);
   }
-});
+})
 </pre></td>
 </tr></table>
 </div></div>
-<p>In fact, this pattern is so common, the above <code>model</code> hook is the
-default implementation for routes with a dynamic segment. If you&#39;re
-using Ember Data, you only need to override the <code>model</code> hook if you need
-to return a model different from the record with the provided ID.</p>
-<h3 class='anchorable-toc' id='toc_querying-for-records'>Querying For Records</h3>
-<p>You can query the server by calling the store&#39;s <code>find()</code> method and
-passing a hash of search options. This method returns a promise that
-fulfills with an array of the search results.</p>
-
-<p>For example, we could search for all <code>person</code> models who have the name of
-<code>Peter</code>:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre><span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">person</span><span class="delimiter">'</span></span>, { <span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Peter</span><span class="delimiter">&quot;</span></span> }).then(<span class="keyword">function</span>(people) {
-  console.log(<span class="string"><span class="delimiter">&quot;</span><span class="content">Found </span><span class="delimiter">&quot;</span></span> + people.get(<span class="string"><span class="delimiter">'</span><span class="content">length</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">&quot;</span><span class="content"> people named Peter.</span><span class="delimiter">&quot;</span></span>);
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>The hash of search options that you pass to <code>find()</code> is opaque to Ember
-Data. By default, these options will be sent to your server as the body
-of an HTTP <code>GET</code> request.</p>
-
-<p><strong>Using this feature requires that your server knows how to interpret
-query responses.</strong></p>
-
     
       <footer>
         
