@@ -671,6 +671,38 @@ compatibility.</p>
 <p>As you can see in this example, the action handlers are called such
 that when executed, <code>this</code> is the route, not the <code>actions</code> hash.</p>
 
+<p>To continue bubbling the action, you must return true from the handler:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+</pre></td>
+  <td class="code"><pre>App.PostRoute = Ember.Route.extend({
+  <span class="key">actions</span>: {
+    <span class="function">expand</span>: <span class="keyword">function</span>() {
+      <span class="local-variable">this</span>.controller.set(<span class="string"><span class="delimiter">'</span><span class="content">isExpanded</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
+    },
+
+    <span class="function">contract</span>: <span class="keyword">function</span>() {
+      <span class="comment">// ...</span>
+      <span class="keyword">if</span> (actionShouldAlsoBeTriggeredOnParentRoute) {
+        <span class="keyword">return</span> <span class="predefined-constant">true</span>;
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
 <p>If neither the template&#39;s controller nor the currently active route
 implements a handler, the action will continue to bubble to any parent
 routes. Ultimately, if an <code>ApplicationRoute</code> is defined, it will have an

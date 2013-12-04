@@ -567,17 +567,17 @@ without any changes to your application code.</p>
 </ol>
 <h4 class='anchorable-toc' id='toc_creating-a-fixture-adapter'>Creating a Fixture Adapter</h4>
 <p>Simply attach it to your instance of <code>Ember.Store</code>:</p>
-<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight JavaScript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
 </pre></td>
-  <td class="code"><pre>var App = Ember.Application.create();
+  <td class="code"><pre><span class="keyword">var</span> App = Ember.Application.create();
 App.Store = DS.Store.extend({
-  revision: 13,
-  adapter: DS.FixtureAdapter.create()
+  <span class="key">revision</span>: <span class="integer">13</span>,
+  <span class="key">adapter</span>: DS.FixtureAdapter
 });
 </pre></td>
 </tr></table>
@@ -585,40 +585,52 @@ App.Store = DS.Store.extend({
 <p>You should refer to <a href="/guides/models/defining-models">Defining a Model</a> for a more in-depth guide on using
 Ember Data Models, but for the purposes of demonstration we&#39;ll use an example
 modeling people who document Ember.js.</p>
-<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight JavaScript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 </pre></td>
   <td class="code"><pre>App.Documenter = DS.Model.extend({
-  firstName: DS.attr( 'string' ),
-  lastName: DS.attr( 'string' )
+  <span class="key">firstName</span>: DS.attr( <span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span> ),
+  <span class="key">lastName</span>: DS.attr( <span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span> )
 });
 </pre></td>
 </tr></table>
 </div></div><h4 class='anchorable-toc' id='toc_attach-fixtures-to-the-model-class'>Attach Fixtures to the Model Class</h4>
 <p>Attaching fixtures couldn&#39;t be simpler. Just attach a collection of plain
 JavaScript objects to your Model&#39;s class under the <code>FIXTURES</code> property:</p>
-<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight JavaScript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 </pre></td>
   <td class="code"><pre>App.Documenter.FIXTURES = [
-  { id: 1, firstName: 'Trek', lastName: 'Glowacki' },
-  { id: 2, firstName: 'Tom' , lastName: 'Dale'     }
+  { <span class="key">id</span>: <span class="integer">1</span>, <span class="key">firstName</span>: <span class="string"><span class="delimiter">'</span><span class="content">Trek</span><span class="delimiter">'</span></span>, <span class="key">lastName</span>: <span class="string"><span class="delimiter">'</span><span class="content">Glowacki</span><span class="delimiter">'</span></span> },
+  { <span class="key">id</span>: <span class="integer">2</span>, <span class="key">firstName</span>: <span class="string"><span class="delimiter">'</span><span class="content">Tom</span><span class="delimiter">'</span></span> , <span class="key">lastName</span>: <span class="string"><span class="delimiter">'</span><span class="content">Dale</span><span class="delimiter">'</span></span>     }
 ];
 </pre></td>
 </tr></table>
 </div></div>
 <p>That&#39;s it! You can now use all of methods for <a href="/guides/models/finding-models">Finding Models</a> in your
 application. For example:</p>
-<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight JavaScript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
 </pre></td>
-  <td class="code"><pre>App.Documenter.find(1); // returns the record representing Trek Glowacki
+  <td class="code"><pre>App.DocumenterRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>() {
+    <span class="keyword">var</span> store = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">store</span><span class="delimiter">'</span></span>);
+    <span class="keyword">return</span> store.find(<span class="string"><span class="delimiter">'</span><span class="content">documenter</span><span class="delimiter">'</span></span>, <span class="integer">1</span>); <span class="comment">// returns a promise that will resolve</span>
+                                        <span class="comment">// with the record representing Trek Glowacki</span>
+  }
+});
 </pre></td>
 </tr></table>
 </div></div><h4 class='anchorable-toc' id='toc_naming-conventions'>Naming Conventions</h4>
