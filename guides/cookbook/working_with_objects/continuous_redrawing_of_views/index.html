@@ -554,10 +554,284 @@
     
     <hr>
     <h2 class='anchorable-toc' id='toc_problem'>Problem</h2>
-<p>You&#39;d like to redraw your views every few seconds/minutes e.G. to update relative timestamps (like on twitter.com).</p>
+<p>You&#39;d like to redraw your views every few seconds/minutes e.g. to update
+relative timestamps (like on twitter.com).</p>
 <h2 class='anchorable-toc' id='toc_solution'>Solution</h2>
-<p>Have a global <code>pulse</code> attribute in your application that you&#39;re incrementing inside a <code>setInterval</code> and let the views bind the values to be refreshed to that attribute.</p>
+<p>Have a clock object with a <code>pulse</code> attribute in your application which 
+increments using a timed interval. You want to let view(s) bind values to be
+refreshed when the <code>pulse</code> attribute increments.</p>
+
+<p>The clock object can be used to create new instances for binding to new views
+generated within the application, like a list of comments.</p>
 <h2 class='anchorable-toc' id='toc_discussion'>Discussion</h2>
+<p><a class="jsbin-embed" href="http://jsbin.com/iLETUTI/10/embed?output">
+Cookbook: Continuous Redrawing of Views
+</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
+<h3 class='anchorable-toc' id='toc_clockservice-object'>ClockService object</h3>
+<p>This <code>ClockService</code> is an example of an object that may come from a library.
+And, is injected into the application via an initializer.</p>
+
+<p>During initialization the <code>tick</code> method is called which uses <code>Ember.run.later</code>
+with a time of 250 milliseconds as the interval. A property is set at the end
+of the interval. Since the <code>tick</code> method observes the incremented property
+another interval is triggered each time the property increases.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> ClockService = Ember.Object.extend({
+  <span class="key">pulse</span>: Ember.computed.oneWay(<span class="string"><span class="delimiter">'</span><span class="content">_seconds</span><span class="delimiter">'</span></span>).readOnly(),
+  <span class="function">tick</span>: <span class="keyword">function</span> () {
+    <span class="keyword">var</span> clock = <span class="local-variable">this</span>;
+    Ember.run.later(<span class="keyword">function</span> () {
+      <span class="keyword">var</span> seconds = clock.get(<span class="string"><span class="delimiter">'</span><span class="content">_seconds</span><span class="delimiter">'</span></span>);
+      <span class="keyword">if</span> (<span class="keyword">typeof</span> seconds === <span class="string"><span class="delimiter">'</span><span class="content">number</span><span class="delimiter">'</span></span>) {
+        clock.set(<span class="string"><span class="delimiter">'</span><span class="content">_seconds</span><span class="delimiter">'</span></span>, seconds + (<span class="integer">1</span>/<span class="integer">4</span>));
+      }
+    }, <span class="integer">250</span>);
+  }.observes(<span class="string"><span class="delimiter">'</span><span class="content">_seconds</span><span class="delimiter">'</span></span>).on(<span class="string"><span class="delimiter">'</span><span class="content">init</span><span class="delimiter">'</span></span>),
+  <span class="key">_seconds</span>: <span class="integer">0</span>,
+});
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_binding-to-the-code-pulse-code-attribute'>Binding to the <code>pulse</code> attribute</h3>
+<p>In this recipe, an application initializer is used to inject an instance of the
+<code>ClockService</code> object, setting a controller&#39;s <code>clock</code> property to this instance.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>Ember.Application.initializer({
+  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">clockServiceInitializer</span><span class="delimiter">'</span></span>,
+  <span class="function">initialize</span>: <span class="keyword">function</span>(container, application) {
+    container.register(<span class="string"><span class="delimiter">'</span><span class="content">clock:service</span><span class="delimiter">'</span></span>, ClockService);
+    application.inject(<span class="string"><span class="delimiter">'</span><span class="content">controller:interval</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">clock</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">clock:service</span><span class="delimiter">'</span></span>);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>The controller can set any computed properties based on the <code>pulse</code> property of
+the injected <code>clock</code> instance.</p>
+
+<p>In this case the <code>seconds</code> property is bound to the <code>pulse</code> property of the
+controller&#39;s <code>clock</code>. The property <code>clock.pulse</code> was injected during
+initialization.</p>
+
+<p>The controller has (session) data to display <code>seconds</code> to visitors, as well as
+a handful of properties used as conditions in the Handlebars template.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+</pre></td>
+  <td class="code"><pre>App.IntervalController = Ember.ObjectController.extend({
+  <span class="key">secondsBinding</span>: <span class="string"><span class="delimiter">'</span><span class="content">clock.pulse</span><span class="delimiter">'</span></span>,
+  <span class="function">fullSecond</span>: <span class="keyword">function</span> () {
+    <span class="keyword">return</span> (<span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">seconds</span><span class="delimiter">'</span></span>) % <span class="integer">1</span> === <span class="integer">0</span>);
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">seconds</span><span class="delimiter">'</span></span>),
+  <span class="function">quarterSecond</span>: <span class="keyword">function</span> () {
+    <span class="keyword">return</span> (<span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">seconds</span><span class="delimiter">'</span></span>) % <span class="integer">1</span> === <span class="integer">1</span>/<span class="integer">4</span>);
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">seconds</span><span class="delimiter">'</span></span>),
+  <span class="function">halfSecond</span>: <span class="keyword">function</span> () {
+    <span class="keyword">return</span> (<span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">seconds</span><span class="delimiter">'</span></span>) % <span class="integer">1</span> === <span class="integer">1</span>/<span class="integer">2</span>);
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">seconds</span><span class="delimiter">'</span></span>),
+  <span class="function">threeQuarterSecond</span>: <span class="keyword">function</span> () {
+    <span class="keyword">return</span> (<span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">seconds</span><span class="delimiter">'</span></span>) % <span class="integer">1</span> === <span class="integer">3</span>/<span class="integer">4</span>);
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">seconds</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>A controller for a list of comments, which creates a new clock instance
+for each comment. Each comment in the list also has a controller. When a
+comment is created the <code>init</code> method adds a clock instance to the comment.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+</pre></td>
+  <td class="code"><pre>App.CommentItemController = Ember.ObjectController.extend({
+  <span class="function">init</span>: <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">clock</span><span class="delimiter">'</span></span>, ClockService.create());
+  }
+})
+
+App.CommentsController = Ember.ArrayController.extend({
+  <span class="key">needs</span>: [<span class="string"><span class="delimiter">'</span><span class="content">interval</span><span class="delimiter">'</span></span>],
+  <span class="key">clockBinding</span>: <span class="string"><span class="delimiter">'</span><span class="content">controllers.interval.clock</span><span class="delimiter">'</span></span>,
+  <span class="key">itemController</span>: <span class="string"><span class="delimiter">'</span><span class="content">commentItem</span><span class="delimiter">'</span></span>,
+  <span class="key">actions</span>: {
+    <span class="function">add</span>: <span class="keyword">function</span> () {
+      <span class="local-variable">this</span>.addObject(Em.Object.create({
+        <span class="key">comment</span>: <span class="predefined">$</span>(<span class="string"><span class="delimiter">'</span><span class="content">#comment</span><span class="delimiter">'</span></span>).val()
+      }));
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_handlebars-template-which-displays-the-code-pulse-code'>Handlebars template which displays the <code>pulse</code></h3>
+<p>The <code>seconds</code> value is computed from the <code>pulse</code> attribute. And the controller
+has a few properties to select a component to render, <code>fullSecond</code>,
+<code>quarterSecond</code>, <code>halfSecond</code>, <code>threeQuarterSecond</code>.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">fullSecond</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">nyan-start</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">quarterSecond</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">nyan-middle</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">halfSecond</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">nyan-end</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">threeQuarterSecond</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">nyan-middle</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;h3&gt;</span>You<span class="entity">&amp;apos;</span>ve nyaned for <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">digital_clock</span> <span class="attribute-name">seconds</span><span class="inline-delimiter">}}</span></span> (h:m:s)<span class="tag">&lt;/h3&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">render</span> <span class="attribute-name">comments</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>A template for a list of comments</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;input</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">comment</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
+<span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="attribute-name">add</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>Add Comment<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;ul&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+    <span class="tag">&lt;li&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">comment</span><span class="inline-delimiter">}}</span></span> (<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">digital_clock</span> <span class="attribute-name">clock.pulse</span><span class="inline-delimiter">}}</span></span>)<span class="tag">&lt;/li&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/ul&gt;</span>
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_handlebars-helper-to-format-the-clock-display-h-m-s'>Handlebars helper to format the clock display (h:m:s)</h3>
+<p>This helper is used in the template like so <code>{{digital_clock seconds}}</code>,
+<code>seconds</code> is the property of the controller that will be displayed (h:m:s).</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+</pre></td>
+  <td class="code"><pre>Ember.Handlebars.registerBoundHelper(<span class="string"><span class="delimiter">'</span><span class="content">digital_clock</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(seconds) {
+  <span class="keyword">var</span> h = Math.floor(seconds / <span class="integer">3600</span>);
+  <span class="keyword">var</span> m = Math.floor((seconds % <span class="integer">3600</span>) / <span class="integer">60</span>);
+  <span class="keyword">var</span> s = Math.floor(seconds % <span class="integer">60</span>);
+  <span class="keyword">var</span> <span class="function">addZero</span> = <span class="keyword">function</span> (number) {
+    <span class="keyword">return</span> (number &lt; <span class="integer">10</span>) ? <span class="string"><span class="delimiter">'</span><span class="content">0</span><span class="delimiter">'</span></span> + number : <span class="string"><span class="delimiter">'</span><span class="delimiter">'</span></span> + number;
+  };
+  <span class="keyword">var</span> <span class="function">formatHMS</span> = <span class="keyword">function</span>(h, m, s) {
+    <span class="keyword">if</span> (h &gt; <span class="integer">0</span>) {
+      <span class="keyword">return</span> <span class="string"><span class="delimiter">'</span><span class="content">%@:%@:%@</span><span class="delimiter">'</span></span>.fmt(h, addZero(m), addZero(s));
+    }
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">'</span><span class="content">%@:%@</span><span class="delimiter">'</span></span>.fmt(m, addZero(s));
+  };
+  <span class="keyword">return</span> <span class="keyword">new</span> Ember.Handlebars.SafeString(formatHMS(h, m, s));
+});
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_note'>Note</h3>
+<p>To explore the concept further, try adding a timestamp and updating the clock&#39;s
+pulse by comparing the current time. This would be needed to update the pulse
+property when a user puts his/her computer to sleep then reopens their browser
+after waking.</p>
+<h3 class='anchorable-toc' id='toc_links'>Links</h3>
+<p>The source code:</p>
+
+<ul>
+<li><a href="http://jsbin.com/iLETUTI/8/">http://jsbin.com/iLETUTI/8/</a></li>
+</ul>
+
+<p>Further reading:</p>
+
+<ul>
+<li><a href="http://emberjs.com/api/classes/Ember.Object.html">http://emberjs.com/api/classes/Ember.Object.html</a></li>
+<li><a href="http://emberjs.com/api/classes/Ember.Application.html">http://emberjs.com/api/classes/Ember.Application.html</a>, See section on
+&quot;Initializers&quot;</li>
+<li><a href="http://emberjs.com/api/classes/Ember.Application.html#method_inject">http://emberjs.com/api/classes/Ember.Application.html#method_inject</a></li>
+<li><a href="http://emberjs.com/guides/templates/conditionals/">http://emberjs.com/guides/templates/conditionals/</a></li>
+<li><a href="http://emberjs.com/guides/templates/writing-helpers/">http://emberjs.com/guides/templates/writing-helpers/</a></li>
+<li><a href="http://emberjs.com/guides/components/defining-a-component/">http://emberjs.com/guides/components/defining-a-component/</a></li>
+<li><a href="http://emberjs.com/api/classes/Ember.ArrayController.html">http://emberjs.com/api/classes/Ember.ArrayController.html</a></li>
+</ul>
+
     
       <footer>
         
