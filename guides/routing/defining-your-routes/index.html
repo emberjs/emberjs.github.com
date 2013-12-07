@@ -799,7 +799,7 @@ specifying URLs for posts (a noun), the route was defined with
 <p>One of the responsibilities of a resource&#39;s route handler is to convert a URL
 into a model.</p>
 
-<p>For example, if we have the resource <code>this.resource(&#39;/blog_posts&#39;)</code>, our
+<p>For example, if we have the resource <code>this.resource(&#39;posts&#39;);</code>, our
 route handler might look like this:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -808,19 +808,19 @@ route handler might look like this:</p>
 4
 5
 </pre></td>
-  <td class="code"><pre>App.BlogPostsRoute = Ember.Route.extend({
+  <td class="code"><pre>App.PostsRoute = Ember.Route.extend({
   <span class="function">model</span>: <span class="keyword">function</span>() {
-    <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">store</span><span class="delimiter">'</span></span>).find(<span class="string"><span class="delimiter">'</span><span class="content">blogPost</span><span class="delimiter">'</span></span>);
+    <span class="keyword">return</span> <span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>);
   }
 });
 </pre></td>
 </tr></table>
 </div></div>
-<p>The <code>blog_posts</code> template will then receive a list of all available posts as
+<p>The <code>posts</code> template will then receive a list of all available posts as
 its context.</p>
 
-<p>Because <code>/blog_posts</code> represents a fixed model, we don&#39;t need any
-additional information to know what to use.  However, if we want a route
+<p>Because <code>/posts</code> represents a fixed model, we don&#39;t need any
+additional information to know what to retrieve.  However, if we want a route
 to represent a single post, we would not want to have to hardcode every
 possible post into the router.</p>
 
@@ -847,7 +847,7 @@ followed by an identifier.</p>
 
 App.PostRoute = Ember.Route.extend({
   <span class="function">model</span>: <span class="keyword">function</span>(params) {
-    <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">store</span><span class="delimiter">'</span></span>).find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, params.post_id);
+    <span class="keyword">return</span> <span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, params.post_id);
   }
 });
 </pre></td>
@@ -859,7 +859,7 @@ default behavior.</p>
 <p>For example, if the dynamic segment is <code>:post_id</code>, Ember.js is smart
 enough to know that it should use the model <code>App.Post</code> (with the ID
 provided in the URL). Specifically, unless you override <code>model</code>, the route will
-return <code>this.get(&#39;store&#39;).find(&#39;post&#39;, params.post_id)</code> automatically.</p>
+return <code>this.store.find(&#39;post&#39;, params.post_id)</code> automatically.</p>
 
 <p>Not coincidentally, this is exactly what Ember Data expects. So if you
 use the Ember router with Ember Data, your dynamic segments will work
