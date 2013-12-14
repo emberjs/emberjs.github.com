@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Models: Defining Models</title>
+    <title>Ember.js - Cookbook: Resetting scroll on route changes</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -38,7 +38,7 @@
   
   </head>
 
-  <body class="guides guides_models guides_models_defining-models guides_models_defining-models_index">
+  <body class="guides guides_cookbook guides_cookbook_user_interface_and_interaction guides_cookbook_user_interface_and_interaction_resetting_scroll_on_route_changes guides_cookbook_user_interface_and_interaction_resetting_scroll_on_route_changes_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -373,15 +373,15 @@
               <a href="/guides/controllers/dependencies-between-controllers">Managing Dependencies Between Controllers</a>
             </li>
           </ol></li>
-          <li class="level-1 selected">
+          <li class="level-1">
             <a href="/guides/models">Models</a>
-            <ol class='selected'>
+            <ol>
         
             <li class="level-3">
               <a href="/guides/models">Introduction</a>
             </li>
           
-            <li class="level-3 sub-selected">
+            <li class="level-3">
               <a href="/guides/models/defining-models">Defining Models</a>
             </li>
           
@@ -485,9 +485,9 @@
               <a href="/guides/configuring-ember/feature-flags">Feature Flags</a>
             </li>
           </ol></li>
-          <li class="level-1">
+          <li class="level-1 selected">
             <a href="/guides/cookbook">Cookbook</a>
-            <ol>
+            <ol class='selected'>
         
             <li class="level-3">
               <a href="/guides/cookbook">Introduction</a>
@@ -497,7 +497,7 @@
               <a href="/guides/cookbook/contributing">Contributing</a>
             </li>
           
-            <li class="level-3">
+            <li class="level-3 sub-selected">
               <a href="/guides/cookbook/user_interface_and_interaction">User Interface and Interaction</a>
             </li>
           
@@ -552,286 +552,63 @@
   
   <div class="chapter">
     
-        <h1>Defining Models
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/models/defining-models.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
+        <h1>Resetting scroll on route changes
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/cookbook/user_interface_and_interaction/resetting_scroll_on_route_changes.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
         </h1>
       
     <hr>
-    <p>A model is a class that defines the properties and behavior of the
-data that you present to the user. Anything that the user expects to see
-if they leave your app and come back later (or if they refresh the page)
-should be represented by a model.</p>
-
-<p>For every model in your application, create a subclass of <code>DS.Model</code>:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre>App.Person = DS.Model.extend();
-</pre></td>
-</tr></table>
-</div></div>
-<p>After you have defined a model class, you can start finding and creating
-records of that type. When interacting with the store, you will need to
-specify a record&#39;s type using the model name. For example, the store&#39;s
-<code>find()</code> method expects a string as the first argument to tell it what
-type of record to find:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre>store.find(<span class="string"><span class="delimiter">'</span><span class="content">person</span><span class="delimiter">'</span></span>, <span class="integer">1</span>);
-</pre></td>
-</tr></table>
-</div></div>
-<p>The table below shows how model names map to model classes.</p>
-
-<table>
-  <thead>
-  <tr>
-    <th>Model Name</th>
-    <th>Model Class</th>
-  </tr>
-  </thead>
-  <tr>
-    <td><code>photo</code></td>
-    <td><code>App.Photo</code></td>
-  </tr>
-  <tr>
-    <td><code>adminUserProfile</code></td>
-    <td><code>App.AdminUserProfile</code></td>
-  </tr>
-</table>
-<h3 class='anchorable-toc' id='toc_defining-attributes'>Defining Attributes</h3>
-<p>You can specify which attributes a model has by using <code>DS.attr</code>.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre><span class="keyword">var</span> attr = DS.attr;
-
-App.Person = DS.Model.extend({
-  <span class="key">firstName</span>: attr(),
-  <span class="key">lastName</span>: attr(),
-  <span class="key">birthday</span>: attr()
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Attributes are used when turning the JSON payload returned from your
-server into a record, and when serializing a record to save back to the
-server after it has been modified.</p>
-
-<p>You can use attributes just like any other property, including as part of a
-computed property. Frequently, you will want to define computed
-properties that combine or transform primitive attributes.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-</pre></td>
-  <td class="code"><pre><span class="keyword">var</span> attr = DS.attr;
-
-App.Person = DS.Model.extend({
-  <span class="key">firstName</span>: attr(),
-  <span class="key">lastName</span>: attr(),
-
-  <span class="function">fullName</span>: <span class="keyword">function</span>() {
-    <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
-  }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>For more about adding computed properties to your classes, see <a href="/guides/object-model/computed-properties">Computed
-Properties</a>.</p>
-
-<p>If you don&#39;t specify the type of the attribute, it will be whatever was
-provided by the server. You can make sure that an attribute is always
-coerced into a particular type by passing a <code>type</code> to <code>attr</code>:</p>
+    <h3 class='anchorable-toc' id='toc_problem'>Problem</h3>
+<p>The page scroller keeps in the same position when you go from one page to another. For instance, if you scroll down a long list of displayed elements on a page and then you navigate to another page with another long list of elements, you should be able to notice that scroll position is not being reset.</p>
+<h3 class='anchorable-toc' id='toc_solution'>Solution</h3>
+<p>Add the following mixin to the affected Routes:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
-</pre></td>
-  <td class="code"><pre>App.Person = DS.Model.extend({
-  <span class="key">birthday</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">date</span><span class="delimiter">'</span></span>)
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>The default adapter supports attribute types of <code>string</code>,
-<code>number</code>, <code>boolean</code>, and <code>date</code>. Custom adapters may offer additional
-attribute types, and new types can be registered as transforms. See the
-<a href="/guides/models/the-rest-adapter">documentation section on the REST Adapter</a>.</p>
-<h4 class='anchorable-toc' id='toc_options'>Options</h4>
-<p><code>DS.attr</code> takes an optional hash as a second parameter, current options are:</p>
-
-<ul>
-<li><p><code>defaultValue</code>: Pass a string or a function to be called to set the
-              attribute to a default value if none is supplied.</p>
-
-<p>Example</p>
-<div class="highlight JavaScript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
 4
 5
 6
-7
-8
-9
-<strong>10</strong>
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> attr = DS.attr;
-
-App.User = DS.Model.extend({
-  <span class="key">username</span>: attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
-  <span class="key">email</span>: attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
-  <span class="key">verified</span>: attr(<span class="string"><span class="delimiter">'</span><span class="content">boolean</span><span class="delimiter">'</span></span>, {<span class="key">defaultValue</span>: <span class="predefined-constant">false</span>}),
-  <span class="key">createdAt</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>, {
-      <span class="function">defaultValue</span>: <span class="keyword">function</span>() { <span class="keyword">return</span> <span class="keyword">new</span> Date(); }
+  <td class="code"><pre>App.ResetScroll = Ember.Mixin.create({
+  <span class="function">enter</span>: <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>._super();
+    window.scrollTo(<span class="integer">0</span>,<span class="integer">0</span>);
   }
 });
 </pre></td>
 </tr></table>
-</div></div></li>
-</ul>
-<h3 class='anchorable-toc' id='toc_defining-relationships'>Defining Relationships</h3>
-<p>Ember Data includes several built-in relationship types to help you
-define how your models relate to each other.</p>
-<h4 class='anchorable-toc' id='toc_one-to-one'>One-to-One</h4>
-<p>To declare a one-to-one relationship between two models, use
-<code>DS.belongsTo</code>:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>App.User = DS.Model.extend({
-  <span class="key">profile</span>: DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">profile</span><span class="delimiter">'</span></span>)
-});
-
-App.Profile = DS.Model.extend({
-  <span class="key">user</span>: DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">user</span><span class="delimiter">'</span></span>)
-});
-</pre></td>
-</tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_one-to-many'>One-to-Many</h4>
-<p>To declare a one-to-many relationship between two models, use
-<code>DS.belongsTo</code> in combination with <code>DS.hasMany</code>, like this:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>App.Post = DS.Model.extend({
-  <span class="key">comments</span>: DS.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>)
-});
-
-App.Comment = DS.Model.extend({
-  <span class="key">post</span>: DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>)
-});
-</pre></td>
-</tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_many-to-many'>Many-to-Many</h4>
-<p>To declare a many-to-many relationship between two models, use
-<code>DS.hasMany</code>:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>App.Post = DS.Model.extend({
-  <span class="key">tags</span>: DS.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">tag</span><span class="delimiter">'</span></span>)
-});
-
-App.Tag = DS.Model.extend({
-  <span class="key">posts</span>: DS.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>)
-});
-</pre></td>
-</tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_explicit-inverses'>Explicit Inverses</h4>
-<p>Ember Data will do its best to discover which relationships map to one
-another. In the one-to-many code above, for example, Ember Data can figure out that
-changing the <code>comments</code> relationship should update the <code>post</code>
-relationship on the inverse because <code>post</code> is the only relationship to
-that model.</p>
-
-<p>However, sometimes you may have multiple <code>belongsTo</code>/<code>hasMany</code>s for the
-same type. You can specify which property on the related model is the
-inverse using <code>DS.attr</code>&#39;s <code>inverse</code> option:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
-14
-15
-16
-</pre></td>
-  <td class="code"><pre><span class="keyword">var</span> belongsTo = DS.belongsTo,
-    hasMany = DS.hasMany;
-
-App.Comment = DS.Model.extend({
-  <span class="key">onePost</span>: belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>),
-  <span class="key">twoPost</span>: belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>),
-  <span class="key">redPost</span>: belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>),
-  <span class="key">bluePost</span>: belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>)
-});
-
-
-App.Post = DS.Model.extend({
-  <span class="key">comments</span>: hasMany(<span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>, {
-    <span class="key">inverse</span>: <span class="string"><span class="delimiter">'</span><span class="content">redPost</span><span class="delimiter">'</span></span>
-  })
-});
-</pre></td>
-</tr></table>
 </div></div>
-<p>You can also specify an inverse on a <code>belongsTo</code>, which works how you&#39;d expect.</p>
+<p>Only if you need do something on the <code>enter</code> method you must call <code>this._super()</code> at the beginning:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>App.IndexRoute = Ember.Route.extend(App.ResetScroll, {
+  <span class="comment">//I need to do other things with enter</span>
+  <span class="function">enter</span>: <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>._super.apply(<span class="local-variable">this</span>, <span class="local-variable">arguments</span>); <span class="comment">// Call super at the beginning</span>
+    <span class="comment">// Your stuff</span>
+  }
+});
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_example'>Example</h4>
+<p><a class="jsbin-embed" href="http://emberjs.jsbin.com/IxERoxoy/4/embed?html,css,js,output">Ember Starter Kit</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 
     
       <footer>
         
-          <a class="previous-guide" href="/guides/models">
-            ← Introduction
+          <a class="previous-guide" href="/guides/cookbook/user_interface_and_interaction/using_modal_dialogs">
+            ← Using Modal Dialogs
           </a>
          
-        <a class="next-guide" href="/guides/models/creating-and-deleting-records">
-          Creating and Deleting Records →
+        <a class="next-guide" href="/guides/cookbook/event_handling_and_data_binding">
+          Event Handling & Data Binding →
         </a>
       
       </footer>
