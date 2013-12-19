@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - DS.Adapter</title>
+    <title>Ember.js - DS.ActiveModelAdapter</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -146,7 +146,7 @@
           
           
             
-          <li class="level-3 ">
+          <li class="level-3 sub-selected">
           
               <a href="/api/data/classes/DS.ActiveModelAdapter.html">DS.ActiveModelAdapter</a>
             
@@ -154,7 +154,7 @@
         
           
             
-          <li class="level-3 sub-selected">
+          <li class="level-3 ">
           
               <a href="/api/data/classes/DS.Adapter.html">DS.Adapter</a>
             
@@ -376,9 +376,9 @@
 
   
   <h1 class="api-header">
-  DS.Adapter Class
+  DS.ActiveModelAdapter Class
   
-    <a class="edit-page" target="_blank" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L20">packages/ember-data/lib/system/adapter.js:20</a>
+    <a class="edit-page" target="_blank" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/activemodel-adapter/lib/system/active_model_adapter.js#L11">packages/activemodel-adapter/lib/system/active_model_adapter.js:11</a>
   
 </h1>
 
@@ -387,13 +387,13 @@
 
 <div class="class-info">
   
-    <p>Extends: Ember.Object</p>
+    <p>Extends: <a href="/api/data/classes/DS.Adapter.html">DS.Adapter</a></p>
   
 
   
 
   
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L20">packages/ember-data/lib/system/adapter.js:20</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/activemodel-adapter/lib/system/active_model_adapter.js#L11">packages/activemodel-adapter/lib/system/active_model_adapter.js:11</a></p>
   
 
   
@@ -402,60 +402,58 @@
 </div>
 
   <div class="description">
-    <p>An adapter is an object that receives requests from a store and
-translates them into the appropriate action to take against your
-persistence layer. The persistence layer is usually an HTTP API, but may
-be anything, such as the browser&#39;s local storage.</p>
-<h3 class='anchorable-toc' id='toc_creating-an-adapter'>Creating an Adapter</h3>
-<p>First, create a new subclass of <code>DS.Adapter</code>:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+    <p>The ActiveModelAdapter is a subclass of the RESTAdapter designed to integrate
+with a JSON API that uses an underscored naming convention instead of camelcasing.
+It has been designed to work out of the box with the
+<a href="http://github.com/rails-api/active_model_serializers">active<em>model</em>serializers</a>
+Ruby gem.</p>
+
+<p>This adapter extends the DS.RESTAdapter by making consistent use of the camelization,
+decamelization and pluralization methods to normalize the serialized JSON into a
+format that is compatible with a conventional Rails backend and Ember Data.</p>
+<h2 class='anchorable-toc' id='toc_json-structure'>JSON Structure</h2>
+<p>The ActiveModelAdapter expects the JSON returned from your server to follow
+the REST adapter conventions substituting underscored keys for camelcased ones.</p>
+<h3 class='anchorable-toc' id='toc_conventional-names'>Conventional Names</h3>
+<p>Attribute names in your JSON payload should be the underscored versions of
+the attributes in your Ember.js models.</p>
+
+<p>For example, if you have a <code>Person</code> model:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
+4
+5
 </pre></td>
-  <td class="code"><pre>App.MyAdapter = DS.Adapter.extend({
-  <span class="comment">// ...your code here</span>
+  <td class="code"><pre>App.FamousPerson = DS.Model.extend({
+  <span class="key">firstName</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">lastName</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">occupation</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>)
 });
 </pre></td>
 </tr></table>
 </div></div>
-<p>To tell your store which adapter to use, set its <code>adapter</code> property:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>The JSON returned should look like this:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
+4
+5
+6
+7
 </pre></td>
-  <td class="code"><pre>App.store = DS.Store.create({
-  <span class="key">adapter</span>: App.MyAdapter.create()
-});
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">famous_person</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">first_name</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Barack</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">last_name</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Obama</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">occupation</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">President</span><span class="delimiter">&quot;</span></span>
+  }
+}
 </pre></td>
 </tr></table>
 </div></div>
-<p><code>DS.Adapter</code> is an abstract base class that you should override in your
-application to customize it for your backend. The minimum set of methods
-that you should implement is:</p>
-
-<ul>
-<li><code>find()</code></li>
-<li><code>createRecord()</code></li>
-<li><code>updateRecord()</code></li>
-<li><code>deleteRecord()</code></li>
-</ul>
-
-<p>To improve the network performance of your application, you can optimize
-your adapter by overriding these lower-level methods:</p>
-
-<ul>
-<li><code>findMany()</code></li>
-<li><code>createRecords()</code></li>
-<li><code>updateRecords()</code></li>
-<li><code>deleteRecords()</code></li>
-<li><code>commit()</code></li>
-</ul>
-
-<p>For an example implementation, see <code>DS.RESTAdapter</code>, the
-included REST adapter.</p>
-
   </div>
 
 
@@ -492,38 +490,46 @@ included REST adapter.</p>
         <ul class="index-list">
           
             <li class="method ">
+              <a href="#method_ajaxError">ajaxError</a>
+            </li>
+          
+            <li class="method inherited">
               <a href="#method_createRecord">createRecord</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_deleteRecord">deleteRecord</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_find">find</a>
             </li>
           
-            <li class="method private">
+            <li class="method private inherited">
               <a href="#method_findAll">findAll</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_findMany">findMany</a>
             </li>
           
-            <li class="method private">
+            <li class="method private inherited">
               <a href="#method_findQuery">findQuery</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_generateIdForRecord">generateIdForRecord</a>
             </li>
           
             <li class="method ">
+              <a href="#method_pathForType">pathForType</a>
+            </li>
+          
+            <li class="method inherited">
               <a href="#method_serialize">serialize</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_updateRecord">updateRecord</a>
             </li>
           
@@ -554,7 +560,85 @@ included REST adapter.</p>
 
       
         
-<div id="method_createRecord" class="method  item-entry">
+<div id="method_ajaxError" class="method  item-entry">
+  <h3 data-id="method_ajaxError" class="name anchorable-toc"><code>ajaxError</code></h3>
+  <span class="args">
+    (jqXHR)
+  </span>
+
+  <span class="type"></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/activemodel-adapter/lib/system/active_model_adapter.js#L80">packages/activemodel-adapter/lib/system/active_model_adapter.js:80</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>The ActiveModelAdapter overrides the <code>ajaxError</code> method
+to return a DS.InvalidError for all 422 Unprocessable Entity
+responses.</p>
+
+<p>A 422 HTTP response from the server generally implies that the request
+was well formed but the API was unable to process it because the
+content was not semantically correct or meaningful per the API.</p>
+
+<p>For more information on 422 HTTP Error code see 11.2 WebDAV RFC 4918
+<a href="https://tools.ietf.org/html/rfc4918#section-11.2">https://tools.ietf.org/html/rfc4918#section-11.2</a></p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>jqXHR</strong> <span class="type"></span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"></span>
+        <dd> error</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
+<div id="method_createRecord" class="method inherited item-entry">
   <h3 data-id="method_createRecord" class="name anchorable-toc"><code>createRecord</code></h3>
   <span class="args">
     (store, type, record)
@@ -571,9 +655,8 @@ included REST adapter.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.Adapter.html#method_createRecord">DS.Adapter</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L158">packages/ember-data/lib/system/adapter.js:158</a>
@@ -626,7 +709,7 @@ method on success or <code>didError</code> method on failure.</p>
 
       
         
-<div id="method_deleteRecord" class="method  item-entry">
+<div id="method_deleteRecord" class="method inherited item-entry">
   <h3 data-id="method_deleteRecord" class="name anchorable-toc"><code>deleteRecord</code></h3>
   <span class="args">
     (store, type, record)
@@ -643,9 +726,8 @@ method on success or <code>didError</code> method on failure.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.Adapter.html#method_deleteRecord">DS.Adapter</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L187">packages/ember-data/lib/system/adapter.js:187</a>
@@ -695,7 +777,7 @@ a record.</p>
 
       
         
-<div id="method_find" class="method  item-entry">
+<div id="method_find" class="method inherited item-entry">
   <h3 data-id="method_find" class="name anchorable-toc"><code>find</code></h3>
 
 
@@ -709,9 +791,8 @@ a record.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.Adapter.html#method_find">DS.Adapter</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L72">packages/ember-data/lib/system/adapter.js:72</a>
@@ -773,7 +854,7 @@ the record into the store.</p>
 
       
         
-<div id="method_findAll" class="method private item-entry">
+<div id="method_findAll" class="method private inherited item-entry">
   <h3 data-id="method_findAll" class="name anchorable-toc"><code>findAll</code></h3>
   <span class="args">
     (store, type, since)
@@ -791,9 +872,8 @@ the record into the store.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.Adapter.html#method_findAll">DS.Adapter</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L99">packages/ember-data/lib/system/adapter.js:99</a>
@@ -835,7 +915,7 @@ the record into the store.</p>
 
       
         
-<div id="method_findMany" class="method  item-entry">
+<div id="method_findMany" class="method inherited item-entry">
   <h3 data-id="method_findMany" class="name anchorable-toc"><code>findMany</code></h3>
   <span class="args">
     (store, type, ids)
@@ -852,9 +932,8 @@ the record into the store.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.Adapter.html#method_findMany">DS.Adapter</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L200">packages/ember-data/lib/system/adapter.js:200</a>
@@ -905,7 +984,7 @@ server requests.</p>
 
       
         
-<div id="method_findQuery" class="method private item-entry">
+<div id="method_findQuery" class="method private inherited item-entry">
   <h3 data-id="method_findQuery" class="name anchorable-toc"><code>findQuery</code></h3>
   <span class="args">
     (store, type, query, recordArray)
@@ -923,9 +1002,8 @@ server requests.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.Adapter.html#method_findQuery">DS.Adapter</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L109">packages/ember-data/lib/system/adapter.js:109</a>
@@ -970,7 +1048,7 @@ server requests.</p>
 
       
         
-<div id="method_generateIdForRecord" class="method  item-entry">
+<div id="method_generateIdForRecord" class="method inherited item-entry">
   <h3 data-id="method_generateIdForRecord" class="name anchorable-toc"><code>generateIdForRecord</code></h3>
   <span class="args">
     (store, record)
@@ -987,9 +1065,8 @@ server requests.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.Adapter.html#method_generateIdForRecord">DS.Adapter</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L120">packages/ember-data/lib/system/adapter.js:120</a>
@@ -1056,7 +1133,85 @@ the first parameter and the newly created record as the second parameter:</p>
 
       
         
-<div id="method_serialize" class="method  item-entry">
+<div id="method_pathForType" class="method  item-entry">
+  <h3 data-id="method_pathForType" class="name anchorable-toc"><code>pathForType</code></h3>
+  <span class="args">
+    (type)
+  </span>
+
+  <span class="type"></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/activemodel-adapter/lib/system/active_model_adapter.js#L62">packages/activemodel-adapter/lib/system/active_model_adapter.js:62</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>The ActiveModelAdapter overrides the <code>pathForType</code> method to build
+underscored URLs by decamelizing and pluralizing the object type name.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre>  <span class="local-variable">this</span>.pathForType(<span class="string"><span class="delimiter">&quot;</span><span class="content">famousPerson</span><span class="delimiter">&quot;</span></span>);
+  <span class="comment">//=&gt; &quot;famous_people&quot;</span>
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>type</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"></span>
+        <dd> String</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
+<div id="method_serialize" class="method inherited item-entry">
   <h3 data-id="method_serialize" class="name anchorable-toc"><code>serialize</code></h3>
   <span class="args">
     (record, options)
@@ -1073,9 +1228,8 @@ the first parameter and the newly created record as the second parameter:</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.Adapter.html#method_serialize">DS.Adapter</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L147">packages/ember-data/lib/system/adapter.js:147</a>
@@ -1119,7 +1273,7 @@ the first parameter and the newly created record as the second parameter:</p>
 
       
         
-<div id="method_updateRecord" class="method  item-entry">
+<div id="method_updateRecord" class="method inherited item-entry">
   <h3 data-id="method_updateRecord" class="name anchorable-toc"><code>updateRecord</code></h3>
   <span class="args">
     (store, type, record)
@@ -1136,9 +1290,8 @@ the first parameter and the newly created record as the second parameter:</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.Adapter.html#method_updateRecord">DS.Adapter</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L174">packages/ember-data/lib/system/adapter.js:174</a>

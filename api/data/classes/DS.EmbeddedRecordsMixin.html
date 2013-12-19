@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - DS.Adapter</title>
+    <title>Ember.js - DS.EmbeddedRecordsMixin</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -154,7 +154,7 @@
         
           
             
-          <li class="level-3 sub-selected">
+          <li class="level-3 ">
           
               <a href="/api/data/classes/DS.Adapter.html">DS.Adapter</a>
             
@@ -202,7 +202,7 @@
         
           
             
-          <li class="level-3 ">
+          <li class="level-3 sub-selected">
           
               <a href="/api/data/classes/DS.EmbeddedRecordsMixin.html">DS.EmbeddedRecordsMixin</a>
             
@@ -376,9 +376,9 @@
 
   
   <h1 class="api-header">
-  DS.Adapter Class
+  DS.EmbeddedRecordsMixin Class
   
-    <a class="edit-page" target="_blank" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L20">packages/ember-data/lib/system/adapter.js:20</a>
+    <a class="edit-page" target="_blank" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/activemodel-adapter/lib/system/embedded_records_mixin.js#L4">packages/activemodel-adapter/lib/system/embedded_records_mixin.js:4</a>
   
 </h1>
 
@@ -387,13 +387,11 @@
 
 <div class="class-info">
   
-    <p>Extends: Ember.Object</p>
-  
 
   
 
   
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L20">packages/ember-data/lib/system/adapter.js:20</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/activemodel-adapter/lib/system/embedded_records_mixin.js#L4">packages/activemodel-adapter/lib/system/embedded_records_mixin.js:4</a></p>
   
 
   
@@ -402,59 +400,26 @@
 </div>
 
   <div class="description">
-    <p>An adapter is an object that receives requests from a store and
-translates them into the appropriate action to take against your
-persistence layer. The persistence layer is usually an HTTP API, but may
-be anything, such as the browser&#39;s local storage.</p>
-<h3 class='anchorable-toc' id='toc_creating-an-adapter'>Creating an Adapter</h3>
-<p>First, create a new subclass of <code>DS.Adapter</code>:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+    <p>The EmbeddedRecordsMixin allows you to add embedded record support to your
+serializers.
+To set up embedded records, you include the mixin into the serializer and then
+define your embedded relations.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
+4
+5
 </pre></td>
-  <td class="code"><pre>App.MyAdapter = DS.Adapter.extend({
-  <span class="comment">// ...your code here</span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>To tell your store which adapter to use, set its <code>adapter</code> property:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre>App.store = DS.Store.create({
-  <span class="key">adapter</span>: App.MyAdapter.create()
-});
+  <td class="code"><pre>App.PostSerializer = DS.ActiveModelSerializer.extend(DS.EmbeddedRecordsMixin, {
+  <span class="key">attrs</span>: {
+    <span class="key">comments</span>: {<span class="key">embedded</span>: <span class="string"><span class="delimiter">'</span><span class="content">always</span><span class="delimiter">'</span></span>}
+  }
+})
 </pre></td>
 </tr></table>
 </div></div>
-<p><code>DS.Adapter</code> is an abstract base class that you should override in your
-application to customize it for your backend. The minimum set of methods
-that you should implement is:</p>
-
-<ul>
-<li><code>find()</code></li>
-<li><code>createRecord()</code></li>
-<li><code>updateRecord()</code></li>
-<li><code>deleteRecord()</code></li>
-</ul>
-
-<p>To improve the network performance of your application, you can optimize
-your adapter by overriding these lower-level methods:</p>
-
-<ul>
-<li><code>findMany()</code></li>
-<li><code>createRecords()</code></li>
-<li><code>updateRecords()</code></li>
-<li><code>deleteRecords()</code></li>
-<li><code>commit()</code></li>
-</ul>
-
-<p>For an example implementation, see <code>DS.RESTAdapter</code>, the
-included REST adapter.</p>
+<p>Currently only <code>{embedded: &#39;always&#39;}</code> records are supported.</p>
 
   </div>
 
@@ -492,39 +457,47 @@ included REST adapter.</p>
         <ul class="index-list">
           
             <li class="method ">
-              <a href="#method_createRecord">createRecord</a>
+              <a href="#method_extractArray">extractArray</a>
             </li>
           
             <li class="method ">
-              <a href="#method_deleteRecord">deleteRecord</a>
+              <a href="#method_extractSingle">extractSingle</a>
             </li>
           
             <li class="method ">
-              <a href="#method_find">find</a>
+              <a href="#method_keyForAttribute">keyForAttribute</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_keyForRelationship">keyForRelationship</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_normalize">normalize</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_normalizeLinks">normalizeLinks</a>
             </li>
           
             <li class="method private">
-              <a href="#method_findAll">findAll</a>
+              <a href="#method_normalizeRelationships">normalizeRelationships</a>
             </li>
           
             <li class="method ">
-              <a href="#method_findMany">findMany</a>
-            </li>
-          
-            <li class="method private">
-              <a href="#method_findQuery">findQuery</a>
+              <a href="#method_serializeHasMany">serializeHasMany</a>
             </li>
           
             <li class="method ">
-              <a href="#method_generateIdForRecord">generateIdForRecord</a>
+              <a href="#method_serializeIntoHash">serializeIntoHash</a>
             </li>
           
             <li class="method ">
-              <a href="#method_serialize">serialize</a>
+              <a href="#method_serializePolymorphicType">serializePolymorphicType</a>
             </li>
           
             <li class="method ">
-              <a href="#method_updateRecord">updateRecord</a>
+              <a href="#method_typeForRoot">typeForRoot</a>
             </li>
           
         </ul>
@@ -554,11 +527,8 @@ included REST adapter.</p>
 
       
         
-<div id="method_createRecord" class="method  item-entry">
-  <h3 data-id="method_createRecord" class="name anchorable-toc"><code>createRecord</code></h3>
-  <span class="args">
-    (store, type, record)
-  </span>
+<div id="method_extractArray" class="method  item-entry">
+  <h3 data-id="method_extractArray" class="name anchorable-toc"><code>extractArray</code></h3>
 
 
 
@@ -576,7 +546,7 @@ included REST adapter.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L158">packages/ember-data/lib/system/adapter.js:158</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/activemodel-adapter/lib/system/embedded_records_mixin.js#L62">packages/activemodel-adapter/lib/system/embedded_records_mixin.js:62</a>
 
     
 
@@ -585,13 +555,105 @@ included REST adapter.</p>
 
   
     <div class="description">
-      <p>Implement this method in a subclass to handle the creation of
-new records.</p>
+      <p>Extract embedded objects out of a standard payload
+and add them as sideloaded objects instead.</p>
 
-<p>Serializes the record and send it to the server.</p>
+    </div>
+  
 
-<p>This implementation should call the adapter&#39;s <code>didCreateRecord</code>
-method on success or <code>didError</code> method on failure.</p>
+  <p>
+    
+  </p>
+
+  
+
+  
+
+  
+</div>
+
+      
+        
+<div id="method_extractSingle" class="method  item-entry">
+  <h3 data-id="method_extractSingle" class="name anchorable-toc"><code>extractSingle</code></h3>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/activemodel-adapter/lib/system/embedded_records_mixin.js#L47">packages/activemodel-adapter/lib/system/embedded_records_mixin.js:47</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Extract embedded objects out of the payload for a single object
+and add them as sideloaded objects instead.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+
+  
+</div>
+
+      
+        
+<div id="method_keyForAttribute" class="method  item-entry">
+  <h3 data-id="method_keyForAttribute" class="name anchorable-toc"><code>keyForAttribute</code></h3>
+  <span class="args">
+    (attribute)
+  </span>
+
+  <span class="type"></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/activemodel-adapter/lib/system/active_model_serializer.js#L13">packages/activemodel-adapter/lib/system/active_model_serializer.js:13</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Converts camelcased attributes to underscored when serializing.</p>
 
     </div>
   
@@ -608,13 +670,7 @@ method on success or <code>didError</code> method on failure.</p>
 
       <dl>
         
-          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
-          <dd></dd>
-        
-          <dt><strong>type</strong> <span class="type">subclass of DS.Model</span></dt>
-          <dd>the DS.Model class of the record</dd>
-        
-          <dt><strong>record</strong> <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span></dt>
+          <dt><strong>attribute</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
           <dd></dd>
         
       </dl>
@@ -622,16 +678,25 @@ method on success or <code>didError</code> method on failure.</p>
   
 
   
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"></span>
+        <dd> String</dd>
+      </dl>
+    </div>
+  
 </div>
 
       
         
-<div id="method_deleteRecord" class="method  item-entry">
-  <h3 data-id="method_deleteRecord" class="name anchorable-toc"><code>deleteRecord</code></h3>
+<div id="method_keyForRelationship" class="method  item-entry">
+  <h3 data-id="method_keyForRelationship" class="name anchorable-toc"><code>keyForRelationship</code></h3>
   <span class="args">
-    (store, type, record)
+    (key, kind)
   </span>
 
+  <span class="type"></span>
 
 
 
@@ -648,7 +713,7 @@ method on success or <code>didError</code> method on failure.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L187">packages/ember-data/lib/system/adapter.js:187</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/activemodel-adapter/lib/system/active_model_serializer.js#L24">packages/activemodel-adapter/lib/system/active_model_serializer.js:24</a>
 
     
 
@@ -657,10 +722,8 @@ method on success or <code>didError</code> method on failure.</p>
 
   
     <div class="description">
-      <p>Implement this method in a subclass to handle the deletion of
-a record.</p>
-
-<p>Sends a delete request for the record to the server.</p>
+      <p>Underscores relationship names and appends &quot;<em>id&quot; or &quot;</em>ids&quot; when serializing
+relationship keys.</p>
 
     </div>
   
@@ -677,13 +740,10 @@ a record.</p>
 
       <dl>
         
-          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
+          <dt><strong>key</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
           <dd></dd>
         
-          <dt><strong>type</strong> <span class="type">subclass of DS.Model</span></dt>
-          <dd>the DS.Model class of the record</dd>
-        
-          <dt><strong>record</strong> <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span></dt>
+          <dt><strong>kind</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
           <dd></dd>
         
       </dl>
@@ -691,13 +751,25 @@ a record.</p>
   
 
   
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"></span>
+        <dd> String</dd>
+      </dl>
+    </div>
+  
 </div>
 
       
         
-<div id="method_find" class="method  item-entry">
-  <h3 data-id="method_find" class="name anchorable-toc"><code>find</code></h3>
+<div id="method_normalize" class="method  item-entry">
+  <h3 data-id="method_normalize" class="name anchorable-toc"><code>normalize</code></h3>
+  <span class="args">
+    (type, hash, prop)
+  </span>
 
+  <span class="type"></span>
 
 
 
@@ -714,7 +786,7 @@ a record.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L72">packages/ember-data/lib/system/adapter.js:72</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/activemodel-adapter/lib/system/active_model_serializer.js#L92">packages/activemodel-adapter/lib/system/active_model_serializer.js:92</a>
 
     
 
@@ -723,14 +795,11 @@ a record.</p>
 
   
     <div class="description">
-      <p>The <code>find()</code> method is invoked when the store is asked for a record that
-has not previously been loaded. In response to <code>find()</code> being called, you
-should query your persistence layer for a record with the given ID. Once
-found, you can asynchronously call the store&#39;s <code>push()</code> method to push
-the record into the store.</p>
+      <p>Add extra step to <code>DS.RESTSerializer.normalize</code> so links are
+normalized.</p>
 
-<p>Here is an example <code>find</code> implementation:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>If your payload looks like this</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -738,290 +807,33 @@ the record into the store.</p>
 5
 6
 7
-8
-9
-<strong>10</strong>
-11
 </pre></td>
-  <td class="code"><pre><span class="function">find</span>: <span class="keyword">function</span>(store, type, id) {
-  <span class="keyword">var</span> url = type.url;
-  url = url.fmt(id);
-
-  jQuery.getJSON(url, <span class="keyword">function</span>(data) {
-      <span class="comment">// data is a hash of key/value pairs. If your server returns a</span>
-      <span class="comment">// root, simply do something like:</span>
-      <span class="comment">// store.push(type, id, data.person)</span>
-      store.push(type, id, data);
-  });
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="integer">1</span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is omakase</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">links</span><span class="delimiter">&quot;</span></span>: { <span class="key"><span class="delimiter">&quot;</span><span class="content">flagged_comments</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">api/comments/flagged</span><span class="delimiter">&quot;</span></span> }
+  }
 }
 </pre></td>
 </tr></table>
 </div></div>
-    </div>
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-
-  
-</div>
-
-      
-        
-<div id="method_findAll" class="method private item-entry">
-  <h3 data-id="method_findAll" class="name anchorable-toc"><code>findAll</code></h3>
-  <span class="args">
-    (store, type, since)
-  </span>
-
-
-
-
-  <span class="flag private">private</span>
-
-
-
-
-
-  <div class="meta">
-      
-        
-          
-            Defined in
-          
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L99">packages/ember-data/lib/system/adapter.js:99</a>
-
-    
-
-    
-  </div>
-
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-        
-          <dt><strong>store</strong> <span class="type"></span></dt>
-          <dd></dd>
-        
-          <dt><strong>type</strong> <span class="type"></span></dt>
-          <dd></dd>
-        
-          <dt><strong>since</strong> <span class="type"></span></dt>
-          <dd></dd>
-        
-      </dl>
-    </div>
-  
-
-  
-</div>
-
-      
-        
-<div id="method_findMany" class="method  item-entry">
-  <h3 data-id="method_findMany" class="name anchorable-toc"><code>findMany</code></h3>
-  <span class="args">
-    (store, type, ids)
-  </span>
-
-
-
-
-
-
-
-
-
-  <div class="meta">
-      
-        
-          
-            Defined in
-          
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L200">packages/ember-data/lib/system/adapter.js:200</a>
-
-    
-
-    
-  </div>
-
-  
-    <div class="description">
-      <p>Find multiple records at once.</p>
-
-<p>By default, it loops over the provided ids and calls <code>find</code> on each.
-May be overwritten to improve performance and reduce the number of
-server requests.</p>
-
-    </div>
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-        
-          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
-          <dd></dd>
-        
-          <dt><strong>type</strong> <span class="type">subclass of DS.Model</span></dt>
-          <dd>the DS.Model class of the records</dd>
-        
-          <dt><strong>ids</strong> <span class="type">Array</span></dt>
-          <dd></dd>
-        
-      </dl>
-    </div>
-  
-
-  
-</div>
-
-      
-        
-<div id="method_findQuery" class="method private item-entry">
-  <h3 data-id="method_findQuery" class="name anchorable-toc"><code>findQuery</code></h3>
-  <span class="args">
-    (store, type, query, recordArray)
-  </span>
-
-
-
-
-  <span class="flag private">private</span>
-
-
-
-
-
-  <div class="meta">
-      
-        
-          
-            Defined in
-          
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L109">packages/ember-data/lib/system/adapter.js:109</a>
-
-    
-
-    
-  </div>
-
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-        
-          <dt><strong>store</strong> <span class="type"></span></dt>
-          <dd></dd>
-        
-          <dt><strong>type</strong> <span class="type"></span></dt>
-          <dd></dd>
-        
-          <dt><strong>query</strong> <span class="type"></span></dt>
-          <dd></dd>
-        
-          <dt><strong>recordArray</strong> <span class="type"></span></dt>
-          <dd></dd>
-        
-      </dl>
-    </div>
-  
-
-  
-</div>
-
-      
-        
-<div id="method_generateIdForRecord" class="method  item-entry">
-  <h3 data-id="method_generateIdForRecord" class="name anchorable-toc"><code>generateIdForRecord</code></h3>
-  <span class="args">
-    (store, record)
-  </span>
-
-
-
-
-
-
-
-
-
-  <div class="meta">
-      
-        
-          
-            Defined in
-          
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L120">packages/ember-data/lib/system/adapter.js:120</a>
-
-    
-
-    
-  </div>
-
-  
-    <div class="description">
-      <p>If the globally unique IDs for your records should be generated on the client,
-implement the <code>generateIdForRecord()</code> method. This method will be invoked
-each time you create a new record, and the value returned from it will be
-assigned to the record&#39;s <code>primaryKey</code>.</p>
-
-<p>Most traditional REST-like HTTP APIs will not use this method. Instead, the ID
-of the record will be set by the server, and your adapter will update the store
-with the new ID when it calls <code>didCreateRecord()</code>. Only implement this method if
-you intend to generate record IDs on the client-side.</p>
-
-<p>The <code>generateIdForRecord()</code> method will be invoked with the requesting store as
-the first parameter and the newly created record as the second parameter:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>The normalized version would look like this</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
+5
+6
+7
 </pre></td>
-  <td class="code"><pre><span class="function">generateIdForRecord</span>: <span class="keyword">function</span>(store, record) {
-  <span class="keyword">var</span> uuid = App.generateUUIDWithStatisticallyLowOddsOfCollision();
-  <span class="keyword">return</span> uuid;
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="integer">1</span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is omakase</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">links</span><span class="delimiter">&quot;</span></span>: { <span class="key"><span class="delimiter">&quot;</span><span class="content">flaggedComments</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">api/comments/flagged</span><span class="delimiter">&quot;</span></span> }
+  }
 }
 </pre></td>
 </tr></table>
@@ -1041,10 +853,13 @@ the first parameter and the newly created record as the second parameter:</p>
 
       <dl>
         
-          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
+          <dt><strong>type</strong> <span class="type">subclass of DS.Model</span></dt>
           <dd></dd>
         
-          <dt><strong>record</strong> <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span></dt>
+          <dt><strong>hash</strong> <span class="type">Object</span></dt>
+          <dd></dd>
+        
+          <dt><strong>prop</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
           <dd></dd>
         
       </dl>
@@ -1052,14 +867,22 @@ the first parameter and the newly created record as the second parameter:</p>
   
 
   
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"></span>
+        <dd> Object</dd>
+      </dl>
+    </div>
+  
 </div>
 
       
         
-<div id="method_serialize" class="method  item-entry">
-  <h3 data-id="method_serialize" class="name anchorable-toc"><code>serialize</code></h3>
+<div id="method_normalizeLinks" class="method  item-entry">
+  <h3 data-id="method_normalizeLinks" class="name anchorable-toc"><code>normalizeLinks</code></h3>
   <span class="args">
-    (record, options)
+    (hash)
   </span>
 
 
@@ -1078,7 +901,7 @@ the first parameter and the newly created record as the second parameter:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L147">packages/ember-data/lib/system/adapter.js:147</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/activemodel-adapter/lib/system/active_model_serializer.js#L132">packages/activemodel-adapter/lib/system/active_model_serializer.js:132</a>
 
     
 
@@ -1087,7 +910,7 @@ the first parameter and the newly created record as the second parameter:</p>
 
   
     <div class="description">
-      <p>Proxies to the serializer&#39;s <code>serialize</code> method.</p>
+      <p>Convert <code>snake_cased</code> links  to <code>camelCase</code></p>
 
     </div>
   
@@ -1103,6 +926,181 @@ the first parameter and the newly created record as the second parameter:</p>
       <h3>Parameters:</h3>
 
       <dl>
+        
+          <dt><strong>hash</strong> <span class="type">Object</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
+<div id="method_normalizeRelationships" class="method private item-entry">
+  <h3 data-id="method_normalizeRelationships" class="name anchorable-toc"><code>normalizeRelationships</code></h3>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/activemodel-adapter/lib/system/active_model_serializer.js#L154">packages/activemodel-adapter/lib/system/active_model_serializer.js:154</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Normalize the polymorphic type from the JSON.</p>
+
+<p>Normalize:
+<code>js
+  {
+    id: &quot;1&quot;
+    minion: { type: &quot;evil_minion&quot;, id: &quot;12&quot;}
+  }
+</code></p>
+
+<p>To:
+<code>js
+  {
+    id: &quot;1&quot;
+    minion: { type: &quot;evilMinion&quot;, id: &quot;12&quot;}
+  }
+</code></p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+
+  
+</div>
+
+      
+        
+<div id="method_serializeHasMany" class="method  item-entry">
+  <h3 data-id="method_serializeHasMany" class="name anchorable-toc"><code>serializeHasMany</code></h3>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/activemodel-adapter/lib/system/embedded_records_mixin.js#L25">packages/activemodel-adapter/lib/system/embedded_records_mixin.js:25</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Serialize has-may relationship when it is configured as embedded objects.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+
+  
+</div>
+
+      
+        
+<div id="method_serializeIntoHash" class="method  item-entry">
+  <h3 data-id="method_serializeIntoHash" class="name anchorable-toc"><code>serializeIntoHash</code></h3>
+  <span class="args">
+    (hash, type, record, options)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/activemodel-adapter/lib/system/active_model_serializer.js#L49">packages/activemodel-adapter/lib/system/active_model_serializer.js:49</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Underscores the JSON root keys when serializing.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>hash</strong> <span class="type">Object</span></dt>
+          <dd></dd>
+        
+          <dt><strong>type</strong> <span class="type">subclass of DS.Model</span></dt>
+          <dd></dd>
         
           <dt><strong>record</strong> <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span></dt>
           <dd></dd>
@@ -1119,10 +1117,10 @@ the first parameter and the newly created record as the second parameter:</p>
 
       
         
-<div id="method_updateRecord" class="method  item-entry">
-  <h3 data-id="method_updateRecord" class="name anchorable-toc"><code>updateRecord</code></h3>
+<div id="method_serializePolymorphicType" class="method  item-entry">
+  <h3 data-id="method_serializePolymorphicType" class="name anchorable-toc"><code>serializePolymorphicType</code></h3>
   <span class="args">
-    (store, type, record)
+    (record, json, relationship)
   </span>
 
 
@@ -1141,7 +1139,7 @@ the first parameter and the newly created record as the second parameter:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L174">packages/ember-data/lib/system/adapter.js:174</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/activemodel-adapter/lib/system/active_model_serializer.js#L63">packages/activemodel-adapter/lib/system/active_model_serializer.js:63</a>
 
     
 
@@ -1150,10 +1148,7 @@ the first parameter and the newly created record as the second parameter:</p>
 
   
     <div class="description">
-      <p>Implement this method in a subclass to handle the updating of
-a record.</p>
-
-<p>Serializes the record update and send it to the server.</p>
+      <p>Serializes a polymorphic type as a fully capitalized model name.</p>
 
     </div>
   
@@ -1170,19 +1165,88 @@ a record.</p>
 
       <dl>
         
-          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
+          <dt><strong>record</strong> <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span></dt>
           <dd></dd>
         
-          <dt><strong>type</strong> <span class="type">subclass of DS.Model</span></dt>
-          <dd>the DS.Model class of the record</dd>
+          <dt><strong>json</strong> <span class="type">Object</span></dt>
+          <dd></dd>
         
-          <dt><strong>record</strong> <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span></dt>
+          <dt><strong>relationship</strong> <span class="type"></span></dt>
           <dd></dd>
         
       </dl>
     </div>
   
 
+  
+</div>
+
+      
+        
+<div id="method_typeForRoot" class="method  item-entry">
+  <h3 data-id="method_typeForRoot" class="name anchorable-toc"><code>typeForRoot</code></h3>
+  <span class="args">
+    (root)
+  </span>
+
+  <span class="type"></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/activemodel-adapter/lib/system/active_model_serializer.js#L80">packages/activemodel-adapter/lib/system/active_model_serializer.js:80</a>
+
+    
+
+    
+  </div>
+
+  
+    <div class="description">
+      <p>Extracts the model typeKey from underscored root objects.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>root</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"></span>
+        <dd> String the model's typeKey</dd>
+      </dl>
+    </div>
   
 </div>
 

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - DS</title>
+    <title>Ember.js - Ember.Inflector</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -35,7 +35,7 @@
   
   </head>
 
-  <body class="api api_data api_data_index">
+  <body class="api api_data api_data_classes api_data_classes_Ember">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -138,11 +138,11 @@
         
 
       
-          <li class="level-1 ">
+          <li class="level-1 selected">
           
         <a href='#'>Classes</a>
         
-          <ol class="">
+          <ol class="selected">
           
           
             
@@ -346,7 +346,7 @@
         
           
             
-          <li class="level-3 ">
+          <li class="level-3 sub-selected">
           
               <a href="/api/data/classes/Ember.Inflector.html">Ember.Inflector</a>
             
@@ -376,9 +376,9 @@
 
   
   <h1 class="api-header">
-  DS Namespace
+  Ember.Inflector Class
   
-    <a class="edit-page" target="_blank" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/core.js#L5">packages/ember-data/lib/core.js:5</a>
+    <a class="edit-page" target="_blank" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-inflector/lib/system/inflector.js#L20">packages/ember-inflector/lib/system/inflector.js:20</a>
   
 </h1>
 
@@ -391,7 +391,7 @@
   
 
   
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/core.js#L5">packages/ember-data/lib/core.js:5</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-inflector/lib/system/inflector.js#L20">packages/ember-inflector/lib/system/inflector.js:20</a></p>
   
 
   
@@ -400,8 +400,92 @@
 </div>
 
   <div class="description">
-    <p>All Ember Data methods and functions are defined inside of this namespace.</p>
+    <p>Inflector.Ember provides a mechanism for supplying inflection rules for your
+application. Ember includes a default set of inflection rules, and provides an
+API for providing additional rules.</p>
 
+<p>Examples:</p>
+
+<p>Creating an inflector with no rules.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> inflector = <span class="keyword">new</span> Ember.Inflector();
+</pre></td>
+</tr></table>
+</div></div>
+<p>Creating an inflector with the default ember ruleset.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> inflector = <span class="keyword">new</span> Ember.Inflector(Ember.Inflector.defaultRules);
+
+inflector.pluralize(<span class="string"><span class="delimiter">'</span><span class="content">cow</span><span class="delimiter">'</span></span>) <span class="comment">//=&gt; 'kine'</span>
+inflector.singularize(<span class="string"><span class="delimiter">'</span><span class="content">kine</span><span class="delimiter">'</span></span>) <span class="comment">//=&gt; 'cow'</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Creating an inflector and adding rules later.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> inflector = Ember.Inflector.inflector;
+
+inflector.pluralize(<span class="string"><span class="delimiter">'</span><span class="content">advice</span><span class="delimiter">'</span></span>) <span class="comment">// =&gt; 'advices'</span>
+inflector.uncountable(<span class="string"><span class="delimiter">'</span><span class="content">advice</span><span class="delimiter">'</span></span>);
+inflector.pluralize(<span class="string"><span class="delimiter">'</span><span class="content">advice</span><span class="delimiter">'</span></span>) <span class="comment">// =&gt; 'advice'</span>
+
+inflector.pluralize(<span class="string"><span class="delimiter">'</span><span class="content">formula</span><span class="delimiter">'</span></span>) <span class="comment">// =&gt; 'formulas'</span>
+inflector.irregular(<span class="string"><span class="delimiter">'</span><span class="content">formula</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">formulae</span><span class="delimiter">'</span></span>);
+inflector.pluralize(<span class="string"><span class="delimiter">'</span><span class="content">formula</span><span class="delimiter">'</span></span>) <span class="comment">// =&gt; 'formulae'</span>
+
+<span class="comment">// you would not need to add these as they are the default rules</span>
+inflector.plural(<span class="regexp"><span class="delimiter">/</span><span class="content">$</span><span class="delimiter">/</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">s</span><span class="delimiter">'</span></span>);
+inflector.singular(<span class="regexp"><span class="delimiter">/</span><span class="content">s$</span><span class="delimiter">/</span><span class="modifier">i</span></span>, <span class="string"><span class="delimiter">'</span><span class="delimiter">'</span></span>);
+</pre></td>
+</tr></table>
+</div></div>
+<p>Creating an inflector with a nondefault ruleset.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> rules = {
+  <span class="key">plurals</span>:  [ <span class="regexp"><span class="delimiter">/</span><span class="content">$</span><span class="delimiter">/</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">s</span><span class="delimiter">'</span></span> ],
+  <span class="key">singular</span>: [ <span class="regexp"><span class="delimiter">/</span><span class="char">\s</span><span class="content">$</span><span class="delimiter">/</span></span>, <span class="string"><span class="delimiter">'</span><span class="delimiter">'</span></span> ],
+  <span class="key">irregularPairs</span>: [
+    [ <span class="string"><span class="delimiter">'</span><span class="content">cow</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">kine</span><span class="delimiter">'</span></span> ]
+  ],
+  <span class="key">uncountable</span>: [ <span class="string"><span class="delimiter">'</span><span class="content">fish</span><span class="delimiter">'</span></span> ]
+};
+
+<span class="keyword">var</span> inflector = <span class="keyword">new</span> Ember.Inflector(rules);
+</pre></td>
+</tr></table>
+</div></div>
   </div>
 
 
@@ -437,16 +521,32 @@
         <p><h2>Methods</h2></p>
         <ul class="index-list">
           
-            <li class="method ">
-              <a href="#method_attr">attr</a>
+            <li class="method protected">
+              <a href="#method_inflect">inflect</a>
             </li>
           
             <li class="method ">
-              <a href="#method_belongsTo">belongsTo</a>
+              <a href="#method_irregular">irregular</a>
             </li>
           
             <li class="method ">
-              <a href="#method_hasMany">hasMany</a>
+              <a href="#method_plural">plural</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_pluralize">pluralize</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_singular">singular</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_singularize">singularize</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_uncountable">uncountable</a>
             </li>
           
         </ul>
@@ -476,16 +576,16 @@
 
       
         
-<div id="method_attr" class="method  item-entry">
-  <h3 data-id="method_attr" class="name anchorable-toc"><code>attr</code></h3>
+<div id="method_inflect" class="method protected item-entry">
+  <h3 data-id="method_inflect" class="name anchorable-toc"><code>inflect</code></h3>
   <span class="args">
-    (type, options)
+    (word, typeRules, irregular)
   </span>
 
-  <span class="type">Attribute</span>
 
 
 
+  <span class="flag protected">protected</span>
 
 
 
@@ -499,51 +599,13 @@
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/model/attributes.js#L231">packages/ember-data/lib/system/model/attributes.js:231</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-inflector/lib/system/inflector.js#L147">packages/ember-inflector/lib/system/inflector.js:147</a>
 
     
 
     
   </div>
 
-  
-    <div class="description">
-      <p><code>DS.attr</code> defines an attribute on a <a href="DS.Model.html">DS.Model</a>.
-By default, attributes are passed through as-is, however you can specify an
-optional type to have the value automatically transformed.
-Ember Data ships with four basic transform types: <code>string</code>, <code>number</code>,
-<code>boolean</code> and <code>date</code>. You can define your own transforms by subclassing
-<a href="DS.Transform.html">DS.Transform</a>.</p>
-
-<p><code>DS.attr</code> takes an optional hash as a second parameter, currently
-supported options are:</p>
-
-<ul>
-<li><code>defaultValue</code>: Pass a string or a function to be called to set the attribute
-              to a default value if none is supplied.</li>
-</ul>
-
-<p>Example</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre><span class="keyword">var</span> attr = DS.attr;
-
-App.User = DS.Model.extend({
-  <span class="key">username</span>: attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
-  <span class="key">email</span>: attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
-  <span class="key">verified</span>: attr(<span class="string"><span class="delimiter">'</span><span class="content">boolean</span><span class="delimiter">'</span></span>, {<span class="key">defaultValue</span>: <span class="predefined-constant">false</span>})
-});
-</pre></td>
-</tr></table>
-</div></div>
-    </div>
   
 
   <p>
@@ -558,36 +620,30 @@ App.User = DS.Model.extend({
 
       <dl>
         
-          <dt><strong>type</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
-          <dd>the attribute type</dd>
+          <dt><strong>word</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dd></dd>
         
-          <dt><strong>options</strong> <span class="type">Object</span></dt>
-          <dd>a hash of options</dd>
+          <dt><strong>typeRules</strong> <span class="type">Object</span></dt>
+          <dd></dd>
+        
+          <dt><strong>irregular</strong> <span class="type">Object</span></dt>
+          <dd></dd>
         
       </dl>
     </div>
   
 
-  
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type">Attribute</span>
-        <dd> </dd>
-      </dl>
-    </div>
   
 </div>
 
       
         
-<div id="method_belongsTo" class="method  item-entry">
-  <h3 data-id="method_belongsTo" class="name anchorable-toc"><code>belongsTo</code></h3>
+<div id="method_irregular" class="method  item-entry">
+  <h3 data-id="method_irregular" class="name anchorable-toc"><code>irregular</code></h3>
   <span class="args">
-    (type, options)
+    (singular, plural)
   </span>
 
-  <span class="type">Ember.computed</span>
 
 
 
@@ -604,70 +660,13 @@ App.User = DS.Model.extend({
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/relationships/belongs_to.js#L35">packages/ember-data/lib/system/relationships/belongs_to.js:35</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-inflector/lib/system/inflector.js#L122">packages/ember-inflector/lib/system/inflector.js:122</a>
 
     
 
     
   </div>
 
-  
-    <div class="description">
-      <p><code>DS.belongsTo</code> is used to define One-To-One and One-To-Many
-relationships on a <a href="DS.Model.html">DS.Model</a>.</p>
-
-<p><code>DS.belongsTo</code> takes an optional hash as a second parameter, currently
-supported options are:</p>
-
-<ul>
-<li><code>async</code>: A boolean value used to explicitly declare this to be an async relationship.</li>
-<li><code>inverse</code>: A string used to identify the inverse property on a
-related model in a One-To-Many relationship. See <a href="#toc_explicit-inverses">Explicit Inverses</a></li>
-</ul>
-<h4 class='anchorable-toc' id='toc_one-to-one'>One-To-One</h4>
-<p>To declare a one-to-one relationship between two models, use
-<code>DS.belongsTo</code>:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>App.User = DS.Model.extend({
-  <span class="key">profile</span>: DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">profile</span><span class="delimiter">'</span></span>)
-});
-
-App.Profile = DS.Model.extend({
-  <span class="key">user</span>: DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">user</span><span class="delimiter">'</span></span>)
-});
-</pre></td>
-</tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_one-to-many'>One-To-Many</h4>
-<p>To declare a one-to-many relationship between two models, use
-<code>DS.belongsTo</code> in combination with <code>DS.hasMany</code>, like this:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>App.Post = DS.Model.extend({
-  <span class="key">comments</span>: DS.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>)
-});
-
-App.Comment = DS.Model.extend({
-  <span class="key">post</span>: DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>)
-});
-</pre></td>
-</tr></table>
-</div></div>
-    </div>
   
 
   <p>
@@ -682,36 +681,27 @@ App.Comment = DS.Model.extend({
 
       <dl>
         
-          <dt><strong>type</strong> <span class="type">String or DS.Model</span></dt>
-          <dd>the model type of the relationship</dd>
+          <dt><strong>singular</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dd></dd>
         
-          <dt><strong>options</strong> <span class="type">Object</span></dt>
-          <dd>a hash of options</dd>
+          <dt><strong>plural</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dd></dd>
         
       </dl>
     </div>
   
 
-  
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type">Ember.computed</span>
-        <dd> relationship</dd>
-      </dl>
-    </div>
   
 </div>
 
       
         
-<div id="method_hasMany" class="method  item-entry">
-  <h3 data-id="method_hasMany" class="name anchorable-toc"><code>hasMany</code></h3>
+<div id="method_plural" class="method  item-entry">
+  <h3 data-id="method_plural" class="name anchorable-toc"><code>plural</code></h3>
   <span class="args">
-    (type, options)
+    (regex, string)
   </span>
 
-  <span class="type">Ember.computed</span>
 
 
 
@@ -728,116 +718,13 @@ App.Comment = DS.Model.extend({
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/relationships/has_many.js#L73">packages/ember-data/lib/system/relationships/has_many.js:73</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-inflector/lib/system/inflector.js#L96">packages/ember-inflector/lib/system/inflector.js:96</a>
 
     
 
     
   </div>
 
-  
-    <div class="description">
-      <p><code>DS.hasMany</code> is used to define One-To-Many and Many-To-Many
-relationships on a <a href="DS.Model.html">DS.Model</a>.</p>
-
-<p><code>DS.hasMany</code> takes an optional hash as a second parameter, currently
-supported options are:</p>
-
-<ul>
-<li><code>async</code>: A boolean value used to explicitly declare this to be an async relationship.</li>
-<li><code>inverse</code>: A string used to identify the inverse property on a related model.</li>
-</ul>
-<h4 class='anchorable-toc' id='toc_one-to-many'>One-To-Many</h4>
-<p>To declare a one-to-many relationship between two models, use
-<code>DS.belongsTo</code> in combination with <code>DS.hasMany</code>, like this:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>App.Post = DS.Model.extend({
-  <span class="key">comments</span>: DS.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>)
-});
-
-App.Comment = DS.Model.extend({
-  <span class="key">post</span>: DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>)
-});
-</pre></td>
-</tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_many-to-many'>Many-To-Many</h4>
-<p>To declare a many-to-many relationship between two models, use
-<code>DS.hasMany</code>:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>App.Post = DS.Model.extend({
-  <span class="key">tags</span>: DS.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">tag</span><span class="delimiter">'</span></span>)
-});
-
-App.Tag = DS.Model.extend({
-  <span class="key">posts</span>: DS.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>)
-});
-</pre></td>
-</tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_explicit-inverses'>Explicit Inverses</h4>
-<p>Ember Data will do its best to discover which relationships map to
-one another. In the one-to-many code above, for example, Ember Data
-can figure out that changing the <code>comments</code> relationship should update
-the <code>post</code> relationship on the inverse because post is the only
-relationship to that model.</p>
-
-<p>However, sometimes you may have multiple <code>belongsTo</code>/<code>hasManys</code> for the
-same type. You can specify which property on the related model is
-the inverse using <code>DS.hasMany</code>&#39;s <code>inverse</code> option:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
-14
-15
-</pre></td>
-  <td class="code"><pre><span class="keyword">var</span> belongsTo = DS.belongsTo,
-    hasMany = DS.hasMany;
-
-App.Comment = DS.Model.extend({
-  <span class="key">onePost</span>: belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>),
-  <span class="key">twoPost</span>: belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>),
-  <span class="key">redPost</span>: belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>),
-  <span class="key">bluePost</span>: belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>)
-});
-
-App.Post = DS.Model.extend({
-  <span class="key">comments</span>: hasMany(<span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>, {
-    <span class="key">inverse</span>: <span class="string"><span class="delimiter">'</span><span class="content">redPost</span><span class="delimiter">'</span></span>
-  })
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>You can also specify an inverse on a <code>belongsTo</code>, which works how
-you&#39;d expect.</p>
-
-    </div>
   
 
   <p>
@@ -852,24 +739,239 @@ you&#39;d expect.</p>
 
       <dl>
         
-          <dt><strong>type</strong> <span class="type">String or DS.Model</span></dt>
-          <dd>the model type of the relationship</dd>
+          <dt><strong>regex</strong> <span class="type">RegExp</span></dt>
+          <dd></dd>
         
-          <dt><strong>options</strong> <span class="type">Object</span></dt>
-          <dd>a hash of options</dd>
+          <dt><strong>string</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dd></dd>
         
       </dl>
     </div>
   
 
   
-    <div class="return">
-      <h3>Returns:</h3>
+</div>
+
+      
+        
+<div id="method_pluralize" class="method  item-entry">
+  <h3 data-id="method_pluralize" class="name anchorable-toc"><code>pluralize</code></h3>
+  <span class="args">
+    (word)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-inflector/lib/system/inflector.js#L131">packages/ember-inflector/lib/system/inflector.js:131</a>
+
+    
+
+    
+  </div>
+
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
       <dl>
-        <dt><span class="type">Ember.computed</span>
-        <dd> relationship</dd>
+        
+          <dt><strong>word</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dd></dd>
+        
       </dl>
     </div>
+  
+
+  
+</div>
+
+      
+        
+<div id="method_singular" class="method  item-entry">
+  <h3 data-id="method_singular" class="name anchorable-toc"><code>singular</code></h3>
+  <span class="args">
+    (regex, string)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-inflector/lib/system/inflector.js#L105">packages/ember-inflector/lib/system/inflector.js:105</a>
+
+    
+
+    
+  </div>
+
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>regex</strong> <span class="type">RegExp</span></dt>
+          <dd></dd>
+        
+          <dt><strong>string</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
+<div id="method_singularize" class="method  item-entry">
+  <h3 data-id="method_singularize" class="name anchorable-toc"><code>singularize</code></h3>
+  <span class="args">
+    (word)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-inflector/lib/system/inflector.js#L139">packages/ember-inflector/lib/system/inflector.js:139</a>
+
+    
+
+    
+  </div>
+
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>word</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
+<div id="method_uncountable" class="method  item-entry">
+  <h3 data-id="method_uncountable" class="name anchorable-toc"><code>uncountable</code></h3>
+  <span class="args">
+    (regex)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-inflector/lib/system/inflector.js#L114">packages/ember-inflector/lib/system/inflector.js:114</a>
+
+    
+
+    
+  </div>
+
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>regex</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
   
 </div>
 
