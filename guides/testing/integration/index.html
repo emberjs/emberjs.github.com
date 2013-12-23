@@ -629,11 +629,6 @@
 <ul>
 <li>Simulates a key event type, e.g. <code>keypress</code>, <code>keydown</code>, <code>keyup</code> with the desired keyCode on element found by the selector.</li>
 </ul></li>
-<li><code>wait()</code>
-
-<ul>
-<li>Returns a promise that fulfills when all async behavior is complete.</li>
-</ul></li>
 </ul>
 <h3 class='anchorable-toc' id='toc_writing-tests'>Writing tests</h3>
 <p>Almost every test has a pattern of visiting a route, interacting with the page (using the helpers), and checking for expected changes in the DOM.</p>
@@ -646,9 +641,11 @@
 4
 5
 6
+7
 </pre></td>
   <td class="code"><pre>test(<span class="string"><span class="delimiter">&quot;</span><span class="content">root lists first page of posts</span><span class="delimiter">&quot;</span></span>, <span class="keyword">function</span>(){
-  visit(<span class="string"><span class="delimiter">&quot;</span><span class="content">/</span><span class="delimiter">&quot;</span></span>).then(<span class="keyword">function</span>() {
+  visit(<span class="string"><span class="delimiter">&quot;</span><span class="content">/</span><span class="delimiter">&quot;</span></span>);
+  andThen(<span class="keyword">function</span>() {
     equal(find(<span class="string"><span class="delimiter">&quot;</span><span class="content">.post</span><span class="delimiter">&quot;</span></span>).length, <span class="integer">5</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">The first page should have 5 posts</span><span class="delimiter">&quot;</span></span>);
     <span class="comment">// Assuming we know that 5 posts display per page and that there are more than 5 posts</span>
   });
@@ -656,7 +653,7 @@
 </pre></td>
 </tr></table>
 </div></div>
-<p>The helpers that perform actions return a promise that fulfills when all asynchronous behavior has completed.</p>
+<p>The helpers that perform actions use a global promise object and automatically chain onto that promise object if it exists. This allows you write your tests without worrying about async behaviour your helper might trigger.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -668,43 +665,13 @@
 8
 9
 <strong>10</strong>
-11
-12
 </pre></td>
   <td class="code"><pre>test(<span class="string"><span class="delimiter">&quot;</span><span class="content">creating a post displays the new post</span><span class="delimiter">&quot;</span></span>, <span class="keyword">function</span>(){
-  visit(<span class="string"><span class="delimiter">&quot;</span><span class="content">/posts/new</span><span class="delimiter">&quot;</span></span>).then(<span class="keyword">function</span>() {
-    <span class="keyword">return</span> fillIn(<span class="string"><span class="delimiter">&quot;</span><span class="content">.post-title</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">A new post</span><span class="delimiter">&quot;</span></span>);
-  }).then(<span class="keyword">function</span>() {
-    <span class="keyword">return</span> fillIn(<span class="string"><span class="delimiter">&quot;</span><span class="content">.post-author</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">John Doe</span><span class="delimiter">&quot;</span></span>);
-  }).then(<span class="keyword">function</span>() {
-    <span class="keyword">return</span> click(<span class="string"><span class="delimiter">&quot;</span><span class="content">button.create</span><span class="delimiter">&quot;</span></span>);
-  }).then(<span class="keyword">function</span>() {
-    ok(find(<span class="string"><span class="delimiter">&quot;</span><span class="content">h1:contains('A new post')</span><span class="delimiter">&quot;</span></span>).length, <span class="string"><span class="delimiter">&quot;</span><span class="content">The post's title should display</span><span class="delimiter">&quot;</span></span>);
-    ok(find(<span class="string"><span class="delimiter">&quot;</span><span class="content">a[rel=author]:contains('John Doe')</span><span class="delimiter">&quot;</span></span>).length, <span class="string"><span class="delimiter">&quot;</span><span class="content">A link to the author should display</span><span class="delimiter">&quot;</span></span>);
-  });
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>For convenience, helpers can be chained:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-</pre></td>
-  <td class="code"><pre>test(<span class="string"><span class="delimiter">&quot;</span><span class="content">creating a post displays the new post</span><span class="delimiter">&quot;</span></span>, <span class="keyword">function</span>() {
-  visit(<span class="string"><span class="delimiter">&quot;</span><span class="content">/posts/new</span><span class="delimiter">&quot;</span></span>)
-  .fillIn(<span class="string"><span class="delimiter">&quot;</span><span class="content">.post-title</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">A new post</span><span class="delimiter">&quot;</span></span>)
-  .fillIn(<span class="string"><span class="delimiter">&quot;</span><span class="content">.post-author</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">John Doe</span><span class="delimiter">&quot;</span></span>)
-  .click(<span class="string"><span class="delimiter">&quot;</span><span class="content">button.create</span><span class="delimiter">&quot;</span></span>)
-  .then(<span class="keyword">function</span>() {
+  visit(<span class="string"><span class="delimiter">&quot;</span><span class="content">/posts/new</span><span class="delimiter">&quot;</span></span>);
+  fillIn(<span class="string"><span class="delimiter">&quot;</span><span class="content">.post-title</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">A new post</span><span class="delimiter">&quot;</span></span>);
+  fillIn(<span class="string"><span class="delimiter">&quot;</span><span class="content">.post-author</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">John Doe</span><span class="delimiter">&quot;</span></span>);
+  click(<span class="string"><span class="delimiter">&quot;</span><span class="content">button.create</span><span class="delimiter">&quot;</span></span>);
+  andThen(<span class="keyword">function</span>() {
     ok(find(<span class="string"><span class="delimiter">&quot;</span><span class="content">h1:contains('A new post')</span><span class="delimiter">&quot;</span></span>).length, <span class="string"><span class="delimiter">&quot;</span><span class="content">The post's title should display</span><span class="delimiter">&quot;</span></span>);
     ok(find(<span class="string"><span class="delimiter">&quot;</span><span class="content">a[rel=author]:contains('John Doe')</span><span class="delimiter">&quot;</span></span>).length, <span class="string"><span class="delimiter">&quot;</span><span class="content">A link to the author should display</span><span class="delimiter">&quot;</span></span>);
   });
@@ -712,8 +679,9 @@
 </pre></td>
 </tr></table>
 </div></div><h3 class='anchorable-toc' id='toc_creating-your-own-test-helpers'>Creating your own test helpers</h3>
-<p><code>Ember.Test.registerHelper</code> is used to register a test helper that will be injected when <code>App.injectTestHelpers</code> is called.
-The helper method will always be called with the current Application as the first parameter. Helpers that cause asynchronous behavior should return <code>wait()</code> to return a promise that will resolve when that asynchronous behavior is complete.</p>
+<p><code>Ember.Test.registerHelper</code> and <code>Ember.test.registerAsyncHelper</code> are used to register test helpers that will be injected when <code>App.injectTestHelpers</code> is called. The difference between <code>Ember.Test.registerHelper</code> and <code>Ember.test.registerAsyncHelper</code> is that the latter will not run until any previous async helper has completed and any subsequent async helper will wait for it to finish before running.</p>
+
+<p>The helper method will always be called with the current Application as the first parameter. </p>
 
 <p>For example:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -723,14 +691,12 @@ The helper method will always be called with the current Application as the firs
 4
 5
 6
-7
 </pre></td>
-  <td class="code"><pre>Ember.Test.registerHelper(<span class="string"><span class="delimiter">'</span><span class="content">dblclick</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(app, selector, context) {
+  <td class="code"><pre>Ember.Test.registerAyncHelper(<span class="string"><span class="delimiter">'</span><span class="content">dblclick</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(app, selector, context) {
   <span class="keyword">var</span> <span class="predefined">$el</span> = findWithAssert(selector, context);
   Ember.run(<span class="keyword">function</span>() {
     <span class="predefined">$el</span>.dblclick();
   });
-  <span class="keyword">return</span> wait();
 });
 </pre></td>
 </tr></table>
