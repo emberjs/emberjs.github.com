@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Getting Started: Modeling Data</title>
+    <title>Ember.js - Guides</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -38,7 +38,7 @@
   
   </head>
 
-  <body class="guides guides_getting-started guides_getting-started_modeling-data guides_getting-started_modeling-data_index">
+  <body class="guides guides_wip guides_wip_data-introduction guides_wip_data-introduction_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -69,9 +69,9 @@
         <div id="sidebar">
           
     <ol id="toc-list">
-          <li class="level-1 selected">
+          <li class="level-1">
             <a href="/guides/getting-started">Getting Started</a>
-            <ol class='selected'>
+            <ol>
         
             <li class="level-3">
               <a href="/guides/getting-started">Getting Started</a>
@@ -93,7 +93,7 @@
               <a href="/guides/getting-started/adding-a-route-and-template">Adding the First Route and Template</a>
             </li>
           
-            <li class="level-3 sub-selected">
+            <li class="level-3">
               <a href="/guides/getting-started/modeling-data">Modeling Data</a>
             </li>
           
@@ -552,65 +552,115 @@
   
   <div class="chapter">
     
-        <h1>Modeling Data
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/getting-started/modeling-data.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
-        </h1>
-      
     <hr>
-    <p>Next we will create a model class to describe todo items. </p>
+    <h1 class='anchorable-toc' id='toc_getting-data-into-your-app'>Getting Data Into Your App</h1>
+<p>Ember.js gives you the tools you need to keep your models synchronized
+with your UI. That&#39;s great, but how do you get data into your models in
+the first place?</p>
 
-<p>Create a file at <code>js/models/todo.js</code> and put the following code inside:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-</pre></td>
-  <td class="code"><pre>Todos.Todo = DS.Model.extend({
-  <span class="key">title</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
-  <span class="key">isCompleted</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">boolean</span><span class="delimiter">'</span></span>)
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>This code creates a new class <code>Todo</code> and places it within your application&#39;s namespace. Each todo will have two attributes: <code>title</code> and <code>isCompleted</code>.</p>
+<p>To recap, Ember.js pages have a lifecycle that is designed to make it
+easy to keep your data and URL in sync.</p>
 
-<p>You may place this file anywhere you like (even just putting all code into the same file), but this guide will assume you have created a file and named it as indicated.</p>
-
-<p>Finally, update your <code>index.html</code> to include a reference to this new file:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-</pre></td>
-  <td class="code"><pre><span class="comment">&lt;!-- ... additional lines truncated for brevity ... --&gt;</span>
-  <span class="tag">&lt;script</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">js/models/todo.js</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/script&gt;</span>
-<span class="tag">&lt;/body&gt;</span>
-<span class="comment">&lt;!-- ... additional lines truncated for brevity ... --&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>Reload your web browser to ensure that all files have been referenced correctly and no errors occur.</p>
-<h3 class='anchorable-toc' id='toc_live-preview'>Live Preview</h3>
-<p><a class="jsbin-embed" href="http://jsbin.com/AJoyOGo/1/embed?live">Ember.js • TodoMVC</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
-<h3 class='anchorable-toc' id='toc_additional-resources'>Additional Resources</h3>
 <ul>
-<li><a href="https://github.com/emberjs/quickstart-code-sample/commit/a1ccdb43df29d316a7729321764c00b8d850fcd1">Changes in this step in <code>diff</code> format</a></li>
-<li><a href="/guides/models">Models Guide</a></li>
+<li>When the user loads the application, Ember looks at the URL and
+invokes the <code>model</code> hooks in the Routes specified by your router
+definition.</li>
+<li><p>Ember then renders the templates for those routes, hooking up the
+model to the template.</p></li>
+<li><p>When a template uses <code>{{link-to &#39;route&#39;}}</code>, Ember automatically
+generates a URL from the router definition.</p></li>
+<li><p>When the user clicks on the link, Ember renders the template for the
+route specified in the <code>link-to</code>. If any models were specified
+(<code>{{link-to &#39;post&#39; post}}</code>), Ember will hook up the specified model to
+the template it renders.</p></li>
+<li><p>Also, when the user clicks on the link, Ember will update the URL.</p></li>
 </ul>
+
+<blockquote>
+<p>Insert Diagram Here</p>
+</blockquote>
+
+<p>As far as Ember is concerned, you can return any JavaScript object from
+the <code>model</code> hook, including a plain JavaScript object, so you can work
+with raw JSON requests to your server if you want.</p>
+
+<p>In practice, you will probably want more structure in your model layer,
+and Ember Data provides additional features that may help you:</p>
+
+<ul>
+<li>Model objects that can contain additional computed properties and
+methods, rather than working directly with Plain Old JavaScript
+Objects.</li>
+<li>A built-in cache so that you can avoid making additional Ajax requests
+if the data you need is already available in memory.</li>
+<li>Flags on each model that you can use to determine whether a record is
+loading, saving, dirty, newly created, deleted, and more. You can use
+these flags to control the UI. For example, you may want to show some UI
+(a spinner) when a record is saving, or disable editing when it&#39;s
+saving.</li>
+<li>Automatic, efficient filters on your models that you can use to build
+live arrays that match conditions on each record. For example, you
+could build a live array that contained only <code>Person</code> records whose
+last name was &quot;Lannister&quot; or whose <code>isSaving</code> flag was true. The
+arrays are updated incrementally only when the properties change.</li>
+<li>Support for several different kinds of relationships. Relationships
+can be populated with an Array of IDs, a URL, or determined lazily
+based on information in the parent model.</li>
+<li>When relationships are specified by ID, avoiding additional fetches
+from the server for records that are already loaded.</li>
+<li>Support for saving records, and tracking what exactly has changed on
+your model object.</li>
+<li>Support for rolling back changes that the user made since the last
+fetch or save. This makes it easy to implement <code>cancel</code> buttons, for
+example.</li>
+<li>A well-defined separation between your model objects, how they are
+fetched from the server, how they are converted into the form
+expected by your application, and how they are saved back to the
+server.</li>
+</ul>
+
+<p>In addition to these features, Ember Data comes with built-in support
+for REST-like APIs. If your server&#39;s API is close to the API that the
+<code>RESTAdapter</code> expects, you can avoid having to write explicit Ajax code
+and serialization/deserialization logic.</p>
+
+<p>Some features of the <code>RESTAdapter</code>:</p>
+
+<ul>
+<li>Automatically builds URLs for you based on the name of your model
+class.</li>
+<li>Automatically makes Ajax requests to the built URL, ensuring that the
+right headers are present and any data is serialized correctly.</li>
+<li>Handles payloads that contain multiple records at a time, so you can
+make a single HTTP request and get back multiple records.</li>
+<li>Handles server responses that embed models inside of other models.</li>
+<li>Handles &quot;sideloading&quot;&mdash;returning a normalized payload with all
+records grouped by type instead of embedded. This allows you to avoid
+duplicating records that are referenced by multiple other records
+(such as the author of a blog post&mdash;sideloading allows you to
+include the author of multiple posts one time in the payload).</li>
+<li>Allows pushing data embedded in the HTML using the same structure as
+your server&#39;s normal Ajax responses as an initial payload (to improve 
+performance).</li>
+</ul>
+
+<p>Additionally, by using any Adapter (either by making your own Ajax
+requests or using the built-in REST Adapter), you can prototype your
+application using the Fixture Adapter and upgrade your models to use the
+server when you&#39;re ready.</p>
+
+<p>You can also make these decisions on a model-by-model basis. You might
+have some models using raw Ajax in the <code>model</code> hook, some models using
+the raw Adapter API, some models using the REST Adapter, and newer parts
+of your application on fixtures.</p>
+
+<p>The rest of the guides in this section walk you through how to use each
+of these techniques, and go into more detail about when each one is
+appropriate.</p>
 
     
       <footer>
-        
-          <a class="previous-guide" href="/guides/getting-started/adding-a-route-and-template">
-            ← Adding the First Route and Template
-          </a>
          
-        <a class="next-guide" href="/guides/getting-started/using-fixtures">
-          Using Fixtures →
-        </a>
-      
       </footer>
       
   </div>

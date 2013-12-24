@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Getting Started: Modeling Data</title>
+    <title>Ember.js - Guides</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -38,7 +38,7 @@
   
   </head>
 
-  <body class="guides guides_getting-started guides_getting-started_modeling-data guides_getting-started_modeling-data_index">
+  <body class="guides guides_understanding-ember-data guides_understanding-ember-data_record-lifecycle guides_understanding-ember-data_record-lifecycle_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -69,9 +69,9 @@
         <div id="sidebar">
           
     <ol id="toc-list">
-          <li class="level-1 selected">
+          <li class="level-1">
             <a href="/guides/getting-started">Getting Started</a>
-            <ol class='selected'>
+            <ol>
         
             <li class="level-3">
               <a href="/guides/getting-started">Getting Started</a>
@@ -93,7 +93,7 @@
               <a href="/guides/getting-started/adding-a-route-and-template">Adding the First Route and Template</a>
             </li>
           
-            <li class="level-3 sub-selected">
+            <li class="level-3">
               <a href="/guides/getting-started/modeling-data">Modeling Data</a>
             </li>
           
@@ -552,65 +552,197 @@
   
   <div class="chapter">
     
-        <h1>Modeling Data
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/getting-started/modeling-data.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
-        </h1>
-      
     <hr>
-    <p>Next we will create a model class to describe todo items. </p>
+    <h1 class='anchorable-toc' id='toc_ember-data-record-lifecycle'>Ember Data Record Lifecycle</h1>
+<p>The goal of this guide is to walk you through the lifecycle of an Ember
+Data record.</p>
 
-<p>Create a file at <code>js/models/todo.js</code> and put the following code inside:</p>
+<p>Throughout this guide, we will assume the existence of the following
+model:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
+5
+6
+7
+8
+9
+<strong>10</strong>
 </pre></td>
-  <td class="code"><pre>Todos.Todo = DS.Model.extend({
-  <span class="key">title</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
-  <span class="key">isCompleted</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">boolean</span><span class="delimiter">'</span></span>)
+  <td class="code"><pre>Person = DS.Model.extend({
+  <span class="key">firstName</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">lastName</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">father</span>: DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">Person</span><span class="delimiter">'</span></span>),
+
+  <span class="function">name</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> +
+           <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
 });
 </pre></td>
 </tr></table>
 </div></div>
-<p>This code creates a new class <code>Todo</code> and places it within your application&#39;s namespace. Each todo will have two attributes: <code>title</code> and <code>isCompleted</code>.</p>
+<p>The guide will walk through the initial <code>find</code> on the model, how the
+adapter loads the data in from the server, and how the server data is
+materialized into an Ember Data record.</p>
+<h2 class='anchorable-toc' id='toc_step-1-finding-a-record'>Step 1: Finding a Record</h2>
+<p>When you request a record using <code>Person.find(1)</code>, Ember Data will ask
+the store to find the record (<code>store.find(Person, 1)</code>).</p>
 
-<p>You may place this file anywhere you like (even just putting all code into the same file), but this guide will assume you have created a file and named it as indicated.</p>
+<figure>
+  <img src="/images/ember-data-guide/step1.png">
+</figure>
 
-<p>Finally, update your <code>index.html</code> to include a reference to this new file:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>If the adapter has not already loaded the record into the store, the
+store will ask the adapter to fetch it.</p>
+
+<figure>
+  <img src="/images/ember-data-guide/step2.png">
+</figure>
+
+<p>Since the adapter&#39;s request is asynchronous, the store will return a new
+<code>Person</code> instance immediately. At this point, the record has no backing
+data.</p>
+
+<figure>
+  <img src="/images/ember-data-guide/step3.png">
+</figure>
+<h2 class='anchorable-toc' id='toc_step-2-adapter-loads-data-into-the-store'>Step 2: Adapter Loads Data Into the Store</h2>
+<p>At some point later, the server will return some data to the adapter.</p>
+
+<figure>
+  <img src="/images/ember-data-guide/step5.png">
+</figure>
+
+<p>Once the adapter receives the data hash, it loads it into the store.
+The store saves off the data hash for use later. The store will also
+notify the record that the data hash is available.</p>
+
+<p>This will, in turn, notify all attributes (<code>DS.attr</code>) and relationships
+(<code>DS.hasMany</code> and <code>DS.belongsTo</code>).</p>
+
+<figure>
+  <img src="/images/ember-data-guide/step6.png">
+</figure>
+<h2 class='anchorable-toc' id='toc_step-3-getting-an-attribute'>Step 3: Getting an Attribute</h2>
+<p>In response to the notification, the app will typically request some
+attribute. In this case, imagine that the <code>Person</code> was represented by
+the following template:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;p&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">name</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/p&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>When the template renders, it will register an observer on the
+<code>name</code> property, which depends on <code>firstName</code> and <code>lastName</code>. Once the
+data hash loads in from the server, the registered observer will call
+<code>person.get(&#39;name&#39;)</code> to update the DOM. This will call
+<code>person.get(&#39;firstName&#39;)</code>.</p>
+
+<figure>
+  <img src="/images/ember-data-guide/step7.png">
+</figure>
+<h2 class='anchorable-toc' id='toc_step-4-materialization'>Step 4: Materialization</h2>
+<p>Because this is the first time the record needs its backend-provided
+data, it will ask the store to load it in using <code>materializeData</code>.</p>
+
+<figure>
+  <img src="/images/ember-data-guide/step8.png">
+</figure>
+
+<p>The store will, in turn, ask the adapter to materialize the data. This
+allows the adapter to apply adapter-specific mappings to the
+backend-provided data hash.</p>
+
+<figure>
+  <img src="/images/ember-data-guide/step9.png">
+</figure>
+
+<p>Finally, the adapter asks its serializer object to perform the
+materialization. In general, the adapter is responsible for working with
+the backend, and the serializer is responsible for materializing
+backend-provided data hashes into records, and serializing records into
+JSON hashes for the backend.</p>
+
+<figure>
+  <img src="/images/ember-data-guide/step10.png">
+</figure>
+
+<p>The serializer is now responsible for extracting the information from
+the backend-provided data hash and hydrating the record object. First,
+it populates the record&#39;s <code>id</code>.</p>
+
+<figure>
+  <img src="/images/ember-data-guide/step11.png">
+</figure>
+
+<p>Next, it populates the record&#39;s attributes.</p>
+
+<figure>
+  <img src="/images/ember-data-guide/step12.png">
+</figure>
+
+<p>Finally, it populates the <code>belongsTo</code> association.</p>
+
+<figure>
+  <img src="/images/ember-data-guide/step13.png">
+</figure>
+
+<p>Once the adapter finishes materializing the record, it returns the
+requested <code>firstName</code>.</p>
+
+<p>Because the adapter has already populated the record, trying to <code>get</code>
+its <code>lastName</code> will not trigger additional materialization.</p>
+<h2 class='anchorable-toc' id='toc_identity-map'>Identity Map</h2>
+<p>Additional requests for Person 1 will skip all of these steps, because
+<code>store.find(Person, 1)</code> will see that it has already created an instance
+for that record and return it.</p>
+
+<p>This means that all requests for a record with the same model type and
+ID will return the same object.</p>
+
+<p>This feature is known as an &quot;identity map&quot;, because it guarantees
+JavaScript <em>identity</em> for objects representing the same backend data.</p>
+<h2 class='anchorable-toc' id='toc_practical-note'>Practical Note</h2>
+<p>In the example above, we used a template that rendered the <code>Person</code>
+object directly. As a result, we got partially loaded output that
+automatically filled in as the data loaded.</p>
+
+<p>You may want this behavior in some cases, but in most cases, your
+template would look something like this:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
+5
 </pre></td>
-  <td class="code"><pre><span class="comment">&lt;!-- ... additional lines truncated for brevity ... --&gt;</span>
-  <span class="tag">&lt;script</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">js/models/todo.js</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/script&gt;</span>
-<span class="tag">&lt;/body&gt;</span>
-<span class="comment">&lt;!-- ... additional lines truncated for brevity ... --&gt;</span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">isLoaded</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;p&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">name</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/p&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">else</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;img</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/images/spinner.gif</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>
-<p>Reload your web browser to ensure that all files have been referenced correctly and no errors occur.</p>
-<h3 class='anchorable-toc' id='toc_live-preview'>Live Preview</h3>
-<p><a class="jsbin-embed" href="http://jsbin.com/AJoyOGo/1/embed?live">Ember.js • TodoMVC</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
-<h3 class='anchorable-toc' id='toc_additional-resources'>Additional Resources</h3>
-<ul>
-<li><a href="https://github.com/emberjs/quickstart-code-sample/commit/a1ccdb43df29d316a7729321764c00b8d850fcd1">Changes in this step in <code>diff</code> format</a></li>
-<li><a href="/guides/models">Models Guide</a></li>
-</ul>
+<p>When the adapter loads the backend-provided hash into the store, the
+store moves the record into the loaded state, which changes its
+<code>isLoaded</code> flag to true.</p>
+
+<p>That will notify an observer set up by the template that <code>isLoaded</code> has
+changed, which will cause the template to render the first branch
+(containing <code>&lt;p&gt;{{name}}&lt;/p&gt;</code>) instead of the spinner.</p>
+
+<p>When it renders that branch, the template will trigger the same
+<code>get(&#39;name&#39;)</code> that caused materialization in the above example.</p>
 
     
       <footer>
-        
-          <a class="previous-guide" href="/guides/getting-started/adding-a-route-and-template">
-            ← Adding the First Route and Template
-          </a>
          
-        <a class="next-guide" href="/guides/getting-started/using-fixtures">
-          Using Fixtures →
-        </a>
-      
       </footer>
       
   </div>

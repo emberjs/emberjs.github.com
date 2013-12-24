@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Getting Started: Modeling Data</title>
+    <title>Ember.js - Guides</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -38,7 +38,7 @@
   
   </head>
 
-  <body class="guides guides_getting-started guides_getting-started_modeling-data guides_getting-started_modeling-data_index">
+  <body class="guides guides_wip guides_wip_basic-ajax guides_wip_basic-ajax_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -69,9 +69,9 @@
         <div id="sidebar">
           
     <ol id="toc-list">
-          <li class="level-1 selected">
+          <li class="level-1">
             <a href="/guides/getting-started">Getting Started</a>
-            <ol class='selected'>
+            <ol>
         
             <li class="level-3">
               <a href="/guides/getting-started">Getting Started</a>
@@ -93,7 +93,7 @@
               <a href="/guides/getting-started/adding-a-route-and-template">Adding the First Route and Template</a>
             </li>
           
-            <li class="level-3 sub-selected">
+            <li class="level-3">
               <a href="/guides/getting-started/modeling-data">Modeling Data</a>
             </li>
           
@@ -552,65 +552,401 @@
   
   <div class="chapter">
     
-        <h1>Modeling Data
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/getting-started/modeling-data.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
-        </h1>
-      
     <hr>
-    <p>Next we will create a model class to describe todo items. </p>
+    <h1 class='anchorable-toc' id='toc_loading-and-saving-data-with-jquery-s-ajax'>Loading and Saving Data With jQuery&#39;s Ajax</h1>
+<p>The easiest way to get started with data hosted on an external service
+is to fetch that data directly in the <code>model</code> hook of a route and to
+save it in an action of your route.</p>
+<h2 class='anchorable-toc' id='toc_when-to-use-this-technique'>When to Use This Technique</h2>
+<p>You should use jQuery Ajax to communicate with your server if:</p>
 
-<p>Create a file at <code>js/models/todo.js</code> and put the following code inside:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<ul>
+<li>You are getting started with Ember, and already understand basic Ajax
+and want to get some data into your app quickly and easily.</li>
+<li>You are working with simple models, with few relationships between
+them (or relationships that you load and save all at once).</li>
+<li>You don&#39;t have the same models represented in many places, or are
+willing to roll your own identity map when the situation arises.</li>
+<li>You are willing to make frequent Ajax requests as your user navigates
+around the page, or are willing to roll your own in-memory cache.</li>
+</ul>
+
+<p>See the bottom of this guide for a brief description of other, more
+advanced ways you can work with data, and links to guides about </p>
+<h2 class='anchorable-toc' id='toc_getting-data-into-your-app'>Getting Data Into Your App</h2>
+<p>When your user enters a route, Ember will ask the associated
+<code>Ember.Route</code> object to convert the current URL into a model.</p>
+
+<p>For example, if you have a <code>posts</code> resource:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
-4
 </pre></td>
-  <td class="code"><pre>Todos.Todo = DS.Model.extend({
-  <span class="key">title</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
-  <span class="key">isCompleted</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">boolean</span><span class="delimiter">'</span></span>)
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>);
 });
 </pre></td>
 </tr></table>
 </div></div>
-<p>This code creates a new class <code>Todo</code> and places it within your application&#39;s namespace. Each todo will have two attributes: <code>title</code> and <code>isCompleted</code>.</p>
+<p>When the user goes to <code>/posts</code>, Ember will ask <code>App.PostsRoute</code> which
+model to use. This method, called the &quot;model hook&quot;, can return an Array,
+which will then become the model for the <code>posts</code> template. </p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.PostsRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> [...];
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>That&#39;s all well and good, but it assumes that you have all of the data
+already available. In practice, you will usually need to get it from the
+server before proceeding.</p>
 
-<p>You may place this file anywhere you like (even just putting all code into the same file), but this guide will assume you have created a file and named it as indicated.</p>
+<p>The good news is that Ember allows you to return a <em>Promise</em>, a
+JavaScript object that represents a value that will eventually arrive
+(sometimes called an &quot;eventual value&quot;).</p>
 
-<p>Finally, update your <code>index.html</code> to include a reference to this new file:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>You may be asking: that sounds cool, but how do I make an &quot;eventual
+value&quot;? jQuery&#39;s Ajax methods all return Promises by default!</p>
+
+<p>If you want to tell Ember that the model for a route is the result of
+making an Ajax request instead of a value that you have locally, just
+return a jQuery Ajax request.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.PostsRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="predefined">$</span>.getJSON(<span class="string"><span class="delimiter">&quot;</span><span class="content">/posts</span><span class="delimiter">&quot;</span></span>);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_munging-data'>Munging Data</h3>
+<p>If you want to do some data munging before setting the model, just do it
+in the success handler of the Ajax request. Whatever value you return
+from the success handler will become the model.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre>App.PostsRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="predefined">$</span>.getJSON(<span class="string"><span class="delimiter">&quot;</span><span class="content">/posts</span><span class="delimiter">&quot;</span></span>).then(<span class="keyword">function</span>(json) {
+      <span class="keyword">return</span> json.map(<span class="keyword">function</span>(post) {
+        <span class="keyword">return</span> { <span class="key">title</span>: post.TTL, <span class="key">body</span>: post.BDY };
+      });
+    });
+  }
+});
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_parameter-based-models'>Parameter-Based Models</h3>
+<p>All of that works great for routes that only have a single model
+associated with them. But what about routes that use <code>:post_id</code> to allow
+a single route to represent many different models?</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 </pre></td>
-  <td class="code"><pre><span class="comment">&lt;!-- ... additional lines truncated for brevity ... --&gt;</span>
-  <span class="tag">&lt;script</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">js/models/todo.js</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/script&gt;</span>
-<span class="tag">&lt;/body&gt;</span>
-<span class="comment">&lt;!-- ... additional lines truncated for brevity ... --&gt;</span>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>);
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">/posts/:post_id</span><span class="delimiter">'</span></span> });
+});
 </pre></td>
 </tr></table>
 </div></div>
-<p>Reload your web browser to ensure that all files have been referenced correctly and no errors occur.</p>
-<h3 class='anchorable-toc' id='toc_live-preview'>Live Preview</h3>
-<p><a class="jsbin-embed" href="http://jsbin.com/AJoyOGo/1/embed?live">Ember.js • TodoMVC</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
-<h3 class='anchorable-toc' id='toc_additional-resources'>Additional Resources</h3>
+<p>In this case, the model for URLs like <code>/posts/1</code> will be different based
+on the actual value of <code>post_id</code>.</p>
+
+<p>In this situation, the <code>model</code> method will receive the parameters
+extracted from the URL, and should use it to return the specific model
+in question.</p>
+
+<p>First, if you already have the data locally:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+22
+23
+24
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> posts = [{
+  <span class="key">id</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>,
+  <span class="key">title</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is omakase</span><span class="delimiter">&quot;</span></span>,
+  <span class="key">body</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">...</span><span class="delimiter">&quot;</span></span>
+}, {
+  <span class="key">id</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">2</span><span class="delimiter">&quot;</span></span>,
+  <span class="key">title</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">The Parley Letter</span><span class="delimiter">&quot;</span></span>,
+  <span class="key">body</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">...</span><span class="delimiter">&quot;</span></span>
+}];
+
+App.PostsRoute = Ember.Route.extend({
+  <span class="comment">// as before, just return the local list of posts</span>
+  <span class="function">model</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> posts;
+  }
+});
+
+App.PostRoute = Ember.Route.extend({
+  <span class="comment">// we'll need to use the :post_id param to figure out which model to</span>
+  <span class="comment">// use, and it's available in `params`</span>
+  <span class="function">model</span>: <span class="keyword">function</span>(params) {
+    <span class="keyword">return</span> posts.findBy(<span class="string"><span class="delimiter">'</span><span class="content">id</span><span class="delimiter">'</span></span>, params.post_id);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Again, this case isn&#39;t very interesting. You&#39;ll normally get your data
+from the server. As before, we can replace our code with an Ajax lookup.
+Because jQuery provides promises by default, we can return the result of
+a call to <code>$.getJSON</code>.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+</pre></td>
+  <td class="code"><pre>App.PostsRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="predefined">$</span>.getJSON(<span class="string"><span class="delimiter">&quot;</span><span class="content">/posts</span><span class="delimiter">&quot;</span></span>);
+  }
+});
+
+App.PostRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>(params) {
+    <span class="keyword">return</span> <span class="predefined">$</span>.getJSON(<span class="string"><span class="delimiter">&quot;</span><span class="content">/posts/</span><span class="delimiter">&quot;</span></span> + params.post_id);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Ember will automatically wait for these Ajax calls to complete before
+rendering your templates, so the Ajax-based routes behave exactly the
+same as the synchronous versions.</p>
+
+<p>As a result, you can often start by prototyping with synchronous <code>model</code>
+hooks, and upgrade to Ajax once your app is further along.</p>
+<h2 class='anchorable-toc' id='toc_drilling-in-to-collections'>Drilling in to Collections</h2>
+<p>In the Ajax examples below, drilling in to an individual post triggered
+a second Ajax call. We will need to do that if the user enters the app
+from an individual post&#39;s page, but if she entered from the index, we&#39;d
+prefer to use the post we already downloaded.</p>
+
+<p>In order to achieve this, you can build a simple cache that will first
+try to use loaded data before fetching.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+22
+23
+24
+25
+26
+27
+28
+29
+<strong>30</strong>
+31
+32
+33
+34
+35
+36
+37
+38
+39
+</pre></td>
+  <td class="code"><pre><span class="comment">// A simple cache class</span>
+App.Cache = Ember.Object.extend({
+  <span class="function">init</span>: <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>._models = {};
+  },
+
+  <span class="comment">/**
+    Fetch a model by ID and URL. If the model is already in the cache,
+    return it. Otherwise, return an Ajax request for the URL. When the
+    Ajax response comes back, put the model in the cache so we don't
+    make another Ajax request later.
+  */</span>
+  <span class="function">fetch</span>: <span class="keyword">function</span>(id, url) {
+    <span class="keyword">var</span> models = <span class="local-variable">this</span>._models;
+
+    <span class="keyword">if</span> (id <span class="keyword">in</span> models) {
+      <span class="keyword">return</span> models[id];
+    }
+
+    <span class="keyword">return</span> <span class="predefined">$</span>.getJSON(url).then(<span class="keyword">function</span>(json) {
+      models[id] = json;
+      <span class="keyword">return</span> json;
+    });
+  },
+
+  <span class="comment">/**
+    Fetch an Array of models by URL. Return an Ajax request for the URL.
+    When the Ajax response comes back, but the models in the cache by
+    their individual `id` property.
+  */</span>
+  <span class="function">fetchAll</span>: <span class="keyword">function</span>(url) {
+    <span class="keyword">return</span> <span class="predefined">$</span>.getJSON(url).then(<span class="keyword">function</span>(json) {
+      json.forEach(<span class="keyword">function</span>(model) {
+        models[model.id] = model;
+      });
+      <span class="keyword">return</span> json;
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Then, we can use the cache in our model hooks:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre></td>
+  <td class="code"><pre>App.CacheController = Ember.Controller.extend({
+  <span class="function">init</span>: <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.posts = App.Cache.create();
+  }
+});
+
+App.PostsRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="local-variable">this</span>.controllerFor(<span class="string"><span class="delimiter">'</span><span class="content">cache</span><span class="delimiter">'</span></span>)
+      .posts.fetchAll(<span class="string"><span class="delimiter">'</span><span class="content">/posts</span><span class="delimiter">'</span></span>);
+  }
+});
+
+App.PostRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>(params) {
+    <span class="keyword">return</span> <span class="local-variable">this</span>.controllerFor(<span class="string"><span class="delimiter">'</span><span class="content">cache</span><span class="delimiter">'</span></span>)
+      .posts.fetch(params.post_id, <span class="string"><span class="delimiter">'</span><span class="content">/posts/</span><span class="delimiter">'</span></span> + params.post_id);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>By putting the cache in a controller, we make sure that using
+<code>App.reset()</code> to reset the application (in tests, or when the user logs
+out) will also clear the cache.</p>
+
+<p>This is just a very simple caching implementation. If you have more
+complex caching needs, or if you need relationships between models, you
+probably will want to use Ember Data, which handles much more
+sophisticated scenarios.</p>
+<h2 class='anchorable-toc' id='toc_partial-models'>Partial Models</h2><h2 class='anchorable-toc' id='toc_more-advanced-techniques'>More Advanced Techniques</h2>
+<p>There are several more advanced techniques, which provide more power,
+but which require more up-front learning. You might want to consider
+using one of these techniques if you have complex relationships or a
+need for in-memory caching of models.</p>
+
+<p>You can learn more about how to use Ember Data in these guides.</p>
+
 <ul>
-<li><a href="https://github.com/emberjs/quickstart-code-sample/commit/a1ccdb43df29d316a7729321764c00b8d850fcd1">Changes in this step in <code>diff</code> format</a></li>
-<li><a href="/guides/models">Models Guide</a></li>
+<li>[Using Ember Data as an in-memory cache][1]. You can still write all
+your own Ajax code, and use Ember Data as an in-memory cache with
+relationship support and a structured Adapter API for organizing your
+Ajax code better.</li>
+<li>[Using the Ember Data REST Adapter][2]. If your server uses relatively
+conventional REST semantics, you can take advantage of the built-in
+REST Adapter, which will build your URLs, make Ajax requests with the
+appropriate headers and body, and deserialize the return value. It
+also provides a pattern for receiving multiple records at once, known
+as &quot;sideloading&quot;.</li>
+<li>[Using the Ember Data ActiveModel Adapter][3]. If your server uses
+Rails-like semantics, such as underscored keys, you can take advantage
+of the ActiveModel Adapter, which will convert Rails conventions into
+Ember conventions.</li>
 </ul>
 
     
       <footer>
-        
-          <a class="previous-guide" href="/guides/getting-started/adding-a-route-and-template">
-            ← Adding the First Route and Template
-          </a>
          
-        <a class="next-guide" href="/guides/getting-started/using-fixtures">
-          Using Fixtures →
-        </a>
-      
       </footer>
       
   </div>
