@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Cookbook: Introduction</title>
+    <title>Ember.js - Guides</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -38,7 +38,7 @@
   
   </head>
 
-  <body class="guides guides_cookbook guides_cookbook_index">
+  <body class="guides guides_cookbook guides_cookbook_helpers_and_components guides_cookbook_helpers_and_components_spin_button_for_asynchronous_actions guides_cookbook_helpers_and_components_spin_button_for_asynchronous_actions_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -489,7 +489,7 @@
             <a href="/guides/cookbook">Cookbook</a>
             <ol class='selected'>
         
-            <li class="level-3 sub-selected">
+            <li class="level-3">
               <a href="/guides/cookbook">Introduction</a>
             </li>
           
@@ -505,7 +505,7 @@
               <a href="/guides/cookbook/event_handling_and_data_binding">Event Handling & Data Binding</a>
             </li>
           
-            <li class="level-3">
+            <li class="level-3 sub-selected">
               <a href="/guides/cookbook/helpers_and_components">Helpers & Components</a>
             </li>
           
@@ -552,50 +552,116 @@
   
   <div class="chapter">
     
-        <h1>Introduction
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/cookbook.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
-        </h1>
-      
     <hr>
-    <p>Welcome to the Ember.js Cookbook! The Cookbook provides answers and solutions 
-to common Ember questions and problems. Anyone is welcome to <a href="/guides/cookbook/contributing">contribute</a>.</p>
+    <h3 class='anchorable-toc' id='toc_problem'>Problem</h3>
+<p>You want a button component that spins to show asynchronous action till completion. Eg- Save Button.</p>
+<h3 class='anchorable-toc' id='toc_solution'>Solution</h3>
+<p>Write an Ember Component to change to loading state when action is taking place.</p>
 
-<p>Here are all of the available recipes:</p>
-<h3 class='anchorable-toc' id='toc_contributing'>Contributing</h3>
-<ol>
-<li><a href="/guides/cookbook/contributing/understanding_the_cookbook_format">Understanding the Cookbook Format</a></li>
-<li><a href="/guides/cookbook/contributing/participating_if_you_know_ember">Participating If You Know Ember</a></li>
-<li><a href="/guides/cookbook/contributing/participating_if_you_dont_know_ember">Participating If You Don&#39;t Know Ember</a></li>
-<li><a href="/guides/cookbook/contributing/deciding_if_a_recipe_is_a_good_fit">Deciding If A Recipe is a Good Fit</a></li>
-<li><a href="/guides/cookbook/contributing/suggesting_a_recipe">Suggesting A Recipe</a></li>
-</ol>
-<h3 class='anchorable-toc' id='toc_user-interface-interaction'>User Interface &amp; Interaction</h3>
-<ol>
-<li><a href="/guides/cookbook/user_interface_and_interaction/adding_css_classes_to_your_components">Adding CSS Classes to Your Components</a></li>
-<li><a href="/guides/cookbook/user_interface_and_interaction/adding_css_classes_to_your_components_based_on_properties">Adding CSS Classes to Your Components Based on Properties</a></li>
-<li><a href="/guides/cookbook/user_interface_and_interaction/focusing_a_textfield_after_its_been_inserted">Focusing a Textfield after It&#39;s Been Inserted</a></li>
-<li><a href="/guides/cookbook/user_interface_and_interaction/displaying_formatted_dates_with_moment_js">Displaying Formatted Dates With Moment.js</a></li>
-<li><a href="/guides/cookbook/user_interface_and_interaction/specifying_data_driven_areas_of_templates_that_do_not_need_to_update">Specifying Data-Driven Areas of Templates That Do Not Need To Update</a></li>
-<li><a href="/guides/cookbook/user_interface_and_interaction/using_modal_dialogs">Using Modal Dialogs</a></li>
-<li><a href="/guides/cookbook/user_interface_and_interaction/resetting_scroll_on_route_changes">Resetting scroll on route changes</a></li>
-</ol>
-<h3 class='anchorable-toc' id='toc_event-handling-data-binding'>Event Handling &amp; Data Binding</h3>
-<ol>
-<li><a href="/guides/cookbook/event_handling_and_data_binding/binding_properties_of_an_object_to_its_own_properties">Binding Properties of an Object to Its Own Properties</a></li>
-</ol>
-<h3 class='anchorable-toc' id='toc_helpers-components'>Helpers &amp; Components</h3>
-<ol>
-<li><p><a href="/guides/cookbook/helpers_and_components/creating_reusable_social_share_buttons">Creating Reusable Social Share Buttons</a></p></li>
-<li><p><a href="/guides/cookbook/helpers_and_components/spin_button_for_asynchronous_actions">A Spinning Button for Asynchronous Actions</a></p></li>
-</ol>
-<h3 class='anchorable-toc' id='toc_working-with-objects'>Working with Objects</h3>
-<ol>
-<li><a href="/guides/cookbook/working_with_objects/incrementing_or_decrementing_a_property">Incrementing Or Decrementing A Property</a></li>
-<li><a href="/guides/cookbook/working_with_objects/setting_multiple_properties_at_once">Setting Multiple Properties At Once</a></li>
-<li><a href="/guides/cookbook/working_with_objects/continuous_redrawing_of_views">Continuous Redrawing of Views</a></li>
-</ol>
+<p>For example a button to save data could be as </p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">'</span><span class="content">text/x-handlebars</span><span class="delimiter">'</span></span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">'</span><span class="content">application</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
+<span class="inline">    </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">spin-button</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">forapplication</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">isLoading</span> = <span class="attribute-value">isLoading</span> <span class="attribute-name">buttonText</span>=<span class="attribute-value">buttonText</span> <span class="attribute-name">action</span>=<span class="string"><span class="delimiter">'</span><span class="content">saveData</span><span class="delimiter">'</span></span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/script&gt;</span>
 
-<p>If you would like to see more recipes, take a look at the <a href="/guides/cookbook/contributing/suggesting_a_recipe">Suggesting A Recipe</a> section.</p>
+<span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">'</span><span class="content">text/x-handlebars</span><span class="delimiter">'</span></span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">'</span><span class="content">components/spin-button</span><span class="delimiter">'</span></span><span class="tag">&gt;</span>
+<span class="inline">    &lt;button </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bind-attr</span> <span class="attribute-name">id</span>=<span class="attribute-value">id</span><span class="inline-delimiter">}}</span></span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">'</span><span class="attribute-name">showLoading</span><span class="error">'</span><span class="inline-delimiter">}}</span></span><span class="error">&gt;</span>
+        <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">isLoading</span><span class="inline-delimiter">}}</span></span>
+            <span class="tag">&lt;img</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://i639.photobucket.com/albums/uu116/pksjce/spiffygif_18x18.gif</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+        <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">else</span><span class="inline-delimiter">}}</span></span>
+            <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">buttonText</span><span class="inline-delimiter">}}</span></span>
+        <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
+    <span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/script&gt;</span>
+</pre></td>
+</tr></table>
+</div></div><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+22
+23
+24
+25
+26
+27
+28
+29
+<strong>30</strong>
+31
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> App = Ember.Application.create({});
+
+App.ApplicationController = Ember.Controller.extend({
+    <span class="key">isLoading</span>:<span class="predefined-constant">false</span>,
+    <span class="key">buttonText</span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">Submit</span><span class="delimiter">&quot;</span></span>,
+    <span class="key">actions</span>:{
+        <span class="function">saveData</span>:<span class="keyword">function</span>(){
+            <span class="keyword">var</span> self = <span class="local-variable">this</span>;
+
+           <span class="comment">//Do Asynchronous action here. Set &quot;isLoading = false&quot; after a timeout.</span>
+            Ember.run.later(<span class="keyword">function</span>(){
+                self.set(<span class="string"><span class="delimiter">'</span><span class="content">isLoading</span><span class="delimiter">'</span></span>, <span class="predefined-constant">false</span>);
+            }, <span class="integer">1000</span>);
+        }
+    }
+});
+
+App.SpinButtonComponent = Ember.Component.extend({
+    <span class="key">classNames</span>: [<span class="string"><span class="delimiter">'</span><span class="content">button</span><span class="delimiter">'</span></span>],
+    <span class="key">buttonText</span>:<span class="string"><span class="delimiter">&quot;</span><span class="content">Save</span><span class="delimiter">&quot;</span></span>,
+    <span class="key">actions</span>:{
+        <span class="key">isLoading</span>:<span class="predefined-constant">false</span>,
+        <span class="function">showLoading</span>:<span class="keyword">function</span>(){
+            <span class="keyword">if</span>(!<span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">isLoading</span><span class="delimiter">'</span></span>)){
+                <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">isLoading</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
+                <span class="local-variable">this</span>.sendAction(<span class="string"><span class="delimiter">'</span><span class="content">action</span><span class="delimiter">'</span></span>);
+            }
+        }
+    }
+});
+
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_discussion'>Discussion</h3>
+<p>I have dumbed down the sample code to only change text within the button. One may add a loading image inside the button or change the button to a div styled like a button.
+The component is in charge of setting isLoading = true and the base controller performing asynchronous action decides when the &#39;isLoading&#39; becomes false again.
+For safety and sanity of the component, one can add a settimeout of however much time and then set &#39;isLoading&#39; back to false so that the components comes to initial state no matter the result of the asynchronous call. But I would prefer it was properly handled in the parent controller.
+Also note that the component does not let multiple clicks get in the way of loading status.</p>
+<h4 class='anchorable-toc' id='toc_example'>Example</h4>
+<p><a class="jsbin-embed" href="http://emberjs.jsbin.com/EXaxEfE/8">JS Bin</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 
     
       <footer>
@@ -604,10 +670,10 @@ to common Ember questions and problems. Anyone is welcome to <a href="/guides/co
              ← Configuring Ember.js: Feature Flags
           </a>
          
-        <a class="next-guide" href="/guides/cookbook/contributing">
-          Contributing →
-        </a>
-      
+            <a class="next-guide" href="/guides/understanding-ember/the-view-layer">
+               We're done with Cookbook. Next up: Understanding Ember.js - The View Layer →
+            </a>
+          
       </footer>
       
   </div>
