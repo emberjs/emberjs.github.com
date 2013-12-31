@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Cookbook: Displaying Formatted Dates With Moment.js</title>
+    <title>Ember.js - Contributing to Ember.js: Repositories</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -38,7 +38,7 @@
   
   </head>
 
-  <body class="guides guides_cookbook guides_cookbook_user_interface_and_interaction guides_cookbook_user_interface_and_interaction_displaying_formatted_dates_with_moment_js guides_cookbook_user_interface_and_interaction_displaying_formatted_dates_with_moment_js_index">
+  <body class="guides guides_contributing guides_contributing_repositories guides_contributing_repositories_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -485,9 +485,9 @@
               <a href="/guides/configuring-ember/feature-flags">Feature Flags</a>
             </li>
           </ol></li>
-          <li class="level-1 selected">
+          <li class="level-1">
             <a href="/guides/cookbook">Cookbook</a>
-            <ol class='selected'>
+            <ol>
         
             <li class="level-3">
               <a href="/guides/cookbook">Introduction</a>
@@ -497,7 +497,7 @@
               <a href="/guides/cookbook/contributing">Contributing</a>
             </li>
           
-            <li class="level-3 sub-selected">
+            <li class="level-3">
               <a href="/guides/cookbook/user_interface_and_interaction">User Interface and Interaction</a>
             </li>
           
@@ -533,15 +533,15 @@
               <a href="/guides/understanding-ember/debugging">Debugging</a>
             </li>
           </ol></li>
-          <li class="level-1">
+          <li class="level-1 selected">
             <a href="/guides/contributing/adding-new-features">Contributing to Ember.js</a>
-            <ol>
+            <ol class='selected'>
         
             <li class="level-3">
               <a href="/guides/contributing/adding-new-features">Adding New Features</a>
             </li>
           
-            <li class="level-3">
+            <li class="level-3 sub-selected">
               <a href="/guides/contributing/repositories">Repositories</a>
             </li>
           </ol></li></ol>
@@ -556,133 +556,61 @@
   
   <div class="chapter">
     
-        <h1>Displaying Formatted Dates With Moment.js
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/cookbook/user_interface_and_interaction/displaying_formatted_dates_with_moment_js.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
+        <h1>Repositories
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/contributing/repositories.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
         </h1>
       
     <hr>
-    <h3 class='anchorable-toc' id='toc_problem'>Problem</h3>
-<p>Display JavaScript Date objects in human readable format.</p>
-<h3 class='anchorable-toc' id='toc_solution'>Solution</h3>
-<p>There are two ways of formatting the value:</p>
+    <p>Ember is made up several libraries. If you wish to add a feature or fix a bug please file a pull request against the appropriate repository. Be sure to check the libraries listed below before making changes in the Ember.js repository.</p>
+<h1 class='anchorable-toc' id='toc_main-repositories'>Main Repositories</h1>
+<p><strong>Ember.js</strong> - The main repository for Ember.</p>
 
-<ol>
-<li>Create a Handlebars helper <code>{{format-date}}</code> and use it in your template</li>
-<li>Create a computed property <code>formattedDate</code> that will return a transformed date</li>
-</ol>
+<ul>
+<li><a href="https://github.com/emberjs/ember.js">https://github.com/emberjs/ember.js</a></li>
+</ul>
 
-<p>We will use <a href="http://momentjs.com">MomentJs</a> for formatting dates.</p>
+<p><strong>Ember Data</strong> - A data persistence library for Ember.js.</p>
 
-<p>Let&#39;s look at a simple example. You&#39;re working on a website for your
-client, and one of the requirements is to have the current date on the index page in human readable format. This is a perfect place to use a
-Handlebars helper that &quot;pretty prints&quot; the current date:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre>Ember.Handlebars.registerBoundHelper(<span class="string"><span class="delimiter">'</span><span class="content">currentDate</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
-  <span class="keyword">return</span> moment().format(<span class="string"><span class="delimiter">'</span><span class="content">LL</span><span class="delimiter">'</span></span>);
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Your template will look like:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre>Today's date: {{currentDate}}  // Today's date: August 30 2013
-</pre></td>
-</tr></table>
-</div></div>
-<p>You can even enhance your code and pass in the date format to the helper:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre>Ember.Handlebars.registerBoundHelper(<span class="string"><span class="delimiter">'</span><span class="content">currentDate</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(format) {
-  <span class="keyword">return</span> moment().format(format);
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Now you would need to pass an additional parameter to the helper:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre>Today's date: {{currentDate 'LL'}}  // Today's date: August 30 2013
-</pre></td>
-</tr></table>
-</div></div>
-<p>Let&#39;s look at another example. Say you need
-to create a simple control that allows you to type in a date and
-a date format. The date will be formatted accordingly.</p>
+<ul>
+<li><a href="https://github.com/emberjs/data">https://github.com/emberjs/data</a></li>
+</ul>
 
-<p>Define <code>formattedDate</code> computed property that depends on
-<code>date</code> and <code>format</code>. Computed property in this example does
-the same thing as Handlebars helpers defined above.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-</pre></td>
-  <td class="code"><pre>App.ApplicationController = Ember.Controller.extend({
-  <span class="key">format</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">YYYYMMDD</span><span class="delimiter">&quot;</span></span>,
-  <span class="key">date</span>: <span class="predefined-constant">null</span>,
-  <span class="function">formattedDate</span>: <span class="keyword">function</span>() {
-    <span class="keyword">var</span> date = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">date</span><span class="delimiter">'</span></span>),
-        format = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">format</span><span class="delimiter">'</span></span>);
-    <span class="keyword">return</span> moment(date).format(format);
-  }.property(<span class="string"><span class="delimiter">'</span><span class="content">date</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">format</span><span class="delimiter">'</span></span>)
-});
-</pre></td>
-</tr></table>
-</div></div><div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre>{{input value=date}}
-{{input value=format}}
-<span class="tag">&lt;div&gt;</span>{{formattedDate}}<span class="tag">&lt;/div&gt;</span>
-</pre></td>
-</tr></table>
-</div></div><h3 class='anchorable-toc' id='toc_discussion'>Discussion</h3>
-<p>Both helper and computed property can format your date value. 
-Which one do I use and when?</p>
-
-<p>Handlebars helpers are shorthand for cases where you want to format
-a value specifically for presentation. That value may be used 
-across different models and controllers.</p>
-
-<p>You can use <code>{{currentDate}}</code> across your application to format dates
-without making any changes to controllers.</p>
-
-<p>Computed property in the example above does the same thing as the
-Handlebars helper with one big difference:
-<code>formattedDate</code> can be consumed later without applying
-date format on the date property again.</p>
-<h4 class='anchorable-toc' id='toc_example'>Example</h4>
-<p><a class="jsbin-embed" href="http://emberjs.jsbin.com/iCaGUne/4/edit?output">JS Bin</a></p>
+<p><strong>Ember Website</strong> - Source for <a href="http://www.emberjs.com">http://www.emberjs.com</a> including these guides.</p>
+<h1 class='anchorable-toc' id='toc_libraries-used-by-ember'>Libraries Used By Ember</h1>
+<p>These libraries are part of the Ember.js source, but development of them takes place in a seperate repository.</p>
+<h2 class='anchorable-toc' id='toc_code-packages-ember-metal-lib-vendor-backburner-js-code'><code>packages/ember-metal/lib/vendor/backburner.js</code></h2>
+<ul>
+<li><strong>backburner.js</strong> - Implements the Ember run loop.</li>
+<li><a href="https://github.com/ebryn/backburner.js">https://github.com/ebryn/backburner.js</a></li>
+</ul>
+<h2 class='anchorable-toc' id='toc_code-packages-ember-routing-lib-vendor-route-recognizer-js-code'><code>packages/ember-routing/lib/vendor/route-recognizer.js</code></h2>
+<ul>
+<li><strong>route-recognizer.js</strong> - A lightweight JavaScript library that matches paths against registered routes.</li>
+<li><a href="https://github.com/tildeio/route-recognizer">https://github.com/tildeio/route-recognizer</a></li>
+</ul>
+<h2 class='anchorable-toc' id='toc_code-packages-ember-routing-lib-vendor-router-js-code'><code>packages/ember-routing/lib/vendor/router.js</code></h2>
+<ul>
+<li><strong>router.js</strong> - A lightweight JavaScript library that builds on route-recognizer and rsvp to provide an API for handling routes.</li>
+<li><a href="https://github.com/tildeio/router.js">https://github.com/tildeio/router.js</a></li>
+</ul>
+<h2 class='anchorable-toc' id='toc_code-packages-metamorph-code'><code>packages/metamorph</code></h2>
+<ul>
+<li><strong>Metamorph.js</strong> - Used by Ember for databinding handlebars templates</li>
+<li><a href="https://github.com/tomhuda/metamorph.js">https://github.com/tomhuda/metamorph.js</a></li>
+</ul>
+<h2 class='anchorable-toc' id='toc_code-packages-rsvp-code'><code>packages/rsvp</code></h2>
+<ul>
+<li><strong>RSVP.js</strong> - Implementation of the of Promises/A+ spec used by Ember.</li>
+<li><a href="https://github.com/tildeio/rsvp.js">https://github.com/tildeio/rsvp.js</a></li>
+</ul>
 
     
       <footer>
         
-          <a class="previous-guide" href="/guides/cookbook/user_interface_and_interaction/focusing_a_textfield_after_its_been_inserted">
-            ← Focusing a Textfield after It's Been Inserted
+          <a class="previous-guide" href="/guides/contributing/adding-new-features">
+            ← Adding New Features
           </a>
          
-        <a class="next-guide" href="/guides/cookbook/user_interface_and_interaction/specifying_data_driven_areas_of_templates_that_do_not_need_to_update">
-          Specifying Data-Driven Areas of Templates That Do Not Need To Update →
-        </a>
-      
       </footer>
       
   </div>
