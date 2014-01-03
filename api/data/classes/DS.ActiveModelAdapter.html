@@ -81,7 +81,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v1.0.0-beta.4" target="_blank"> Tag: v1.0.0-beta.4</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/data/commits/f8f3fbc" target="_blank"> Tag: f8f3fbc</a></li>
 
       
           <li class="level-1 ">
@@ -228,6 +228,14 @@
             
           <li class="level-3 ">
           
+              <a href="/api/data/classes/DS.InvalidError.html">DS.InvalidError</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
               <a href="/api/data/classes/DS.JSONSerializer.html">DS.JSONSerializer</a>
             
           </li>
@@ -253,6 +261,22 @@
           <li class="level-3 ">
           
               <a href="/api/data/classes/DS.NumberTransform.html">DS.NumberTransform</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/data/classes/DS.PromiseArray.html">DS.PromiseArray</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/data/classes/DS.PromiseObject.html">DS.PromiseObject</a>
             
           </li>
         
@@ -378,7 +402,7 @@
   <h1 class="api-header">
   DS.ActiveModelAdapter Class
   
-    <a class="edit-page" target="_blank" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/activemodel-adapter/lib/system/active_model_adapter.js#L11">packages/activemodel-adapter/lib/system/active_model_adapter.js:11</a>
+    <a class="edit-page" target="_blank" href="https://github.com/emberjs/data/tree/f8f3fbc/packages/activemodel-adapter/lib/system/active_model_adapter.js#L11">packages/activemodel-adapter/lib/system/active_model_adapter.js:11</a>
   
 </h1>
 
@@ -393,7 +417,7 @@
   
 
   
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/activemodel-adapter/lib/system/active_model_adapter.js#L11">packages/activemodel-adapter/lib/system/active_model_adapter.js:11</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/f8f3fbc/packages/activemodel-adapter/lib/system/active_model_adapter.js#L11">packages/activemodel-adapter/lib/system/active_model_adapter.js:11</a></p>
   
 
   
@@ -583,7 +607,7 @@ the attributes in your Ember.js models.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/activemodel-adapter/lib/system/active_model_adapter.js#L80">packages/activemodel-adapter/lib/system/active_model_adapter.js:80</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/f8f3fbc/packages/activemodel-adapter/lib/system/active_model_adapter.js#L80">packages/activemodel-adapter/lib/system/active_model_adapter.js:80</a>
 
     
 
@@ -644,6 +668,7 @@ content was not semantically correct or meaningful per the API.</p>
     (store, type, record)
   </span>
 
+  <span class="type">Promise</span>
 
 
 
@@ -659,7 +684,7 @@ content was not semantically correct or meaningful per the API.</p>
           <a href="/api/data/classes/DS.Adapter.html#method_createRecord">DS.Adapter</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L158">packages/ember-data/lib/system/adapter.js:158</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/f8f3fbc/packages/ember-data/lib/system/adapter.js#L265">packages/ember-data/lib/system/adapter.js:265</a>
 
     
 
@@ -673,9 +698,52 @@ new records.</p>
 
 <p>Serializes the record and send it to the server.</p>
 
-<p>This implementation should call the adapter&#39;s <code>didCreateRecord</code>
-method on success or <code>didError</code> method on failure.</p>
+<p>Example</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+</pre></td>
+  <td class="code"><pre>App.ApplicationAdapter = DS.Adapter.extend({
+  <span class="function">createRecord</span>: <span class="keyword">function</span>(store, type, record) {
+    <span class="keyword">var</span> data = <span class="local-variable">this</span>.serialize(record, { <span class="key">includeId</span>: <span class="predefined-constant">true</span> });
+    <span class="keyword">var</span> url = type;
 
+    <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
+      jQuery.ajax({
+        <span class="key">type</span>: <span class="string"><span class="delimiter">'</span><span class="content">POST</span><span class="delimiter">'</span></span>,
+        <span class="key">url</span>: url,
+        <span class="key">dataType</span>: <span class="string"><span class="delimiter">'</span><span class="content">json</span><span class="delimiter">'</span></span>,
+        <span class="key">data</span>: data
+      }).then(<span class="keyword">function</span>(data) {
+        Ember.run(<span class="predefined-constant">null</span>, resolve, data);
+      }, <span class="keyword">function</span>(jqXHR) {
+        jqXHR.then = <span class="predefined-constant">null</span>; <span class="comment">// tame jQuery's ill mannered promises</span>
+        Ember.run(<span class="predefined-constant">null</span>, reject, jqXHR);
+      });
+    });
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
     </div>
   
 
@@ -705,6 +773,14 @@ method on success or <code>didError</code> method on failure.</p>
   
 
   
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Promise</span>
+        <dd> promise</dd>
+      </dl>
+    </div>
+  
 </div>
 
       
@@ -715,6 +791,7 @@ method on success or <code>didError</code> method on failure.</p>
     (store, type, record)
   </span>
 
+  <span class="type">Promise</span>
 
 
 
@@ -730,7 +807,7 @@ method on success or <code>didError</code> method on failure.</p>
           <a href="/api/data/classes/DS.Adapter.html#method_deleteRecord">DS.Adapter</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L187">packages/ember-data/lib/system/adapter.js:187</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/f8f3fbc/packages/ember-data/lib/system/adapter.js#L344">packages/ember-data/lib/system/adapter.js:344</a>
 
     
 
@@ -744,6 +821,54 @@ a record.</p>
 
 <p>Sends a delete request for the record to the server.</p>
 
+<p>Example</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+</pre></td>
+  <td class="code"><pre>App.ApplicationAdapter = DS.Adapter.extend({
+  <span class="function">deleteRecord</span>: <span class="keyword">function</span>(store, type, record) {
+    <span class="keyword">var</span> data = <span class="local-variable">this</span>.serialize(record, { <span class="key">includeId</span>: <span class="predefined-constant">true</span> });
+    <span class="keyword">var</span> id = record.get(<span class="string"><span class="delimiter">'</span><span class="content">id</span><span class="delimiter">'</span></span>);
+    <span class="keyword">var</span> url = [type, id].join(<span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>);
+
+    <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
+      jQuery.ajax({
+        <span class="key">type</span>: <span class="string"><span class="delimiter">'</span><span class="content">DELETE</span><span class="delimiter">'</span></span>,
+        <span class="key">url</span>: url,
+        <span class="key">dataType</span>: <span class="string"><span class="delimiter">'</span><span class="content">json</span><span class="delimiter">'</span></span>,
+        <span class="key">data</span>: data
+      }).then(<span class="keyword">function</span>(data) {
+        Ember.run(<span class="predefined-constant">null</span>, resolve, data);
+      }, <span class="keyword">function</span>(jqXHR) {
+        jqXHR.then = <span class="predefined-constant">null</span>; <span class="comment">// tame jQuery's ill mannered promises</span>
+        Ember.run(<span class="predefined-constant">null</span>, reject, jqXHR);
+      });
+    });
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
     </div>
   
 
@@ -773,13 +898,25 @@ a record.</p>
   
 
   
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Promise</span>
+        <dd> promise</dd>
+      </dl>
+    </div>
+  
 </div>
 
       
         
 <div id="method_find" class="method inherited item-entry">
   <h3 data-id="method_find" class="name anchorable-toc"><code>find</code></h3>
+  <span class="args">
+    (store, type, id)
+  </span>
 
+  <span class="type">Promise</span>
 
 
 
@@ -795,7 +932,7 @@ a record.</p>
           <a href="/api/data/classes/DS.Adapter.html#method_find">DS.Adapter</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L72">packages/ember-data/lib/system/adapter.js:72</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/f8f3fbc/packages/ember-data/lib/system/adapter.js#L102">packages/ember-data/lib/system/adapter.js:102</a>
 
     
 
@@ -823,18 +960,24 @@ the record into the store.</p>
 9
 <strong>10</strong>
 11
+12
+13
+14
 </pre></td>
-  <td class="code"><pre><span class="function">find</span>: <span class="keyword">function</span>(store, type, id) {
-  <span class="keyword">var</span> url = type.url;
-  url = url.fmt(id);
+  <td class="code"><pre>App.ApplicationAdapter = DS.Adapter.extend({
+  <span class="function">find</span>: <span class="keyword">function</span>(store, type, id) {
+    <span class="keyword">var</span> url = [type, id].join(<span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>);
 
-  jQuery.getJSON(url, <span class="keyword">function</span>(data) {
-      <span class="comment">// data is a hash of key/value pairs. If your server returns a</span>
-      <span class="comment">// root, simply do something like:</span>
-      <span class="comment">// store.push(type, id, data.person)</span>
-      store.push(type, id, data);
-  });
-}
+    <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
+      jQuery.getJSON(url).then(<span class="keyword">function</span>(data) {
+        Ember.run(<span class="predefined-constant">null</span>, resolve, data);
+      }, <span class="keyword">function</span>(jqXHR) {
+        jqXHR.then = <span class="predefined-constant">null</span>; <span class="comment">// tame jQuery's ill mannered promises</span>
+        Ember.run(<span class="predefined-constant">null</span>, reject, jqXHR);
+      });
+    });
+  }
+});
 </pre></td>
 </tr></table>
 </div></div>
@@ -848,7 +991,32 @@ the record into the store.</p>
   
 
   
+    <div class="params">
+      <h3>Parameters:</h3>
 
+      <dl>
+        
+          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
+          <dd></dd>
+        
+          <dt><strong>type</strong> <span class="type">subclass of DS.Model</span></dt>
+          <dd></dd>
+        
+          <dt><strong>id</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Promise</span>
+        <dd> promise</dd>
+      </dl>
+    </div>
   
 </div>
 
@@ -857,9 +1025,10 @@ the record into the store.</p>
 <div id="method_findAll" class="method private inherited item-entry">
   <h3 data-id="method_findAll" class="name anchorable-toc"><code>findAll</code></h3>
   <span class="args">
-    (store, type, since)
+    (store, type, sinceToken)
   </span>
 
+  <span class="type">Promise</span>
 
 
 
@@ -876,13 +1045,53 @@ the record into the store.</p>
           <a href="/api/data/classes/DS.Adapter.html#method_findAll">DS.Adapter</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L99">packages/ember-data/lib/system/adapter.js:99</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/f8f3fbc/packages/ember-data/lib/system/adapter.js#L136">packages/ember-data/lib/system/adapter.js:136</a>
 
     
 
     
   </div>
 
+  
+    <div class="description">
+      <p>The <code>findAll()</code> method is called when you call <code>find</code> on the store
+without an ID (i.e. <code>store.find(&#39;post&#39;)</code>).</p>
+
+<p>Example</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+</pre></td>
+  <td class="code"><pre>App.ApplicationAdapter = DS.Adapter.extend({
+  <span class="function">findAll</span>: <span class="keyword">function</span>(store, type, sinceToken) {
+    <span class="keyword">var</span> url = type;
+    <span class="keyword">var</span> query = { <span class="key">since</span>: sinceToken };
+    <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
+      jQuery.getJSON(url, query).then(<span class="keyword">function</span>(data) {
+        Ember.run(<span class="predefined-constant">null</span>, resolve, data);
+      }, <span class="keyword">function</span>(jqXHR) {
+        jqXHR.then = <span class="predefined-constant">null</span>; <span class="comment">// tame jQuery's ill mannered promises</span>
+        Ember.run(<span class="predefined-constant">null</span>, reject, jqXHR);
+      });
+    });
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
   
 
   <p>
@@ -897,19 +1106,27 @@ the record into the store.</p>
 
       <dl>
         
-          <dt><strong>store</strong> <span class="type"></span></dt>
+          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
           <dd></dd>
         
-          <dt><strong>type</strong> <span class="type"></span></dt>
+          <dt><strong>type</strong> <span class="type">subclass of DS.Model</span></dt>
           <dd></dd>
         
-          <dt><strong>since</strong> <span class="type"></span></dt>
+          <dt><strong>sinceToken</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
           <dd></dd>
         
       </dl>
     </div>
   
 
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Promise</span>
+        <dd> promise</dd>
+      </dl>
+    </div>
   
 </div>
 
@@ -921,6 +1138,7 @@ the record into the store.</p>
     (store, type, ids)
   </span>
 
+  <span class="type">Promise</span>
 
 
 
@@ -936,7 +1154,7 @@ the record into the store.</p>
           <a href="/api/data/classes/DS.Adapter.html#method_findMany">DS.Adapter</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L200">packages/ember-data/lib/system/adapter.js:200</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/f8f3fbc/packages/ember-data/lib/system/adapter.js#L384">packages/ember-data/lib/system/adapter.js:384</a>
 
     
 
@@ -951,6 +1169,38 @@ the record into the store.</p>
 May be overwritten to improve performance and reduce the number of
 server requests.</p>
 
+<p>Example</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+</pre></td>
+  <td class="code"><pre>App.ApplicationAdapter = DS.Adapter.extend({
+  <span class="function">findMany</span>: <span class="keyword">function</span>(store, type, ids) {
+    <span class="keyword">var</span> url = type;
+    <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
+      jQuery.getJSON(url, {<span class="key">ids</span>: ids}).then(<span class="keyword">function</span>(data) {
+        Ember.run(<span class="predefined-constant">null</span>, resolve, data);
+      }, <span class="keyword">function</span>(jqXHR) {
+        jqXHR.then = <span class="predefined-constant">null</span>; <span class="comment">// tame jQuery's ill mannered promises</span>
+        Ember.run(<span class="predefined-constant">null</span>, reject, jqXHR);
+      });
+    });
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
     </div>
   
 
@@ -980,6 +1230,14 @@ server requests.</p>
   
 
   
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Promise</span>
+        <dd> promise</dd>
+      </dl>
+    </div>
+  
 </div>
 
       
@@ -1006,13 +1264,52 @@ server requests.</p>
           <a href="/api/data/classes/DS.Adapter.html#method_findQuery">DS.Adapter</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L109">packages/ember-data/lib/system/adapter.js:109</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/f8f3fbc/packages/ember-data/lib/system/adapter.js#L168">packages/ember-data/lib/system/adapter.js:168</a>
 
     
 
     
   </div>
 
+  
+    <div class="description">
+      <p>This method is called when you call <code>find</code> on the store with a
+query object as the second parameter (i.e. <code>store.find(&#39;person&#39;, {
+page: 1 })</code>).</p>
+
+<p>Example</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+</pre></td>
+  <td class="code"><pre>App.ApplicationAdapter = DS.Adapter.extend({
+  <span class="function">findQuery</span>: <span class="keyword">function</span>(store, type, query) {
+    <span class="keyword">var</span> url = type;
+    <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
+      jQuery.getJSON(url, query).then(<span class="keyword">function</span>(data) {
+        Ember.run(<span class="predefined-constant">null</span>, resolve, data);
+      }, <span class="keyword">function</span>(jqXHR) {
+        jqXHR.then = <span class="predefined-constant">null</span>; <span class="comment">// tame jQuery's ill mannered promises</span>
+        Ember.run(<span class="predefined-constant">null</span>, reject, jqXHR);
+      });
+    });
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
   
 
   <p>
@@ -1027,16 +1324,16 @@ server requests.</p>
 
       <dl>
         
-          <dt><strong>store</strong> <span class="type"></span></dt>
+          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
           <dd></dd>
         
-          <dt><strong>type</strong> <span class="type"></span></dt>
+          <dt><strong>type</strong> <span class="type">subclass of DS.Model</span></dt>
           <dd></dd>
         
-          <dt><strong>query</strong> <span class="type"></span></dt>
+          <dt><strong>query</strong> <span class="type">Object</span></dt>
           <dd></dd>
         
-          <dt><strong>recordArray</strong> <span class="type"></span></dt>
+          <dt><strong>recordArray</strong> <span class="type"><a href="/api/data/classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a></span></dt>
           <dd></dd>
         
       </dl>
@@ -1054,6 +1351,7 @@ server requests.</p>
     (store, record)
   </span>
 
+  <span class="type">String|Number</span>
 
 
 
@@ -1069,7 +1367,7 @@ server requests.</p>
           <a href="/api/data/classes/DS.Adapter.html#method_generateIdForRecord">DS.Adapter</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L120">packages/ember-data/lib/system/adapter.js:120</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/f8f3fbc/packages/ember-data/lib/system/adapter.js#L200">packages/ember-data/lib/system/adapter.js:200</a>
 
     
 
@@ -1129,6 +1427,14 @@ the first parameter and the newly created record as the second parameter:</p>
   
 
   
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">String|Number</span>
+        <dd> id</dd>
+      </dl>
+    </div>
+  
 </div>
 
       
@@ -1156,7 +1462,7 @@ the first parameter and the newly created record as the second parameter:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/activemodel-adapter/lib/system/active_model_adapter.js#L62">packages/activemodel-adapter/lib/system/active_model_adapter.js:62</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/f8f3fbc/packages/activemodel-adapter/lib/system/active_model_adapter.js#L62">packages/activemodel-adapter/lib/system/active_model_adapter.js:62</a>
 
     
 
@@ -1217,6 +1523,7 @@ underscored URLs by decamelizing and pluralizing the object type name.</p>
     (record, options)
   </span>
 
+  <span class="type">Object</span>
 
 
 
@@ -1232,7 +1539,7 @@ underscored URLs by decamelizing and pluralizing the object type name.</p>
           <a href="/api/data/classes/DS.Adapter.html#method_serialize">DS.Adapter</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L147">packages/ember-data/lib/system/adapter.js:147</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/f8f3fbc/packages/ember-data/lib/system/adapter.js#L228">packages/ember-data/lib/system/adapter.js:228</a>
 
     
 
@@ -1243,6 +1550,52 @@ underscored URLs by decamelizing and pluralizing the object type name.</p>
     <div class="description">
       <p>Proxies to the serializer&#39;s <code>serialize</code> method.</p>
 
+<p>Example</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+</pre></td>
+  <td class="code"><pre>App.ApplicationAdapter = DS.Adapter.extend({
+  <span class="function">createRecord</span>: <span class="keyword">function</span>(store, type, record) {
+    <span class="keyword">var</span> data = <span class="local-variable">this</span>.serialize(record, { <span class="key">includeId</span>: <span class="predefined-constant">true</span> });
+    <span class="keyword">var</span> url = type;
+
+    <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
+      jQuery.ajax({
+        <span class="key">type</span>: <span class="string"><span class="delimiter">'</span><span class="content">POST</span><span class="delimiter">'</span></span>,
+        <span class="key">url</span>: url,
+        <span class="key">dataType</span>: <span class="string"><span class="delimiter">'</span><span class="content">json</span><span class="delimiter">'</span></span>,
+        <span class="key">data</span>: data
+      }).then(<span class="keyword">function</span>(data) {
+        Ember.run(<span class="predefined-constant">null</span>, resolve, data);
+      }, <span class="keyword">function</span>(jqXHR) {
+        jqXHR.then = <span class="predefined-constant">null</span>; <span class="comment">// tame jQuery's ill mannered promises</span>
+        Ember.run(<span class="predefined-constant">null</span>, reject, jqXHR);
+      });
+    });
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
     </div>
   
 
@@ -1269,6 +1622,14 @@ underscored URLs by decamelizing and pluralizing the object type name.</p>
   
 
   
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Object</span>
+        <dd> serialized record</dd>
+      </dl>
+    </div>
+  
 </div>
 
       
@@ -1279,6 +1640,7 @@ underscored URLs by decamelizing and pluralizing the object type name.</p>
     (store, type, record)
   </span>
 
+  <span class="type">Promise</span>
 
 
 
@@ -1294,7 +1656,7 @@ underscored URLs by decamelizing and pluralizing the object type name.</p>
           <a href="/api/data/classes/DS.Adapter.html#method_updateRecord">DS.Adapter</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.4/packages/ember-data/lib/system/adapter.js#L174">packages/ember-data/lib/system/adapter.js:174</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/f8f3fbc/packages/ember-data/lib/system/adapter.js#L304">packages/ember-data/lib/system/adapter.js:304</a>
 
     
 
@@ -1308,6 +1670,54 @@ a record.</p>
 
 <p>Serializes the record update and send it to the server.</p>
 
+<p>Example</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+</pre></td>
+  <td class="code"><pre>App.ApplicationAdapter = DS.Adapter.extend({
+  <span class="function">updateRecord</span>: <span class="keyword">function</span>(store, type, record) {
+    <span class="keyword">var</span> data = <span class="local-variable">this</span>.serialize(record, { <span class="key">includeId</span>: <span class="predefined-constant">true</span> });
+    <span class="keyword">var</span> id = record.get(<span class="string"><span class="delimiter">'</span><span class="content">id</span><span class="delimiter">'</span></span>);
+    <span class="keyword">var</span> url = [type, id].join(<span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>);
+
+    <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
+      jQuery.ajax({
+        <span class="key">type</span>: <span class="string"><span class="delimiter">'</span><span class="content">PUT</span><span class="delimiter">'</span></span>,
+        <span class="key">url</span>: url,
+        <span class="key">dataType</span>: <span class="string"><span class="delimiter">'</span><span class="content">json</span><span class="delimiter">'</span></span>,
+        <span class="key">data</span>: data
+      }).then(<span class="keyword">function</span>(data) {
+        Ember.run(<span class="predefined-constant">null</span>, resolve, data);
+      }, <span class="keyword">function</span>(jqXHR) {
+        jqXHR.then = <span class="predefined-constant">null</span>; <span class="comment">// tame jQuery's ill mannered promises</span>
+        Ember.run(<span class="predefined-constant">null</span>, reject, jqXHR);
+      });
+    });
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
     </div>
   
 
@@ -1336,6 +1746,14 @@ a record.</p>
     </div>
   
 
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Promise</span>
+        <dd> promise</dd>
+      </dl>
+    </div>
   
 </div>
 
