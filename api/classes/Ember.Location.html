@@ -81,7 +81,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v1.2.0" target="_blank"> Tag: v1.2.0</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v1.3.0" target="_blank"> Tag: v1.3.0</a></li>
 
       
           <li class="level-1 ">
@@ -90,6 +90,14 @@
         
           <ol class="">
           
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/modules/RSVP.html">RSVP</a>
+            
+          </li>
+        
           
             
           <li class="level-3 ">
@@ -111,6 +119,14 @@
           <li class="level-3 ">
           
               <a href="/api/modules/ember-debug.html">ember-debug</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/modules/ember-extension-support.html">ember-extension-support</a>
             
           </li>
         
@@ -388,6 +404,14 @@
             
           <li class="level-3 ">
           
+              <a href="/api/classes/Ember.DataAdapter.html">Ember.DataAdapter</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
               <a href="/api/classes/Ember.DefaultResolver.html">Ember.DefaultResolver</a>
             
           </li>
@@ -644,6 +668,22 @@
             
           <li class="level-3 ">
           
+              <a href="/api/classes/Ember.RSVP.EventTarget.html">Ember.RSVP.EventTarget</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.RSVP.Promise.html">Ember.RSVP.Promise</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
               <a href="/api/classes/Ember.ReduceComputedProperty.html">Ember.ReduceComputedProperty</a>
             
           </li>
@@ -866,7 +906,7 @@
   <h1 class="api-header">
   Ember.Location Namespace
   
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/ember.js/tree/v1.2.0/packages/ember-routing/lib/location/api.js#L24">packages/ember-routing/lib/location/api.js:24</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/ember.js/tree/v1.3.0/packages/ember-routing/lib/location/api.js#L8">packages/ember-routing/lib/location/api.js:8</a>
   
 </h1>
 
@@ -879,7 +919,7 @@
   
 
   
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.2.0/packages/ember-routing/lib/location/api.js#L24">packages/ember-routing/lib/location/api.js:24</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.3.0/packages/ember-routing/lib/location/api.js#L8">packages/ember-routing/lib/location/api.js:8</a></p>
   
 
   
@@ -890,9 +930,85 @@
   <div class="description">
     <p>Ember.Location returns an instance of the correct implementation of
 the <code>location</code> API.</p>
+<h2 class='anchorable-toc' id='toc_implementations'>Implementations</h2>
+<p>You can pass an implementation name (<code>hash</code>, <code>history</code>, <code>none</code>) to force a
+particular implementation to be used in your application.</p>
+<h3 class='anchorable-toc' id='toc_hashlocation'>HashLocation</h3>
+<p>Using <code>HashLocation</code> results in URLs with a <code>#</code> (hash sign) separating the
+server side URL portion of the URL from the portion that is used by Ember.
+This relies upon the <code>hashchange</code> event existing in the browser.</p>
 
-<p>You can pass it a <code>implementation</code> (&#39;hash&#39;, &#39;history&#39;, &#39;none&#39;) to force a
-particular implementation.</p>
+<p>Example:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">new</span><span class="delimiter">'</span></span>);
+  });
+});
+
+App.Router.reopen({
+  <span class="key">location</span>: <span class="string"><span class="delimiter">'</span><span class="content">hash</span><span class="delimiter">'</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>This will result in a posts.new url of <code>/#/posts/new</code>.</p>
+<h3 class='anchorable-toc' id='toc_historylocation'>HistoryLocation</h3>
+<p>Using <code>HistoryLocation</code> results in URLs that are indistinguishable from a
+standard URL. This relies upon the browser&#39;s <code>history</code> API.</p>
+
+<p>Example:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">new</span><span class="delimiter">'</span></span>);
+  });
+});
+
+App.Router.reopen({
+  <span class="key">location</span>: <span class="string"><span class="delimiter">'</span><span class="content">history</span><span class="delimiter">'</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>This will result in a posts.new url of <code>/posts/new</code>.</p>
+<h3 class='anchorable-toc' id='toc_nonelocation'>NoneLocation</h3>
+<p>Using <code>NoneLocation</code> causes Ember to not store the applications URL state
+in the actual URL. This is generally used for testing purposes, and is one
+of the changes made when calling <code>App.setupForTesting()</code>.</p>
+<h2 class='anchorable-toc' id='toc_location-api'>Location API</h2>
+<p>Each location implementation must provide the following methods:</p>
+
+<ul>
+<li>implementation: returns the string name used to reference the implementation.</li>
+<li>getURL: returns the current URL.</li>
+<li>setURL(path): sets the current URL.</li>
+<li>replaceURL(path): replace the current URL (optional).</li>
+<li>onUpdateURL(callback): triggers the callback when the URL changes.</li>
+<li>formatURL(url): formats <code>url</code> to be placed into <code>href</code> attribute.</li>
+</ul>
+
+<p>Calling setURL or replaceURL will not trigger onUpdateURL callbacks.</p>
 
   </div>
 
@@ -929,11 +1045,11 @@ particular implementation.</p>
         <p><h2>Methods</h2></p>
         <ul class="index-list">
           
-            <li class="method ">
+            <li class="method deprecated">
               <a href="#method_create">create</a>
             </li>
           
-            <li class="method ">
+            <li class="method deprecated">
               <a href="#method_registerImplementation">registerImplementation</a>
             </li>
           
@@ -964,7 +1080,7 @@ particular implementation.</p>
 
       
         
-<div id="method_create" class="method  item-entry">
+<div id="method_create" class="method deprecated item-entry">
   <h3 data-id="method_create" class="name anchorable-toc"><code>create</code></h3>
   <span class="args">
     (options)
@@ -973,6 +1089,8 @@ particular implementation.</p>
   <span class="type">Object</span>
 
 
+  
+  <span class="flag deprecated">deprecated</span>
 
 
 
@@ -987,7 +1105,7 @@ particular implementation.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.2.0/packages/ember-routing/lib/location/api.js#L36">packages/ember-routing/lib/location/api.js:36</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.3.0/packages/ember-routing/lib/location/api.js#L84">packages/ember-routing/lib/location/api.js:84</a>
 
     
 
@@ -996,18 +1114,22 @@ particular implementation.</p>
 
   
     <div class="description">
-      <p>Create an instance of a an implementation of the <code>location</code> API. Requires
-an options object with an <code>implementation</code> property.</p>
+      <p>This is deprecated in favor of using the container to lookup the location
+implementation as desired.</p>
 
-<p>Example</p>
+<p>For example:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
+4
+5
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> hashLocation = Ember.Location.create({<span class="key">implementation</span>: <span class="string"><span class="delimiter">'</span><span class="content">hash</span><span class="delimiter">'</span></span>});
-<span class="keyword">var</span> historyLocation = Ember.Location.create({<span class="key">implementation</span>: <span class="string"><span class="delimiter">'</span><span class="content">history</span><span class="delimiter">'</span></span>});
-<span class="keyword">var</span> noneLocation = Ember.Location.create({<span class="key">implementation</span>: <span class="string"><span class="delimiter">'</span><span class="content">none</span><span class="delimiter">'</span></span>});
+  <td class="code"><pre><span class="comment">// Given a location registered as follows:</span>
+container.register(<span class="string"><span class="delimiter">'</span><span class="content">location:history-test</span><span class="delimiter">'</span></span>, HistoryTestLocation);
+
+<span class="comment">// You could create a new instance via:</span>
+container.lookup(<span class="string"><span class="delimiter">'</span><span class="content">location:history-test</span><span class="delimiter">'</span></span>);
 </pre></td>
 </tr></table>
 </div></div>
@@ -1046,7 +1168,7 @@ an options object with an <code>implementation</code> property.</p>
 
       
         
-<div id="method_registerImplementation" class="method  item-entry">
+<div id="method_registerImplementation" class="method deprecated item-entry">
   <h3 data-id="method_registerImplementation" class="name anchorable-toc"><code>registerImplementation</code></h3>
   <span class="args">
     (name, implementation)
@@ -1054,6 +1176,8 @@ an options object with an <code>implementation</code> property.</p>
 
 
 
+  
+  <span class="flag deprecated">deprecated</span>
 
 
 
@@ -1068,7 +1192,7 @@ an options object with an <code>implementation</code> property.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.2.0/packages/ember-routing/lib/location/api.js#L62">packages/ember-routing/lib/location/api.js:62</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.3.0/packages/ember-routing/lib/location/api.js#L114">packages/ember-routing/lib/location/api.js:114</a>
 
     
 
@@ -1077,22 +1201,25 @@ an options object with an <code>implementation</code> property.</p>
 
   
     <div class="description">
-      <p>Registers a class that implements the <code>location</code> API with an implementation
-name. This implementation name can then be specified by the location property on
-the application&#39;s router class.</p>
+      <p>This is deprecated in favor of using the container to register the
+location implementation as desired.</p>
 
-<p>Example</p>
+<p>Example:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
+6
+7
 </pre></td>
-  <td class="code"><pre>Ember.Location.registerImplementation(<span class="string"><span class="delimiter">'</span><span class="content">history</span><span class="delimiter">'</span></span>, Ember.HistoryLocation);
+  <td class="code"><pre>Application.initializer({
+ <span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">history-test-location</span><span class="delimiter">&quot;</span></span>,
 
-App.Router.reopen({
-  <span class="key">location</span>: <span class="string"><span class="delimiter">'</span><span class="content">history</span><span class="delimiter">'</span></span>
+ <span class="function">initialize</span>: <span class="keyword">function</span>(container, application) {
+   application.register(<span class="string"><span class="delimiter">'</span><span class="content">location:history-test</span><span class="delimiter">'</span></span>, HistoryTestLocation);
+ }
 });
 </pre></td>
 </tr></table>

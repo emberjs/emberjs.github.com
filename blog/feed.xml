@@ -5,10 +5,186 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2013-12-22T00:00:00Z</updated>
+  <updated>2014-01-06T00:00:00Z</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>Ember 1.3.0 and 1.4 Beta Released</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2014/01/06/ember-1-3-0-and-ember-1-4-0-beta-released.html"/>
+    <id>http://emberjs.com/blog/2014/01/06/ember-1-3-0-and-ember-1-4-0-beta-released.html</id>
+    <published>2014-01-06T00:00:00Z</published>
+    <updated>2014-01-06T00:00:00Z</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;We are pleased to announce that both Ember.js 1.3.0 and the first beta in the 1.4 series
+have just been released. This comes as the third cycle of our six-week release
+process that began just after 1.0 was released.&lt;/p&gt;
+&lt;h3 class="anchorable-toc" id="toc_new-in-1-3"&gt;New in 1.3&lt;/h3&gt;&lt;h4 class="anchorable-toc" id="toc_non-array-dependencies-for-reducecomputed"&gt;Non-array Dependencies...&lt;/h4&gt;</summary>
+    <content type="html">&lt;p&gt;We are pleased to announce that both Ember.js 1.3.0 and the first beta in the 1.4 series
+have just been released. This comes as the third cycle of our six-week release
+process that began just after 1.0 was released.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_new-in-1-3'&gt;New in 1.3&lt;/h3&gt;&lt;h4 class='anchorable-toc' id='toc_non-array-dependencies-for-reducecomputed'&gt;Non-array Dependencies for ReduceComputed&lt;/h4&gt;
+&lt;p&gt;Generally, using &lt;code&gt;reduceComputed&lt;/code&gt; is all about efficiently computing the resulting value, but
+occasionally you might need to recompute every time. It is now possible to instruct
+&lt;code&gt;reduceComputed&lt;/code&gt; to completely recompute when an item is added/removed (instead of calling
+the &lt;code&gt;addedItem&lt;/code&gt; and &lt;code&gt;removedItem&lt;/code&gt; callbacks).&lt;/p&gt;
+
+&lt;p&gt;This is done by using either non-array dependent keys or adding &lt;code&gt;.[]&lt;/code&gt; to an array dependency.&lt;/p&gt;
+
+&lt;p&gt;Take a look at the following example:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+13
+14
+15
+16
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;Ember.Object.extend({
+  &lt;span class="comment"&gt;// When `string` is changed, `computed` is completely recomputed.&lt;/span&gt;
+  &lt;span class="key"&gt;string&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;a string&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;,
+
+  &lt;span class="comment"&gt;// When an item is added to `array`, `addedItem` is called.&lt;/span&gt;
+  &lt;span class="key"&gt;array&lt;/span&gt;: [],
+
+  &lt;span class="comment"&gt;// When an item is added to `anotherArray`, `computed` is completely&lt;/span&gt;
+  &lt;span class="comment"&gt;// recomputed.&lt;/span&gt;
+  &lt;span class="key"&gt;anotherArray&lt;/span&gt;: [],
+
+  &lt;span class="key"&gt;computed&lt;/span&gt;: Ember.reduceComputed(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;string&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;array&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;anotherArray.[]&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, {
+    &lt;span class="key"&gt;addedItem&lt;/span&gt;: addedItemCallback,
+    &lt;span class="key"&gt;removedItem&lt;/span&gt;: removedItemCallback
+  })
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;h4 class='anchorable-toc' id='toc_testing'&gt;Testing&lt;/h4&gt;
+&lt;p&gt;Testability of Ember applications is an ongoing priority, and the 1.3 release
+contains a number of updates that result in a dramatic improvement.&lt;/p&gt;
+&lt;h5 class='anchorable-toc' id='toc_custom-code-wait-code-hooks'&gt;Custom &lt;code&gt;wait()&lt;/code&gt; Hooks&lt;/h5&gt;
+&lt;p&gt;You can now specify custom hooks to notify the asynchronous test helpers when all
+async actions have completed. Under Ember 1.2 if you need to wait for an IndexDB
+action, the default &lt;code&gt;wait&lt;/code&gt; implementation would not wait until that
+action finished. Now you can simply register your own hook that will instruct wait
+that it is truly time to continue.&lt;/p&gt;
+
+&lt;p&gt;For example:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;Ember.Test.registerWaiter(&lt;span class="keyword"&gt;function&lt;/span&gt;() {
+  &lt;span class="keyword"&gt;return&lt;/span&gt; hasPendingTransactions() == &lt;span class="integer"&gt;0&lt;/span&gt;;
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;This instructs the &lt;code&gt;wait&lt;/code&gt; helper that the async actions are not finished until
+&lt;code&gt;hasPendingTransactions&lt;/code&gt; is zero.&lt;/p&gt;
+
+&lt;p&gt;You can find more details &lt;a href="https://github.com/emberjs/ember.js/pull/3433"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h5 class='anchorable-toc' id='toc_lazy-routing'&gt;Lazy Routing&lt;/h5&gt;
+&lt;p&gt;Under Ember.js 1.2 routing is started as soon as you boot your application and &lt;em&gt;before&lt;/em&gt;
+you call &lt;code&gt;visit&lt;/code&gt;. This results in duplicate routing which slows down your tests and also
+potentially causes your tests to be less isolated.&lt;/p&gt;
+
+&lt;p&gt;Under Ember.js 1.3 routing isn&amp;#39;t started until you call &lt;code&gt;visit&lt;/code&gt; for the first time. This
+provides a couple of improvements to the way you test:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;You do not need to call &lt;code&gt;App.advanceReadiness()&lt;/code&gt; in your test setup since the application
+is automatically in a deferred state until calling &lt;code&gt;visit&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;App.reset()&lt;/code&gt; now leaves the application in the same state as &lt;code&gt;App.setupForTesting()&lt;/code&gt; (a
+deferred state).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You can find more details &lt;a href="https://github.com/emberjs/ember.js/pull/3695"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h5 class='anchorable-toc' id='toc_stubbable-code-controllers-code-property'&gt;Stubbable &lt;code&gt;controllers&lt;/code&gt; Property&lt;/h5&gt;
+&lt;p&gt;Prior to Ember 1.3 you could not easily stub out any dependencies specified with &lt;code&gt;needs&lt;/code&gt;.
+Now you can unit test controllers and stub their dependencies all within
+&lt;code&gt;TheControllerClass.create()&lt;/code&gt; instead of having to use a container, register stubbed
+dependencies, and instantiate the controller via &lt;code&gt;container.lookup()&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Simplified example:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; BrotherController = Ember.Controller.extend({
+  &lt;span class="key"&gt;needs&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;sister&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;,
+  &lt;span class="key"&gt;foo&lt;/span&gt;: Ember.computed.alias(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;controllers.sister.foo&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
+});
+
+&lt;span class="keyword"&gt;var&lt;/span&gt; broController = BrotherController.create({
+  &lt;span class="key"&gt;controllers&lt;/span&gt;: {
+    &lt;span class="key"&gt;sister&lt;/span&gt;: { &lt;span class="key"&gt;foo&lt;/span&gt;: &lt;span class="integer"&gt;5&lt;/span&gt; }
+  }
+});
+
+equal(broController.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;foo&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;), &lt;span class="integer"&gt;5&lt;/span&gt;, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;`needs` dependencies can be stubbed&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;);
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Previously, specifying &lt;code&gt;controllers&lt;/code&gt; to &lt;code&gt;BrotherController&lt;/code&gt; would have resulted in an error,
+and now under Ember.js 1.3 this works as expected.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_promise-improvements'&gt;Promise Improvements&lt;/h4&gt;
+&lt;p&gt;Ember.js 1.3 has updated to &lt;code&gt;RSVP&lt;/code&gt; 3.0.3 which brings considerable performance improvements, a number
+of new features, and significantly improved documentation coverage.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;RSVP&lt;/code&gt; has added a number of features that allow external tooling to be able to inspect and track the labels, states, and
+values of promises. These improvements will be extremely useful when used with the next major
+version of the &lt;a href="https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi"&gt;Ember Inspector&lt;/a&gt;.
+Which will allow you to see a tree of promises and inspect their names, state, and fulfilled/rejected values.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;RSVP&lt;/code&gt; added a number of additional methods to &lt;code&gt;Promise&lt;/code&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Promise.cast&lt;/code&gt; - Coerces the given argument into a promise, or returns the argument if it is
+already a promise.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Promise.catch&lt;/code&gt; - &lt;code&gt;catch&lt;/code&gt; is essentially syntactic sugar for &lt;code&gt;then(undefined, onRejection)&lt;/code&gt; which
+makes it the same as the &lt;code&gt;catch&lt;/code&gt; block of a &lt;code&gt;try&lt;/code&gt;/&lt;code&gt;catch&lt;/code&gt; statement.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Promise.finally&lt;/code&gt; - The callback provided to &lt;code&gt;Promise.finally&lt;/code&gt; will be invoked regardless of the
+promises fate (both fulfilled and rejected promises). This is essentially similar to native
+&lt;code&gt;try&lt;/code&gt;/&lt;code&gt;catch&lt;/code&gt;/&lt;code&gt;finally&lt;/code&gt; statements.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Promise.race&lt;/code&gt; - Will return a new promise which will be settled with the value of
+the first promise that settles. In other words: given an array of promises &lt;code&gt;Promise.race&lt;/code&gt;
+will return the value from the first argument that settles (like the winner in a &amp;quot;race&amp;quot;).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Please review &lt;a href="/api/modules/RSVP.html"&gt;the documentation&lt;/a&gt; for more information.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_other-improvements'&gt;Other Improvements&lt;/h4&gt;
+&lt;p&gt;As usual, there are a ton of bug fixes and small improvements in this
+release. You can see a list of all the changes in the CHANGELOG:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.3.0/CHANGELOG.md"&gt;Ember.js 1.3.0 CHANGELOG&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.4.0-beta.1/CHANGELOG.md"&gt;Ember.js 1.4.0 beta 1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
   <entry>
     <title>Core Team Meeting Minutes - 2013/12/20</title>
     <link rel="alternate" href="http://emberjs.com/blog/2013/12/22/core-team-meeting-minutes-2013-12-20.html"/>
@@ -703,95 +879,6 @@ to download. Our apologies for the inconvenience.&lt;/p&gt;
 &lt;p&gt;While we were at it, we also released the second 1.2 beta which includes
 a couple of bug fixes. 1.2.0-beta.2 is also available at
 &lt;a href="/builds"&gt;emberjs.com/builds&lt;/a&gt;.&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Ember 1.1.1 and 1.2 Beta Released</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2013/10/24/ember-1-1-1-and-ember-1-2-0-beta-released.html"/>
-    <id>http://emberjs.com/blog/2013/10/24/ember-1-1-1-and-ember-1-2-0-beta-released.html</id>
-    <published>2013-10-24T00:00:00Z</published>
-    <updated>2013-10-24T00:00:00Z</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Hot off the heels of our 1.0 release, we've got two new bundles of
-goodness for you to try out today.&lt;/p&gt;
-
-&lt;p&gt;First up is Ember.js 1.1.1, the inaugural stable release after our
-&lt;a href="/blog/2013/09/06/new-ember-release-process.html"&gt;switch to a Chrome-like six week release
-cycle&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Because this is the kickoff release...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Hot off the heels of our 1.0 release, we&amp;#39;ve got two new bundles of
-goodness for you to try out today.&lt;/p&gt;
-
-&lt;p&gt;First up is Ember.js 1.1.1, the inaugural stable release after our
-&lt;a href="/blog/2013/09/06/new-ember-release-process.html"&gt;switch to a Chrome-like six week release
-cycle&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Because this is the kickoff release of the new process, there are very
-few new features and the delta between 1.0 and 1.1.1 is very small. This
-release is composed primarily of bug fixes and performance improvements,
-so we recommend you upgrade right away.&lt;/p&gt;
-
-&lt;p&gt;For a list of exactly what&amp;#39;s new, see the &lt;a href="https://github.com/emberjs/ember.js/blob/v1.1.1/CHANGELOG"&gt;CHANGELOG&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;(If you&amp;#39;re wondering why 1.1.1 and not 1.1, there was &lt;a href="https://github.com/emberjs/ember.js/issues/3596"&gt;a regression
-introduced in Ember.Object.create() that could break 1.0-compatible
-apps&lt;/a&gt; that we didn&amp;#39;t
-notice until after we&amp;#39;d tagged the 1.1 release.)&lt;/p&gt;
-
-&lt;p&gt;To coincide with the stable release, we&amp;#39;ve also got a new beta release
-of Ember 1.2. Beta releases are intended to get more eyeballs on new
-features that look ready to go, but may have bugs or edge cases that we
-haven&amp;#39;t yet sussed out.&lt;/p&gt;
-
-&lt;p&gt;The only changes between a beta release and the stable version should be
-bug fixes and removing features that originally looked ready but didn&amp;#39;t
-end up making the cut.&lt;/p&gt;
-
-&lt;p&gt;For a full list of the new features in Ember 1.2 beta, see the &lt;a href="https://github.com/emberjs/ember.js/blob/v1.2.0-beta.1/CHANGELOG"&gt;CHANGELOG&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;As always, Ember 1.1 and 1.2 beta are available at
-&lt;a href="/builds"&gt;emberjs.com/builds&lt;/a&gt;. If you&amp;#39;re feeling particularly
-adventurous, you can also grab a Canary build to see what we&amp;#39;re in the
-middle of working on, though do note that all new APIs in Canary are
-subject to change. To see what features are available to be enabled, see
-&lt;a href="https://github.com/emberjs/ember.js/blob/master/FEATURES.md"&gt;FEATURES.md&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;We&amp;#39;re excited about kicking off the new release process because we think
-that it will allow us to deliver a higher-quality product more
-frequently. We also believe that using feature flags in our Canary
-builds will allow us to more easily experiment with new APIs, which
-translates to more features faster.&lt;/p&gt;
-
-&lt;p&gt;As always, if you find bugs or need help, please &lt;a href="https://github.com/emberjs/ember.js/issues"&gt;file an issue on
-GitHub&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Lastly, my sincere thanks to everyone who has contributed features, bug
-reports and bug fixes to this release.&lt;/p&gt;
-
-&lt;p&gt;In particular, I&amp;#39;d like to call out &lt;a href="https://twitter.com/rwjblue"&gt;Robert Jackson
-(@rwjblue)&lt;/a&gt; and &lt;a href="https://twitter.com/thomasABoyt"&gt;Thomas Boyt
-(@thomasABoyt)&lt;/a&gt; for their superheroic
-efforts on the infrastructure required to make this type of release
-process work smoothly.&lt;/p&gt;
-
-&lt;p&gt;Early on, Yehuda and I made a bet that investing in making Ember.js a
-community project would pay dividends. We&amp;#39;ve sometimes questioned that
-decision when going up against better-funded competitors, but this
-release, I think, vindicates our decision.&lt;/p&gt;
-
-&lt;p&gt;This is &lt;a href="https://github.com/emberjs/ember.js/pulse/monthly"&gt;a truly community-driven release&lt;/a&gt;, and both Yehuda and I were
-hands-off through most of it. I am deeply grateful to everyone who
-sacrificed hours of their nights and weekends to help us build something
-that matters.&lt;/p&gt;
-
-&lt;p&gt;If you&amp;#39;d like to be a part of it, we have a welcoming and helpful
-community, and we&amp;#39;d love to have you join. Come see us in #emberjs on
-Freenode to ask questions and get involved.&lt;/p&gt;
-
-&lt;p&gt;Enjoy the new releases, and go forth and build great things!&lt;/p&gt;
 </content>
   </entry>
 </feed>
