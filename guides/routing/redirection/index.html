@@ -565,7 +565,18 @@
         </h1>
       
     <hr>
-    <h3 class='anchorable-toc' id='toc_before-the-model-is-known'>Before the model is known</h3>
+    <h3 class='anchorable-toc' id='toc_transitioning-and-redirecting'>Transitioning and Redirecting</h3>
+<p>Calling <code>transitionTo</code> from a route or <code>transitionToRoute</code> from a controller
+will stop any transition currently in progress and start a new one, functioning
+as a redirect. <code>transitionTo</code> takes parameters and behaves exactly like the <a href="/guides/templates/links">link-to</a> helper:</p>
+
+<ul>
+<li><p>If you transition into a route without dynamic segments that route&#39;s <code>model</code> hook
+will always run.</p></li>
+<li><p>If the new route has dynamic segments, you need to pass either a <em>model</em> or an <em>identifier</em> for each segment.
+Passing a model will skip that segment&#39;s <code>model</code> hook.  Passing an identifier will run the <code>model</code> hook and you&#39;ll be able to access the identifier in the params. See <a href="/guides/templates/links">Links</a> for more detail.</p></li>
+</ul>
+<h3 class='anchorable-toc' id='toc_before-the-model-is-known'>Before the model is known</h3>
 <p>If you want to redirect from one route to another, you can do the transition in
 the <code>beforeModel</code> hook of your route handler.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -626,8 +637,8 @@ App.PostsRoute = Ember.Route.extend({
 </pre></td>
 </tr></table>
 </div></div>
-<p>When transitioning to the <code>PostsRoute</code> it turns out that there is only one post,
-the current transition is aborted in favor of redirecting to the <code>PostRoute</code>
+<p>When transitioning to the <code>PostsRoute</code> if it turns out that there is only one post,
+the current transition will be aborted in favor of redirecting to the <code>PostRoute</code>
 with the single post object being its model.</p>
 <h3 class='anchorable-toc' id='toc_based-on-other-application-state'>Based on other application state</h3>
 <p>You can conditionally transition based on some other application state.</p>

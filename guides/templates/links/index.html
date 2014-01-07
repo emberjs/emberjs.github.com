@@ -627,14 +627,12 @@ object instance is passed into the helper, then the link is given
 <li>The name of a route. In this example, it would be <code>index</code>, <code>photos</code>, or
 <code>photos.edit</code>.</li>
 <li>At most one model for each <a href="/guides/routing/defining-your-routes/#toc_dynamic-segments">dynamic segment</a>.
-By default, Ember.js will replace each segment with the
-value of the corresponding object&#39;s <code>id</code> property.</li>
+By default, Ember.js will replace each segment with the value of the corresponding object&#39;s <code>id</code> property.
+If there is no model to pass to the helper, you can provide an explicit identifier value instead.
+The value will be filled into the <a href="/guides/routing/defining-your-routes/#toc_dynamic-segments">dynamic segment</a>
+of the route, and will make sure that the <code>model</code> hook is triggered.</li>
 <li>An optional title which will be bound to the <code>a</code> title attribute</li>
 </ul>
-
-<p>If there is no model to pass to the helper, you can provide an explicit identifier value instead.
-The value will be filled into the <a href="/guides/routing/defining-your-routes/#toc_dynamic-segments">dynamic segment</a>
-of the route, and will make sure that the <code>model</code> hook is triggered.</p>
 <div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -650,7 +648,7 @@ of the route, and will make sure that the <code>model</code> hook is triggered.<
 </pre></td>
 </tr></table>
 </div></div><h3 class='anchorable-toc' id='toc_example-for-multiple-segments'>Example for Multiple Segments</h3>
-<p>If the route is nested, you can supply a model for each dynamic
+<p>If the route is nested, you can supply a model or an identifier for each dynamic
 segment.</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -703,15 +701,16 @@ The <code>:photo_id</code> segment will use the current photo.</p>
 5
 </pre></td>
   <td class="code"><pre><span class="tag">&lt;p&gt;</span>
-  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">link-to</span> <span class="error">'</span><span class="attribute-name">photo.comment</span><span class="error">'</span> <span class="attribute-name">nextPhoto</span> <span class="attribute-name">primaryComment</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">link-to</span> <span class="error">'</span><span class="attribute-name">photo.comment</span><span class="error">'</span> <span class="attribute-name">5</span> <span class="attribute-name">primaryComment</span><span class="inline-delimiter">}}</span></span>
     Main Comment for the Next Photo
   <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">link-to</span><span class="inline-delimiter">}}</span></span>
 <span class="tag">&lt;/p&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
-<p>In this case, the models specified will populate both the <code>:photo_id</code>
-and <code>:comment_id</code>.</p>
+<p>In the above example, the model hook for <code>PhotoRoute</code> will run with <code>params.photo_id = 5</code>.  The <code>model</code> hook for
+<code>CommentRoute</code> <em>won&#39;t</em> run since you supplied a model object for the <code>comment</code> segment. The comment&#39;s id will
+populate the url according to <code>CommentRoute</code>&#39;s <code>serialize</code> hook.</p>
 
     
       <footer>
