@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Guides</title>
+    <title>Ember.js - Routing: Query Parameters</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -38,7 +38,7 @@
   
   </head>
 
-  <body class="guides guides_models guides_models_filtering-records guides_models_filtering-records_index">
+  <body class="guides guides_routing guides_routing_query-params guides_routing_query-params_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -277,9 +277,9 @@
               <a href="/guides/templates/writing-helpers">Writing Helpers</a>
             </li>
           </ol></li>
-          <li class="level-1">
+          <li class="level-1 selected">
             <a href="/guides/routing">Routing</a>
-            <ol>
+            <ol class='selected'>
         
             <li class="level-3">
               <a href="/guides/routing">Introduction</a>
@@ -313,7 +313,7 @@
               <a href="/guides/routing/specifying-the-location-api">Specifying the URL Type</a>
             </li>
           
-            <li class="level-3">
+            <li class="level-3 sub-selected">
               <a href="/guides/routing/query-params">Query Parameters</a>
             </li>
           
@@ -381,9 +381,9 @@
               <a href="/guides/controllers/dependencies-between-controllers">Managing Dependencies Between Controllers</a>
             </li>
           </ol></li>
-          <li class="level-1 selected">
+          <li class="level-1">
             <a href="/guides/models">Models</a>
-            <ol class='selected'>
+            <ol>
         
             <li class="level-3">
               <a href="/guides/models">Introduction</a>
@@ -562,21 +562,321 @@
   
 
   
+    
+          <div class="under_construction_warning">
+            <h3>
+              <div class="msg">
+                <strong>WARNING:</strong> query params are an experimental feature. You must be using a recent canary build of Ember, and enable the <code>query-params-new</code> feature flag. For more info on enabling feature flags visit <a href="http://emberjs.com/guides/configuring-ember/feature-flags/">the Feature Flags guide</a>
+              </div>
+            </h3>
+          </div>
+        
+  
   <div class="chapter">
     
+        <h1>Query Parameters
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/routing/query-params.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
+        </h1>
+      
     <hr>
-    
+    <p>In general, the dynamic segments of a URL are a serialized representation 
+of a model, commonly for example the model&#39;s ID. However, sometimes you 
+need to serialize other application state into the URL. This could be 
+further parameters that affect the loading of the model from the server, 
+e.g. what page of a result set you are viewing, or it could be 
+information about client side state, e.g. sort order when the records 
+are sorted on the client.</p>
+
+<p>There can also be more global information that you want to serialize into 
+the url, for example if you want to store an auth token in the URL, or 
+filter all models in your application globally. It&#39;s also possible that
+there are a lot of parameters that you want to serialize in the url that 
+are inconvenient to store in normal dynamic segments. This might apply 
+when you have a map view and need to store X, Y, and zoom coordinates
+along with a set of visible layers on the map. Although this is possible
+to do with dynamic segments, it can be inconvenient. For any of these use 
+case, you can consider using query params instead.</p>
+<h3 class='anchorable-toc' id='toc_query-parameters-are-controller-driven'>Query Parameters are Controller-Driven</h3>
+<p>Support for query parameters is built right into controllers, unlike
+other aspects of the URL which are specified and managed entirely at
+the router level. First class support for query params at the 
+controller level allows for a simple yet powerful API for updating and
+responding to changes in query params without requiring the developer to
+manually install and manage bindings/observers to keep the URL and 
+controller state in sync. </p>
+<h3 class='anchorable-toc' id='toc_specifying-query-parameters'>Specifying Query Parameters</h3>
+<p>Query params can be specified by route-driven controllers. Recall that,
+given a route specified by <code>this.route(&#39;articles&#39;);</code>, the value resolved
+from the <code>ArticlesRoute</code>&#39;s <code>model</code> hook will be loaded into 
+<code>ArticlesController</code> as its <code>model</code> property. While <code>ArticlesRoute</code> has
+the option of loading data into different controllers in the
+<code>setupController</code> hook, <code>ArticlesController</code> is considered to be the
+&quot;route-driven&quot; controller in this case, and therefore has the ability to
+specify query params. </p>
+
+<p><aside>
+  <strong>Note:</strong> The controller associated with a given route can be changed
+  by specifying the <code>controllerName</code> property on that route.
+</aside></p>
+
+<p>Let&#39;s say we&#39;d like to add a <code>category</code> 
+query parameter that will filter out all the articles that haven&#39;t
+been categorized as popular. To do this, we specify <code>&#39;category&#39;</code>
+as one of <code>ArticlesController</code>&#39;s <code>queryParams</code>:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>App.ArticlesController = Ember.ArrayController.extend({
+  <span class="key">queryParams</span>: [<span class="string"><span class="delimiter">'</span><span class="content">category</span><span class="delimiter">'</span></span>],
+  <span class="key">category</span>: <span class="predefined-constant">null</span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>This sets up a binding between the <code>category</code> query param in the URL,
+and the <code>category</code> property on <code>ArticlesController</code>. In other words,
+once the <code>articles</code> route has been entered, any changes to the
+<code>category</code> query param in the URL will update the <code>category</code> property 
+on <code>ArticlesController</code>, and vice versa.</p>
+
+<p>Now we just need to define a computed property of our category-filtered
+array that <code>articles</code> template will render:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+</pre></td>
+  <td class="code"><pre>App.ArticlesController = Ember.ArrayController.extend({
+  <span class="key">queryParams</span>: [<span class="string"><span class="delimiter">'</span><span class="content">category</span><span class="delimiter">'</span></span>],
+  <span class="key">category</span>: <span class="predefined-constant">null</span>,
+
+  <span class="function">filteredArticles</span>: <span class="keyword">function</span>() {
+    <span class="keyword">var</span> category = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">category</span><span class="delimiter">'</span></span>);
+    <span class="keyword">var</span> articles = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">model</span><span class="delimiter">'</span></span>);
+
+    <span class="keyword">if</span> (category) {
+      <span class="keyword">return</span> articles.filterProperty(<span class="string"><span class="delimiter">'</span><span class="content">category</span><span class="delimiter">'</span></span>, category);
+    } <span class="keyword">else</span> {
+      <span class="keyword">return</span> articles;
+    }
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">category</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">model</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>With this code, we have established the following behaviors:</p>
+
+<ol>
+<li>If the user navigates to <code>/articles</code>, <code>category</code> will be <code>null</code>, so
+the articles won&#39;t be filtered.</li>
+<li>If the user navigates to <code>/articles?articles[category]=recent</code>, 
+<code>category</code> will be set to <code>&quot;recent&quot;</code>, so articles will be filtered.</li>
+<li>Once inside the the <code>articles</code> route, any changes to the <code>category</code>
+property on <code>ArticlesController</code> will cause the URL to update the
+query param. By default, a query param property change won&#39;t cause a
+full router transition (i.e. it won&#39;t call <code>model</code> hooks and
+<code>setupController</code>, etc.); it will only update the URL.</li>
+</ol>
+<h3 class='anchorable-toc' id='toc_link-to-helper'>link-to Helper</h3>
+<p>The <code>link-to</code> helper supports specifying query params by way of the
+<code>query-params</code> subexpression helper.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>// Explicitly set target query para
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">link-to</span> <span class="error">'</span><span class="attribute-name">posts</span><span class="error">'</span> <span class="error">(</span><span class="attribute-name">query-params</span> <span class="attribute-name">direction</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">asc</span><span class="delimiter">&quot;</span></span><span class="error">)</span><span class="inline-delimiter">}}</span></span>Sort<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">link-to</span><span class="inline-delimiter">}}</span></span>
+
+// Binding is also supported
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">link-to</span> <span class="error">'</span><span class="attribute-name">posts</span><span class="error">'</span> <span class="error">(</span><span class="attribute-name">query-params</span> <span class="attribute-name">direction</span>=<span class="attribute-value">otherDirection</span><span class="error">)</span><span class="inline-delimiter">}}</span></span>Sort<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">link-to</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>In the above examples, <code>direction</code> is presumably a query param property
+on <code>PostsController</code>, but it could also refer to a <code>direction</code> property
+on any of the controllers associated with the <code>posts</code> route hierarchy,
+matching the leaf-most controller with the supplied property name.</p>
+
+<p><aside>
+  <strong>Note:</strong> Subexpressions are only available in Handlebars 1.3
+  or later.
+</aside></p>
+
+<p>The link-to helper takes into account query parameters when determining 
+its &quot;active&quot; state, and will set the class appropriately. The active state
+is determined by working out if you clicked on the link, would the query
+params end up the same? You don&#39;t have to supply all of the current, 
+active query params for this to be true.</p>
+<h3 class='anchorable-toc' id='toc_transitionto'>transitionTo</h3>
+<p><code>Route#transitionTo</code> (and <code>Controller#transitionToRoute</code>) now 
+accepts a final argument, which is an object with 
+the key <code>queryParams</code>.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="local-variable">this</span>.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, object, {<span class="key">queryParams</span>: {<span class="key">showDetails</span>: <span class="predefined-constant">true</span>}});
+<span class="local-variable">this</span>.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>, {<span class="key">queryParams</span>: {<span class="key">sort</span>: <span class="string"><span class="delimiter">'</span><span class="content">title</span><span class="delimiter">'</span></span>}});
+
+<span class="comment">// if you just want to transition the query parameters without changing the route</span>
+<span class="local-variable">this</span>.transitionTo({<span class="key">queryParams</span>: {<span class="key">direction</span>: <span class="string"><span class="delimiter">'</span><span class="content">asc</span><span class="delimiter">'</span></span>}});
+</pre></td>
+</tr></table>
+</div></div>
+<p>You can also use add query params to URL transitions:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="local-variable">this</span>.transitionTo(<span class="string"><span class="delimiter">&quot;</span><span class="content">/posts/1?sort=date&amp;showDetails=true</span><span class="delimiter">&quot;</span></span>);
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_opting-into-a-full-transition'>Opting into a full transition</h3>
+<p>Keep in mind that if the arguments provided to <code>transitionTo</code> 
+or <code>link-to</code> only correspond to a change in query param values,
+and not a change in the route hierarchy, it is not considered a 
+full transition, which means that hooks like <code>model</code> and
+<code>setupController</code> won&#39;t fire by default, but rather only 
+controller properties will be updated with new query param values, as
+will the URL. </p>
+
+<p>But some query param changes necessitate loading data from the server,
+in which case it is desirable to opt into a full-on transition. To opt
+into a full transition, you can provide a handler for the
+<code>queryParamsDidChange</code> action that calls <code>Route#refresh</code>, e.g.:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+</pre></td>
+  <td class="code"><pre>App.ArticlesRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>(params) {
+    <span class="comment">// This gets called upon entering 'articles' route</span>
+    <span class="comment">// for the first time, and we opt in refiring it</span>
+    <span class="comment">// upon query param changes via `queryParamsDidChange` action</span>
+
+    <span class="comment">// params has format of { category: &quot;someValueOrJustNull&quot; },</span>
+    <span class="comment">// which we can just forward to the server.</span>
+    <span class="keyword">return</span> <span class="local-variable">this</span>.store.findQuery(<span class="string"><span class="delimiter">'</span><span class="content">articles</span><span class="delimiter">'</span></span>, params);
+  },
+  <span class="key">actions</span>: {
+    <span class="function">queryParamsDidChange</span>: <span class="keyword">function</span>() {
+      <span class="local-variable">this</span>.refresh();
+    }
+  }
+});
+
+App.ArticlesController = Ember.ArrayController.extend({
+  <span class="key">queryParams</span>: [<span class="string"><span class="delimiter">'</span><span class="content">category</span><span class="delimiter">'</span></span>],
+  <span class="key">category</span>: <span class="predefined-constant">null</span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p><code>Route#refresh</code> is a general purpose method that essentially invalidates
+the data currently loaded data into a route hierarchy, causing <code>model</code>
+hooks on the route you call it on (and any child routes) to refire. If
+the new models returned from the hooks are different from what was
+previously loaded, <code>setupController</code> hooks will refire as well, similar
+to what would happen when navigating between <code>/users/123</code> and
+<code>/users/456</code>.</p>
+
+<p>In the case of query parameters, we can use <code>Route#refresh</code> to opt into
+a full transition in response to a query param change which otherwise
+would have only caused controller properties to update.</p>
+
+<p><aside>
+  <strong>Note:</strong> <code>Route#refresh</code> is general purpose, but resides behind the
+  <code>query-params-new</code> feature flag along with all of the API being
+  described by this guide.
+</aside></p>
+<h3 class='anchorable-toc' id='toc_stickiness'>&quot;Stickiness&quot;</h3>
+<p>By default, query params are &quot;sticky&quot;. This means that if you are on a
+url like <code>/posts?sort=name</code>, and you executed 
+<code>transitionTo({queryParams: {direction: &#39;desc&#39;}})</code> or clicked 
+<code>{{#link-to &#39;posts&#39; (query-params direction=desc)}}</code>, the resulting url will be 
+<code>/posts?sort=name&amp;direction=desc</code>.</p>
+
+<p>To clear query params, give a falsy value, e.g.
+<code>transitionTo({queryParams: {direction: null}})</code> or 
+<code>{{#link-to &#39;posts&#39; (query-params direction=false)}}</code></p>
+<h3 class='anchorable-toc' id='toc_boolean-query-params'>Boolean Query params</h3>
+<p>Boolean query params are serialized without the truth value,
+e.g. <code>transitionTo(&#39;posts&#39;, {queryParams: {sort: true}})</code> 
+would result in the url <code>/posts?sort</code></p>
+
+<p>This is for two reasons:</p>
+
+<ol>
+<li>passing false is the way to clear query parameters</li>
+<li>The string &quot;false&quot; is truthy in javascript. i.e. 
+<code>if (&quot;false&quot;) { alert(&#39;oops&#39;); }</code> will show an alert.</li>
+</ol>
+<h2 class='anchorable-toc' id='toc_examples'>Examples</h2>
+<ul>
+<li><a href="http://emberjs.jsbin.com/ucanam/3008">Search queries</a></li>
+<li><a href="http://emberjs.jsbin.com/ucanam/2937">Sort: client-side, no refiring of model hook</a></li>
+<li><a href="http://emberjs.jsbin.com/ucanam/2942">Sort: server-side, refire model hook</a></li>
+<li><a href="http://emberjs.jsbin.com/ucanam/2950">Pagination + Sorting</a></li>
+<li><a href="http://emberjs.jsbin.com/ucanam/2708/edit">Boolean values. False value removes QP from URL</a></li>
+<li><a href="http://emberjs.jsbin.com/ucanam/2719/edit">Global query params on app route</a></li>
+<li><a href="http://emberjs.jsbin.com/ucanam/2711/edit">Opt-in to full transition via refresh()</a></li>
+<li><a href="http://emberjs.jsbin.com/ucanam/2710/edit">replaceUrl by changing controller QP property</a></li>
+<li><a href="http://emberjs.jsbin.com/ucanam/2706">w/ {{partial}} helper for easy tabbing</a></li>
+<li><a href="http://emberjs.jsbin.com/ucanam/2718#/about?about%5BshowThing%5D">link-to with no route name, only QP change</a></li>
+<li><a href="http://emberjs.jsbin.com/ucanam/2703/edit">Complex: serializing textarea content into URL (and subexpressions))</a></li>
+<li><a href="http://emberjs.jsbin.com/ucanam/2849">Arrays</a></li>
+</ul>
+
     
       <footer>
         
-          <a class="previous-guide" href="/guides/controllers/dependencies-between-controllers">
-             ← Controllers: Managing Dependencies Between Controllers
+          <a class="previous-guide" href="/guides/routing/specifying-the-location-api">
+            ← Specifying the URL Type
           </a>
          
-            <a class="next-guide" href="/guides/views">
-               We're done with Models. Next up: Views - Introduction →
-            </a>
-          
+        <a class="next-guide" href="/guides/routing/asynchronous-routing">
+          Asynchronous Routing →
+        </a>
+      
       </footer>
       
   </div>
