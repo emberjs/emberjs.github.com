@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - DS.AttributeChange</title>
+    <title>Ember.js - DS.InvalidError</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -170,7 +170,7 @@
         
           
             
-          <li class="level-3 sub-selected">
+          <li class="level-3 ">
           
               <a href="/api/data/classes/DS.AttributeChange.html">DS.AttributeChange</a>
             
@@ -234,7 +234,7 @@
         
           
             
-          <li class="level-3 ">
+          <li class="level-3 sub-selected">
           
               <a href="/api/data/classes/DS.InvalidError.html">DS.InvalidError</a>
             
@@ -408,22 +408,22 @@
 
   
   <h1 class="api-header">
-  DS.AttributeChange Class
+  DS.InvalidError Class
   
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v1.0.0-beta.5/packages/ember-data/lib/system/changes/attribute_change.js#L5">packages/ember-data/lib/system/changes/attribute_change.js:5</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v1.0.0-beta.5/packages/ember-data/lib/system/adapter.js#L10">packages/ember-data/lib/system/adapter.js:10</a>
   
 </h1>
 
 <hr>
 
-<p>PRIVATE</p>
+
 <div class="class-info">
   
 
   
 
   
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.5/packages/ember-data/lib/system/changes/attribute_change.js#L5">packages/ember-data/lib/system/changes/attribute_change.js:5</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.5/packages/ember-data/lib/system/adapter.js#L10">packages/ember-data/lib/system/adapter.js:10</a></p>
   
 
   
@@ -432,126 +432,47 @@
 </div>
 
   <div class="description">
-    <p>An AttributeChange object is created whenever a record&#39;s
-attribute changes value. It is used to track changes to a
-record between transaction commits.</p>
+    <p>A <code>DS.InvalidError</code> is used by an adapter to signal the external API
+was unable to process a request because the content was not
+semantically correct or meaningful per the API. Usually this means a
+record failed some form of server side validation. When a promise
+from an adapter is rejected with a <code>DS.InvalidError</code> the record will
+transition to the <code>invalid</code> state and the errors will be set to the
+<code>errors</code> property on the record.</p>
 
+<p>Example</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre>App.ApplicationAdapter = DS.RESTAdapter.extend({
+  <span class="function">ajaxError</span>: <span class="keyword">function</span>(jqXHR) {
+    <span class="keyword">var</span> error = <span class="local-variable">this</span>._super(jqXHR);
+
+    <span class="keyword">if</span> (jqXHR &amp;&amp; jqXHR.status === <span class="integer">422</span>) {
+      <span class="keyword">var</span> jsonErrors = Ember.<span class="predefined">$</span>.parseJSON(jqXHR.responseText)[<span class="string"><span class="delimiter">&quot;</span><span class="content">errors</span><span class="delimiter">&quot;</span></span>];
+      <span class="keyword">return</span> <span class="keyword">new</span> DS.InvalidError(jsonErrors);
+    } <span class="keyword">else</span> {
+      <span class="keyword">return</span> error;
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
   </div>
 
 
-  <div class="tabs">
-    <ul>
-      <li><a href="#index">Index</a></li>
-      
-        <li><a href="#methods">Methods</a></li>
-      
-    </ul>
-    <div class="pane" id="index">
-      <div id='api-options'>
-  Show:
-  <label>
-    <input type='checkbox' data-type='inherited' checked>
-    Inherited
-  </label>
-  <label>
-    <input type='checkbox' data-type='protected'>
-    Protected
-  </label>
-  <label>
-    <input type='checkbox' data-type='private'>
-    Private
-  </label>
-  <label>
-    <input type='checkbox' data-type='deprecated'>
-    Deprecated
-  </label>
-</div>
-
-      
-        <p><h2>Methods</h2></p>
-        <ul class="index-list">
-          
-            <li class="method ">
-              <a href="#method_destroy">destroy</a>
-            </li>
-          
-        </ul>
-      
-    </div>
-  
-    <div class="pane" id="methods">
-      <div id='api-options'>
-  Show:
-  <label>
-    <input type='checkbox' data-type='inherited' checked>
-    Inherited
-  </label>
-  <label>
-    <input type='checkbox' data-type='protected'>
-    Protected
-  </label>
-  <label>
-    <input type='checkbox' data-type='private'>
-    Private
-  </label>
-  <label>
-    <input type='checkbox' data-type='deprecated'>
-    Deprecated
-  </label>
-</div>
-
-      
-        
-<div id="method_destroy" class="method  item-entry">
-  <h3 data-id="method_destroy" class="name anchorable-toc"><code>destroy</code></h3>
-
-
-
-
-
-
-
-
-
-  <div class="meta">
-      
-        
-          
-            Defined in
-          
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.5/packages/ember-data/lib/system/changes/attribute_change.js#L38">packages/ember-data/lib/system/changes/attribute_change.js:38</a>
-
-    
-
-    
-  </div>
-
-  
-    <div class="description">
-      <p>If the AttributeChange is destroyed (either by being rolled back
-or being committed), remove it from the list of pending changes
-on the record.</p>
-
-    </div>
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-
-  
-</div>
-
-      
-    </div>
-  
-  </div>
 
 
       </div>

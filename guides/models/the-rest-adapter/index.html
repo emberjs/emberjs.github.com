@@ -565,11 +565,12 @@
   <div class="chapter">
     
     <hr>
-    <p>By default, your store will use <code>DS.RESTAdapter</code> to load and save
-records. The REST adapter assumes that the URLs and JSON associated with
-each model are conventional; this means that, if you follow the rules,
-you will not need to configure the adapter or write any code in order to
-get started.</p>
+    <p>By default, your store will use
+<a href="/api/data/classes/DS.RESTAdapter.html">DS.RESTAdapter</a> to load and
+save records. The RESTAdapter assumes that the URLs and JSON
+associated with each model are conventional; this means that, if you
+follow the rules, you will not need to configure the adapter or write
+any code in order to get started.</p>
 <h3 class='anchorable-toc' id='toc_url-conventions'>URL Conventions</h3>
 <p>The REST adapter is smart enough to determine the URLs it communicates
 with based on the name of the model. For example, if you ask for a
@@ -577,7 +578,7 @@ with based on the name of the model. For example, if you ask for a
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> post = App.Post.find(<span class="integer">1</span>);
+  <td class="code"><pre><span class="keyword">var</span> post = store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="integer">1</span>);
 </pre></td>
 </tr></table>
 </div></div>
@@ -665,7 +666,7 @@ be nested inside a property called <code>person</code>:</p>
 </pre></td>
 </tr></table>
 </div></div><h4 class='anchorable-toc' id='toc_attribute-names'>Attribute Names</h4>
-<p>Attribute names should be  camelized.  For example, if you have a model like this:</p>
+<p>Attribute names should be camelized.  For example, if you have a model like this:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -703,9 +704,10 @@ be nested inside a property called <code>person</code>:</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>Irregular keys can be mapped on the adapter. If the JSON
-has a key of <code>lastNameOfPerson</code>, and the desired attribute
-name is simply <code>lastName</code>, inform the adapter:</p>
+<p>Irregular keys can be mapped with a custom serializer. If the JSON for
+the <code>Person</code> model has a key of <code>lastNameOfPerson</code>, and the desired
+attribute name is simply <code>lastName</code>, then create a custom Serializer
+for the model and override the <code>normalizeHash</code> property.</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -713,12 +715,24 @@ name is simply <code>lastName</code>, inform the adapter:</p>
 4
 5
 6
+7
+8
+9
+<strong>10</strong>
+11
+12
 </pre></td>
   <td class="code"><pre>App.Person = DS.Model.extend({
   <span class="key">lastName</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>)
 });
-DS.RESTAdapter.map(<span class="string"><span class="delimiter">'</span><span class="content">App.Person</span><span class="delimiter">'</span></span>, {
-  <span class="key">lastName</span>: { <span class="key">key</span>: <span class="string"><span class="delimiter">'</span><span class="content">lastNameOfPerson</span><span class="delimiter">'</span></span> }
+App.PersonSerializer = DS.RESTSerializer.extend({
+  <span class="key">normalizeHash</span>: {
+    <span class="function">lastNameOfPerson</span>: <span class="keyword">function</span>(hash) {
+      hash.lastName = hash.lastNameOfPerson;
+      <span class="keyword">delete</span> hash.lastNameOfPerson;
+      <span class="keyword">return</span> hash;
+    }
+  }
 });
 </pre></td>
 </tr></table>
@@ -746,7 +760,7 @@ have a model with a <code>hasMany</code> relationship:</p>
 </pre></td>
   <td class="code"><pre>{
   <span class="key"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: {
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">commentIds</span><span class="delimiter">&quot;</span></span>: [<span class="integer">1</span>, <span class="integer">2</span>, <span class="integer">3</span>]
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">comments</span><span class="delimiter">&quot;</span></span>: [<span class="integer">1</span>, <span class="integer">2</span>, <span class="integer">3</span>]
   }
 }
 </pre></td>
@@ -779,9 +793,26 @@ camelized version of the Ember Data model&#39;s name, with the string
 </pre></td>
   <td class="code"><pre>{
   <span class="key"><span class="delimiter">&quot;</span><span class="content">comment</span><span class="delimiter">&quot;</span></span>: {
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">postId</span><span class="delimiter">&quot;</span></span>: <span class="integer">1</span>
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: <span class="integer">1</span>
   }
 }
+</pre></td>
+</tr></table>
+</div></div>
+<p>If needed these naming conventions can be overwritten by implementing
+the <code>keyForRelationship</code> method.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre> App.ApplicationSerializer = DS.RESTSerializer.extend({
+   <span class="function">keyForRelationship</span>: <span class="keyword">function</span>(key, relationship) {
+      <span class="keyword">return</span> key + <span class="string"><span class="delimiter">'</span><span class="content">Ids</span><span class="delimiter">'</span></span>;
+   }
+ });
 </pre></td>
 </tr></table>
 </div></div><h4 class='anchorable-toc' id='toc_sideloaded-relationships'>Sideloaded Relationships</h4>
@@ -814,7 +845,7 @@ outside the JSON root, and are represented as an array of hashes:</p>
   <span class="key"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: {
     <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="integer">1</span>,
     <span class="key"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Node is not omakase</span><span class="delimiter">&quot;</span></span>,
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">commentIds</span><span class="delimiter">&quot;</span></span>: [<span class="integer">1</span>, <span class="integer">2</span>, <span class="integer">3</span>]
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">comments</span><span class="delimiter">&quot;</span></span>: [<span class="integer">1</span>, <span class="integer">2</span>, <span class="integer">3</span>]
   },
 
   <span class="key"><span class="delimiter">&quot;</span><span class="content">comments</span><span class="delimiter">&quot;</span></span>: [{
