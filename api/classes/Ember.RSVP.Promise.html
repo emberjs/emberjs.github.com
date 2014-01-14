@@ -81,7 +81,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v1.3.0" target="_blank"> Tag: v1.3.0</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v1.3.1" target="_blank"> Tag: v1.3.1</a></li>
 
       
           <li class="level-1 ">
@@ -906,8 +906,6 @@
   <h1 class="api-header">
   Ember.RSVP.Promise Class
   
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/ember.js/tree/v1.3.0/packages/rsvp/lib/main.js#L950">packages/rsvp/lib/main.js:950</a>
-  
 </h1>
 
 <hr>
@@ -919,158 +917,12 @@
   
 
   
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.3.0/packages/rsvp/lib/main.js#L950">packages/rsvp/lib/main.js:950</a></p>
-  
 
   
     <p>Module: <a href="/api/modules/RSVP.html">RSVP</a></p>
   
 </div>
 
-  <div class="description">
-    <p>Promise objects represent the eventual result of an asynchronous operation. The
-primary way of interacting with a promise is through its <code>then</code> method, which
-registers callbacks to receive either a promise’s eventual value or the reason
-why the promise cannot be fulfilled.</p>
-<h2 class='anchorable-toc' id='toc_terminology'>Terminology</h2>
-<ul>
-<li><code>promise</code> is an object or function with a <code>then</code> method whose behavior conforms to this specification.</li>
-<li><code>thenable</code> is an object or function that defines a <code>then</code> method.</li>
-<li><code>value</code> is any legal JavaScript value (including undefined, a thenable, or a promise).</li>
-<li><code>exception</code> is a value that is thrown using the throw statement.</li>
-<li><code>reason</code> is a value that indicates why a promise was rejected.</li>
-<li><code>settled</code> the final resting state of a promise, fulfilled or rejected.</li>
-</ul>
-
-<p>A promise can be in one of three states: pending, fulfilled, or rejected.</p>
-
-<p>Promises that are fulfilled have a fulfillment value and are in the fulfilled
-state.  Promises that are rejected have a rejection reason and are in the
-rejected state.  A fulfillment value is never a thenable.  Similarly, a
-rejection reason is never a thenable.</p>
-
-<p>Promises can also be said to <em>resolve</em> a value.  If this value is also a
-promise, then the original promise&#39;s settled state will match the value&#39;s
-settled state.  So a promise that <em>resolves</em> a promise that rejects will
-itself reject, and a promise that <em>resolves</em> a promise that fulfills will
-itself fulfill.</p>
-<h2 class='anchorable-toc' id='toc_basic-usage'>Basic Usage:</h2><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
-</pre></td>
-  <td class="code"><pre><span class="keyword">var</span> promise = <span class="keyword">new</span> Promise(<span class="keyword">function</span>(resolve, reject) {
-  <span class="comment">// on success</span>
-  resolve(value);
-
-  <span class="comment">// on failure</span>
-  reject(reason);
-});
-
-promise.then(<span class="keyword">function</span>(value) {
-  <span class="comment">// on fulfillment</span>
-}, <span class="keyword">function</span>(reason) {
-  <span class="comment">// on rejection</span>
-});
-</pre></td>
-</tr></table>
-</div></div><h2 class='anchorable-toc' id='toc_advanced-usage'>Advanced Usage:</h2>
-<p>Promises shine when abstracting away asynchronous interactions such as
-<code>XMLHttpRequest</code>s.</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
-14
-15
-16
-17
-18
-19
-<strong>20</strong>
-21
-22
-23
-24
-25
-26
-27
-</pre></td>
-  <td class="code"><pre><span class="keyword">function</span> <span class="function">getJSON</span>(url) {
-  <span class="keyword">return</span> <span class="keyword">new</span> Promise(<span class="keyword">function</span>(resolve, reject){
-    <span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest();
-
-    xhr.open(<span class="string"><span class="delimiter">'</span><span class="content">GET</span><span class="delimiter">'</span></span>, url);
-    xhr.onreadystatechange = handler;
-    xhr.responseType = <span class="string"><span class="delimiter">'</span><span class="content">json</span><span class="delimiter">'</span></span>;
-    xhr.setRequestHeader(<span class="string"><span class="delimiter">'</span><span class="content">Accept</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">application/json</span><span class="delimiter">'</span></span>);
-    xhr.send();
-
-    <span class="keyword">function</span> <span class="function">handler</span>() {
-      <span class="keyword">if</span> (<span class="local-variable">this</span>.readyState === <span class="local-variable">this</span>.DONE) {
-        <span class="keyword">if</span> (<span class="local-variable">this</span>.status === <span class="integer">200</span>) {
-          resolve(<span class="local-variable">this</span>.response);
-        } <span class="keyword">else</span> {
-          reject(<span class="keyword">new</span> Error(<span class="string"><span class="delimiter">&quot;</span><span class="content">getJSON: `</span><span class="delimiter">&quot;</span></span> + url + <span class="string"><span class="delimiter">&quot;</span><span class="content">` failed with status: [</span><span class="delimiter">&quot;</span></span> + <span class="local-variable">this</span>.status + <span class="string"><span class="delimiter">&quot;</span><span class="content">]</span><span class="delimiter">&quot;</span></span>);
-        }
-      }
-    };
-  });
-}
-
-getJSON(<span class="string"><span class="delimiter">'</span><span class="content">/posts.json</span><span class="delimiter">'</span></span>).then(<span class="keyword">function</span>(json) {
-  <span class="comment">// on fulfillment</span>
-}, <span class="keyword">function</span>(reason) {
-  <span class="comment">// on rejection</span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Unlike callbacks, promises are great composable primitives.</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-</pre></td>
-  <td class="code"><pre>Promise.all([
-  getJSON(<span class="string"><span class="delimiter">'</span><span class="content">/posts</span><span class="delimiter">'</span></span>),
-  getJSON(<span class="string"><span class="delimiter">'</span><span class="content">/comments</span><span class="delimiter">'</span></span>)
-]).then(<span class="keyword">function</span>(values){
-  values[<span class="integer">0</span>] <span class="comment">// =&gt; postsJSON</span>
-  values[<span class="integer">1</span>] <span class="comment">// =&gt; commentsJSON</span>
-
-  <span class="keyword">return</span> values;
-});
-</pre></td>
-</tr></table>
-</div></div>
-  </div>
 
 
   <div class="tabs">
@@ -1188,7 +1040,7 @@ getJSON(<span class="string"><span class="delimiter">'</span><span class="conten
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.3.0/packages/rsvp/lib/main.js#L1562">packages/rsvp/lib/main.js:1562</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.3.1/packages/rsvp/lib/main.js#L1562">packages/rsvp/lib/main.js:1562</a>
 
     
 
@@ -1318,7 +1170,7 @@ fulfilled, or rejected if any of them become rejected.</dd>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.3.0/packages/rsvp/lib/main.js#L1660">packages/rsvp/lib/main.js:1660</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.3.1/packages/rsvp/lib/main.js#L1660">packages/rsvp/lib/main.js:1660</a>
 
     
 
@@ -1474,7 +1326,7 @@ Useful for tooling.</dd>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.3.0/packages/rsvp/lib/main.js#L1361">packages/rsvp/lib/main.js:1361</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.3.1/packages/rsvp/lib/main.js#L1361">packages/rsvp/lib/main.js:1361</a>
 
     
 
@@ -1582,7 +1434,7 @@ Useful for tooling.</dd>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.3.0/packages/rsvp/lib/main.js#L1393">packages/rsvp/lib/main.js:1393</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.3.1/packages/rsvp/lib/main.js#L1393">packages/rsvp/lib/main.js:1393</a>
 
     
 
@@ -1708,7 +1560,7 @@ Useful for tooling.</dd>
           but overwritten in
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.3.0/packages/rsvp/lib/main.js#L1942">packages/rsvp/lib/main.js:1942</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.3.1/packages/rsvp/lib/main.js#L1942">packages/rsvp/lib/main.js:1942</a>
 
     
 
@@ -1774,7 +1626,7 @@ for tooling.</dd>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.3.0/packages/rsvp/lib/main.js#L1847">packages/rsvp/lib/main.js:1847</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.3.1/packages/rsvp/lib/main.js#L1847">packages/rsvp/lib/main.js:1847</a>
 
     
 
@@ -1891,7 +1743,7 @@ Useful for tooling.</dd>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.3.0/packages/rsvp/lib/main.js#L1895">packages/rsvp/lib/main.js:1895</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.3.1/packages/rsvp/lib/main.js#L1895">packages/rsvp/lib/main.js:1895</a>
 
     
 
@@ -2000,7 +1852,7 @@ Useful for tooling.</dd>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.3.0/packages/rsvp/lib/main.js#L1145">packages/rsvp/lib/main.js:1145</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.3.1/packages/rsvp/lib/main.js#L1145">packages/rsvp/lib/main.js:1145</a>
 
     
 
