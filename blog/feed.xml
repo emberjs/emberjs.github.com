@@ -5,10 +5,127 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2014-01-14T00:00:00Z</updated>
+  <updated>2014-01-19T00:00:00Z</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>Core Team Meeting Minutes - 2014/01/17</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2014/01/19/core-team-meeting-minutes-2014-01-17.html"/>
+    <id>http://emberjs.com/blog/2014/01/19/core-team-meeting-minutes-2014-01-17.html</id>
+    <published>2014-01-19T00:00:00Z</published>
+    <updated>2014-01-19T00:00:00Z</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
+(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
+the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
+Friday at 2pm EST/11am PST through Google Hangout for a weekly
+discussion of all things Ember...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
+(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
+the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
+Friday at 2pm EST/11am PST through Google Hangout for a weekly
+discussion of all things Ember.&lt;/p&gt;
+
+&lt;p&gt;If you have a topic you&amp;#39;d like to see covered, contact your favorite
+core team member and let them know!&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_attendees'&gt;Attendees&lt;/h4&gt;
+&lt;p&gt;@ebryn, @krisselden, @machty, @stefanpenner, @tomdale, @trek, @wagenet, @wycats, @wifelette&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_pending-go-no-go'&gt;Pending Go/No-Go&lt;/h3&gt;
+&lt;p&gt;We received feedback that too many flagged features in canary were
+not getting enough discussion from the core team early in the release cycle.&lt;/p&gt;
+
+&lt;p&gt;This was delaying useful features making it into scheduled beta releases.&lt;/p&gt;
+
+&lt;p&gt;To tighten up the feedback loop, the core team will regularly
+review features on our canary builds and work with authors sooner to address concerns.&lt;/p&gt;
+
+&lt;p&gt;The current list of features on master but not enabled in the 1.4 family of beta builds
+can be found on this Github issue: 
+&lt;a href="https://github.com/emberjs/ember.js/issues/4052"&gt;https://github.com/emberjs/ember.js/issues/4052&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The following features look good in their current incarnation and will likely receive a &amp;quot;go&amp;quot;
+vote:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/3711"&gt;ember-testing-routing-helpers&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/3879"&gt;computed-read-only&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4049"&gt;ember-metal-is-blank&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4122"&gt;ember-eager-url-update&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 class='anchorable-toc' id='toc_a-href-https-github-com-emberjs-ember-js-pull-3224-string-humanize-a-and-a-href-https-github-com-emberjs-ember-js-pull-3953-string-parameterize-a'&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/3224"&gt;string-humanize&lt;/a&gt; and &lt;a href="https://github.com/emberjs/ember.js/pull/3953"&gt;string-parameterize&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;There is a concern that this increases the surface area of API and the size of the framework
+without providing enough benefit that is unique to Ember.js. If the package manager ecosystem
+for browser JavaScript were more mature, these would clear cases for community contribution.
+String inflection is notoriously hard to get correct, especially with internationalization,
+and the common case is already handled by existing libraries. 
+@trek &lt;a href="https://github.com/trek/fleck"&gt;even maintains one&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Resolutions:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Revert.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 class='anchorable-toc' id='toc_a-href-https-github-com-emberjs-ember-js-pull-3218-ember-handlebars-caps-lookup-a'&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/3218"&gt;ember-handlebars-caps-lookup&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;A bare capitalized word in Handlebars should look up on current scope.
+&lt;code&gt;{{CONSTANT}}&lt;/code&gt; and &lt;code&gt;{{#each CONSTANT}}&lt;/code&gt; did global lookup mostly by side effect, 
+this was not intended API, but we need to think through backwards compatibility
+issues for people who used this as part of their app design.&lt;/p&gt;
+
+&lt;p&gt;Some proposed ideas:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;try local lookup first&lt;/li&gt;
+&lt;li&gt;try global lookup and issue a deprecation warning (&amp;quot;will be removed in 2.0&amp;quot;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Resolutions:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Revert.&lt;/li&gt;
+&lt;li&gt;@wycats will talk to the author about a revert and our preferred way forward for this
+behavior&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 class='anchorable-toc' id='toc_a-href-https-github-com-emberjs-ember-js-pull-3792-ember-testing-triggerevent-helper-a'&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/3792"&gt;ember-testing-triggerEvent-helper&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Looks good but needs some revision:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Needs mechanism for customizing event with additional data (i.e. which key is being pressed)&lt;/li&gt;
+&lt;li&gt;Possibly have &lt;code&gt;keyEvent&lt;/code&gt; event helper use &lt;code&gt;triggerEvent&lt;/code&gt; internally&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Resolutions:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;@ebryn will provide feedback on the PR&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 class='anchorable-toc' id='toc_a-href-https-github-com-emberjs-ember-js-pull-3696-composable-computed-properties-a'&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/3696"&gt;composable-computed-properties&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Possibly still needs some work (there some unhandled todos)? Will be a &amp;quot;go&amp;quot; when
+these are addressed.&lt;/p&gt;
+
+&lt;p&gt;Resolutions:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;@trek will ask about the status of remaining todos&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 class='anchorable-toc' id='toc_a-href-https-github-com-emberjs-ember-js-pull-4008-query-params-new-a'&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4008"&gt;query-params-new&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;@wycats and @machty chatted about some last minute issues. This PR should be good soon.
+The removal of query prefixing should provide a nicer query string  (the &lt;code&gt;[]&lt;/code&gt; prefixing only
+happens if two controllers in same hierarchy have the same parameter name).&lt;/p&gt;
+
+&lt;p&gt;Resolutions:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;@machty will keep chugging along&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 class='anchorable-toc' id='toc_a-href-https-github-com-emberjs-ember-js-pull-3655-ember-routing-loading-error-substates-a'&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/3655"&gt;ember-routing-loading-error-substates&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Currently &lt;code&gt;state/loading&lt;/code&gt; and &lt;code&gt;state_loading&lt;/code&gt; both reify into StateLoading under the current
+resolver. Custom resolvers (like those in EmberAppKit) don&amp;#39;t have this issue, but the global
+resolver does. We can&amp;#39;t make this work until modularization is done.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>Security Releases - Ember 1.0.1, 1.1.3, 1.2.1, and 1.3.1</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/01/14/ember-security-releases.html"/>
@@ -83,6 +200,58 @@ extremely low-traffic and only contains announcements such as these.&lt;/p&gt;
 &lt;li&gt;&lt;a href="http://emberjs.com/blog/2013/04/05/announcing-the-ember-security-policy.html"&gt;Ember.js Security Policy Announcement&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://emberjs.com/security/"&gt;Ember.js Security Policy&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://groups.google.com/forum/#!forum/ember-security"&gt;Ember.js Security Group&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Core Team Meeting Minutes - 2014/01/03</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2014/01/06/core-team-meeting-minutes-2014-01-03.html"/>
+    <id>http://emberjs.com/blog/2014/01/06/core-team-meeting-minutes-2014-01-03.html</id>
+    <published>2014-01-06T00:00:00Z</published>
+    <updated>2014-01-06T00:00:00Z</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
+(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
+the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
+Friday at 2pm EST/11am PST through Google Hangout for a weekly
+discussion of all things Ember...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
+(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
+the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
+Friday at 2pm EST/11am PST through Google Hangout for a weekly
+discussion of all things Ember.&lt;/p&gt;
+
+&lt;p&gt;If you have a topic you&amp;#39;d like to see covered, contact your favorite
+core team member and let them know!&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_attendees'&gt;Attendees&lt;/h4&gt;
+&lt;p&gt;@ebryn, @krisselden, @machty, @stefanpenner, @trek, @wagenet, @wycats&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_go-no-go-for-1-4'&gt;Go/No-Go for 1.4&lt;/h3&gt;
+&lt;p&gt;It&amp;#39;s that time in the &lt;a href="/builds/#/beta"&gt;beta release cycle&lt;/a&gt; where the core team
+gives a &amp;quot;go&amp;quot; or &amp;quot;no-go&amp;quot; vote to feature-flagged beta functionality.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_query-params-new-no-go'&gt;query-params-new: no-go&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;needs more people trying this&lt;/li&gt;
+&lt;li&gt;doc/guides need to be updated.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 class='anchorable-toc' id='toc_with-controller-go'&gt;with-controller: go&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;make sure to add parentController immediately after merge (@kselden)&lt;/li&gt;
+&lt;li&gt;address https://github.com/emberjs/ember.js/issues/4050 (@stefanpenner)&lt;/li&gt;
+&lt;li&gt;ensure lookupFactory and creates with content
+&lt;code&gt;
+{{#with foo controller=’someController}}
+&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 class='anchorable-toc' id='toc_ember-metal-with-proxy-go'&gt;ember-metal-with-proxy: go&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;rename to Ember.run.bind and merge (@stefanpenner)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 class='anchorable-toc' id='toc_ember-metal-run-method-no-go'&gt;ember-metal-run-method: no-go&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;@krisselden and @wycats are worried that this will be used inappropriately&lt;/li&gt;
+&lt;li&gt;people should use &lt;code&gt;.run&lt;/code&gt; at the root of a frame, not randomly throughout it&lt;/li&gt;
 &lt;/ul&gt;
 </content>
   </entry>
@@ -259,58 +428,6 @@ release. You can see a list of all the changes in the CHANGELOG:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.3.0/CHANGELOG.md"&gt;Ember.js 1.3.0 CHANGELOG&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.4.0-beta.1/CHANGELOG.md"&gt;Ember.js 1.4.0 beta 1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Core Team Meeting Minutes - 2014/01/03</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2014/01/06/core-team-meeting-minutes-2014-01-03.html"/>
-    <id>http://emberjs.com/blog/2014/01/06/core-team-meeting-minutes-2014-01-03.html</id>
-    <published>2014-01-06T00:00:00Z</published>
-    <updated>2014-01-06T00:00:00Z</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
-(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
-the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
-Friday at 2pm EST/11am PST through Google Hangout for a weekly
-discussion of all things Ember...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
-(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
-the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
-Friday at 2pm EST/11am PST through Google Hangout for a weekly
-discussion of all things Ember.&lt;/p&gt;
-
-&lt;p&gt;If you have a topic you&amp;#39;d like to see covered, contact your favorite
-core team member and let them know!&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_attendees'&gt;Attendees&lt;/h4&gt;
-&lt;p&gt;@ebryn, @krisselden, @machty, @stefanpenner, @trek, @wagenet, @wycats&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_go-no-go-for-1-4'&gt;Go/No-Go for 1.4&lt;/h3&gt;
-&lt;p&gt;It&amp;#39;s that time in the &lt;a href="/builds/#/beta"&gt;beta release cycle&lt;/a&gt; where the core team
-gives a &amp;quot;go&amp;quot; or &amp;quot;no-go&amp;quot; vote to feature-flagged beta functionality.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_query-params-new-no-go'&gt;query-params-new: no-go&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;needs more people trying this&lt;/li&gt;
-&lt;li&gt;doc/guides need to be updated.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 class='anchorable-toc' id='toc_with-controller-go'&gt;with-controller: go&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;make sure to add parentController immediately after merge (@kselden)&lt;/li&gt;
-&lt;li&gt;address https://github.com/emberjs/ember.js/issues/4050 (@stefanpenner)&lt;/li&gt;
-&lt;li&gt;ensure lookupFactory and creates with content
-&lt;code&gt;
-{{#with foo controller=’someController}}
-&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 class='anchorable-toc' id='toc_ember-metal-with-proxy-go'&gt;ember-metal-with-proxy: go&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;rename to Ember.run.bind and merge (@stefanpenner)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 class='anchorable-toc' id='toc_ember-metal-run-method-no-go'&gt;ember-metal-run-method: no-go&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;@krisselden and @wycats are worried that this will be used inappropriately&lt;/li&gt;
-&lt;li&gt;people should use &lt;code&gt;.run&lt;/code&gt; at the root of a frame, not randomly throughout it&lt;/li&gt;
 &lt;/ul&gt;
 </content>
   </entry>
@@ -840,59 +957,6 @@ on our roadmap there in a separate blog post soon.&lt;/p&gt;
 &lt;img src="/images/blog/2013-12-17-whats-coming-in-ember-in-2014/3.jpg"&gt;
 &lt;img src="/images/blog/2013-12-17-whats-coming-in-ember-in-2014/4.jpg"&gt;
 &lt;img src="/images/blog/2013-12-17-whats-coming-in-ember-in-2014/5.jpg"&gt;&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Core Team Meeting Minutes - 2013/12/06</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2013/12/07/core-team-meeting-minutes-2013-12-06.html"/>
-    <id>http://emberjs.com/blog/2013/12/07/core-team-meeting-minutes-2013-12-06.html</id>
-    <published>2013-12-07T00:00:00Z</published>
-    <updated>2013-12-07T00:00:00Z</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC 
-(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
-the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every 
-Friday at 2pm EST/11am PST through Google Hangout for a weekly 
-discussion of all things...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC 
-(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
-the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every 
-Friday at 2pm EST/11am PST through Google Hangout for a weekly 
-discussion of all things Ember.&lt;/p&gt;
-
-&lt;p&gt;We want to ensure that our process and thinking is totally transparent
-to the Ember.js community so we&amp;#39;re going to start publishing meeting
-notes here.&lt;/p&gt;
-
-&lt;p&gt;If you have a topic you&amp;#39;d like to see covered, contact your favorite
-core team member and let them know!&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_attendees'&gt;Attendees&lt;/h4&gt;
-&lt;p&gt;@ebryn, @krisselden, @machty, @stefanpenner, @tomdale, @trek, @wagenet, @wycats&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_topics'&gt;Topics&lt;/h3&gt;&lt;h4 class='anchorable-toc' id='toc_transparency'&gt;Transparency&lt;/h4&gt;
-&lt;p&gt;We&amp;#39;ve heard a few comments that people would like greater Core Team transparency.
-Since the weekly meetings are the only significant group communication that isn&amp;#39;t
-public, we&amp;#39;ll be posting notes from these meetings.&lt;/p&gt;
-
-&lt;p&gt;Resolutions:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;@trek publish core team meeting notes&lt;/li&gt;
-&lt;li&gt;@trek post weekly reminders that the core team meeting occurs and invite people
-to contact individual core team members if they have issued they’d like raised.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 class='anchorable-toc' id='toc_htmlbars'&gt;HTMLBars&lt;/h4&gt;
-&lt;p&gt;@wycats says it’s ready to hand off to someone else. &lt;/p&gt;
-
-&lt;p&gt;Resolutions:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;@krisselden will come a bit early to the face to face to get mind-dumped. @machty
-is already familiar with writing Handlebars runtime compatible template languages
-from his work on &lt;a href="http://emblemjs.com/"&gt;Emblem.js&lt;/a&gt; so can also help get this
-over the last few hurdles.&lt;/li&gt;
-&lt;/ul&gt;
 </content>
   </entry>
 </feed>

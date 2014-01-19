@@ -587,21 +587,25 @@
 12
 13
 14
+15
+16
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">todos/index</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-<span class="inline"><span class="tag">&lt;ul</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">todo-list</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-  {{#each itemController=&quot;todo&quot;}}
-    <span class="tag">&lt;li</span> <span class="error">{</span><span class="error">{</span><span class="attribute-name">bind-attr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">isCompleted:completed isEditing:editing</span><span class="delimiter">&quot;</span></span><span class="error">}</span><span class="error">}</span><span class="tag">&gt;</span>
-      {{#if isEditing}}
-        {{edit-todo class=&quot;edit&quot; value=title focus-out=&quot;acceptChanges&quot; insert-newline=&quot;acceptChanges&quot;}}
-      {{else}}
-        {{input type=&quot;checkbox&quot; checked=isCompleted class=&quot;toggle&quot;}}
-        <span class="tag">&lt;label</span> <span class="error">{</span><span class="error">{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">editTodo</span><span class="error">&quot;</span> <span class="attribute-name">on</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">doubleClick</span><span class="delimiter">&quot;</span></span><span class="error">}</span><span class="error">}</span><span class="tag">&gt;</span>{{title}}<span class="tag">&lt;/label&gt;</span><span class="tag">&lt;button</span> <span class="error">{</span><span class="error">{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">removeTodo</span><span class="error">&quot;</span><span class="error">}</span><span class="error">}</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">destroy</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/button&gt;</span>
-      {{/if}}
-    <span class="tag">&lt;/li&gt;</span>
-  {{/each}}
-<span class="tag">&lt;/ul&gt;</span></span>
+  <td class="code"><pre><span class="comment">&lt;!--- ... additional lines truncated for brevity ... --&gt;</span>
+<span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">todos/index</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="inline">  <span class="tag">&lt;ul</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">todo-list</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    {{#each itemController=&quot;todo&quot;}}
+      <span class="tag">&lt;li</span> <span class="error">{</span><span class="error">{</span><span class="attribute-name">bind-attr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">isCompleted:completed isEditing:editing</span><span class="delimiter">&quot;</span></span><span class="error">}</span><span class="error">}</span><span class="tag">&gt;</span>
+        {{#if isEditing}}
+          {{edit-todo class=&quot;edit&quot; value=title focus-out=&quot;acceptChanges&quot; insert-newline=&quot;acceptChanges&quot;}}
+        {{else}}
+          {{input type=&quot;checkbox&quot; checked=isCompleted class=&quot;toggle&quot;}}
+          <span class="tag">&lt;label</span> <span class="error">{</span><span class="error">{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">editTodo</span><span class="error">&quot;</span> <span class="attribute-name">on</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">doubleClick</span><span class="delimiter">&quot;</span></span><span class="error">}</span><span class="error">}</span><span class="tag">&gt;</span>{{title}}<span class="tag">&lt;/label&gt;</span><span class="tag">&lt;button</span> <span class="error">{</span><span class="error">{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">removeTodo</span><span class="error">&quot;</span><span class="error">}</span><span class="error">}</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">destroy</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/button&gt;</span>
+        {{/if}}
+      <span class="tag">&lt;/li&gt;</span>
+    {{/each}}
+  <span class="tag">&lt;/ul&gt;</span></span>
 <span class="tag">&lt;/script&gt;</span>
+<span class="comment">&lt;!--- ... additional lines truncated for brevity ... --&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -659,7 +663,7 @@ Todos.TodosIndexRoute = Ember.Route.extend({
 </pre></td>
 </tr></table>
 </div></div>
-<p>When the application loads at the url <code>&#39;/&#39;</code> Ember.js will enter the <code>todos</code> route and render the <code>todos</code> template as before. It will also transition into the <code>todos.index</code> route and fill the <code>{{outlet}}</code> in the <code>todos</code> template with the <code>todos/index</code> template.  The model data for this template is the result of the <code>model</code> method of <code>TodosIndexRoute</code>, which indicates that the 
+<p>When the application loads at the url <code>&#39;/&#39;</code> Ember.js will enter the <code>todos</code> route and render the <code>todos</code> template as before. It will also transition into the <code>todos.index</code> route and fill the <code>{{outlet}}</code> in the <code>todos</code> template with the <code>todos/index</code> template.  The model data for this template is the result of the <code>model</code> method of <code>TodosIndexRoute</code>, which indicates that the
 model for this route is the same model for the <code>TodosRoute</code>.</p>
 
 <p>This mapping is described in more detail in the <a href="/guides/concepts/naming-conventions">Naming Conventions Guide</a>.</p>
