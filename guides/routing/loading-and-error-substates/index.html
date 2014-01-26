@@ -819,25 +819,25 @@ more control, but if you&#39;d like to emulate something similar to legacy
 11
 12
 13
-14
 </pre></td>
-  <td class="code"><pre>App.ApplicationRoute = Ember.Route.extend({
+  <td class="code"><pre>App.LoadingView = Ember.View.extend({
+  <span class="key">templateName</span>: <span class="string"><span class="delimiter">'</span><span class="content">global-loading</span><span class="delimiter">'</span></span>,
+  <span class="key">elementId</span>: <span class="string"><span class="delimiter">'</span><span class="content">global-loading</span><span class="delimiter">'</span></span>
+});
+
+App.ApplicationRoute = Ember.Route.extend({
   <span class="key">actions</span>: {
     <span class="function">loading</span>: <span class="keyword">function</span>() {
-      <span class="keyword">var</span> view = Ember.View.create({
-        <span class="key">templateName</span>: <span class="string"><span class="delimiter">'</span><span class="content">global-loading</span><span class="delimiter">'</span></span>,
-        <span class="key">elementId</span>: <span class="string"><span class="delimiter">'</span><span class="content">global-loading</span><span class="delimiter">'</span></span>
-      }).append();
-
-      <span class="local-variable">this</span>.router.one(<span class="string"><span class="delimiter">'</span><span class="content">didTransition</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
-        view.destroy();
-      });
+      <span class="keyword">var</span> view = <span class="local-variable">this</span>.container.lookup(<span class="string"><span class="delimiter">'</span><span class="content">view:loading</span><span class="delimiter">'</span></span>).append();
+      <span class="local-variable">this</span>.router.one(<span class="string"><span class="delimiter">'</span><span class="content">didTransition</span><span class="delimiter">'</span></span>, view, <span class="string"><span class="delimiter">'</span><span class="content">destroy</span><span class="delimiter">'</span></span>);
     }
   }
 });
 </pre></td>
 </tr></table>
 </div></div>
+<p><a href="http://emberjs.jsbin.com/ucanam/3307">Example JSBin</a></p>
+
 <p>This will, like legacy <code>LoadingRoute</code>, append a top-level view when the
 router goes into a loading state, and tear down the view once the
 transition finishes.</p>

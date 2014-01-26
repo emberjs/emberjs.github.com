@@ -580,7 +580,7 @@ refreshed when the <code>pulse</code> attribute increments.</p>
 <p>The clock object can be used to create new instances for binding to new views
 generated within the application, like a list of comments.</p>
 <h2 class='anchorable-toc' id='toc_discussion'>Discussion</h2>
-<p><a class="jsbin-embed" href="http://jsbin.com/iLETUTI/10/embed?output">
+<p><a class="jsbin-embed" href="http://jsbin.com/iLETUTI/17/embed?output">
 Cookbook: Continuous Redrawing of Views
 </a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <h3 class='anchorable-toc' id='toc_clockservice-object'>ClockService object</h3>
@@ -687,9 +687,10 @@ a handful of properties used as conditions in the Handlebars template.</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>A controller for a list of comments, which creates a new clock instance
-for each comment. Each comment in the list also has a controller. When a
-comment is created the <code>init</code> method adds a clock instance to the comment.</p>
+<p>A controller for a list of comments, each comment will have a new clock
+instance when added to the list. The comment item controller sets up
+the <code>seconds</code> binding, used by the template to show the time since the
+comment was created.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -707,23 +708,19 @@ comment is created the <code>init</code> method adds a clock instance to the com
 14
 15
 16
-17
-18
 </pre></td>
   <td class="code"><pre>App.CommentItemController = Ember.ObjectController.extend({
-  <span class="function">init</span>: <span class="keyword">function</span>() {
-    <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">clock</span><span class="delimiter">'</span></span>, ClockService.create());
-  }
-})
+  <span class="key">seconds</span>: Ember.computed.oneWay(<span class="string"><span class="delimiter">'</span><span class="content">clock.pulse</span><span class="delimiter">'</span></span>).readOnly()
+});
 
 App.CommentsController = Ember.ArrayController.extend({
   <span class="key">needs</span>: [<span class="string"><span class="delimiter">'</span><span class="content">interval</span><span class="delimiter">'</span></span>],
-  <span class="key">clockBinding</span>: <span class="string"><span class="delimiter">'</span><span class="content">controllers.interval.clock</span><span class="delimiter">'</span></span>,
   <span class="key">itemController</span>: <span class="string"><span class="delimiter">'</span><span class="content">commentItem</span><span class="delimiter">'</span></span>,
   <span class="key">actions</span>: {
     <span class="function">add</span>: <span class="keyword">function</span> () {
       <span class="local-variable">this</span>.addObject(Em.Object.create({
-        <span class="key">comment</span>: <span class="predefined">$</span>(<span class="string"><span class="delimiter">'</span><span class="content">#comment</span><span class="delimiter">'</span></span>).val()
+        <span class="key">comment</span>: <span class="predefined">$</span>(<span class="string"><span class="delimiter">'</span><span class="content">#comment</span><span class="delimiter">'</span></span>).val(),
+        <span class="key">clock</span>: ClockService.create()
       }));
     }
   }
@@ -832,7 +829,7 @@ after waking.</p>
 <p>The source code:</p>
 
 <ul>
-<li><a href="http://jsbin.com/iLETUTI/8/">http://jsbin.com/iLETUTI/8/</a></li>
+<li><a href="http://jsbin.com/iLETUTI/17/edit?html,js,output">http://jsbin.com/iLETUTI/17/edit?html,js,output</a></li>
 </ul>
 
 <p>Further reading:</p>

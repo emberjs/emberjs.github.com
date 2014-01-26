@@ -622,15 +622,31 @@ post.save(); <span class="comment">// =&gt; PUT to '/posts/1'</span>
 9
 <strong>10</strong>
 11
+12
+13
+14
+15
+16
+17
+18
+19
 </pre></td>
   <td class="code"><pre><span class="keyword">var</span> post = store.createRecord(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, {
   <span class="key">title</span>: <span class="string"><span class="delimiter">'</span><span class="content">Rails is Omakase</span><span class="delimiter">'</span></span>,
   <span class="key">body</span>: <span class="string"><span class="delimiter">'</span><span class="content">Lorem ipsum</span><span class="delimiter">'</span></span>
 });
 
-post.save().then(<span class="keyword">function</span>(post) {
-  <span class="local-variable">this</span>.transitionToRoute(<span class="string"><span class="delimiter">'</span><span class="content">posts/show</span><span class="delimiter">'</span></span>, post);
-});
+<span class="keyword">var</span> self = <span class="local-variable">this</span>;
+
+<span class="keyword">function</span> <span class="function">transitionToPost</span>(post) {
+  self.transitionToRoute(<span class="string"><span class="delimiter">'</span><span class="content">posts/show</span><span class="delimiter">'</span></span>, post);
+}
+
+<span class="keyword">function</span> <span class="function">failure</span>(reason) {
+  <span class="comment">// handle the error</span>
+}
+
+post.save().then(transitionToPost).<span class="keyword">catch</span>(failure);
 
 <span class="comment">// =&gt; POST to '/posts'</span>
 <span class="comment">// =&gt; transitioning to posts.show route</span>
