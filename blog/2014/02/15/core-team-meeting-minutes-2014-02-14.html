@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Ember 1.0 RC6</title>
+    <title>Ember.js - Core Team Meeting Minutes - 2014/02/14</title>
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -34,7 +34,7 @@
     
   </head>
 
-  <body class="blog blog_2013 blog_2013_06 blog_2013_06_23 blog_2013_06_23_ember-1-0-rc6">
+  <body class="blog blog_2014 blog_2014_02 blog_2014_02_15 blog_2014_02_15_core-team-meeting-minutes-2014-02-14">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -187,62 +187,102 @@
       
       <div id="content" class="has-sidebar">
           <article class="blog-post">
-    <h1>Ember 1.0 RC6</h1>
+    <h1>Core Team Meeting Minutes - 2014/02/14</h1>
     
-      <h3 class="blog-post-author">Posted By: Michael Madrid &ndash; <time>Jun 23, 2013</time></h3>
+      <h3 class="blog-post-author">Posted By: Trek Glowacki &ndash; <time>Feb 15, 2014</time></h3>
     
 
     <hr>
 
-    <p>Ember.js 1.0 RC6 has been released and is available from the
-main website and at <a href="http://builds.emberjs.com">builds.emberjs.com</a>.  This
-release features two big changes: 1) router update 2) Ember Components.</p>
+    <p>Although most of our collaboration takes place on Github, IRC 
+(<code>#emberjs</code> on freenode.net), and our <a href="http://discuss.emberjs.com/">Discourse site</a>
+the <a href="/team">Ember.js Core Team</a> meets privately every 
+Friday at 2pm EST/11am PST through Google Hangout for a weekly 
+discussion of all things Ember.</p>
 
-<p><strong><em>Router Update</em></strong></p>
+<p>If you have a topic you&#39;d like to see covered, contact your favorite
+core team member and let them know!</p>
+<h4 class='anchorable-toc' id='toc_attendees'>Attendees</h4>
+<p>@ebryn, @krisselden, @machty, @stefanpenner, @tomdale, @trek, @wagenet, @wycats</p>
+<h3 class='anchorable-toc' id='toc_topics'>Topics</h3><h4 class='anchorable-toc' id='toc_es6ifying-core'>ES6ifying core</h4>
+<p>Last month we completed the migration of <a href="https://github.com/emberjs">ember-data</a> to the ES6 module syntax. This lets us use <a href="https://github.com/emberjs/data/blob/master/packages/ember-data/lib/serializers/rest_serializer.js#L5-L8">clearer dependency declarations</a>, stay clear of module syntax battles (you can export to whichever module format best conforms to your deeply held beliefs on JavaScript modules), and continues our pattern of bringing future JavaScript features to you today.</p>
 
-<p>The biggest change is router update (aka &quot;router facelift&quot;), which addresses
-two major issues. The first was inconsistent semantics between URL-based transitions
-and <code>transitionTo</code>. The second was spotty async support which made it difficult to
-prevent or delay route entry in cases such as authentication and async code-loading.</p>
+<p>Work has started on the <a href="https://github.com/emberjs/ember.js/commit/8c0a52cb10efbaede8e14cca24fa5c05bcf121ff">porting Ember.js to ES6 module syntax as well!</a>.</p>
 
-<p>We have now harmonized URL changes and <code>transitionTo</code> semantics and more fully embraced
-asynchrony using promises.</p>
+<p>Thanks to @thomasABoyt and @Square for work on the <a href="https://github.com/square/es6-module-transpiler">ES6 Module Transpiler</a>, @fivetanley for converting ember-data, and @rjackson for starting the process in Ember.js core.</p>
 
-<p>Additionally, router transitions have become first-class citizens and there are
-new hooks to prevent or decorate transitions:</p>
+<p>Resolution: @rjackson hands off the grunt work to @trek and @fivetanley so he&#39;s not overextended. @rjackson says &quot;you&#39;re good to start with ember-metal&quot;</p>
+<h4 class='anchorable-toc' id='toc_ghost-js-admin'>Ghost.js Admin</h4>
+<p>The fine folks at <a href="https://ghost.org/">Ghost</a> have hit a complexity ceiling with their current admin interface (a mixed client/server rendering solution with Backbone tossed in). They&#39;re <a href="https://github.com/TryGhost/Ghost/issues/2144">discussing various solutions for a rewrite</a> and Ember.js is among the options.</p>
 
-<p><code>willTransition</code>: fires on current routes whenever a transition is about to take place
- <code>beforeModel</code>/<code>model</code>/<code>afterModel</code>: hooks fired during the async validation phase</p>
+<p>The core team discussed devoting some time to helping the Ghost team evaluate Ember.js as a possible solution.
+If you&#39;d like to help or weigh in – especially if you&#39;re a current Ghost user or developer – please go comment: <a href="https://github.com/TryGhost/Ghost/issues/2144">https://github.com/TryGhost/Ghost/issues/2144</a></p>
 
-<p>Finally there is an <code>error</code> event which fires whenever there is a rejected promise or
-error thrown in any of the <code>beforeModel</code>/<code>model</code>/<code>afterModel</code> hooks.</p>
-
-<p>For more on new router features, see:</p>
+<p>Resolution: @trek will devote some time to helping the Ghost team. Possibly on a small spike.</p>
+<h4 class='anchorable-toc' id='toc_getting-rid-of-old-stack-overflow-questions-answers'>Getting rid of old Stack Overflow questions/answers</h4>
+<p>We frequently get comments about older Stack Overflow questions and answers. Answers
+related to pre-release versions of Ember have a high likelihood of no longer being valid.
+Stack Overflow has a policy of not deleting questions related to older versions of software,
+but we think pre-release software is exceptional for a few reasons:</p>
 
 <ul>
-<li><a href="https://machty.s3.amazonaws.com/ember-facelift-presentation/index.html#/1">New router overview given by Alex Matchneer&#39;s at the June Ember NYC Meetup </a></li>
-<li><a href="https://gist.github.com/machty/5647589">Usage Examples</a></li>
-<li><a href="http://www.embercasts.com/episodes/client-side-authentication-part-2">Client-side Authentication Part 2 Embercast</a></li>
+<li>pre-release software is often undocumented and unfinished, leading people to use
+Stack Overflow as a place to find answers at higher rates than for relased software</li>
+<li>people should not continue using pre-release software for long after an official
+release, so there is little value in having those answers around for future reference</li>
+<li>good questions might have wildly different answers before and after a 1.0 release
+but there&#39;s no way for a new user to know</li>
+<li>some questions themselves will no longer make sense as features are added or removed</li>
 </ul>
 
-<p>Special thanks to Alex Matchneer for his work on this!</p>
+<p>An example of a question that should be deleted is this <a href="http://stackoverflow.com/questions/8672287/ember-js-how-to-use-em-button">question related to Ember.Button</a>. Ember.Button has long been deprecated and removed. The pattern for actions has changed significantly since that question was asked in December 2011. However, someone wondering how to handle buttons in Ember who searches for &quot;ember and buttons stackoverflow&quot; will get this question as a top result.</p>
 
-<p><strong><em>Ember Components</em></strong></p>
+<p>We&#39;re working to do some form of cleanup for questions like these. The first step is to compile a list of ones the community feels should be removed. With that list we&#39;ll apply some form of cleanup.</p>
 
-<p>The other major change is the introduction of Ember Components, which shares Web
-Components&#39; goal of facilitating creation of reusable higher-level page elements.</p>
+<p>Resolution: @trek will get this list created somehow.</p>
+<h4 class='anchorable-toc' id='toc_features-pending-go-decision'>Features pending &#39;Go&#39; decision.</h4>
+<p>The core team reviewed the following pull requests for future inclusion in the 1.6.x beta series:</p>
 
-<p>Ember Components will generally consist of a <code>template</code> and a <code>view</code> which encapsulate the <code>template</code>&#39;s
-property access and actions.  Any reference to outside constructs is handled through context
-info passed into the <code>view</code>.  Components can be customized through subclassing.</p>
+<ul>
+<li><p><code>ember-routing-named-substates</code> <a href="https://github.com/emberjs/ember.js/pull/3655">#3655</a></p>
 
-<p>Ember Components naming conventions are: 1) the <code>template</code>&#39;s name begins with &#39;components/&#39;, and 2) the
-Component&#39;s name must include a &#39;-&#39; (this latter convention is consistent with Web Components standards,
-and prevents name collisions with built-in controls that wrap HTML elements). As an example, a component
-might be named <code>&#39;radio-button&#39;</code>.  Its <code>template</code> would be <code>&#39;components/radio-button&#39;</code> and you would call
-it as <code>{{radio-button}}</code> in other <code>templates</code>.</p>
+<p>@stefanpenner and @tomdale still need to pow-wow on this.</p>
 
-<p>Stay tuned for more docs and examples of this exciting new feature.</p>
+<p>Resolution: @stefanpenner and @tomdale will speak.</p></li>
+<li><p><code>ember-testing-simple-setup</code> <a href="https://github.com/emberjs/ember.js/pull/3785">#3785</a></p>
+
+<p>@stefanpenner and @tomdale still need to pow-wow on this.</p>
+
+<p>Resolution: @stefanpenner and @tomdale will speak.</p></li>
+<li><p><code>query-params-new</code> <a href="https://github.com/emberjs/ember.js/pull/4008">#4008</a></p>
+
+<p>@wycats and @machty continued discussion on lazy loading. Goal is to get it in during this beta cycle</p>
+
+<p>Resolution: @machty &amp; @stefanpenner have a man-date to discuss lazy loading.</p></li>
+<li><p><code>composable-computed-properties</code> <a href="https://github.com/emberjs/ember.js/pull/3696">#3696</a></p>
+
+<p>Still blocked on <a href="https://github.com/emberjs/ember.js/pull/4185">computed.literal</a></p>
+
+<p>Resolution: The original behavior wasn&#39;t intended. Changing now might be breaking change
+in some people&#39;s apps. We&#39;ll put it through a multi-cycle deprecation/removal path.</p></li>
+<li><p><code>ember-metal-computed-empty-array</code> <a href="https://github.com/emberjs/ember.js/pull/4219">#4219</a></p>
+
+<p>Resolution: &quot;Go&quot;. Upgrade to a Bugfix is it doesn&#39;t require a flag.</p></li>
+<li><p><code>ember-runtime-test-friendly-promises</code> <a href="https://github.com/emberjs/ember.js/pull/4176">#4176</a></p>
+
+<p>Resolution: Peter will try in <a href="https://www.skylight.io/">Skylight</a>&#39;s tests and
+offer feedback</p></li>
+<li><p><code>ember-routing-inherits-parent-model</code> <a href="https://github.com/emberjs/ember.js/pull/4246">#4246</a></p>
+
+<p>Resolution: Already conceptually a &quot;Go&quot;. @machty will make nestable routes in the next week or so so this can be merged.</p></li>
+<li><p><a href="https://github.com/emberjs/ember.js/pull/4235">BUGFIX beta Still update HTML5 history if the previous state was null</a></p>
+
+<p>iframes may set null values onto the HTML5 history state. The router will sometimes pick up the null value as current
+instead of the window&#39;s nominal state (which was set by Ember). The old logic required that a prior state be present, 
+this logic allows a null state to be replaced or pushed over.</p>
+
+<p>Resolution: A clear &quot;Go&quot;.</p></li>
+</ul>
 
 
     <hr>
