@@ -632,7 +632,101 @@ HTML element:</p>
   <td class="code"><pre><span class="tag">&lt;input</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">checkbox</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
 </pre></td>
 </tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_adding-data-attributes'>Adding data attributes</h3>
+<p>By default, view helpers do not accept <em>data attributes</em>. For example</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">link-to</span> <span class="error">&quot;</span><span class="attribute-name">photos</span><span class="error">&quot;</span> <span class="attribute-name">data-toggle</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">dropdown</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>Photos<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">link-to</span><span class="inline-delimiter">}}</span></span>
+
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">input</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-toggle</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">tooltip</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-placement</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">bottom</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">title</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Name</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
 </div></div>
+<p>renders the following HTML:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;a</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember239</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">#/photos</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Link<span class="tag">&lt;/a&gt;</span>
+
+<span class="tag">&lt;input</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember257</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view ember-text-field</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>There are two ways to enable support for data attributes. One way would be to add an 
+attribute binding on the view, e.g. <code>Ember.LinkView</code> or <code>Ember.TextField</code> for the specific attribute:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>Ember.LinkView.reopen({
+  <span class="key">attributeBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">data-toggle</span><span class="delimiter">'</span></span>]
+});
+
+Ember.TextField.reopen({
+  <span class="key">attributeBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">data-toggle</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">data-placement</span><span class="delimiter">'</span></span>]
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Now the same handlebars code above renders the following HTML:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;a</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember240</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">#/photos</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-toggle</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">dropdown</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Photos<span class="tag">&lt;/a&gt;</span>
+
+<span class="tag">&lt;input</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember259</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view ember-text-field</span><span class="delimiter">&quot;</span></span> 
+       <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-toggle</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">tooltip</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-placement</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">bottom</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>You can also automatically bind data attributes on the base view with the
+following:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+</pre></td>
+  <td class="code"><pre>Ember.View.reopen({
+  <span class="function">init</span>: <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>._super();
+    <span class="keyword">var</span> self = <span class="local-variable">this</span>;
+
+    <span class="comment">// bind attributes beginning with 'data-'</span>
+    Em.keys(<span class="local-variable">this</span>).forEach(<span class="keyword">function</span>(key) {
+      <span class="keyword">if</span> (key.substr(<span class="integer">0</span>, <span class="integer">5</span>) === <span class="string"><span class="delimiter">'</span><span class="content">data-</span><span class="delimiter">'</span></span>) {
+        self.get(<span class="string"><span class="delimiter">'</span><span class="content">attributeBindings</span><span class="delimiter">'</span></span>).pushObject(key);
+      }
+    });
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Now you can add as many data-attributes as you want without having to specify them by name.</p>
+
     
       <footer>
         
