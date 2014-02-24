@@ -707,6 +707,32 @@ return the JSON in the following format:</p>
 <p>To customize the REST adapter, define a subclass of <code>DS.RESTAdapter</code> and
 name it <code>App.ApplicationAdapter</code>. You can then override its properties
 and methods to customize how records are retrieved and saved.</p>
+<h4 class='anchorable-toc' id='toc_customizing-a-specific-model'>Customizing a Specific Model</h4>
+<p>It&#39;s entirely possible that you need to define options for just one model instead of an application-wide customization. In that case, you can create an adapter named after the model you are specifying:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre>App.PostAdapter = DS.RESTAdapter.extend({
+  <span class="key">namespace</span>: <span class="string"><span class="delimiter">'</span><span class="content">api/v2</span><span class="delimiter">'</span></span>,
+  <span class="key">host</span>: <span class="string"><span class="delimiter">'</span><span class="content">https://api.example2.com</span><span class="delimiter">'</span></span>
+});
+
+App.PhotoAdapter = DS.RESTAdapter.extend({
+  <span class="key">namespace</span>: <span class="string"><span class="delimiter">'</span><span class="content">api/v1</span><span class="delimiter">'</span></span>
+  host: <span class="string"><span class="delimiter">'</span><span class="content">https://api.example.com</span><span class="delimiter">'</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>This allows you to easily connect to multiple API versions simultaneously or interact with different domains on a per model basis.</p>
 <h3 class='anchorable-toc' id='toc_customizing-urls'>Customizing URLs</h3><h4 class='anchorable-toc' id='toc_url-prefix'>URL Prefix</h4>
 <p>If your JSON API lives somewhere other than on the host root,
 you can set a prefix that will be added to all requests.</p>
