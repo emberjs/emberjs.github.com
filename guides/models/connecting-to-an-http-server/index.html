@@ -9,34 +9,8 @@
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
-    <link href="/stylesheets/highlight.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="http://emberjs.com/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
-
-    <script type="text/javascript">
-      var _gaq = _gaq || [];
-      var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
-      _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
-      _gaq.push(['_setAccount', 'UA-27675533-1']);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-    </script>
-
-<!--[if lt IE 9]>
-    <script type="text/javascript" src="/javascripts/common-old-ie.js"></script>
-<![endif]-->
-<!--[if gte IE 9]><!-->
-    <script type="text/javascript" src="/javascripts/common-modern.js"></script>
-<!--<![endif]-->
-
     
-    <script type="text/javascript" src="/javascripts/guides.js"></script>
-    <script src="http://static.jsbin.com/js/embed.js"></script>
-  
   </head>
 
   <body class="guides guides_models guides_models_connecting-to-an-http-server guides_models_connecting-to-an-http-server_index">
@@ -775,7 +749,39 @@ your server will need to be configured to send the correct CORS headers.</p>
 </tr></table>
 </div></div>
 <p>Requests for a <code>person</code> with ID <code>1</code> would now target <code>https://api.example.com/people/1</code>.</p>
+<h4 class='anchorable-toc' id='toc_custom-http-headers'>Custom HTTP Headers</h4>
+<p>Some APIs require HTTP headers, e.g. to provide an API key. Arbitrary
+headers can be set as key/value pairs on the <code>RESTAdapter</code>&#39;s <code>headers</code>
+property and Ember Data will send them along with each ajax request.</p>
 
+<p>For Example</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre>App.ApplicationAdapter = DS.RESTAdapter.extend({
+  <span class="key">headers</span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">API_KEY</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">secret key</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">ANOTHER_HEADER</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Some header value</span><span class="delimiter">&quot;</span></span>
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Requests for any resource will include the following HTTP headers.</p>
+<div class="highlight http "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre>ANOTHER_HEADER: Some header value
+API_KEY: secret key
+</pre></td>
+</tr></table>
+</div></div>
     
       <footer>
         
@@ -815,5 +821,29 @@ your server will need to be configured to send the correct CORS headers.</p>
         </div>
       </div>
     </div>
+
+<!--[if lt IE 9]>
+    <script type="text/javascript" src="/javascripts/common-old-ie.js"></script>
+<![endif]-->
+<!--[if gte IE 9]><!-->
+    <script type="text/javascript" src="/javascripts/common-modern.js"></script>
+<!--<![endif]-->
+    
+    <script type="text/javascript" src="/javascripts/guides.js"></script>
+    <script src="http://static.jsbin.com/js/embed.js"></script>
+  
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+      _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+      _gaq.push(['_setAccount', 'UA-27675533-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
   </body>
 </html>
