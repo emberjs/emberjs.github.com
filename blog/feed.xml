@@ -5,10 +5,261 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2014-03-04T00:00:00Z</updated>
+  <updated>2014-03-18T00:00:00Z</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>The Road to Ember Data 1.0</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2014/03/18/the-road-to-ember-data-1-0.html"/>
+    <id>http://emberjs.com/blog/2014/03/18/the-road-to-ember-data-1-0.html</id>
+    <published>2014-03-18T00:00:00Z</published>
+    <updated>2014-03-18T00:00:00Z</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt; Ember Data 1.0 is coming soon. We have a few last features to land before we
+can confidently make guarantees around not breaking the API. Specifically:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;A guarantee that if one side of a two-way relationship changes, the other
+side will remain...&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;</summary>
+    <content type="html">&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt; Ember Data 1.0 is coming soon. We have a few last features to land before we
+can confidently make guarantees around not breaking the API. Specifically:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;A guarantee that if one side of a two-way relationship changes, the other
+side will remain in sync, even if it hasn&amp;#39;t loaded yet.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;All relationships will become async, but DataBoundPromises will make them
+work well in observers, computed properties and in templates.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Just like how it took us a few attempts to get the router right—but now we&amp;#39;ve
+got the best one in JavaScript—getting Ember Data right has taken longer than
+we thought, but it&amp;#39;s here and it&amp;#39;s almost ready for a 1.0.&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Ever since the 1.0 release, developers building apps on top of Ember.js have
+appreciated the stability and forward-momentum that our commitment to &lt;a href="http://semver.org/"&gt;Semantic
+Versioning&lt;/a&gt; allows.&lt;/p&gt;
+
+&lt;p&gt;We frequently get asked, &amp;quot;Ember.js is great, but what about Ember Data?&amp;quot; Today,
+we&amp;#39;d like to give you an update on where Ember Data is and where it&amp;#39;s headed
+soon.&lt;/p&gt;
+
+&lt;p&gt;First, the good news: there is only one major breaking change planned before
+releasing Ember Data 1.0, and we are doing our best to minimize the impact that
+that change will have on existing apps.&lt;/p&gt;
+
+&lt;p&gt;Other than that, we anticipate that the current feature set and API will serve
+as a stable base for the foreseeable future. In other words, we don&amp;#39;t
+anticipate needing any more user-facing breaking changes in order to
+accommodate future changes to the architecture.&lt;/p&gt;
+
+&lt;p&gt;So why haven&amp;#39;t we released a 1.0 yet? There are two more features that we&amp;#39;re
+working on: an improved relationship architecture, and more consistent API when
+dealing with relationships.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_a-single-source-of-truth'&gt;A Single Source of Truth&lt;/h2&gt;
+&lt;p&gt;Modeling relationships between records is easily the most difficult feature
+we&amp;#39;ve added to Ember Data. Finding a common solution is complicated because of
+how much JSON servers differ from one another. Things get even more interesting
+when you introduce streaming changes over WebSockets.&lt;/p&gt;
+
+&lt;p&gt;The naïve approach is to declare that the problem is too domain-specific and
+that each developer should hand-roll relationships via a simplistic abstraction
+(like sugar around computed properties).&lt;/p&gt;
+
+&lt;p&gt;However, we have observed that everyone who tries to implement their own
+domain-specific relationships quickly ends up with their own ad hoc
+mini-framework. As we did with Ember, we wanted to look at the problems shared
+across all of these applications, and tease out the core abstractions.&lt;/p&gt;
+
+&lt;p&gt;We wanted to build something that was powerful, to help save time for advanced
+developers, while also being accessible to developers just getting started with
+client-side web applications.&lt;/p&gt;
+
+&lt;p&gt;To take a simple example, sometimes a has-many relationship is stored in the
+parent record&amp;#39;s JSON representation:&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;{
+  &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;id&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="integer"&gt;1&lt;/span&gt;,
+  &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;name&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;Lord Grantham&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;,
+  &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;children&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: [&lt;span class="integer"&gt;2&lt;/span&gt;, &lt;span class="integer"&gt;3&lt;/span&gt;, &lt;span class="integer"&gt;4&lt;/span&gt;]
+}
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Other times, the same relationship may be saved as a foreign key on the children:&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;{
+  &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;id&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="integer"&gt;2&lt;/span&gt;,
+  &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;name&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;Lady Mary&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;,
+  &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;parent_id&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="integer"&gt;1&lt;/span&gt;
+}
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Often, the same application will represent the same relationship in both forms,
+depending on whether the records are being loaded or saved.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;ll spare you the details, but the permutations get even more complex when you
+introduce things like streaming changes from the server over a socket.&lt;/p&gt;
+
+&lt;p&gt;The point of highlighting the essential complexity here is to demonstrate that
+we couldn&amp;#39;t just hardcode support for each one; each representation will likely
+co-exist and interoperate with multiple other representations.&lt;/p&gt;
+
+&lt;p&gt;One-way relationships aren&amp;#39;t too bad--you can get pretty far with hand-rolled
+solutions before inevitably hitting a wall. The real problem comes up when you
+have two-way relationships: an article has many comments, but each comment also
+belongs to the article.&lt;/p&gt;
+
+&lt;p&gt;Because both sides of the relationship aren&amp;#39;t always loaded together, and
+because each side may represent the relationship differently (a foreign key on
+the comment and an array on the article), maintaining this link has
+historically been very difficult for us.&lt;/p&gt;
+
+&lt;p&gt;It&amp;#39;s especially complicated when you want to support updated data coming in
+from the server. Imagine that refreshing the article provides a new set of
+comments, but you also know that the user is in the middle of creating her own
+comment. How do you make sure that the &lt;code&gt;comments&lt;/code&gt; array takes both of those
+facts into consideration?&lt;/p&gt;
+
+&lt;p&gt;At a high-level, the solution is this: instead of internally storing the
+relationships as state on each record that needs to be synchronized, we
+maintain a single entity in memory that represents the logical relationship
+&lt;strong&gt;between&lt;/strong&gt; the records. That entity exists regardless of which side of the
+relationship the application has loaded.&lt;/p&gt;
+
+&lt;p&gt;For example, if you change the belongs-to relationship on a comment, you are
+changing the has-many side even if the application has not yet loaded the
+article. When the application finally does load the article, the local
+belongs-to change is ready to apply.&lt;/p&gt;
+
+&lt;p&gt;The long and short of it is that the two sides of a two-way relationship will
+remain in sync in Ember Data 1.0, regardless of the order the records were
+loaded, the way they were loaded, or how the relationships were represented in
+the payloads.&lt;/p&gt;
+
+&lt;p&gt;We are doing this work on the
+&lt;a href="https://github.com/emberjs/data/tree/single-source-of-truth"&gt;single-source-of-truth&lt;/a&gt;
+branch (thank you &lt;a href="https://github.com/igort"&gt;Igor Terzic&lt;/a&gt; for getting this over
+the finish line!) and hope to merge it soon.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_async-relationships'&gt;Async Relationships&lt;/h2&gt;
+&lt;p&gt;Currently in Ember Data, you must specify ahead of time whether relationships
+are synchronous or asynchronous. Determining whether or not a relationship is
+asynchronous requires knowing how the server will represent the data when
+sending it to your application. That isn&amp;#39;t fatal, but it does tightly couple
+the semantics of your application to the server.&lt;/p&gt;
+
+&lt;p&gt;The fatal problem comes when you start refactoring your server API. For
+example, in a has-many relationship, perhaps instead of inlining an array of
+record IDs you instead send a URL where the client can retrieve the collection.&lt;/p&gt;
+
+&lt;p&gt;All of a sudden, your application starts breaking in very Zalgo-esque ways (of
+note: if you have not read Isaac&amp;#39;s &lt;a href="http://blog.izs.me/post/59142742143/designing-apis-for-asynchrony"&gt;excellent essay on async
+APIs&lt;/a&gt;,
+please do).&lt;/p&gt;
+
+&lt;p&gt;We strongly consider how easy or difficult refactorings are when designing
+APIs, and in this case, we made a mistake. Making small changes to your server
+API should not require widespread changes to the application that consumes it.&lt;/p&gt;
+
+&lt;p&gt;For what it&amp;#39;s worth, not all refactorings are created equal. In this case, we
+observed that real apps almost always shuffle around their payloads as they
+grow, hitting this problem. (In other cases, if we see that real-world
+applications rarely change in a particular way, we might prioritize convenience
+over refactor-proofing.)&lt;/p&gt;
+
+&lt;p&gt;The solution is to treat &lt;strong&gt;all&lt;/strong&gt; relationships as async, and use promises to
+represent their values. By relying on Promises/A+&amp;#39;s guarantees around
+asynchronicity, we can avoid releasing Zalgo into your application. In the
+future, if the way you represent a relationship changes, or the order in which
+the relationship becomes available changes, your application will continue to
+function with no changes required.&lt;/p&gt;
+
+&lt;p&gt;Using a Promise in JavaScript is pretty simple: call &lt;code&gt;.then&lt;/code&gt; on it and do
+something with the returned value in the callback. But what if you want to use
+an Ember Data relationship in a template or in a computed property? How would
+that work?&lt;/p&gt;
+
+&lt;p&gt;Ember Data 1.0 introduces a subclass of Promise called &lt;code&gt;DataBoundPromise&lt;/code&gt;. This
+object allows you to observe properties on the Promise, just as you would on a
+normal object. When the promise resolves, those properties will be updated to
+match the underlying object. If you &lt;code&gt;get&lt;/code&gt;a property from a &lt;code&gt;DataBoundPromise&lt;/code&gt;
+when it is unresolved, it will return &lt;code&gt;undefined&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; article = comment.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;article&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+
+&lt;span class="comment"&gt;// If the promise has not yet resolved&lt;/span&gt;
+article.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;title&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;); &lt;span class="comment"&gt;//=&amp;gt; undefined&lt;/span&gt;
+
+&lt;span class="comment"&gt;// If the promise has resolved&lt;/span&gt;
+article.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;title&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;); &lt;span class="comment"&gt;//=&amp;gt; &amp;quot;Ember Data Roadmap&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;The basic idea is that when you&amp;#39;re working within the context of Ember data bindings (templates, computed properties, observers), you can use a relationship as if it were a synchronous value, and let the data binding system handle the promise. This means that in many cases, this change won&amp;#39;t affect your existing code, and will indeed improve your ability to work with asynchronous relationships in templates and computed properties (a major pain point today).&lt;/p&gt;
+
+&lt;p&gt;You should &lt;strong&gt;not&lt;/strong&gt; rely on this behavior when you want to use the value in imperative JavaScript (outside of computed properties); in that case, always use the promise&amp;#39;s &lt;code&gt;then()&lt;/code&gt; method to ensure the the value is available, lest you unleash Zalgo into your own apps. Only &lt;code&gt;.get&lt;/code&gt; properties from a &lt;code&gt;DataBoundPromise&lt;/code&gt; if you&amp;#39;re relying on Ember&amp;#39;s data binding functionality to update the template or computed property when the promise finally does resolve.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt; Only use &lt;code&gt;get&lt;/code&gt; on &lt;code&gt;DataBoundPromises&lt;/code&gt; inside of observers or computed properties. Otherwise, always treat them as regular promises and use &lt;code&gt;.then&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_other-improvements'&gt;Other Improvements&lt;/h2&gt;
+&lt;p&gt;There are a number of outstanding bugs we&amp;#39;d like to get fixed before we feel comfortable declaring 1.0. Some of them involve tightening up behavior that is currently undefined, and others are bugs we want to make sure applications don&amp;#39;t come to rely on.&lt;/p&gt;
+
+&lt;p&gt;Most notably, the current &lt;code&gt;RESTAdapter&lt;/code&gt; calls the wrong &lt;code&gt;normalize&lt;/code&gt; hook for embedded or sideloaded data in &lt;code&gt;pushPayload&lt;/code&gt;. &lt;a href="https://github.com/emberjs/data/issues/1804"&gt;Fixing this&lt;/a&gt; is a high priority and blocks the 1.0 release.&lt;/p&gt;
+
+&lt;p&gt;We are also committed to making sure that the documentation is up to the high quality standards people expect from Ember before we declare 1.0.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_what-s-next'&gt;What&amp;#39;s Next&lt;/h2&gt;
+&lt;p&gt;We are committed to following &lt;a href="http://semver.org/"&gt;Semantic Versioning&lt;/a&gt;, and want to make sure we have a solid base we can build on for the next few years.&lt;/p&gt;
+
+&lt;p&gt;We think the decision to iterate on Ember.js before locking down the API has given us a foundation that we can continue to iterate on for years, without breaking backwards compatibility. We want the same for Ember Data.&lt;/p&gt;
+
+&lt;p&gt;Once the issues we&amp;#39;ve outlined above are complete, we&amp;#39;ll be releasing a 1.0 of Ember Data that will not see breaking changes for some time. We intend to keep the release of Ember.js and Ember Data in sync, so that the first version in the Ember Data 1.x series will be whatever the current version of Ember is at that time.&lt;/p&gt;
+
+&lt;p&gt;For example, if Ember.js 1.7 is the current stable version at the time of Ember Data&amp;#39;s first stable release, it will be Ember Data 1.7.&lt;/p&gt;
+
+&lt;p&gt;As with Ember.js, we intend Ember Data to follow the same &lt;a href="http://emberjs.com/blog/2013/09/06/new-ember-release-process.html"&gt;Chrome-inspired six-week release process&lt;/a&gt;. That release process has paid dividends in terms of predictability and momentum, and the feedback has been overwhelmingly positive. Importantly, having separate stable, beta and canary releases also allows us to clearly &lt;a href="http://emberjs.com/builds/#/beta"&gt;communicate which features are stable&lt;/a&gt; and ready for production, and which are still being worked on.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_a-framework-for-data'&gt;A Framework for Data&lt;/h2&gt;
+&lt;p&gt;As we outlined in &lt;a href="http://www.youtube.com/watch?v=jScLjUlLTLI"&gt;our keynote last week at Fluent&lt;/a&gt;, we believe that frameworks exist to make doing the right thing feel better than doing the wrong thing. By codifying best practices in code, frameworks allow their communities to build further abstractions, creating a virtuous cycle that grows more and more powerful over time.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;We think of Ember Data as a framework for managing your models and relationships.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Relationships are difficult to get right, but by giving in to temptation and having everyone roll their own solutions, the community cannot build further abstractions on top of the concept of relationships.&lt;/p&gt;
+
+&lt;p&gt;Earlier on, when we started with Ember Data, we tried to codify good practices, but didn&amp;#39;t provide a flexible enough primitive underneath as an escape valve. Because people are interacting with servers they don&amp;#39;t always control, we realized that having a good escape valve was more important in Ember Data than usual.&lt;/p&gt;
+
+&lt;p&gt;In order to make sure that the community would still be able to build on top of the Ember Data abstraction, we tried our best to isolate the code that is different between applications to the Adapter. This means that if someone writes a plugin for Ember Data, they can assume that models and relationships will look the same in all apps that use it, even though application backends can vary considerably.&lt;/p&gt;
+
+&lt;p&gt;In earlier versions of Ember Data, we were too religious about this separation, forcing every application to bear significant costs in the adapter layer. When we rebooted Ember Data six months ago, we took a hard look at striking a better balance between these competing concerns. Based on the feedback we&amp;#39;ve gotten since then, we believe that Ember Data is now a great fit for applications that have very unique backends, as well as applications that want direction on how to build a backend that &amp;quot;just works&amp;quot; with Ember Data.&lt;/p&gt;
+
+&lt;p&gt;We are committed to getting things right before declaring 1.0. The router in Ember.js went through several similar iterations, which were painful at the time, but we believe the results speak for themselves. Adapting to real-world usage is an important part of our design process, and we will always prioritize thinking through problems carefully over rushing to ship.&lt;/p&gt;
+
+&lt;p&gt;Given that, we hope that you will trust us when we say that Ember Data is on the cusp of the level of quality that we demand from the 1.0 versions of our open source projects. If you start building now, you&amp;#39;ll be very happy with the forward momentum that having a community with shared understanding will bring.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>Core Team Meeting Minutes - 2014/02/28</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/03/04/core-team-meeting-minutes-2014-02-28.html"/>
@@ -600,135 +851,6 @@ This should include at least the following entries:
 &lt;h4 class='anchorable-toc' id='toc_security-process'&gt;Security Process&lt;/h4&gt;
 &lt;p&gt;Currently we do security releases all the way back to 1.0.x. At some point that will be untenable (not yet though).
 There was some discussions about Long Term Support release structures: every odd/even becomes LTS, or even 5th release, or we only support previous three revisions (which would be all releases in the last 4.5 months with our current release model).&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Core Team Meeting Minutes - 2014/01/31</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2014/02/08/core-team-meeting-minutes-2014-01-31.html"/>
-    <id>http://emberjs.com/blog/2014/02/08/core-team-meeting-minutes-2014-01-31.html</id>
-    <published>2014-02-08T00:00:00Z</published>
-    <updated>2014-02-08T00:00:00Z</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
-(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
-the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
-Friday at 2pm EST/11am PST through Google Hangout for a weekly
-discussion of all things Ember...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
-(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
-the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
-Friday at 2pm EST/11am PST through Google Hangout for a weekly
-discussion of all things Ember.&lt;/p&gt;
-
-&lt;p&gt;If you have a topic you&amp;#39;d like to see covered, contact your favorite
-core team member and let them know!&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_attendees'&gt;Attendees&lt;/h4&gt;
-&lt;p&gt;@ebryn, @krisselden, @machty, @stefanpenner, @tomdale, @wifelette, @wycats&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_go-no-go-feature-listing'&gt;Go/No-Go Feature Listing&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;ember-routing-named-substates&lt;/code&gt; &lt;a href="https://github.com/emberjs/ember.js/pull/3655"&gt;#3655&lt;/a&gt;
-  @krisselden: likes the feature a lot (we should “just doit”)
-  @wycats: naming with globals is totally unsolvable.
-  @machty: If FooLoading is ambiguous, we should just warn that global mode is not supported for this feature
-  @tomdale: we need a separate task force for thinking about module mode only features.&lt;/p&gt;
-
-&lt;p&gt;resolution: Tom and Stef will review&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;ember-handlebars-caps-lookup&lt;/code&gt; &lt;a href="https://github.com/emberjs/ember.js/pull/3218"&gt;#3218&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;resolution: check local first, warn and fallback to global seems like a good strategy&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;ember-testing-simple-setup&lt;/code&gt; &lt;a href="https://github.com/emberjs/ember.js/pull/3785"&gt;#3785&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;resolution: Tom and Stef will review&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;version api docs&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Often asked for. We should work with community, see if robert can own, and help delegate.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;query-params-new&lt;/code&gt; &lt;a href="https://github.com/emberjs/ember.js/pull/4008"&gt;#4008&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;misleading bug reports, but eager loader of controllers was the original pain point that kept
-this a &amp;quot;No go&amp;quot;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;composable-computed-properties&lt;/code&gt; &lt;a href="https://github.com/emberjs/ember.js/pull/3696"&gt;#3696&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;@wycats: aliased to short words in the examples, should be documented to match this?
-@ebryn:: new CP work may have issues, @wycats and @ebryn and David should talk.&lt;/p&gt;
-
-&lt;p&gt;resolution: @ebryn will talk to David about blocking&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;ember-routing-auto-location&lt;/code&gt; &lt;a href="https://github.com/emberjs/ember.js/pull/3725"&gt;#3725&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;resolution: Alex will make sure docs are good, then this becomes a &amp;quot;Go&amp;quot;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;ember-routing-bound-action-name&lt;/code&gt; &lt;a href="https://github.com/emberjs/ember.js/pull/3936"&gt;#3936&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;resolution: &amp;quot;Go&amp;quot; but we need an intermediate release issuing deprecation warnings, a future release will have break. This future release may contain some helpful warning, and the release notes will contain this info.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 class='anchorable-toc' id='toc_pr-s-issues-to-review'&gt;PR&amp;#39;s/Issues To Review&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4251"&gt;FEATURE ember-routing-consistent-resources&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Adds &lt;code&gt;.index&lt;/code&gt;, &lt;code&gt;.loading&lt;/code&gt;, and &lt;code&gt;.error&lt;/code&gt; sub-routes for resources created even if no callback was provided.&lt;/p&gt;
-
-&lt;p&gt;For example:&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt; App.Router.map(&lt;span class="keyword"&gt;function&lt;/span&gt;() {
-   &lt;span class="local-variable"&gt;this&lt;/span&gt;.resource(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;home&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;);
- });
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Prior to this feature &lt;code&gt;home.index&lt;/code&gt; route would not be created for the above resource.
-It is possible that the current situation was intentional.&lt;/p&gt;
-
-&lt;p&gt;resolution: &amp;quot;No go&amp;quot;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4246"&gt;FEATURE ember-routing-inherits-parent-model&lt;/a&gt;&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;App.Router.map(&lt;span class="keyword"&gt;function&lt;/span&gt;() {
-  &lt;span class="local-variable"&gt;this&lt;/span&gt;.resource(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;thing&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, { &lt;span class="key"&gt;path&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;/thing/:thing_id&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; }, &lt;span class="keyword"&gt;function&lt;/span&gt;() {
-    &lt;span class="local-variable"&gt;this&lt;/span&gt;.route(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;edit&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
-  });
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;If you wanted the Edit route&amp;#39;s model to be the Thing loaded in the Thing route, you have to define a model hook on the Edit route to call this.modelFor(&amp;#39;thing&amp;#39;), which is pretty repetitive and cumbersome.&lt;/p&gt;
-
-&lt;p&gt;For this.route() routes that don&amp;#39;t specify a model hook, the model for that route should default to the parent resource&amp;#39;s model.&lt;/p&gt;
-
-&lt;p&gt;This should be totally backwards compatible unless someone is doing something extremely strange.&lt;/p&gt;
-
-&lt;p&gt;resolution: make this work only for routes, not resources for now. The interim solution.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/3689"&gt;FEATURE ember-document-title&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Examples from @machty:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="http://jsbin.com/ucanam/3299"&gt;Single static title&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://jsbin.com/ucanam/3302"&gt;Basic example of titleToken + title&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://jsbin.com/ucanam/3300"&gt;Basic example of titleToken + title (reversed)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://jsbin.com/ucanam/3303"&gt;titleToken bound to controller/model properties&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://jsbin.com/ucanam/3304"&gt;Overriding doc.title format in deeper routes&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;resolution: pause, until @wycats and @tomdale can review tokens behavior. Its getting close and we want this.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/3935"&gt;Convert Checkbox and Select to Components.&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;resolution: &amp;quot;No go&amp;quot;, this is a breaking change.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/3838"&gt;Use &lt;code&gt;QUnit.module&lt;/code&gt; instead of &lt;code&gt;module&lt;/code&gt;.&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Let&amp;#39;s just confirm what to use as a prefix. Is &lt;code&gt;QUnit.module&lt;/code&gt; OK, or should we create our own
-(perhaps &lt;code&gt;EmberDev.module&lt;/code&gt; or something)?&lt;/p&gt;
-
-&lt;p&gt;resolution: &amp;quot;Go&amp;quot;&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
 </content>
   </entry>
 </feed>

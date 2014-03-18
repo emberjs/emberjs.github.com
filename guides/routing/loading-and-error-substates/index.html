@@ -664,9 +664,9 @@ the following loading substate behavior we&#39;ve been alluding to.</p>
 7
 </pre></td>
   <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
-  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {   <span class="comment">// -&gt; FooRoute</span>
-    <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">bar</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() { <span class="comment">// -&gt; BarRoute</span>
-      <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">baz</span><span class="delimiter">'</span></span>);              <span class="comment">// -&gt; BarBazRoute</span>
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {       <span class="comment">// -&gt; FooRoute</span>
+    <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">foo.bar</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() { <span class="comment">// -&gt; FooBarRoute</span>
+      <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">baz</span><span class="delimiter">'</span></span>);                  <span class="comment">// -&gt; FooBarBazRoute</span>
     });
   });
 });
@@ -688,7 +688,7 @@ above <code>foo.bar.baz</code> that it can transition into, starting with
 Route subclass has been defined for such a route, e.g.</p>
 
 <ol>
-<li><code>App.BarLoadingRoute</code></li>
+<li><code>App.FooBarLoadingRoute</code></li>
 <li><code>App.FooLoadingRoute</code></li>
 <li><code>App.LoadingRoute</code></li>
 </ol>
@@ -696,7 +696,7 @@ Route subclass has been defined for such a route, e.g.</p>
 <p>or b) a properly-named loading template has been found, e.g.</p>
 
 <ol>
-<li><code>bar/loading</code></li>
+<li><code>foo/bar/loading</code></li>
 <li><code>foo/loading</code></li>
 <li><code>loading</code></li>
 </ol>
@@ -788,7 +788,7 @@ a transition and exited upon completion of the transition. Because the
 <code>loading</code> template rendered as a top-level view and not within an
 outlet, it could be used for little more than displaying a loading
 spinner during slow transitions. Loading events/substates give you far
-more control, but if you&#39;d like to emulate something similar to legacy
+more control, but if you&#39;d like to emulate something similar to the legacy
 <code>LoadingRoute</code> behavior, you could do as follows:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -823,7 +823,7 @@ App.ApplicationRoute = Ember.Route.extend({
 </div></div>
 <p><a href="http://emberjs.jsbin.com/ucanam/3307">Example JSBin</a></p>
 
-<p>This will, like legacy <code>LoadingRoute</code>, append a top-level view when the
+<p>This will, like the legacy <code>LoadingRoute</code>, append a top-level view when the
 router goes into a loading state, and tear down the view once the
 transition finishes.</p>
 
