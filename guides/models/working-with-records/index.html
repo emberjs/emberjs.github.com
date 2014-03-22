@@ -581,7 +581,11 @@ modifying attributes. For example, you can use <code>Ember.Object</code>&#39;s
 </tr></table>
 </div></div>
 <p>You can tell if a record has outstanding changes that have not yet been
-saved by checking its <code>isDirty</code> property.</p>
+saved by checking its <code>isDirty</code> property. You can also see what parts of
+the record were changed and what the original value was using the
+<code>changedAttributes</code> function.  <code>changedAttributes</code> returns an object,
+whose keys are the changed properties and values are an array of values
+<code>[oldValue, newValue]</code>.</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -589,11 +593,35 @@ saved by checking its <code>isDirty</code> property.</p>
 4
 5
 </pre></td>
-  <td class="code"><pre>person.get(<span class="string"><span class="delimiter">'</span><span class="content">isDirty</span><span class="delimiter">'</span></span>); <span class="comment">//=&gt; false</span>
-
+  <td class="code"><pre>person.get(<span class="string"><span class="delimiter">'</span><span class="content">isAdmin</span><span class="delimiter">'</span></span>);      <span class="comment">//=&gt; false</span>
+person.get(<span class="string"><span class="delimiter">'</span><span class="content">isDirty</span><span class="delimiter">'</span></span>);      <span class="comment">//=&gt; false</span>
 person.set(<span class="string"><span class="delimiter">'</span><span class="content">isAdmin</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
+person.get(<span class="string"><span class="delimiter">'</span><span class="content">isDirty</span><span class="delimiter">'</span></span>);      <span class="comment">//=&gt; true</span>
+person.changedAttributes(); <span class="comment">//=&gt; { isAdmin: [false, true] }</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>At this point, you can either persist your changes via <code>save()</code> or you
+can rollback your changes. Calling <code>rollback()</code> reverts all the
+<code>changedAttributes</code> to their original value</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre>person.get(<span class="string"><span class="delimiter">'</span><span class="content">isDirty</span><span class="delimiter">'</span></span>);      <span class="comment">//=&gt; true</span>
+person.changedAttributes(); <span class="comment">//=&gt; { isAdmin: [false, true] }</span>
 
-person.get(<span class="string"><span class="delimiter">'</span><span class="content">isDirty</span><span class="delimiter">'</span></span>); <span class="comment">//=&gt; true</span>
+person.rollback();
+
+person.get(<span class="string"><span class="delimiter">'</span><span class="content">isDirty</span><span class="delimiter">'</span></span>);      <span class="comment">//=&gt; false</span>
+person.get(<span class="string"><span class="delimiter">'</span><span class="content">isAdmin</span><span class="delimiter">'</span></span>);      <span class="comment">//=&gt; false</span>
+person.changedAttributes(); <span class="comment">//=&gt; {}</span>
 </pre></td>
 </tr></table>
 </div></div>

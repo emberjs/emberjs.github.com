@@ -3,8 +3,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - The Post-1.0 Release Cycle</title>
-    <meta property="st:title" content="The Post-1.0 Release Cycle" />
+    <title>Ember.js - Core Team Meeting Minutes - 2014/03/07</title>
+    <meta property="st:title" content="Core Team Meeting Minutes - 2014/03/07" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -12,7 +12,7 @@
     
   </head>
 
-  <body class="blog blog_2013 blog_2013_09 blog_2013_09_06 blog_2013_09_06_new-ember-release-process">
+  <body class="blog blog_2014 blog_2014_03 blog_2014_03_04 blog_2014_03_04_core-team-meeting-minutes-2014-03-07">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -177,129 +177,166 @@
       
       <div id="content" class="has-sidebar">
           <article class="blog-post">
-    <h1>The Post-1.0 Release Cycle</h1>
+    <h1>Core Team Meeting Minutes - 2014/03/07</h1>
     
-      <h3 class="blog-post-author">Posted By: Yehuda Katz &ndash; <time>Sep 06, 2013</time></h3>
+      <h3 class="blog-post-author">Posted By: Trek Glowacki &ndash; <time>Mar 04, 2014</time></h3>
     
 
     <hr>
 
-    <p>Now that we&#39;ve shipped Ember 1.0 final, it&#39;s time to look forward to future 
-releases.</p>
+    <p>Although most of our collaboration takes place on Github, IRC
+(<code>#emberjs</code> on freenode.net), and our <a href="http://discuss.emberjs.com/">Discourse site</a>
+the <a href="/team">Ember.js Core Team</a> meets privately every
+Friday at 2pm EST/11am PST through Google Hangout for a weekly
+discussion of all things Ember.</p>
 
-<p>The plan moving forward is to adopt a Chrome-like release cycle: more frequent releases with more clarity about where features are in the pipeline.</p>
-
-<p></p>
-<h3 class='anchorable-toc' id='toc_tl-dr'>TL;DR</h3>
-<p>The Ember.js 1.x Schedule:</p>
-
+<p>If you have a topic you&#39;d like to see covered, contact your favorite
+core team member and let them know!</p>
+<h4 class='anchorable-toc' id='toc_attendees'>Attendees</h4>
+<p>@ebryn, @krisselden, @machty, @rwjblue, @stefanpenner, @tomdale, @trek, @wycats</p>
+<h3 class='anchorable-toc' id='toc_topics'>Topics</h3><h4 class='anchorable-toc' id='toc_features-pending-go-decision-a-href-https-github-com-emberjs-ember-js-issues-4052-tracking-issue-a'>Features pending &#39;Go&#39; decision. <a href="https://github.com/emberjs/ember.js/issues/4052">Tracking Issue</a></h4>
 <ul>
-<li>Every six weeks: A new stable version of Ember.js.</li>
-<li>Every week: A new beta of the next version of Ember.js. When
-Ember 1.1 is released, the first beta of Ember 1.2 will be released
-at the same time.</li>
-<li>Every day: A new &quot;canary&quot; build, which is the last successful build of
-the day.</li>
-<li>Every successful build: The <code>ember-latest.js</code> build is updated</li>
+<li> <code>ember-routing-add-model-option</code> <a href="https://github.com/emberjs/ember.js/pull/4293">#4293</a>
+Resolution: Go</li>
 </ul>
+<h3 class='anchorable-toc' id='toc_pr-s-issues-to-review'>PR&#39;s/Issues To Review</h3>
+<ul>
+<li><p>Query Params New - Sticky Params?</p>
 
-<p>All builds will be available on the new <a href="http://emberjs.com/builds/">Ember.js Builds</a> section of the
-Ember website.</p>
-
-<p>All new features will start out on master, behind a feature flag. Canary
-and <code>latest</code> builds will ship with all experimental features, enable-able
-at runtime.</p>
-
-<p>Beta and Stable releases will only ship with features that the core team
-believes are stable.</p>
-
-<p>Read on for more details about how we plan to organize new features. If
-you plan to contribute features to Ember.js, or are just interested in
-the full nitty-gritty, you should check out the <a href="/guides/contributing/adding-new-features">Adding New
-Features</a> guide, which lays
-out all of the mechanics for the process going forward.</p>
-<h3 class='anchorable-toc' id='toc_feature-flags'>Feature Flags</h3>
-<p>Starting today, all new features on master that introduce new public APIs
-will be wrapped in a feature flag. This will make it very easy for the core
-team and the community to see which features are in development and how far
-along they are.</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>Should query paramters remain on route change? When do we want it? All the time?
+How do we disable it? Proposals thus far:</p>
+<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
+4
 </pre></td>
-  <td class="code"><pre><span class="keyword">if</span> (Ember.FEATURES.isEnabled(<span class="string"><span class="delimiter">'</span><span class="content">link-to</span><span class="delimiter">'</span></span>)) {
-  <span class="comment">// implementation here</span>
-}
-</pre></td>
-</tr></table>
-</div></div><h3 class='anchorable-toc' id='toc_cross-browser-builds'>Cross Browser Builds</h3>
-<p>Moving forward, builds will be tested (via Travis and SauceLabs) against
-every supported browser. This means that we&#39;ll know whether a commit broke
-the build on any browser we support.</p>
-<h3 class='anchorable-toc' id='toc_ember-latest'>Ember Latest</h3>
-<p>Every time the build passes across all browsers, the <code>ember-latest</code> build
-will be updated. This is the most bleeding of bleeding-edge builds.</p>
-
-<p>You can get all of the latest builds at http://emberjs.com/builds/#/canary/latest.</p>
-<h3 class='anchorable-toc' id='toc_canary-builds'>Canary Builds</h3>
-<p>At the end of every day, <code>ember-latest</code> will be saved off to a canary build
-for that day. That means that the last successful build of a given day will
-be saved for posterity.</p>
-
-<p>This is a bleeding-edge build with no manual testing applied, so use at
-your own peril.</p>
-
-<p>On the latest or canary builds, you can enable any experimental feature
-using a flag:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-</pre></td>
-  <td class="code"><pre>Ember.FEATURES[<span class="string"><span class="delimiter">'</span><span class="content">link-to</span><span class="delimiter">'</span></span>] = <span class="predefined-constant">true</span>;
-Ember.FEATURES[<span class="string"><span class="delimiter">'</span><span class="content">router-facelift</span><span class="delimiter">'</span></span>] = <span class="predefined-constant">true</span>;
+  <td class="code"><pre>/r?sort=asc ← keep
+/r/ios?sort=hot ← keep? “model specific state”
+/r/gonewild ← keep? “model specific state”
+/r/foo?name=’something related to foo’
 </pre></td>
 </tr></table>
 </div></div>
-<p>This means that latest and canary ship with all experimental features,
-and will be bigger in byte-size than using beta or released builds.</p>
-<h3 class='anchorable-toc' id='toc_beta-builds'>Beta Builds</h3>
-<p>Every six weeks, we will:</p>
-<h4 class='anchorable-toc' id='toc_branch-beta-to-release'>Branch Beta to Release</h4>
-<p>See more on the release branch below.</p>
-<h4 class='anchorable-toc' id='toc_branch-master-to-beta'>Branch Master to Beta</h4>
-<p>First, the core team will review all feature flags on <code>master</code>, and make
-a Go/No-Go decision for each of them.</p>
+<p>or
+<code>
+/blog/somepost?comments=true
+then navigate to
+/blog/someOtherPost?comments=true ← keep?
+/blog/someOtherPostthen ← don’t keep?
+// then navigate to
+/blog/somepost?comments=true ← kept from before? kept from last route? gone from last route?
+</code></p>
 
-<p>Any feature that is not ready to go will be stripped from the beta build.</p>
+<p>Possible opt-out via helper?
+<code>
+{{link-to ‘Home’ ‘home’ (query-params sort=null)}}
+</code></p>
 
-<p>Feature development will continue on master, and get another shot at the
-next departing train, six weeks hence.</p>
-<h4 class='anchorable-toc' id='toc_the-beta-branch'>The Beta Branch</h4>
-<p>The <code>beta</code> branch is designed to get more eyeballs on new features that
-look ready to go.</p>
+<p>some options:</p>
 
-<p>The only changes to the <code>beta</code> branch should be bug fixes and removing
-features that looked ready originally but which aren&#39;t going to make the
-cut for the next stable build.</p>
+<ul>
+<li>Preserve stickiness as the default, but add a (query-params-reset) subexpression helper
+(in addition to query-params) that can take 0 or more args and will reset any query params
+not explicitly specified in the helper invocation. The puts the stickiness in the control
+of the caller (the link-to helper).</li>
+<li><p>Add a sticky option to the route query params config hash, which defaults to true. If set to
+false, any links into that route will reset (unless QP values are explicitly provided in the
+link-to helper), but any links to that route from within that route hierarchy will be sticky,
+which effectively makes it so that if you leave a route and come back into it via a link-to,
+the QPs specified as sticky:false will be reset. Keep in mind though that leaving a route and
+pressing the back button will be &quot;sticky&quot; since the previous values on the controller will be
+restored based on the previous URL.</p>
 
-<p>You can get the latest successful build off of the beta branch at
-http://emberjs.com/builds/#/beta/latest.</p>
-<h3 class='anchorable-toc' id='toc_release-build'>Release Build</h3>
-<p>Once the <code>beta</code> branch has gone through its paces, there will be another
-Go/No-Go decision for each new feature still remaining on the branch.</p>
+<p>Example JSBin: http://emberjs.jsbin.com/ucanam/4102</p>
 
-<p>This decision is made every six weeks, and the features that make the cut
-will end up in the next release of Ember.js!</p>
-<h3 class='anchorable-toc' id='toc_new-release-management-team'>New Release Management Team</h3>
-<p>A number of Ember contributors have really stepped up to automate the
-process and build out tooling: Stanley Stuart (fivetanley), Robert
-Jackson (rwjblue), Alex Navasardyan (twokul) and Thomas Boyt (tboyt).</p>
+<p>Resolution: Sticky by default, with appropriate escape valves to opt out per route change</p></li>
+</ul></li>
+<li><p><a href="https://github.com/emberjs/ember.js/pull/4374">ES6 ember-metal, ember-runtime, ember-debug</a></p>
 
-<p>They are now the (drumroll please) Ember.js release management team!</p>
+<p>Work is currently being done (by @thomasaboyt amongst others) on the es6-module-transpiler
+to remove the need for intermediate variables. This will both reduce filesize (less total
+output), and enable cycles support (since it is evaluated lazily).</p>
 
-<p>Thanks for all your hard work in making the new release process
-possible.</p>
+<p>We believe there is more file size savings to be had in the way the view layer, and would like
+to be able to progress in the ES6 effort. Currently rebasing upon any change to ember-metal,
+ember-runtime, and ember-debug (rare) is difficult. I believe that we cannot maintain the long
+running pull-request branch for much longer and would like time to process/deal-with any issues
+that crop up from the swap (missing global exports for example) before branching the next beta
+series (2 weeks).</p>
+
+<p>RESOLUTION: Merge (pending specific issues that have already been noted), but before shipping another globals build we should deal with the file size issue. We have ~7 weeks until the 1.6 release.</p></li>
+<li><p><a href="https://github.com/emberjs/ember.js/pull/4404">The <code>each</code> helper checks that the metamorph tags have the same parent.</a></p>
+
+<p>This was generally approved in the 2014-02-28 meeting once some verbiage tweaks were made. @trek&#39;s suggested
+changes have been made, this is ready to go.</p>
+
+<p>Resolution: merge.</p></li>
+<li><p><a href="https://github.com/emberjs/ember.js/pull/4291">FEATURE Ember.computed.instance</a></p>
+
+<blockquote>
+<p>A computed property that creates a new instance of source. <code>source</code> can be any
+Class constructor, object, array, or a path to a local property.  Optionally you can
+specify the initial value(s), if only <code>initialValue</code> is given and if it is a string, it
+is treated as a local path.</p>
+</blockquote>
+
+<p>Resolution: make it an add on that’s not core. CPM.</p></li>
+<li><p><a href="https://github.com/emberjs/ember.js/pull/4124">Deprecate edge-case get and normalizeTuple behavior before fixes</a></p>
+
+<p>PR <a href="https://github.com/emberjs/ember.js/pull/3852">#3852</a> changes some edge case behavior for get and normalizeTuple. Ahead of those changes, this commit introduces deprecation notices.</p>
+
+<ul>
+<li>Deprecate get for local paths on global contexts, only if they
+return data.</li>
+<li>Deprecate normalizeTuple calls that return a non-global contenxt
+and a simple global path.</li>
+</ul></li>
+<li><p><a href="https://github.com/emberjs/ember.js/pull/4459">Deprecate global access from templates</a></p>
+
+<p>PR by @mixonic:</p>
+
+<blockquote>
+<p>Replaces #4358. These deprecations are narrow in scope, and only impact {{Global}} and
+{{#each Global}}. They do not deprecate any other global access in templates. Deprecating
+all global access from templates would a) need to be done helper-by-helper or b) would impact
+the get and binding code at a lower level.</p>
+
+<p>@xtian I&#39;m rewritten your first commit but preserved it here.</p>
+
+<p>@ebryn yo.</p>
+</blockquote></li>
+<li><p><a href="https://github.com/emberjs/ember.js/pull/4328">Container throws if injection registered for already instantiated type</a></p>
+
+<blockquote>
+<p>Prior to this commit, the container would happily allow you to register an injection for a
+type that had already been instantiated. This led to confusing-to-debug situations where an
+injection is registered but a container-created instance doesn&#39;t have the injection applied.</p>
+</blockquote>
+
+<p>Comment from @stefanpenner</p>
+
+<blockquote>
+<p>As you know I&#39;m all for this change, but it may cause people some inconvenience. I personally
+consider it a bugfix, but i would like @tomdale or @wycats&#39;s +1/-1.</p>
+</blockquote>
+
+<p>Resolution: @stefanpenner &amp; @wycats will chat.</p></li>
+<li><p><a href="https://github.com/emberjs/ember.js/pull/4097">Expose asObject to Ember.Handlebars.precompile</a></p>
+
+<p>Comment from @rwjblue:</p>
+
+<blockquote>
+<p>This was mentioned in the core team meeting on 2014-02-28. It was mentioned that this should be
+changed upstream (in Handlebars itself), but as I reviewed (to let you know where that change
+would be needed) I realized that this PR is simply exposing the functionality that already
+exists within Handlebars, but is not exposed to <code>Ember.Handlebars.precompile</code>.</p>
+
+<p>As such, I think that we should likely re-evaluate the prior decision.</p>
+</blockquote>
+
+<p>Resolution. Ship it. This just passes from Handlebars to Ember.Handlebars</p></li>
+</ul>
 
 
     <hr>

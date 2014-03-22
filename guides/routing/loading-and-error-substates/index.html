@@ -728,7 +728,8 @@ once the transition is complete. But once you provide a destination
 route loading substate, you are opting into an &quot;eager&quot; transition, which
 is to say that, unlike the &quot;lazy&quot; default, you will eagerly exit the
 source routes (and tear down their templates, etc) in order to
-transition into this substate. </p>
+transition into this substate. URLs always update immediately unless the
+transition was aborted or redirected within the same run loop.</p>
 
 <p>This has implications on error handling, i.e. when a transition into
 another route fails, a lazy transition will (by default) just remain on the
@@ -781,6 +782,67 @@ logged.</p>
 <p>The only way in which <code>loading</code>/<code>error</code> substate resolution differs is
 that <code>error</code> events will continue to bubble above a transition&#39;s pivot
 route.</p>
+<h3 class='anchorable-toc' id='toc_code-error-code-substates-with-dynamic-segments'><code>error</code> substates with dynamic segments</h3>
+<p>Routes with dynamic segments are often mapped to a mental model of &quot;two
+separate levels.&quot; Take for example:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+</pre></td>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>, {<span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">/foo/:id</span><span class="delimiter">'</span></span>}, <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">baz</span><span class="delimiter">'</span></span>);
+  });
+});
+
+App.FooRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>(params) {
+    <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
+       reject(<span class="string"><span class="delimiter">&quot;</span><span class="content">Error</span><span class="delimiter">&quot;</span></span>);
+    });
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>In the URL hierarchy you would visit <code>/foo/12</code> which would result in rendering
+the <code>foo</code> template into the <code>application</code> template&#39;s <code>outlet</code>. In the event of
+an error while attempting to load the <code>foo</code> route you would also render the
+top-level <code>error</code> template into the <code>application</code> template&#39;s <code>outlet</code>. This is
+intentionally parallel behavior as the <code>foo</code> route is never successfully
+entered. In order to create a <code>foo</code> scope for errors and render <code>foo/error</code>
+into <code>foo</code>&#39;s <code>outlet</code> you would need to split the dynamic segment:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>, {<span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">/foo</span><span class="delimiter">'</span></span>}, <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">elem</span><span class="delimiter">'</span></span>, {<span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">:id</span><span class="delimiter">'</span></span>}, <span class="keyword">function</span>() {
+      <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">baz</span><span class="delimiter">'</span></span>);
+    });
+  });
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p><a href="http://emberjs.jsbin.com/ucanam/4279">Example JSBin</a></p>
 <h2 class='anchorable-toc' id='toc_legacy-code-loadingroute-code'>Legacy <code>LoadingRoute</code></h2>
 <p>Previous versions of Ember (somewhat inadvertently) allowed you to define a global <code>LoadingRoute</code>
 which would be activated whenever a slow promise was encountered during
