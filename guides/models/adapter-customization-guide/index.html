@@ -4,8 +4,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Models: Frequently Asked Questions</title>
-    <meta property="st:title" content="Models: Frequently Asked Questions" />
+    <title>Ember.js - Guides</title>
+    <meta property="st:title" content="Guides" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -13,7 +13,7 @@
     
   </head>
 
-  <body class="guides guides_models guides_models_frequently-asked-questions guides_models_frequently-asked-questions_index">
+  <body class="guides guides_models guides_models_adapter-customization-guide guides_models_adapter-customization-guide_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -402,7 +402,7 @@
               <a href="/guides/models/handling-metadata">Handling Metadata</a>
             </li>
           
-            <li class="level-3 sub-selected">
+            <li class="level-3">
               <a href="/guides/models/frequently-asked-questions">Frequently Asked Questions</a>
             </li>
           </ol></li>
@@ -549,209 +549,171 @@
   
   <div class="chapter">
     
-        <h1>Frequently Asked Questions
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/models/frequently-asked-questions.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
-        </h1>
-      
     <hr>
-    <h4 class='anchorable-toc' id='toc_should-i-use-a-query-or-a-filter-to-search-records'>Should I use a query or a filter to search records?</h4>
-<p>It depends on how many records you want to search and whether they have
-been loaded into the store.</p>
+    <h1 class='anchorable-toc' id='toc_adapter-customization-guide'>Adapter Customization Guide</h1>
+<p>In Ember Data, the logic for communicating with a backend data store
+lives in the <code>Adapter</code>. Ember Data&#39;s Adapter has some built-in
+assumptions of how a <a href="http://jsonapi.org/">REST API</a> should look. If
+your backend conventions differ from these assumptions Ember Data
+makes it easy to change its functionality by swapping out or extending
+the default Adapter.</p>
 
-<p><em>Queries</em> are useful for doing searches of hundreds, thousands, or even
-millions of records. You just hand the search options to your server,
-and it is responsible for handing you back the list of records that
-match. Because the response from the server includes the ID of all of
-the records that matched, it doesn&#39;t matter if the store hadn&#39;t loaded
-them previously; it sees that they are not in the cache and can request
-the records by ID if necessary.</p>
+<p>Some reasons for customizing an Adapter include using
+<code>underscores_case</code> in your urls, using a medium other than REST to
+communicate with your backend API or even using a
+<a href="https://github.com/rpflorence/ember-localstorage-adapter">local backend</a>.</p>
 
-<p>The downside of queries is that they do not live update, they are
-slower, and they require that your server support the kind of queries
-that you wish to perform.</p>
+<p>Extending Adapters is a natural process in Ember Data. Ember takes the
+position that you should extend an adapter to add different
+functionality instead of adding a flag. This results in code that is
+more testable, easier to understand and reduces bloat for people who
+may want to subclass your adapter.</p>
 
-<p>Because the server decides which records match the query, not the store,
-queries do not live update. If you want to update them, you must
-manually call <code>reload()</code> and wait for the server to respond. If you
-create a new record on the client, it will not show up in the results
-until you both save the new record to the server and reload the query
-results.</p>
+<p>If your backend has some consistent rules you can define an
+<code>ApplicationAdapter</code>. The <code>ApplicationAdapter</code> will get priority over
+the default Adapter, however it will still be superseded by model
+specific Adapters.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>App.ApplicationAdapter = DS.RESTAdapter.extend({
+    <span class="comment">// Application specific overrides go here</span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>If you have one model that has exceptional rules for communicating
+with its backend than the others you can create a Model specific
+Adapter by naming an adapter &quot;ModelName&quot; + &quot;Adapter&quot;.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>App.PostAdapter = DS.RESTAdapter.extend({
+  <span class="key">namespace</span>: <span class="string"><span class="delimiter">'</span><span class="content">api/v1</span><span class="delimiter">'</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>By default Ember Data comes with several builtin adapters. Feel free
+to use these adapters as a starting point for creating your own custom
+adapter.</p>
 
-<p>Because the store must confer with your server to determine the results
-of a query, it necessitates a network request. This can feel slow to
-users, especially if they are on a slow connection or your server is
-slow to respond. The typical speed of JavaScript web applications can
-heighten the perceived slowness when the server must be consulted.</p>
+<ul>
+<li><p><a href="/api/data/classes/DS.Adapter.html">DS.Adapter</a> is the basic adapter
+with no functionality. It is generally a good starting point if you
+want to create an adapter that is radically different from the other
+Ember adapters.</p></li>
+<li><p><a href="/api/data/classes/DS.FixtureAdapter.html">DS.FixtureAdapter</a> is an
+adapter that loads records from memory. Its primarily used for
+development and testing.</p></li>
+<li><p><a href="/api/data/classes/DS.RESTAdapter.html">DS.RESTAdapter</a> is the most
+commonly extended adapter. The <code>RESTAdapter</code> allows your store to
+communicate with an HTTP server by transmitting JSON via XHR. Most
+Ember.js apps that consume a JSON API should use the REST adapter.</p></li>
+<li><p><a href="/api/data/classes/DS.ActiveModelAdapter.html">DS.ActiveModelAdapter</a>
+is a specialized version of the <code>RESTAdapter</code> that is set up to work
+out of the box with Rails-style REST APIs.</p></li>
+</ul>
+<h2 class='anchorable-toc' id='toc_customizing-the-restadapter'>Customizing the RESTAdapter</h2>
+<p>The <a href="/api/data/classes/DS.RESTAdapter.html">DS.RESTAdapter</a> is the
+most commonly extended adapter that ships with Ember Data. It has a
+handful of hooks that are commonly used to extend it to work with
+non-standard backends.</p>
+<h4 class='anchorable-toc' id='toc_endpoint-path-customization'>Endpoint Path Customization</h4>
+<p>The <code>namespace</code> property can be used to prefix requests with a
+specific url namespace.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>App.ApplicationAdapter = DS.RESTAdapter.extend({
+  <span class="key">namespace</span>: <span class="string"><span class="delimiter">'</span><span class="content">api/1</span><span class="delimiter">'</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Requests for <code>App.Person</code> would now target <code>/api/1/people/1</code>.</p>
+<h4 class='anchorable-toc' id='toc_host-customization'>Host Customization</h4>
+<p>By default the adapter will target the current domain. If you would
+like to specify a new domain you can do so by setting the <code>host</code>
+property on the adapter.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>App.ApplicationAdapter = DS.RESTAdapter.extend({
+  <span class="key">host</span>: <span class="string"><span class="delimiter">'</span><span class="content">https://api.example.com</span><span class="delimiter">'</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Requests for <code>App.Person</code> would now target <code>https://api.example.com/people/1</code>.</p>
+<h4 class='anchorable-toc' id='toc_path-customization'>Path Customization</h4>
+<p>By default the <code>RESTAdapter</code> will attempt to pluralize and camelCase
+the model name to generate the path name. If this convention does not
+conform to your backend you can override the <code>pathForType</code> method.</p>
 
-<p>Lastly, performing queries requires collaboration between the store and
-your server. By default, Ember Data will send the search options that
-you pass as the body of an HTTP request to your server. If your server
-does not support requests in this format, you will need to either change
-your server to do so, or customize how queries are sent by creating a
-custom adapter.</p>
-
-<p><em>Filters</em>, on the other hand, perform a live search of all of the records
-in the store&#39;s cache. As soon as a new record is loaded into the store,
-the filter will check to see if the record matches, and if so, add it to
-the array of search results. If that array is displayed in a template,
-it will update automatically.</p>
-
-<p>Filters also take into account newly created records that have not been
-saved, and records that have been modified but not yet saved. If you
-want records to show up in search results as soon as they are created or
-modified on the client, you should use a filter.</p>
-
-<p>Keep in mind that records will not show up in a filter if the store
-doesn&#39;t know about them. You can ensure that a record is in the store by
-using the store&#39;s <code>push()</code> method.</p>
-
-<p>There is also a limit to how many records you can reasonably keep in
-memory and search before you start hitting performance issues.</p>
-
-<p>Finally, keep in mind that you can combine queries and filters to take
-advantage of their respective strengths and weaknesses. Remember that
-records returned by a query to the server are cached in the store. You
-can use this fact to perform a filter, passing it a query that starts
-matching records into the store, and a filter function that matches the
-same records.</p>
-
-<p>This will offload searching all of the possible records to the server,
-while still creating a live updating list that includes records created
-and modified on the client.</p>
+<p>For example, if you did not want to pluralize model names and needed
+underscore_case instead of camelCase you could override the
+<code>pathForType</code> method like this:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
-14
-15
 </pre></td>
-  <td class="code"><pre>App.PostsFavoritedRoute = Ember.Route.extend({
-  <span class="function">model</span>: <span class="keyword">function</span>() {
-    <span class="keyword">var</span> store = <span class="local-variable">this</span>.store;
-
-    <span class="comment">// Create a filter for all favorited posts that will be displayed in</span>
-    <span class="comment">// the template. Any favorited posts that are already in the store</span>
-    <span class="comment">// will be displayed immediately;</span>
-    <span class="comment">// Kick off a query to the server for all posts that</span>
-    <span class="comment">// the user has favorited. As results from the query are</span>
-    <span class="comment">// returned from the server, they will also begin to appear.</span>
-    <span class="keyword">return</span> store.filter(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, { <span class="key">favorited</span>: <span class="predefined-constant">true</span> }, <span class="keyword">function</span>(post) {
-      <span class="keyword">return</span> post.get(<span class="string"><span class="delimiter">'</span><span class="content">isFavorited</span><span class="delimiter">'</span></span>);
-    });
+  <td class="code"><pre>App.ApplicationAdapter = DS.RESTAdapter.extend({
+  <span class="function">pathForType</span>: <span class="keyword">function</span>(type) {
+    <span class="keyword">return</span> Ember.String.underscore(type);
   }
 });
 </pre></td>
 </tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_how-do-i-inform-ember-data-about-new-records-created-on-the-backend'>How do I inform Ember Data about new records created on the backend?</h4>
-<p>When you request a record using Ember Data&#39;s <code>store.find</code> method, Ember
-will automatically load the data into the store. This allows Ember to
-avoid the latency of making a round trip to the backend next time
-that record is requested. Additionally, loading a record into the
-store will update any <code>RecordArray</code>s (e.g. the result of
-<code>store.filter</code> or <code>store.all</code>) that should include that record. This
-means any data bindings or computed properties that depend on the
-<code>RecordArray</code> will automatically be synced to include the new or
-updated record values.</p>
+</div></div>
+<p>Requests for <code>App.Person</code> would now target <code>/person/1</code>.
+Requests for <code>App.UserProfile</code> would now target <code>/user_profile/1</code>.</p>
+<h4 class='anchorable-toc' id='toc_authoring-adapters'>Authoring Adapters</h4>
+<p>The <code>defaultSerializer</code> property can be used to specify the serializer
+that will be used by this adapter. This is only used when an model
+specific serializer or ApplicationSerializer are not defined.</p>
 
-<p>Some applications may want to add or update records in the store
-without requesting the record via <code>store.find</code>. To accomplish this you
-can use the <code>DS.Store</code>&#39;s <code>push</code>, <code>pushPayload</code>, or <code>update</code>
-methods. This is useful for web applications that have a channel
-(such as <a href="http://dev.w3.org/html5/eventsource/">SSE</a> or
-<a href="http://www.w3.org/TR/2009/WD-websockets-20091222/">Web Sockets</a>) to
-notify it of new or updated records on the backend.</p>
+<p>In an application, it is often easier to specify an
+<code>ApplicationSerializer</code>. However, if you are the author of a community
+adapter it is important to remember to set this property to ensure
+Ember does the right thing in the case a user of your adapter
+does not specify an <code>ApplicationSerializer</code>.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>MyCustomAdapterAdapter = DS.RESTAdapter.extend({
+  <span class="key">defaultSerializer</span>: <span class="string"><span class="delimiter">'</span><span class="content">-default</span><span class="delimiter">'</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div><h2 class='anchorable-toc' id='toc_community-adapters'>Community Adapters</h2>
+<p>If none of the builtin Ember Data Adapters work for your backend,
+be sure to check out some of the community maintained Ember Data
+Adapters. Some good places to look for Ember Data Adapters include:</p>
 
-<p><a href="http://emberjs.com/api/data/classes/DS.Store.html#method_push">push</a>
-is the simplest way to load records to Ember Data&#39;s store. When using
-<code>push</code> it is important to remember to deserialize the JSON object
-before pushing it into the store. <code>push</code> only accepts one record at a
-time. If you would like to load an array of records to the store you
-can call
-<a href="http://emberjs.com/api/data/classes/DS.Store.html#method_pushMany">pushMany</a>.</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-</pre></td>
-  <td class="code"><pre>socket.on(<span class="string"><span class="delimiter">'</span><span class="content">message</span><span class="delimiter">'</span></span>, <span class="keyword">function</span> (message) {
-  <span class="keyword">var</span> type = store.modelFor(message.model);
-  <span class="keyword">var</span> serializer = store.serializerFor(type.typeKey);
-  <span class="keyword">var</span> record = serializer.extractSingle(store, type, message.data);
-  store.push(message.model, record);
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p><a href="http://emberjs.com/api/data/classes/DS.Store.html#method_pushPayload">pushPayload</a>
-is a convenience wrapper for <code>store#push</code> that will deserialize
-payloads if the model&#39;s Serializer implements a <code>pushPayload</code>
-method. It is important to note this method will not work with the
-<code>JSONSerializer</code> because it does not implement a <code>pushPlayload</code>
-method.</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre>socket.on(<span class="string"><span class="delimiter">'</span><span class="content">message</span><span class="delimiter">'</span></span>, <span class="keyword">function</span> (message) {
-  store.pushPayload(message.model, message.data);
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p><a href="http://emberjs.com/api/data/classes/DS.Store.html#method_update">update</a>
-works likea <code>push</code> except it can handle partial attributes without
-overwriting the existing record properties. This method is useful if
-your web application only receives notifications of the changed
-attributes on a model. Like <code>push</code> it is important to remember to
-deserialize the JSON object before calling <code>update</code>.</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-</pre></td>
-  <td class="code"><pre>socket.on(<span class="string"><span class="delimiter">'</span><span class="content">message</span><span class="delimiter">'</span></span>, <span class="keyword">function</span> (message) {
-  <span class="keyword">var</span> hash = message.data;
-  <span class="keyword">var</span> type = store.modelFor(message.model);
-  <span class="keyword">var</span> fields = Ember.get(type, <span class="string"><span class="delimiter">'</span><span class="content">fields</span><span class="delimiter">'</span></span>);
-  fields.forEach(<span class="keyword">function</span>(field) {
-    <span class="keyword">var</span> payloadField = Ember.String.underscore(field);
-    <span class="keyword">if</span> (field === payloadField) { <span class="keyword">return</span>; }
-      hash[field] = hash[payloadField];
-      <span class="keyword">delete</span> hash[payloadField];
-  });
-  store.push(message.model, hash);
-});
-</pre></td>
-</tr></table>
-</div></div>
+<ul>
+<li><a href="https://github.com/search?q=ember+data+adapter&amp;ref=cmdform">GitHub</a></li>
+<li><a href="http://bower.io/search/?q=ember-data-">Bower</a></li>
+</ul>
+
     
       <footer>
         
-          <a class="previous-guide" href="/guides/models/handling-metadata">
-            ← Handling Metadata
+          <a class="previous-guide" href="/guides/controllers/dependencies-between-controllers">
+             ← Controllers: Managing Dependencies Between Controllers
           </a>
          
             <a class="next-guide" href="/guides/views">
