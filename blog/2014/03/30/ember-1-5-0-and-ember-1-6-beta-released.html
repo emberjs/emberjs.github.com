@@ -3,8 +3,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Ember Data Progress Update</title>
-    <meta property="st:title" content="Ember Data Progress Update" />
+    <title>Ember.js - Ember 1.5.0 and 1.6 Beta Released</title>
+    <meta property="st:title" content="Ember 1.5.0 and 1.6 Beta Released" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -12,7 +12,7 @@
     
   </head>
 
-  <body class="blog blog_2013 blog_2013_05 blog_2013_05_03 blog_2013_05_03_ember-data-progress-update">
+  <body class="blog blog_2014 blog_2014_03 blog_2014_03_30 blog_2014_03_30_ember-1-5-0-and-ember-1-6-beta-released">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -181,195 +181,185 @@
       
       <div id="content" class="has-sidebar">
           <article class="blog-post">
-    <h1>Ember Data Progress Update</h1>
+    <h1>Ember 1.5.0 and 1.6 Beta Released</h1>
     
-      <h3 class="blog-post-author">Posted By: Tom Dale &ndash; <time>May 03, 2013</time></h3>
+      <h3 class="blog-post-author">Posted By: Robert Jackson &ndash; <time>Mar 30, 2014</time></h3>
     
 
     <hr>
 
-    <p>Just over a month ago, we told you about our <a href="http://emberjs.com/blog/2013/03/22/stabilizing-ember-data.html">plans for stabilizing Ember
-Data</a>. I&#39;d like
-to give you an update on the status of those efforts.</p>
+    <p>We are pleased to announce that both Ember.js 1.5.0 and the first beta in the 1.6 series
+have just been released. This comes as the fifth cycle of our six-week release
+process that began just after 1.0 was released.</p>
+<h3 class='anchorable-toc' id='toc_new-features-in-1-5'>New features in 1.5</h3><h4 class='anchorable-toc' id='toc_handlebars-logging-of-primitive-values'>Handlebars Logging of Primitive Values</h4>
+<p>This feature allows you to log primitive values (strings, numbers, etc) from within your
+templates. Previously, the <code>{{log}}</code> helper only allowed usage of bound property lookup.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>{{log <span class="string"><span class="delimiter">&quot;</span><span class="content">**LOOKEY HERE**</span><span class="delimiter">&quot;</span></span>}}
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_new-testing-helpers'>New Testing Helpers</h4><h5 class='anchorable-toc' id='toc_routing-helpers'>Routing Helpers</h5>
+<p>A few new testing helpers have been added to make it easier to make assertions on the state
+of routing in your application (for example to confirm clicking a given link results in a
+redirect to a specific route).</p>
 
-<p>First, though, I&#39;d like to thank everyone who has been contributing to Ember
-Data. As an open source project, a healthy, active community is our
-lifeblood. In particular, I want to call out Igor Terzic, Stefan Penner,
-Paul Chavard and Gordon Hempton for going above and beyond the call of
-duty.</p>
+<p>New routing test helpers: <code>currentRouteName</code>, <code>currentPath</code>, and <code>currentURL</code>.</p>
+<h5 class='anchorable-toc' id='toc_trigger-event-helper'>Trigger Event Helper</h5>
+<p>A new <code>triggerEvent</code> helper has been created to allow triggering of arbitrary events on an element.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>triggerEvent(<span class="string"><span class="delimiter">'</span><span class="content">#some-element-id</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">dblclick</span><span class="delimiter">'</span></span>);
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_ember-computed-readonly'>Ember.computed.readOnly</h4>
+<p>Generally, when you use <code>Ember.computed.oneWay</code> you would also need to call <code>readOnly</code> to ensure no data
+propagates back up.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="comment">// prior to Ember.computed.readOnly you would have to do the following:</span>
+Ember.computed.oneWay(<span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>).readOnly()
 
-<p>Thanks to their efforts, <a href="https://github.com/emberjs/data/pulse/monthly">we&#39;ve been making steady progress towards
-triaging and reviewing pull requests and
-issues</a>.</p>
+<span class="comment">// in 1.5 you can use the following for the same result:</span>
+Ember.computed.readOnly(<span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>)
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_ember-isblank'>Ember.isBlank</h4>
+<p>A new shortcut for checking if a particular object is empty or an empty string:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+</pre></td>
+  <td class="code"><pre>Ember.isBlank();                <span class="comment">// true</span>
+Ember.isBlank(<span class="predefined-constant">null</span>);            <span class="comment">// true</span>
+Ember.isBlank(<span class="predefined-constant">undefined</span>);       <span class="comment">// true</span>
+Ember.isBlank(<span class="string"><span class="delimiter">'</span><span class="delimiter">'</span></span>);              <span class="comment">// true</span>
+Ember.isBlank([]);              <span class="comment">// true</span>
+Ember.isBlank(<span class="string"><span class="delimiter">'</span><span class="content">\n</span><span class="content">\t</span><span class="delimiter">'</span></span>);          <span class="comment">// true</span>
+Ember.isBlank(<span class="string"><span class="delimiter">'</span><span class="content">  </span><span class="delimiter">'</span></span>);            <span class="comment">// true</span>
+Ember.isBlank({});              <span class="comment">// false</span>
+Ember.isBlank(<span class="string"><span class="delimiter">'</span><span class="content">\n</span><span class="content">\t</span><span class="content"> Hello</span><span class="delimiter">'</span></span>);    <span class="comment">// false</span>
+Ember.isBlank(<span class="string"><span class="delimiter">'</span><span class="content">Hello world</span><span class="delimiter">'</span></span>);   <span class="comment">// false</span>
+Ember.isBlank([<span class="integer">1</span>,<span class="integer">2</span>,<span class="integer">3</span>]);         <span class="comment">// false</span>
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_eager-updating-url'>Eager Updating URL</h4>
+<p>Previously, the URL in the address bar would only update at the very end of
+the transition. This change causes the URL update to happen immediately unless
+the transition was aborted/redirected within the same run loop, which provides
+for a better UX 99% of the time.</p>
+<h4 class='anchorable-toc' id='toc_auto-location'>Auto Location</h4>
+<p>Adds <code>auto</code> as a <code>location</code> option for the app&#39;s <code>Router</code>.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>App.Router.reopen({
+  <span class="key">location</span>: <span class="string"><span class="delimiter">'</span><span class="content">auto</span><span class="delimiter">'</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>When used, Ember will select the best location option based off browser
+support with the priority order: history, hash, none.</p>
 
-<p>Additionally, Yehuda and I have been able to devote significant time to
-working on Ember Data thanks to the financial support of
-<a href="http://www.addepar.com">Addepar</a>. They have my sincere thanks for being
-a company that understands the importance of investing in open source.</p>
-<h3 class='anchorable-toc' id='toc_a-new-focus'>A New Focus</h3>
-<p>Imagine that you are starting a new job as a developer on an existing
-server-side web application. On the first day, you begin the process of
-familiarizing yourself with the codebase.</p>
+<p>Clean pushState paths accessed by hashchange-only browsers will be redirected
+to the hash-equivalent and vice versa so future transitions look consistent.</p>
+<h4 class='anchorable-toc' id='toc_bound-action-lookup'>Bound Action Lookup</h4>
+<p>The <code>{{action}}</code> helper will now use a non-quoted parameter and perform a bound property
+lookup against the action&#39;s target at the time the event is triggered. This allows usage
+of a dynamic action name (determined by looking up the property).</p>
+<h4 class='anchorable-toc' id='toc_routes-inherit-model'>Routes Inherit Model</h4>
+<p>Ember routes and leaf resources (without nested routes) will inherit the parent route&#39;s model.</p>
 
-<p>Since you have experience with the server-side MVC framework that this
-company uses, it&#39;s pretty easy going. You see that the templates are
-cleanly separated from the controller logic, which is itself cleanly
-separated from the models.</p>
+<p>Take the following example:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+</pre></td>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>(){
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(){
+    <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">edit</span><span class="delimiter">'</span></span>);
+  });
+});
 
-<p>But, wait: something looks amiss in the model code. You take a closer look.</p>
+App.PostRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>(){
+    <span class="keyword">return</span> {<span class="key">title</span>: <span class="string"><span class="delimiter">'</span><span class="content">ZOMG</span><span class="delimiter">'</span></span>, <span class="key">text</span>: <span class="string"><span class="delimiter">'</span><span class="content">AWESOME</span><span class="delimiter">'</span></span>};
+  }
+});
 
-<p>Instead of using an ORM (like ActiveRecord), which queries the database
-for you and automatically turns the results into objects, it looks like
-they&#39;re issuing queries manually.</p>
+App.PostEditRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>(){
+    <span class="keyword">return</span> <span class="local-variable">this</span>.modelFor(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Now in 1.5, you do not have to define the <code>model</code> hook for <code>PostEditRoute</code> as the default implementation
+is to use the parent routes model.</p>
+<h3 class='anchorable-toc' id='toc_other-notable-changes'>Other Notable Changes</h3><h4 class='anchorable-toc' id='toc_ever-present-_super-breaking-bugfix'>Ever-present _super (Breaking Bugfix)</h4>
+<p>Prior versions of Ember.js used a super mechanism that was un-safe for mixins. If more than
+one <code>_super</code> was called for a given function name and there was no terminating function, an
+infinite loop would occur. See <a href="https://github.com/emberjs/ember.js/issues/3523">#3523</a> for
+further discussion.</p>
 
-<p><em>&quot;No problem,&quot;</em> you think, <em>&quot;I can write SQL with my eyes closed.&quot;</em></p>
-
-<p>But something doesn&#39;t look quite right. Upon closer examination, you see
-that database queries aren&#39;t written in SQL, but some query language
-you&#39;ve never seen before.</p>
-
-<p>You go to your manager&#39;s office and ask her about it.</p>
-
-<p><em>&quot;Oh yeah,&quot;</em> she says, <em>&quot;We didn&#39;t have time to learn how to setup an
-existing database, and our needs were pretty simple at the time. We
-decided to roll our own, lightweight database with a simplified query
-language.  I guess it sort of just grew over time as our needs grew.&quot;</em></p>
-
-<p>Horrified, you tell her that you don&#39;t think it&#39;s going to be a good
-fit, turn in your badge, and head to your car.</p>
-
-<p>Unfortunately, when you land your next job, the above scenario plays out
-all over again. Instead of using SQL, you discover that they too have rolled
-their own custom, ad hoc querying language! This repeats, over and over,
-until your descent into madness is complete and you retire to a cabin in
-the woods.</p>
-
-<p>While this hopefully sounds like something out of a nightmare, the sad
-fact is that this is precisely the state of the art when it comes to
-writing web JSON APIs. Whether you&#39;re writing an Ember.js application, a
-mobile app for Android or iOS, or a desktop app, anything that consumes
-a web API typically has to deal with URL patterns and JSON structures that are
-ad hoc and informally-specified.</p>
-
-<p><strong>This is bad.</strong> Even though we have figured out a standard way of
-describing models and their relationships on the server, getting them
-into the browser requires every developer write custom, imperative
-code. <strong>It&#39;s a colossal waste of human time and energy.</strong></p>
-
-<p><img src="/images/blog/most-web-architectures.png" alt="A diagram showing most current web architectures. A conventional MVC
-server framework asks for records from a database using a standardized
-query language (SQL). A conventional client-side MVC app, however, uses
-ad hoc JavaScript to retrieve records from the same web server. An
-illustrated picture of Jackie Chan looking frustrated appears to the
-right."></p>
-
-<p>The good news is that the solution should now appear obvious: if you
-have a conventional framework on the server and a conventional framework
-on the client, they should be able to communicate, automatically, using
-a standard interchange format.</p>
-
-<p>The reality, however, is that Ember.js developers need to use existing
-APIs that aren&#39;t 100% consistent. While we were building towards the
-future, we were also trying to build something that could be used in the
-interim. In retrospect, trying to serve two masters simply muddled our
-message, confused users, and complicated the architecture.</p>
-
-<p>Instead, <strong>Ember Data will now focus on being the best possible library
-for Ember.js apps to communicate with consistent, conventional APIs.</strong></p>
-
-<p>We will leave bridging the gap in the very capable hands of simpler
-libraries that require less conceptual overhead to work with custom JSON
-APIs, such as:</p>
+<p>The solution released in 1.5 fixes this behavior (see <a href="https://github.com/emberjs/ember.js/pull/3683">#3683</a>),
+but also breaks the edge-case of using <code>_super</code> out of line. For instance:</p>
+<div class="highlight JavaScript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>  <span class="function">doIt</span>: <span class="keyword">function</span>(){
+    Ember.run.once(<span class="local-variable">this</span>, <span class="local-variable">this</span>._super);
+  }
+</pre></td>
+</tr></table>
+</div></div>
+<p>Is no longer a supported use of <code>_super</code>. See <a href="http://emberjs.jsbin.com/xuroy/1/edit?html,js,output">this jsbin</a>
+for a live example. If this change impacts you, please comment on <a href="https://github.com/emberjs/ember.js/pull/4301">#4632</a>.</p>
+<h3 class='anchorable-toc' id='toc_other-improvements'>Other Improvements</h3>
+<p>As usual, there are a ton of bug fixes and small improvements in this
+release. You can see a list of all the changes in the CHANGELOG:</p>
 
 <ul>
-<li><a href="https://github.com/ebryn/ember-model">ember-model</a></li>
-<li><a href="https://github.com/endlessinc/ember-restless">ember-restless</a></li>
-<li><a href="https://github.com/charlieridley/emu">emu</a></li>
+<li><a href="https://github.com/emberjs/ember.js/blob/v1.5.0/CHANGELOG.md">Ember.js 1.5.0 CHANGELOG</a></li>
+<li><a href="https://github.com/emberjs/ember.js/blob/v1.6.0-beta.1/CHANGELOG.md">Ember.js 1.6.0-beta.1 CHANGELOG</a></li>
 </ul>
-
-<p>To be clear: Ember Data will not be limited to one <em>particular</em>
-convention. We are excited to see the number of third-party adapters,
-such as those for
-<a href="https://github.com/clintjhill/ember-parse-adapter">Parse</a>,
-<a href="https://github.com/toranb/ember-data-django-rest-adapter">Django</a>,
-<a href="https://github.com/rpflorence/ember-localstorage-adapter">localStorage</a>,
-and <a href="https://github.com/thomasboyt/ember-firebase-adapter">Firebase</a>,
-continue to grow. The only important feature is that the interchange
-between Ember Data and the backend be consistent across all models and
-their relationships.</p>
-<h3 class='anchorable-toc' id='toc_what-does-this-mean'>What Does This Mean?</h3>
-<p>Most users of Ember Data will not have to make any changes to their
-application. If you are using the REST adapter with something like the
-<code>ActiveModel::Serializers</code> gem in Ruby on Rails, you will continue to not
-have to write any network code—defining your schema in JavaScript is
-enough for us to know how to load data from the server.</p>
-
-<p>The only notable immediate change is that we will be removing the
-<code>BasicAdapter</code> that we described in last month&#39;s blog post. This adapter
-was designed to be a stopgap measure to help people use Ember Data with
-ad hoc JSON APIs, but we committed the cardinal sin of inventing an API
-instead of extracting it from a real application as we usually do.</p>
-
-<p>Developers who had tried out the <code>BasicAdapter</code> appreciated our efforts, but
-found it lacking in several important areas. We believe focus is
-important, so we will be focusing our efforts on conventional APIs and
-will leave the cases previously covered by the <code>BasicAdapter</code> to other
-libraries.</p>
-
-<p>The other change is that we will be updating the documentation on the
-Ember.js website to reflect this new focus, as well as providing
-documentation on how to connect Ember apps to less well-defined JSON
-APIs.</p>
-<h3 class='anchorable-toc' id='toc_json-api'>JSON API</h3>
-<p>In order for Ember Data apps to communicate with a server automatically,
-the interchange format must be semantically rich enough to capture all
-of the changes to models and their relationships that you may make on
-the client.</p>
-
-<p>Over time, we have been building more functionality into the JSON
-format used by the <code>RESTAdapter</code>. We have decided to formalize this
-JSON format so that any backend, whether it be Ruby on Rails, Django,
-node.js, or your other favorite server technology, can interact with
-Ember.js apps without users having to write network code.</p>
-
-<p>We have begun the process of documenting this format at
-<a href="http://jsonapi.org/">JSONAPI.org</a> with <a href="https://twitter.com/brixen">Brian
-Shirai</a>. This is a living document that
-formally describes the JSON format we hope that the authors of
-server-side frameworks will use to get seamless compatibility with
-Ember.js applications. And, of course, other JavaScript framework are
-encouraged to adopt this format so that they can get the same benefit.</p>
-
-<p>Because the best standards are driven by real implementations, <a href="https://twitter.com/steveklabnik">Steve
-Klabnik</a> and <a href="https://twitter.com/spastorino">Santiago
-Pastorino</a> (both major contributors to
-Ruby on Rails) have volunteered to integrate this specification into the
-<code>rails-api</code> and <code>ActiveModel::Serializers</code> projects. This
-proof-of-concept will allow us to verify the specification is solving
-real-world problems.</p>
-
-<p>This work will make it extremely simple for Ember.js developers to
-integrate with Ruby on Rails, and we hope other server-side frameworks
-vendors follow suit.</p>
-
-<p>Of course, the <code>RESTAdapter</code> will continue to be configurable, so if you
-want to use a JSON API that differs from the default specification, but
-is still consistent across all of your models, you don&#39;t have to write
-an adapter from scratch.</p>
-<h3 class='anchorable-toc' id='toc_regular-releases'>Regular Releases</h3>
-<p>Now that Ember Data is stabilizing rapidly, we will start doing regular
-beta releases to make it easier for users to communicate about different
-versions. The first release, which we&#39;ll be releasing in the next few
-days, will be version 0.13. In keeping with the <a href="http://semver.org/">SemVer
-standard</a>, we reserve the right to change public
-APIs until we reach a 1.0.0 candidate. That being said, we will try our
-best to continue keeping the app-facing API stable.</p>
-
-<p>We&#39;re excited about the future of Ember Data. In the same way we fought
-for strong application architecture conventions in the browser, we will
-continue to fight for better compatibility between the client and
-server. Hopefully soon, writing low-level XHR code will be an optional
-optimization, not a requirement.</p>
 
 
     <hr>
