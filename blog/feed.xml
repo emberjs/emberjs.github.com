@@ -186,7 +186,50 @@ but also breaks the edge-case of using &lt;code&gt;_super&lt;/code&gt; out of li
 &lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;Is no longer a supported use of &lt;code&gt;_super&lt;/code&gt;. See &lt;a href="http://emberjs.jsbin.com/xuroy/1/edit?html,js,output"&gt;this jsbin&lt;/a&gt;
 for a live example. If this change impacts you, please comment on &lt;a href="https://github.com/emberjs/ember.js/pull/4301"&gt;#4632&lt;/a&gt;.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_other-improvements'&gt;Other Improvements&lt;/h3&gt;
+&lt;h4 class='anchorable-toc' id='toc_handlebars-each-helper-checks-markup'&gt;Handlebars {{each}} Helper Checks Markup&lt;/h4&gt;
+&lt;p&gt;In some cases, the browser may add or fix tags, which change the parentage of metamorph tags. This problem happens frequently when the
+developer doesn&amp;#39;t include the TBODY tag inside a table for example.  This prevents the framework from updating or cleaning the underlying DOM
+elements.&lt;/p&gt;
+
+&lt;p&gt;An assertion has been added in non-production builds that indicates that the metamorph start and end tags have different parents.
+This is most commonly caused by using an &lt;code&gt;{{each}}&lt;/code&gt; inside of a &lt;code&gt;&amp;lt;table&amp;gt;&lt;/code&gt; tag without specifying a &lt;code&gt;&amp;lt;tbody&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Example demonstrating the assertion (&lt;a href="http://emberjs.jsbin.com/fotin/3/edit"&gt;JSBin here&lt;/a&gt;):&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;table&amp;gt;&lt;/span&gt;
+  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{#&lt;/span&gt;&lt;span class="attribute-name"&gt;each&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+    &lt;span class="tag"&gt;&amp;lt;tr&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/tr&amp;gt;&lt;/span&gt;
+  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{/&lt;/span&gt;&lt;span class="attribute-name"&gt;each&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+&lt;span class="tag"&gt;&amp;lt;/table&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;And the resolution is to include a &lt;code&gt;&amp;lt;tbody&amp;gt;&lt;/code&gt; (&lt;a href="http://emberjs.jsbin.com/fotin/2/edit"&gt;JSBin here&lt;/a&gt;):&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;table&amp;gt;&lt;/span&gt;
+  &lt;span class="tag"&gt;&amp;lt;tbody&amp;gt;&lt;/span&gt;
+    &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{#&lt;/span&gt;&lt;span class="attribute-name"&gt;each&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+      &lt;span class="tag"&gt;&amp;lt;tr&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/tr&amp;gt;&lt;/span&gt;
+    &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{/&lt;/span&gt;&lt;span class="attribute-name"&gt;each&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+  &lt;span class="tag"&gt;&amp;lt;/tbody&amp;gt;&lt;/span&gt;
+&lt;span class="tag"&gt;&amp;lt;/table&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;h3 class='anchorable-toc' id='toc_other-improvements'&gt;Other Improvements&lt;/h3&gt;
 &lt;p&gt;As usual, there are a ton of bug fixes and small improvements in this
 release. You can see a list of all the changes in the CHANGELOG:&lt;/p&gt;
 

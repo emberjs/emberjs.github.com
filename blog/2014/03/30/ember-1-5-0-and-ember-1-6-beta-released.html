@@ -352,7 +352,50 @@ but also breaks the edge-case of using <code>_super</code> out of line. For inst
 </div></div>
 <p>Is no longer a supported use of <code>_super</code>. See <a href="http://emberjs.jsbin.com/xuroy/1/edit?html,js,output">this jsbin</a>
 for a live example. If this change impacts you, please comment on <a href="https://github.com/emberjs/ember.js/pull/4301">#4632</a>.</p>
-<h3 class='anchorable-toc' id='toc_other-improvements'>Other Improvements</h3>
+<h4 class='anchorable-toc' id='toc_handlebars-each-helper-checks-markup'>Handlebars {{each}} Helper Checks Markup</h4>
+<p>In some cases, the browser may add or fix tags, which change the parentage of metamorph tags. This problem happens frequently when the
+developer doesn&#39;t include the TBODY tag inside a table for example.  This prevents the framework from updating or cleaning the underlying DOM
+elements.</p>
+
+<p>An assertion has been added in non-production builds that indicates that the metamorph start and end tags have different parents.
+This is most commonly caused by using an <code>{{each}}</code> inside of a <code>&lt;table&gt;</code> tag without specifying a <code>&lt;tbody&gt;</code>.</p>
+
+<p>Example demonstrating the assertion (<a href="http://emberjs.jsbin.com/fotin/3/edit">JSBin here</a>):</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;table&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+    <span class="tag">&lt;tr&gt;</span><span class="tag">&lt;/tr&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/table&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>And the resolution is to include a <code>&lt;tbody&gt;</code> (<a href="http://emberjs.jsbin.com/fotin/2/edit">JSBin here</a>):</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;table&gt;</span>
+  <span class="tag">&lt;tbody&gt;</span>
+    <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+      <span class="tag">&lt;tr&gt;</span><span class="tag">&lt;/tr&gt;</span>
+    <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;/tbody&gt;</span>
+<span class="tag">&lt;/table&gt;</span>
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_other-improvements'>Other Improvements</h3>
 <p>As usual, there are a ton of bug fixes and small improvements in this
 release. You can see a list of all the changes in the CHANGELOG:</p>
 
