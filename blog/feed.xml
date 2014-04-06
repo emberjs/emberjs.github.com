@@ -5,10 +5,140 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2014-03-30T00:00:00Z</updated>
+  <updated>2014-04-05T00:00:00Z</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>Core Team Meeting Minutes - 2014/04/04</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2014/04/05/core-team-meeting-minutes-2014-04-04.html"/>
+    <id>http://emberjs.com/blog/2014/04/05/core-team-meeting-minutes-2014-04-04.html</id>
+    <published>2014-04-05T00:00:00Z</published>
+    <updated>2014-04-05T00:00:00Z</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
+(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
+the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
+Friday at 2pm EST/11am PST through Google Hangout for a weekly
+discussion of all things Ember...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
+(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
+the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
+Friday at 2pm EST/11am PST through Google Hangout for a weekly
+discussion of all things Ember.&lt;/p&gt;
+
+&lt;p&gt;If you have a topic you&amp;#39;d like to see covered, contact your favorite
+core team member and let them know!&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_attendees'&gt;Attendees&lt;/h4&gt;
+&lt;p&gt;&lt;a href="https://twitter.com/ebryn"&gt;@ebryn&lt;/a&gt;, &lt;a href="https://twitter.com/krisselden"&gt;@krisselden&lt;/a&gt;, &lt;a href="https://twitter.com/machty"&gt;@machty&lt;/a&gt;,
+&lt;a href="https://twitter.com/rwjblue"&gt;@rwjblue&lt;/a&gt;, &lt;a href="https://twitter.com/wagenet"&gt;@wagenet&lt;/a&gt;, &lt;a href="https://twitter.com/tomdale"&gt;@tomdale&lt;/a&gt;&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_topics'&gt;Topics&lt;/h3&gt;&lt;h3 class='anchorable-toc' id='toc_pr-s-issues-to-review'&gt;PR&amp;#39;s/Issues To Review&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4645"&gt;BUGFIX beta Allow setting of &lt;code&gt;undefined&lt;/code&gt; value to a &lt;code&gt;content&lt;/code&gt; property&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Fixes setting of &lt;code&gt;undefined&lt;/code&gt; value to a content property. &lt;/p&gt;
+
+&lt;p&gt;Still, checking &lt;code&gt;obj[keyName] === value&lt;/code&gt; in these &lt;a href="https://github.com/selvagsz/ember.js/blob/master/packages_es6/ember-metal/lib/property_set.js#L52-54"&gt;lines&lt;/a&gt; is bypassed in two cases&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;If the setter value is &lt;code&gt;undefined&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;If the setter property lies inside the proxied content&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Using &lt;code&gt;get(obj, keyName)&lt;/code&gt; might resolve. But was quite nervous to do that as it may involve some additional function calls&lt;/p&gt;
+
+&lt;p&gt;+1 by @stefanpenner, but he requests @krisselden to review.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Resolution&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Seems good, but @krisselden will review in further detail. Will attempt to have this update in 1.6.0-beta.2.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4636"&gt;BUGFIX beta Ensure context is unchanged when using keywords with itemController.&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Prior to this change the following code would bind &lt;code&gt;this&lt;/code&gt; in the template block to the itemController&amp;#39;s content (even
+though the keyword form of &lt;code&gt;{{each}}&lt;/code&gt; is used).&lt;/p&gt;
+
+&lt;p&gt;This change sets the child view&amp;#39;s &lt;code&gt;_context&lt;/code&gt; property to the current context when using the keyword form of &lt;code&gt;{{each}}&lt;/code&gt;,
+and a couple of confirming tests to demonstrate using &lt;code&gt;itemController&lt;/code&gt; specified in either the &lt;code&gt;ArrayController&lt;/code&gt; or the
+template directly.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://emberjs.jsbin.com/zokali/1/edit"&gt;Failing JSBin&lt;/a&gt; | &lt;a href="http://emberjs.jsbin.com/kecen/1/edit"&gt;Passing JSBin&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Fixes #4634.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Resolution&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The intent of the &lt;code&gt;each foo in bar&lt;/code&gt; syntax is specifically to preserve the current context. However, using &lt;code&gt;each foo in bar&lt;/code&gt; syntax along
+with an &lt;code&gt;itemController&lt;/code&gt; has always changed the inner templates context. This change seems good, but all context related changes
+require a bit of additional review. @krisselden to review further and +1/-1.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4598"&gt;BUGFIX beta {{view}} helper no longer uses Ember.View global, instead uses container view:default&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;During the ES6-ify process @rjackson left a comment mentioning that the {{view}} helper needs to not look up
+Ember.View globally. This PR fixes this by looking up view:default from the container (which Ember.View is
+registered at, by default).&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Resolution&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Looking up &lt;code&gt;view:default&lt;/code&gt; in the container is definitely more appropriate than hard-coding to &lt;code&gt;Ember.View&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Merged.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4655"&gt;BUGFIX beta Add better debugging for DefaultResolver.&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Adds nice log entries if your application was created with &lt;code&gt;LOG_RESOLVER&lt;/code&gt; set.&lt;/p&gt;
+
+&lt;p&gt;Example log entries:&lt;/p&gt;
+&lt;div class="highlight  "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;[ ] route:application ..........................................  App.ApplicationRoute
+[✓] route:index ................................................  App.IndexRoute
+[ ] controller:application .....................................  App.ApplicationController
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Fixes #4654.&lt;/p&gt;
+
+&lt;p&gt;Example &lt;a href="http://emberjs.jsbin.com/maxum/1"&gt;JSBin&lt;/a&gt; (look at console)&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Resolution&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;This adds good insight into exactly what the resolver is doing and what you need to implement to add
+custom behavior. In the future, a better API needs to be created to enable these logging options (hanging
+a bunch of properties off of the application instance is sub-optimal).&lt;/p&gt;
+
+&lt;p&gt;Merged (will be in 1.6.0-beta.2).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4352"&gt;FEATURE ember-handlebars-radio-buttons Implement radio buttons&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;This updates &lt;a href="https://github.com/emberjs/ember.js/pull/1235"&gt;#1235&lt;/a&gt; to extend component, adds handlebar helpers,
+updates tests and documentation. I think a lot of people would be pleased to see radio buttons in the core and I 
+see a lot of developers at my company have a hard time with radio buttons when they first get started with Ember,
+so I think this would be a great addition to the core.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Resolution&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;We would prefer for this to live as an addon for a while to allow the community to test (and influence) the API.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/issues/4613"&gt;Transitioning to a globbing route does not work&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;I think it&amp;#39;s a corner case, so I don&amp;#39;t know if this should work, or if you would fix that.
+Anyway, in my application, I&amp;#39;m defining a notFound route, hit when the user plays with the url and gives something wrong.
+I also want redirect to this route when the user try to access an unexisting record (ie the backend answer a 404). So I basically tried to define an error handler in the ApplicationRoute, and transitionTo(&amp;#39;notFound&amp;#39;). Unfortunately it does not work. Though if I remove the globbing path, then it works for the redirection, but obviously not when entering unknown url.&lt;/p&gt;
+
+&lt;p&gt;I made a jsbin reproducing it: &lt;a href="http://emberjs.jsbin.com/ucanam/4401/edit"&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Resolution&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;It is possible to transition to a globbing route, but like any target route with a dynamic segment, you need to
+provide a object / param, which in this case can just be a string of the path you want to use for that globbed segment:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;this.transitionTo(&amp;#39;yargle&amp;#39;, &amp;quot;MY/COOL/URL&amp;quot;);&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://emberjs.jsbin.com/ucanam/4522/edit"&gt;JSBin&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
   <entry>
     <title>Ember 1.5.0 and 1.6 Beta Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/03/30/ember-1-5-0-and-ember-1-6-beta-released.html"/>
@@ -240,131 +370,6 @@ release. You can see a list of all the changes in the CHANGELOG:&lt;/p&gt;
 </content>
   </entry>
   <entry>
-    <title>Core Team Meeting Minutes - 2014/03/21</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2014/03/22/core-team-meeting-minutes-2014-03-21.html"/>
-    <id>http://emberjs.com/blog/2014/03/22/core-team-meeting-minutes-2014-03-21.html</id>
-    <published>2014-03-22T00:00:00Z</published>
-    <updated>2014-03-22T00:00:00Z</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
-(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
-the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
-Friday at 2pm EST/11am PST through Google Hangout for a weekly
-discussion of all things Ember...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
-(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
-the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
-Friday at 2pm EST/11am PST through Google Hangout for a weekly
-discussion of all things Ember.&lt;/p&gt;
-
-&lt;p&gt;If you have a topic you&amp;#39;d like to see covered, contact your favorite
-core team member and let them know!&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_attendees'&gt;Attendees&lt;/h4&gt;
-&lt;p&gt;@ebryn, @krisselden, @machty, @rwjblue, @stefanpenner, @trek, @wycats, @wifelette&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_topics'&gt;Topics&lt;/h3&gt;&lt;h4 class='anchorable-toc' id='toc_prs-issues-to-review'&gt;PRs/Issues To Review&lt;/h4&gt;
-&lt;p&gt;We reviewed the following PRs and Issues:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;query-params-new&lt;/code&gt; &lt;a href="https://github.com/emberjs/ember.js/pull/4008"&gt;#4008&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Nothing new here. We&amp;#39;re working very hard to get this correct the first time
-and have something to demo at EmberConf.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Move instanceMetas into object&amp;#39;s meta &lt;a href="https://github.com/emberjs/ember.js/pull/4559"&gt;#4559&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;InstanceMetas for objects&amp;#39; ReduceComputedPropertys are stored on the RCP instance (ie. on the descriptor) as &lt;code&gt;this._instanceMetas[key]&lt;/code&gt; where key = guidOfTheObject + &amp;#39;:&amp;#39; + propertyName (see http://git.io/t9bKxA). The RCP can&amp;#39;t know when the object is garbage collected, hence the _instanceMetas array grows unbounded.&lt;/p&gt;
-
-&lt;p&gt;Resolution: if David Hamilton +1’s, we merge as a bugfix.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Allow multiple arguments to be passed to EmberStringUtils.fmt() &lt;a href="https://github.com/emberjs/ember.js/pull/4518"&gt;#4518&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;This allows you to use Ember.String.fmt with the same multi-arg signature as String#fmt:&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;Ember.String.fmt(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;%@ %@&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;John&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Doe&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
-&lt;span class="comment"&gt;// vs&lt;/span&gt;
-Ember.String.fmt([&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;%@ %@&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;John&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Doe&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;])
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Resolution: Seems reasonable. Merge&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Deprecate App.Store in favor of App.ApplicationStore &lt;a href="https://github.com/emberjs/data/pull/1808"&gt;#1808&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;This makes the application level store lookup much closer to the reset of our conventions (ala &lt;code&gt;App.ApplicationAdapter&lt;/code&gt; and &lt;code&gt;App.ApplicationSerializer&lt;/code&gt;).&lt;/p&gt;
-
-&lt;p&gt;This change also allows specifying a custom store when using non-global resolver (i.e. EAK/ember-cli). Previously, we were only looking for a property &lt;code&gt;Store&lt;/code&gt; hung off of the application instance. Now you can have a module named (in the case of stock EAK setup):
-&lt;code&gt;app/stores/application&lt;/code&gt; or &lt;code&gt;app/application/store.js&lt;/code&gt; (pods structure).&lt;/p&gt;
-
-&lt;p&gt;A deprecation warning was added, and the prior technique still works so this is not a breaking change (although I believe that we should remove before the prior lookup prior to 1.0).&lt;/p&gt;
-
-&lt;p&gt;Resolution: Seems reasonable. Merge&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Core Team Meeting Minutes - 2014/03/14</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2014/03/22/core-team-meeting-minutes-2014-03-14.html"/>
-    <id>http://emberjs.com/blog/2014/03/22/core-team-meeting-minutes-2014-03-14.html</id>
-    <published>2014-03-22T00:00:00Z</published>
-    <updated>2014-03-22T00:00:00Z</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
-(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
-the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
-Friday at 2pm EST/11am PST through Google Hangout for a weekly
-discussion of all things Ember...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
-(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
-the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
-Friday at 2pm EST/11am PST through Google Hangout for a weekly
-discussion of all things Ember.&lt;/p&gt;
-
-&lt;p&gt;If you have a topic you&amp;#39;d like to see covered, contact your favorite
-core team member and let them know!&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_attendees'&gt;Attendees&lt;/h4&gt;
-&lt;p&gt;@ebryn, @krisselden, @machty, @rwjblue, @stefanpenner, @tomdale, @trek, @wycats&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_topics'&gt;Topics&lt;/h3&gt;&lt;h3 class='anchorable-toc' id='toc_go-no-go-feature-listing'&gt;Go/No-Go Feature Listing&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt; &lt;code&gt;query-params-new&lt;/code&gt; &lt;a href="https://github.com/emberjs/ember.js/pull/4008"&gt;#4008&lt;/a&gt;
- Still a no-go, while @machty and @wycats hash out the specifics&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 class='anchorable-toc' id='toc_pr-s-issues-to-review'&gt;PR&amp;#39;s/Issues To Review&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4496"&gt;canSetInnerHTML: IE cannot set innerHTML on several tags&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;IE doesn&amp;#39;t support .innerHTML = on COL, COLGROUP, FRAMESET, HTML, STYLE, TABLE, TBODY, TFOOT, THEAD, TITLE, or TR.&lt;/p&gt;
-
-&lt;p&gt;Resolution: definitely a bug, but this will be fixed with HTMLbars so we&amp;#39;d rather wait for that to
-land instead of fixing now&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4360"&gt;Overwrite observers and listeners in Ember.CoreObject.create().&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Modifies mixin inclusion code in &lt;code&gt;makeCtor&lt;/code&gt; to remove any observers/listeners setup on the property or key prior
-to adding the property.&lt;/p&gt;
-
-&lt;p&gt;My concern is the modification in this particular code path.&lt;/p&gt;
-
-&lt;p&gt;Resolution: this used to be how create worked, but we moved away with this for performance reasons. &lt;code&gt;.extend&lt;/code&gt;
-is intended for design-time use, not runtime: use &lt;code&gt;.extend().create() or&lt;/code&gt;.createWithMixins()`&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4520"&gt;Use injected test helpers instead of local functions.&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Since we are injecting the application with our helpers (into the App.testHelpers hash), we should be using
-that helper and not simply calling the function in local scope.&lt;/p&gt;
-
-&lt;p&gt;As the tests show, this allows a user to override the internal helpers with a tailored version for their scenarios.&lt;/p&gt;
-
-&lt;p&gt;Resolution: make it possible but still private API. Assert on attempting to override built-in helpers.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</content>
-  </entry>
-  <entry>
     <title>Core Team Meeting Minutes - 2014/03/07</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/03/22/core-team-meeting-minutes-2014-03-07.html"/>
     <id>http://emberjs.com/blog/2014/03/22/core-team-meeting-minutes-2014-03-07.html</id>
@@ -530,6 +535,131 @@ exists within Handlebars, but is not exposed to &lt;code&gt;Ember.Handlebars.pre
 &lt;/blockquote&gt;
 
 &lt;p&gt;Resolution. Ship it. This just passes from Handlebars to Ember.Handlebars&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Core Team Meeting Minutes - 2014/03/14</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2014/03/22/core-team-meeting-minutes-2014-03-14.html"/>
+    <id>http://emberjs.com/blog/2014/03/22/core-team-meeting-minutes-2014-03-14.html</id>
+    <published>2014-03-22T00:00:00Z</published>
+    <updated>2014-03-22T00:00:00Z</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
+(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
+the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
+Friday at 2pm EST/11am PST through Google Hangout for a weekly
+discussion of all things Ember...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
+(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
+the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
+Friday at 2pm EST/11am PST through Google Hangout for a weekly
+discussion of all things Ember.&lt;/p&gt;
+
+&lt;p&gt;If you have a topic you&amp;#39;d like to see covered, contact your favorite
+core team member and let them know!&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_attendees'&gt;Attendees&lt;/h4&gt;
+&lt;p&gt;@ebryn, @krisselden, @machty, @rwjblue, @stefanpenner, @tomdale, @trek, @wycats&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_topics'&gt;Topics&lt;/h3&gt;&lt;h3 class='anchorable-toc' id='toc_go-no-go-feature-listing'&gt;Go/No-Go Feature Listing&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt; &lt;code&gt;query-params-new&lt;/code&gt; &lt;a href="https://github.com/emberjs/ember.js/pull/4008"&gt;#4008&lt;/a&gt;
+ Still a no-go, while @machty and @wycats hash out the specifics&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 class='anchorable-toc' id='toc_pr-s-issues-to-review'&gt;PR&amp;#39;s/Issues To Review&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4496"&gt;canSetInnerHTML: IE cannot set innerHTML on several tags&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;IE doesn&amp;#39;t support .innerHTML = on COL, COLGROUP, FRAMESET, HTML, STYLE, TABLE, TBODY, TFOOT, THEAD, TITLE, or TR.&lt;/p&gt;
+
+&lt;p&gt;Resolution: definitely a bug, but this will be fixed with HTMLbars so we&amp;#39;d rather wait for that to
+land instead of fixing now&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4360"&gt;Overwrite observers and listeners in Ember.CoreObject.create().&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Modifies mixin inclusion code in &lt;code&gt;makeCtor&lt;/code&gt; to remove any observers/listeners setup on the property or key prior
+to adding the property.&lt;/p&gt;
+
+&lt;p&gt;My concern is the modification in this particular code path.&lt;/p&gt;
+
+&lt;p&gt;Resolution: this used to be how create worked, but we moved away with this for performance reasons. &lt;code&gt;.extend&lt;/code&gt;
+is intended for design-time use, not runtime: use &lt;code&gt;.extend().create() or&lt;/code&gt;.createWithMixins()`&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4520"&gt;Use injected test helpers instead of local functions.&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Since we are injecting the application with our helpers (into the App.testHelpers hash), we should be using
+that helper and not simply calling the function in local scope.&lt;/p&gt;
+
+&lt;p&gt;As the tests show, this allows a user to override the internal helpers with a tailored version for their scenarios.&lt;/p&gt;
+
+&lt;p&gt;Resolution: make it possible but still private API. Assert on attempting to override built-in helpers.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Core Team Meeting Minutes - 2014/03/21</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2014/03/22/core-team-meeting-minutes-2014-03-21.html"/>
+    <id>http://emberjs.com/blog/2014/03/22/core-team-meeting-minutes-2014-03-21.html</id>
+    <published>2014-03-22T00:00:00Z</published>
+    <updated>2014-03-22T00:00:00Z</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
+(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
+the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
+Friday at 2pm EST/11am PST through Google Hangout for a weekly
+discussion of all things Ember...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
+(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
+the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
+Friday at 2pm EST/11am PST through Google Hangout for a weekly
+discussion of all things Ember.&lt;/p&gt;
+
+&lt;p&gt;If you have a topic you&amp;#39;d like to see covered, contact your favorite
+core team member and let them know!&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_attendees'&gt;Attendees&lt;/h4&gt;
+&lt;p&gt;@ebryn, @krisselden, @machty, @rwjblue, @stefanpenner, @trek, @wycats, @wifelette&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_topics'&gt;Topics&lt;/h3&gt;&lt;h4 class='anchorable-toc' id='toc_prs-issues-to-review'&gt;PRs/Issues To Review&lt;/h4&gt;
+&lt;p&gt;We reviewed the following PRs and Issues:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;query-params-new&lt;/code&gt; &lt;a href="https://github.com/emberjs/ember.js/pull/4008"&gt;#4008&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Nothing new here. We&amp;#39;re working very hard to get this correct the first time
+and have something to demo at EmberConf.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Move instanceMetas into object&amp;#39;s meta &lt;a href="https://github.com/emberjs/ember.js/pull/4559"&gt;#4559&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;InstanceMetas for objects&amp;#39; ReduceComputedPropertys are stored on the RCP instance (ie. on the descriptor) as &lt;code&gt;this._instanceMetas[key]&lt;/code&gt; where key = guidOfTheObject + &amp;#39;:&amp;#39; + propertyName (see http://git.io/t9bKxA). The RCP can&amp;#39;t know when the object is garbage collected, hence the _instanceMetas array grows unbounded.&lt;/p&gt;
+
+&lt;p&gt;Resolution: if David Hamilton +1’s, we merge as a bugfix.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Allow multiple arguments to be passed to EmberStringUtils.fmt() &lt;a href="https://github.com/emberjs/ember.js/pull/4518"&gt;#4518&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;This allows you to use Ember.String.fmt with the same multi-arg signature as String#fmt:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;Ember.String.fmt(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;%@ %@&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;John&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Doe&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
+&lt;span class="comment"&gt;// vs&lt;/span&gt;
+Ember.String.fmt([&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;%@ %@&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;John&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Doe&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;])
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Resolution: Seems reasonable. Merge&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Deprecate App.Store in favor of App.ApplicationStore &lt;a href="https://github.com/emberjs/data/pull/1808"&gt;#1808&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This makes the application level store lookup much closer to the reset of our conventions (ala &lt;code&gt;App.ApplicationAdapter&lt;/code&gt; and &lt;code&gt;App.ApplicationSerializer&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;This change also allows specifying a custom store when using non-global resolver (i.e. EAK/ember-cli). Previously, we were only looking for a property &lt;code&gt;Store&lt;/code&gt; hung off of the application instance. Now you can have a module named (in the case of stock EAK setup):
+&lt;code&gt;app/stores/application&lt;/code&gt; or &lt;code&gt;app/application/store.js&lt;/code&gt; (pods structure).&lt;/p&gt;
+
+&lt;p&gt;A deprecation warning was added, and the prior technique still works so this is not a breaking change (although I believe that we should remove before the prior lookup prior to 1.0).&lt;/p&gt;
+
+&lt;p&gt;Resolution: Seems reasonable. Merge&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </content>
   </entry>
@@ -782,143 +912,6 @@ article.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&
 &lt;p&gt;We are committed to getting things right before declaring 1.0. The router in Ember.js went through several similar iterations, which were painful at the time, but we believe the results speak for themselves. Adapting to real-world usage is an important part of our design process, and we will always prioritize thinking through problems carefully over rushing to ship.&lt;/p&gt;
 
 &lt;p&gt;Given that, we hope that you will trust us when we say that Ember Data is on the cusp of the level of quality that we demand from the 1.0 versions of our open source projects. If you start building now, you&amp;#39;ll be very happy with the forward momentum that having a community with shared understanding will bring.&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Core Team Meeting Minutes - 2014/02/28</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2014/03/04/core-team-meeting-minutes-2014-02-28.html"/>
-    <id>http://emberjs.com/blog/2014/03/04/core-team-meeting-minutes-2014-02-28.html</id>
-    <published>2014-03-04T00:00:00Z</published>
-    <updated>2014-03-04T00:00:00Z</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
-(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
-the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
-Friday at 2pm EST/11am PST through Google Hangout for a weekly
-discussion of all things Ember...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
-(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
-the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
-Friday at 2pm EST/11am PST through Google Hangout for a weekly
-discussion of all things Ember.&lt;/p&gt;
-
-&lt;p&gt;If you have a topic you&amp;#39;d like to see covered, contact your favorite
-core team member and let them know!&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_attendees'&gt;Attendees&lt;/h4&gt;
-&lt;p&gt;@ebryn, @krisselden, @machty, @rwjblue, @stefanpenner, @tomdale, @trek, @wycats&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_topics'&gt;Topics&lt;/h3&gt;&lt;h4 class='anchorable-toc' id='toc_hello-ghost'&gt;Hello, Ghost&lt;/h4&gt;
-&lt;p&gt;A few weeks ago &lt;a href="https://twitter.com/jacob4u2/status/434059022220541952"&gt;@jacob4u2 reached out over twitter&lt;/a&gt;
-to let us know the popular Node.js-based blogging platform &lt;a href="https://ghost.org/"&gt;Ghost&lt;/a&gt; was looking to
-reinvent their admin interface and were discussing various browser JavaScript libraries. The
-&lt;a href="https://github.com/TryGhost/Ghost/issues/2144"&gt;ensuing discussion&lt;/a&gt; is a great read.&lt;/p&gt;
-
-&lt;p&gt;This week the Ghost team announced &lt;a href="http://dev.ghost.org/hello-ember/"&gt;they&amp;#39;d be rebuilding in Ember.js&lt;/a&gt;.
-We&amp;#39;re super geeked to see Ghost join &lt;a href="https://www.balancedpayments.com/"&gt;Balanced&lt;/a&gt;,
-&lt;a href="https://travis-ci.org/"&gt;TravisCI&lt;/a&gt;, &lt;a href="http://www.discourse.org/"&gt;Discourse&lt;/a&gt;, and the rest of the
-great community of open source projects adopting Ember.js.&lt;/p&gt;
-
-&lt;p&gt;Thanks to everyone who chimed in on the discussion and the Ember.js community members who
-helped with advice, feedback, and tender loving care on Github, Twitter, and IRC.&lt;/p&gt;
-
-&lt;p&gt;Resolution:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;@ebryn is going to do a video walkthrough of how he&amp;#39;d organize Ghost&amp;#39;s admin interface&lt;/li&gt;
-&lt;li&gt;@rwjblue and @trek have been in #Ghost IRC and will keep that up&lt;/li&gt;
-&lt;li&gt;We&amp;#39;ll ask the Ghost to team to draw our attention to PRs/Issues related to the migration&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 class='anchorable-toc' id='toc_es6ifying-core'&gt;ES6ifying core&lt;/h4&gt;
-&lt;p&gt;The migration of ember-metal, ember-runtime, and ember-debug to ES6-style modules is
-&lt;a href="https://github.com/emberjs/ember.js/pull/4374"&gt;completed but not yet merged&lt;/a&gt;.  In making
-large changes we&amp;#39;re always especially cautious about accidentally breaking existing
-features, reducing performance, or increasing file size. Modularizing doesn&amp;#39;t appear to have
-an effect on build speed or runtime performance, but did lead to a 5k min/gzip size increase
-that we&amp;#39;re not happy with.&lt;/p&gt;
-
-&lt;p&gt;We&amp;#39;re currently tracking down the various causes of size bloat and doing some cleanup
-to bring build size back to its previous size.&lt;/p&gt;
-
-&lt;p&gt;Resolution:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;@rwjblue is going to do some cleanup and work with the transpiler
-maintainers to add some output improvements.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 class='anchorable-toc' id='toc_features-pending-go-decision'&gt;Features pending &amp;#39;Go&amp;#39; decision.&lt;/h4&gt;
-&lt;p&gt;The core team reviewed the following pull requests for future inclusion in
-the 1.6.x beta series:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;ember-routing-named-substates&lt;/code&gt; &lt;a href="https://github.com/emberjs/ember.js/pull/3655"&gt;#3655&lt;/a&gt;
-Still blocked on module vs global object lookup form, which causes naming collisions.&lt;/p&gt;
-
-&lt;p&gt;Resolution: will remain on canary until we&amp;#39;ve moved to modules and have a modular
-loader.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;ember-handlebars-caps-lookup&lt;/code&gt; &lt;a href="https://github.com/emberjs/ember.js/pull/3218"&gt;#3218&lt;/a&gt;
-The original author has become unresponsive.&lt;/p&gt;
-
-&lt;p&gt;Resolution: approach @mixonic to take over.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;ember-routing-add-model-option&lt;/code&gt; &lt;a href="https://github.com/emberjs/ember.js/pull/4293"&gt;#4293&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Resolution: It’s a go.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 class='anchorable-toc' id='toc_pr-s-issues-to-review'&gt;PR&amp;#39;s/Issues To Review&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4436"&gt;Do not setup listeners for destroyed Arrays&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Sometimes due to timing in test suites, an array that has become
-destroyed (most likely due to a call to DS.Store#unloadAll in Ember Data)
-is assigned to an array proxy. This leads to an intermittent problem
-where an assertion is raised due to a destroyed array-like object
-no longer being considered an array by Ember.&lt;/p&gt;
-
-&lt;p&gt;The root cause is that Ember.isArray relies on Ember.Array.detect to
-determine &amp;quot;Array-ness&amp;quot;, and when Ember.Array.detect is used on a
-destroyed object false is returned because the meta information has
-been removed.&lt;/p&gt;
-
-&lt;p&gt;Resolution: this error is the symptom, needs further investigation.
-@stefanpenner will investigate, and consult @krisselden and @ebryn&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4401"&gt;Resolve target issue on actions and with-controller&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Fixes issues where actions inside a {{with controller=&amp;#39;foo&amp;#39;}}
-block bypass the &lt;code&gt;FooController&lt;/code&gt;&amp;#39;s action handling.&lt;/p&gt;
-
-&lt;p&gt;Resolution: @ebryn, @krisselden, @wycats should review. Future changes that touch
-scope manipulation must be reviewed by @ebryn, @krisselden,  @wycats.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4404"&gt;The &lt;code&gt;each&lt;/code&gt; helper checks that the metamorph tags have the same parent.&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;In some cases, the browser may add or fix tags, which change the
-parentage of metamorph tags. This problem happens frequently when the
-developer doesn&amp;#39;t not include the TBODY tag inside a table for example.
-This prevents the framework to update or clean the underlying DOM
-elements.&lt;/p&gt;
-
-&lt;p&gt;This helps to detect the issue described in #4273.&lt;/p&gt;
-
-&lt;p&gt;Resolution: @trek will offer some feedback on wording. This should be a total non-issue
-once we can emit HTMLBars.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4097"&gt;Expose asObject to Ember.Handlebars.precompile&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Resolution: This belongs in handlebars, so reopen on Handlebars repo&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4352"&gt;FEATURE ember-handlebars-radio-buttons Implement radio buttons&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Resolution: hold off and talk about this at the next face to face.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4124"&gt;Deprecate edge-case get and normalizeTuple behavior before fixes&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;PR &lt;a href="https://github.com/emberjs/ember.js/pull/3852"&gt;#3852&lt;/a&gt; changes some edge case behavior for get and normalizeTuple. Ahead of those changes, this commit introduces deprecation notices.&lt;/p&gt;
-
-&lt;p&gt;Resolution:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Deprecate get for local paths on global contexts, only if they
-return data.&lt;/li&gt;
-&lt;li&gt;Deprecate normalizeTuple calls that return a non-global context
-and a simple global path.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
 </content>
   </entry>
 </feed>
