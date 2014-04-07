@@ -1079,6 +1079,44 @@ custom route).</p></li>
 
 <p>Remember, these routes are part of every application, so you don&#39;t need to
 specify them in <code>App.Router.map</code>.</p>
+<h3 class='anchorable-toc' id='toc_wildcard-globbing-routes'>Wildcard / globbing routes</h3>
+<p>You can define wildcard routes that will match mutliple routes. This could be used, for example,
+if you&#39;d like a catchall route which is useful when the user enters an incorrect URL not managed
+by your app.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">catchall</span><span class="delimiter">'</span></span>, {<span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">/*wildcard</span><span class="delimiter">'</span></span>});
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Like all routes with a dynamic segment, you must provide a context when using a <code>{{link-to}}</code>
+or <code>transitionTo</code> to programatically enter this route.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>App.ApplicationRoute = Ember.Route.extend({
+  <span class="key">actions</span>:
+    <span class="function">error</span>: <span class="keyword">function</span> () {
+      <span class="local-variable">this</span>.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">catchall</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">application-error</span><span class="delimiter">&quot;</span></span>);
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>With this code, if an error bubbles up to the Application route, your application will enter
+the <code>catchall</code> route and display <code>/application-error</code> in the URL.</p>
 
     
       <footer>
