@@ -4,8 +4,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Testing: Integration Testing</title>
-    <meta property="st:title" content="Testing: Integration Testing" />
+    <title>Ember.js - Testing: Integration Tests</title>
+    <meta property="st:title" content="Testing: Integration Tests" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -459,11 +459,51 @@
             </li>
           </ol></li>
           <li class="level-1 selected">
-            <a href="/guides/testing/integration">Testing</a>
+            <a href="/guides/testing">Testing</a>
             <ol class='selected'>
         
+            <li class="level-3">
+              <a href="/guides/testing">Introduction</a>
+            </li>
+          
             <li class="level-3 sub-selected">
-              <a href="/guides/testing/integration">Integration Testing</a>
+              <a href="/guides/testing/integration">Integration Tests</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/testing/test-helpers">Test Helpers</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/testing/testing-user-interaction">Testing User Interaction</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/testing/unit">Unit Tests</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/testing/unit-testing-basics">Unit Testing Basics</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/testing/testing-components">Testing Components</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/testing/testing-controllers">Testing Controllers</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/testing/testing-routes">Testing Routes</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/testing/testing-models">Testing Models</a>
+            </li>
+          
+            <li class="level-3">
+              <a href="/guides/testing/test-runners">Automating Tests with Runners</a>
             </li>
           </ol></li>
           <li class="level-1">
@@ -557,16 +597,14 @@
   
   <div class="chapter">
     
-        <h1>Integration Testing
+        <h1>Integration Tests
           <a href="https://github.com/emberjs/website/tree/master/source/guides/testing/integration.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
         </h1>
       
     <hr>
-    <p>Ember includes several helpers to facilitate integration testing. These helpers are &quot;aware&quot; of (and wait for) asynchronous behavior within your application, making it much easier to write deterministic tests.</p>
-
-<p><a href="http://qunitjs.com/">QUnit</a> is the default testing framework for this package, but others are supported through third-party adapters.</p>
+    <p>Integration tests are generally used to test important workflows within your application. They emulate user interaction and confirm expected results.</p>
 <h3 class='anchorable-toc' id='toc_setup'>Setup</h3>
-<p>In order to integration test the Ember application, you need to run the app within your test framework. Set the root element of the application to an arbitrary element you know will exist. It is useful, as an aid to test-driven development, if the root element is visible while the tests run. You can potentially use #qunit-fixture, typically used to contain fixture html for use in tests, but you will need to override css to make it visible.</p>
+<p>In order to integration test the Ember application, you need to run the app within your test framework. Set the root element of the application to an arbitrary element you know will exist. It is useful, as an aid to test-driven development, if the root element is visible while the tests run. You can potentially use #qunit-fixture, which is typically used to contain fixture html for use in tests, but you will need to override css to make it visible.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
@@ -590,7 +628,7 @@
 </pre></td>
 </tr></table>
 </div></div>
-<p>With QUnit, <code>setup</code> and <code>teardown</code> functions are defined in each test module&#39;s configuration. These functions are called for each test in the module. If you are using a framework other than QUnit, use the hook that is called before each individual test.</p>
+<p>With QUnit, <code>setup</code> and <code>teardown</code> functions can be defined in each test module&#39;s configuration. These functions are called for each test in the module. If you are using a framework other than QUnit, use the hook that is called before each individual test.</p>
 
 <p>Before each test, reset the application: <code>App.reset()</code> completely resets the state of the application.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -607,179 +645,24 @@
 });
 </pre></td>
 </tr></table>
-</div></div><h3 class='anchorable-toc' id='toc_asynchronous-helpers'>Asynchronous Helpers</h3>
-<p>Asynchronous helpers will wait for other asynchronous helpers triggered prior to complete before starting.</p>
-
-<ul>
-<li><code>visit(url)</code>
-
-<ul>
-<li>Visits the given route and returns a promise that fulfills when all resulting async behavior is complete.</li>
-</ul></li>
-<li><code>fillIn(input_selector, text)</code>
-
-<ul>
-<li>Fills in the selected input with the given text and returns a promise that fulfills when all resulting async behavior is complete.</li>
-</ul></li>
-<li><code>click(selector)</code>
-
-<ul>
-<li>Clicks an element and triggers any actions triggered by the element&#39;s <code>click</code> event and returns a promise that fulfills when all resulting async behavior is complete.</li>
-</ul></li>
-<li><code>keyEvent(selector, type, keyCode)</code>
-
-<ul>
-<li>Simulates a key event type, e.g. <code>keypress</code>, <code>keydown</code>, <code>keyup</code> with the desired keyCode on element found by the selector.</li>
-</ul></li>
-<li><code>triggerEvent(selector, type, options)</code>
-
-<ul>
-<li>Triggers the given event, e.g. <code>blur</code>, <code>dblclick</code> on the element identified by the provided selector.</li>
-</ul></li>
-</ul>
-<h3 class='anchorable-toc' id='toc_synchronous-helpers'>Synchronous Helpers</h3>
-<p>Synchronous helpers are performed immediately when triggered.</p>
-
-<ul>
-<li><code>find(selector, context)</code>
-
-<ul>
-<li>Finds an element within the app&#39;s root element and within the context (optional). Scoping to the root element is especially useful to avoid conflicts with the test framework&#39;s reporter.</li>
-</ul></li>
-<li><code>currentPath()</code>
-
-<ul>
-<li>Returns the current path.</li>
-</ul></li>
-<li><code>currentRouteName()</code>
-
-<ul>
-<li>Returns the currently active route name.</li>
-</ul></li>
-<li><code>currentURL()</code>
-
-<ul>
-<li>Returns the current URL.</li>
-</ul></li>
-</ul>
-<h3 class='anchorable-toc' id='toc_wait-helpers'>Wait Helpers</h3>
-<p>The <code>andThen</code> helper will wait for all preceding asynchronous helpers to complete prior to progressing forward. Let&#39;s take a look at the following example.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-</pre></td>
-  <td class="code"><pre>test(<span class="string"><span class="delimiter">&quot;</span><span class="content">simple test</span><span class="delimiter">&quot;</span></span>, <span class="keyword">function</span>(){
-  expect(<span class="integer">1</span>); <span class="comment">// Ensure that we will perform one assertion</span>
-
-  visit(<span class="string"><span class="delimiter">&quot;</span><span class="content">/posts/new</span><span class="delimiter">&quot;</span></span>);
-  fillIn(<span class="string"><span class="delimiter">&quot;</span><span class="content">input.title</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">My new post</span><span class="delimiter">&quot;</span></span>);
-  click(<span class="string"><span class="delimiter">&quot;</span><span class="content">button.submit</span><span class="delimiter">&quot;</span></span>);
-
-  <span class="comment">// Wait for asynchronous helpers above to complete</span>
-  andThen(<span class="keyword">function</span>() {
-    equal(find(<span class="string"><span class="delimiter">&quot;</span><span class="content">ul.posts li:last</span><span class="delimiter">&quot;</span></span>).text(), <span class="string"><span class="delimiter">&quot;</span><span class="content">My new post</span><span class="delimiter">&quot;</span></span>);
-  });
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Note that in the example above we are using the <code>andThen</code> helper. This will wait for the preceding asynchronous test helpers to complete and then calls the function which was passed to it as an argument.</p>
-<h3 class='anchorable-toc' id='toc_writing-tests'>Writing tests</h3>
-<p>Almost every test has a pattern of visiting a route, interacting with the page (using the helpers), and checking for expected changes in the DOM.</p>
-
-<p>Examples:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>test(<span class="string"><span class="delimiter">&quot;</span><span class="content">root lists first page of posts</span><span class="delimiter">&quot;</span></span>, <span class="keyword">function</span>(){
-  visit(<span class="string"><span class="delimiter">&quot;</span><span class="content">/</span><span class="delimiter">&quot;</span></span>);
-  andThen(<span class="keyword">function</span>() {
-    equal(find(<span class="string"><span class="delimiter">&quot;</span><span class="content">.post</span><span class="delimiter">&quot;</span></span>).length, <span class="integer">5</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">The first page should have 5 posts</span><span class="delimiter">&quot;</span></span>);
-    <span class="comment">// Assuming we know that 5 posts display per page and that there are more than 5 posts</span>
-  });
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>The helpers that perform actions use a global promise object and automatically chain onto that promise object if it exists. This allows you write your tests without worrying about async behaviour your helper might trigger.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-</pre></td>
-  <td class="code"><pre>test(<span class="string"><span class="delimiter">&quot;</span><span class="content">creating a post displays the new post</span><span class="delimiter">&quot;</span></span>, <span class="keyword">function</span>(){
-  visit(<span class="string"><span class="delimiter">&quot;</span><span class="content">/posts/new</span><span class="delimiter">&quot;</span></span>);
-  fillIn(<span class="string"><span class="delimiter">&quot;</span><span class="content">.post-title</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">A new post</span><span class="delimiter">&quot;</span></span>);
-  fillIn(<span class="string"><span class="delimiter">&quot;</span><span class="content">.post-author</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">John Doe</span><span class="delimiter">&quot;</span></span>);
-  click(<span class="string"><span class="delimiter">&quot;</span><span class="content">button.create</span><span class="delimiter">&quot;</span></span>);
-  andThen(<span class="keyword">function</span>() {
-    ok(find(<span class="string"><span class="delimiter">&quot;</span><span class="content">h1:contains('A new post')</span><span class="delimiter">&quot;</span></span>).length, <span class="string"><span class="delimiter">&quot;</span><span class="content">The post's title should display</span><span class="delimiter">&quot;</span></span>);
-    ok(find(<span class="string"><span class="delimiter">&quot;</span><span class="content">a[rel=author]:contains('John Doe')</span><span class="delimiter">&quot;</span></span>).length, <span class="string"><span class="delimiter">&quot;</span><span class="content">A link to the author should display</span><span class="delimiter">&quot;</span></span>);
-  });
-});
-</pre></td>
-</tr></table>
-</div></div><h3 class='anchorable-toc' id='toc_creating-your-own-test-helpers'>Creating your own test helpers</h3>
-<p><code>Ember.Test.registerHelper</code> and <code>Ember.Test.registerAsyncHelper</code> are used to register test helpers that will be injected when <code>App.injectTestHelpers</code> is called. The difference between <code>Ember.Test.registerHelper</code> and <code>Ember.Test.registerAsyncHelper</code> is that the latter will not run until any previous async helper has completed and any subsequent async helper will wait for it to finish before running.</p>
-
-<p>The helper method will always be called with the current Application as the first parameter. Helpers need to be registered prior to calling <code>App.injectTestHelpers()</code>. </p>
-
-<p>For example:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-</pre></td>
-  <td class="code"><pre>Ember.Test.registerAsyncHelper(<span class="string"><span class="delimiter">'</span><span class="content">dblclick</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(app, selector, context) {
-  <span class="keyword">var</span> <span class="predefined">$el</span> = findWithAssert(selector, context);
-  Ember.run(<span class="keyword">function</span>() {
-    <span class="predefined">$el</span>.dblclick();
-  });
-});
-</pre></td>
-</tr></table>
 </div></div><h3 class='anchorable-toc' id='toc_test-adapters-for-other-libraries'>Test adapters for other libraries</h3>
 <p>If you use a library other than QUnit, your test adapter will need to provide methods for <code>asyncStart</code> and <code>asyncEnd</code>. To facilitate asynchronous testing, the default test adapter for QUnit uses methods that QUnit provides: (globals) <code>stop()</code> and <code>start()</code>.</p>
 
-<p><strong>(Please note: Only development builds of Ember include the testing package. The ember-testing package is not included in the production build of Ember. The package can be loaded in your dev or qa builds to facilitate testing your application. By not including the ember-testing package in production, your tests will not be executable in a production environment.)</strong></p>
+<p><strong>Please note:</strong></p>
+
+<p>The <code>ember-testing</code> package is not included in the production builds, only development builds of Ember include the testing package. The package can be loaded in your dev or qa builds to facilitate testing your application. By not including the ember-testing package in production, your tests will not be executable in a production environment.</p>
 
     
       <footer>
         
-          <a class="previous-guide" href="/guides/enumerables">
-             ← Enumerables: Introduction
+          <a class="previous-guide" href="/guides/testing">
+            ← Introduction
           </a>
          
-            <a class="next-guide" href="/guides/configuring-ember/disabling-prototype-extensions">
-               We're done with Testing. Next up: Configuring Ember.js - Disabling Prototype Extensions →
-            </a>
-          
+        <a class="next-guide" href="/guides/testing/test-helpers">
+          Test Helpers →
+        </a>
+      
       </footer>
       
   </div>
