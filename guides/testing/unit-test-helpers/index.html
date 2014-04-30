@@ -4,8 +4,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Getting Started: Adding Child Routes</title>
-    <meta property="st:title" content="Getting Started: Adding Child Routes" />
+    <title>Ember.js - Testing: Unit Test Helpers</title>
+    <meta property="st:title" content="Testing: Unit Test Helpers" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -13,7 +13,7 @@
     
   </head>
 
-  <body class="guides guides_getting-started guides_getting-started_adding-child-routes guides_getting-started_adding-child-routes_index">
+  <body class="guides guides_testing guides_testing_unit-test-helpers guides_testing_unit-test-helpers_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -46,9 +46,9 @@
         <div id="sidebar">
           
     <ol id="toc-list">
-          <li class="level-1 selected">
+          <li class="level-1">
             <a href="/guides/getting-started">Getting Started</a>
-            <ol class='selected'>
+            <ol>
         
             <li class="level-3">
               <a href="/guides/getting-started">Getting Started</a>
@@ -110,7 +110,7 @@
               <a href="/guides/getting-started/deleting-todos">Deleting a Model</a>
             </li>
           
-            <li class="level-3 sub-selected">
+            <li class="level-3">
               <a href="/guides/getting-started/adding-child-routes">Adding Child Routes</a>
             </li>
           
@@ -458,9 +458,9 @@
               <a href="/guides/enumerables">Introduction</a>
             </li>
           </ol></li>
-          <li class="level-1">
+          <li class="level-1 selected">
             <a href="/guides/testing">Testing</a>
-            <ol>
+            <ol class='selected'>
         
             <li class="level-3">
               <a href="/guides/testing">Introduction</a>
@@ -482,7 +482,7 @@
               <a href="/guides/testing/unit-testing-basics">Unit Testing Basics</a>
             </li>
           
-            <li class="level-3">
+            <li class="level-3 sub-selected">
               <a href="/guides/testing/unit-test-helpers">Unit Test Helpers</a>
             </li>
           
@@ -597,128 +597,151 @@
   
   <div class="chapter">
     
-        <h1>Adding Child Routes
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/getting-started/adding-child-routes.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
+        <h1>Unit Test Helpers
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/testing/unit-test-helpers.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
         </h1>
       
     <hr>
-    <p>Next we will split our single template into a set of nested templates so we can transition between different lists of todos in reaction to user interaction.</p>
+    <h3 class='anchorable-toc' id='toc_globals-vs-modules'>Globals vs Modules</h3>
+<p>In the past, it has been difficult to test portions of your Ember application
+without loading the entire app as a global. By having your application written
+using modules (<a href="http://wiki.commonjs.org/wiki/CommonJS" title="CommonJS">CommonJS</a>, <a href="http://requirejs.org/docs/whyamd.html" title="AMD">AMD</a>, etc), you are able to require just code that 
+is to be tested without having to pluck the pieces out of your global 
+application.</p>
+<h3 class='anchorable-toc' id='toc_unit-testing-helpers'>Unit Testing Helpers</h3>
+<p><a href="https://github.com/rpflorence/ember-qunit" title="Ember QUnit">Ember-QUnit</a> is the default <em>unit</em> testing helper suite for Ember. It can and
+should be used as a template for other test framework helpers. It uses your
+application&#39;s resolver to find and automatically create test subjects for you
+using the <code>moduleFor</code> and <code>test</code> helpers.</p>
 
-<p>In <code>index.html</code> move the entire <code>&lt;ul&gt;</code> of todos into a new template named <code>todos/index</code> by adding a new Handlebars template <code>&lt;script&gt;</code> tag inside the <code>&lt;body&gt;</code> of the document:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>A test subject is simply an instance of the object that a particular test is 
+making assertions about. Usually test subjects are manually created by the 
+writer of the test.</p>
+
+<!--
+* [Ember-QUnit](https://github.com/rpflorence/ember-qunit) - Unit test helpers
+  written for QUnit
+* [Ember-Mocha](#) - Unit test helpers written for Mocha (to be written)
+* [Ember-Jasmine](#) - Unit test helpers written for Jasmine (to be written)
+-->
+
+<p><strong><em>The unit testing section of this guide will use the Ember-QUnit library, but
+the concepts and examples should translate easily to other frameworks.</em></strong></p>
+<h3 class='anchorable-toc' id='toc_available-helpers'>Available Helpers</h3>
+<p>By including <a href="https://github.com/rpflorence/ember-qunit" title="Ember QUnit">Ember-QUnit</a>, you will have access to a number of test helpers.</p>
+
+<ul>
+<li><p><code>moduleFor(fullName [, description [, callbacks]])</code></p>
+
+<ul>
+<li><strong>fullName</strong>: The full name of the unit, (ie. <code>controller:application</code>,
+<code>route:index</code>, etc.)</li>
+<li><strong>description</strong>: the description of the module</li>
+<li><strong>callbacks</strong>: normal QUnit callbacks (setup and teardown), with addition to
+needs, which allows you specify the other units the tests will need.</li>
+</ul></li>
+<li><p><code>moduleForComponent(name [, description [, callbacks]])</code></p>
+
+<ul>
+<li><strong>name</strong>: the short name of the component that you&#39;d use in a template, (ie.
+<code>x-foo</code>, <code>ic-tabs</code>, etc.)</li>
+<li><strong>description</strong>: the description of the module</li>
+<li><strong>callbacks</strong>: normal QUnit callbacks (setup and teardown), with addition to
+needs, which allows you specify the other units the tests will need.</li>
+</ul></li>
+<li><p><code>moduleForModel(fullName [, description [, callbacks]])</code></p>
+
+<ul>
+<li><strong>name</strong>: the short name of the model you&#39;d use in store
+operations (ie. <code>user</code>, <code>assignmentGroup</code>, etc.)</li>
+<li><strong>description</strong>: the description of the module</li>
+<li><strong>callbacks</strong>: normal QUnit callbacks (setup and teardown), with addition to
+needs, which allows you specify the other units the tests will need.</li>
+</ul></li>
+<li><p><code>test</code></p>
+
+<ul>
+<li>Same as QUnit <code>test</code> except it includes the <code>subject</code> function which is used
+to create the test subject.</li>
+</ul></li>
+<li><p><code>setResolver</code></p>
+
+<ul>
+<li>Sets the resolver which will be used to lookup objects from the application
+container.</li>
+</ul></li>
+</ul>
+<h3 class='anchorable-toc' id='toc_unit-testing-setup'>Unit Testing Setup</h3>
+<p>In order to unit test your Ember application, you need to let Ember know it is in
+test mode. To do so, you must call <code>Ember.setupForTesting()</code>.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
-14
-15
-16
 </pre></td>
-  <td class="code"><pre><span class="comment">&lt;!--- ... additional lines truncated for brevity ... --&gt;</span>
-<span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">todos/index</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-<span class="inline">  <span class="tag">&lt;ul</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">todo-list</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    {{#each itemController=&quot;todo&quot;}}
-      <span class="tag">&lt;li</span> <span class="error">{</span><span class="error">{</span><span class="attribute-name">bind-attr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">isCompleted:completed isEditing:editing</span><span class="delimiter">&quot;</span></span><span class="error">}</span><span class="error">}</span><span class="tag">&gt;</span>
-        {{#if isEditing}}
-          {{edit-todo class=&quot;edit&quot; value=title focus-out=&quot;acceptChanges&quot; insert-newline=&quot;acceptChanges&quot;}}
-        {{else}}
-          {{input type=&quot;checkbox&quot; checked=isCompleted class=&quot;toggle&quot;}}
-          <span class="tag">&lt;label</span> <span class="error">{</span><span class="error">{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">editTodo</span><span class="error">&quot;</span> <span class="attribute-name">on</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">doubleClick</span><span class="delimiter">&quot;</span></span><span class="error">}</span><span class="error">}</span><span class="tag">&gt;</span>{{title}}<span class="tag">&lt;/label&gt;</span><span class="tag">&lt;button</span> <span class="error">{</span><span class="error">{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">removeTodo</span><span class="error">&quot;</span><span class="error">}</span><span class="error">}</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">destroy</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/button&gt;</span>
-        {{/if}}
-      <span class="tag">&lt;/li&gt;</span>
-    {{/each}}
-  <span class="tag">&lt;/ul&gt;</span></span>
-<span class="tag">&lt;/script&gt;</span>
-<span class="comment">&lt;!--- ... additional lines truncated for brevity ... --&gt;</span>
+  <td class="code"><pre>Ember.setupForTesting();
 </pre></td>
 </tr></table>
 </div></div>
-<p>Still within <code>index.html</code> place a Handlebars <code>{{outlet}}</code> helper where the <code>&lt;ul&gt;</code> was previously:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre><span class="comment">&lt;!--- ... additional lines truncated for brevity ... --&gt;</span>
-<span class="tag">&lt;section</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">main</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span><span class="inline-delimiter">}}</span></span>
+<p>The <code>setupForTesting()</code> function call makes ember turn off its automatic run
+loop execution. This gives us an ability to control the flow of the run loop
+ourselves, to a degree. Its default behaviour of resolving all promises and
+completing all async behaviour are suspended to give you a chance to set up
+state and make assertions in a known state. In other words, you know that if you
+run &quot;visit&quot; to get to a particular URL, you can be sure the URL has been visited
+and that&#39;s the only behaviour that has transpired. If we didn&#39;t use this mode,
+our assertions would most likely be executed before the async behaviour had taken place, so
+our assertion results would be unpredictable.</p>
 
-  <span class="tag">&lt;input</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">checkbox</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">toggle-all</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-<span class="tag">&lt;/section&gt;</span>
-<span class="comment">&lt;!--- ... additional lines truncated for brevity ... --&gt;</span>
+<p>With a module-based application, you have access to the unit test helpers simply
+by requiring the exports of the module. However, if you are testing a global
+Ember application, you are still able to use the unit test helpers. Instead of
+importing the <code>ember-qunit</code> module, you need to make the unit test helpers
+global with <code>emq.globalize()</code>:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>emq.globalize();
 </pre></td>
 </tr></table>
 </div></div>
-<p>The <code>{{outlet}}</code> Handlebars helper designates an area of a template that will dynamically update as we transition between routes. Our first new child route will fill this area with the list of all todos in the application.</p>
+<p>This will make the above helpers available globally.</p>
+<h3 class='anchorable-toc' id='toc_the-resolver'>The Resolver</h3>
+<p>The Ember resolver plays a huge role when unit testing your application. It
+provides the lookup functionality based on name, such as <code>route:index</code> or
+<code>model:post</code>.</p>
 
-<p>In <code>js/router.js</code> update the router to change the <code>todos</code> mapping, with an additional empty function parameter so it can accept child routes, and add this first <code>index</code> route:</p>
+<p>If you do not have a custom resolver or are testing a global Ember application,
+the resolver should be set like this:</p>
+
+<p><strong><em>Make sure to replace &quot;App&quot; with your application&#39;s namespace in the following line</em></strong></p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>setResolver(Ember.DefaultResolver.create({ <span class="key">namespace</span>: App }))
+</pre></td>
+</tr></table>
+</div></div>
+<p>Otherwise, you would require the custom resolver and pass it to <code>setResolver</code>
+like this <em>(ES6 example)</em>:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
 </pre></td>
-  <td class="code"><pre>Todos.Router.map(<span class="keyword">function</span> () {
-  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">todos</span><span class="delimiter">'</span></span>, { <span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span> }, <span class="keyword">function</span> () {
-    <span class="comment">// additional child routes will go here later</span>
-  });
-});
-
-<span class="comment">// ... additional lines truncated for brevity ...</span>
-
-Todos.TodosIndexRoute = Ember.Route.extend({
-  <span class="function">model</span>: <span class="keyword">function</span>() {
-    <span class="keyword">return</span> <span class="local-variable">this</span>.modelFor(<span class="string"><span class="delimiter">'</span><span class="content">todos</span><span class="delimiter">'</span></span>);
-  }
-});
+  <td class="code"><pre><span class="reserved">import</span> Resolver from <span class="string"><span class="delimiter">'</span><span class="content">./path/to/resolver</span><span class="delimiter">'</span></span>;
+<span class="reserved">import</span> { setResolver } from <span class="string"><span class="delimiter">'</span><span class="content">ember-qunit</span><span class="delimiter">'</span></span>;
+setResolver(Resolver.create());
 </pre></td>
 </tr></table>
 </div></div>
-<p>When the application loads at the url <code>&#39;/&#39;</code> Ember.js will enter the <code>todos</code> route and render the <code>todos</code> template as before. It will also transition into the <code>todos.index</code> route and fill the <code>{{outlet}}</code> in the <code>todos</code> template with the <code>todos/index</code> template.  The model data for this template is the result of the <code>model</code> method of <code>TodosIndexRoute</code>, which indicates that the
-model for this route is the same model as for the <code>TodosRoute</code>.</p>
-
-<p>This mapping is described in more detail in the <a href="/guides/concepts/naming-conventions">Naming Conventions Guide</a>.</p>
-<h3 class='anchorable-toc' id='toc_live-preview'>Live Preview</h3>
-<p><a class="jsbin-embed" href="http://jsbin.com/oweNovo/1/embed?live">Ember.js • TodoMVC</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
-<h3 class='anchorable-toc' id='toc_additional-resources'>Additional Resources</h3>
-<ul>
-<li><a href="https://github.com/emberjs/quickstart-code-sample/commit/3bab8f1519ffc1ca2d5a12d1de35e4c764c91f05">Changes in this step in <code>diff</code> format</a></li>
-<li><a href="/guides/routing">Ember Router Guide</a></li>
-<li><a href="/guides/controllers">Ember Controller Guide</a></li>
-<li><a href="/api/classes/Ember.Handlebars.helpers.html#method_outlet">outlet API documentation</a></li>
-</ul>
-
     
       <footer>
         
-          <a class="previous-guide" href="/guides/getting-started/deleting-todos">
-            ← Deleting a Model
+          <a class="previous-guide" href="/guides/testing/unit-testing-basics">
+            ← Unit Testing Basics
           </a>
          
-        <a class="next-guide" href="/guides/getting-started/show-only-incomplete-todos">
-          Transitioning to Show Only Incomplete Todos →
+        <a class="next-guide" href="/guides/testing/testing-components">
+          Testing Components →
         </a>
       
       </footer>

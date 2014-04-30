@@ -479,11 +479,11 @@
             </li>
           
             <li class="level-3">
-              <a href="/guides/testing/unit">Unit Tests</a>
+              <a href="/guides/testing/unit-testing-basics">Unit Testing Basics</a>
             </li>
           
             <li class="level-3">
-              <a href="/guides/testing/unit-testing-basics">Unit Testing Basics</a>
+              <a href="/guides/testing/unit-test-helpers">Unit Test Helpers</a>
             </li>
           
             <li class="level-3">
@@ -628,6 +628,12 @@ types of helpers: <strong>asynchronous</strong> and <strong>synchronous</strong>
 <p>Asynchronous helpers are &quot;aware&quot; of (and wait for) asynchronous behavior within
 your application, making it much easier to write deterministic tests.</p>
 
+<p>Also, these helpers register themselves in the order that you call them and will
+be run in a chain; each one is only called after the previous one finishes, in a
+chain. You can rest assured, therefore, that the order you call them in will also
+be their execution order, and that the previous helper has finished before the
+next one starts.</p>
+
 <ul>
 <li><code>visit(url)</code>
 
@@ -722,9 +728,21 @@ example.</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>Note that in the example above we are using the <code>andThen</code> helper. This will wait
-for the preceding asynchronous test helpers to complete and then calls the
-function which was passed to it as an argument.</p>
+<p>First we tell qunit that this test should have one assertion made by the end 
+of the test by calling <code>expect</code> with an argument of <code>1</code>. We then visit the new
+posts URL &quot;/posts/new&quot;, enter the text &quot;My new post&quot; into an input control
+with the CSS class &quot;title&quot;, and click on a button whose class is &quot;submit&quot;.</p>
+
+<p>We then make a call to the <code>andThen</code> helper which will wait for the preceding
+asynchronous test helpers to complete (specifically, <code>andThen</code> will only be
+called <strong>after</strong> the new posts URL was visited, the text filled in and the
+submit button was clicked, <strong>and</strong> the browser has returned from doing whatever
+those actions required). Note <code>andThen</code> has a single argument of the function
+that contains the code to execute after the other test helpers have finished.</p>
+
+<p>In the <code>andThen</code> helper, we finally make our call to equal which makes an
+assertion that the text found in the last li of the ul whose class is &quot;posts&quot;
+is equal to &quot;My new post&quot;.</p>
 <h3 class='anchorable-toc' id='toc_custom-test-helpers'>Custom Test Helpers</h3>
 <p><code>Ember.Test.registerHelper</code> and <code>Ember.Test.registerAsyncHelper</code> are used to
 register test helpers that will be injected when <code>App.injectTestHelpers</code> is
@@ -814,7 +832,7 @@ into one helper. For example:</p>
 </div></div><h4 class='anchorable-toc' id='toc_example'>Example</h4>
 <p>Here is an example of using both <code>registerHelper</code> and <code>registerAsyncHelper</code>.</p>
 
-<p><a class="jsbin-embed" href="http://jsbin.com/bahas/embed?output">Custom Test Helpers</a></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/jesuyeri/embed?output">Custom Test Helpers</a></p>
 
     
       <footer>
