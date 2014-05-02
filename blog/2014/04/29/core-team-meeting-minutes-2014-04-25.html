@@ -3,8 +3,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Core Team Meeting Minutes - 2014/03/07</title>
-    <meta property="st:title" content="Core Team Meeting Minutes - 2014/03/07" />
+    <title>Ember.js - Core Team Meeting Minutes - 2014/04/25</title>
+    <meta property="st:title" content="Core Team Meeting Minutes - 2014/04/25" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -12,7 +12,7 @@
     
   </head>
 
-  <body class="blog blog_2014 blog_2014_03 blog_2014_03_22 blog_2014_03_22_core-team-meeting-minutes-2014-03-07">
+  <body class="blog blog_2014 blog_2014_04 blog_2014_04_29 blog_2014_04_29_core-team-meeting-minutes-2014-04-25">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -185,9 +185,9 @@
       
       <div id="content" class="has-sidebar">
           <article class="blog-post">
-    <h1>Core Team Meeting Minutes - 2014/03/07</h1>
+    <h1>Core Team Meeting Minutes - 2014/04/25</h1>
     
-      <h3 class="blog-post-author">Posted By: Trek Glowacki &ndash; <time>Mar 22, 2014</time></h3>
+      <h3 class="blog-post-author">Posted By: Trek Glowacki &ndash; <time>Apr 29, 2014</time></h3>
     
 
     <hr>
@@ -201,149 +201,70 @@ discussion of all things Ember.</p>
 <p>If you have a topic you&#39;d like to see covered, contact your favorite
 core team member and let them know!</p>
 <h4 class='anchorable-toc' id='toc_attendees'>Attendees</h4>
-<p>@ebryn, @krisselden, @machty, @rwjblue, @stefanpenner, @tomdale, @trek, @wycats</p>
-<h3 class='anchorable-toc' id='toc_topics'>Topics</h3><h4 class='anchorable-toc' id='toc_features-pending-go-decision-a-href-https-github-com-emberjs-ember-js-issues-4052-tracking-issue-a'>Features pending &#39;Go&#39; decision. <a href="https://github.com/emberjs/ember.js/issues/4052">Tracking Issue</a></h4>
-<ul>
-<li> <code>ember-routing-add-model-option</code> <a href="https://github.com/emberjs/ember.js/pull/4293">#4293</a>
-Resolution: Go</li>
-</ul>
+<!--   [@ebryn](https://twitter.com/ebryn),
+  [@krisselden](https://twitter.com/krisselden),
+  [@machty](https://twitter.com/machty),
+  [@rwjblue](https://twitter.com/rwjblue),
+  [@trek](https://twitter.com/trek),
+  [@stefanpenner](https://twitter.com/stefanpenner),
+  [@wagenet](https://twitter.com/wagenet),
+  [@tomdale](https://twitter.com/tomdale),
+  [@wifelette](https://twitter.com/wifelette),
+  [@wycats](https://twitter.com/wycats) -->
+
+<p><a href="https://twitter.com/ebryn">@ebryn</a>,
+<a href="https://twitter.com/krisselden">@krisselden</a>,
+<a href="https://twitter.com/machty">@machty</a>,
+<a href="https://twitter.com/rwjblue">@rwjblue</a>,
+<a href="https://twitter.com/trek">@trek</a>,
+<a href="https://twitter.com/stefanpenner">@stefanpenner</a>,
+<a href="https://twitter.com/wagenet">@wagenet</a>,
+<a href="https://twitter.com/wycats">@wycats</a></p>
+<h3 class='anchorable-toc' id='toc_topics'>Topics</h3><h3 class='anchorable-toc' id='toc_build-tools-redux-progresss'>Build Tools Redux Progresss</h3>
+<p>When Ember.js took its first tentative steps into the world there existed no
+ecosystem of build tools for ambitious applications in the browser. Instead,
+we needed to <a href="https://github.com/livingsocial/rake-pipeline">build these tools</a>
+from scratch.</p>
+
+<p>The build tools story is significantly improved from those days! We&#39;re fortunate enough to
+have several competing systems, all JavaScript based, that help streamline this workflow.</p>
+
+<p>Work is <a href="https://github.com/rjackson/ember.js/tree/broccolify">in progress</a> to unify our builds
+and better declare and manage our external dependencies.</p>
 <h3 class='anchorable-toc' id='toc_pr-s-issues-to-review'>PR&#39;s/Issues To Review</h3>
 <ul>
-<li><p>Query Params New - Sticky Params?</p>
+<li><p><code>ember-routing-linkto-target-attribute</code> <a href="https://github.com/emberjs/ember.js/pull/4718">#4718</a></p>
 
-<p>Should query paramters remain on route change? When do we want it? All the time?
-How do we disable it? Proposals thus far:</p>
-<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-</pre></td>
-  <td class="code"><pre>/r?sort=asc ← keep
-/r/ios?sort=hot ← keep? “model specific state”
-/r/gonewild ← keep? “model specific state”
-/r/foo?name=’something related to foo’
-</pre></td>
-</tr></table>
-</div></div>
-<p>or
-<code>
-/blog/somepost?comments=true
-then navigate to
-/blog/someOtherPost?comments=true ← keep?
-/blog/someOtherPostthen ← don’t keep?
-// then navigate to
-/blog/somepost?comments=true ← kept from before? kept from last route? gone from last route?
-</code></p>
+<p>Resolution: Good to merge into Canary, but not a &quot;Go&quot; yet.</p></li>
+<li><p><code>ember-routing-will-change-hooks</code> <a href="https://github.com/emberjs/ember.js/pull/4760">#4760</a></p>
 
-<p>Possible opt-out via helper?
-<code>
-{{link-to ‘Home’ ‘home’ (query-params sort=null)}}
-</code></p>
+<p>Resolution: Good to merge into Canary, but not a &quot;Go&quot; yet.</p></li>
+<li><p><a href="https://github.com/emberjs/ember.js/pull/4770">Fix view keyword in component block</a></p>
 
-<p>some options:</p>
+<p>Fixes <a href="https://github.com/emberjs/ember.js/pull/3520">#3520</a> by setting the concreteView
+of the virtual view created to yield inside a component block.</p>
 
-<ul>
-<li>Preserve stickiness as the default, but add a (query-params-reset) subexpression helper
-(in addition to query-params) that can take 0 or more args and will reset any query params
-not explicitly specified in the helper invocation. The puts the stickiness in the control
-of the caller (the link-to helper).</li>
-<li><p>Add a sticky option to the route query params config hash, which defaults to true. If set to
-false, any links into that route will reset (unless QP values are explicitly provided in the
-link-to helper), but any links to that route from within that route hierarchy will be sticky,
-which effectively makes it so that if you leave a route and come back into it via a link-to,
-the QPs specified as sticky:false will be reset. Keep in mind though that leaving a route and
-pressing the back button will be &quot;sticky&quot; since the previous values on the controller will be
-restored based on the previous URL.</p>
+<p>Resolution: Don&#39;t merge. Not the real fix.</p></li>
+<li><p><a href="https://github.com/emberjs/ember.js/issues/4764">Cannot use the property name <code>states</code> in views</a>
+_states</p>
 
-<p>Example JSBin: http://emberjs.jsbin.com/ucanam/4102</p>
+<p>Resolution: Fix by making <code>states</code> into <code>_states</code>. States is considered private API,
+so this should not be a breaking change.</p></li>
+<li><p>Async Testing Helpers</p>
 
-<p>Resolution: Sticky by default, with appropriate escape valves to opt out per route change</p></li>
-</ul></li>
-<li><p><a href="https://github.com/emberjs/ember.js/pull/4374">ES6 ember-metal, ember-runtime, ember-debug</a></p>
+<p>1.4 contained bug fixes in the async test helpers that broke plugins relying on the broken
+behavior (e.g. <a href="https://github.com/trek/ember-testing-httpRespond">the third party httpRespond helper</a>)</p>
 
-<p>Work is currently being done (by @thomasaboyt amongst others) on the es6-module-transpiler
-to remove the need for intermediate variables. This will both reduce filesize (less total
-output), and enable cycles support (since it is evaluated lazily).</p>
+<p>Currently, async is not granular enough, so it&#39;s not possible to have test helpers that
+assert while async is working (which httpRespond would need).</p>
 
-<p>We believe there is more file size savings to be had in the way the view layer, and would like
-to be able to progress in the ES6 effort. Currently rebasing upon any change to ember-metal,
-ember-runtime, and ember-debug (rare) is difficult. I believe that we cannot maintain the long
-running pull-request branch for much longer and would like time to process/deal-with any issues
-that crop up from the swap (missing global exports for example) before branching the next beta
-series (2 weeks).</p>
+<p>Testing Async helpers need some love. In the past when parts of the ecosystem have needed
+help we&#39;ve suggested teams of motivated and capable individuals to investigate and improve
+our process. Past successful examples of this include the Ember Inspector and the build tools
+team. We probably need someone to take point on really making the test experience in Ember
+as great as the rest of the framework.</p>
 
-<p>RESOLUTION: Merge (pending specific issues that have already been noted), but before shipping another globals build we should deal with the file size issue. We have ~7 weeks until the 1.6 release.</p></li>
-<li><p><a href="https://github.com/emberjs/ember.js/pull/4404">The <code>each</code> helper checks that the metamorph tags have the same parent.</a></p>
-
-<p>This was generally approved in the 2014-02-28 meeting once some verbiage tweaks were made. @trek&#39;s suggested
-changes have been made, this is ready to go.</p>
-
-<p>Resolution: merge.</p></li>
-<li><p><a href="https://github.com/emberjs/ember.js/pull/4291">FEATURE Ember.computed.instance</a></p>
-
-<blockquote>
-<p>A computed property that creates a new instance of source. <code>source</code> can be any
-Class constructor, object, array, or a path to a local property.  Optionally you can
-specify the initial value(s), if only <code>initialValue</code> is given and if it is a string, it
-is treated as a local path.</p>
-</blockquote>
-
-<p>Resolution: make it an add on that’s not core. CPM.</p></li>
-<li><p><a href="https://github.com/emberjs/ember.js/pull/4124">Deprecate edge-case get and normalizeTuple behavior before fixes</a></p>
-
-<p>PR <a href="https://github.com/emberjs/ember.js/pull/3852">#3852</a> changes some edge case behavior for get and normalizeTuple. Ahead of those changes, this commit introduces deprecation notices.</p>
-
-<ul>
-<li>Deprecate get for local paths on global contexts, only if they
-return data.</li>
-<li>Deprecate normalizeTuple calls that return a non-global contenxt
-and a simple global path.</li>
-</ul></li>
-<li><p><a href="https://github.com/emberjs/ember.js/pull/4459">Deprecate global access from templates</a></p>
-
-<p>PR by @mixonic:</p>
-
-<blockquote>
-<p>Replaces #4358. These deprecations are narrow in scope, and only impact {{Global}} and
-{{#each Global}}. They do not deprecate any other global access in templates. Deprecating
-all global access from templates would a) need to be done helper-by-helper or b) would impact
-the get and binding code at a lower level.</p>
-
-<p>@xtian I&#39;m rewritten your first commit but preserved it here.</p>
-
-<p>@ebryn yo.</p>
-</blockquote></li>
-<li><p><a href="https://github.com/emberjs/ember.js/pull/4328">Container throws if injection registered for already instantiated type</a></p>
-
-<blockquote>
-<p>Prior to this commit, the container would happily allow you to register an injection for a
-type that had already been instantiated. This led to confusing-to-debug situations where an
-injection is registered but a container-created instance doesn&#39;t have the injection applied.</p>
-</blockquote>
-
-<p>Comment from @stefanpenner</p>
-
-<blockquote>
-<p>As you know I&#39;m all for this change, but it may cause people some inconvenience. I personally
-consider it a bugfix, but i would like @tomdale or @wycats&#39;s +1/-1.</p>
-</blockquote>
-
-<p>Resolution: @stefanpenner &amp; @wycats will chat.</p></li>
-<li><p><a href="https://github.com/emberjs/ember.js/pull/4097">Expose asObject to Ember.Handlebars.precompile</a></p>
-
-<p>Comment from @rwjblue:</p>
-
-<blockquote>
-<p>This was mentioned in the core team meeting on 2014-02-28. It was mentioned that this should be
-changed upstream (in Handlebars itself), but as I reviewed (to let you know where that change
-would be needed) I realized that this PR is simply exposing the functionality that already
-exists within Handlebars, but is not exposed to <code>Ember.Handlebars.precompile</code>.</p>
-
-<p>As such, I think that we should likely re-evaluate the prior decision.</p>
-</blockquote>
-
-<p>Resolution. Ship it. This just passes from Handlebars to Ember.Handlebars</p></li>
+<p>Resolution: Assemble a Testing Task Force.</p></li>
 </ul>
 
 
