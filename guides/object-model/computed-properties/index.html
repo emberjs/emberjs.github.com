@@ -648,7 +648,19 @@ ironMan.get(<span class="string"><span class="delimiter">'</span><span class="co
 <p>Notice that the <code>fullName</code> function calls <code>property</code>. This declares the function to be a computed property, and the arguments tell Ember that it depends on the <code>firstName</code> and <code>lastName</code> attributes.</p>
 
 <p>Whenever you access the <code>fullName</code> property, this function gets called, and it returns the value of the function, which simply calls <code>firstName</code> + <code>lastName</code>.</p>
-<h3 class='anchorable-toc' id='toc_chaining-computed-properties'>Chaining computed properties</h3>
+<h4 class='anchorable-toc' id='toc_alternate-invocation'>Alternate invocation</h4>
+<p>At this point, you might be wondering how you are able to call the <code>.property</code> function on a function.  This is possible because Ember extends the <code>function</code> prototype.  Read more on that <a href="http://emberjs.com/guides/configuring-ember/disabling-prototype-extensions/">here</a>. If you&#39;d like to replicate the declaration from above without using these extensions you could do so with the following:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>  fullName: Ember.computed(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
+  })
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_chaining-computed-properties'>Chaining computed properties</h3>
 <p>You can use computed properties as values to create new computed properties. Let&#39;s add a <code>description</code> computed property to the previous example, and use the existing <code>fullName</code> property and add in some other properties:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
