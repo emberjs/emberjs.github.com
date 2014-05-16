@@ -608,8 +608,8 @@ properties on the same object, or across two different objects. Unlike most othe
 frameworks that include some sort of binding implementation, bindings in
 Ember.js can be used with any object, not just between views and models.</p>
 
-<p>The easiest way to create a two-way binding is by creating a new property
-with the string <code>Binding</code> at the end, then specifying a path from the global scope:</p>
+<p>The easiest way to create a two-way binding is to use a computed alias, that
+specifies the path to another object.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -624,20 +624,22 @@ with the string <code>Binding</code> at the end, then specifying a path from the
 11
 12
 13
+14
 </pre></td>
-  <td class="code"><pre>App.wife = Ember.Object.create({
+  <td class="code"><pre>wife = Ember.Object.create({
   <span class="key">householdIncome</span>: <span class="integer">80000</span>
 });
 
-App.husband = Ember.Object.create({
-  <span class="key">householdIncomeBinding</span>: <span class="string"><span class="delimiter">'</span><span class="content">App.wife.householdIncome</span><span class="delimiter">'</span></span>
+husband = Ember.Object.create({
+  <span class="key">wife</span>: wife,
+  <span class="key">householdIncome</span>: Ember.computed.alias(<span class="string"><span class="delimiter">'</span><span class="content">wife.householdIncome</span><span class="delimiter">'</span></span>)
 });
 
-App.husband.get(<span class="string"><span class="delimiter">'</span><span class="content">householdIncome</span><span class="delimiter">'</span></span>); <span class="comment">// 80000</span>
+husband.get(<span class="string"><span class="delimiter">'</span><span class="content">householdIncome</span><span class="delimiter">'</span></span>); <span class="comment">// 80000</span>
 
 <span class="comment">// Someone gets raise.</span>
-App.husband.set(<span class="string"><span class="delimiter">'</span><span class="content">householdIncome</span><span class="delimiter">'</span></span>, <span class="integer">90000</span>);
-App.wife.get(<span class="string"><span class="delimiter">'</span><span class="content">householdIncome</span><span class="delimiter">'</span></span>); <span class="comment">// 90000</span>
+husband.set(<span class="string"><span class="delimiter">'</span><span class="content">householdIncome</span><span class="delimiter">'</span></span>, <span class="integer">90000</span>);
+wife.get(<span class="string"><span class="delimiter">'</span><span class="content">householdIncome</span><span class="delimiter">'</span></span>); <span class="comment">// 90000</span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -646,10 +648,12 @@ application code has finished running before synchronizing changes, so you can
 change a bound property as many times as you&#39;d like without worrying about the
 overhead of syncing bindings when values are transient.</p>
 <h2 class='anchorable-toc' id='toc_one-way-bindings'>One-Way Bindings</h2>
-<p>A one-way binding only propagates changes in one direction. Usually, one-way
-bindings are just a performance optimization and you can safely use
-the more concise two-way binding syntax (as, of course, two-way bindings are
-de facto one-way bindings if you only ever change one side).</p>
+<p>A one-way binding only propagates changes in one direction. Often, one-way
+bindings are just a performance optimization and you can safely use a two-way binding
+(as, of course, two-way bindings are de facto one-way bindings if you only ever change
+one side). Sometimes one-way bindings are useful to achieve specific behaviour such
+as a default that is the same as another property but can be overriden (e.g. a
+shipping address that starts the same as a billing address but can later be changed)</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -668,24 +672,26 @@ de facto one-way bindings if you only ever change one side).</p>
 15
 16
 17
+18
 </pre></td>
-  <td class="code"><pre>App.user = Ember.Object.create({
+  <td class="code"><pre>user = Ember.Object.create({
   <span class="key">fullName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Kara Gates</span><span class="delimiter">&quot;</span></span>
 });
 
-App.userView = Ember.View.create({
-  <span class="key">userNameBinding</span>: Ember.Binding.oneWay(<span class="string"><span class="delimiter">'</span><span class="content">App.user.fullName</span><span class="delimiter">'</span></span>)
+userView = Ember.View.create({
+  <span class="key">user</span>: user,
+  <span class="key">userName</span>: Ember.computed.oneWay(<span class="string"><span class="delimiter">'</span><span class="content">user.fullName</span><span class="delimiter">'</span></span>)
 });
 
 <span class="comment">// Changing the name of the user object changes</span>
 <span class="comment">// the value on the view.</span>
-App.user.set(<span class="string"><span class="delimiter">'</span><span class="content">fullName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Krang Gates</span><span class="delimiter">&quot;</span></span>);
-<span class="comment">// App.userView.userName will become &quot;Krang Gates&quot;</span>
+user.set(<span class="string"><span class="delimiter">'</span><span class="content">fullName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Krang Gates</span><span class="delimiter">&quot;</span></span>);
+<span class="comment">// userView.userName will become &quot;Krang Gates&quot;</span>
 
 <span class="comment">// ...but changes to the view don't make it back to</span>
 <span class="comment">// the object.</span>
-App.userView.set(<span class="string"><span class="delimiter">'</span><span class="content">userName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Truckasaurus Gates</span><span class="delimiter">&quot;</span></span>);
-App.user.get(<span class="string"><span class="delimiter">'</span><span class="content">fullName</span><span class="delimiter">'</span></span>); <span class="comment">// &quot;Krang Gates&quot;</span>
+userView.set(<span class="string"><span class="delimiter">'</span><span class="content">userName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Truckasaurus Gates</span><span class="delimiter">&quot;</span></span>);
+user.get(<span class="string"><span class="delimiter">'</span><span class="content">fullName</span><span class="delimiter">'</span></span>); <span class="comment">// &quot;Krang Gates&quot;</span>
 </pre></td>
 </tr></table>
 </div></div>
