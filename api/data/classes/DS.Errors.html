@@ -59,7 +59,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v1.0.0-beta.6" target="_blank"> Tag: v1.0.0-beta.6</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/data/commits/da8194a" target="_blank"> Tag: da8194a</a></li>
 
       
           <li class="level-1 ">
@@ -134,6 +134,14 @@
             
           <li class="level-3 ">
           
+              <a href="/api/data/classes/DS.ActiveModelSerializer.html">DS.ActiveModelSerializer</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
               <a href="/api/data/classes/DS.Adapter.html">DS.Adapter</a>
             
           </li>
@@ -143,14 +151,6 @@
           <li class="level-3 ">
           
               <a href="/api/data/classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/data/classes/DS.AttributeChange.html">DS.AttributeChange</a>
             
           </li>
         
@@ -350,6 +350,14 @@
             
           <li class="level-3 ">
           
+              <a href="/api/data/classes/DS.String.html">DS.String</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
               <a href="/api/data/classes/DS.StringTransform.html">DS.StringTransform</a>
             
           </li>
@@ -371,14 +379,6 @@
           </li>
         
           
-            
-          <li class="level-3 ">
-          
-              <a href="/api/data/classes/String.html">String</a>
-            
-          </li>
-        
-          
         
           </ol>
         
@@ -396,7 +396,7 @@
   <h1 class="api-header">
   DS.Errors Class
   
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/model/errors.js#L7">packages/ember-data/lib/system/model/errors.js:7</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/model/errors.js#L8">packages/ember-data/lib/system/model/errors.js:8</a>
   
 </h1>
 
@@ -417,7 +417,7 @@
   
 
   
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/model/errors.js#L7">packages/ember-data/lib/system/model/errors.js:7</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/model/errors.js#L8">packages/ember-data/lib/system/model/errors.js:8</a></p>
   
 
   
@@ -428,6 +428,104 @@
   <div class="description">
     <p>Holds validation errors for a given record organized by attribute names.</p>
 
+<p>Every DS.Model has an <code>errors</code> property that is an instance of
+<code>DS.Errors</code>. This can be used to display validation error
+messages returned from the server when a <code>record.save()</code> rejects.</p>
+
+<p>For Example, if you had an <code>User</code> model that looked like this:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>App.User = DS.Model.extend({
+  <span class="key">username</span>: attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">email</span>: attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>And you attempted to save a record that did not validate on the backend.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> user = store.createRecord(<span class="string"><span class="delimiter">'</span><span class="content">user</span><span class="delimiter">'</span></span>, {
+  <span class="key">username</span>: <span class="string"><span class="delimiter">'</span><span class="content">tomster</span><span class="delimiter">'</span></span>,
+  <span class="key">email</span>: <span class="string"><span class="delimiter">'</span><span class="content">invalidEmail</span><span class="delimiter">'</span></span>
+});
+user.save();
+</pre></td>
+</tr></table>
+</div></div>
+<p>Your backend data store might return a response that looks like
+this. This response will be used to populate the error object.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">errors</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span>: [<span class="string"><span class="delimiter">&quot;</span><span class="content">This username is already taken!</span><span class="delimiter">&quot;</span></span>],
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">email</span><span class="delimiter">&quot;</span></span>: [<span class="string"><span class="delimiter">&quot;</span><span class="content">Doesn't look like a valid email.</span><span class="delimiter">&quot;</span></span>]
+  }
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>Errors can be displayed to the user by accessing their property name
+or using the <code>messages</code> property to get an array of all errors.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">errors.messages</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">error</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">message</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+
+<span class="tag">&lt;label&gt;</span>Username: <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">input</span> <span class="attribute-name">value</span>=<span class="attribute-value">username</span><span class="inline-delimiter">}}</span></span> <span class="tag">&lt;/label&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">errors.username</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">error</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">message</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+
+<span class="tag">&lt;label&gt;</span>Email: <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">input</span> <span class="attribute-name">value</span>=<span class="attribute-value">email</span><span class="inline-delimiter">}}</span></span> <span class="tag">&lt;/label&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">errors.email</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">error</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">message</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
   </div>
 
 
@@ -522,6 +620,10 @@
               <a href="#property_length">length</a>
             </li>
           
+            <li class="property ">
+              <a href="#property_messages">messages</a>
+            </li>
+          
         </ul>
       
     </div>
@@ -569,7 +671,7 @@
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/model/errors.js#L137">packages/ember-data/lib/system/model/errors.js:137</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/model/errors.js#L228">packages/ember-data/lib/system/model/errors.js:228</a>
 
     
   </div>
@@ -613,7 +715,7 @@
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/model/errors.js#L115">packages/ember-data/lib/system/model/errors.js:115</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/model/errors.js#L198">packages/ember-data/lib/system/model/errors.js:198</a>
 
     
   </div>
@@ -625,6 +727,18 @@
       <p>Adds error messages to a given attribute and sends
 <code>becameInvalid</code> event to the record.</p>
 
+<p>Example:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="keyword">if</span> (!user.get(<span class="string"><span class="delimiter">'</span><span class="content">username</span><span class="delimiter">'</span></span>) {
+  user.get(<span class="string"><span class="delimiter">'</span><span class="content">errors</span><span class="delimiter">'</span></span>).add(<span class="string"><span class="delimiter">'</span><span class="content">username</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">This field is required</span><span class="delimiter">'</span></span>);
+}
+</pre></td>
+</tr></table>
+</div></div>
     </div>
   
 
@@ -640,7 +754,7 @@
 
       <dl>
         
-          <dt><strong>attribute</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>attribute</strong> <span class="type">String</span></dt>
           <dd></dd>
         
           <dt><strong>messages</strong> <span class="type">Array|String</span></dt>
@@ -674,7 +788,7 @@
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/model/errors.js#L173">packages/ember-data/lib/system/model/errors.js:173</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/model/errors.js#L285">packages/ember-data/lib/system/model/errors.js:285</a>
 
     
   </div>
@@ -686,6 +800,28 @@
       <p>Removes all error messages and sends <code>becameValid</code> event
 to the record.</p>
 
+<p>Example:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre>App.UserEditRoute = Ember.Route.extend({
+  <span class="key">actions</span>: {
+    <span class="function">retrySave</span>: <span class="keyword">function</span>(user) {
+       user.get(<span class="string"><span class="delimiter">'</span><span class="content">errors</span><span class="delimiter">'</span></span>).clear();
+       user.save();
+     }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
     </div>
   
 
@@ -725,7 +861,7 @@ to the record.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/model/errors.js#L57">packages/ember-data/lib/system/model/errors.js:57</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/model/errors.js#L117">packages/ember-data/lib/system/model/errors.js:117</a>
 
     
   </div>
@@ -735,7 +871,25 @@ to the record.</p>
   
     <div class="description">
       <p>Returns errors for a given attribute</p>
-
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> user = store.createRecord(<span class="string"><span class="delimiter">'</span><span class="content">user</span><span class="delimiter">'</span></span>, {
+  <span class="key">username</span>: <span class="string"><span class="delimiter">'</span><span class="content">tomster</span><span class="delimiter">'</span></span>,
+  <span class="key">email</span>: <span class="string"><span class="delimiter">'</span><span class="content">invalidEmail</span><span class="delimiter">'</span></span>
+});
+user.save().<span class="keyword">catch</span>(<span class="keyword">function</span>(){
+  user.get(<span class="string"><span class="delimiter">'</span><span class="content">errors</span><span class="delimiter">'</span></span>).errorsFor(<span class="string"><span class="delimiter">'</span><span class="content">email</span><span class="delimiter">'</span></span>); <span class="comment">// [&quot;Doesn't look like a valid email.&quot;]</span>
+});
+</pre></td>
+</tr></table>
+</div></div>
     </div>
   
 
@@ -751,7 +905,7 @@ to the record.</p>
 
       <dl>
         
-          <dt><strong>attribute</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>attribute</strong> <span class="type">String</span></dt>
           <dd></dd>
         
       </dl>
@@ -794,7 +948,7 @@ to the record.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/model/errors.js#L188">packages/ember-data/lib/system/model/errors.js:188</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/model/errors.js#L313">packages/ember-data/lib/system/model/errors.js:313</a>
 
     
   </div>
@@ -804,7 +958,31 @@ to the record.</p>
   
     <div class="description">
       <p>Checks if there is error messages for the given attribute.</p>
-
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre>App.UserEditRoute = Ember.Route.extend({
+  <span class="key">actions</span>: {
+    <span class="function">save</span>: <span class="keyword">function</span>(user) {
+       <span class="keyword">if</span> (user.get(<span class="string"><span class="delimiter">'</span><span class="content">errors</span><span class="delimiter">'</span></span>).has(<span class="string"><span class="delimiter">'</span><span class="content">email</span><span class="delimiter">'</span></span>)) {
+         <span class="keyword">return</span> alert(<span class="string"><span class="delimiter">'</span><span class="content">Please update your email before attempting to save.</span><span class="delimiter">'</span></span>);
+       }
+       user.save();
+     }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
     </div>
   
 
@@ -820,7 +998,7 @@ to the record.</p>
 
       <dl>
         
-          <dt><strong>attribute</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>attribute</strong> <span class="type">String</span></dt>
           <dd></dd>
         
       </dl>
@@ -860,7 +1038,7 @@ to the record.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/model/errors.js#L91">packages/ember-data/lib/system/model/errors.js:91</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/model/errors.js#L174">packages/ember-data/lib/system/model/errors.js:174</a>
 
     
   </div>
@@ -904,7 +1082,7 @@ to the record.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/model/errors.js#L17">packages/ember-data/lib/system/model/errors.js:17</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/model/errors.js#L77">packages/ember-data/lib/system/model/errors.js:77</a>
 
     
   </div>
@@ -970,7 +1148,7 @@ to the record.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/model/errors.js#L152">packages/ember-data/lib/system/model/errors.js:152</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/model/errors.js#L243">packages/ember-data/lib/system/model/errors.js:243</a>
 
     
   </div>
@@ -982,6 +1160,44 @@ to the record.</p>
       <p>Removes all error messages from the given attribute and sends
 <code>becameValid</code> event to the record if there no more errors left.</p>
 
+<p>Example:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+</pre></td>
+  <td class="code"><pre>App.User = DS.Model.extend({
+  <span class="key">email</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">twoFactorAuth</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">boolean</span><span class="delimiter">'</span></span>),
+  <span class="key">phone</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>)
+});
+
+App.UserEditRoute = Ember.Route.extend({
+  <span class="key">actions</span>: {
+    <span class="function">save</span>: <span class="keyword">function</span>(user) {
+       <span class="keyword">if</span> (!user.get(<span class="string"><span class="delimiter">'</span><span class="content">twoFactorAuth</span><span class="delimiter">'</span></span>)) {
+         user.get(<span class="string"><span class="delimiter">'</span><span class="content">errors</span><span class="delimiter">'</span></span>).remove(<span class="string"><span class="delimiter">'</span><span class="content">phone</span><span class="delimiter">'</span></span>);
+       }
+       user.save();
+     }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
     </div>
   
 
@@ -997,7 +1213,7 @@ to the record.</p>
 
       <dl>
         
-          <dt><strong>attribute</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>attribute</strong> <span class="type">String</span></dt>
           <dd></dd>
         
       </dl>
@@ -1029,7 +1245,7 @@ to the record.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/model/errors.js#L81">packages/ember-data/lib/system/model/errors.js:81</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/model/errors.js#L164">packages/ember-data/lib/system/model/errors.js:164</a>
 
     
   </div>
@@ -1096,7 +1312,7 @@ to the record.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/model/errors.js#L72">packages/ember-data/lib/system/model/errors.js:72</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/model/errors.js#L155">packages/ember-data/lib/system/model/errors.js:155</a>
 
     
   </div>
@@ -1139,7 +1355,7 @@ to the record.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/model/errors.js#L30">packages/ember-data/lib/system/model/errors.js:30</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/model/errors.js#L90">packages/ember-data/lib/system/model/errors.js:90</a>
 
     
   </div>
@@ -1181,7 +1397,7 @@ to the record.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/model/errors.js#L108">packages/ember-data/lib/system/model/errors.js:108</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/model/errors.js#L191">packages/ember-data/lib/system/model/errors.js:191</a>
 
     
   </div>
@@ -1223,7 +1439,7 @@ to the record.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/model/errors.js#L99">packages/ember-data/lib/system/model/errors.js:99</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/model/errors.js#L182">packages/ember-data/lib/system/model/errors.js:182</a>
 
     
   </div>
@@ -1234,6 +1450,68 @@ to the record.</p>
     <div class="description">
       <p>Total number of errors.</p>
 
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+
+  
+</div>
+
+      
+        
+<div id="property_messages" class="property  item-entry">
+  <h3 data-id="property_messages" class="name anchorable-toc"><code>messages</code></h3>
+
+
+  <span class="type">{Array}</span>
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/model/errors.js#L138">packages/ember-data/lib/system/model/errors.js:138</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>An array containing all of the error messages for this
+record. This is useful for displaying all errors to the user.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">errors.messages</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">error</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">message</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
     </div>
   
 

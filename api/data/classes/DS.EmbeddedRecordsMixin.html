@@ -59,7 +59,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v1.0.0-beta.6" target="_blank"> Tag: v1.0.0-beta.6</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/data/commits/da8194a" target="_blank"> Tag: da8194a</a></li>
 
       
           <li class="level-1 ">
@@ -134,6 +134,14 @@
             
           <li class="level-3 ">
           
+              <a href="/api/data/classes/DS.ActiveModelSerializer.html">DS.ActiveModelSerializer</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
               <a href="/api/data/classes/DS.Adapter.html">DS.Adapter</a>
             
           </li>
@@ -143,14 +151,6 @@
           <li class="level-3 ">
           
               <a href="/api/data/classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/data/classes/DS.AttributeChange.html">DS.AttributeChange</a>
             
           </li>
         
@@ -350,6 +350,14 @@
             
           <li class="level-3 ">
           
+              <a href="/api/data/classes/DS.String.html">DS.String</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
               <a href="/api/data/classes/DS.StringTransform.html">DS.StringTransform</a>
             
           </li>
@@ -371,14 +379,6 @@
           </li>
         
           
-            
-          <li class="level-3 ">
-          
-              <a href="/api/data/classes/String.html">String</a>
-            
-          </li>
-        
-          
         
           </ol>
         
@@ -396,7 +396,7 @@
   <h1 class="api-header">
   DS.EmbeddedRecordsMixin Class
   
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/activemodel-adapter/lib/system/embedded_records_mixin.js#L4">packages/activemodel-adapter/lib/system/embedded_records_mixin.js:4</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/da8194a/packages/activemodel-adapter/lib/system/embedded_records_mixin.js#L7">packages/activemodel-adapter/lib/system/embedded_records_mixin.js:7</a>
   
 </h1>
 
@@ -409,7 +409,7 @@
   
 
   
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/activemodel-adapter/lib/system/embedded_records_mixin.js#L4">packages/activemodel-adapter/lib/system/embedded_records_mixin.js:4</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/activemodel-adapter/lib/system/embedded_records_mixin.js#L7">packages/activemodel-adapter/lib/system/embedded_records_mixin.js:7</a></p>
   
 
   
@@ -418,26 +418,80 @@
 </div>
 
   <div class="description">
-    <p>The EmbeddedRecordsMixin allows you to add embedded record support to your
-serializers.
-To set up embedded records, you include the mixin into the serializer and then
-define your embedded relations.</p>
+    <h2 class='anchorable-toc' id='toc_using-embedded-records'>Using Embedded Records</h2>
+<p><code>DS.EmbeddedRecordsMixin</code> supports serializing embedded records.</p>
+
+<p>To set up embedded records, include the mixin when extending a serializer
+then define and configure embedded (model) relationships.</p>
+
+<p>Below is an example of a per-type serializer (&#39;post&#39; type).</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
+6
 </pre></td>
   <td class="code"><pre>App.PostSerializer = DS.ActiveModelSerializer.extend(DS.EmbeddedRecordsMixin, {
   <span class="key">attrs</span>: {
-    <span class="key">comments</span>: {<span class="key">embedded</span>: <span class="string"><span class="delimiter">'</span><span class="content">always</span><span class="delimiter">'</span></span>}
+    <span class="key">author</span>: {<span class="key">embedded</span>: <span class="string"><span class="delimiter">'</span><span class="content">always</span><span class="delimiter">'</span></span>},
+    <span class="key">comments</span>: {<span class="key">serialize</span>: <span class="string"><span class="delimiter">'</span><span class="content">ids</span><span class="delimiter">'</span></span>}
   }
 })
 </pre></td>
 </tr></table>
 </div></div>
-<p>Currently only <code>{embedded: &#39;always&#39;}</code> records are supported.</p>
+<p>The <code>attrs</code> option for a resource <code>{embedded: &#39;always&#39;}</code> is shorthand for:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>{<span class="key">serialize</span>: <span class="string"><span class="delimiter">'</span><span class="content">records</span><span class="delimiter">'</span></span>, <span class="key">deserialize</span>: <span class="string"><span class="delimiter">'</span><span class="content">records</span><span class="delimiter">'</span></span>}
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_configuring-attrs'>Configuring Attrs</h3>
+<p>A resource&#39;s <code>attrs</code> option may be set to use <code>ids</code>, <code>records</code> or <code>no</code> for the
+<code>serialize</code>  and <code>deserialize</code> settings.</p>
+
+<p>The <code>attrs</code> property can be set on the ApplicationSerializer or a per-type
+serializer.</p>
+
+<p>In the case where embedded JSON is expected while extracting a payoad (reading)
+the setting is <code>deserialize: &#39;records&#39;</code>, there is no need to use <code>ids</code> when
+extracting as that is the default behavior without this mixin if you are using
+the vanilla ActiveModelAdapter. Likewise, to embed JSON in the payload while
+serializing <code>serialize: &#39;records&#39;</code> is the setting to use. There is an option of
+not embedding JSON in the serialized payload by using <code>serialize: &#39;ids&#39;</code>. If you
+do not want the relationship sent at all, you can use <code>serialize: &#39;no&#39;</code>.</p>
+<h3 class='anchorable-toc' id='toc_activemodelserializer-defaults'>ActiveModelSerializer defaults</h3>
+<p>If you do not overwrite <code>attrs</code> for a specific relationship, the <code>ActiveModelSerializer</code>
+will behave in the following way:</p>
+
+<p>BelongsTo: <code>{serialize:&#39;id&#39;, deserialize:&#39;id&#39;}</code>
+HasMany:   <code>{serialize:no,  deserialize:&#39;ids&#39;}</code></p>
+<h3 class='anchorable-toc' id='toc_model-relationships'>Model Relationships</h3>
+<p>Embedded records must have a model defined to be extracted and serialized.</p>
+
+<p>To successfully extract and serialize embedded records the model relationships
+must be setup correcty See the
+<a href="/guides/models/defining-models/#toc_defining-relationships">defining relationships</a>
+section of the <strong>Defining Models</strong> guide page.</p>
+
+<p>Records without an <code>id</code> property are not considered embedded records, model
+instances must have an <code>id</code> property to be used with Ember Data.</p>
+<h3 class='anchorable-toc' id='toc_example-json-payloads-models-and-serializers'>Example JSON payloads, Models and Serializers</h3>
+<p><strong>When customizing a serializer it is imporant to grok what the cusomizations
+are, please read the docs for the methods this mixin provides, in case you need
+to modify to fit your specific needs.</strong></p>
+
+<p>For example review the docs for each method of this mixin:</p>
+
+<ul>
+<li><a href="/api/data/classes/DS.EmbeddedRecordsMixin.html#method_extractArray">extractArray</a></li>
+<li><a href="/api/data/classes/DS.EmbeddedRecordsMixin.html#method_extractSingle">extractSingle</a></li>
+<li><a href="/api/data/classes/DS.EmbeddedRecordsMixin.html#method_serializeBelongsTo">serializeBelongsTo</a></li>
+<li><a href="/api/data/classes/DS.EmbeddedRecordsMixin.html#method_serializeHasMany">serializeHasMany</a></li>
+</ul>
 
   </div>
 
@@ -483,39 +537,15 @@ define your embedded relations.</p>
             </li>
           
             <li class="method ">
-              <a href="#method_keyForAttribute">keyForAttribute</a>
+              <a href="#method_removeEmbeddedForeignKey">removeEmbeddedForeignKey</a>
             </li>
           
             <li class="method ">
-              <a href="#method_keyForRelationship">keyForRelationship</a>
-            </li>
-          
-            <li class="method ">
-              <a href="#method_normalize">normalize</a>
-            </li>
-          
-            <li class="method ">
-              <a href="#method_normalizeLinks">normalizeLinks</a>
-            </li>
-          
-            <li class="method private">
-              <a href="#method_normalizeRelationships">normalizeRelationships</a>
+              <a href="#method_serializeBelongsTo">serializeBelongsTo</a>
             </li>
           
             <li class="method ">
               <a href="#method_serializeHasMany">serializeHasMany</a>
-            </li>
-          
-            <li class="method ">
-              <a href="#method_serializeIntoHash">serializeIntoHash</a>
-            </li>
-          
-            <li class="method ">
-              <a href="#method_serializePolymorphicType">serializePolymorphicType</a>
-            </li>
-          
-            <li class="method ">
-              <a href="#method_typeForRoot">typeForRoot</a>
             </li>
           
         </ul>
@@ -547,7 +577,11 @@ define your embedded relations.</p>
         
 <div id="method_extractArray" class="method  item-entry">
   <h3 data-id="method_extractArray" class="name anchorable-toc"><code>extractArray</code></h3>
+  <span class="args">
+    (store, primaryType, payload)
+  </span>
 
+  <span class="type">Array<Object></span>
 
 
 
@@ -564,7 +598,7 @@ define your embedded relations.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/activemodel-adapter/lib/system/embedded_records_mixin.js#L62">packages/activemodel-adapter/lib/system/embedded_records_mixin.js:62</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/activemodel-adapter/lib/system/embedded_records_mixin.js#L357">packages/activemodel-adapter/lib/system/embedded_records_mixin.js:357</a>
 
     
   </div>
@@ -573,8 +607,76 @@ define your embedded relations.</p>
 
   
     <div class="description">
-      <p>Extract embedded objects out of a standard payload
-and add them as sideloaded objects instead.</p>
+      <p>Extract embedded objects in an array when an attr is configured for embedded,
+and add them as side-loaded objects instead.</p>
+
+<p>A payload with an attr configured for embedded records needs to be extracted:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is omakase</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">comments</span><span class="delimiter">&quot;</span></span>: [{
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">body</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is unagi</span><span class="delimiter">&quot;</span></span>
+    }, {
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">2</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">body</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Omakase O_o</span><span class="delimiter">&quot;</span></span>
+    }]
+  }
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>Ember Data is expecting a payload with compound document (side-loaded) like:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is omakase</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">comments</span><span class="delimiter">&quot;</span></span>: [<span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">2</span><span class="delimiter">&quot;</span></span>]
+  },
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">comments</span><span class="delimiter">&quot;</span></span>: [{
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">body</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is unagi</span><span class="delimiter">&quot;</span></span>
+  }, {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">2</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">body</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Omakase O_o</span><span class="delimiter">&quot;</span></span>
+  }]
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>The payload&#39;s <code>comments</code> attribute represents records in a <code>hasMany</code> relationship</p>
 
     </div>
   
@@ -586,7 +688,33 @@ and add them as sideloaded objects instead.</p>
   
 
   
+    <div class="params">
+      <h3>Parameters:</h3>
 
+      <dl>
+        
+          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
+          <dd></dd>
+        
+          <dt><strong>primaryType</strong> <span class="type">subclass of DS.Model</span></dt>
+          <dd></dd>
+        
+          <dt><strong>payload</strong> <span class="type">Object</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Array<Object></span>
+        <dd> The primary array that was returned in response
+  to the original query.</dd>
+      </dl>
+    </div>
   
 </div>
 
@@ -594,55 +722,8 @@ and add them as sideloaded objects instead.</p>
         
 <div id="method_extractSingle" class="method  item-entry">
   <h3 data-id="method_extractSingle" class="name anchorable-toc"><code>extractSingle</code></h3>
-
-
-
-
-
-
-
-
-
-  <div class="meta">
-      
-        
-          
-            Defined in
-          
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/activemodel-adapter/lib/system/embedded_records_mixin.js#L47">packages/activemodel-adapter/lib/system/embedded_records_mixin.js:47</a>
-
-    
-  </div>
-
-  
-
-  
-    <div class="description">
-      <p>Extract embedded objects out of the payload for a single object
-and add them as sideloaded objects instead.</p>
-
-    </div>
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-
-  
-</div>
-
-      
-        
-<div id="method_keyForAttribute" class="method  item-entry">
-  <h3 data-id="method_keyForAttribute" class="name anchorable-toc"><code>keyForAttribute</code></h3>
   <span class="args">
-    (attribute)
+    (store, primaryType, payload, recordId)
   </span>
 
   <span class="type"></span>
@@ -662,7 +743,7 @@ and add them as sideloaded objects instead.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/activemodel-adapter/lib/system/active_model_serializer.js#L18">packages/activemodel-adapter/lib/system/active_model_serializer.js:18</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/activemodel-adapter/lib/system/embedded_records_mixin.js#L299">packages/activemodel-adapter/lib/system/embedded_records_mixin.js:299</a>
 
     
   </div>
@@ -671,152 +752,10 @@ and add them as sideloaded objects instead.</p>
 
   
     <div class="description">
-      <p>Converts camelcased attributes to underscored when serializing.</p>
+      <p>Extract an embedded object from the payload for a single object
+and add the object in the compound document (side-loaded) format instead.</p>
 
-    </div>
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-        
-          <dt><strong>attribute</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
-          <dd></dd>
-        
-      </dl>
-    </div>
-  
-
-  
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type"></span>
-        <dd> String</dd>
-      </dl>
-    </div>
-  
-</div>
-
-      
-        
-<div id="method_keyForRelationship" class="method  item-entry">
-  <h3 data-id="method_keyForRelationship" class="name anchorable-toc"><code>keyForRelationship</code></h3>
-  <span class="args">
-    (key, kind)
-  </span>
-
-  <span class="type"></span>
-
-
-
-
-
-
-
-
-  <div class="meta">
-      
-        
-          
-            Defined in
-          
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/activemodel-adapter/lib/system/active_model_serializer.js#L29">packages/activemodel-adapter/lib/system/active_model_serializer.js:29</a>
-
-    
-  </div>
-
-  
-
-  
-    <div class="description">
-      <p>Underscores relationship names and appends &quot;<em>id&quot; or &quot;</em>ids&quot; when serializing
-relationship keys.</p>
-
-    </div>
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-        
-          <dt><strong>key</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
-          <dd></dd>
-        
-          <dt><strong>kind</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
-          <dd></dd>
-        
-      </dl>
-    </div>
-  
-
-  
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type"></span>
-        <dd> String</dd>
-      </dl>
-    </div>
-  
-</div>
-
-      
-        
-<div id="method_normalize" class="method  item-entry">
-  <h3 data-id="method_normalize" class="name anchorable-toc"><code>normalize</code></h3>
-  <span class="args">
-    (type, hash, prop)
-  </span>
-
-  <span class="type"></span>
-
-
-
-
-
-
-
-
-  <div class="meta">
-      
-        
-          
-            Defined in
-          
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/activemodel-adapter/lib/system/active_model_serializer.js#L97">packages/activemodel-adapter/lib/system/active_model_serializer.js:97</a>
-
-    
-  </div>
-
-  
-
-  
-    <div class="description">
-      <p>Add extra step to <code>DS.RESTSerializer.normalize</code> so links are
-normalized.</p>
-
-<p>If your payload looks like this</p>
+<p>A payload with an attribute configured for embedded records needs to be extracted:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -825,18 +764,26 @@ normalized.</p>
 5
 6
 7
+8
+9
+<strong>10</strong>
+11
 </pre></td>
   <td class="code"><pre>{
   <span class="key"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: {
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="integer">1</span>,
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is omakase</span><span class="delimiter">&quot;</span></span>,
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">links</span><span class="delimiter">&quot;</span></span>: { <span class="key"><span class="delimiter">&quot;</span><span class="content">flagged_comments</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">api/comments/flagged</span><span class="delimiter">&quot;</span></span> }
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="integer">1</span>
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is omakase</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">author</span><span class="delimiter">&quot;</span></span>: {
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="integer">2</span>
+      <span class="string"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">dhh</span><span class="delimiter">&quot;</span></span>
+    }
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">comments</span><span class="delimiter">&quot;</span></span>: []
   }
 }
 </pre></td>
 </tr></table>
 </div></div>
-<p>The normalized version would look like this</p>
+<p>Ember Data is expecting a payload with a compound document (side-loaded) like:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -845,17 +792,34 @@ normalized.</p>
 5
 6
 7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
 </pre></td>
   <td class="code"><pre>{
   <span class="key"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: {
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="integer">1</span>,
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is omakase</span><span class="delimiter">&quot;</span></span>,
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">links</span><span class="delimiter">&quot;</span></span>: { <span class="key"><span class="delimiter">&quot;</span><span class="content">flaggedComments</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">api/comments/flagged</span><span class="delimiter">&quot;</span></span> }
-  }
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is omakase</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">author</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">2</span><span class="delimiter">&quot;</span></span>
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">comments</span><span class="delimiter">&quot;</span></span>: []
+  },
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">authors</span><span class="delimiter">&quot;</span></span>: [{
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">2</span><span class="delimiter">&quot;</span></span>
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">dhh</span><span class="delimiter">&quot;</span></span>
+  }]
+  <span class="string"><span class="delimiter">&quot;</span><span class="content">comments</span><span class="delimiter">&quot;</span></span>: []
 }
 </pre></td>
 </tr></table>
 </div></div>
+<p>The payload&#39;s <code>author</code> attribute represents an object with a <code>belongsTo</code> relationship.
+The <code>post</code> attribute under <code>author</code> is the foreign key with the id for the post</p>
+
     </div>
   
 
@@ -871,13 +835,16 @@ normalized.</p>
 
       <dl>
         
-          <dt><strong>type</strong> <span class="type">subclass of DS.Model</span></dt>
+          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
           <dd></dd>
         
-          <dt><strong>hash</strong> <span class="type">Object</span></dt>
+          <dt><strong>primaryType</strong> <span class="type">subclass of DS.Model</span></dt>
           <dd></dd>
         
-          <dt><strong>prop</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>payload</strong> <span class="type">Object</span></dt>
+          <dd></dd>
+        
+          <dt><strong>recordId</strong> <span class="type">String</span></dt>
           <dd></dd>
         
       </dl>
@@ -889,7 +856,7 @@ normalized.</p>
       <h3>Returns:</h3>
       <dl>
         <dt><span class="type"></span>
-        <dd> Object</dd>
+        <dd> Object the primary response to the original request</dd>
       </dl>
     </div>
   
@@ -897,10 +864,10 @@ normalized.</p>
 
       
         
-<div id="method_normalizeLinks" class="method  item-entry">
-  <h3 data-id="method_normalizeLinks" class="name anchorable-toc"><code>normalizeLinks</code></h3>
+<div id="method_removeEmbeddedForeignKey" class="method  item-entry">
+  <h3 data-id="method_removeEmbeddedForeignKey" class="name anchorable-toc"><code>removeEmbeddedForeignKey</code></h3>
   <span class="args">
-    (hash)
+    (record, embeddedRecord, relationship, json)
   </span>
 
 
@@ -919,7 +886,7 @@ normalized.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/activemodel-adapter/lib/system/active_model_serializer.js#L137">packages/activemodel-adapter/lib/system/active_model_serializer.js:137</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/activemodel-adapter/lib/system/embedded_records_mixin.js#L267">packages/activemodel-adapter/lib/system/embedded_records_mixin.js:267</a>
 
     
   </div>
@@ -928,7 +895,14 @@ normalized.</p>
 
   
     <div class="description">
-      <p>Convert <code>snake_cased</code> links  to <code>camelCase</code></p>
+      <p>When serializing an embedded record, modify the property (in the json payload)
+that refers to the parent record (foreign key for relationship).</p>
+
+<p>Serializing a <code>belongsTo</code> relationship removes the property that refers to the
+parent record</p>
+
+<p>Serializing a <code>hasMany</code> relationship does not remove the property that refers to
+the parent record.</p>
 
     </div>
   
@@ -944,186 +918,17 @@ normalized.</p>
       <h3>Parameters:</h3>
 
       <dl>
-        
-          <dt><strong>hash</strong> <span class="type">Object</span></dt>
-          <dd></dd>
-        
-      </dl>
-    </div>
-  
-
-  
-</div>
-
-      
-        
-<div id="method_normalizeRelationships" class="method private item-entry">
-  <h3 data-id="method_normalizeRelationships" class="name anchorable-toc"><code>normalizeRelationships</code></h3>
-
-
-
-
-  <span class="flag private">private</span>
-
-
-
-
-
-  <div class="meta">
-      
-        
-          
-            Defined in
-          
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/activemodel-adapter/lib/system/active_model_serializer.js#L159">packages/activemodel-adapter/lib/system/active_model_serializer.js:159</a>
-
-    
-  </div>
-
-  
-
-  
-    <div class="description">
-      <p>Normalize the polymorphic type from the JSON.</p>
-
-<p>Normalize:
-<code>js
-  {
-    id: &quot;1&quot;
-    minion: { type: &quot;evil_minion&quot;, id: &quot;12&quot;}
-  }
-</code></p>
-
-<p>To:
-<code>js
-  {
-    id: &quot;1&quot;
-    minion: { type: &quot;evilMinion&quot;, id: &quot;12&quot;}
-  }
-</code></p>
-
-    </div>
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-
-  
-</div>
-
-      
-        
-<div id="method_serializeHasMany" class="method  item-entry">
-  <h3 data-id="method_serializeHasMany" class="name anchorable-toc"><code>serializeHasMany</code></h3>
-
-
-
-
-
-
-
-
-
-  <div class="meta">
-      
-        
-          
-            Defined in
-          
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/activemodel-adapter/lib/system/embedded_records_mixin.js#L25">packages/activemodel-adapter/lib/system/embedded_records_mixin.js:25</a>
-
-    
-  </div>
-
-  
-
-  
-    <div class="description">
-      <p>Serialize has-may relationship when it is configured as embedded objects.</p>
-
-    </div>
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-
-  
-</div>
-
-      
-        
-<div id="method_serializeIntoHash" class="method  item-entry">
-  <h3 data-id="method_serializeIntoHash" class="name anchorable-toc"><code>serializeIntoHash</code></h3>
-  <span class="args">
-    (hash, type, record, options)
-  </span>
-
-
-
-
-
-
-
-
-
-  <div class="meta">
-      
-        
-          
-            Defined in
-          
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/activemodel-adapter/lib/system/active_model_serializer.js#L54">packages/activemodel-adapter/lib/system/active_model_serializer.js:54</a>
-
-    
-  </div>
-
-  
-
-  
-    <div class="description">
-      <p>Underscores the JSON root keys when serializing.</p>
-
-    </div>
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-        
-          <dt><strong>hash</strong> <span class="type">Object</span></dt>
-          <dd></dd>
-        
-          <dt><strong>type</strong> <span class="type">subclass of DS.Model</span></dt>
-          <dd></dd>
         
           <dt><strong>record</strong> <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span></dt>
           <dd></dd>
         
-          <dt><strong>options</strong> <span class="type">Object</span></dt>
+          <dt><strong>embeddedRecord</strong> <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span></dt>
+          <dd></dd>
+        
+          <dt><strong>relationship</strong> <span class="type">Object</span></dt>
+          <dd></dd>
+        
+          <dt><strong>json</strong> <span class="type">Object</span></dt>
           <dd></dd>
         
       </dl>
@@ -1135,8 +940,8 @@ normalized.</p>
 
       
         
-<div id="method_serializePolymorphicType" class="method  item-entry">
-  <h3 data-id="method_serializePolymorphicType" class="name anchorable-toc"><code>serializePolymorphicType</code></h3>
+<div id="method_serializeBelongsTo" class="method  item-entry">
+  <h3 data-id="method_serializeBelongsTo" class="name anchorable-toc"><code>serializeBelongsTo</code></h3>
   <span class="args">
     (record, json, relationship)
   </span>
@@ -1157,7 +962,7 @@ normalized.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/activemodel-adapter/lib/system/active_model_serializer.js#L68">packages/activemodel-adapter/lib/system/active_model_serializer.js:68</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/activemodel-adapter/lib/system/embedded_records_mixin.js#L86">packages/activemodel-adapter/lib/system/embedded_records_mixin.js:86</a>
 
     
   </div>
@@ -1166,8 +971,77 @@ normalized.</p>
 
   
     <div class="description">
-      <p>Serializes a polymorphic type as a fully capitalized model name.</p>
+      <p>Serialize <code>belongsTo</code> relationship when it is configured as an embedded object.</p>
 
+<p>This example of an author model belongs to a post model:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre>Post = DS.Model.extend({
+  <span class="key">title</span>:    DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">body</span>:     DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">author</span>:   DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">author</span><span class="delimiter">'</span></span>)
+});
+
+Author = DS.Model.extend({
+  <span class="key">name</span>:     DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">post</span>:     DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Use a custom (type) serializer for the post model to configure embedded author</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.PostSerializer = DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {
+  <span class="key">attrs</span>: {
+    <span class="key">author</span>: {<span class="key">embedded</span>: <span class="string"><span class="delimiter">'</span><span class="content">always</span><span class="delimiter">'</span></span>}
+  }
+})
+</pre></td>
+</tr></table>
+</div></div>
+<p>A payload with an attribute configured for embedded records can serialize
+the records together under the root attribute&#39;s payload:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is omakase</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">author</span><span class="delimiter">&quot;</span></span>: {
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">2</span><span class="delimiter">&quot;</span></span>
+      <span class="string"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">dhh</span><span class="delimiter">&quot;</span></span>
+    }
+  }
+}
+</pre></td>
+</tr></table>
+</div></div>
     </div>
   
 
@@ -1189,7 +1063,7 @@ normalized.</p>
           <dt><strong>json</strong> <span class="type">Object</span></dt>
           <dd></dd>
         
-          <dt><strong>relationship</strong> <span class="type"></span></dt>
+          <dt><strong>relationship</strong> <span class="type">Object</span></dt>
           <dd></dd>
         
       </dl>
@@ -1201,13 +1075,12 @@ normalized.</p>
 
       
         
-<div id="method_typeForRoot" class="method  item-entry">
-  <h3 data-id="method_typeForRoot" class="name anchorable-toc"><code>typeForRoot</code></h3>
+<div id="method_serializeHasMany" class="method  item-entry">
+  <h3 data-id="method_serializeHasMany" class="name anchorable-toc"><code>serializeHasMany</code></h3>
   <span class="args">
-    (root)
+    (record, json, relationship)
   </span>
 
-  <span class="type"></span>
 
 
 
@@ -1224,7 +1097,7 @@ normalized.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/activemodel-adapter/lib/system/active_model_serializer.js#L85">packages/activemodel-adapter/lib/system/active_model_serializer.js:85</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/activemodel-adapter/lib/system/embedded_records_mixin.js#L163">packages/activemodel-adapter/lib/system/embedded_records_mixin.js:163</a>
 
     
   </div>
@@ -1233,8 +1106,128 @@ normalized.</p>
 
   
     <div class="description">
-      <p>Extracts the model typeKey from underscored root objects.</p>
+      <p>Serialize <code>hasMany</code> relationship when it is configured as embedded objects.</p>
 
+<p>This example of a post model has many comments:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre>Post = DS.Model.extend({
+  <span class="key">title</span>:    DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">body</span>:     DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">comments</span>: DS.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>)
+});
+
+Comment = DS.Model.extend({
+  <span class="key">body</span>:     DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">post</span>:     DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Use a custom (type) serializer for the post model to configure embedded comments</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.PostSerializer = DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {
+  <span class="key">attrs</span>: {
+    <span class="key">comments</span>: {<span class="key">embedded</span>: <span class="string"><span class="delimiter">'</span><span class="content">always</span><span class="delimiter">'</span></span>}
+  }
+})
+</pre></td>
+</tr></table>
+</div></div>
+<p>A payload with an attribute configured for embedded records can serialize
+the records together under the root attribute&#39;s payload:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is omakase</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">body</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">I want this for my ORM, I want that for my template language...</span><span class="delimiter">&quot;</span></span>
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">comments</span><span class="delimiter">&quot;</span></span>: [{
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">body</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is unagi</span><span class="delimiter">&quot;</span></span>
+    }, {
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">2</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">body</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Omakase O_o</span><span class="delimiter">&quot;</span></span>
+    }]
+  }
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>The attrs options object can use more specific instruction for extracting and
+serializing. When serializing, an option to embed <code>ids</code> or <code>records</code> can be set.
+When extracting the only option is <code>records</code>.</p>
+
+<p>So <code>{embedded: &#39;always&#39;}</code> is shorthand for:
+<code>{serialize: &#39;records&#39;, deserialize: &#39;records&#39;}</code></p>
+
+<p>To embed the <code>ids</code> for a related object (using a hasMany relationship):</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.PostSerializer = DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {
+  <span class="key">attrs</span>: {
+    <span class="key">comments</span>: {<span class="key">serialize</span>: <span class="string"><span class="delimiter">'</span><span class="content">ids</span><span class="delimiter">'</span></span>, <span class="key">deserialize</span>: <span class="string"><span class="delimiter">'</span><span class="content">records</span><span class="delimiter">'</span></span>}
+  }
+})
+</pre></td>
+</tr></table>
+</div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is omakase</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">body</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">I want this for my ORM, I want that for my template language...</span><span class="delimiter">&quot;</span></span>
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">comments</span><span class="delimiter">&quot;</span></span>: [<span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">2</span><span class="delimiter">&quot;</span></span>]
+  }
+}
+</pre></td>
+</tr></table>
+</div></div>
     </div>
   
 
@@ -1250,21 +1243,19 @@ normalized.</p>
 
       <dl>
         
-          <dt><strong>root</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>record</strong> <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span></dt>
+          <dd></dd>
+        
+          <dt><strong>json</strong> <span class="type">Object</span></dt>
+          <dd></dd>
+        
+          <dt><strong>relationship</strong> <span class="type">Object</span></dt>
           <dd></dd>
         
       </dl>
     </div>
   
 
-  
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type"></span>
-        <dd> String the model's typeKey</dd>
-      </dl>
-    </div>
   
 </div>
 

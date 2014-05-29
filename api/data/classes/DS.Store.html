@@ -59,7 +59,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v1.0.0-beta.6" target="_blank"> Tag: v1.0.0-beta.6</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/data/commits/da8194a" target="_blank"> Tag: da8194a</a></li>
 
       
           <li class="level-1 ">
@@ -134,6 +134,14 @@
             
           <li class="level-3 ">
           
+              <a href="/api/data/classes/DS.ActiveModelSerializer.html">DS.ActiveModelSerializer</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
               <a href="/api/data/classes/DS.Adapter.html">DS.Adapter</a>
             
           </li>
@@ -143,14 +151,6 @@
           <li class="level-3 ">
           
               <a href="/api/data/classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/data/classes/DS.AttributeChange.html">DS.AttributeChange</a>
             
           </li>
         
@@ -350,6 +350,14 @@
             
           <li class="level-3 ">
           
+              <a href="/api/data/classes/DS.String.html">DS.String</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
               <a href="/api/data/classes/DS.StringTransform.html">DS.StringTransform</a>
             
           </li>
@@ -371,14 +379,6 @@
           </li>
         
           
-            
-          <li class="level-3 ">
-          
-              <a href="/api/data/classes/String.html">String</a>
-            
-          </li>
-        
-          
         
           </ol>
         
@@ -396,7 +396,7 @@
   <h1 class="api-header">
   DS.Store Class
   
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L44">packages/ember-data/lib/system/store.js:44</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L47">packages/ember-data/lib/system/store.js:47</a>
   
 </h1>
 
@@ -411,7 +411,7 @@
   
 
   
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L44">packages/ember-data/lib/system/store.js:44</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L47">packages/ember-data/lib/system/store.js:47</a></p>
   
 
   
@@ -450,7 +450,7 @@ specify which store should be used:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> person = store.find(App.Person, <span class="integer">123</span>);
+  <td class="code"><pre><span class="keyword">var</span> person = store.find(<span class="string"><span class="delimiter">'</span><span class="content">person</span><span class="delimiter">'</span></span>, <span class="integer">123</span>);
 </pre></td>
 </tr></table>
 </div></div>
@@ -470,6 +470,37 @@ backend by specifying a custom adapter:</p>
 </div></div>
 <p>You can learn more about writing a custom adapter by reading the <code>DS.Adapter</code>
 documentation.</p>
+<h3 class='anchorable-toc' id='toc_store-createrecord-vs-push-vs-pushpayload-vs-update'>Store createRecord() vs. push() vs. pushPayload() vs. update()</h3>
+<p>The store provides multiple ways to create new records object. They have
+some subtle differences in their use which are detailed below:</p>
+
+<p><a href="#method_createRecord">createRecord</a> is used for creating new
+records on the client side. This will return a new record in the
+<code>created.uncommitted</code> state. In order to persist this record to the
+backend you will need to call <code>record.save()</code>.</p>
+
+<p><a href="#method_push">push</a> is used to notify Ember Data&#39;s store of new or
+updated records that exist in the backend. This will return a record
+in the <code>loaded.saved</code> state. The primary use-case for <code>store#push</code> is
+to notify Ember Data about record updates that happen
+outside of the normal adapter methods (for example
+<a href="http://dev.w3.org/html5/eventsource/">SSE</a> or <a href="http://www.w3.org/TR/2009/WD-websockets-20091222/">Web
+Sockets</a>).</p>
+
+<p><a href="#method_pushPayload">pushPayload</a> is a convenience wrapper for
+<code>store#push</code> that will deserialize payloads if the
+Serializer implements a <code>pushPayload</code> method.</p>
+
+<p><a href="#method_update">update</a> works like <code>push</code>, except it can handle
+partial attributes without overwriting the existing record
+properties.</p>
+
+<p>Note: When creating a new record using any of the above methods
+Ember Data will update <code>DS.RecordArray</code>s such as those returned by
+<code>store#all()</code>, <code>store#findAll()</code> or <code>store#filter()</code>. This means any
+data bindings or computed properties that depend on the RecordArray
+will automatically be synced to include the new or updated record
+values.</p>
 
   </div>
 
@@ -514,6 +545,10 @@ documentation.</p>
           
             <li class="method private">
               <a href="#method__load">_load</a>
+            </li>
+          
+            <li class="method private">
+              <a href="#method__normalizeTypeKey">_normalizeTypeKey</a>
             </li>
           
             <li class="method private">
@@ -684,6 +719,10 @@ documentation.</p>
               <a href="#method_unloadRecord">unloadRecord</a>
             </li>
           
+            <li class="method ">
+              <a href="#method_update">update</a>
+            </li>
+          
             <li class="method private">
               <a href="#method_updateId">updateId</a>
             </li>
@@ -734,7 +773,7 @@ documentation.</p>
     (type)
   </span>
 
-  <span class="type"><a href="/api/data/classes/String.html">String</a></span>
+  <span class="type">String</span>
 
 
 
@@ -752,7 +791,7 @@ documentation.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L223">packages/ember-data/lib/system/store.js:223</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L262">packages/ember-data/lib/system/store.js:262</a>
 
     
   </div>
@@ -779,7 +818,7 @@ a newly created record.</p>
 
       <dl>
         
-          <dt><strong>type</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>type</strong> <span class="type">String</span></dt>
           <dd></dd>
         
       </dl>
@@ -790,7 +829,7 @@ a newly created record.</p>
     <div class="return">
       <h3>Returns:</h3>
       <dl>
-        <dt><span class="type"><a href="/api/data/classes/String.html">String</a></span>
+        <dt><span class="type">String</span>
         <dd> if the adapter can generate one, an ID</dd>
       </dl>
     </div>
@@ -822,7 +861,7 @@ a newly created record.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L1034">packages/ember-data/lib/system/store.js:1034</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L1090">packages/ember-data/lib/system/store.js:1090</a>
 
     
   </div>
@@ -867,6 +906,77 @@ a newly created record.</p>
 
       
         
+<div id="method__normalizeTypeKey" class="method private item-entry">
+  <h3 data-id="method__normalizeTypeKey" class="name anchorable-toc"><code>_normalizeTypeKey</code></h3>
+  <span class="args">
+    (type)
+  </span>
+
+  <span class="type">String</span>
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L1529">packages/ember-data/lib/system/store.js:1529</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>All typeKeys are camelCase internally. Changing this function may
+require changes to other normalization hooks (such as typeForRoot).</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>type</strong> <span class="type">String</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">String</span>
+        <dd> if the adapter can generate one, an ID</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
 <div id="method_adapterFor" class="method private item-entry">
   <h3 data-id="method_adapterFor" class="name anchorable-toc"><code>adapterFor</code></h3>
   <span class="args">
@@ -891,7 +1001,7 @@ a newly created record.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L1363">packages/ember-data/lib/system/store.js:1363</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L1466">packages/ember-data/lib/system/store.js:1466</a>
 
     
   </div>
@@ -960,7 +1070,7 @@ a newly created record.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L706">packages/ember-data/lib/system/store.js:706</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L749">packages/ember-data/lib/system/store.js:749</a>
 
     
   </div>
@@ -982,7 +1092,7 @@ return the same RecordArray.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> local_posts = store.all(App.Post);
+  <td class="code"><pre><span class="keyword">var</span> localPosts = store.all(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>);
 </pre></td>
 </tr></table>
 </div></div>
@@ -1045,7 +1155,7 @@ return the same RecordArray.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L1241">packages/ember-data/lib/system/store.js:1241</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L1343">packages/ember-data/lib/system/store.js:1343</a>
 
     
   </div>
@@ -1075,7 +1185,7 @@ initial data.</p>
           <dt><strong>type</strong> <span class="type">subclass of DS.Model</span></dt>
           <dd></dd>
         
-          <dt><strong>id</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>id</strong> <span class="type">String</span></dt>
           <dd></dd>
         
           <dt><strong>data</strong> <span class="type">Object</span></dt>
@@ -1121,7 +1231,7 @@ initial data.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L176">packages/ember-data/lib/system/store.js:176</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L215">packages/ember-data/lib/system/store.js:215</a>
 
     
   </div>
@@ -1160,7 +1270,7 @@ to this method are set on the newly created record.</p>
 
       <dl>
         
-          <dt><strong>type</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>type</strong> <span class="type">String</span></dt>
           <dd></dd>
         
           <dt><strong>properties</strong> <span class="type">Object</span></dt>
@@ -1207,7 +1317,7 @@ to this method are set on the newly created record.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L864">packages/ember-data/lib/system/store.js:864</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L917">packages/ember-data/lib/system/store.js:917</a>
 
     
   </div>
@@ -1275,7 +1385,7 @@ To avoid thrashing, this method is invoked only once per</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L246">packages/ember-data/lib/system/store.js:246</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L285">packages/ember-data/lib/system/store.js:285</a>
 
     
   </div>
@@ -1352,7 +1462,7 @@ store.deleteRecord(post);
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L1285">packages/ember-data/lib/system/store.js:1285</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L1388">packages/ember-data/lib/system/store.js:1388</a>
 
     
   </div>
@@ -1414,7 +1524,7 @@ removes it from any record arrays so it can be GCed.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L930">packages/ember-data/lib/system/store.js:930</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L985">packages/ember-data/lib/system/store.js:985</a>
 
     
   </div>
@@ -1482,7 +1592,7 @@ update the record and the store&#39;s indexes.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L697">packages/ember-data/lib/system/store.js:697</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L740">packages/ember-data/lib/system/store.js:740</a>
 
     
   </div>
@@ -1539,7 +1649,7 @@ update the record and the store&#39;s indexes.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L678">packages/ember-data/lib/system/store.js:678</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L721">packages/ember-data/lib/system/store.js:721</a>
 
     
   </div>
@@ -1586,9 +1696,10 @@ update the record and the store&#39;s indexes.</p>
 <div id="method_fetchMany" class="method private item-entry">
   <h3 data-id="method_fetchMany" class="name anchorable-toc"><code>fetchMany</code></h3>
   <span class="args">
-    (records, owner, resolver)
+    (records, owner)
   </span>
 
+  <span class="type">Promise</span>
 
 
 
@@ -1606,7 +1717,7 @@ update the record and the store&#39;s indexes.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L463">packages/ember-data/lib/system/store.js:463</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L505">packages/ember-data/lib/system/store.js:505</a>
 
     
   </div>
@@ -1647,13 +1758,18 @@ changes.</p>
           <dt><strong>owner</strong> <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span></dt>
           <dd></dd>
         
-          <dt><strong>resolver</strong> <span class="type">Resolver</span></dt>
-          <dd></dd>
-        
       </dl>
     </div>
   
 
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Promise</span>
+        <dd> promise</dd>
+      </dl>
+    </div>
   
 </div>
 
@@ -1683,7 +1799,7 @@ changes.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L388">packages/ember-data/lib/system/store.js:388</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L430">packages/ember-data/lib/system/store.js:430</a>
 
     
   </div>
@@ -1754,7 +1870,7 @@ adapter.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L764">packages/ember-data/lib/system/store.js:764</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L809">packages/ember-data/lib/system/store.js:809</a>
 
     
   </div>
@@ -1793,7 +1909,7 @@ match the filter function.</p>
 7
 8
 </pre></td>
-  <td class="code"><pre>store.filter(App.Post, {<span class="key">unread</span>: <span class="predefined-constant">true</span>}, <span class="keyword">function</span>(post) {
+  <td class="code"><pre>store.filter(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, {<span class="key">unread</span>: <span class="predefined-constant">true</span>}, <span class="keyword">function</span>(post) {
   <span class="keyword">return</span> post.get(<span class="string"><span class="delimiter">'</span><span class="content">unread</span><span class="delimiter">'</span></span>);
 }).then(<span class="keyword">function</span>(unreadPosts) {
   unreadPosts.get(<span class="string"><span class="delimiter">'</span><span class="content">length</span><span class="delimiter">'</span></span>); <span class="comment">// 5</span>
@@ -1868,7 +1984,7 @@ match the filter function.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L289">packages/ember-data/lib/system/store.js:289</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L328">packages/ember-data/lib/system/store.js:328</a>
 
     
   </div>
@@ -1919,7 +2035,7 @@ parameter:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre>store.find(App.Person, { <span class="key">page</span>: <span class="integer">1</span> });
+  <td class="code"><pre>store.find(<span class="string"><span class="delimiter">'</span><span class="content">person</span><span class="delimiter">'</span></span>, { <span class="key">page</span>: <span class="integer">1</span> });
 </pre></td>
 </tr></table>
 </div></div>
@@ -1989,7 +2105,7 @@ responds.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L662">packages/ember-data/lib/system/store.js:662</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L705">packages/ember-data/lib/system/store.js:705</a>
 
     
   </div>
@@ -2040,9 +2156,10 @@ the array with records of that type.</p>
 <div id="method_findBelongsTo" class="method private item-entry">
   <h3 data-id="method_findBelongsTo" class="name anchorable-toc"><code>findBelongsTo</code></h3>
   <span class="args">
-    (owner, link, relationship, resolver)
+    (owner, link, relationship)
   </span>
 
+  <span class="type">Promise</span>
 
 
 
@@ -2060,7 +2177,7 @@ the array with records of that type.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L610">packages/ember-data/lib/system/store.js:610</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L657">packages/ember-data/lib/system/store.js:657</a>
 
     
   </div>
@@ -2090,13 +2207,18 @@ the array with records of that type.</p>
           <dt><strong>relationship</strong> <span class="type">Relationship</span></dt>
           <dd></dd>
         
-          <dt><strong>resolver</strong> <span class="type">Resolver</span></dt>
-          <dd></dd>
-        
       </dl>
     </div>
   
 
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Promise</span>
+        <dd> promise</dd>
+      </dl>
+    </div>
   
 </div>
 
@@ -2126,7 +2248,7 @@ the array with records of that type.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L352">packages/ember-data/lib/system/store.js:352</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L394">packages/ember-data/lib/system/store.js:394</a>
 
     
   </div>
@@ -2199,7 +2321,7 @@ the array with records of that type.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L370">packages/ember-data/lib/system/store.js:370</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L412">packages/ember-data/lib/system/store.js:412</a>
 
     
   </div>
@@ -2226,7 +2348,7 @@ and returns a promise that resolves once they are all loaded.</p>
 
       <dl>
         
-          <dt><strong>type</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>type</strong> <span class="type">String</span></dt>
           <dd></dd>
         
           <dt><strong>ids</strong> <span class="type">Array</span></dt>
@@ -2252,10 +2374,10 @@ and returns a promise that resolves once they are all loaded.</p>
 <div id="method_findHasMany" class="method private item-entry">
   <h3 data-id="method_findHasMany" class="name anchorable-toc"><code>findHasMany</code></h3>
   <span class="args">
-    (owner, link, type, resolver)
+    (owner, link, type)
   </span>
 
-  <span class="type"><a href="/api/data/classes/DS.ManyArray.html">DS.ManyArray</a></span>
+  <span class="type">Promise</span>
 
 
 
@@ -2273,7 +2395,7 @@ and returns a promise that resolves once they are all loaded.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L580">packages/ember-data/lib/system/store.js:580</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L628">packages/ember-data/lib/system/store.js:628</a>
 
     
   </div>
@@ -2316,9 +2438,6 @@ then use that URL in the future to make a request for the relationship.</p>
           <dt><strong>type</strong> <span class="type">String or subclass of DS.Model</span></dt>
           <dd></dd>
         
-          <dt><strong>resolver</strong> <span class="type">Resolver</span></dt>
-          <dd></dd>
-        
       </dl>
     </div>
   
@@ -2327,8 +2446,8 @@ then use that URL in the future to make a request for the relationship.</p>
     <div class="return">
       <h3>Returns:</h3>
       <dl>
-        <dt><span class="type"><a href="/api/data/classes/DS.ManyArray.html">DS.ManyArray</a></span>
-        <dd> </dd>
+        <dt><span class="type">Promise</span>
+        <dd> promise</dd>
       </dl>
     </div>
   
@@ -2360,7 +2479,7 @@ then use that URL in the future to make a request for the relationship.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L542">packages/ember-data/lib/system/store.js:542</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L590">packages/ember-data/lib/system/store.js:590</a>
 
     
   </div>
@@ -2434,7 +2553,7 @@ then use that URL in the future to make a request for the relationship.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L627">packages/ember-data/lib/system/store.js:627</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L674">packages/ember-data/lib/system/store.js:674</a>
 
     
   </div>
@@ -2511,7 +2630,7 @@ once the server returns.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L902">packages/ember-data/lib/system/store.js:902</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L955">packages/ember-data/lib/system/store.js:955</a>
 
     
   </div>
@@ -2561,7 +2680,7 @@ flushes any records passed into <code>scheduleSave</code></p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L416">packages/ember-data/lib/system/store.js:416</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L458">packages/ember-data/lib/system/store.js:458</a>
 
     
   </div>
@@ -2637,7 +2756,7 @@ Otherwise, it will return null.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L504">packages/ember-data/lib/system/store.js:504</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L552">packages/ember-data/lib/system/store.js:552</a>
 
     
   </div>
@@ -2706,7 +2825,7 @@ Otherwise, it will return null.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L92">packages/ember-data/lib/system/store.js:92</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L128">packages/ember-data/lib/system/store.js:128</a>
 
     
   </div>
@@ -2750,7 +2869,7 @@ Otherwise, it will return null.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L1227">packages/ember-data/lib/system/store.js:1227</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L1329">packages/ember-data/lib/system/store.js:1329</a>
 
     
   </div>
@@ -2815,7 +2934,7 @@ you can call <code>metaForType</code>.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L848">packages/ember-data/lib/system/store.js:848</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L901">packages/ember-data/lib/system/store.js:901</a>
 
     
   </div>
@@ -2884,7 +3003,7 @@ you can call <code>metaForType</code>.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L1054">packages/ember-data/lib/system/store.js:1054</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L1110">packages/ember-data/lib/system/store.js:1110</a>
 
     
   </div>
@@ -2955,7 +3074,7 @@ etc.)</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L1082">packages/ember-data/lib/system/store.js:1082</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L1141">packages/ember-data/lib/system/store.js:1141</a>
 
     
   </div>
@@ -3108,7 +3227,7 @@ records, as well as to update existing records.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L1211">packages/ember-data/lib/system/store.js:1211</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L1313">packages/ember-data/lib/system/store.js:1313</a>
 
     
   </div>
@@ -3165,7 +3284,6 @@ call <code>push</code> repeatedly for you.</p>
     (type, payload)
   </span>
 
-  <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span>
 
 
 
@@ -3182,7 +3300,7 @@ call <code>push</code> repeatedly for you.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L1160">packages/ember-data/lib/system/store.js:1160</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L1219">packages/ember-data/lib/system/store.js:1219</a>
 
     
   </div>
@@ -3193,13 +3311,9 @@ call <code>push</code> repeatedly for you.</p>
     <div class="description">
       <p>Push some raw data into the store.</p>
 
-<p>The data will be automatically deserialized using the
-serializer for the <code>type</code> param.</p>
-
 <p>This method can be used both to push in brand new
-records, as well as to update existing records.</p>
-
-<p>You can push in more than one type of object at once.
+records, as well as to update existing records. You
+can push in more than one type of object at once.
 All objects should be in the format expected by the
 serializer.</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -3227,7 +3341,28 @@ serializer.</p>
   ]
 }
 
-store.pushPayload(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, pushData);
+store.pushPayload(pushData);
+</pre></td>
+</tr></table>
+</div></div>
+<p>By default, the data will be deserialized using a default
+serializer (the application serializer if it exists).</p>
+
+<p>Alternativly, <code>pushPayload</code> will accept a model type which
+will determine which serializer will process the payload.
+However, the serializer itself (processing this data via
+<code>normalizePayload</code>) will not know which model it is
+deserializing.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>App.ApplicationSerializer = DS.ActiveModelSerializer;
+App.PostSerializer = DS.JSONSerializer;
+store.pushPayload(<span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>, pushData); <span class="comment">// Will use the ApplicationSerializer</span>
+store.pushPayload(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, pushData); <span class="comment">// Will use the PostSerializer</span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -3246,8 +3381,8 @@ store.pushPayload(<span class="string"><span class="delimiter">'</span><span cla
 
       <dl>
         
-          <dt><strong>type</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
-          <dd></dd>
+          <dt><strong>type</strong> <span class="type">String</span></dt>
+          <dd>Optionally, a model used to determine which serializer will be used</dd>
         
           <dt><strong>payload</strong> <span class="type">Object</span></dt>
           <dd></dd>
@@ -3256,14 +3391,6 @@ store.pushPayload(<span class="string"><span class="delimiter">'</span><span cla
     </div>
   
 
-  
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span>
-        <dd> the record that was created or updated.</dd>
-      </dl>
-    </div>
   
 </div>
 
@@ -3293,7 +3420,7 @@ store.pushPayload(<span class="string"><span class="delimiter">'</span><span cla
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L518">packages/ember-data/lib/system/store.js:518</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L566">packages/ember-data/lib/system/store.js:566</a>
 
     
   </div>
@@ -3366,7 +3493,7 @@ it builds a new record and leaves it in the <code>empty</code> state.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L824">packages/ember-data/lib/system/store.js:824</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L877">packages/ember-data/lib/system/store.js:877</a>
 
     
   </div>
@@ -3386,9 +3513,9 @@ will result in a request or that it will be a cache hit.</p>
 3
 4
 </pre></td>
-  <td class="code"><pre>store.recordIsLoaded(App.Post, <span class="integer">1</span>); <span class="comment">// false</span>
-store.find(App.Post, <span class="integer">1</span>).then(<span class="keyword">function</span>() {
-  store.recordIsLoaded(App.Post, <span class="integer">1</span>); <span class="comment">// true</span>
+  <td class="code"><pre>store.recordIsLoaded(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="integer">1</span>); <span class="comment">// false</span>
+store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="integer">1</span>).then(<span class="keyword">function</span>() {
+  store.recordIsLoaded(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="integer">1</span>); <span class="comment">// true</span>
 });
 </pre></td>
 </tr></table>
@@ -3411,7 +3538,7 @@ store.find(App.Post, <span class="integer">1</span>).then(<span class="keyword">
           <dt><strong>type</strong> <span class="type">String or subclass of DS.Model</span></dt>
           <dd></dd>
         
-          <dt><strong>id</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>id</strong> <span class="type">String</span></dt>
           <dd></dd>
         
       </dl>
@@ -3454,7 +3581,7 @@ store.find(App.Post, <span class="integer">1</span>).then(<span class="keyword">
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L968">packages/ember-data/lib/system/store.js:968</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L1023">packages/ember-data/lib/system/store.js:1023</a>
 
     
   </div>
@@ -3517,7 +3644,7 @@ is rejected (with anything other than a <code>DS.InvalidError</code>).</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L954">packages/ember-data/lib/system/store.js:954</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L1009">packages/ember-data/lib/system/store.js:1009</a>
 
     
   </div>
@@ -3584,7 +3711,7 @@ is rejected with a <code>DS.InvalidError</code>.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L439">packages/ember-data/lib/system/store.js:439</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L481">packages/ember-data/lib/system/store.js:481</a>
 
     
   </div>
@@ -3657,7 +3784,7 @@ by the record&#39;s <code>reload</code>.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L885">packages/ember-data/lib/system/store.js:885</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L938">packages/ember-data/lib/system/store.js:938</a>
 
     
   </div>
@@ -3724,7 +3851,7 @@ resolver for the promise that <code>record.save</code> returns.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L123">packages/ember-data/lib/system/store.js:123</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L160">packages/ember-data/lib/system/store.js:160</a>
 
     
   </div>
@@ -3797,7 +3924,7 @@ the JSON representation</li>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L1385">packages/ember-data/lib/system/store.js:1385</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L1488">packages/ember-data/lib/system/store.js:1488</a>
 
     
   </div>
@@ -3832,7 +3959,7 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
 
       <dl>
         
-          <dt><strong>type</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>type</strong> <span class="type">String</span></dt>
           <dd>the record to serialize</dd>
         
       </dl>
@@ -3876,7 +4003,7 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L1002">packages/ember-data/lib/system/store.js:1002</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L1057">packages/ember-data/lib/system/store.js:1057</a>
 
     
   </div>
@@ -3944,7 +4071,7 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L741">packages/ember-data/lib/system/store.js:741</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L784">packages/ember-data/lib/system/store.js:784</a>
 
     
   </div>
@@ -3957,7 +4084,7 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre>store.unloadAll(App.Post);
+  <td class="code"><pre>store.unloadAll(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>);
 </pre></td>
 </tr></table>
 </div></div>
@@ -4010,7 +4137,7 @@ to an instance of <code>DS.JSONSerializer</code>.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L266">packages/ember-data/lib/system/store.js:266</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L305">packages/ember-data/lib/system/store.js:305</a>
 
     
   </div>
@@ -4061,6 +4188,118 @@ non-dirty records can be unloaded.</p>
 
       
         
+<div id="method_update" class="method  item-entry">
+  <h3 data-id="method_update" class="name anchorable-toc"><code>update</code></h3>
+  <span class="args">
+    (type, data)
+  </span>
+
+  <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L1275">packages/ember-data/lib/system/store.js:1275</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>Update existing records in the store. Unlike <a href="#method_push">push</a>,
+update will merge the new data properties with the existing
+properties. This makes it safe to use with a subset of record
+attributes. This method expects normalized data.</p>
+
+<p><code>update</code> is useful if you app broadcasts partial updates to
+records.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+</pre></td>
+  <td class="code"><pre>App.Person = DS.Model.extend({
+  <span class="key">firstName</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">lastName</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>)
+});
+
+store.get(<span class="string"><span class="delimiter">'</span><span class="content">person</span><span class="delimiter">'</span></span>, <span class="integer">1</span>).then(<span class="keyword">function</span>(tom) {
+  tom.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>); <span class="comment">// Tom</span>
+  tom.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>); <span class="comment">// Dale</span>
+
+  <span class="keyword">var</span> updateEvent = {<span class="key">id</span>: <span class="integer">1</span>, <span class="key">firstName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">TomHuda</span><span class="delimiter">&quot;</span></span>};
+  store.update(<span class="string"><span class="delimiter">'</span><span class="content">person</span><span class="delimiter">'</span></span>, updateEvent);
+
+  tom.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>); <span class="comment">// TomHuda</span>
+  tom.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>); <span class="comment">// Dale</span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>type</strong> <span class="type">String</span></dt>
+          <dd></dd>
+        
+          <dt><strong>data</strong> <span class="type">Object</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span>
+        <dd> the record that was updated.</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
 <div id="method_updateId" class="method private item-entry">
   <h3 data-id="method_updateId" class="name anchorable-toc"><code>updateId</code></h3>
   <span class="args">
@@ -4084,7 +4323,7 @@ non-dirty records can be unloaded.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L981">packages/ember-data/lib/system/store.js:981</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L1036">packages/ember-data/lib/system/store.js:1036</a>
 
     
   </div>
@@ -4171,7 +4410,7 @@ data.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L106">packages/ember-data/lib/system/store.js:106</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L143">packages/ember-data/lib/system/store.js:143</a>
 
     
   </div>
@@ -4231,7 +4470,7 @@ data.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/store.js#L141">packages/ember-data/lib/system/store.js:141</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/store.js#L178">packages/ember-data/lib/system/store.js:178</a>
 
     
   </div>

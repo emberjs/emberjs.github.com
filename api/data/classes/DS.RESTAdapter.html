@@ -59,7 +59,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v1.0.0-beta.6" target="_blank"> Tag: v1.0.0-beta.6</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/data/commits/da8194a" target="_blank"> Tag: da8194a</a></li>
 
       
           <li class="level-1 ">
@@ -134,6 +134,14 @@
             
           <li class="level-3 ">
           
+              <a href="/api/data/classes/DS.ActiveModelSerializer.html">DS.ActiveModelSerializer</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
               <a href="/api/data/classes/DS.Adapter.html">DS.Adapter</a>
             
           </li>
@@ -143,14 +151,6 @@
           <li class="level-3 ">
           
               <a href="/api/data/classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/data/classes/DS.AttributeChange.html">DS.AttributeChange</a>
             
           </li>
         
@@ -350,6 +350,14 @@
             
           <li class="level-3 ">
           
+              <a href="/api/data/classes/DS.String.html">DS.String</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
               <a href="/api/data/classes/DS.StringTransform.html">DS.StringTransform</a>
             
           </li>
@@ -371,14 +379,6 @@
           </li>
         
           
-            
-          <li class="level-3 ">
-          
-              <a href="/api/data/classes/String.html">String</a>
-            
-          </li>
-        
-          
         
           </ol>
         
@@ -396,7 +396,7 @@
   <h1 class="api-header">
   DS.RESTAdapter Class
   
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/adapters/rest_adapter.js#L13">packages/ember-data/lib/adapters/rest_adapter.js:13</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/adapters/rest_adapter.js#L9">packages/ember-data/lib/adapters/rest_adapter.js:9</a>
   
 </h1>
 
@@ -411,7 +411,7 @@
   
 
   
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/adapters/rest_adapter.js#L13">packages/ember-data/lib/adapters/rest_adapter.js:13</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/adapters/rest_adapter.js#L9">packages/ember-data/lib/adapters/rest_adapter.js:9</a></p>
   
 
   
@@ -516,8 +516,9 @@ property on the adapter:</p>
 </pre></td>
 </tr></table>
 </div></div><h3 class='anchorable-toc' id='toc_headers-customization'>Headers customization</h3>
-<p>Some APIs require HTTP headers, e.g. to provide an API key. An array of
-headers can be added to the adapter which are passed with every request:</p>
+<p>Some APIs require HTTP headers, e.g. to provide an API key. Arbitrary
+headers can be set as key/value pairs on the <code>RESTAdapter</code>&#39;s <code>headers</code>
+object and Ember Data will send them along with each ajax request.</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -526,11 +527,62 @@ headers can be added to the adapter which are passed with every request:</p>
 5
 6
 </pre></td>
-  <td class="code"><pre>DS.RESTAdapter.reopen({
+  <td class="code"><pre>App.ApplicationAdapter = DS.RESTAdapter.extend({
   <span class="key">headers</span>: {
     <span class="key"><span class="delimiter">&quot;</span><span class="content">API_KEY</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">secret key</span><span class="delimiter">&quot;</span></span>,
     <span class="key"><span class="delimiter">&quot;</span><span class="content">ANOTHER_HEADER</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Some header value</span><span class="delimiter">&quot;</span></span>
   }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p><code>headers</code> can also be used as a computed property to support dynamic
+headers. In the example below, the <code>session</code> object has been
+injected into an adapter by Ember&#39;s container.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre>App.ApplicationAdapter = DS.RESTAdapter.extend({
+  <span class="function">headers</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> {
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">API_KEY</span><span class="delimiter">&quot;</span></span>: <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">session.authToken</span><span class="delimiter">&quot;</span></span>),
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">ANOTHER_HEADER</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Some header value</span><span class="delimiter">&quot;</span></span>
+    };
+  }.property(<span class="string"><span class="delimiter">&quot;</span><span class="content">session.authToken</span><span class="delimiter">&quot;</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>In some cases, your dynamic headers may require data from some
+object outside of Ember&#39;s observer system (for example
+<code>document.cookie</code>). You can use the
+<a href="/api/classes/Ember.ComputedProperty.html#method_volatile">volatile</a>
+function to set the property into a non-chached mode causing the headers to
+be recomputed with every request.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre>App.ApplicationAdapter = DS.RESTAdapter.extend({
+  <span class="function">headers</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> {
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">API_KEY</span><span class="delimiter">&quot;</span></span>: Ember.get(document.cookie.match(<span class="regexp"><span class="delimiter">/</span><span class="content">apiKey</span><span class="content">\=</span><span class="content">([^;]*)</span><span class="delimiter">/</span></span>), <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>),
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">ANOTHER_HEADER</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Some header value</span><span class="delimiter">&quot;</span></span>
+    };
+  }.property().<span class="reserved">volatile</span>();
 });
 </pre></td>
 </tr></table>
@@ -712,7 +764,7 @@ headers can be added to the adapter which are passed with every request:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/adapters/rest_adapter.js#L546">packages/ember-data/lib/adapters/rest_adapter.js:546</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/adapters/rest_adapter.js#L578">packages/ember-data/lib/adapters/rest_adapter.js:578</a>
 
     
   </div>
@@ -754,10 +806,10 @@ data is the serialized record in the case of a save.</li>
 
       <dl>
         
-          <dt><strong>url</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>url</strong> <span class="type">String</span></dt>
           <dd></dd>
         
-          <dt><strong>type</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>type</strong> <span class="type">String</span></dt>
           <dd>The request type GET, POST, PUT, DELETE etc.</dd>
         
           <dt><strong>hash</strong> <span class="type">Object</span></dt>
@@ -803,7 +855,7 @@ data is the serialized record in the case of a save.</li>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/adapters/rest_adapter.js#L504">packages/ember-data/lib/adapters/rest_adapter.js:504</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/adapters/rest_adapter.js#L536">packages/ember-data/lib/adapters/rest_adapter.js:536</a>
 
     
   </div>
@@ -914,7 +966,7 @@ promise libraries.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/adapters/rest_adapter.js#L588">packages/ember-data/lib/adapters/rest_adapter.js:588</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/adapters/rest_adapter.js#L620">packages/ember-data/lib/adapters/rest_adapter.js:620</a>
 
     
   </div>
@@ -935,10 +987,10 @@ promise libraries.</p>
 
       <dl>
         
-          <dt><strong>url</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>url</strong> <span class="type">String</span></dt>
           <dd></dd>
         
-          <dt><strong>type</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>type</strong> <span class="type">String</span></dt>
           <dd>The request type GET, POST, PUT, DELETE etc.</dd>
         
           <dt><strong>hash</strong> <span class="type">Object</span></dt>
@@ -967,7 +1019,7 @@ promise libraries.</p>
     (type, id)
   </span>
 
-  <span class="type"><a href="/api/data/classes/String.html">String</a></span>
+  <span class="type">String</span>
 
 
 
@@ -984,7 +1036,7 @@ promise libraries.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/adapters/rest_adapter.js#L409">packages/ember-data/lib/adapters/rest_adapter.js:409</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/adapters/rest_adapter.js#L441">packages/ember-data/lib/adapters/rest_adapter.js:441</a>
 
     
   </div>
@@ -1017,10 +1069,10 @@ for the type, separated by a <code>/</code>.</p>
 
       <dl>
         
-          <dt><strong>type</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>type</strong> <span class="type">String</span></dt>
           <dd></dd>
         
-          <dt><strong>id</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>id</strong> <span class="type">String</span></dt>
           <dd></dd>
         
       </dl>
@@ -1031,7 +1083,7 @@ for the type, separated by a <code>/</code>.</p>
     <div class="return">
       <h3>Returns:</h3>
       <dl>
-        <dt><span class="type"><a href="/api/data/classes/String.html">String</a></span>
+        <dt><span class="type">String</span>
         <dd> url</dd>
       </dl>
     </div>
@@ -1063,7 +1115,7 @@ for the type, separated by a <code>/</code>.</p>
           but overwritten in
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/adapters/rest_adapter.js#L340">packages/ember-data/lib/adapters/rest_adapter.js:340</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/adapters/rest_adapter.js#L372">packages/ember-data/lib/adapters/rest_adapter.js:372</a>
 
     
   </div>
@@ -1145,7 +1197,7 @@ of a record.</p>
           but overwritten in
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/adapters/rest_adapter.js#L392">packages/ember-data/lib/adapters/rest_adapter.js:392</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/adapters/rest_adapter.js#L424">packages/ember-data/lib/adapters/rest_adapter.js:424</a>
 
     
   </div>
@@ -1222,7 +1274,7 @@ of a record.</p>
           but overwritten in
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/adapters/rest_adapter.js#L163">packages/ember-data/lib/adapters/rest_adapter.js:163</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/adapters/rest_adapter.js#L195">packages/ember-data/lib/adapters/rest_adapter.js:195</a>
 
     
   </div>
@@ -1260,7 +1312,7 @@ promise for the resulting payload.</p>
           <dt><strong>type</strong> <span class="type">subclass of DS.Model</span></dt>
           <dd></dd>
         
-          <dt><strong>id</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>id</strong> <span class="type">String</span></dt>
           <dd></dd>
         
       </dl>
@@ -1304,7 +1356,7 @@ promise for the resulting payload.</p>
           but overwritten in
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/adapters/rest_adapter.js#L182">packages/ember-data/lib/adapters/rest_adapter.js:182</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/adapters/rest_adapter.js#L214">packages/ember-data/lib/adapters/rest_adapter.js:214</a>
 
     
   </div>
@@ -1340,7 +1392,7 @@ promise for the resulting payload.</p>
           <dt><strong>type</strong> <span class="type">subclass of DS.Model</span></dt>
           <dd></dd>
         
-          <dt><strong>sinceToken</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>sinceToken</strong> <span class="type">String</span></dt>
           <dd></dd>
         
       </dl>
@@ -1383,7 +1435,7 @@ promise for the resulting payload.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/adapters/rest_adapter.js#L306">packages/ember-data/lib/adapters/rest_adapter.js:306</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/adapters/rest_adapter.js#L338">packages/ember-data/lib/adapters/rest_adapter.js:338</a>
 
     
   </div>
@@ -1441,7 +1493,7 @@ specified as a URL (inside of <code>links</code>).</p>
           <dt><strong>record</strong> <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span></dt>
           <dd></dd>
         
-          <dt><strong>url</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>url</strong> <span class="type">String</span></dt>
           <dd></dd>
         
       </dl>
@@ -1484,7 +1536,7 @@ specified as a URL (inside of <code>links</code>).</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/adapters/rest_adapter.js#L265">packages/ember-data/lib/adapters/rest_adapter.js:265</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/adapters/rest_adapter.js#L297">packages/ember-data/lib/adapters/rest_adapter.js:297</a>
 
     
   </div>
@@ -1544,7 +1596,7 @@ request will use the host specified on the adapter (if any).</p>
           <dt><strong>record</strong> <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span></dt>
           <dd></dd>
         
-          <dt><strong>url</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>url</strong> <span class="type">String</span></dt>
           <dd></dd>
         
       </dl>
@@ -1587,7 +1639,7 @@ request will use the host specified on the adapter (if any).</p>
           but overwritten in
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/adapters/rest_adapter.js#L227">packages/ember-data/lib/adapters/rest_adapter.js:227</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/adapters/rest_adapter.js#L259">packages/ember-data/lib/adapters/rest_adapter.js:259</a>
 
     
   </div>
@@ -1696,7 +1748,7 @@ promise for the resulting payload.</p>
           but overwritten in
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/adapters/rest_adapter.js#L206">packages/ember-data/lib/adapters/rest_adapter.js:206</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/adapters/rest_adapter.js#L238">packages/ember-data/lib/adapters/rest_adapter.js:238</a>
 
     
   </div>
@@ -1777,7 +1829,7 @@ to the server as parameters.</p>
           <a href="/api/data/classes/DS.Adapter.html#method_generateIdForRecord">DS.Adapter</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/adapter.js#L220">packages/ember-data/lib/system/adapter.js:220</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/adapter.js#L237">packages/ember-data/lib/system/adapter.js:237</a>
 
     
   </div>
@@ -1855,7 +1907,7 @@ the first parameter and the newly created record as the second parameter:</p>
     (type)
   </span>
 
-  <span class="type"><a href="/api/data/classes/String.html">String</a></span>
+  <span class="type">String</span>
 
 
 
@@ -1872,7 +1924,7 @@ the first parameter and the newly created record as the second parameter:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/adapters/rest_adapter.js#L475">packages/ember-data/lib/adapters/rest_adapter.js:475</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/adapters/rest_adapter.js#L507">packages/ember-data/lib/adapters/rest_adapter.js:507</a>
 
     
   </div>
@@ -1896,11 +1948,11 @@ endpoint of &quot;/line_items/&quot;.</p>
 5
 6
 </pre></td>
-  <td class="code"><pre>DS.RESTAdapter.reopen({
+  <td class="code"><pre>App.ApplicationAdapter = DS.RESTAdapter.extend({
   <span class="function">pathForType</span>: <span class="keyword">function</span>(type) {
     <span class="keyword">var</span> decamelized = Ember.String.decamelize(type);
     <span class="keyword">return</span> Ember.String.pluralize(decamelized);
-  };
+  }
 });
 </pre></td>
 </tr></table>
@@ -1920,7 +1972,7 @@ endpoint of &quot;/line_items/&quot;.</p>
 
       <dl>
         
-          <dt><strong>type</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>type</strong> <span class="type">String</span></dt>
           <dd></dd>
         
       </dl>
@@ -1931,7 +1983,7 @@ endpoint of &quot;/line_items/&quot;.</p>
     <div class="return">
       <h3>Returns:</h3>
       <dl>
-        <dt><span class="type"><a href="/api/data/classes/String.html">String</a></span>
+        <dt><span class="type">String</span>
         <dd> path</dd>
       </dl>
     </div>
@@ -1962,7 +2014,7 @@ endpoint of &quot;/line_items/&quot;.</p>
           <a href="/api/data/classes/DS.Adapter.html#method_serialize">DS.Adapter</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/adapter.js#L248">packages/ember-data/lib/system/adapter.js:248</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/adapter.js#L265">packages/ember-data/lib/system/adapter.js:265</a>
 
     
   </div>
@@ -2056,7 +2108,7 @@ endpoint of &quot;/line_items/&quot;.</p>
           but overwritten in
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/adapters/rest_adapter.js#L365">packages/ember-data/lib/adapters/rest_adapter.js:365</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/adapters/rest_adapter.js#L397">packages/ember-data/lib/adapters/rest_adapter.js:397</a>
 
     
   </div>
@@ -2121,7 +2173,7 @@ of a record.</p>
     (path, parentUrl)
   </span>
 
-  <span class="type"><a href="/api/data/classes/String.html">String</a></span>
+  <span class="type">String</span>
 
 
 
@@ -2139,7 +2191,7 @@ of a record.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/adapters/rest_adapter.js#L440">packages/ember-data/lib/adapters/rest_adapter.js:440</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/adapters/rest_adapter.js#L472">packages/ember-data/lib/adapters/rest_adapter.js:472</a>
 
     
   </div>
@@ -2160,10 +2212,10 @@ of a record.</p>
 
       <dl>
         
-          <dt><strong>path</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>path</strong> <span class="type">String</span></dt>
           <dd></dd>
         
-          <dt><strong>parentUrl</strong> <span class="type"><a href="/api/data/classes/String.html">String</a></span></dt>
+          <dt><strong>parentUrl</strong> <span class="type">String</span></dt>
           <dd></dd>
         
       </dl>
@@ -2174,7 +2226,7 @@ of a record.</p>
     <div class="return">
       <h3>Returns:</h3>
       <dl>
-        <dt><span class="type"><a href="/api/data/classes/String.html">String</a></span>
+        <dt><span class="type">String</span>
         <dd> urlPrefix</dd>
       </dl>
     </div>
@@ -2226,7 +2278,7 @@ of a record.</p>
           <a href="/api/data/classes/DS.Adapter.html#method_defaultSerializer">DS.Adapter</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/system/adapter.js#L102">packages/ember-data/lib/system/adapter.js:102</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/system/adapter.js#L119">packages/ember-data/lib/system/adapter.js:119</a>
 
     
   </div>
@@ -2289,7 +2341,7 @@ a model specific serializer (i.e. <code>PostSerializer</code>) or the
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/adapters/rest_adapter.js#L146">packages/ember-data/lib/adapters/rest_adapter.js:146</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/adapters/rest_adapter.js#L175">packages/ember-data/lib/adapters/rest_adapter.js:175</a>
 
     
   </div>
@@ -2298,8 +2350,11 @@ a model specific serializer (i.e. <code>PostSerializer</code>) or the
 
   
     <div class="description">
-      <p>Some APIs require HTTP headers, e.g. to provide an API key. An array of
-headers can be added to the adapter which are passed with every request:</p>
+      <p>Some APIs require HTTP headers, e.g. to provide an API
+key. Arbitrary headers can be set as key/value pairs on the
+<code>RESTAdapter</code>&#39;s <code>headers</code> object and Ember Data will send them
+along with each ajax request. For dynamic headers see <a href="/api/data/classes/DS.RESTAdapter.html#toc_headers-customization">headers
+customization</a>.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -2308,7 +2363,7 @@ headers can be added to the adapter which are passed with every request:</p>
 5
 6
 </pre></td>
-  <td class="code"><pre>DS.RESTAdapter.reopen({
+  <td class="code"><pre>App.ApplicationAdapter = DS.RESTAdapter.extend({
   <span class="key">headers</span>: {
     <span class="key"><span class="delimiter">&quot;</span><span class="content">API_KEY</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">secret key</span><span class="delimiter">&quot;</span></span>,
     <span class="key"><span class="delimiter">&quot;</span><span class="content">ANOTHER_HEADER</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Some header value</span><span class="delimiter">&quot;</span></span>
@@ -2353,7 +2408,7 @@ headers can be added to the adapter which are passed with every request:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/adapters/rest_adapter.js#L131">packages/ember-data/lib/adapters/rest_adapter.js:131</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/adapters/rest_adapter.js#L160">packages/ember-data/lib/adapters/rest_adapter.js:160</a>
 
     
   </div>
@@ -2412,7 +2467,7 @@ headers can be added to the adapter which are passed with every request:</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.6/packages/ember-data/lib/adapters/rest_adapter.js#L115">packages/ember-data/lib/adapters/rest_adapter.js:115</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/adapters/rest_adapter.js#L144">packages/ember-data/lib/adapters/rest_adapter.js:144</a>
 
     
   </div>

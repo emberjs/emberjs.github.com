@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - DS.JSONSerializer</title>
-    <meta property="st:title" content="DS.JSONSerializer" />
+    <title>Ember.js - DS.ActiveModelSerializer</title>
+    <meta property="st:title" content="DS.ActiveModelSerializer" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -132,7 +132,7 @@
         
           
             
-          <li class="level-3 ">
+          <li class="level-3 sub-selected">
           
               <a href="/api/data/classes/DS.ActiveModelSerializer.html">DS.ActiveModelSerializer</a>
             
@@ -228,7 +228,7 @@
         
           
             
-          <li class="level-3 sub-selected">
+          <li class="level-3 ">
           
               <a href="/api/data/classes/DS.JSONSerializer.html">DS.JSONSerializer</a>
             
@@ -394,9 +394,9 @@
 
   
   <h1 class="api-header">
-  DS.JSONSerializer Class
+  DS.ActiveModelSerializer Class
   
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L5">packages/ember-data/lib/serializers/json_serializer.js:5</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/da8194a/packages/activemodel-adapter/lib/system/active_model_serializer.js#L13">packages/activemodel-adapter/lib/system/active_model_serializer.js:13</a>
   
 </h1>
 
@@ -405,11 +405,13 @@
 
 <div class="class-info">
   
-
+    <p>Extends: <a href="/api/data/classes/DS.RESTSerializer.html">DS.RESTSerializer</a></p>
   
 
   
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L5">packages/ember-data/lib/serializers/json_serializer.js:5</a></p>
+
+  
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/activemodel-adapter/lib/system/active_model_serializer.js#L13">packages/activemodel-adapter/lib/system/active_model_serializer.js:13</a></p>
   
 
   
@@ -418,17 +420,61 @@
 </div>
 
   <div class="description">
-    <p>In Ember Data a Serializer is used to serialize and deserialize
-records when they are transferred in and out of an external source.
-This process involves normalizing property names, transforming
-attribute values and serializing relationships.</p>
+    <p>The ActiveModelSerializer is a subclass of the RESTSerializer designed to integrate
+with a JSON API that uses an underscored naming convention instead of camelCasing.
+It has been designed to work out of the box with the
+<a href="http://github.com/rails-api/active_model_serializers">active<em>model</em>serializers</a>
+Ruby gem. This Serializer expects specific settings using ActiveModel::Serializers,
+<code>embed :ids, include: true</code> which sideloads the records.</p>
 
-<p>For maximum performance Ember Data recommends you use the
-<a href="DS.RESTSerializer.html">RESTSerializer</a> or one of its subclasses.</p>
+<p>This serializer extends the DS.RESTSerializer by making consistent
+use of the camelization, decamelization and pluralization methods to
+normalize the serialized JSON into a format that is compatible with
+a conventional Rails backend and Ember Data.</p>
+<h2 class='anchorable-toc' id='toc_json-structure'>JSON Structure</h2>
+<p>The ActiveModelSerializer expects the JSON returned from your server
+to follow the REST adapter conventions substituting underscored keys
+for camelcased ones.</p>
+<h3 class='anchorable-toc' id='toc_conventional-names'>Conventional Names</h3>
+<p>Attribute names in your JSON payload should be the underscored versions of
+the attributes in your Ember.js models.</p>
 
-<p><code>JSONSerializer</code> is useful for simpler or legacy backends that may
-not support the <a href="http://jsonapi.org/">http://jsonapi.org/</a> spec.</p>
-
+<p>For example, if you have a <code>Person</code> model:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.FamousPerson = DS.Model.extend({
+  <span class="key">firstName</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">lastName</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">occupation</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>The JSON returned should look like this:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">famous_person</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">first_name</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Barack</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">last_name</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Obama</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">occupation</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">President</span><span class="delimiter">&quot;</span></span>
+  }
+}
+</pre></td>
+</tr></table>
+</div></div>
   </div>
 
 
@@ -466,75 +512,75 @@ not support the <a href="http://jsonapi.org/">http://jsonapi.org/</a> spec.</p>
         <p><h2>Methods</h2></p>
         <ul class="index-list">
           
-            <li class="method private">
+            <li class="method private inherited">
               <a href="#method_applyTransforms">applyTransforms</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_extract">extract</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_extractArray">extractArray</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_extractCreateRecord">extractCreateRecord</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_extractDeleteRecord">extractDeleteRecord</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_extractFind">extractFind</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_extractFindAll">extractFindAll</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_extractFindBelongsTo">extractFindBelongsTo</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_extractFindHasMany">extractFindHasMany</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_extractFindMany">extractFindMany</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_extractFindQuery">extractFindQuery</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_extractMeta">extractMeta</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_extractSave">extractSave</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_extractSingle">extractSingle</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_extractUpdateRecord">extractUpdateRecord</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_initializeStore">initializeStore</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_initializeStoreInjections">initializeStoreInjections</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_initializeTransforms">initializeTransforms</a>
             </li>
           
@@ -550,36 +596,64 @@ not support the <a href="http://jsonapi.org/">http://jsonapi.org/</a> spec.</p>
               <a href="#method_normalize">normalize</a>
             </li>
           
-            <li class="method private">
+            <li class="method private inherited">
+              <a href="#method_normalizeAttributes">normalizeAttributes</a>
+            </li>
+          
+            <li class="method private inherited">
               <a href="#method_normalizeId">normalizeId</a>
             </li>
           
+            <li class="method ">
+              <a href="#method_normalizeLinks">normalizeLinks</a>
+            </li>
+          
+            <li class="method inherited">
+              <a href="#method_normalizePayload">normalizePayload</a>
+            </li>
+          
             <li class="method private">
+              <a href="#method_normalizeRelationships">normalizeRelationships</a>
+            </li>
+          
+            <li class="method private inherited">
               <a href="#method_normalizeUsingDeclaredMapping">normalizeUsingDeclaredMapping</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
+              <a href="#method_pushPayload">pushPayload</a>
+            </li>
+          
+            <li class="method inherited">
               <a href="#method_serialize">serialize</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_serializeAttribute">serializeAttribute</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_serializeBelongsTo">serializeBelongsTo</a>
             </li>
           
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_serializeHasMany">serializeHasMany</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_serializeIntoHash">serializeIntoHash</a>
             </li>
           
             <li class="method ">
               <a href="#method_serializePolymorphicType">serializePolymorphicType</a>
             </li>
           
-            <li class="method private">
+            <li class="method private inherited">
               <a href="#method_transformFor">transformFor</a>
+            </li>
+          
+            <li class="method inherited">
+              <a href="#method_typeForRoot">typeForRoot</a>
             </li>
           
         </ul>
@@ -587,11 +661,15 @@ not support the <a href="http://jsonapi.org/">http://jsonapi.org/</a> spec.</p>
         <p><h2>Properties</h2></p>
         <ul class="index-list">
           
-            <li class="property ">
+            <li class="property inherited">
               <a href="#property_attrs">attrs</a>
             </li>
           
-            <li class="property ">
+            <li class="property inherited">
+              <a href="#property_normalizeHash">normalizeHash</a>
+            </li>
+          
+            <li class="property inherited">
               <a href="#property_primaryKey">primaryKey</a>
             </li>
           
@@ -622,7 +700,7 @@ not support the <a href="http://jsonapi.org/">http://jsonapi.org/</a> spec.</p>
 
       
         
-<div id="method_applyTransforms" class="method private item-entry">
+<div id="method_applyTransforms" class="method private inherited item-entry">
   <h3 data-id="method_applyTransforms" class="name anchorable-toc"><code>applyTransforms</code></h3>
   <span class="args">
     (type, data)
@@ -641,9 +719,8 @@ not support the <a href="http://jsonapi.org/">http://jsonapi.org/</a> spec.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_applyTransforms">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L72">packages/ember-data/lib/serializers/json_serializer.js:72</a>
@@ -699,7 +776,7 @@ serializer&#39;s <code>normalize</code> method.</p>
 
       
         
-<div id="method_extract" class="method  item-entry">
+<div id="method_extract" class="method inherited item-entry">
   <h3 data-id="method_extract" class="name anchorable-toc"><code>extract</code></h3>
   <span class="args">
     (store, type, payload, id, requestType)
@@ -717,9 +794,8 @@ serializer&#39;s <code>normalize</code> method.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_extract">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L486">packages/ember-data/lib/serializers/json_serializer.js:486</a>
@@ -811,10 +887,10 @@ socket.on(<span class="string"><span class="delimiter">'</span><span class="cont
 
       
         
-<div id="method_extractArray" class="method  item-entry">
+<div id="method_extractArray" class="method inherited item-entry">
   <h3 data-id="method_extractArray" class="name anchorable-toc"><code>extractArray</code></h3>
   <span class="args">
-    (store, type, payload)
+    (store, primaryType, payload)
   </span>
 
   <span class="type">Array</span>
@@ -828,13 +904,13 @@ socket.on(<span class="string"><span class="delimiter">'</span><span class="cont
 
   <div class="meta">
       
+        Inherited from
+        <a href="/api/data/classes/DS.JSONSerializer.html#method_extractArray">DS.JSONSerializer</a>
         
-          
-            Defined in
-          
+          but overwritten in
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L695">packages/ember-data/lib/serializers/json_serializer.js:695</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/rest_serializer.js#L366">packages/ember-data/lib/serializers/rest_serializer.js:366</a>
 
     
   </div>
@@ -843,11 +919,18 @@ socket.on(<span class="string"><span class="delimiter">'</span><span class="cont
 
   
     <div class="description">
-      <p><code>extractArray</code> is used to deserialize an array of records
-returned from the adapter.</p>
+      <p>Called when the server has returned a payload representing
+multiple records, such as in response to a <code>findAll</code> or <code>findQuery</code>.</p>
 
-<p>Example</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>It is your opportunity to clean up the server&#39;s response into the normalized
+form expected by Ember Data.</p>
+
+<p>If you want, you can just restructure the top-level of your payload, and
+do more fine-grained normalization in the <code>normalize</code> method.</p>
+
+<p>For example, if you have a payload like this in response to a request for
+all posts:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -855,17 +938,137 @@ returned from the adapter.</p>
 5
 6
 7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
 </pre></td>
-  <td class="code"><pre>App.PostSerializer = DS.JSONSerializer.extend({
-  <span class="function">extractArray</span>: <span class="keyword">function</span>(store, type, payload) {
-    <span class="keyword">return</span> payload.map(<span class="keyword">function</span>(json) {
-      <span class="keyword">return</span> <span class="local-variable">this</span>.extractSingle(store, type, json);
-    }, <span class="local-variable">this</span>);
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">_embedded</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: [{
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="integer">1</span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is omakase</span><span class="delimiter">&quot;</span></span>
+    }, {
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="integer">2</span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">The Parley Letter</span><span class="delimiter">&quot;</span></span>
+    }],
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">comment</span><span class="delimiter">&quot;</span></span>: [{
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">_id</span><span class="delimiter">&quot;</span></span>: <span class="integer">1</span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">comment_title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is unagi</span><span class="delimiter">&quot;</span></span>
+      <span class="string"><span class="delimiter">&quot;</span><span class="content">post_id</span><span class="delimiter">&quot;</span></span>: <span class="integer">1</span>
+    }, {
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">_id</span><span class="delimiter">&quot;</span></span>: <span class="integer">2</span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">comment_title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Don't tread on me</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">post_id</span><span class="delimiter">&quot;</span></span>: <span class="integer">2</span>
+    }]
   }
-});
+}
 </pre></td>
 </tr></table>
 </div></div>
+<p>You could implement a serializer that looks like this to get your payload
+into shape:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+22
+23
+24
+25
+26
+27
+28
+29
+<strong>30</strong>
+31
+32
+33
+34
+35
+36
+</pre></td>
+  <td class="code"><pre>App.PostSerializer = DS.RESTSerializer.extend({
+  <span class="comment">// First, restructure the top-level so it's organized by type</span>
+  <span class="comment">// and the comments are listed under a post's `comments` key.</span>
+  <span class="function">extractArray</span>: <span class="keyword">function</span>(store, type, payload) {
+    <span class="keyword">var</span> posts = payload._embedded.post;
+    <span class="keyword">var</span> comments = [];
+    <span class="keyword">var</span> postCache = {};
+
+    posts.forEach(<span class="keyword">function</span>(post) {
+      post.comments = [];
+      postCache[post.id] = post;
+    });
+
+    payload._embedded.comment.forEach(<span class="keyword">function</span>(comment) {
+      comments.push(comment);
+      postCache[comment.post_id].comments.push(comment);
+      <span class="keyword">delete</span> comment.post_id;
+    }
+
+    payload = { <span class="key">comments</span>: comments, <span class="key">posts</span>: payload };
+
+    <span class="keyword">return</span> <span class="local-variable">this</span>._super(store, type, payload);
+  },
+
+  <span class="key">normalizeHash</span>: {
+    <span class="comment">// Next, normalize individual comments, which (after `extract`)</span>
+    <span class="comment">// are now located under `comments`</span>
+    <span class="function">comments</span>: <span class="keyword">function</span>(hash) {
+      hash.id = hash._id;
+      hash.title = hash.comment_title;
+      <span class="keyword">delete</span> hash._id;
+      <span class="keyword">delete</span> hash.comment_title;
+      <span class="keyword">return</span> hash;
+    }
+  }
+})
+</pre></td>
+</tr></table>
+</div></div>
+<p>When you call super from your own implementation of <code>extractArray</code>, the
+built-in implementation will find the primary array in your normalized
+payload and push the remaining records into the store.</p>
+
+<p>The primary array is the array found under <code>posts</code>.</p>
+
+<p>The primary record has special meaning when responding to <code>findQuery</code>
+or <code>findHasMany</code>. In particular, the primary array will become the
+list of records in the record array that kicked off the request.</p>
+
+<p>If your primary array contains secondary (embedded) records of the same type,
+you cannot place these into the primary array <code>posts</code>. Instead, place the
+secondary items into an underscore prefixed property <code>_posts</code>, which will
+push these items into the store and will not affect the resulting query.</p>
+
     </div>
   
 
@@ -884,7 +1087,7 @@ returned from the adapter.</p>
           <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
           <dd></dd>
         
-          <dt><strong>type</strong> <span class="type">subclass of DS.Model</span></dt>
+          <dt><strong>primaryType</strong> <span class="type">subclass of DS.Model</span></dt>
           <dd></dd>
         
           <dt><strong>payload</strong> <span class="type">Object</span></dt>
@@ -899,7 +1102,8 @@ returned from the adapter.</p>
       <h3>Returns:</h3>
       <dl>
         <dt><span class="type">Array</span>
-        <dd> array An array of deserialized objects</dd>
+        <dd> The primary array that was returned in response
+  to the original query.</dd>
       </dl>
     </div>
   
@@ -907,7 +1111,7 @@ returned from the adapter.</p>
 
       
         
-<div id="method_extractCreateRecord" class="method  item-entry">
+<div id="method_extractCreateRecord" class="method inherited item-entry">
   <h3 data-id="method_extractCreateRecord" class="name anchorable-toc"><code>extractCreateRecord</code></h3>
   <span class="args">
     (store, type, payload)
@@ -925,9 +1129,8 @@ returned from the adapter.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_extractCreateRecord">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L582">packages/ember-data/lib/serializers/json_serializer.js:582</a>
@@ -984,7 +1187,7 @@ alias for <a href="#method_extractSave">extractSave</a>.</p>
 
       
         
-<div id="method_extractDeleteRecord" class="method  item-entry">
+<div id="method_extractDeleteRecord" class="method inherited item-entry">
   <h3 data-id="method_extractDeleteRecord" class="name anchorable-toc"><code>extractDeleteRecord</code></h3>
   <span class="args">
     (store, type, payload)
@@ -1002,9 +1205,8 @@ alias for <a href="#method_extractSave">extractSave</a>.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_extractDeleteRecord">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L610">packages/ember-data/lib/serializers/json_serializer.js:610</a>
@@ -1061,7 +1263,7 @@ alias for <a href="#method_extractSave">extractSave</a>.</p>
 
       
         
-<div id="method_extractFind" class="method  item-entry">
+<div id="method_extractFind" class="method inherited item-entry">
   <h3 data-id="method_extractFind" class="name anchorable-toc"><code>extractFind</code></h3>
   <span class="args">
     (store, type, payload)
@@ -1079,9 +1281,8 @@ alias for <a href="#method_extractSave">extractSave</a>.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_extractFind">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L625">packages/ember-data/lib/serializers/json_serializer.js:625</a>
@@ -1138,7 +1339,7 @@ alias for <a href="#method_extractSingle">extractSingle</a>.</p>
 
       
         
-<div id="method_extractFindAll" class="method  item-entry">
+<div id="method_extractFindAll" class="method inherited item-entry">
   <h3 data-id="method_extractFindAll" class="name anchorable-toc"><code>extractFindAll</code></h3>
   <span class="args">
     (store, type, payload)
@@ -1156,9 +1357,8 @@ alias for <a href="#method_extractSingle">extractSingle</a>.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_extractFindAll">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L525">packages/ember-data/lib/serializers/json_serializer.js:525</a>
@@ -1215,7 +1415,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
 
       
         
-<div id="method_extractFindBelongsTo" class="method  item-entry">
+<div id="method_extractFindBelongsTo" class="method inherited item-entry">
   <h3 data-id="method_extractFindBelongsTo" class="name anchorable-toc"><code>extractFindBelongsTo</code></h3>
   <span class="args">
     (store, type, payload)
@@ -1233,9 +1433,8 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_extractFindBelongsTo">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L639">packages/ember-data/lib/serializers/json_serializer.js:639</a>
@@ -1292,7 +1491,7 @@ alias for <a href="#method_extractSingle">extractSingle</a>.</p>
 
       
         
-<div id="method_extractFindHasMany" class="method  item-entry">
+<div id="method_extractFindHasMany" class="method inherited item-entry">
   <h3 data-id="method_extractFindHasMany" class="name anchorable-toc"><code>extractFindHasMany</code></h3>
   <span class="args">
     (store, type, payload)
@@ -1310,9 +1509,8 @@ alias for <a href="#method_extractSingle">extractSingle</a>.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_extractFindHasMany">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L567">packages/ember-data/lib/serializers/json_serializer.js:567</a>
@@ -1369,7 +1567,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
 
       
         
-<div id="method_extractFindMany" class="method  item-entry">
+<div id="method_extractFindMany" class="method inherited item-entry">
   <h3 data-id="method_extractFindMany" class="name anchorable-toc"><code>extractFindMany</code></h3>
   <span class="args">
     (store, type, payload)
@@ -1387,9 +1585,8 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_extractFindMany">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L553">packages/ember-data/lib/serializers/json_serializer.js:553</a>
@@ -1446,7 +1643,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
 
       
         
-<div id="method_extractFindQuery" class="method  item-entry">
+<div id="method_extractFindQuery" class="method inherited item-entry">
   <h3 data-id="method_extractFindQuery" class="name anchorable-toc"><code>extractFindQuery</code></h3>
   <span class="args">
     (store, type, payload)
@@ -1464,9 +1661,8 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_extractFindQuery">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L539">packages/ember-data/lib/serializers/json_serializer.js:539</a>
@@ -1523,7 +1719,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
 
       
         
-<div id="method_extractMeta" class="method  item-entry">
+<div id="method_extractMeta" class="method inherited item-entry">
   <h3 data-id="method_extractMeta" class="name anchorable-toc"><code>extractMeta</code></h3>
   <span class="args">
     (store, type, payload)
@@ -1540,9 +1736,8 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_extractMeta">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L724">packages/ember-data/lib/serializers/json_serializer.js:724</a>
@@ -1613,7 +1808,7 @@ be located on the <code>meta</code> property of the payload object.</p>
 
       
         
-<div id="method_extractSave" class="method  item-entry">
+<div id="method_extractSave" class="method inherited item-entry">
   <h3 data-id="method_extractSave" class="name anchorable-toc"><code>extractSave</code></h3>
   <span class="args">
     (store, type, payload)
@@ -1631,9 +1826,8 @@ be located on the <code>meta</code> property of the payload object.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_extractSave">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L653">packages/ember-data/lib/serializers/json_serializer.js:653</a>
@@ -1690,10 +1884,10 @@ for <a href="#method_extractSingle">extractSingle</a>.</p>
 
       
         
-<div id="method_extractSingle" class="method  item-entry">
+<div id="method_extractSingle" class="method inherited item-entry">
   <h3 data-id="method_extractSingle" class="name anchorable-toc"><code>extractSingle</code></h3>
   <span class="args">
-    (store, type, payload)
+    (store, primaryType, payload, recordId)
   </span>
 
   <span class="type">Object</span>
@@ -1707,13 +1901,13 @@ for <a href="#method_extractSingle">extractSingle</a>.</p>
 
   <div class="meta">
       
+        Inherited from
+        <a href="/api/data/classes/DS.JSONSerializer.html#method_extractSingle">DS.JSONSerializer</a>
         
-          
-            Defined in
-          
+          but overwritten in
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L668">packages/ember-data/lib/serializers/json_serializer.js:668</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/rest_serializer.js#L246">packages/ember-data/lib/serializers/rest_serializer.js:246</a>
 
     
   </div>
@@ -1722,11 +1916,18 @@ for <a href="#method_extractSingle">extractSingle</a>.</p>
 
   
     <div class="description">
-      <p><code>extractSingle</code> is used to deserialize a single record returned
-from the adapter.</p>
+      <p>Called when the server has returned a payload representing
+a single record, such as in response to a <code>find</code> or <code>save</code>.</p>
 
-<p>Example</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>It is your opportunity to clean up the server&#39;s response into the normalized
+form expected by Ember Data.</p>
+
+<p>If you want, you can just restructure the top-level of your payload, and
+do more fine-grained normalization in the <code>normalize</code> method.</p>
+
+<p>For example, if you have a payload like this in response to a request for
+post 1:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -1735,18 +1936,92 @@ from the adapter.</p>
 6
 7
 8
+9
+<strong>10</strong>
+11
+12
+13
+14
 </pre></td>
-  <td class="code"><pre>App.PostSerializer = DS.JSONSerializer.extend({
-  <span class="function">extractSingle</span>: <span class="keyword">function</span>(store, type, payload) {
-    payload.comments = payload._embedded.comment;
-    <span class="keyword">delete</span> payload._embedded;
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="integer">1</span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is omakase</span><span class="delimiter">&quot;</span></span>,
 
-    <span class="keyword">return</span> <span class="local-variable">this</span>._super(store, type, payload);
-  },
-});
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">_embedded</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">comment</span><span class="delimiter">&quot;</span></span>: [{
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">_id</span><span class="delimiter">&quot;</span></span>: <span class="integer">1</span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">comment_title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">FIRST</span><span class="delimiter">&quot;</span></span>
+    }, {
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">_id</span><span class="delimiter">&quot;</span></span>: <span class="integer">2</span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">comment_title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is unagi</span><span class="delimiter">&quot;</span></span>
+    }]
+  }
+}
 </pre></td>
 </tr></table>
 </div></div>
+<p>You could implement a serializer that looks like this to get your payload
+into shape:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+22
+</pre></td>
+  <td class="code"><pre>App.PostSerializer = DS.RESTSerializer.extend({
+  <span class="comment">// First, restructure the top-level so it's organized by type</span>
+  <span class="function">extractSingle</span>: <span class="keyword">function</span>(store, type, payload, id) {
+    <span class="keyword">var</span> comments = payload._embedded.comment;
+    <span class="keyword">delete</span> payload._embedded;
+
+    payload = { <span class="key">comments</span>: comments, <span class="key">post</span>: payload };
+    <span class="keyword">return</span> <span class="local-variable">this</span>._super(store, type, payload, id);
+  },
+
+  <span class="key">normalizeHash</span>: {
+    <span class="comment">// Next, normalize individual comments, which (after `extract`)</span>
+    <span class="comment">// are now located under `comments`</span>
+    <span class="function">comments</span>: <span class="keyword">function</span>(hash) {
+      hash.id = hash._id;
+      hash.title = hash.comment_title;
+      <span class="keyword">delete</span> hash._id;
+      <span class="keyword">delete</span> hash.comment_title;
+      <span class="keyword">return</span> hash;
+    }
+  }
+})
+</pre></td>
+</tr></table>
+</div></div>
+<p>When you call super from your own implementation of <code>extractSingle</code>, the
+built-in implementation will find the primary record in your normalized
+payload and push the remaining records into the store.</p>
+
+<p>The primary record is the single hash found under <code>post</code> or the first
+element of the <code>posts</code> array.</p>
+
+<p>The primary record has special meaning when the record is being created
+for the first time or updated (<code>createRecord</code> or <code>updateRecord</code>). In
+particular, it will update the properties of the record that was saved.</p>
+
     </div>
   
 
@@ -1765,10 +2040,13 @@ from the adapter.</p>
           <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
           <dd></dd>
         
-          <dt><strong>type</strong> <span class="type">subclass of DS.Model</span></dt>
+          <dt><strong>primaryType</strong> <span class="type">subclass of DS.Model</span></dt>
           <dd></dd>
         
           <dt><strong>payload</strong> <span class="type">Object</span></dt>
+          <dd></dd>
+        
+          <dt><strong>recordId</strong> <span class="type">String</span></dt>
           <dd></dd>
         
       </dl>
@@ -1780,7 +2058,7 @@ from the adapter.</p>
       <h3>Returns:</h3>
       <dl>
         <dt><span class="type">Object</span>
-        <dd> json The deserialized payload</dd>
+        <dd> the primary response to the original request</dd>
       </dl>
     </div>
   
@@ -1788,7 +2066,7 @@ from the adapter.</p>
 
       
         
-<div id="method_extractUpdateRecord" class="method  item-entry">
+<div id="method_extractUpdateRecord" class="method inherited item-entry">
   <h3 data-id="method_extractUpdateRecord" class="name anchorable-toc"><code>extractUpdateRecord</code></h3>
   <span class="args">
     (store, type, payload)
@@ -1806,9 +2084,8 @@ from the adapter.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_extractUpdateRecord">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L596">packages/ember-data/lib/serializers/json_serializer.js:596</a>
@@ -1865,7 +2142,7 @@ for <a href="#method_extractSave">extractSave</a>.</p>
 
       
         
-<div id="method_initializeStore" class="method  item-entry">
+<div id="method_initializeStore" class="method inherited item-entry">
   <h3 data-id="method_initializeStore" class="name anchorable-toc"><code>initializeStore</code></h3>
   <span class="args">
     (container, application)
@@ -1882,9 +2159,8 @@ for <a href="#method_extractSave">extractSave</a>.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_initializeStore">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/initializers/store.js#L6">packages/ember-data/lib/initializers/store.js:6</a>
@@ -1929,7 +2205,7 @@ store. Accepts an optional namespace argument.</p>
 
       
         
-<div id="method_initializeStoreInjections" class="method  item-entry">
+<div id="method_initializeStoreInjections" class="method inherited item-entry">
   <h3 data-id="method_initializeStoreInjections" class="name anchorable-toc"><code>initializeStoreInjections</code></h3>
   <span class="args">
     (container)
@@ -1990,7 +2266,7 @@ for the Ember-Data store. Accepts an optional namespace argument.</p>
 
       
         
-<div id="method_initializeTransforms" class="method  item-entry">
+<div id="method_initializeTransforms" class="method inherited item-entry">
   <h3 data-id="method_initializeTransforms" class="name anchorable-toc"><code>initializeTransforms</code></h3>
   <span class="args">
     (container)
@@ -2007,9 +2283,8 @@ for the Ember-Data store. Accepts an optional namespace argument.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_initializeTransforms">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/initializers/transforms.js#L8">packages/ember-data/lib/initializers/transforms.js:8</a>
@@ -2054,10 +2329,10 @@ transforms.</p>
 <div id="method_keyForAttribute" class="method  item-entry">
   <h3 data-id="method_keyForAttribute" class="name anchorable-toc"><code>keyForAttribute</code></h3>
   <span class="args">
-    (key)
+    (attribute)
   </span>
 
-  <span class="type">String</span>
+  <span class="type"></span>
 
 
 
@@ -2068,13 +2343,13 @@ transforms.</p>
 
   <div class="meta">
       
+        Inherited from
+        <a href="/api/data/classes/DS.JSONSerializer.html#method_keyForAttribute">DS.JSONSerializer</a>
         
-          
-            Defined in
-          
+          but overwritten in
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L754">packages/ember-data/lib/serializers/json_serializer.js:754</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/activemodel-adapter/lib/system/active_model_serializer.js#L66">packages/activemodel-adapter/lib/system/active_model_serializer.js:66</a>
 
     
   </div>
@@ -2083,25 +2358,8 @@ transforms.</p>
 
   
     <div class="description">
-      <p><code>keyForAttribute</code> can be used to define rules for how to convert an
-attribute name in your model to a key in your JSON.</p>
+      <p>Converts camelCased attributes to underscored when serializing.</p>
 
-<p>Example</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre>App.ApplicationSerializer = DS.RESTSerializer.extend({
-  <span class="function">keyForAttribute</span>: <span class="keyword">function</span>(attr) {
-    <span class="keyword">return</span> Ember.String.underscore(attr).toUpperCase();
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
     </div>
   
 
@@ -2117,7 +2375,7 @@ attribute name in your model to a key in your JSON.</p>
 
       <dl>
         
-          <dt><strong>key</strong> <span class="type">String</span></dt>
+          <dt><strong>attribute</strong> <span class="type">String</span></dt>
           <dd></dd>
         
       </dl>
@@ -2128,8 +2386,8 @@ attribute name in your model to a key in your JSON.</p>
     <div class="return">
       <h3>Returns:</h3>
       <dl>
-        <dt><span class="type">String</span>
-        <dd> normalized key</dd>
+        <dt><span class="type"></span>
+        <dd> String</dd>
       </dl>
     </div>
   
@@ -2140,10 +2398,10 @@ attribute name in your model to a key in your JSON.</p>
 <div id="method_keyForRelationship" class="method  item-entry">
   <h3 data-id="method_keyForRelationship" class="name anchorable-toc"><code>keyForRelationship</code></h3>
   <span class="args">
-    (key, relationship)
+    (key, kind)
   </span>
 
-  <span class="type">String</span>
+  <span class="type"></span>
 
 
 
@@ -2154,13 +2412,13 @@ attribute name in your model to a key in your JSON.</p>
 
   <div class="meta">
       
+        Inherited from
+        <a href="/api/data/classes/DS.JSONSerializer.html#method_keyForRelationship">DS.JSONSerializer</a>
         
-          
-            Defined in
-          
+          but overwritten in
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L774">packages/ember-data/lib/serializers/json_serializer.js:774</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/activemodel-adapter/lib/system/active_model_serializer.js#L77">packages/activemodel-adapter/lib/system/active_model_serializer.js:77</a>
 
     
   </div>
@@ -2169,26 +2427,9 @@ attribute name in your model to a key in your JSON.</p>
 
   
     <div class="description">
-      <p><code>keyForRelationship</code> can be used to define a custom key when
-serializing relationship properties. By default <code>JSONSerializer</code>
-does not provide an implementation of this method.</p>
+      <p>Underscores relationship names and appends &quot;<em>id&quot; or &quot;</em>ids&quot; when serializing
+relationship keys.</p>
 
-<p>Example</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre> App.PostSerializer = DS.JSONSerializer.extend({
-   <span class="function">keyForRelationship</span>: <span class="keyword">function</span>(key, relationship) {
-      <span class="keyword">return</span> <span class="string"><span class="delimiter">'</span><span class="content">rel_</span><span class="delimiter">'</span></span> + Ember.String.underscore(key);
-   }
- });
-</pre></td>
-</tr></table>
-</div></div>
     </div>
   
 
@@ -2207,8 +2448,8 @@ does not provide an implementation of this method.</p>
           <dt><strong>key</strong> <span class="type">String</span></dt>
           <dd></dd>
         
-          <dt><strong>relationship</strong> <span class="type">String</span></dt>
-          <dd>type</dd>
+          <dt><strong>kind</strong> <span class="type">String</span></dt>
+          <dd></dd>
         
       </dl>
     </div>
@@ -2218,8 +2459,8 @@ does not provide an implementation of this method.</p>
     <div class="return">
       <h3>Returns:</h3>
       <dl>
-        <dt><span class="type">String</span>
-        <dd> normalized key</dd>
+        <dt><span class="type"></span>
+        <dd> String</dd>
       </dl>
     </div>
   
@@ -2230,10 +2471,10 @@ does not provide an implementation of this method.</p>
 <div id="method_normalize" class="method  item-entry">
   <h3 data-id="method_normalize" class="name anchorable-toc"><code>normalize</code></h3>
   <span class="args">
-    (type, hash)
+    (type, hash, prop)
   </span>
 
-  <span class="type">Object</span>
+  <span class="type"></span>
 
 
 
@@ -2244,13 +2485,13 @@ does not provide an implementation of this method.</p>
 
   <div class="meta">
       
+        Inherited from
+        <a href="/api/data/classes/DS.RESTSerializer.html#method_normalize">DS.RESTSerializer</a>
         
-          
-            Defined in
-          
+          but overwritten in
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L94">packages/ember-data/lib/serializers/json_serializer.js:94</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/activemodel-adapter/lib/system/active_model_serializer.js#L136">packages/activemodel-adapter/lib/system/active_model_serializer.js:136</a>
 
     
   </div>
@@ -2259,19 +2500,10 @@ does not provide an implementation of this method.</p>
 
   
     <div class="description">
-      <p>Normalizes a part of the JSON payload returned by
-the server. You should override this method, munge the hash
-and call super if you have generic normalization to do.</p>
+      <p>Add extra step to <code>DS.RESTSerializer.normalize</code> so links are normalized.</p>
 
-<p>It takes the type of the record that is being normalized
-(as a DS.Model class), the property where the hash was
-originally found, and the hash to normalize.</p>
-
-<p>You can use this method, for example, to normalize underscored keys to camelized
-or other general-purpose normalizations.</p>
-
-<p>Example</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>If your payload looks like:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -2279,26 +2511,34 @@ or other general-purpose normalizations.</p>
 5
 6
 7
-8
-9
-<strong>10</strong>
-11
-12
-13
 </pre></td>
-  <td class="code"><pre>App.ApplicationSerializer = DS.JSONSerializer.extend({
-  <span class="function">normalize</span>: <span class="keyword">function</span>(type, hash) {
-    <span class="keyword">var</span> fields = Ember.get(type, <span class="string"><span class="delimiter">'</span><span class="content">fields</span><span class="delimiter">'</span></span>);
-    fields.forEach(<span class="keyword">function</span>(field) {
-      <span class="keyword">var</span> payloadField = Ember.String.underscore(field);
-      <span class="keyword">if</span> (field === payloadField) { <span class="keyword">return</span>; }
-
-      hash[field] = hash[payloadField];
-      <span class="keyword">delete</span> hash[payloadField];
-    });
-    <span class="keyword">return</span> <span class="local-variable">this</span>._super.apply(<span class="local-variable">this</span>, <span class="local-variable">arguments</span>);
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="integer">1</span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is omakase</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">links</span><span class="delimiter">&quot;</span></span>: { <span class="key"><span class="delimiter">&quot;</span><span class="content">flagged_comments</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">api/comments/flagged</span><span class="delimiter">&quot;</span></span> }
   }
-});
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>The normalized version would look like this</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="integer">1</span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is omakase</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">links</span><span class="delimiter">&quot;</span></span>: { <span class="key"><span class="delimiter">&quot;</span><span class="content">flaggedComments</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">api/comments/flagged</span><span class="delimiter">&quot;</span></span> }
+  }
+}
 </pre></td>
 </tr></table>
 </div></div>
@@ -2323,6 +2563,9 @@ or other general-purpose normalizations.</p>
           <dt><strong>hash</strong> <span class="type">Object</span></dt>
           <dd></dd>
         
+          <dt><strong>prop</strong> <span class="type">String</span></dt>
+          <dd></dd>
+        
       </dl>
     </div>
   
@@ -2331,8 +2574,8 @@ or other general-purpose normalizations.</p>
     <div class="return">
       <h3>Returns:</h3>
       <dl>
-        <dt><span class="type">Object</span>
-        <dd> </dd>
+        <dt><span class="type"></span>
+        <dd> Object</dd>
       </dl>
     </div>
   
@@ -2340,7 +2583,48 @@ or other general-purpose normalizations.</p>
 
       
         
-<div id="method_normalizeId" class="method private item-entry">
+<div id="method_normalizeAttributes" class="method private inherited item-entry">
+  <h3 data-id="method_normalizeAttributes" class="name anchorable-toc"><code>normalizeAttributes</code></h3>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+      
+        
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_normalizeAttributes">DS.RESTSerializer</a>
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/rest_serializer.js#L210">packages/ember-data/lib/serializers/rest_serializer.js:210</a>
+
+    
+  </div>
+
+  
+
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+
+  
+</div>
+
+      
+        
+<div id="method_normalizeId" class="method private inherited item-entry">
   <h3 data-id="method_normalizeId" class="name anchorable-toc"><code>normalizeId</code></h3>
 
 
@@ -2355,9 +2639,8 @@ or other general-purpose normalizations.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_normalizeId">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L158">packages/ember-data/lib/serializers/json_serializer.js:158</a>
@@ -2382,7 +2665,219 @@ or other general-purpose normalizations.</p>
 
       
         
-<div id="method_normalizeUsingDeclaredMapping" class="method private item-entry">
+<div id="method_normalizeLinks" class="method  item-entry">
+  <h3 data-id="method_normalizeLinks" class="name anchorable-toc"><code>normalizeLinks</code></h3>
+  <span class="args">
+    (data)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/activemodel-adapter/lib/system/active_model_serializer.js#L176">packages/activemodel-adapter/lib/system/active_model_serializer.js:176</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>Convert <code>snake_cased</code> links  to <code>camelCase</code></p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>data</strong> <span class="type">Object</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
+<div id="method_normalizePayload" class="method inherited item-entry">
+  <h3 data-id="method_normalizePayload" class="name anchorable-toc"><code>normalizePayload</code></h3>
+  <span class="args">
+    (payload)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_normalizePayload">DS.RESTSerializer</a>
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/rest_serializer.js#L186">packages/ember-data/lib/serializers/rest_serializer.js:186</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>You can use this method to normalize all payloads, regardless of whether they
+represent single records or an array.</p>
+
+<p>For example, you might want to remove some extraneous data from the payload:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>App.ApplicationSerializer = DS.RESTSerializer.extend({
+  <span class="function">normalizePayload</span>: <span class="keyword">function</span>(payload) {
+    <span class="keyword">delete</span> payload.version;
+    <span class="keyword">delete</span> payload.status;
+    <span class="keyword">return</span> payload;
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>payload</strong> <span class="type">Object</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Object</span>
+        <dd> the normalized payload</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
+<div id="method_normalizeRelationships" class="method private item-entry">
+  <h3 data-id="method_normalizeRelationships" class="name anchorable-toc"><code>normalizeRelationships</code></h3>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+      
+        Inherited from
+        <a href="/api/data/classes/DS.RESTSerializer.html#method_normalizeRelationships">DS.RESTSerializer</a>
+        
+          but overwritten in
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/activemodel-adapter/lib/system/active_model_serializer.js#L198">packages/activemodel-adapter/lib/system/active_model_serializer.js:198</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>Normalize the polymorphic type from the JSON.</p>
+
+<p>Normalize:
+<code>js
+  {
+    id: &quot;1&quot;
+    minion: { type: &quot;evil_minion&quot;, id: &quot;12&quot;}
+  }
+</code></p>
+
+<p>To:
+<code>js
+  {
+    id: &quot;1&quot;
+    minion: { type: &quot;evilMinion&quot;, id: &quot;12&quot;}
+  }
+</code></p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+
+  
+</div>
+
+      
+        
+<div id="method_normalizeUsingDeclaredMapping" class="method private inherited item-entry">
   <h3 data-id="method_normalizeUsingDeclaredMapping" class="name anchorable-toc"><code>normalizeUsingDeclaredMapping</code></h3>
 
 
@@ -2397,9 +2892,8 @@ or other general-purpose normalizations.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_normalizeUsingDeclaredMapping">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L138">packages/ember-data/lib/serializers/json_serializer.js:138</a>
@@ -2424,13 +2918,12 @@ or other general-purpose normalizations.</p>
 
       
         
-<div id="method_serialize" class="method  item-entry">
-  <h3 data-id="method_serialize" class="name anchorable-toc"><code>serialize</code></h3>
+<div id="method_pushPayload" class="method inherited item-entry">
+  <h3 data-id="method_pushPayload" class="name anchorable-toc"><code>pushPayload</code></h3>
   <span class="args">
-    (record, options)
+    (store, payload)
   </span>
 
-  <span class="type">Object</span>
 
 
 
@@ -2442,12 +2935,115 @@ or other general-purpose normalizations.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_pushPayload">DS.RESTSerializer</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L172">packages/ember-data/lib/serializers/json_serializer.js:172</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/rest_serializer.js#L501">packages/ember-data/lib/serializers/rest_serializer.js:501</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>This method allows you to push a payload containing top-level
+collections of records organized per type.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">posts</span><span class="delimiter">&quot;</span></span>: [{
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is omakase</span><span class="delimiter">&quot;</span></span>,
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">author</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">comments</span><span class="delimiter">&quot;</span></span>: [ <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span> ]
+  }],
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">comments</span><span class="delimiter">&quot;</span></span>: [{
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">body</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">FIRST</span><span class="delimiter">&quot;</span></span>
+  }],
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">users</span><span class="delimiter">&quot;</span></span>: [{
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">@d2h</span><span class="delimiter">&quot;</span></span>
+  }]
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>It will first normalize the payload, so you can use this to push
+in data streaming in from your server structured the same way
+that fetches and saves are structured.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
+          <dd></dd>
+        
+          <dt><strong>payload</strong> <span class="type">Object</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
+<div id="method_serialize" class="method inherited item-entry">
+  <h3 data-id="method_serialize" class="name anchorable-toc"><code>serialize</code></h3>
+  <span class="args">
+    (record, options)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        Inherited from
+        <a href="/api/data/classes/DS.JSONSerializer.html#method_serialize">DS.JSONSerializer</a>
+        
+          but overwritten in
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/rest_serializer.js#L598">packages/ember-data/lib/serializers/rest_serializer.js:598</a>
 
     
   </div>
@@ -2463,7 +3059,7 @@ record into JSON.</p>
 each attribute and belongsTo relationship.</p>
 
 <p>For example, consider this model:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -2481,7 +3077,7 @@ each attribute and belongsTo relationship.</p>
 </tr></table>
 </div></div>
 <p>The default serialization would create a JSON object like:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -2516,7 +3112,7 @@ built-in serialization format.</p>
 
 <p>In that case, you can implement <code>serialize</code> yourself and
 return a JSON hash of your choosing.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -2533,7 +3129,7 @@ return a JSON hash of your choosing.</p>
 14
 15
 </pre></td>
-  <td class="code"><pre>App.PostSerializer = DS.JSONSerializer.extend({
+  <td class="code"><pre>App.PostSerializer = DS.RESTSerializer.extend({
   <span class="function">serialize</span>: <span class="keyword">function</span>(post, options) {
     <span class="keyword">var</span> json = {
       <span class="key">POST_TTL</span>: post.get(<span class="string"><span class="delimiter">'</span><span class="content">title</span><span class="delimiter">'</span></span>),
@@ -2554,7 +3150,7 @@ return a JSON hash of your choosing.</p>
 <p>If you want to define a serializer for your entire
 application, you&#39;ll probably want to use <code>eachAttribute</code>
 and <code>eachRelationship</code> on the record.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -2585,7 +3181,7 @@ and <code>eachRelationship</code> on the record.</p>
 28
 29
 </pre></td>
-  <td class="code"><pre>App.ApplicationSerializer = DS.JSONSerializer.extend({
+  <td class="code"><pre>App.ApplicationSerializer = DS.RESTSerializer.extend({
   <span class="function">serialize</span>: <span class="keyword">function</span>(record, options) {
     <span class="keyword">var</span> json = {};
 
@@ -2618,7 +3214,7 @@ and <code>eachRelationship</code> on the record.</p>
 </tr></table>
 </div></div>
 <p>This serializer will generate JSON that looks like this:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -2636,7 +3232,7 @@ and <code>eachRelationship</code> on the record.</p>
 <p>If you just want to do some small tweaks on the default JSON,
 you can call super first and make the tweaks on the returned
 JSON.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -2648,9 +3244,9 @@ JSON.</p>
 9
 <strong>10</strong>
 </pre></td>
-  <td class="code"><pre>App.PostSerializer = DS.JSONSerializer.extend({
+  <td class="code"><pre>App.PostSerializer = DS.RESTSerializer.extend({
   <span class="function">serialize</span>: <span class="keyword">function</span>(record, options) {
-    <span class="keyword">var</span> json = <span class="local-variable">this</span>._super.apply(<span class="local-variable">this</span>, <span class="local-variable">arguments</span>);
+    <span class="keyword">var</span> json = <span class="local-variable">this</span>._super(record, options);
 
     json.subject = json.title;
     <span class="keyword">delete</span> json.title;
@@ -2676,30 +3272,22 @@ JSON.</p>
 
       <dl>
         
-          <dt><strong>record</strong> <span class="type">subclass of DS.Model</span></dt>
+          <dt><strong>record</strong> <span class="type"></span></dt>
           <dd></dd>
         
-          <dt><strong>options</strong> <span class="type">Object</span></dt>
+          <dt><strong>options</strong> <span class="type"></span></dt>
           <dd></dd>
         
       </dl>
     </div>
   
 
-  
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type">Object</span>
-        <dd> json</dd>
-      </dl>
-    </div>
   
 </div>
 
       
         
-<div id="method_serializeAttribute" class="method  item-entry">
+<div id="method_serializeAttribute" class="method inherited item-entry">
   <h3 data-id="method_serializeAttribute" class="name anchorable-toc"><code>serializeAttribute</code></h3>
   <span class="args">
     (record, json, key, attribute)
@@ -2716,9 +3304,8 @@ JSON.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_serializeAttribute">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L341">packages/ember-data/lib/serializers/json_serializer.js:341</a>
@@ -2789,7 +3376,7 @@ write:</p>
 
       
         
-<div id="method_serializeBelongsTo" class="method  item-entry">
+<div id="method_serializeBelongsTo" class="method inherited item-entry">
   <h3 data-id="method_serializeBelongsTo" class="name anchorable-toc"><code>serializeBelongsTo</code></h3>
   <span class="args">
     (record, json, relationship)
@@ -2806,9 +3393,8 @@ write:</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_serializeBelongsTo">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L380">packages/ember-data/lib/serializers/json_serializer.js:380</a>
@@ -2884,7 +3470,7 @@ properties are serialized.</p>
 
       
         
-<div id="method_serializeHasMany" class="method  item-entry">
+<div id="method_serializeHasMany" class="method inherited item-entry">
   <h3 data-id="method_serializeHasMany" class="name anchorable-toc"><code>serializeHasMany</code></h3>
   <span class="args">
     (record, json, relationship)
@@ -2901,9 +3487,8 @@ properties are serialized.</p>
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_serializeHasMany">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L423">packages/ember-data/lib/serializers/json_serializer.js:423</a>
@@ -2977,6 +3562,75 @@ properties are serialized.</p>
 
       
         
+<div id="method_serializeIntoHash" class="method  item-entry">
+  <h3 data-id="method_serializeIntoHash" class="name anchorable-toc"><code>serializeIntoHash</code></h3>
+  <span class="args">
+    (hash, type, record, options)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        Inherited from
+        <a href="/api/data/classes/DS.RESTSerializer.html#method_serializeIntoHash">DS.RESTSerializer</a>
+        
+          but overwritten in
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/activemodel-adapter/lib/system/active_model_serializer.js#L102">packages/activemodel-adapter/lib/system/active_model_serializer.js:102</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>Underscores the JSON root keys when serializing.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>hash</strong> <span class="type">Object</span></dt>
+          <dd></dd>
+        
+          <dt><strong>type</strong> <span class="type">subclass of DS.Model</span></dt>
+          <dd></dd>
+        
+          <dt><strong>record</strong> <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span></dt>
+          <dd></dd>
+        
+          <dt><strong>options</strong> <span class="type">Object</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
 <div id="method_serializePolymorphicType" class="method  item-entry">
   <h3 data-id="method_serializePolymorphicType" class="name anchorable-toc"><code>serializePolymorphicType</code></h3>
   <span class="args">
@@ -2993,13 +3647,13 @@ properties are serialized.</p>
 
   <div class="meta">
       
+        Inherited from
+        <a href="/api/data/classes/DS.RESTSerializer.html#method_serializePolymorphicType">DS.RESTSerializer</a>
         
-          
-            Defined in
-          
+          but overwritten in
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L458">packages/ember-data/lib/serializers/json_serializer.js:458</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/activemodel-adapter/lib/system/active_model_serializer.js#L116">packages/activemodel-adapter/lib/system/active_model_serializer.js:116</a>
 
     
   </div>
@@ -3008,33 +3662,8 @@ properties are serialized.</p>
 
   
     <div class="description">
-      <p>You can use this method to customize how polymorphic objects are
-serialized. Objects are considered to be polymorphic if
-<code>{polymorphic: true}</code> is pass as the second argument to the
-<code>DS.belongsTo</code> function.</p>
+      <p>Serializes a polymorphic type as a fully capitalized model name.</p>
 
-<p>Example</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-</pre></td>
-  <td class="code"><pre>App.CommentSerializer = DS.JSONSerializer.extend({
-  <span class="function">serializePolymorphicType</span>: <span class="keyword">function</span>(record, json, relationship) {
-    <span class="keyword">var</span> key = relationship.key,
-        belongsTo = get(record, key);
-    key = <span class="local-variable">this</span>.keyForAttribute ? <span class="local-variable">this</span>.keyForAttribute(key) : key;
-    json[key + <span class="string"><span class="delimiter">&quot;</span><span class="content">_type</span><span class="delimiter">&quot;</span></span>] = belongsTo.constructor.typeKey;
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
     </div>
   
 
@@ -3056,7 +3685,7 @@ serialized. Objects are considered to be polymorphic if
           <dt><strong>json</strong> <span class="type">Object</span></dt>
           <dd></dd>
         
-          <dt><strong>relationship</strong> <span class="type">Object</span></dt>
+          <dt><strong>relationship</strong> <span class="type"></span></dt>
           <dd></dd>
         
       </dl>
@@ -3068,7 +3697,7 @@ serialized. Objects are considered to be polymorphic if
 
       
         
-<div id="method_transformFor" class="method private item-entry">
+<div id="method_transformFor" class="method private inherited item-entry">
   <h3 data-id="method_transformFor" class="name anchorable-toc"><code>transformFor</code></h3>
   <span class="args">
     (attributeType, skipAssertion)
@@ -3087,9 +3716,8 @@ serialized. Objects are considered to be polymorphic if
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_transformFor">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L797">packages/ember-data/lib/serializers/json_serializer.js:797</a>
@@ -3135,6 +3763,127 @@ serialized. Objects are considered to be polymorphic if
 </div>
 
       
+        
+<div id="method_typeForRoot" class="method inherited item-entry">
+  <h3 data-id="method_typeForRoot" class="name anchorable-toc"><code>typeForRoot</code></h3>
+  <span class="args">
+    (key)
+  </span>
+
+  <span class="type">String</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_typeForRoot">DS.RESTSerializer</a>
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/rest_serializer.js#L549">packages/ember-data/lib/serializers/rest_serializer.js:549</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>This method is used to convert each JSON root key in the payload
+into a typeKey that it can use to look up the appropriate model for
+that part of the payload. By default the typeKey for a model is its
+name in camelCase, so if your JSON root key is &#39;fast-car&#39; you would
+use typeForRoot to convert it to &#39;fastCar&#39; so that Ember Data finds
+the <code>FastCar</code> model.</p>
+
+<p>If you diverge from this norm you should also consider changes to
+store._normalizeTypeKey as well.</p>
+
+<p>For example, your server may return prefixed root keys like so:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">response-fast-car</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">corvette</span><span class="delimiter">&quot;</span></span>
+  }
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>In order for Ember Data to know that the model corresponding to
+the &#39;response-fast-car&#39; hash is <code>FastCar</code> (typeKey: &#39;fastCar&#39;),
+you can override typeForRoot to convert &#39;response-fast-car&#39; to
+&#39;fastCar&#39; like so:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre>App.ApplicationSerializer = DS.RESTSerializer.extend({
+  <span class="function">typeForRoot</span>: <span class="keyword">function</span>(root) {
+    <span class="comment">// 'response-fast-car' should become 'fast-car'</span>
+    <span class="keyword">var</span> subRoot = root.substring(<span class="integer">9</span>);
+
+    <span class="comment">// _super normalizes 'fast-car' to 'fastCar'</span>
+    <span class="keyword">return</span> <span class="local-variable">this</span>._super(subRoot);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>key</strong> <span class="type">String</span></dt>
+          <dd></dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">String</span>
+        <dd> the model's typeKey</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
     </div>
   
     <div class="pane" id="properties">
@@ -3160,7 +3909,7 @@ serialized. Objects are considered to be polymorphic if
 
       
         
-<div id="property_attrs" class="property  item-entry">
+<div id="property_attrs" class="property inherited item-entry">
   <h3 data-id="property_attrs" class="name anchorable-toc"><code>attrs</code></h3>
 
 
@@ -3175,9 +3924,8 @@ serialized. Objects are considered to be polymorphic if
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_attrs">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L43">packages/ember-data/lib/serializers/json_serializer.js:43</a>
@@ -3243,7 +3991,121 @@ App.PersonSerializer = DS.JSONSerializer.extend({
 
       
         
-<div id="property_primaryKey" class="property  item-entry">
+<div id="property_normalizeHash" class="property inherited item-entry">
+  <h3 data-id="property_normalizeHash" class="name anchorable-toc"><code>normalizeHash</code></h3>
+
+
+  <span class="type">{Object}</span>
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_normalizeHash">DS.RESTSerializer</a>
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/rest_serializer.js#L58">packages/ember-data/lib/serializers/rest_serializer.js:58</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>If you want to do normalizations specific to some part of the payload, you
+can specify those under <code>normalizeHash</code>.</p>
+
+<p>For example, given the following json where the the <code>IDs</code> under
+<code>&quot;comments&quot;</code> are provided as <code>_id</code> instead of <code>id</code>.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="integer">1</span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is omakase</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">comments</span><span class="delimiter">&quot;</span></span>: [ <span class="integer">1</span>, <span class="integer">2</span> ]
+  },
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">comments</span><span class="delimiter">&quot;</span></span>: [{
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">_id</span><span class="delimiter">&quot;</span></span>: <span class="integer">1</span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">body</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">FIRST</span><span class="delimiter">&quot;</span></span>
+  }, {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">_id</span><span class="delimiter">&quot;</span></span>: <span class="integer">2</span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">body</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is unagi</span><span class="delimiter">&quot;</span></span>
+  }]
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>You use <code>normalizeHash</code> to normalize just the comments:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre>App.PostSerializer = DS.RESTSerializer.extend({
+  <span class="key">normalizeHash</span>: {
+    <span class="function">comments</span>: <span class="keyword">function</span>(hash) {
+      hash.id = hash._id;
+      <span class="keyword">delete</span> hash._id;
+      <span class="keyword">return</span> hash;
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>The key under <code>normalizeHash</code> is usually just the original key
+that was in the original payload. However, key names will be
+impacted by any modifications done in the <code>normalizePayload</code>
+method. The <code>DS.RESTSerializer</code>&#39;s default implementation makes no
+changes to the payload keys.</p>
+
+    </div>
+  
+
+  <p>
+    
+      <strong>Default:</strong> <code>undefined</code>
+    
+  </p>
+
+  
+
+  
+
+  
+</div>
+
+      
+        
+<div id="property_primaryKey" class="property inherited item-entry">
   <h3 data-id="property_primaryKey" class="name anchorable-toc"><code>primaryKey</code></h3>
 
 
@@ -3258,9 +4120,8 @@ App.PersonSerializer = DS.JSONSerializer.extend({
   <div class="meta">
       
         
-          
-            Defined in
-          
+          Inherited from
+          <a href="/api/data/classes/DS.RESTSerializer.html#method_primaryKey">DS.RESTSerializer</a>
         
       
       <a class="api-file-link" href="https://github.com/emberjs/data/tree/da8194a/packages/ember-data/lib/serializers/json_serializer.js#L21">packages/ember-data/lib/serializers/json_serializer.js:21</a>
