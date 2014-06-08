@@ -5,10 +5,97 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2014-04-29T00:00:00Z</updated>
+  <updated>2014-06-07T00:00:00Z</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>Core Team Meeting Minutes - 2014/06/06</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2014/06/07/core-team-meeting-minutes-2014-06-06.html"/>
+    <id>http://emberjs.com/blog/2014/06/07/core-team-meeting-minutes-2014-06-06.html</id>
+    <published>2014-06-07T00:00:00Z</published>
+    <updated>2014-06-07T00:00:00Z</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
+(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
+the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
+Friday at 2pm EST/11am PST through Google Hangout for a weekly
+discussion of all things Ember...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
+(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
+the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
+Friday at 2pm EST/11am PST through Google Hangout for a weekly
+discussion of all things Ember.&lt;/p&gt;
+
+&lt;p&gt;If you have a topic you&amp;#39;d like to see covered, contact your favorite
+core team member and let them know!&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_attendees'&gt;Attendees&lt;/h4&gt;
+&lt;!--   [@ebryn](https://twitter.com/ebryn),
+  [@krisselden](https://twitter.com/krisselden),
+  [@machty](https://twitter.com/machty),
+  [@rwjblue](https://twitter.com/rwjblue),
+  [@trek](https://twitter.com/trek),
+  [@stefanpenner](https://twitter.com/stefanpenner),
+  [@wagenet](https://twitter.com/wagenet),
+  [@tomdale](https://twitter.com/tomdale),
+  [@wifelette](https://twitter.com/wifelette),
+  [@wycats](https://twitter.com/wycats) --&gt;
+
+&lt;p&gt;&lt;a href="https://twitter.com/ebryn"&gt;@ebryn&lt;/a&gt;,
+&lt;a href="https://twitter.com/krisselden"&gt;@krisselden&lt;/a&gt;,
+&lt;a href="https://twitter.com/machty"&gt;@machty&lt;/a&gt;,
+&lt;a href="https://twitter.com/trek"&gt;@trek&lt;/a&gt;,
+&lt;a href="https://twitter.com/stefanpenner"&gt;@stefanpenner&lt;/a&gt;,
+&lt;a href="https://twitter.com/wagenet"&gt;@wagenet&lt;/a&gt;,
+&lt;a href="https://twitter.com/tomdale"&gt;@tomdale&lt;/a&gt;&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_where-have-all-the-minutes-gone-long-time-passing'&gt;Where have all the minutes gone, long time passing?&lt;/h3&gt;
+&lt;p&gt;Many people have reached out on twitter wondering where the meeting
+minutes for May have gone. We&amp;#39;d like to apologize: many of us were
+traveling, attending conferences, and/or handling cross-state moves during May.
+Meetings have still been taking place, topics discussed, and advanced thought
+leadership generated, but attendance and note taking have been sporadic.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_ember-1-6-1-7-beta-delayed'&gt;Ember 1.6/1.7.beta Delayed&lt;/h3&gt;
+&lt;p&gt;We&amp;#39;ve been delaying the release of Ember 1.6 and the start of the 1.7.beta
+branch for a few weeks to address outstanding issues that have been reported
+and to ensure certain features make it into the 1.7.beta cycle.&lt;/p&gt;
+
+&lt;p&gt;There are two main concerns:&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_module-performance-regression'&gt;Module Performance Regression&lt;/h4&gt;
+&lt;p&gt;Despite what the anti-framework crowd might think, Ember.js was written from the
+start to be composed of many smaller, single purpose modules. Some of these are
+pulled in from external repositories and some are contained inside
+the Ember.js repository itself.&lt;/p&gt;
+
+&lt;p&gt;Modularity was part of the Ember.js story even when there wasn&amp;#39;t a great way to distribute
+or consume modules for the browser. Today, the landscape is much improved with an official
+module specification for ES6 and tooling to transpile from this format to the several
+competing community formats until the browsers gain native support.&lt;/p&gt;
+
+&lt;p&gt;A month ago, we completed our migration to the ES6 module format and
+&lt;a href="https://github.com/square/es6-module-transpiler"&gt;Square&amp;#39;s ES6 module transpiler&lt;/a&gt;, transpiling to
+&lt;a href="https://github.com/amdjs/amdjs-api/blob/master/AMD.md"&gt;AMD style&lt;/a&gt; modules.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, even with an extremely &lt;a href="https://github.com/stefanpenner/loader.js"&gt;minimal loader&lt;/a&gt;,
+the number of module load calls adds up: An AMD build of Ember.js accesses the loader ~ 1300 times.&lt;/p&gt;
+
+&lt;p&gt;On desktop the performance change is negligible, but on lower power mobile devices can cause
+a ~300ms addition to load time over previous builds of Ember.js.&lt;/p&gt;
+
+&lt;p&gt;Thankfully, the ES6 module transpiler is being augmented to address this concern and we should be
+able to output a build that does not require a loader for Ember.js internals. Everyone
+should be sure to thank &lt;a href="https://twitter.com/eventualbuddha"&gt;Brian Donovan&lt;/a&gt; and &lt;a href="https://twitter.com/squareeng"&gt;Square&lt;/a&gt; for their amazing work on bringing ES6 modules to us today.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_query-parameters'&gt;Query Parameters&lt;/h4&gt;
+&lt;p&gt;When we released 1.0 we pledged to follow &lt;a href="http://semver.org/"&gt;Semantic Versioning&lt;/a&gt; and not break public-facing API until 2.0. Because of this, we&amp;#39;re hesitant to release extensions to Ember.js&amp;#39;s
+public API until we feel confident supporting it for the foreseeable future. We&amp;#39;ve taken several stabs
+at adding query parameters to our router. People have been very happy with the &lt;a href="http://emberjs.com/guides/routing/query-params/"&gt;latest incarnation&lt;/a&gt; available on canary builds, but there have been a few
+edge cases we wanted to address. The last of these (providing a hook for overriding parameter resets
+on route exit) is about to land and we should hopefully include query parameters in the first 1.7.beta release.&lt;/p&gt;
+
+&lt;p&gt;If you&amp;#39;re thinking &amp;quot;pft, how hard is it to tack a &lt;code&gt;?&lt;/code&gt; to the end of a URL?&amp;quot;, there&amp;#39;s a great &lt;a href="https://www.youtube.com/watch?v=Syv_OTzHOr0"&gt;EmberConf presentation&lt;/a&gt; about the road to discovering what exactly query parameters are trying to express in a long running, stateful application.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>Core Team Meeting Minutes - 2014/04/25</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/04/29/core-team-meeting-minutes-2014-04-25.html"/>
@@ -456,175 +543,6 @@ release. You can see a list of all the changes in the CHANGELOG:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.5.0/CHANGELOG.md"&gt;Ember.js 1.5.0 CHANGELOG&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.6.0-beta.1/CHANGELOG.md"&gt;Ember.js 1.6.0-beta.1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Core Team Meeting Minutes - 2014/03/07</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2014/03/22/core-team-meeting-minutes-2014-03-07.html"/>
-    <id>http://emberjs.com/blog/2014/03/22/core-team-meeting-minutes-2014-03-07.html</id>
-    <published>2014-03-22T00:00:00Z</published>
-    <updated>2014-03-22T00:00:00Z</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
-(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
-the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
-Friday at 2pm EST/11am PST through Google Hangout for a weekly
-discussion of all things Ember...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
-(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
-the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
-Friday at 2pm EST/11am PST through Google Hangout for a weekly
-discussion of all things Ember.&lt;/p&gt;
-
-&lt;p&gt;If you have a topic you&amp;#39;d like to see covered, contact your favorite
-core team member and let them know!&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_attendees'&gt;Attendees&lt;/h4&gt;
-&lt;p&gt;@ebryn, @krisselden, @machty, @rwjblue, @stefanpenner, @tomdale, @trek, @wycats&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_topics'&gt;Topics&lt;/h3&gt;&lt;h4 class='anchorable-toc' id='toc_features-pending-go-decision-a-href-https-github-com-emberjs-ember-js-issues-4052-tracking-issue-a'&gt;Features pending &amp;#39;Go&amp;#39; decision. &lt;a href="https://github.com/emberjs/ember.js/issues/4052"&gt;Tracking Issue&lt;/a&gt;&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt; &lt;code&gt;ember-routing-add-model-option&lt;/code&gt; &lt;a href="https://github.com/emberjs/ember.js/pull/4293"&gt;#4293&lt;/a&gt;
-Resolution: Go&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 class='anchorable-toc' id='toc_pr-s-issues-to-review'&gt;PR&amp;#39;s/Issues To Review&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Query Params New - Sticky Params?&lt;/p&gt;
-
-&lt;p&gt;Should query paramters remain on route change? When do we want it? All the time?
-How do we disable it? Proposals thus far:&lt;/p&gt;
-&lt;div class="highlight  "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;/r?sort=asc ← keep
-/r/ios?sort=hot ← keep? “model specific state”
-/r/gonewild ← keep? “model specific state”
-/r/foo?name=’something related to foo’
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;or
-&lt;code&gt;
-/blog/somepost?comments=true
-then navigate to
-/blog/someOtherPost?comments=true ← keep?
-/blog/someOtherPostthen ← don’t keep?
-// then navigate to
-/blog/somepost?comments=true ← kept from before? kept from last route? gone from last route?
-&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Possible opt-out via helper?
-&lt;code&gt;
-{{link-to ‘Home’ ‘home’ (query-params sort=null)}}
-&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;some options:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Preserve stickiness as the default, but add a (query-params-reset) subexpression helper
-(in addition to query-params) that can take 0 or more args and will reset any query params
-not explicitly specified in the helper invocation. The puts the stickiness in the control
-of the caller (the link-to helper).&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Add a sticky option to the route query params config hash, which defaults to true. If set to
-false, any links into that route will reset (unless QP values are explicitly provided in the
-link-to helper), but any links to that route from within that route hierarchy will be sticky,
-which effectively makes it so that if you leave a route and come back into it via a link-to,
-the QPs specified as sticky:false will be reset. Keep in mind though that leaving a route and
-pressing the back button will be &amp;quot;sticky&amp;quot; since the previous values on the controller will be
-restored based on the previous URL.&lt;/p&gt;
-
-&lt;p&gt;Example JSBin: http://emberjs.jsbin.com/ucanam/4102&lt;/p&gt;
-
-&lt;p&gt;Resolution: Sticky by default, with appropriate escape valves to opt out per route change&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4374"&gt;ES6 ember-metal, ember-runtime, ember-debug&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Work is currently being done (by @thomasaboyt amongst others) on the es6-module-transpiler
-to remove the need for intermediate variables. This will both reduce filesize (less total
-output), and enable cycles support (since it is evaluated lazily).&lt;/p&gt;
-
-&lt;p&gt;We believe there is more file size savings to be had in the way the view layer, and would like
-to be able to progress in the ES6 effort. Currently rebasing upon any change to ember-metal,
-ember-runtime, and ember-debug (rare) is difficult. I believe that we cannot maintain the long
-running pull-request branch for much longer and would like time to process/deal-with any issues
-that crop up from the swap (missing global exports for example) before branching the next beta
-series (2 weeks).&lt;/p&gt;
-
-&lt;p&gt;RESOLUTION: Merge (pending specific issues that have already been noted), but before shipping another globals build we should deal with the file size issue. We have ~7 weeks until the 1.6 release.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4404"&gt;The &lt;code&gt;each&lt;/code&gt; helper checks that the metamorph tags have the same parent.&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;This was generally approved in the 2014-02-28 meeting once some verbiage tweaks were made. @trek&amp;#39;s suggested
-changes have been made, this is ready to go.&lt;/p&gt;
-
-&lt;p&gt;Resolution: merge.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4291"&gt;FEATURE Ember.computed.instance&lt;/a&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;A computed property that creates a new instance of source. &lt;code&gt;source&lt;/code&gt; can be any
-Class constructor, object, array, or a path to a local property.  Optionally you can
-specify the initial value(s), if only &lt;code&gt;initialValue&lt;/code&gt; is given and if it is a string, it
-is treated as a local path.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Resolution: make it an add on that’s not core. CPM.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4124"&gt;Deprecate edge-case get and normalizeTuple behavior before fixes&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;PR &lt;a href="https://github.com/emberjs/ember.js/pull/3852"&gt;#3852&lt;/a&gt; changes some edge case behavior for get and normalizeTuple. Ahead of those changes, this commit introduces deprecation notices.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Deprecate get for local paths on global contexts, only if they
-return data.&lt;/li&gt;
-&lt;li&gt;Deprecate normalizeTuple calls that return a non-global contenxt
-and a simple global path.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4459"&gt;Deprecate global access from templates&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;PR by @mixonic:&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;Replaces #4358. These deprecations are narrow in scope, and only impact {{Global}} and
-{{#each Global}}. They do not deprecate any other global access in templates. Deprecating
-all global access from templates would a) need to be done helper-by-helper or b) would impact
-the get and binding code at a lower level.&lt;/p&gt;
-
-&lt;p&gt;@xtian I&amp;#39;m rewritten your first commit but preserved it here.&lt;/p&gt;
-
-&lt;p&gt;@ebryn yo.&lt;/p&gt;
-&lt;/blockquote&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4328"&gt;Container throws if injection registered for already instantiated type&lt;/a&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;Prior to this commit, the container would happily allow you to register an injection for a
-type that had already been instantiated. This led to confusing-to-debug situations where an
-injection is registered but a container-created instance doesn&amp;#39;t have the injection applied.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Comment from @stefanpenner&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;As you know I&amp;#39;m all for this change, but it may cause people some inconvenience. I personally
-consider it a bugfix, but i would like @tomdale or @wycats&amp;#39;s +1/-1.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Resolution: @stefanpenner &amp;amp; @wycats will chat.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/4097"&gt;Expose asObject to Ember.Handlebars.precompile&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Comment from @rwjblue:&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;This was mentioned in the core team meeting on 2014-02-28. It was mentioned that this should be
-changed upstream (in Handlebars itself), but as I reviewed (to let you know where that change
-would be needed) I realized that this PR is simply exposing the functionality that already
-exists within Handlebars, but is not exposed to &lt;code&gt;Ember.Handlebars.precompile&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;As such, I think that we should likely re-evaluate the prior decision.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Resolution. Ship it. This just passes from Handlebars to Ember.Handlebars&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </content>
   </entry>
