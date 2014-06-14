@@ -706,8 +706,29 @@ of content. There are two properties that can be set in order to set up sorting:
 </tr></table>
 </div></div><h3 class='anchorable-toc' id='toc_item-controller'>Item Controller</h3>
 <p>It is often useful to specify a controller to decorate individual items in
-the <code>ArrayController</code> while iterating over them. This can be done in the
-<code>ArrayController</code> definition:</p>
+the <code>ArrayController</code> while iterating over them. This can be done by
+creating an <code>ObjectController</code>:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>App.SongController = Ember.ObjectController.extend({
+  <span class="function">fullName</span>: <span class="keyword">function</span>() {
+
+    <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">'</span><span class="content"> by </span><span class="delimiter">'</span></span> + <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">artist</span><span class="delimiter">'</span></span>);
+
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">artist</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Then, the <code>ArrayController</code> <code>itemController</code> property must be set to
+the decorated controller.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -718,15 +739,33 @@ the <code>ArrayController</code> while iterating over them. This can be done in 
 });
 </pre></td>
 </tr></table>
-</div></div>
-<p>or directly in the template:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">itemController</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">song</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
-  <span class="tag">&lt;li&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">name</span><span class="inline-delimiter">}}</span></span> by <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">artist</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/li&gt;</span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">controller</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;li&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">fullName</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/li&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>or you could setup the <code>itemController</code> directly in the template:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre>App.SongsController = Ember.ArrayController.extend({
+});
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">controller</span> <span class="attribute-name">itemController</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">song</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;li&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">fullName</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/li&gt;</span>
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
