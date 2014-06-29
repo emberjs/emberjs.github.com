@@ -653,7 +653,7 @@ property on the adapter:</p>
 2
 3
 </pre></td>
-  <td class="code"><pre>DS.RESTAdapter.reopen({
+  <td class="code"><pre>App.ApplicationAdapter = DS.RESTAdapter.extend({
   <span class="key">namespace</span>: <span class="string"><span class="delimiter">'</span><span class="content">api/1</span><span class="delimiter">'</span></span>
 });
 </pre></td>
@@ -667,7 +667,7 @@ property on the adapter:</p>
 2
 3
 </pre></td>
-  <td class="code"><pre>DS.RESTAdapter.reopen({
+  <td class="code"><pre>App.ApplicationAdapter = DS.RESTAdapter.extend({
   <span class="key">host</span>: <span class="string"><span class="delimiter">'</span><span class="content">https://api.example.com</span><span class="delimiter">'</span></span>
 });
 </pre></td>
@@ -695,6 +695,25 @@ be nested inside a property called <code>person</code>:</p>
     <span class="key"><span class="delimiter">&quot;</span><span class="content">firstName</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Jeff</span><span class="delimiter">&quot;</span></span>,
     <span class="key"><span class="delimiter">&quot;</span><span class="content">lastName</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Atwood</span><span class="delimiter">&quot;</span></span>
   }
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p><em>Note: Although after <code>destroyRecord</code> or <code>deleteRecord</code>/<code>save</code> the adapter expects an empty object e.g. <code>{}</code> to be returned from the server after destroying a record.</em></p>
+
+<p>If you don&#39;t have the option to change the data that the server responds with, you can override the 
+<a href="/api/data/classes/DS.JSONSerializer.html#method_extractDeleteRecord">DS.JSONSerializer#extractDeleteRecord</a>, like so:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="function">extractDeleteRecord</span>: <span class="keyword">function</span>(store, type, payload) {
+  <span class="comment">// payload is {delete: true} and then ember data wants to go ahead and set</span>
+  <span class="comment">// the new properties, return null so it doesn't try to do that</span>
+  <span class="keyword">return</span> <span class="predefined-constant">null</span>;
 }
 </pre></td>
 </tr></table>

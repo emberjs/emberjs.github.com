@@ -714,7 +714,7 @@ App.__container__.lookup(<span class="string"><span class="delimiter">&quot;</sp
 });
 </pre></td>
 </tr></table>
-</div></div><h2 class='anchorable-toc' id='toc_ember-data'>Ember Data</h2><h4 class='anchorable-toc' id='toc_view-ember-data-s-identity-map'>View ember-data&#39;s identity map</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><h2 class='anchorable-toc' id='toc_ember-data'>Ember Data</h2><h4 class='anchorable-toc' id='toc_view-ember-data-s-type-maps'>View ember-data&#39;s type maps</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -723,15 +723,27 @@ App.__container__.lookup(<span class="string"><span class="delimiter">&quot;</sp
 6
 7
 8
+9
+<strong>10</strong>
+11
+12
+13
+14
 </pre></td>
-  <td class="code"><pre><span class="comment">// all records in memory</span>
-App.__container__.lookup(<span class="string"><span class="delimiter">'</span><span class="content">store:main</span><span class="delimiter">'</span></span>).recordCache 
+  <td class="code"><pre><span class="comment">// all type maps in memory</span>
+App.__container__.lookup(<span class="string"><span class="delimiter">'</span><span class="content">store:main</span><span class="delimiter">'</span></span>).typeMaps 
 
-<span class="comment">// attributes</span>
-App.__container__.lookup(<span class="string"><span class="delimiter">'</span><span class="content">store:main</span><span class="delimiter">'</span></span>).recordCache[<span class="integer">2</span>].get(<span class="string"><span class="delimiter">'</span><span class="content">data.attributes</span><span class="delimiter">'</span></span>)
+<span class="comment">// specific type map in memory</span>
+App.__container__.lookup(<span class="string"><span class="delimiter">'</span><span class="content">store:main</span><span class="delimiter">'</span></span>).typeMapFor(App.Color)
 
-<span class="comment">// loaded associations</span>
-App.__container__.lookup(<span class="string"><span class="delimiter">'</span><span class="content">store:main</span><span class="delimiter">'</span></span>).recordCache[<span class="integer">2</span>].get(<span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>)
+<span class="comment">// map of id to record for all cached records for a type</span>
+App.__container__.lookup(<span class="string"><span class="delimiter">'</span><span class="content">store:main</span><span class="delimiter">'</span></span>).typeMapFor(App.Color).idToRecord
+
+<span class="comment">// array of all cached records for a type</span>
+App.__container__.lookup(<span class="string"><span class="delimiter">'</span><span class="content">store:main</span><span class="delimiter">'</span></span>).typeMapFor(App.Color).records
+
+<span class="comment">// grab a property off record id &quot;33&quot;</span>
+App.__container__.lookup(<span class="string"><span class="delimiter">'</span><span class="content">store:main</span><span class="delimiter">'</span></span>).typeMapFor(App.Color).idToRecord[<span class="string"><span class="delimiter">&quot;</span><span class="content">33</span><span class="delimiter">&quot;</span></span>].get(<span class="string"><span class="delimiter">'</span><span class="content">color</span><span class="delimiter">'</span></span>)
 </pre></td>
 </tr></table>
 </div></div><h2 class='anchorable-toc' id='toc_observers-binding'>Observers / Binding</h2><h4 class='anchorable-toc' id='toc_see-all-observers-for-a-object-key'>See all observers for a object, key</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -746,7 +758,23 @@ App.__container__.lookup(<span class="string"><span class="delimiter">'</span><s
   <td class="code"><pre>Ember.LOG_BINDINGS = <span class="predefined-constant">true</span>
 </pre></td>
 </tr></table>
-</div></div><h2 class='anchorable-toc' id='toc_miscellaneous'>Miscellaneous</h2><h4 class='anchorable-toc' id='toc_view-an-instance-of-something-from-the-container'>View an instance of something from the container</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><h2 class='anchorable-toc' id='toc_miscellaneous'>Miscellaneous</h2><h4 class='anchorable-toc' id='toc_turn-on-resolver-resolution-logging'>Turn on resolver resolution logging</h4>
+<p>This option logs all the lookups that are done to the console. Custom objects
+you&#39;ve created yourself have a tick, and Ember generated ones don&#39;t.</p>
+
+<p>It&#39;s useful for understanding which objects Ember is finding when it does a lookup
+and which it is generating automatically for you.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>App = Ember.Application.create({
+  <span class="key">LOG_RESOLVER</span>: <span class="predefined-constant">true</span>
+});
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_view-an-instance-of-something-from-the-container'>View an instance of something from the container</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 </pre></td>

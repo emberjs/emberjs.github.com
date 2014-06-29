@@ -599,7 +599,7 @@
           <div class="under_construction_warning">
             <h3>
               <div class="msg">
-                <strong>WARNING:</strong> query params are an experimental feature. You must be using a recent canary build of Ember, and enable the <code>query-params-new</code> feature flag. For more info on enabling feature flags visit <a href="http://emberjs.com/guides/configuring-ember/feature-flags/">the Feature Flags guide</a>
+                <strong>WARNING:</strong> query params are only available in recent canary builds of Ember.
               </div>
             </h3>
           </div>
@@ -612,40 +612,25 @@
         </h1>
       
     <hr>
-    <p>In general, the dynamic segments of a URL are a serialized representation
-of a model, commonly a model&#39;s ID. However, sometimes you
-need to serialize other application state into the URL. This could be
-further parameters that affect the loading of the model from the server,
-e.g. what page of a result set you are viewing, or it could be
-information about client side state, e.g. sort order when the records
-are sorted on the client.</p>
-
-<p>There can also be more global information that you want to serialize into
-the url, for example if you want to store an auth token in the URL, or
-filter all models in your application globally. It&#39;s also possible that
-there are a lot of parameters that you want to serialize in the url that
-are inconvenient to store in normal dynamic segments. This might apply
-when you have a map view and need to store X, Y, and zoom coordinates
-along with a set of visible layers on the map. Although this is possible
-to do with dynamic segments, it can be inconvenient. For any of these use
-cases, you can consider using query params instead.</p>
-<h3 class='anchorable-toc' id='toc_query-parameters-are-controller-driven'>Query Parameters are Controller-Driven</h3>
-<p>Support for query parameters is built right into controllers, unlike
-other aspects of the URL which are specified and managed entirely at
-the router level. First class support for query params at the
-controller level allows for a simple yet powerful API for updating and
-responding to changes in query params without requiring the developer to
-manually install and manage bindings/observers to keep the URL and
-controller state in sync.</p>
+    <p>Query parameters are optional key-value pairs that appear to the right of
+the <code>?</code> in a URL. For example, the following URL has two query params,
+<code>sort</code> and <code>page</code>, which respective values <code>ASC</code> and <code>2</code>:</p>
+<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>http://example.com/articles?sort=ASC&amp;page=2
+</pre></td>
+</tr></table>
+</div></div>
+<p>Query params allow for additional application state to be serialized
+into the URL that can&#39;t otherwise fit into the <em>path</em> of the URL (i.e.
+everything to the left of the <code>?</code>). Common use cases include
+representing the current page, filter criteria, or sorting criteria in
+the URL as query params.</p>
 <h3 class='anchorable-toc' id='toc_specifying-query-parameters'>Specifying Query Parameters</h3>
-<p>Query params can be specified by route-driven controllers. Recall that,
-given a route specified by <code>this.route(&#39;articles&#39;);</code>, the value resolved
-from the <code>ArticlesRoute</code>&#39;s <code>model</code> hook will be loaded into
-<code>ArticlesController</code> as its <code>model</code> property. While <code>ArticlesRoute</code> has
-the option of loading data into different controllers in the
-<code>setupController</code> hook, <code>ArticlesController</code> is considered to be the
-&quot;route-driven&quot; controller in this case, and therefore has the ability to
-specify query params.</p>
+<p>Query params can be declared on route-driven controllers, e.g. to
+configure query params that are active within the <code>articles</code> route,
+they must be declared on <code>ArticlesController</code>.</p>
 
 <p><aside>
   <strong>Note:</strong> The controller associated with a given route can be changed
@@ -877,17 +862,20 @@ you opt into a <code>replaceState</code> transition via <code>replace=true</code
 <h3 class='anchorable-toc' id='toc_map-a-controller-s-property-to-a-different-query-param-key'>Map a controller&#39;s property to a different query param key</h3>
 <p>By default, specifying <code>foo</code> as a controller query param property will
 bind to a query param whose key is <code>foo</code>, e.g. <code>?foo=123</code>. You can also map
-a controller property to a different query param key using an optional
-colon syntax similar to the <code>classNameBindings</code> syntax 
-<a href="/guides/views/customizing-a-views-element/">demonstrated here</a>.</p>
+a controller property to a different query param key using the
+following configuration syntax:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
+5
+6
 </pre></td>
   <td class="code"><pre>App.ArticlesController = Ember.ArrayController.extend({
-  <span class="key">queryParams</span>: [<span class="string"><span class="delimiter">'</span><span class="content">category:articles_category</span><span class="delimiter">'</span></span>],
+  <span class="key">queryParams</span>: {
+    <span class="key">category</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">articles_category</span><span class="delimiter">&quot;</span></span>
+  },
   <span class="key">category</span>: <span class="predefined-constant">null</span>
 });
 </pre></td>
@@ -895,7 +883,30 @@ colon syntax similar to the <code>classNameBindings</code> syntax
 </div></div>
 <p>This will cause changes to the <code>ArticlesController</code>&#39;s <code>category</code>
 property to update the <code>articles_category</code> query param, and vice versa.</p>
-<h3 class='anchorable-toc' id='toc_default-values-and-deserialization'>Default values and deserialization</h3>
+
+<p>Note that query params that require additional customization can
+be provided along with strings in the <code>queryParams</code> array.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre>App.ArticlesController = Ember.ArrayController.extend({
+  <span class="key">queryParams</span>: [ <span class="string"><span class="delimiter">&quot;</span><span class="content">page</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">filter</span><span class="delimiter">&quot;</span></span>, {
+    <span class="key">category</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">articles_category</span><span class="delimiter">&quot;</span></span>
+  }],
+  <span class="key">category</span>: <span class="predefined-constant">null</span>,
+  <span class="key">page</span>: <span class="integer">1</span>,
+  <span class="key">filter</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">recent</span><span class="delimiter">&quot;</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_default-values-and-deserialization'>Default values and deserialization</h3>
 <p>In the following example, the controller query param property <code>page</code> is
 considered to have a default value of <code>1</code>. </p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -930,19 +941,18 @@ will become <code>/articles?page=2</code>.</li>
 </ol>
 <h2 class='anchorable-toc' id='toc_examples'>Examples</h2>
 <ul>
-<li><a href="http://emberjs.jsbin.com/ucanam/4059">Search queries</a></li>
+<li><a href="http://emberjs.jsbin.com/ucanam/3008">Search queries</a></li>
 <li><a href="http://emberjs.jsbin.com/ucanam/2937">Sort: client-side, no refiring of model hook</a></li>
-<li><a href="http://emberjs.jsbin.com/ucanam/4073">Sort: server-side, refire model hook</a></li>
-<li><a href="http://emberjs.jsbin.com/ucanam/4075">Pagination + Sorting</a></li>
-<li><a href="http://emberjs.jsbin.com/ucanam/4076/edit">Boolean values</a></li>
-<li><a href="http://emberjs.jsbin.com/ucanam/4077/edit">Global query params on app route</a></li>
-<li><a href="http://emberjs.jsbin.com/ucanam/4079/edit">Opt-in to full transition via refreshModel:true</a></li>
-<li><a href="http://emberjs.jsbin.com/ucanam/4080/edit">opt into replaceState via replace:true</a></li>
-<li><a href="http://emberjs.jsbin.com/ucanam/4081">w/ {{partial}} helper for easy tabbing</a></li>
-<li><a href="http://emberjs.jsbin.com/ucanam/4082#/about?showThing=true">link-to with no route name, only QP change</a></li>
-<li><a href="http://emberjs.jsbin.com/ucanam/4083/edit">Complex: serializing textarea content into URL (and subexpressions))</a></li>
-<li><a href="http://emberjs.jsbin.com/ucanam/4084">Arrays</a></li>
-<li><a href="http://emberjs.jsbin.com/ucanam/4090/edit">Map to different URL key with colon syntax</a></li>
+<li><a href="http://emberjs.jsbin.com/ucanam/2942">Sort: server-side, refire model hook</a></li>
+<li><a href="http://emberjs.jsbin.com/ucanam/2950">Pagination + Sorting</a></li>
+<li><a href="http://emberjs.jsbin.com/ucanam/2708/edit">Boolean values. False value removes QP from URL</a></li>
+<li><a href="http://emberjs.jsbin.com/ucanam/2719/edit">Global query params on app route</a></li>
+<li><a href="http://emberjs.jsbin.com/ucanam/2711/edit">Opt-in to full transition via refresh()</a></li>
+<li><a href="http://emberjs.jsbin.com/ucanam/2710/edit">replaceUrl by changing controller QP property</a></li>
+<li><a href="http://emberjs.jsbin.com/ucanam/2706">w/ {{partial}} helper for easy tabbing</a></li>
+<li><a href="http://emberjs.jsbin.com/ucanam/2718#/about?about%5BshowThing%5D">link-to with no route name, only QP change</a></li>
+<li><a href="http://emberjs.jsbin.com/ucanam/2703/edit">Complex: serializing textarea content into URL (and subexpressions))</a></li>
+<li><a href="http://emberjs.jsbin.com/ucanam/2849">Arrays</a></li>
 </ul>
 
     
