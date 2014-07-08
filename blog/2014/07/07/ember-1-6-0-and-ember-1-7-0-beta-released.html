@@ -3,8 +3,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - This Week in Ember</title>
-    <meta property="st:title" content="This Week in Ember" />
+    <title>Ember.js - Ember 1.6.0 and 1.7 Beta Released</title>
+    <meta property="st:title" content="Ember 1.6.0 and 1.7 Beta Released" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -12,7 +12,7 @@
     
   </head>
 
-  <body class="blog blog_2013 blog_2013_01 blog_2013_01_18 blog_2013_01_18_this-week-in-ember-js-4">
+  <body class="blog blog_2014 blog_2014_07 blog_2014_07_07 blog_2014_07_07_ember-1-6-0-and-ember-1-7-0-beta-released">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -197,147 +197,148 @@
       
       <div id="content" class="has-sidebar">
           <article class="blog-post">
-    <h1>This Week in Ember</h1>
+    <h1>Ember 1.6.0 and 1.7 Beta Released</h1>
     
-      <h3 class="blog-post-author">Posted By: Tom Dale & Yehuda Katz &ndash; <time>Jan 18, 2013</time></h3>
+      <h3 class="blog-post-author">Posted By: Robert Jackson &ndash; <time>Jul 07, 2014</time></h3>
     
 
     <hr>
 
-    <p>It&#39;s been a big month for Ember.js, and we&#39;re excited about the progress
-that we&#39;ve made. With so much going on, it can be hard to
-keep up-to-date with the project, so here&#39;s what you need to know.</p>
+    <p>We are pleased to announce that both Ember.js 1.6.0 and the first beta in the 1.7 series
+have just been released. This comes as the sixth cycle of our release process that began
+just after 1.0 was released.</p>
+<h3 class='anchorable-toc' id='toc_delays-detailed'>Delays Detailed</h3>
+<p>As many of you know, the 1.6 release is the first to be published after converting the
+codebase to ES6 modules. The 1.6+ builds are now transpiled by the <a href="https://github.com/square/es6-module-transpiler">es6-module-transpiler</a>
+into AMD and use a <a href="https://github.com/stefanpenner/loader.js">small AMD loader</a> to handle
+loading the transpiled modules. Unfortunately, adding the additional loader overhead on
+boot has a fairly significant performance impact on boot speed of older mobile clients
+(approximately 5-10% boot time penalty).</p>
 
-<p></p>
-<h2 class='anchorable-toc' id='toc_ember-camp'>Ember Camp</h2>
-<p>While we have an incredible network of local meetup groups, <a href="http://www.embercamp.com">Ember
-Camp</a> is the first national event for the Ember
-community.</p>
+<p>This regression was brought to our attention just before 1.6.0 was intended to ship (late
+May), and we decided to hold the release until a fix could be applied. In retrospect this
+was absolutely the wrong decision. The fix has taken much longer than originally anticipated
+and in the meantime folks are stuck with 1.5.1. Many of our users either are not affected
+or do not care about this regression, and they are forced to use beta/canary channels for
+certain bug fixes that have already been made.</p>
 
-<p>We&#39;ve been working hard on making sure that this event is both fun and
-educational, and we&#39;ll be announcing the lineup of speakers soon.
-Unfortuately, tickets have sold out, so if you didn&#39;t get yours this
-time, make sure you grab a ticket next year!</p>
+<p>As a group the core team has decided that this type of delay is absolutely unacceptable and
+apologize for the lack of clarity into what is going on.</p>
+<h3 class='anchorable-toc' id='toc_new-features-in-1-6'>New features in 1.6</h3><h4 class='anchorable-toc' id='toc_ember-computed-empty'>Ember.computed.empty</h4>
+<p><code>Ember.computed.empty</code> has been updated to automatically respect arrays without forcing users to use <code>array.[]</code>
+as the dependent key.</p>
+<h4 class='anchorable-toc' id='toc_test-friendly-promises'>Test Friendly Promises</h4>
+<p>With 1.5.1 you were forced to wrap any Promise <code>resolve</code> and/or <code>reject</code> calls in an <code>Ember.run</code> loop
+while in testing, but the same code did not need to be wrapped in a run loop for normal operation.</p>
 
-<p>While Ember Camp is happening, keep an eye on this website and on <a href="https://twitter.com/emberjs">our
-Twitter account</a>. There will be several announcements you won&#39;t want
-to miss!</p>
-<h2 class='anchorable-toc' id='toc_peepcode'>PeepCode</h2>
-<p>We were fortunate enough to get to spend a day with Geoffrey Grosenbach,
-reviewing his in-progress PeepCode screencast about Ember.js. He spent a
-lot of time getting to know Ember in-depth, and we think the final
-product will be invaluable for new developers getting started with the
-framework.</p>
+<p>In 1.6.0 you do not need to do this promise run loop wrapping simply for the purposes of testing.</p>
+<h4 class='anchorable-toc' id='toc_ember-route-prototype-render-now-has-a-model-option'>Ember.Route.prototype.render Now has a model Option</h4>
+<p>Previously, you would need to set the model explicitly on the other controller using 
+<code>controllerFor</code> (while trying to render a different template with <code>renderTemplate#render</code>).</p>
 
-<p><center>
-<blockquote class="twitter-tweet"><p>Finished an Ember.js demo app, filming screencast tomorrow, will publish next week. Fun stuff! <a href="https://t.co/Sq4q85Ql" title="https://peepcode.com/system/uploads/2013/peepcode-emberjs-demo.png">peepcode.com/system/uploads…</a></p>&mdash; PeepCode (@peepcode) <a href="https://twitter.com/peepcode/status/291350861207187456" data-datetime="2013-01-16T01:07:13+00:00">January 16, 2013</a></blockquote>
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-</center></p>
-<h2 class='anchorable-toc' id='toc_the-road-to-1-0'>The Road to 1.0</h2>
-<p>If you&#39;ve been tracking <code>master</code> over the last month, you know that we
-have made many large improvements to Ember.js in quick succession. Some
-of these involved API changes that were not backwards compatible.</p>
+<p>Now <code>render</code> has an option to set the model that set the controller&#39;s content after the controller has been
+looked-up.</p>
 
-<p>We appreciate your patience as we round the corner to a 1.0 release. We
-take feedback about &quot;developer ergonomics&quot; extremely seriously, and
-we&#39;re not willing to rush out a release if we&#39;re not satisfied that the
-API is as good as we can make it.</p>
+<p>Before:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre>App.HomeRoute = Ember.Route.extend({
+  <span class="function">renderTemplate</span>: <span class="keyword">function</span>(){
+    <span class="local-variable">this</span>.controllerFor(<span class="string"><span class="delimiter">'</span><span class="content">bio</span><span class="delimiter">'</span></span>).set(<span class="string"><span class="delimiter">'</span><span class="content">content</span><span class="delimiter">'</span></span>, model);
+    <span class="local-variable">this</span>.render(<span class="string"><span class="delimiter">'</span><span class="content">bio</span><span class="delimiter">'</span></span>);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>After:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>App.HomeRoute = Ember.Route.extend({
+  <span class="function">renderTemplate</span>: <span class="keyword">function</span>(){
+    <span class="local-variable">this</span>.render(<span class="string"><span class="delimiter">'</span><span class="content">bio</span><span class="delimiter">'</span></span>, {
+      <span class="key">model</span>: model
+    });
+  }
+});
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_other-notable-changes'>Other Notable Changes</h3>
+<ul>
+<li>Add better debugging for Resolver Lookup</li>
+</ul>
 
-<p>Thanks for all your excellent feedback on earlier iterations of the
-router API. Learning about how you found the API confusing or hard to
-use drove our work on the final version that is shipping in <code>pre4</code>.</p>
-<h3 class='anchorable-toc' id='toc_the-router'>The Router</h3>
-<p>The first iteration of the Ember.js router (which some have colloquially
-begun referring to as &quot;v1&quot;) allowed us to begin fleshing out some
-conventions around application structure. Previously, application
-structure was mostly done on an ad hoc basis, but common conventions
-emerged in the community, which we rolled into &quot;Router v1.&quot;</p>
+<p>A <code>LOG_RESOLVER</code> flag can now be added to your application instance to get nice logging output
+showing each lookup the resolver is doing, including which were &quot;hits&quot; and which were &quot;misses&quot;
+(checked items are &quot;hits&quot;):</p>
+<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>[ ] route:application ..........................................  App.ApplicationRoute
+[✓] route:index ................................................  App.IndexRoute
+[ ] controller:application .....................................  App.ApplicationController
+</pre></td>
+</tr></table>
+</div></div>
+<ul>
+<li>Ensure context is unchanged when using keywords with <code>itemController</code> for <code>{{each}}</code> or <code>controller</code> for <code>{{with}}</code>.</li>
+</ul>
 
-<p>However, despite the fact that developers appreciated conventions around
-app structure, their reaction to the first version of the API could
-generously be described as <em>horrified</em>. Indeed, the router for large
-applications began to look like the twisted amalgams of views in old
-SproutCore applications. We knew we had to head back to the drawing
-board with the lessons we had learned.</p>
+<p>Previously the following code would bind <code>this</code> in the template block to the
+itemController&#39;s content (even though the keyword form of <code>{{each}}</code> or <code>{{with}}</code> is used). In 1.6.0
+the context of the  block will correctly be unchanged, and the <code>post</code> property will be wrapped in the <code>post</code> controller.</p>
+<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>{{#each post in posts itemController='post'}}
+  {{this}} - Should be the surrounding context, NOT changed to that of the itemController.
+{{/each}}
 
-<p>The reaction to &quot;v2&quot; of our router proposal, in contrast, has been
-overwhelmingly positive. While we&#39;ve had to make several tweaks over the
-past month to make sure the API is as intuitive as possible, the overall
-concepts behind the API have remained stable.</p>
+{{#with post as somethingElse controller='post'}}
+  {{this}} - Should be the surrounding context, NOT changed to that of the controller specified.
+{{/with}}
+</pre></td>
+</tr></table>
+</div></div>
+<ul>
+<li>Fix swallowed rejections in asynchronous route hooks (this may mean that errors that were previously completely
+swallowed are now surfaced in your application).</li>
+<li><code>Ember.copy</code> and <code>Ember.isEqual</code> now support <code>Date</code> objects.</li>
+<li>Backburner and RSVP now use the <code>Ember.onerror</code> handler if present to log errors.</li>
+<li>An error is now thrown when injecting a factory into all factories of the same type.</li>
+</ul>
+<h3 class='anchorable-toc' id='toc_query-params-in-1-7-beta'>Query Params in 1.7 Beta</h3>
+<p>Thanks to the tireless work of <a href="https://github.com/machty">@machty</a> and team, query params support has finally landed and is
+enabled by default in the 1.7 beta series! Please test and report any issues you come across.</p>
+<h3 class='anchorable-toc' id='toc_other-improvements'>Other Improvements</h3>
+<p>As usual, there are a ton of bug fixes and small improvements in this
+release. You can see a list of all the changes in the CHANGELOG:</p>
 
-<p>We believe that we&#39;ve finally worked out all of the kinks, and do not
-have any plans to make any further backwards-incompatible changes to the
-router API before the final 1.0 release.</p>
-
-<p>To learn what this router API is all about, head over to the <a href="http://www.emberjs.com/guides/routing/">Routing
-guide</a>.</p>
-<h3 class='anchorable-toc' id='toc_api-freeze'>API Freeze</h3>
-<p>In the run-up to Ember 1.0, we have chosen to aggressively make API
-changes in response to your feedback in an effort to make the 1.0 API as
-good as possible.</p>
-
-<p>The reward for putting up with that level of churn is that we plan to
-keep things very stable after 1.0. As we get close to that milestone, we
-are starting to freeze portions of the API.</p>
-
-<p>As of today, we will no longer make changes to the API that affect
-high-level tutorials, screencasts or our introductory-level
-documentation, unless such a change is necessary to address a critical
-bug.</p>
-
-<p>When we release the first RC, we will no longer make changes that affect
-any part of the documented API–again–unless such a change is necessary
-to address a critical bug.</p>
-
-<p>In keeping with <a href="http://semver.org/">SemVer</a>, once we release the final 1.0, we will
-not make breaking, backwards-incompatible changes to publicly documented
-APIs until Ember 2.0. We may deprecate APIs, and print deprecation
-warnings in the debug build, but things will continue to work.</p>
-
-<p>In order to facilitate these API freezes, we are planning on taking
-several steps:</p>
-
-<ol>
-<li>We will convert high-profile screencasts and much of our public
-documentation into integration tests. &quot;Your commit broke the PeepCode
-screencast&quot; is something that Travis will tell contributors.</li>
-<li>We will freeze the Ember 1.0 tests and run them against all builds of
-Ember in the 1.x series. This will notify us if we make a
-potentially backwards-incompatible change, and we can examine if it
-is the result of an API change or simply brittle tests. If we have to
-modify an old test, we will announce it here.</li>
-</ol>
-<h2 class='anchorable-toc' id='toc_documentation'>Documentation</h2>
-<p>Perhaps the most widespread feedback we received from developers was:
-<em>&quot;Ember.js looks really cool, but your documentation sucks.&quot;</em> We heard
-you loud and clear.</p>
-
-<p>We recently launched the <a href="http://www.emberjs.com/guides/">completely redesigned Guides</a>, and due to
-their more focused nature, have been able to rapidly iterate on them.
-Since deploying the new site, the bounce rate has dropped dramatically
-and engagement with any particular page has nearly doubled.</p>
-
-<p>We have lots more great documentation coming your way as we approach the
-1.0 release, and we think the design work that <a href="http://www.heropixel.com">Matt Grantham</a> did on
-the new guides will make them much easier for new developers to approach.</p>
-
-<p>We are also working on improving the API reference documentation. In
-particular, <a href="https://twitter.com/stefanpenner">Stefan Penner</a> has been putting in a heroic effort to
-bring them up to a similarly polished look-and-feel as the guides.</p>
-<h2 class='anchorable-toc' id='toc_thanks'>Thanks</h2>
-<p>We&#39;ve been working on Ember.js for just over a year now, and it&#39;s no
-understatement to say that it has attracted some of the best and
-brightest web engineers on the planet. It has been extremely gratifying
-to see our ideas take form, and we can&#39;t wait to see what 2013 holds for
-web applications.</p>
-
-<p>Big thanks to all of <a href="https://github.com/emberjs/ember.js/graphs/contributors">our contributors</a>, who have poured hours of
-their nights and weekends into helping us make one of the best tools for
-writing ambitious web applications. We quite literally could not have
-done it without you.</p>
-
-<p>Wishing you all the best in the new year,<br>
-Yehuda Katz &amp; Tom Dale</p>
+<ul>
+<li><a href="https://github.com/emberjs/ember.js/blob/v1.6.0/CHANGELOG.md">Ember.js 1.6.0 CHANGELOG</a></li>
+<li><a href="https://github.com/emberjs/ember.js/blob/v1.7.0-beta.1/CHANGELOG.md">Ember.js 1.7.0-beta.1 CHANGELOG</a></li>
+</ul>
 
 
     <hr>
