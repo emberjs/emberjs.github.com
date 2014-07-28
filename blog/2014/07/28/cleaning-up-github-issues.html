@@ -3,8 +3,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - This Week in Ember.js</title>
-    <meta property="st:title" content="This Week in Ember.js" />
+    <title>Ember.js - Cleaning Up Github Issues</title>
+    <meta property="st:title" content="Cleaning Up Github Issues" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -12,7 +12,7 @@
     
   </head>
 
-  <body class="blog blog_2012 blog_2012_12 blog_2012_12_22 blog_2012_12_22_this-week-in-ember-js-3">
+  <body class="blog blog_2014 blog_2014_07 blog_2014_07_28 blog_2014_07_28_cleaning-up-github-issues">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -183,89 +183,24 @@
       
       <div id="content" class="has-sidebar">
           <article class="blog-post">
-    <h1>This Week in Ember.js</h1>
+    <h1>Cleaning Up Github Issues</h1>
     
-      <h3 class="blog-post-author">Posted By: Bradley Priest &ndash; <time>Dec 22, 2012</time></h3>
+      <h3 class="blog-post-author">Posted By: Peter Wagenet &ndash; <time>Jul 28, 2014</time></h3>
     
 
     <hr>
 
-    <p>Only a few more days left, I hope everyone&#39;s had a great 2012,
-while you get ready for the New Year, here&#39;s what&#39;s been happening in Ember.</p>
+    <p>If you&#39;ve been following along, the Ember issues tracker has grown to over 200 active issues. While this is better than some other large OSS projects, it&#39;s still too large for us on the core team to easily keep track of. There are also a number of issues that are over six months old and even a year or two old.</p>
 
-<p></p>
-<h3 class='anchorable-toc' id='toc_new-router-api'>New Router API</h3>
-<p>The new router API is has been <a href="https://github.com/emberjs/ember.js/commit/44b23dcf245b0fffdeb29f9f8a5d1bbdc9eb7690">merged into
-master!</a>
-We&#39;ve spent a lot of time incorporating feedback about our first
-iteration of the router, and we think you&#39;re going to really love what
-we&#39;ve come up with. It makes getting started super simple, and
-eliminates the old API that forced you to write unwieldy nested objects.</p>
+<p>Declaring straight-up issue bankruptcy is appealing, but does a disservice to everyone involved. There&#39;s a lot of useful information here for the core team and many of these issues are things we are actively working on solving. So we&#39;re attempting to cut down on the number of issues in a bit more targeted way.</p>
 
-<p>There is a <a href="https://gist.github.com/3981133">short walkthrough</a> that
-describes the thinking behind the new API. Full documentation should be
-landing this week.</p>
-<h3 class='anchorable-toc' id='toc_embedded-records'>Embedded Records</h3>
-<p>After a massive refactor of the Ember Data library, it now fully
-supports embedded records, amongst other goodies.</p>
+<p>In many cases these old issues stuck around because the solution was non-trivial and only a limited set of contributors was qualified to fix them. In some instances, a fix involves considerable internal refactoring that no one has yet had time to do and was hard to justify for just one fix.</p>
 
-<p>As always, check out <a href="https://github.com/emberjs/data/blob/master/BREAKING_CHANGES.md">BREAKING_CHANGES</a>
-for information about updating your apps.</p>
-<h3 class='anchorable-toc' id='toc_ds-jsonserializer'>DS.JSONSerializer</h3>
-<p>In the last post we talked about the changes in the serialization API&#39;s renaming methods
-to remove the JSON specificity whilst adding hooks to manage relationship dirtiness.</p>
+<p>To help keep things manageable, we&#39;ll be consolidating these types of issues into single meta issues. Over time we do intend to refactor and clean up different parts of the internals and knowing what bugs we need to fix while we&#39;re at it will be helpful. The original issues will be closed to help reduce overall noise, but we&#39;ll still make sure to consider them when doing our refactoring. Please continue to comment on the original issue so we can keep things organized.</p>
 
-<p>We&#39;ve now fully extracted all the JSON semantics from <code>DS.Serializer</code> into it&#39;s own class.
-The <code>DS.JSONSerializer</code> is a subclass of <code>DS.Serializer</code> which implements
-the JSON-specific semantics. The <code>RESTAdapter</code> now uses the <code>JSONSerializer</code> by
-default so if you are using that there is no need to change anything in your application.</p>
+<p>In some cases, we may close issues without a meta if there is a clean workaround (we don&#39;t want you to have to use hacks) or if the issue is very minor. If you think we miscategorized an issue, please let us know. We&#39;re also still happy to receive PRs for these issues, though it&#39;s probably wise to double check with us first.</p>
 
-<p>After some feedback we&#39;ve also renamed <code>toData/fromData</code> to <code>serialize/deserialize</code>
-for a more friendly API.</p>
-
-<p>As always, check out <a href="https://github.com/emberjs/data/blob/master/BREAKING_CHANGES.md">BREAKING_CHANGES</a>
-for more information.</p>
-<h3 class='anchorable-toc' id='toc_bound-handlebars-helpers'>Bound handlebars helpers</h3>
-<p>Ember.Handlebars just got a little bit smarter. <code>Ember.Handlebars.registerBoundHelper</code>
-provides a way to easily create your own bound custom helpers.</p>
-<h4 class='anchorable-toc' id='toc_example'>Example:</h4><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre>  Ember.Handlebars.registerBoundHelper(<span class="string"><span class="delimiter">'</span><span class="content">capitalize</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(value) {
-    <span class="keyword">return</span> value.toUpperCase();
-  });
-</pre></td>
-</tr></table>
-</div></div>
-<p>which can be used in your templates as follows:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre>  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">capitalize</span> <span class="attribute-name">name</span><span class="inline-delimiter">}}</span></span>
-</pre></td>
-</tr></table>
-</div></div><h3 class='anchorable-toc' id='toc_ember-object-create-behavior-change'>Ember.Object.create behavior change</h3>
-<p>The new behavior will call computed property setters instead of overwriting them.<br>
-We suggest using <code>Ember.Object.extend()</code> to create classes and use <code>create</code> to initialize
-properties on your instance. The old behavior is available via <code>createWithMixins</code>.<br>
-This change should increase object creation performance by 2x.</p>
-<h3 class='anchorable-toc' id='toc_other-changes-of-note'>Other changes of note</h3>
-<p><code>reject</code> and <code>rejectProperty</code> methods have been added to <code>Ember.Enumerable</code>.</p>
-
-<p><code>Ember.none</code> and <code>Ember.empty</code> have been renamed to <code>Ember.isEmpty</code> and <code>Ember.isNone</code>
-to keep with the Ember Boolean naming convention.</p>
-<h3 class='anchorable-toc' id='toc_embercamp'>EmberCamp</h3>
-<p>The very first Ember Camp in SF is happening on the 15th February 2013.
-<a href="https://tito.io/tilde/ember-camp-2013">Sign up here</a>, be quick, tickets are limited.</p>
-
-<p>Looking to learn Ember? There&#39;s also an <a href="http://www.embertraining.com/">Introduction to Ember</a>
-event in the week leading up to Ember Camp.</p>
-
-<p>Enjoy your holiday,<br>
-Bradley Priest<br>
-<a href="https://twitter.com/bradleypriest">@bradleypriest</a></p>
+<p>I hope we can make the issue tracker more useful and effective for everyone.</p>
 
 
     <hr>
