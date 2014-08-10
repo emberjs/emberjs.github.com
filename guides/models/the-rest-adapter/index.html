@@ -4,8 +4,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Guides</title>
-    <meta property="st:title" content="Guides" />
+    <title>Ember.js - Models: The Rest Adapter</title>
+    <meta property="st:title" content="Models: The Rest Adapter" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -398,6 +398,10 @@
               <a href="/guides/models/the-fixture-adapter">Using Fixtures</a>
             </li>
           
+            <li class="level-3 sub-selected">
+              <a href="/guides/models/the-rest-adapter">The Rest Adapter</a>
+            </li>
+          
             <li class="level-3">
               <a href="/guides/models/connecting-to-an-http-server">Connecting to an HTTP Server</a>
             </li>
@@ -601,6 +605,10 @@
   
   <div class="chapter">
     
+        <h1>The Rest Adapter
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/models/the-rest-adapter.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
+        </h1>
+      
     <hr>
     <p>By default, your store will use
 <a href="/api/data/classes/DS.RESTAdapter.html">DS.RESTAdapter</a> to load and
@@ -616,7 +624,7 @@ with based on the name of the model. For example, if you ask for a
   <td class="line-numbers"><pre>1
 2
 </pre></td>
-  <td class="code"><pre>store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="integer">1</span>).then(<span class="keyword">function</span> (post) {
+  <td class="code"><pre>store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="integer">1</span>).then(<span class="keyword">function</span>(post) {
 });
 </pre></td>
 </tr></table>
@@ -643,9 +651,13 @@ REST adapter:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
+3
+4
 </pre></td>
-  <td class="code"><pre>Ember.Inflector.inflector.irregular(<span class="string"><span class="delimiter">'</span><span class="content">formula</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">formulae</span><span class="delimiter">'</span></span>);
-Ember.Inflector.inflector.uncountable(<span class="string"><span class="delimiter">'</span><span class="content">advice</span><span class="delimiter">'</span></span>);
+  <td class="code"><pre><span class="keyword">var</span> inflector = Ember.Inflector.inflector;
+
+inflector.irregular(<span class="string"><span class="delimiter">'</span><span class="content">formula</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">formulae</span><span class="delimiter">'</span></span>);
+inflector.uncountable(<span class="string"><span class="delimiter">'</span><span class="content">advice</span><span class="delimiter">'</span></span>);
 </pre></td>
 </tr></table>
 </div></div>
@@ -735,7 +747,7 @@ be nested inside a property called <code>person</code>:</p>
 </pre></td>
   <td class="code"><pre>App.Person = DS.Model.extend({
   <span class="key">firstName</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
-  <span class="key">lastName</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">lastName</span>:  DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
 
   <span class="key">isPersonOfTheYear</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">boolean</span><span class="delimiter">'</span></span>)
 });
@@ -779,15 +791,19 @@ for the model and override the <code>normalizeHash</code> property.</p>
 <strong>10</strong>
 11
 12
+13
+14
 </pre></td>
   <td class="code"><pre>App.Person = DS.Model.extend({
   <span class="key">lastName</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>)
 });
+
 App.PersonSerializer = DS.RESTSerializer.extend({
   <span class="key">normalizeHash</span>: {
     <span class="function">lastNameOfPerson</span>: <span class="keyword">function</span>(hash) {
       hash.lastName = hash.lastNameOfPerson;
       <span class="keyword">delete</span> hash.lastNameOfPerson;
+
       <span class="keyword">return</span> hash;
     }
   }
@@ -940,6 +956,7 @@ registered for use as attributes:</p>
 9
 <strong>10</strong>
 11
+12
 </pre></td>
   <td class="code"><pre>App.CoordinatePointTransform = DS.Transform.extend({
   <span class="function">serialize</span>: <span class="keyword">function</span>(value) {
@@ -949,6 +966,7 @@ registered for use as attributes:</p>
     <span class="keyword">return</span> Ember.create({ <span class="key">x</span>: value[<span class="integer">0</span>], <span class="key">y</span>: value[<span class="integer">1</span>] });
   }
 });
+
 App.Cursor = DS.Model.extend({
   <span class="key">position</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">coordinatePoint</span><span class="delimiter">'</span></span>)
 });
@@ -991,14 +1009,14 @@ an array in JSON.</p>
     
       <footer>
         
-          <a class="previous-guide" href="/guides/controllers/dependencies-between-controllers">
-             ← Controllers: Managing Dependencies Between Controllers
+          <a class="previous-guide" href="/guides/models/the-fixture-adapter">
+            ← Using Fixtures
           </a>
          
-            <a class="next-guide" href="/guides/views">
-               We're done with Models. Next up: Views - Introduction →
-            </a>
-          
+        <a class="next-guide" href="/guides/models/connecting-to-an-http-server">
+          Connecting to an HTTP Server →
+        </a>
+      
       </footer>
       
   </div>
@@ -1010,7 +1028,7 @@ an array in JSON.</p>
       <div id="footer-wrapper">
         <div class="info">
           Copyright 2014 <a href="http://tilde.io">Tilde Inc.</a><br>
-          Design by <a href="http://www.heropixel.com">HeroPixel</a></br>
+          Design by <a href="https://dribbble.com/mg">Matt Grantham</a></br>
           <a href="/team">Core Team</a> | <a href="/sponsors">Project Sponsors</a>
         </div>
         <div class="statement">Ember.js is free, open source and always will be.</div>
