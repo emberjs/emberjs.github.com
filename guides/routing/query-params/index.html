@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
-    <link href="http://emberjs.com/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
+    <link href="/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
     
   </head>
 
@@ -788,7 +788,7 @@ will the URL.</p>
 
 <p>But some query param changes necessitate loading data from the server,
 in which case it is desirable to opt into a full-on transition. To opt
-into a full transition when a controller query param property changes, 
+into a full transition when a controller query param property changes,
 you can use the optional <code>queryParams</code> configuration hash on the <code>Route</code>
 associated with that controller, and set that query param&#39;s
 <code>refreshModel</code> config property to <code>true</code>:</p>
@@ -823,7 +823,7 @@ associated with that controller, and set that query param&#39;s
   },
   <span class="function">model</span>: <span class="keyword">function</span>(params) {
     <span class="comment">// This gets called upon entering 'articles' route</span>
-    <span class="comment">// for the first time, and we opt into refiring it upon </span>
+    <span class="comment">// for the first time, and we opt into refiring it upon</span>
     <span class="comment">// query param changes by setting `refreshModel:true` above.</span>
 
     <span class="comment">// params has format of { category: &quot;someValueOrJustNull&quot; },</span>
@@ -866,7 +866,7 @@ from the example above):</p>
 </div></div>
 <p>Note that the name of this config property and its default value of
 <code>false</code> is similar to the <code>link-to</code> helper&#39;s, which also lets
-you opt into a <code>replaceState</code> transition via <code>replace=true</code>. </p>
+you opt into a <code>replaceState</code> transition via <code>replace=true</code>.</p>
 <h3 class='anchorable-toc' id='toc_map-a-controller-s-property-to-a-different-query-param-key'>Map a controller&#39;s property to a different query param key</h3>
 <p>By default, specifying <code>foo</code> as a controller query param property will
 bind to a query param whose key is <code>foo</code>, e.g. <code>?foo=123</code>. You can also map
@@ -916,7 +916,7 @@ be provided along with strings in the <code>queryParams</code> array.</p>
 </tr></table>
 </div></div><h3 class='anchorable-toc' id='toc_default-values-and-deserialization'>Default values and deserialization</h3>
 <p>In the following example, the controller query param property <code>page</code> is
-considered to have a default value of <code>1</code>. </p>
+considered to have a default value of <code>1</code>.</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -933,21 +933,141 @@ considered to have a default value of <code>1</code>. </p>
 <p>This affects query param behavior in two ways:</p>
 
 <ol>
-<li>The type of the default value is used to cast changed query param
-values in the URL before setting values on the controller. So, given
-the above example, if the user clicks the back button to change from
-<code>/?page=3</code> to <code>/?page=2</code>, Ember will update the <code>page</code> controller
-property to the properly cast number <code>2</code> rather than the string <code>&quot;2&quot;</code>, which it
-knows to do because the default value (<code>1</code>) is a number. This also
-allows boolean default values to be correctly cast when deserializing
-from URL changes.</li>
+<li>Query param values are cast to the same datatype as the default
+value, e.g. a URL change from <code>/?page=3</code> to <code>/?page=2</code> will set
+<code>ArticlesController</code>&#39;s <code>page</code> property to the number <code>2</code>, rather than
+the string <code>&quot;2&quot;</code>. The same also applies to boolean default values.</li>
 <li>When a controller&#39;s query param property is currently set to its
 default value, this value won&#39;t be serialized into the URL. So in the
 above example, if <code>page</code> is <code>1</code>, the URL might look like <code>/articles</code>,
 but once someone sets the controller&#39;s <code>page</code> value to <code>2</code>, the URL
 will become <code>/articles?page=2</code>.</li>
 </ol>
-<h2 class='anchorable-toc' id='toc_examples'>Examples</h2>
+<h3 class='anchorable-toc' id='toc_sticky-query-param-values'>Sticky Query Param Values</h3>
+<p>By default, query param values in Ember are &quot;sticky&quot;, in that if you
+make changes to a query param and then leave and re-enter the route, the
+new value of that query param will be preserved (rather than reset to
+its default). This is a particularly handy default for preserving sort/filter
+parameters as you navigate back and forth between routes.</p>
+
+<p>Furthermore, these sticky query param values are remembered/restored
+according to the model loaded into the route. So, given a <code>team</code> route
+with dynamic segment <code>/:team_name</code> and controller query param &quot;filter&quot;,
+if you navigate to <code>/badgers</code> and filter by <code>&quot;rookies&quot;</code>, then navigate
+to <code>/bears</code> and filter by <code>&quot;best&quot;</code>, and then navigate to <code>/potatoes</code> and
+filter by <code>&quot;lamest&quot;</code>, then given the following nav bar links,</p>
+<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>{{#link-to 'team' 'badgers '}}Badgers{{/link-to}}
+{{#link-to 'team' 'bears'   }}Bears{{/link-to}}
+{{#link-to 'team' 'potatoes'}}Potatoes{{/link-to}}
+</pre></td>
+</tr></table>
+</div></div>
+<p>the generated links would be</p>
+<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>&lt;a href=&quot;/badgers?filter=rookies&quot;&gt;Badgers&lt;/a&gt;
+&lt;a href=&quot;/bears?filter=best&quot;&gt;Bears&lt;/a&gt;
+&lt;a href=&quot;/potatoes?filter=lamest&quot;&gt;Potatoes&lt;/a&gt;
+</pre></td>
+</tr></table>
+</div></div>
+<p>This illustrates that once you change a query param, it is stored and
+tied to the model loaded into the route.</p>
+
+<p>If you wish to reset a query param, you have two options:</p>
+
+<ol>
+<li>explicitly pass in the default value for that query param into
+<code>link-to</code> or <code>transitionTo</code></li>
+<li>use the <code>Route.resetController</code> hook to set query param values back to
+their defaults before exiting the route or changing the route&#39;s model</li>
+</ol>
+
+<p>In the following example, the controller&#39;s <code>page</code> query param is reset
+to 1, <em>while still scoped to the pre-transition <code>ArticlesRoute</code> model</em>.
+The result of this is that all links pointing back into the exited route
+will use the newly reset value <code>1</code> as the value for the <code>page</code> query
+param.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre>App.ArticlesRoute = Ember.Route.extend({
+  <span class="function">resetController</span>: <span class="keyword">function</span> (controller, isExiting, transition) {
+    <span class="keyword">if</span> (isExiting) {
+      <span class="comment">// isExiting would be false if only the route's model was changing</span>
+      controller.set(<span class="string"><span class="delimiter">'</span><span class="content">page</span><span class="delimiter">'</span></span>, <span class="integer">1</span>);
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>In some cases, you might not want the sticky query param value to be
+scoped to the route&#39;s model but would rather reuse a query param&#39;s value
+even as a route&#39;s model changes. This can be accomplished by setting the
+<code>scope</code> option to <code>&quot;controller&quot;</code> within the controller&#39;s <code>queryParams</code>
+config hash:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>App.ArticlesRoute = Ember.Route.extend({
+  <span class="key">queryParams</span>: {
+    <span class="key">showMagnifyingGlass</span>: {
+      <span class="key">scope</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">controller</span><span class="delimiter">&quot;</span></span>
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>The following demonstrates how you can override both the scope and the
+query param URL key of a single controller query param property:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre>App.ArticlesController = Ember.Controller.extend({
+  <span class="key">queryParams</span>: [ <span class="string"><span class="delimiter">&quot;</span><span class="content">page</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">filter</span><span class="delimiter">&quot;</span></span>,
+    {
+      <span class="key">showMagnifyingGlass</span>: {
+        <span class="key">scope</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">controller</span><span class="delimiter">&quot;</span></span>,
+        <span class="key">as</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">glass</span><span class="delimiter">&quot;</span></span>,
+      }
+    }
+  ]
+});
+</pre></td>
+</tr></table>
+</div></div><h2 class='anchorable-toc' id='toc_examples'>Examples</h2>
 <ul>
 <li><a href="http://emberjs.jsbin.com/ucanam/3008">Search queries</a></li>
 <li><a href="http://emberjs.jsbin.com/ucanam/2937">Sort: client-side, no refiring of model hook</a></li>

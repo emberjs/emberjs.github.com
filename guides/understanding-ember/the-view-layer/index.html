@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
-    <link href="http://emberjs.com/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
+    <link href="/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
     
   </head>
 
@@ -736,8 +736,8 @@ are unnecessary for getting started with Ember.</p>
   <td class="line-numbers"><pre>1
 2
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="attribute-name">App.Search</span> <span class="attribute-name">placeholder</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Search</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
-<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">view</span> <span class="attribute-name">Ember.Button</span><span class="inline-delimiter">}}</span></span>Go!<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">view</span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="error">&quot;</span><span class="attribute-name">search</span><span class="error">&quot;</span> <span class="attribute-name">placeholder</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Search</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">view</span> <span class="attribute-name">view.buttonView</span><span class="inline-delimiter">}}</span></span>Go!<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">view</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -746,9 +746,11 @@ are unnecessary for getting started with Ember.</p>
   <td class="line-numbers"><pre>1
 2
 3
+4
 </pre></td>
   <td class="code"><pre><span class="keyword">var</span> view = Ember.View.create({
-  <span class="key">templateName</span>: <span class="string"><span class="delimiter">'</span><span class="content">form</span><span class="delimiter">'</span></span>
+  <span class="key">templateName</span>: <span class="string"><span class="delimiter">'</span><span class="content">form</span><span class="delimiter">'</span></span>,
+  <span class="key">buttonView</span>: Ember.Button
 }).append();
 </pre></td>
 </tr></table>
@@ -834,15 +836,15 @@ API. The public view hierarchy reflects only views created using the
 12
 </pre></td>
   <td class="code"><pre><span class="tag">&lt;h1&gt;</span>Joe's Lamprey Shack<span class="tag">&lt;/h1&gt;</span>
-<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">controller.restaurantHours</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">restaurantHours</span><span class="inline-delimiter">}}</span></span>
 
-<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">view</span> <span class="attribute-name">App.FDAContactForm</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">view</span> <span class="error">&quot;</span><span class="attribute-name">fdaContactForm</span><span class="error">&quot;</span><span class="inline-delimiter">}}</span></span>
   If you are experiencing discomfort from eating at Joe's Lamprey Shack,
 please use the form below to submit a complaint to the FDA.
 
-  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">controller.allowComplaints</span><span class="inline-delimiter">}}</span></span>
-    <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="attribute-name">Ember.TextArea</span> <span class="attribute-name">valueBinding</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">controller.complaint</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
-    <span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">'</span><span class="attribute-name">submitComplaint</span><span class="error">'</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>Submit<span class="tag">&lt;/button&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">allowComplaints</span><span class="inline-delimiter">}}</span></span>
+    <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">input</span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">complaint</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+    <span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">submitComplaint</span><span class="error">&quot;</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>Submit<span class="tag">&lt;/button&gt;</span>
   <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">view</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
@@ -862,7 +864,7 @@ Handlebars expressions:</p>
 </figure>
 
 <p>From inside of the <code>TextArea</code>, the <code>parentView</code> would point to the
-<code>FDAContactForm</code> and the <code>FDAContactForm</code>&#39;s <code>childViews</code> would be an
+<code>FdaContactForm</code> and the <code>FdaContactForm</code>&#39;s <code>childViews</code> would be an
 array of the single <code>TextArea</code> view.</p>
 
 <p>You can see the internal view hierarchy by asking for the <code>_parentView</code>
@@ -881,7 +883,7 @@ console.log(_childViews.objectAt(<span class="integer">0</span>).toString());
 <p><strong>Warning!</strong> You may not rely on these internal APIs in application code.
 They may change at any time and have no public contract. The return
 value may not be observable or bindable. It may not be an Ember object.
-If you feel the need to use them, please contact us so we can expose a better 
+If you feel the need to use them, please contact us so we can expose a better
 public API for your use-case.</p>
 
 <p>Bottom line: This API is like XML. If you think you have a use for it,
@@ -985,9 +987,9 @@ App.ChildView = Ember.View.extend({
 6
 7
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">view</span> <span class="attribute-name">App.GrandparentView</span><span class="inline-delimiter">}}</span></span>
-  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">view</span> <span class="attribute-name">App.ParentView</span><span class="inline-delimiter">}}</span></span>
-    <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">view</span> <span class="attribute-name">App.ChildView</span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">view</span> <span class="error">&quot;</span><span class="attribute-name">grandparent</span><span class="error">&quot;</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">view</span> <span class="error">&quot;</span><span class="attribute-name">parent</span><span class="error">&quot;</span><span class="inline-delimiter">}}</span></span>
+    <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">view</span> <span class="error">&quot;</span><span class="attribute-name">child</span><span class="error">&quot;</span><span class="inline-delimiter">}}</span></span>
       <span class="tag">&lt;h1&gt;</span>Click me!<span class="tag">&lt;/h1&gt;</span>
     <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">view</span><span class="inline-delimiter">}}</span></span>
   <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">view</span><span class="inline-delimiter">}}</span></span>
@@ -1043,9 +1045,9 @@ form view will &quot;just work&quot;.</p>
 4
 5
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">view</span> <span class="attribute-name">App.FormView</span><span class="inline-delimiter">}}</span></span>
-  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="attribute-name">Ember.TextField</span> <span class="attribute-name">valueBinding</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">controller.firstName</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
-  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="attribute-name">Ember.TextField</span> <span class="attribute-name">valueBinding</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">controller.lastName</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">view</span> <span class="error">&quot;</span><span class="attribute-name">form</span><span class="error">&quot;</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">input</span> <span class="attribute-name">value</span>=<span class="attribute-value">firstName</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">input</span> <span class="attribute-name">value</span>=<span class="attribute-value">lastName</span><span class="inline-delimiter">}}</span></span>
   <span class="tag">&lt;button</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">submit</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Done<span class="tag">&lt;/button&gt;</span>
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">view</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
