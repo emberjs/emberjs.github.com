@@ -4,8 +4,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Getting Started: Indicating When All Todos Are Complete</title>
-    <meta property="st:title" content="Getting Started: Indicating When All Todos Are Complete" />
+    <title>Ember.js - Understanding Ember.js: Deprecations</title>
+    <meta property="st:title" content="Understanding Ember.js: Deprecations" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -13,7 +13,7 @@
     
   </head>
 
-  <body class="guides guides_getting-started guides_getting-started_show-when-all-todos-are-complete guides_getting-started_show-when-all-todos-are-complete_index">
+  <body class="guides guides_deprecations guides_deprecations_index">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -46,9 +46,9 @@
         <div id="sidebar">
           
     <ol id="toc-list">
-          <li class="level-1 selected">
+          <li class="level-1">
             <a href="/guides/getting-started">Getting Started</a>
-            <ol class='selected'>
+            <ol>
         
             <li class="level-3">
               <a href="/guides/getting-started">Getting Started</a>
@@ -130,7 +130,7 @@
               <a href="/guides/getting-started/display-a-button-to-remove-completed-todos">Displaying a Button to Remove All Completed Todos</a>
             </li>
           
-            <li class="level-3 sub-selected">
+            <li class="level-3">
               <a href="/guides/getting-started/show-when-all-todos-are-complete">Indicating When All Todos Are Complete</a>
             </li>
           
@@ -554,11 +554,11 @@
               <a href="/guides/cookbook/working_with_objects">Working with Objects</a>
             </li>
           </ol></li>
-          <li class="level-1">
+          <li class="level-1 selected">
             <a href="/guides/deprecations">Understanding Ember.js</a>
-            <ol>
+            <ol class='selected'>
         
-            <li class="level-3">
+            <li class="level-3 sub-selected">
               <a href="/guides/deprecations">Deprecations</a>
             </li>
           
@@ -609,67 +609,130 @@
   
   <div class="chapter">
     
-        <h1>Indicating When All Todos Are Complete
-          <a href="https://github.com/emberjs/website/tree/master/source/guides/getting-started/show-when-all-todos-are-complete.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
+        <h1>Deprecations
+          <a href="https://github.com/emberjs/website/tree/master/source/guides/deprecations/index.md" target="_blank" class="edit-page icon-pencil">Edit Page</a>
         </h1>
       
     <hr>
-    <p>Next we&#39;ll update our template to indicate when all todos have been completed. In <code>index.html</code> replace the static checkbox <code>&lt;input&gt;</code> with an <code>{{input}}</code>:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+    <p>Periodically, various APIs in Ember.js may be deprecated. During a minor
+release, for instance when upgrading from version 1.9 to 1.10, you may see new
+deprecations fire in your codebase. Until a major revision such as 2.0 lands,
+code firing such deprecations is still supported by the Ember community. After
+the next major revision lands, the supporting code may be removed. This style
+of change management is commonly referred to as <a href="http://semver.org/">Semantic Versioning</a>.</p>
+
+<p>What follows is a list of deprecations introduced to Ember.js during the 1.x
+cycle.</p>
+<h4 class='anchorable-toc' id='toc_global-lookup-of-views-since-1-8'>Global lookup of views (since 1.8)</h4>
+<p>Previous to Ember 1.8, views would commonly be fetched from the global
+scope:</p>
+<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre>{{view App.SomeView}}
+{{each itemViewClass=App.SomeView}}
+</pre></td>
+</tr></table>
+</div></div>
+<p>Since Ember 1.8, views are more appropriately resolved on the application
+via strings:</p>
+<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre>{{view &quot;some&quot;}}
+{{each itemViewClass=&quot;some&quot;}}
+</pre></td>
+</tr></table>
+</div></div>
+<p>They may also be fetched via a binding:</p>
+<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre>{{view view.someViewViaTheCurrentView}}
+{{each itemViewClass=someViewViaAControllerProperty}}
+</pre></td>
+</tr></table>
+</div></div>
+<p>In general, it is recommended that your Ember application avoid accessing
+globals from a template.</p>
+<h5 class='anchorable-toc' id='toc_new-usage-of-ember-select'>New usage of Ember.Select</h5>
+<p>Most of Ember&#39;s provided views are already accessed via helpers. For example,
+the <a href="/api/classes/Ember.TextField.html">Ember.TextField</a> view is used via the
+<a href="/api/classes/Ember.Handlebars.helpers.html#method_input">input helper</a>.</p>
+
+<p>The <a href="/api/classes/Ember.Select.html">Ember.Select</a> view has not been upgraded to
+have a helper. Instead, it was suggested that you call it via the global
+class name:</p>
+<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>{{view Ember.Select content=manyItems}}
+</pre></td>
+</tr></table>
+</div></div>
+<p>Since this lookup is now deprecated, the select view has been registered
+on an application as <code>select</code>. The new usage is:</p>
+<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>{{view &quot;select&quot; content=manyItems}}
+</pre></td>
+</tr></table>
+</div></div>
+<p>See the updated <a href="/api/classes/Ember.Select.html">Ember.Select</a> documentation
+and the <a href="/guides/views/built-in-views">built-in views guide</a> for more details
+and examples.</p>
+<h5 class='anchorable-toc' id='toc_ember-js-libraries-and-plugins'>Ember.js libraries and plugins</h5>
+<p>If the code triggering this deprecation is being fired from a library, that
+library may need to update its suggested usage.</p>
+
+<p>One solution for such a library is to provide mixins instead of classes:</p>
+<div class="highlight JavaScript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre><span class="comment">// usage is {{view &quot;list&quot;}}</span>
+<span class="keyword">var</span> App.ListView = Ember.View.extend(ListView);
+</pre></td>
+</tr></table>
+</div></div>
+<p>A more advanced solution is to use an initializer to register the plugin&#39;s
+views on the the application:</p>
+<div class="highlight JavaScript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
 6
+7
 </pre></td>
-  <td class="code"><pre><span class="comment">&lt;!--- ... additional lines truncated for brevity ... --&gt;</span>
-<span class="tag">&lt;section</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">main</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span><span class="inline-delimiter">}}</span></span>
-  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">input</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">checkbox</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">toggle-all</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">checked</span>=<span class="attribute-value">allAreDone</span><span class="inline-delimiter">}}</span></span>
-<span class="tag">&lt;/section&gt;</span>
-<span class="comment">&lt;!--- ... additional lines truncated for brevity ... --&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>This checkbox will be checked when the controller property <code>allAreDone</code> is <code>true</code> and unchecked when the property <code>allAreDone</code> is <code>false</code>.</p>
-
-<p>In <code>js/controllers/todos_controller.js</code> implement the matching <code>allAreDone</code> property:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre><span class="comment">// ... additional lines truncated for brevity ...</span>
-<span class="function">allAreDone</span>: <span class="keyword">function</span>(key, value) {
-  <span class="keyword">return</span> !!<span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">length</span><span class="delimiter">'</span></span>) &amp;&amp; <span class="local-variable">this</span>.isEvery(<span class="string"><span class="delimiter">'</span><span class="content">isCompleted</span><span class="delimiter">'</span></span>);
-}.property(<span class="string"><span class="delimiter">'</span><span class="content">@each.isCompleted</span><span class="delimiter">'</span></span>)
-<span class="comment">// ... additional lines truncated for brevity ...</span>
+  <td class="code"><pre><span class="comment">// usage is {{view &quot;list&quot;}}</span>
+Ember.Application.initializer({
+  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">list-view</span><span class="delimiter">'</span></span>,
+  <span class="function">initialize</span>: <span class="keyword">function</span>(application, container) {
+    application.register(<span class="string"><span class="delimiter">'</span><span class="content">view:list</span><span class="delimiter">'</span></span>, ListView);
+  }
+});
 </pre></td>
 </tr></table>
 </div></div>
-<p>This property will be <code>true</code> if the controller has any todos and every todo&#39;s <code>isCompleted</code> property is true. If the <code>isCompleted</code> property of any todo changes, this property will be recomputed. If the return value has changed, sections of the template that need to update will be automatically updated for us.</p>
-
-<p>Reload your web browser to ensure that there are no errors and the behavior described above occurs. </p>
-<h3 class='anchorable-toc' id='toc_live-preview'>Live Preview</h3>
-<p><a class="jsbin-embed" href="http://jsbin.com/IcItARE/1/embed?live">Ember.js • TodoMVC</a><script src="http://static.jsbin.com/js/embed.js"></script></p>
-<h3 class='anchorable-toc' id='toc_additional-resources'>Additional Resources</h3>
-<ul>
-<li><a href="https://github.com/emberjs/quickstart-code-sample/commit/9bf8a430bc4afb06f31be55f63f1d9806e6ab01c">Changes in this step in <code>diff</code> format</a></li>
-<li><a href="/api/classes/Ember.Checkbox.html">Ember.Checkbox API documentation</a></li>
-</ul>
+<p>More details on how to register an Ember.js framework component are available
+in the <a href="/api/classes/Ember.Application.html#toc_initializers">initializer API documentation</a>
+and the <a href="/guides/understanding-ember/dependency-injection-and-service-lookup">dependency injection guide</a>.</p>
 
     
       <footer>
         
-          <a class="previous-guide" href="/guides/getting-started/display-a-button-to-remove-completed-todos">
-            ← Displaying a Button to Remove All Completed Todos
+          <a class="previous-guide" href="/guides/cookbook/working_with_objects/continuous_redrawing_of_views">
+             ← Cookbook: Continuous Redrawing of Views
           </a>
          
-        <a class="next-guide" href="/guides/getting-started/toggle-all-todos">
-          Toggling All Todos Between Complete and Incomplete →
+        <a class="next-guide" href="/guides/understanding-ember/the-view-layer">
+          The View Layer →
         </a>
       
       </footer>

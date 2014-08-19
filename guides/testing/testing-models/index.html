@@ -555,9 +555,13 @@
             </li>
           </ol></li>
           <li class="level-1">
-            <a href="/guides/understanding-ember/the-view-layer">Understanding Ember.js</a>
+            <a href="/guides/deprecations">Understanding Ember.js</a>
             <ol>
         
+            <li class="level-3">
+              <a href="/guides/deprecations">Deprecations</a>
+            </li>
+          
             <li class="level-3">
               <a href="/guides/understanding-ember/the-view-layer">The View Layer</a>
             </li>
@@ -697,7 +701,7 @@ declarations are setup properly.</p>
   <td class="code"><pre>App.Profile = DS.Model.extend({});
 
 App.User = DS.Model.extend({
-  <span class="key">profile</span>: DS.belongsTo(App.Profile)
+  <span class="key">profile</span>: DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">profile</span><span class="delimiter">'</span></span>)
 });
 </pre></td>
 </tr></table>
@@ -715,21 +719,23 @@ with this test.</p>
 8
 9
 <strong>10</strong>
+11
 </pre></td>
   <td class="code"><pre>moduleForModel(<span class="string"><span class="delimiter">'</span><span class="content">user</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">User Model</span><span class="delimiter">'</span></span>, {
   <span class="key">needs</span>: [<span class="string"><span class="delimiter">'</span><span class="content">model:profile</span><span class="delimiter">'</span></span>]
 });
 
 test(<span class="string"><span class="delimiter">'</span><span class="content">profile relationship</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
-  <span class="keyword">var</span> relationships = Ember.get(App.User, <span class="string"><span class="delimiter">'</span><span class="content">relationships</span><span class="delimiter">'</span></span>);
-  deepEqual(relationships.get(App.Profile), [
-    { <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">profile</span><span class="delimiter">'</span></span>, <span class="key">kind</span>: <span class="string"><span class="delimiter">'</span><span class="content">belongsTo</span><span class="delimiter">'</span></span> }
-  ]);
+  <span class="keyword">var</span> User = <span class="local-variable">this</span>.store().modelFor(<span class="string"><span class="delimiter">'</span><span class="content">user</span><span class="delimiter">'</span></span>);
+  <span class="keyword">var</span> relationship = Ember.get(User, <span class="string"><span class="delimiter">'</span><span class="content">relationshipsByName</span><span class="delimiter">'</span></span>).get(<span class="string"><span class="delimiter">'</span><span class="content">profile</span><span class="delimiter">'</span></span>);
+
+  equal(relationship.key, <span class="string"><span class="delimiter">'</span><span class="content">profile</span><span class="delimiter">'</span></span>);
+  equal(relationship.kind, <span class="string"><span class="delimiter">'</span><span class="content">belongsTo</span><span class="delimiter">'</span></span>);
 });
 </pre></td>
 </tr></table>
 </div></div><h4 class='anchorable-toc' id='toc_live-example'>Live Example</h4>
-<p><a class="jsbin-embed" href="http://jsbin.com/ziboq/embed?output">Unit Testing Models (Relationships : One-to-One)</a></p>
+<p><a class="jsbin-embed" href="http://jsbin.com/zuvak/3/embed?output">Unit Testing Models (Relationships : One-to-One)</a></p>
 
 <script src="http://static.jsbin.com/js/embed.js"></script>
 

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ember.js - Ember Data v1.0.0-beta.9 Released</title>
+    <meta property="st:title" content="Ember Data v1.0.0-beta.9 Released" />
+    <link rel="shortcut icon" href="/images/favicon.png" />
+    <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
+    <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
+    
+  </head>
+
+  <body class="blog blog_2014-08-18-ember-data-v1">
+    <div id="header">
+      <div id="wrapper">
+        <a id="logo" href="/">&nbsp;</a>
+        <ul id="nav">
+          <li><a href="/about">about</a></li>
+          <li><a href="/guides">guides</a></li>
+          <li><a href="/api">api</a></li>
+          <li><a href="/community">community</a></li>
+          <li><a href="/blog">blog</a></li>
+          <li><a href="/builds">builds</a></li>
+          <li id="search">
+            <form>
+              <input type="text" id="st-search-input" class="st-search-input" />
+            </form>
+            <div id="st-results-container"></div>
+          </li>
+        </ul>
+
+        <div id="github">
+          <a href="https://github.com/emberjs/ember.js"><i class="icon-fork"></i>Fork Us!</a>
+        </div>
+      </div>
+    </div>
+
+    
+
+    <div id="content-wrapper">
+      
+      
+      <div id="content" >
+        <p>Since Ember Data v1.0.0-beta.8, a lot has changed. Since we didn&#39;t write a blog
+post for beta.8, this blog post will contain features in both beta.8 and beta.9.</p>
+<h2 class='anchorable-toc' id='toc_new-release-schedule'>New Release Schedule</h2>
+<p>Since the first beta release for Ember Data 1.0, Ember Data has typically been
+released when we felt like critical features or bugfixes were merged. Due to the
+ever changing nature of Ember Data, we&#39;d like to reward Ember Data users for
+keeping up with changes by providing more frequent releases until a release
+candidate emerges. Beginning Monday, August 18th 2014, Ember Data will release a
+new beta version <strong>every 3 weeks</strong>. The builds will be available on the <a href="http://emberjs.com/builds/#/beta">builds
+page</a>, Bower, Rubygems, and soon, NPM.</p>
+<h2 class='anchorable-toc' id='toc_breaking-changes'>Breaking Changes</h2><h3 class='anchorable-toc' id='toc_object-create-shim-required'>Object.create shim required</h3>
+<p>Ember Data now requires an <code>Object.create</code> polyfill for environments without
+<code>Object.create</code> or incorrect <code>Object.create</code> implementations such as <strong>Internet
+Explorer 8</strong>. Ember.js will be shipping with an Object.create polyfill in 1.8.0.
+If you are using stable builds of Ember, we recommend using
+<a href="https://github.com/es-shims/es5-shim">ES5Shim</a>&#39;s  <a href="https://github.com/es-shims/es5-shim/blob/master/es5-sham.js">es5-sham.js</a> file available on NPM and Bower.
+You can refer to <a href="http://kangax.github.io/compat-table/es5/#Object.create">Kangax&#39;s Compatibility Tables</a> to
+see if you need the shim.</p>
+
+<p>Ember Data uses Object.create under the hood for faster and collision-free
+caches.</p>
+<h3 class='anchorable-toc' id='toc_dates-serialized-with-iso8601-by-default'>Dates Serialized with ISO8601 by Default</h3>
+<p>Due to the <a href="http://xkcd.com/1179/">various ways</a> dates can be serialized across the wire,
+Ember Data has decided to use the well-known, well-supported, and accurate
+<a href="http://en.wikipedia.org/wiki/ISO_8601">ISO8601</a> format. Although the JavaScript programming language has had
+support for ISO8601 strings since <a href="http://es5.github.io/#x15.9.5.43">ECMAScript5</a>, environment such as
+Internet Explorer 8 do not support <code>Date.prototype.toISOstring</code>. However, Ember
+Data does include a shim so you need no further work here except to make sure
+your backend is supporting ISO8601.</p>
+<h3 class='anchorable-toc' id='toc_restadapter-prototype-findmany-changed-behavior-and-method-signature'>RESTAdapter.prototype.findMany changed behavior and method signature</h3>
+<p>You should see the <a href="http://emberjs.com/api/data/classes/DS.RESTAdapter.html#method_findMany">findMany</a> documentation if you have overridden
+the <code>findMany</code> method in your adapter.</p>
+<h3 class='anchorable-toc' id='toc_hasmany-coalescing-now-opt-in'>HasMany Coalescing Now Opt-In</h3>
+<p>See the section below on “Coalescing Find Requests” for more information.
+Previously, if you did not sideload data for a hasMany relationship, but
+did provide IDs, Ember Data would attempt to get all the records in one request.</p>
+
+<p>For example:</p>
+<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre>// Given this payload:
+{
+  “author”: {
+    “id”: “1”,
+    “name”: “Lon Ingram”,
+    “post_ids”: [“1”, “2”, “3”]
+  }
+}
+
+this.store.getById(‘author’, ‘1’).get(‘posts’);
+
+// $.ajax GET /posts?ids[]=1&amp;ids[]=2&amp;ids[]=3
+</pre></td>
+</tr></table>
+</div></div>
+<p>Unless you opt in using the information below, Ember Data
+will instead fire 3 requests:</p>
+<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>this.store.getById(‘author’, ‘1’).get(‘posts’);
+
+// $.ajax GET /posts/1
+// $.ajax GET /posts/2
+// $.ajax GET /posts/3
+</pre></td>
+</tr></table>
+</div></div><h2 class='anchorable-toc' id='toc_new-features-and-improvements'>New Features and Improvements</h2><h3 class='anchorable-toc' id='toc_embedded-records-mixin'>Embedded Records Mixin</h3><h4 class='anchorable-toc' id='toc_deserializing-relationships'>Deserializing Relationships</h4>
+<p>Thanks to Igor Terzic, Brendan Mcloughlin, and Bill Heaton, the
+<code>DS.EmbeddedRecordsMixin</code> was extracted out of <code>DS.ActiveModelSerializer</code> in
+Ember Data v1.0.0-beta.8 so that users of <code>JSONSerializer,</code>RESTSerializer<code>, and
+</code>ActiveModelSerializer` could easily serialize and deserialize relationships. To
+use the code in your app, you can include the EmbeddedRecordsMixin into your
+serializer:</p>
+
+<p><code>App.PostSerializer = DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin);</code></p>
+
+<p>This means that your <code>PostSerializer</code> will now correctly bring in data for
+relationships if they are embedded in the response, rather than sideloaded.</p>
+
+<p>For example, here is the previous JSON data response Ember Data expected for the
+RESTAdapter:</p>
+<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+</pre></td>
+  <td class="code"><pre>// GET /posts/1
+{
+  &quot;post&quot;: {
+    &quot;id&quot;: &quot;1&quot;,
+    &quot;name&quot;: &quot;The Mother We Share Lyrics&quot;,
+    &quot;authorId&quot;: &quot;1&quot;
+  },
+  &quot;authors&quot;: [
+    {
+      &quot;id&quot;: &quot;1&quot;,
+      &quot;name&quot;: &quot;CHVRCHES&quot;
+    }
+  ]
+}
+
+this.store.find('post', '1').then(function(post){
+  console.log(post.get('author.name')); // =&gt; CHVRCHES
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Now, if you mixin the EmbeddedRecordsMixin, Ember Data will understand the
+following payload:</p>
+<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+</pre></td>
+  <td class="code"><pre>// GET /posts/1
+{
+  &quot;post&quot;: {
+    &quot;id&quot;: &quot;1&quot;,
+    &quot;name&quot;: &quot;The Mother We Share Lyrics&quot;,
+    &quot;author&quot;: {
+      &quot;id&quot;: &quot;1&quot;,
+      &quot;name&quot;: &quot;CHVRCHES&quot;
+    }
+  }
+}
+
+this.store.find('post', '1']).then(function(post){
+  console.log(post.get('author.name')); // =&gt; CHVRCHES
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>These settings are configurable. See the section below on &quot;Serializing
+Relationships.&quot;</p>
+<h4 class='anchorable-toc' id='toc_serializing-relationships'>Serializing Relationships</h4>
+<p>The EmbeddedRecordsMixin also has support for sending information about
+relationships to the server. To override the defaults, you can configure the
+EmbeddedRecordsMixin by defining an <code>attrs</code> object on your serializer
+definition. For example, to serialize the complete record when serializing to
+the server:</p>
+<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+22
+</pre></td>
+  <td class="code"><pre>App.PostSerialize = DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {
+  attrs: {
+    author: {
+      serialize: 'records'
+    }
+  }
+});
+
+var post = this.store.getById('post', '1');
+post.set('name', 'Recover Lyrics');
+post.save();
+
+// POST /posts/1
+{
+  &quot;post&quot;: {
+    &quot;name&quot;: &quot;Recover Lyrics&quot;,
+    &quot;author&quot;: {
+      &quot;id&quot;: &quot;1&quot;,
+      &quot;name&quot;: &quot;CHVRCHES&quot;
+    }
+  }
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>To see even more ways to customize serializing and deserializing behavior, check
+out the <a href="http://emberjs.com/api/data/classes/DS.EmbeddedRecordsMixin.html">documentation</a> for the EmbeddedRecordsMixin.</p>
+<h3 class='anchorable-toc' id='toc_coalescing-find-requests'>Coalescing Find Requests</h3>
+<p>One feature we&#39;re particularly excited about is the ability to coalesce find
+requests for the same record type.</p>
+
+<p>To introduce this feature, I&#39;ll explain the basic concept behind Ember.js&#39;s &quot;Run
+Loop&quot;. Typically in JavaScript code that re-renders whenever the data changes,
+changing the data multiple times within the same turn of the JavaScript event
+loop would cause multiple re-renders. Ember uses a microlibrary called
+<a href="https://github.com/ebryn/backburner.js/">Backburner</a> to reduce the number of writes by only rendering once
+per &quot;run loop&quot;. For more information, you can view the README on the Backburner
+on the repository and view the Ember.js <a href="http://emberjs.com/guides/understanding-ember/run-loop/">Run Loop Guide</a>.</p>
+
+<p>Without &quot;Coalescing Find Requests&quot; turned on, the previous code would result in
+multiple network requests:</p>
+<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>this.store.find('post', '1');
+this.store.find('post', '2');
+this.store.find('post', '3');
+
+// $.ajax GET /posts/1
+// $.ajax GET /posts/2
+// $.ajax GET /posts/3
+</pre></td>
+</tr></table>
+</div></div>
+<p>On the server-side, this is frequently referred to as an <a href="https://secure.phabricator.com/book/phabcontrib/article/n_plus_one/">N+1
+query</a>.</p>
+
+<p>By coalescing (also known as batching) these requests, Ember Data will observe
+that you requested several records of the same type and only send one request
+instead of 3.</p>
+<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>this.store.find('post', '1');
+this.store.find('post', '2');
+this.store.find('post', '3');
+
+// $.ajax GET /posts?ids[]=1&amp;ids[]=2&amp;ids[]=3
+</pre></td>
+</tr></table>
+</div></div>
+<p><strong>Coalescing find requests is currently turned off by default</strong>. To turn it on,
+you can use the following code:</p>
+<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>DS.RESTAdapter.reopen({
+  coalesceFindRequests: true
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>To override how the records are requested, you may override the <code>findMany</code> and
+<code>findHasMany</code> methods on your adapter.</p>
+<h3 class='anchorable-toc' id='toc_ember-inflector-is-now-a-standalone-package'>Ember Inflector is Now a Standalone Package</h3>
+<p>Ember Inflector is Ember&#39;s approach for a Rails-compatible API for inflecting
+strings. This provides methods such as <code>Ember.String.pluralize</code> and
+<code>Ember.String.singularize</code>, and hooks for defining your own inflections.
+Previously, the Ember Inflector package was contained in Ember Data&#39;s repository
+and released alongside Ember Data. It has been pulled out to a <a href="https://github.com/stefanpenner/ember-inflector">separate
+repository</a>. Although Ember Inflector is still included in the
+Ember Data release, you may now use it in projects that do not use Ember Data.
+Ember Inflector is currently released as a 1.0 semver package.</p>
+<h3 class='anchorable-toc' id='toc_ember-inflector-string-caching'>Ember Inflector String Caching</h3>
+<p>Ember Inflector now caches lookups of strings by default. This means that you
+should only pay the cost of transforming a string (via <code>pluralize</code> and
+<code>singularize</code>) once as the values are now stored using an in-memory cache. If
+you have memory concerns, you may want to monitor lookups and disable the cache
+by calling <code>Ember.Inflector.inflector.disableCache()</code> at the beginning of your
+app code.</p>
+<h3 class='anchorable-toc' id='toc_improved-uncountable-irregular-definitions-for-singularize'>Improved Uncountable / Irregular Definitions for Singularize</h3>
+<p>We would like to express our deep appreciation to <a href="https://github.com/ofbriggs">Olivia Briggs</a>
+for adding better support for uncountable/irregular singular words in
+Ember-Inflector. You should now not need definitions for <code>dasherized</code> and
+<code>underscore</code> versions of your inflections.</p>
+<h3 class='anchorable-toc' id='toc_handlebars-helpers-for-inflections'>Handlebars Helpers for Inflections</h3>
+<p>You can now use <code>pluralize</code> and <code>singularize</code> in your Handlebars templates:</p>
+<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre>{{pluralize &quot;octopus&quot;}}
+{{singularize &quot;oxen&quot;}}
+</pre></td>
+</tr></table>
+</div></div>
+<p>The Handlebars helpers are bound, so they will stay up to date if you bind to a
+property:</p>
+
+<p><code>{{pluralize type}}</code></p>
+<h3 class='anchorable-toc' id='toc_performance-improvements'>Performance Improvements</h3>
+<p>Thanks to <a href="https://twitter.com/stefanpenner">Stefan Penner</a> from the Ember.js core team, your apps should be
+faster when used with Ember Data. We&#39;d also like you to try out Ember 1.8
+beta in your apps with Ember Data 1.0.0-beta.9 for additional performance
+improvements.</p>
+
+<p>We have more performance improvements around the corner! Keep an eye out for
+Stef landing some commits on improving <code>pushPayload</code> calls and a <a href="https://github.com/ebryn/backburner.js/pull/97">commit
+to Backburner</a> improving many hot code paths in Ember Data.</p>
+<h3 class='anchorable-toc' id='toc_better-support-for-nested-records'>Better Support for Nested Records.</h3>
+<p><code>buildUrl</code> now takes a record, on which you can look up the relationship if you
+need to build a nested URL. For example:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>App.CommentAdapter = DS.RestAdapter.extend({
+  <span class="function">buildUrl</span>: <span class="keyword">function</span>(type, id, record) {
+    <span class="keyword">return</span> <span class="error">“</span><span class="regexp"><span class="delimiter">/</span><span class="content">posts</span><span class="delimiter">/</span></span><span class="error">”</span> + record.get(<span class="error">‘</span>post.id<span class="error">’</span>) + <span class="error">“</span><span class="regexp"><span class="delimiter">/</span><span class="content">comments</span><span class="delimiter">/</span></span><span class="error">”</span> + id;
+  }
+})
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_added-support-for-preloading-records'>Added support for preloading records</h3>
+<p>For more information, go to https://github.com/emberjs/data/blob/master/packages/ember-data/lib/system/store.js#L356</p>
+<h2 class='anchorable-toc' id='toc_special-thanks'>Special Thanks</h2>
+<p>We&#39;d like to thank the following members of the Ember.js community for their
+continued contributions to Ember Data:</p>
+
+<ul>
+<li>Igor Terzic as the project&#39;s main steward (@terzicigor)</li>
+<li>Brendan McLoughlin (@BezoMaxo) for responding to and triaging issues, and
+contributing documentation, bug fixes, and improvements.</li>
+<li>Ilya Radchenko (@knownasilya)</li>
+<li>Bradley Priest (@bradleypriest)</li>
+<li>Bill Heaton (@pixelhandler)</li>
+<li>Paul Chavard (@tchak)</li>
+<li>Sylvain Mina (GH @sly7-7)</li>
+<li>Ryunosuke Sato (@tricknotes)<br></li>
+<li>Alexandre de Oliveira (@kurko) for his awesome work on the
+<a href="https://github.com/kurko/ember-localstorage-adapter">ember-localstorage-adapter</a> and
+<a href="https://github.com/kurko/ember-indexeddb-adapter">ember-indexeddb-adapter</a>.</li>
+<li>Jonathan Collins (Github @jcollins1991)</li>
+<li>Stefan Penner (@stefanpenner)</li>
+</ul>
+
+<p>We’d also like to thank Instructure and PrecisionNutrition for sponsoring
+some of Igor’s development on Ember Data.</p>
+<h2 class='anchorable-toc' id='toc_tools'>Tools</h2>
+<ul>
+<li><a href="http://andycrum.github.io/ember-data-model-maker/">Ember Data Model Maker</a></li>
+</ul>
+
+<!-- Links -->
+
+      </div>
+    </div>
+
+    <div id="footer">
+      <div id="footer-wrapper">
+        <div class="info">
+          Copyright 2014 <a href="http://tilde.io">Tilde Inc.</a><br>
+          Design by <a href="https://dribbble.com/mg">Matt Grantham</a></br>
+          <a href="/team">Core Team</a> | <a href="/sponsors">Project Sponsors</a>
+        </div>
+        <div class="statement">Ember.js is free, open source and always will be.</div>
+        <div class="links">
+          <a class="twitter" href="http://twitter.com/emberjs">
+            <i class="icon-twitter"></i><span>Twitter</span>
+          </a>
+          <a class="github" href="https://github.com/emberjs/ember.js">
+            <i class="icon-github"></i><span>GitHub</span>
+          </a>
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">
+            <i class="icon-gplus"></i><span>Google+</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+<!--[if lt IE 9]>
+    <script type="text/javascript" src="/javascripts/common-old-ie.js"></script>
+<![endif]-->
+<!--[if gte IE 9]><!-->
+    <script type="text/javascript" src="/javascripts/common-modern.js"></script>
+<!--<![endif]-->
+    
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+      _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+      _gaq.push(['_setAccount', 'UA-27675533-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </body>
+</html>
