@@ -5,10 +5,424 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2014-07-28T00:00:00Z</updated>
+  <updated>2014-08-18T00:00:00Z</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>Ember Data v1.0.0-beta.9 Released</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2014/08/18/ember-data-1-0-beta-9-released.html"/>
+    <id>http://emberjs.com/blog/2014/08/18/ember-data-1-0-beta-9-released.html</id>
+    <published>2014-08-18T00:00:00Z</published>
+    <updated>2014-08-18T00:00:00Z</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Since Ember Data v1.0.0-beta.8, a lot has changed. Since we didn't write a blog
+post for beta.8, this blog post will contain features in both beta.8 and beta.9.&lt;/p&gt;
+&lt;h2 class="anchorable-toc" id="toc_new-release-schedule"&gt;New Release Schedule&lt;/h2&gt;
+&lt;p&gt;Since the first beta release for Ember Data 1.0, Ember Data has typically...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;Since Ember Data v1.0.0-beta.8, a lot has changed. Since we didn&amp;#39;t write a blog
+post for beta.8, this blog post will contain features in both beta.8 and beta.9.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_new-release-schedule'&gt;New Release Schedule&lt;/h2&gt;
+&lt;p&gt;Since the first beta release for Ember Data 1.0, Ember Data has typically been
+released when we felt like critical features or bugfixes were merged. Due to the
+ever changing nature of Ember Data, we&amp;#39;d like to reward Ember Data users for
+keeping up with changes by providing more frequent releases until a release
+candidate emerges. Beginning Monday, August 18th 2014, Ember Data will release a
+new beta version &lt;strong&gt;every 3 weeks&lt;/strong&gt;. The builds will be available on the &lt;a href="http://emberjs.com/builds/#/beta"&gt;builds
+page&lt;/a&gt;, Bower, Rubygems, and soon, NPM.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_breaking-changes'&gt;Breaking Changes&lt;/h2&gt;&lt;h3 class='anchorable-toc' id='toc_object-create-shim-required'&gt;Object.create shim required&lt;/h3&gt;
+&lt;p&gt;Ember Data now requires an &lt;code&gt;Object.create&lt;/code&gt; polyfill for environments without
+&lt;code&gt;Object.create&lt;/code&gt; or incorrect &lt;code&gt;Object.create&lt;/code&gt; implementations such as &lt;strong&gt;Internet
+Explorer 8&lt;/strong&gt;. Ember.js will be shipping with an Object.create polyfill in 1.8.0.
+If you are using stable builds of Ember, we recommend using
+&lt;a href="https://github.com/es-shims/es5-shim"&gt;ES5Shim&lt;/a&gt;&amp;#39;s  &lt;a href="https://github.com/es-shims/es5-shim/blob/master/es5-sham.js"&gt;es5-sham.js&lt;/a&gt; file available on NPM and Bower.
+You can refer to &lt;a href="http://kangax.github.io/compat-table/es5/#Object.create"&gt;Kangax&amp;#39;s Compatibility Tables&lt;/a&gt; to
+see if you need the shim.&lt;/p&gt;
+
+&lt;p&gt;Ember Data uses Object.create under the hood for faster and collision-free
+caches.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_dates-serialized-with-iso8601-by-default'&gt;Dates Serialized with ISO8601 by Default&lt;/h3&gt;
+&lt;p&gt;Due to the &lt;a href="http://xkcd.com/1179/"&gt;various ways&lt;/a&gt; dates can be serialized across the wire,
+Ember Data has decided to use the well-known, well-supported, and accurate
+&lt;a href="http://en.wikipedia.org/wiki/ISO_8601"&gt;ISO8601&lt;/a&gt; format. Although the JavaScript programming language has had
+support for ISO8601 strings since &lt;a href="http://es5.github.io/#x15.9.5.43"&gt;ECMAScript5&lt;/a&gt;, environment such as
+Internet Explorer 8 do not support &lt;code&gt;Date.prototype.toISOstring&lt;/code&gt;. However, Ember
+Data does include a shim so you need no further work here except to make sure
+your backend is supporting ISO8601.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_restadapter-prototype-findmany-changed-behavior-and-method-signature'&gt;RESTAdapter.prototype.findMany changed behavior and method signature&lt;/h3&gt;
+&lt;p&gt;You should see the &lt;a href="http://emberjs.com/api/data/classes/DS.RESTAdapter.html#method_findMany"&gt;findMany&lt;/a&gt; documentation if you have overridden
+the &lt;code&gt;findMany&lt;/code&gt; method in your adapter.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_hasmany-coalescing-now-opt-in'&gt;HasMany Coalescing Now Opt-In&lt;/h3&gt;
+&lt;p&gt;See the section below on “Coalescing Find Requests” for more information.
+Previously, if you did not sideload data for a hasMany relationship, but
+did provide IDs, Ember Data would attempt to get all the records in one request.&lt;/p&gt;
+
+&lt;p&gt;For example:&lt;/p&gt;
+&lt;div class="highlight  "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;// Given this payload:
+{
+  “author”: {
+    “id”: “1”,
+    “name”: “Lon Ingram”,
+    “post_ids”: [“1”, “2”, “3”]
+  }
+}
+
+this.store.getById(‘author’, ‘1’).get(‘posts’);
+
+// $.ajax GET /posts?ids[]=1&amp;amp;ids[]=2&amp;amp;ids[]=3
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Unless you opt in using the information below, Ember Data
+will instead fire 3 requests:&lt;/p&gt;
+&lt;div class="highlight  "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;this.store.getById(‘author’, ‘1’).get(‘posts’);
+
+// $.ajax GET /posts/1
+// $.ajax GET /posts/2
+// $.ajax GET /posts/3
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;h2 class='anchorable-toc' id='toc_new-features-and-improvements'&gt;New Features and Improvements&lt;/h2&gt;&lt;h3 class='anchorable-toc' id='toc_embedded-records-mixin'&gt;Embedded Records Mixin&lt;/h3&gt;&lt;h4 class='anchorable-toc' id='toc_deserializing-relationships'&gt;Deserializing Relationships&lt;/h4&gt;
+&lt;p&gt;Thanks to Igor Terzic, Brendan Mcloughlin, and Bill Heaton, the
+&lt;code&gt;DS.EmbeddedRecordsMixin&lt;/code&gt; was extracted out of &lt;code&gt;DS.ActiveModelSerializer&lt;/code&gt; in
+Ember Data v1.0.0-beta.8 so that users of &lt;code&gt;JSONSerializer,&lt;/code&gt;RESTSerializer&lt;code&gt;, and
+&lt;/code&gt;ActiveModelSerializer` could easily serialize and deserialize relationships. To
+use the code in your app, you can include the EmbeddedRecordsMixin into your
+serializer:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;App.PostSerializer = DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin);&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;This means that your &lt;code&gt;PostSerializer&lt;/code&gt; will now correctly bring in data for
+relationships if they are embedded in the response, rather than sideloaded.&lt;/p&gt;
+
+&lt;p&gt;For example, here is the previous JSON data response Ember Data expected for the
+RESTAdapter:&lt;/p&gt;
+&lt;div class="highlight  "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+13
+14
+15
+16
+17
+18
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;// GET /posts/1
+{
+  &amp;quot;post&amp;quot;: {
+    &amp;quot;id&amp;quot;: &amp;quot;1&amp;quot;,
+    &amp;quot;name&amp;quot;: &amp;quot;The Mother We Share Lyrics&amp;quot;,
+    &amp;quot;authorId&amp;quot;: &amp;quot;1&amp;quot;
+  },
+  &amp;quot;authors&amp;quot;: [
+    {
+      &amp;quot;id&amp;quot;: &amp;quot;1&amp;quot;,
+      &amp;quot;name&amp;quot;: &amp;quot;CHVRCHES&amp;quot;
+    }
+  ]
+}
+
+this.store.find('post', '1').then(function(post){
+  console.log(post.get('author.name')); // =&amp;gt; CHVRCHES
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Now, if you mixin the EmbeddedRecordsMixin, Ember Data will understand the
+following payload:&lt;/p&gt;
+&lt;div class="highlight  "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+13
+14
+15
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;// GET /posts/1
+{
+  &amp;quot;post&amp;quot;: {
+    &amp;quot;id&amp;quot;: &amp;quot;1&amp;quot;,
+    &amp;quot;name&amp;quot;: &amp;quot;The Mother We Share Lyrics&amp;quot;,
+    &amp;quot;author&amp;quot;: {
+      &amp;quot;id&amp;quot;: &amp;quot;1&amp;quot;,
+      &amp;quot;name&amp;quot;: &amp;quot;CHVRCHES&amp;quot;
+    }
+  }
+}
+
+this.store.find('post', '1']).then(function(post){
+  console.log(post.get('author.name')); // =&amp;gt; CHVRCHES
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;These settings are configurable. See the section below on &amp;quot;Serializing
+Relationships.&amp;quot;&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_serializing-relationships'&gt;Serializing Relationships&lt;/h4&gt;
+&lt;p&gt;The EmbeddedRecordsMixin also has support for sending information about
+relationships to the server. To override the defaults, you can configure the
+EmbeddedRecordsMixin by defining an &lt;code&gt;attrs&lt;/code&gt; object on your serializer
+definition. For example, to serialize the complete record when serializing to
+the server:&lt;/p&gt;
+&lt;div class="highlight  "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+13
+14
+15
+16
+17
+18
+19
+&lt;strong&gt;20&lt;/strong&gt;
+21
+22
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;App.PostSerialize = DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {
+  attrs: {
+    author: {
+      serialize: 'records'
+    }
+  }
+});
+
+var post = this.store.getById('post', '1');
+post.set('name', 'Recover Lyrics');
+post.save();
+
+// POST /posts/1
+{
+  &amp;quot;post&amp;quot;: {
+    &amp;quot;name&amp;quot;: &amp;quot;Recover Lyrics&amp;quot;,
+    &amp;quot;author&amp;quot;: {
+      &amp;quot;id&amp;quot;: &amp;quot;1&amp;quot;,
+      &amp;quot;name&amp;quot;: &amp;quot;CHVRCHES&amp;quot;
+    }
+  }
+}
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;To see even more ways to customize serializing and deserializing behavior, check
+out the &lt;a href="http://emberjs.com/api/data/classes/DS.EmbeddedRecordsMixin.html"&gt;documentation&lt;/a&gt; for the EmbeddedRecordsMixin.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_coalescing-find-requests'&gt;Coalescing Find Requests&lt;/h3&gt;
+&lt;p&gt;One feature we&amp;#39;re particularly excited about is the ability to coalesce find
+requests for the same record type.&lt;/p&gt;
+
+&lt;p&gt;To introduce this feature, I&amp;#39;ll explain the basic concept behind Ember.js&amp;#39;s &amp;quot;Run
+Loop&amp;quot;. Typically in JavaScript code that re-renders whenever the data changes,
+changing the data multiple times within the same turn of the JavaScript event
+loop would cause multiple re-renders. Ember uses a microlibrary called
+&lt;a href="https://github.com/ebryn/backburner.js/"&gt;Backburner&lt;/a&gt; to reduce the number of writes by only rendering once
+per &amp;quot;run loop&amp;quot;. For more information, you can view the README on the Backburner
+on the repository and view the Ember.js &lt;a href="http://emberjs.com/guides/understanding-ember/run-loop/"&gt;Run Loop Guide&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Without &amp;quot;Coalescing Find Requests&amp;quot; turned on, the previous code would result in
+multiple network requests:&lt;/p&gt;
+&lt;div class="highlight  "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;this.store.find('post', '1');
+this.store.find('post', '2');
+this.store.find('post', '3');
+
+// $.ajax GET /posts/1
+// $.ajax GET /posts/2
+// $.ajax GET /posts/3
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;On the server-side, this is frequently referred to as an &lt;a href="https://secure.phabricator.com/book/phabcontrib/article/n_plus_one/"&gt;N+1
+query&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;By coalescing (also known as batching) these requests, Ember Data will observe
+that you requested several records of the same type and only send one request
+instead of 3.&lt;/p&gt;
+&lt;div class="highlight  "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;this.store.find('post', '1');
+this.store.find('post', '2');
+this.store.find('post', '3');
+
+// $.ajax GET /posts?ids[]=1&amp;amp;ids[]=2&amp;amp;ids[]=3
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;Coalescing find requests is currently turned off by default&lt;/strong&gt;. To turn it on,
+you can use the following code:&lt;/p&gt;
+&lt;div class="highlight  "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;DS.RESTAdapter.reopen({
+  coalesceFindRequests: true
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;To override how the records are requested, you may override the &lt;code&gt;findMany&lt;/code&gt; and
+&lt;code&gt;findHasMany&lt;/code&gt; methods on your adapter.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_ember-inflector-is-now-a-standalone-package'&gt;Ember Inflector is Now a Standalone Package&lt;/h3&gt;
+&lt;p&gt;Ember Inflector is Ember&amp;#39;s approach for a Rails-compatible API for inflecting
+strings. This provides methods such as &lt;code&gt;Ember.String.pluralize&lt;/code&gt; and
+&lt;code&gt;Ember.String.singularize&lt;/code&gt;, and hooks for defining your own inflections.
+Previously, the Ember Inflector package was contained in Ember Data&amp;#39;s repository
+and released alongside Ember Data. It has been pulled out to a &lt;a href="https://github.com/stefanpenner/ember-inflector"&gt;separate
+repository&lt;/a&gt;. Although Ember Inflector is still included in the
+Ember Data release, you may now use it in projects that do not use Ember Data.
+Ember Inflector is currently released as a 1.0 semver package.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_ember-inflector-string-caching'&gt;Ember Inflector String Caching&lt;/h3&gt;
+&lt;p&gt;Ember Inflector now caches lookups of strings by default. This means that you
+should only pay the cost of transforming a string (via &lt;code&gt;pluralize&lt;/code&gt; and
+&lt;code&gt;singularize&lt;/code&gt;) once as the values are now stored using an in-memory cache. If
+you have memory concerns, you may want to monitor lookups and disable the cache
+by calling &lt;code&gt;Ember.Inflector.inflector.disableCache()&lt;/code&gt; at the beginning of your
+app code.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_improved-uncountable-irregular-definitions-for-singularize'&gt;Improved Uncountable / Irregular Definitions for Singularize&lt;/h3&gt;
+&lt;p&gt;We would like to express our deep appreciation to &lt;a href="https://github.com/ofbriggs"&gt;Olivia Briggs&lt;/a&gt;
+for adding better support for uncountable/irregular singular words in
+Ember-Inflector. You should now not need definitions for &lt;code&gt;dasherized&lt;/code&gt; and
+&lt;code&gt;underscore&lt;/code&gt; versions of your inflections.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_handlebars-helpers-for-inflections'&gt;Handlebars Helpers for Inflections&lt;/h3&gt;
+&lt;p&gt;You can now use &lt;code&gt;pluralize&lt;/code&gt; and &lt;code&gt;singularize&lt;/code&gt; in your Handlebars templates:&lt;/p&gt;
+&lt;div class="highlight  "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;{{pluralize &amp;quot;octopus&amp;quot;}}
+{{singularize &amp;quot;oxen&amp;quot;}}
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;The Handlebars helpers are bound, so they will stay up to date if you bind to a
+property:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;{{pluralize type}}&lt;/code&gt;&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_performance-improvements'&gt;Performance Improvements&lt;/h3&gt;
+&lt;p&gt;Thanks to &lt;a href="https://twitter.com/stefanpenner"&gt;Stefan Penner&lt;/a&gt; from the Ember.js core team, your apps should be
+faster when used with Ember Data. We&amp;#39;d also like you to try out Ember 1.8
+beta in your apps with Ember Data 1.0.0-beta.9 for additional performance
+improvements.&lt;/p&gt;
+
+&lt;p&gt;We have more performance improvements around the corner! Keep an eye out for
+Stef landing some commits on improving &lt;code&gt;pushPayload&lt;/code&gt; calls and a &lt;a href="https://github.com/ebryn/backburner.js/pull/97"&gt;commit
+to Backburner&lt;/a&gt; improving many hot code paths in Ember Data.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_better-support-for-nested-records'&gt;Better Support for Nested Records.&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;buildUrl&lt;/code&gt; now takes a record, on which you can look up the relationship if you
+need to build a nested URL. For example:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;App.CommentAdapter = DS.RestAdapter.extend({
+  &lt;span class="function"&gt;buildUrl&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;(type, id, record) {
+    &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="error"&gt;“&lt;/span&gt;&lt;span class="regexp"&gt;&lt;span class="delimiter"&gt;/&lt;/span&gt;&lt;span class="content"&gt;posts&lt;/span&gt;&lt;span class="delimiter"&gt;/&lt;/span&gt;&lt;/span&gt;&lt;span class="error"&gt;”&lt;/span&gt; + record.get(&lt;span class="error"&gt;‘&lt;/span&gt;post.id&lt;span class="error"&gt;’&lt;/span&gt;) + &lt;span class="error"&gt;“&lt;/span&gt;&lt;span class="regexp"&gt;&lt;span class="delimiter"&gt;/&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;/&lt;/span&gt;&lt;/span&gt;&lt;span class="error"&gt;”&lt;/span&gt; + id;
+  }
+})
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;h3 class='anchorable-toc' id='toc_added-support-for-preloading-records'&gt;Added support for preloading records&lt;/h3&gt;
+&lt;p&gt;For more information, go to https://github.com/emberjs/data/blob/master/packages/ember-data/lib/system/store.js#L356&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_special-thanks'&gt;Special Thanks&lt;/h2&gt;
+&lt;p&gt;We&amp;#39;d like to thank the following members of the Ember.js community for their
+continued contributions to Ember Data:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Igor Terzic as the project&amp;#39;s main steward (@terzicigor)&lt;/li&gt;
+&lt;li&gt;Brendan McLoughlin (@BezoMaxo) for responding to and triaging issues, and
+contributing documentation, bug fixes, and improvements.&lt;/li&gt;
+&lt;li&gt;Ilya Radchenko (@knownasilya)&lt;/li&gt;
+&lt;li&gt;Bradley Priest (@bradleypriest)&lt;/li&gt;
+&lt;li&gt;Bill Heaton (@pixelhandler)&lt;/li&gt;
+&lt;li&gt;Paul Chavard (@tchak)&lt;/li&gt;
+&lt;li&gt;Sylvain Mina (GH @sly7-7)&lt;/li&gt;
+&lt;li&gt;Ryunosuke Sato (@tricknotes)&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;Alexandre de Oliveira (@kurko) for his awesome work on the
+&lt;a href="https://github.com/kurko/ember-localstorage-adapter"&gt;ember-localstorage-adapter&lt;/a&gt; and
+&lt;a href="https://github.com/kurko/ember-indexeddb-adapter"&gt;ember-indexeddb-adapter&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Jonathan Collins (Github @jcollins1991)&lt;/li&gt;
+&lt;li&gt;Stefan Penner (@stefanpenner)&lt;/li&gt;
+&lt;li&gt;Tom Dale (@tomdale)&lt;/li&gt;
+&lt;li&gt;Yehuda Katz (@wycats)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We’d also like to thank Instructure and PrecisionNutrition for sponsoring
+some of Igor’s development on Ember Data.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_tools'&gt;Tools&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://andycrum.github.io/ember-data-model-maker/"&gt;Ember Data Model Maker&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!-- Links --&gt;
+</content>
+  </entry>
   <entry>
     <title>Cleaning Up Github Issues</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/07/28/cleaning-up-github-issues.html"/>
@@ -30,6 +444,72 @@
 &lt;p&gt;In some cases, we may close issues without a meta if there is a clean workaround (we don&amp;#39;t want you to have to use hacks) or if the issue is very minor. If you think we miscategorized an issue, please let us know. We&amp;#39;re also still happy to receive PRs for these issues, though it&amp;#39;s probably wise to double check with us first.&lt;/p&gt;
 
 &lt;p&gt;I hope we can make the issue tracker more useful and effective for everyone.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Core Team Meeting Minutes - 2014/07/25</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2014/07/26/core-team-meeting-minutes-2014-07-25.html"/>
+    <id>http://emberjs.com/blog/2014/07/26/core-team-meeting-minutes-2014-07-25.html</id>
+    <published>2014-07-26T00:00:00Z</published>
+    <updated>2014-07-26T00:00:00Z</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
+(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
+the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
+Friday at 2pm EST/11am PST through Google Hangout for a weekly
+discussion of all things Ember...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
+(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
+the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
+Friday at 2pm EST/11am PST through Google Hangout for a weekly
+discussion of all things Ember.&lt;/p&gt;
+
+&lt;p&gt;If you have a topic you&amp;#39;d like to see covered, contact your favorite
+core team member and let them know!&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_attendees'&gt;Attendees&lt;/h4&gt;
+&lt;!--   [@ebryn](https://twitter.com/ebryn),
+  [@krisselden](https://twitter.com/krisselden),
+  [@machty](https://twitter.com/machty),
+  [@mixonic](https://twitter.com/mixonic)
+  [@_mmun](https://twitter.com/_mmun),
+  [@rwjblue](https://twitter.com/rwjblue),
+  [@trek](https://twitter.com/trek),
+  [@stefanpenner](https://twitter.com/stefanpenner),
+  [@wagenet](https://twitter.com/wagenet),
+  [@tomdale](https://twitter.com/tomdale),
+  [@wifelette](https://twitter.com/wifelette),
+  [@wycats](https://twitter.com/wycats) --&gt;
+
+&lt;p&gt;&lt;a href="https://twitter.com/krisselden"&gt;@krisselden&lt;/a&gt;,
+&lt;a href="https://twitter.com/machty"&gt;@machty&lt;/a&gt;,
+&lt;a href="https://twitter.com/mixonic"&gt;@mixonic&lt;/a&gt;
+&lt;a href="https://twitter.com/_mmun"&gt;@_mmun&lt;/a&gt;,
+&lt;a href="https://twitter.com/rwjblue"&gt;@rwjblue&lt;/a&gt;,
+&lt;a href="https://twitter.com/trek"&gt;@trek&lt;/a&gt;,
+&lt;a href="https://twitter.com/stefanpenner"&gt;@stefanpenner&lt;/a&gt;,
+&lt;a href="https://twitter.com/wagenet"&gt;@wagenet&lt;/a&gt;,
+&lt;a href="https://twitter.com/wycats"&gt;@wycats&lt;/a&gt;&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_face-to-face-july-2014'&gt;Face to Face July 2014&lt;/h3&gt;
+&lt;p&gt;Last week the core team (and those on path to core) met in New York City for
+our periodic face to face meeting. Tom and Yehuda will be posting notes from
+that meeting in the coming weeks. Thank you to our friends at &lt;a href="http://pivotallabs.com/"&gt;Pivotal
+Labs&lt;/a&gt; for hosting us in their awesome new office.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_built-with-ember'&gt;Built With Ember&lt;/h3&gt;
+&lt;p&gt;A few months ago we &lt;a href="https://docs.google.com/document/d/1ZWYq3gwkPTzUiyqr4x_asSj8wIgfvg8XyLmU3Yx_FPE/edit"&gt;began tracking&lt;/a&gt; some of the ambitious apps made
+with Ember.js. The folks at &lt;a href="http://www.getblimp.com/"&gt;Blimp&lt;/a&gt; have turned that
+document into a curated list of awesome Ember.js applications. &lt;a href="http://builtwithember.io/"&gt;Check it
+out&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_ember-cli-website'&gt;ember-cli website&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;ember-cli&lt;/code&gt;, our ES6 module-based build tool has a new site. &lt;a href="http://www.ember-cli.com/"&gt;Give it a
+browse&lt;/a&gt;&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_modularizing-ember-js-s-repository'&gt;Modularizing Ember.js&amp;#39;s Repository&lt;/h3&gt;
+&lt;p&gt;We&amp;#39;ve started moving more external dependencies out of the Ember.js repository
+and have begun work to turn some infrequently used parts of the framework into
+their own libraries. These will still be built into the &lt;code&gt;1.x&lt;/code&gt; series of
+releases, but will not come bundled by default when we have the next major
+versions release.&lt;/p&gt;
 </content>
   </entry>
   <entry>
@@ -121,72 +601,6 @@ polyfill with feature flag for 1.7 OK until that time.&lt;/p&gt;&lt;/li&gt;
 &lt;p&gt;&lt;code&gt;:-1:&lt;/code&gt; as is, need to re-work and add a &amp;#39;re-bubble&amp;#39; phase that checks &lt;code&gt;actionMissing&lt;/code&gt;
 good idea, but seems like it may require a lot of work.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Core Team Meeting Minutes - 2014/07/25</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2014/07/26/core-team-meeting-minutes-2014-07-25.html"/>
-    <id>http://emberjs.com/blog/2014/07/26/core-team-meeting-minutes-2014-07-25.html</id>
-    <published>2014-07-26T00:00:00Z</published>
-    <updated>2014-07-26T00:00:00Z</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
-(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
-the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
-Friday at 2pm EST/11am PST through Google Hangout for a weekly
-discussion of all things Ember...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
-(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
-the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
-Friday at 2pm EST/11am PST through Google Hangout for a weekly
-discussion of all things Ember.&lt;/p&gt;
-
-&lt;p&gt;If you have a topic you&amp;#39;d like to see covered, contact your favorite
-core team member and let them know!&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_attendees'&gt;Attendees&lt;/h4&gt;
-&lt;!--   [@ebryn](https://twitter.com/ebryn),
-  [@krisselden](https://twitter.com/krisselden),
-  [@machty](https://twitter.com/machty),
-  [@mixonic](https://twitter.com/mixonic)
-  [@_mmun](https://twitter.com/_mmun),
-  [@rwjblue](https://twitter.com/rwjblue),
-  [@trek](https://twitter.com/trek),
-  [@stefanpenner](https://twitter.com/stefanpenner),
-  [@wagenet](https://twitter.com/wagenet),
-  [@tomdale](https://twitter.com/tomdale),
-  [@wifelette](https://twitter.com/wifelette),
-  [@wycats](https://twitter.com/wycats) --&gt;
-
-&lt;p&gt;&lt;a href="https://twitter.com/krisselden"&gt;@krisselden&lt;/a&gt;,
-&lt;a href="https://twitter.com/machty"&gt;@machty&lt;/a&gt;,
-&lt;a href="https://twitter.com/mixonic"&gt;@mixonic&lt;/a&gt;
-&lt;a href="https://twitter.com/_mmun"&gt;@_mmun&lt;/a&gt;,
-&lt;a href="https://twitter.com/rwjblue"&gt;@rwjblue&lt;/a&gt;,
-&lt;a href="https://twitter.com/trek"&gt;@trek&lt;/a&gt;,
-&lt;a href="https://twitter.com/stefanpenner"&gt;@stefanpenner&lt;/a&gt;,
-&lt;a href="https://twitter.com/wagenet"&gt;@wagenet&lt;/a&gt;,
-&lt;a href="https://twitter.com/wycats"&gt;@wycats&lt;/a&gt;&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_face-to-face-july-2014'&gt;Face to Face July 2014&lt;/h3&gt;
-&lt;p&gt;Last week the core team (and those on path to core) met in New York City for
-our periodic face to face meeting. Tom and Yehuda will be posting notes from
-that meeting in the coming weeks. Thank you to our friends at &lt;a href="http://pivotallabs.com/"&gt;Pivotal
-Labs&lt;/a&gt; for hosting us in their awesome new office.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_built-with-ember'&gt;Built With Ember&lt;/h3&gt;
-&lt;p&gt;A few months ago we &lt;a href="https://docs.google.com/document/d/1ZWYq3gwkPTzUiyqr4x_asSj8wIgfvg8XyLmU3Yx_FPE/edit"&gt;began tracking&lt;/a&gt; some of the ambitious apps made
-with Ember.js. The folks at &lt;a href="http://www.getblimp.com/"&gt;Blimp&lt;/a&gt; have turned that
-document into a curated list of awesome Ember.js applications. &lt;a href="http://builtwithember.io/"&gt;Check it
-out&lt;/a&gt;.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_ember-cli-website'&gt;ember-cli website&lt;/h3&gt;
-&lt;p&gt;&lt;code&gt;ember-cli&lt;/code&gt;, our ES6 module-based build tool has a new site. &lt;a href="http://www.ember-cli.com/"&gt;Give it a
-browse&lt;/a&gt;&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_modularizing-ember-js-s-repository'&gt;Modularizing Ember.js&amp;#39;s Repository&lt;/h3&gt;
-&lt;p&gt;We&amp;#39;ve started moving more external dependencies out of the Ember.js repository
-and have begun work to turn some infrequently used parts of the framework into
-their own libraries. These will still be built into the &lt;code&gt;1.x&lt;/code&gt; series of
-releases, but will not come bundled by default when we have the next major
-versions release.&lt;/p&gt;
 </content>
   </entry>
   <entry>
@@ -363,70 +777,6 @@ release. You can see a list of all the changes in the CHANGELOG:&lt;/p&gt;
 &lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.6.0/CHANGELOG.md"&gt;Ember.js 1.6.0 CHANGELOG&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.7.0-beta.1/CHANGELOG.md"&gt;Ember.js 1.7.0-beta.1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Ember Data Meeting Minutes - 2014/06/25</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2014/07/03/ember-data-meeting-minutes-2014-06-25.html"/>
-    <id>http://emberjs.com/blog/2014/07/03/ember-data-meeting-minutes-2014-06-25.html</id>
-    <published>2014-07-03T00:00:00Z</published>
-    <updated>2014-07-03T00:00:00Z</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
-(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
-the Ember Data team meets privately every
-Wednesday at 11am PST through Google Hangout for a weekly
-discussion of all things Ember-Data...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
-(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
-the Ember Data team meets privately every
-Wednesday at 11am PST through Google Hangout for a weekly
-discussion of all things Ember-Data.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_attendees'&gt;Attendees&lt;/h4&gt;
-&lt;!--   [@ebryn](https://twitter.com/ebryn),
-  [@krisselden](https://twitter.com/krisselden),
-  [@machty](https://twitter.com/machty),
-  [@rwjblue](https://twitter.com/rwjblue),
-  [@trek](https://twitter.com/trek),
-  [@stefanpenner](https://twitter.com/stefanpenner),
-  [@wagenet](https://twitter.com/wagenet),
-  [@tomdale](https://twitter.com/tomdale),
-  [@wifelette](https://twitter.com/wifelette),
-  [@wycats](https://twitter.com/wycats)
-  [@terzicigor](https://twitter.com/terzicigor) --&gt;
-
-&lt;p&gt;&lt;a href="https://twitter.com/tomdale"&gt;@tomdale&lt;/a&gt;,
-&lt;a href="https://twitter.com/wycats"&gt;@wycats&lt;/a&gt;,
-&lt;a href="https://twitter.com/terzicigor"&gt;@terzicigor&lt;/a&gt;&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_serializer-refactor'&gt;Serializer refactor&lt;/h3&gt;
-&lt;p&gt;We discussed how best to refactor the existing serializers, especially the work lead by &lt;a href="https://twitter.com/BezoMaxo"&gt;@BMac&lt;/a&gt; to break up the
-Rest Serializer into a JSON Serializer + a Sideloading mixin. While working on it, there were several issues raised, including the problem of
-how to make sure that mixins that extend the JSON Serializer(Embedded records mixin right now, and Sideloading mixin in the future) have their
-hooks called in the right order and that they do not interfere with each other.&lt;/p&gt;
-
-&lt;p&gt;Decided that the refactor into a mixin is a good idea.
-Tom raised the idea of having a serialization pipeline, but we decided to punt on that for now.
-Decided to wait on more use cases before deciding whether/and how to reorganize the hooks such that mixins are easier to use/write.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_zalgo-promise-proxy'&gt;Zalgo Promise Proxy&lt;/h3&gt;
-&lt;p&gt;Discussed how to address the problem of serializing async relationships.
-&lt;a href="https://twitter.com/terzicigor"&gt;@terzicigor&lt;/a&gt; and &lt;a href="https://twitter.com/stefanpenner"&gt;@stefanpenner&lt;/a&gt; have previously come up with the idea of having
-a Zalgo Proxy, a proxy that would be passed to the serialize hook and would proxy access to relationships as synchronous.&lt;/p&gt;
-
-&lt;p&gt;Decided it is a good idea but needs to be fully specced out and needs a better name.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_sync-setting-of-async-relationships'&gt;Sync setting of async relationships&lt;/h3&gt;
-&lt;p&gt;Discussed the problem of how to set/bind two async relationships. For example currently binding an async belongsTo
-to an async hasMany does not work because the binding tries to set a promiseProxy and not a model.&lt;/p&gt;
-
-&lt;p&gt;Decided to make template bindings work with promises, while not letting users manually set a promise.
-Will require some Ember-Metal work to get working&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_explore-a-way-for-nicely-getting-a-sync-version-of-a-model'&gt;Explore a way for nicely getting a sync version of a model&lt;/h3&gt;
-&lt;p&gt;Decided to explore a nice way of calling then on a model and/or several relationships at once which would return a promise
-that would resolve once all the relationships are loaded.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_think-about-how-to-incorporate-async-wait-from-es7'&gt;Think about how to incorporate async wait from ES7&lt;/h3&gt;
-&lt;p&gt;&lt;a href="https://twitter.com/wycats"&gt;@wycats&lt;/a&gt; was very excited about the possibility of having Ember-Data support async wait from ES7.
-Said it could make dealing with asynchronicity much nicer. No conclusion, due to a lack of time for someone to investigate.&lt;/p&gt;
 </content>
   </entry>
 </feed>
