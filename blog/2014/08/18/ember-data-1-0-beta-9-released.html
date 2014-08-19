@@ -213,7 +213,7 @@ If you are using stable builds of Ember, we recommend using
 You can refer to <a href="http://kangax.github.io/compat-table/es5/#Object.create">Kangax&#39;s Compatibility Tables</a> to
 see if you need the shim.</p>
 
-<p>Ember Data uses Object.create under the hood for faster and collision-free
+<p>Ember Data uses <code>Object.create</code> under the hood for faster and collision-free
 caches.</p>
 <h3 class='anchorable-toc' id='toc_dates-serialized-with-iso8601-by-default'>Dates Serialized with ISO8601 by Default</h3>
 <p>Due to the <a href="http://xkcd.com/1179/">various ways</a> dates can be serialized across the wire,
@@ -227,12 +227,12 @@ your backend is supporting ISO8601.</p>
 <p>You should see the <a href="http://emberjs.com/api/data/classes/DS.RESTAdapter.html#method_findMany">findMany</a> documentation if you have overridden
 the <code>findMany</code> method in your adapter.</p>
 <h3 class='anchorable-toc' id='toc_hasmany-coalescing-now-opt-in'>HasMany Coalescing Now Opt-In</h3>
-<p>See the section below on “Coalescing Find Requests” for more information.
+<p>See the section below on &quot;Coalescing Find Requests&quot; for more information.
 Previously, if you did not sideload data for a hasMany relationship, but
 did provide IDs, Ember Data would attempt to get all the records in one request.</p>
 
 <p>For example:</p>
-<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -246,53 +246,57 @@ did provide IDs, Ember Data would attempt to get all the records in one request.
 11
 12
 </pre></td>
-  <td class="code"><pre>// Given this payload:
+  <td class="code"><pre><span class="comment">// Given this payload:</span>
 {
-  “author”: {
-    “id”: “1”,
-    “name”: “Lon Ingram”,
-    “post_ids”: [“1”, “2”, “3”]
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">author</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Lon Ingram</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">post_ids</span><span class="delimiter">&quot;</span></span>: [<span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">2</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">3</span><span class="delimiter">&quot;</span></span>]
   }
 }
 
-this.store.getById(‘author’, ‘1’).get(‘posts’);
+<span class="local-variable">this</span>.store.getById(<span class="string"><span class="delimiter">'</span><span class="content">author</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">1</span><span class="delimiter">'</span></span>).get(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>);
 
-// $.ajax GET /posts?ids[]=1&amp;ids[]=2&amp;ids[]=3
+<span class="comment">// $.ajax GET /posts?ids[]=1&amp;ids[]=2&amp;ids[]=3</span>
 </pre></td>
 </tr></table>
 </div></div>
 <p>Unless you opt in using the information below, Ember Data
 will instead fire 3 requests:</p>
-<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
 </pre></td>
-  <td class="code"><pre>this.store.getById(‘author’, ‘1’).get(‘posts’);
+  <td class="code"><pre><span class="local-variable">this</span>.store.getById(<span class="string"><span class="delimiter">'</span><span class="content">author</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">1</span><span class="delimiter">'</span></span>).get(<span class="string"><span class="delimiter">'</span><span class="content">posts</span><span class="delimiter">'</span></span>);
 
-// $.ajax GET /posts/1
-// $.ajax GET /posts/2
-// $.ajax GET /posts/3
+<span class="comment">// $.ajax GET /posts/1</span>
+<span class="comment">// $.ajax GET /posts/2</span>
+<span class="comment">// $.ajax GET /posts/3</span>
 </pre></td>
 </tr></table>
 </div></div><h2 class='anchorable-toc' id='toc_new-features-and-improvements'>New Features and Improvements</h2><h3 class='anchorable-toc' id='toc_embedded-records-mixin'>Embedded Records Mixin</h3><h4 class='anchorable-toc' id='toc_deserializing-relationships'>Deserializing Relationships</h4>
 <p>Thanks to Igor Terzic, Brendan Mcloughlin, and Bill Heaton, the
 <code>DS.EmbeddedRecordsMixin</code> was extracted out of <code>DS.ActiveModelSerializer</code> in
-Ember Data v1.0.0-beta.8 so that users of <code>JSONSerializer,</code>RESTSerializer<code>, and
-</code>ActiveModelSerializer` could easily serialize and deserialize relationships. To
-use the code in your app, you can include the EmbeddedRecordsMixin into your
+Ember Data v1.0.0-beta.8 so that users of <code>JSONSerializer</code>, <code>RESTSerializer</code>, and
+<code>ActiveModelSerializer</code> could easily serialize and deserialize relationships. To
+use the code in your app, you can include the <code>EmbeddedRecordsMixin</code> into your
 serializer:</p>
-
-<p><code>App.PostSerializer = DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin);</code></p>
-
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>App.PostSerializer = DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin);
+</pre></td>
+</tr></table>
+</div></div>
 <p>This means that your <code>PostSerializer</code> will now correctly bring in data for
 relationships if they are embedded in the response, rather than sideloaded.</p>
 
 <p>For example, here is the previous JSON data response Ember Data expected for the
 RESTAdapter:</p>
-<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -312,30 +316,30 @@ RESTAdapter:</p>
 17
 18
 </pre></td>
-  <td class="code"><pre>// GET /posts/1
+  <td class="code"><pre><span class="comment">// GET /posts/1</span>
 {
-  &quot;post&quot;: {
-    &quot;id&quot;: &quot;1&quot;,
-    &quot;name&quot;: &quot;The Mother We Share Lyrics&quot;,
-    &quot;authorId&quot;: &quot;1&quot;
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">The Mother We Share Lyrics</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">authorId</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>
   },
-  &quot;authors&quot;: [
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">authors</span><span class="delimiter">&quot;</span></span>: [
     {
-      &quot;id&quot;: &quot;1&quot;,
-      &quot;name&quot;: &quot;CHVRCHES&quot;
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">CHVRCHES</span><span class="delimiter">&quot;</span></span>
     }
   ]
 }
 
-this.store.find('post', '1').then(function(post){
-  console.log(post.get('author.name')); // =&gt; CHVRCHES
+<span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">1</span><span class="delimiter">'</span></span>).then(<span class="keyword">function</span>(post){
+  console.log(post.get(<span class="string"><span class="delimiter">'</span><span class="content">author.name</span><span class="delimiter">'</span></span>)); <span class="comment">// =&gt; CHVRCHES</span>
 });
 </pre></td>
 </tr></table>
 </div></div>
 <p>Now, if you mixin the EmbeddedRecordsMixin, Ember Data will understand the
 following payload:</p>
-<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -352,20 +356,20 @@ following payload:</p>
 14
 15
 </pre></td>
-  <td class="code"><pre>// GET /posts/1
+  <td class="code"><pre><span class="comment">// GET /posts/1</span>
 {
-  &quot;post&quot;: {
-    &quot;id&quot;: &quot;1&quot;,
-    &quot;name&quot;: &quot;The Mother We Share Lyrics&quot;,
-    &quot;author&quot;: {
-      &quot;id&quot;: &quot;1&quot;,
-      &quot;name&quot;: &quot;CHVRCHES&quot;
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">The Mother We Share Lyrics</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">author</span><span class="delimiter">&quot;</span></span>: {
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">CHVRCHES</span><span class="delimiter">&quot;</span></span>
     }
   }
 }
 
-this.store.find('post', '1']).then(function(post){
-  console.log(post.get('author.name')); // =&gt; CHVRCHES
+<span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">1</span><span class="delimiter">'</span></span>).then(<span class="keyword">function</span>(post) {
+  console.log(post.get(<span class="string"><span class="delimiter">'</span><span class="content">author.name</span><span class="delimiter">'</span></span>)); <span class="comment">// =&gt; CHVRCHES</span>
 });
 </pre></td>
 </tr></table>
@@ -378,7 +382,7 @@ relationships to the server. To override the defaults, you can configure the
 EmbeddedRecordsMixin by defining an <code>attrs</code> object on your serializer
 definition. For example, to serialize the complete record when serializing to
 the server:</p>
-<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -402,25 +406,25 @@ the server:</p>
 21
 22
 </pre></td>
-  <td class="code"><pre>App.PostSerialize = DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {
-  attrs: {
-    author: {
-      serialize: 'records'
+  <td class="code"><pre>App.PostSerializer = DS.RESTSerializer.extend(DS.EmbeddedRecordsMixin, {
+  <span class="key">attrs</span>: {
+    <span class="key">author</span>: {
+      <span class="key">serialize</span>: <span class="string"><span class="delimiter">'</span><span class="content">records</span><span class="delimiter">'</span></span>
     }
   }
 });
 
-var post = this.store.getById('post', '1');
-post.set('name', 'Recover Lyrics');
+<span class="keyword">var</span> post = <span class="local-variable">this</span>.store.getById(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">1</span><span class="delimiter">'</span></span>);
+post.set(<span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Recover Lyrics</span><span class="delimiter">'</span></span>);
 post.save();
 
-// POST /posts/1
+<span class="comment">// POST /posts/1</span>
 {
-  &quot;post&quot;: {
-    &quot;name&quot;: &quot;Recover Lyrics&quot;,
-    &quot;author&quot;: {
-      &quot;id&quot;: &quot;1&quot;,
-      &quot;name&quot;: &quot;CHVRCHES&quot;
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Recover Lyrics</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">author</span><span class="delimiter">&quot;</span></span>: {
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">CHVRCHES</span><span class="delimiter">&quot;</span></span>
     }
   }
 }
@@ -428,7 +432,7 @@ post.save();
 </tr></table>
 </div></div>
 <p>To see even more ways to customize serializing and deserializing behavior, check
-out the <a href="http://emberjs.com/api/data/classes/DS.EmbeddedRecordsMixin.html">documentation</a> for the EmbeddedRecordsMixin.</p>
+out the <a href="http://emberjs.com/api/data/classes/DS.EmbeddedRecordsMixin.html">documentation</a> for the <code>EmbeddedRecordsMixin</code>.</p>
 <h3 class='anchorable-toc' id='toc_coalescing-find-requests'>Coalescing Find Requests</h3>
 <p>One feature we&#39;re particularly excited about is the ability to coalesce find
 requests for the same record type.</p>
@@ -443,7 +447,7 @@ on the repository and view the Ember.js <a href="http://emberjs.com/guides/under
 
 <p>Without &quot;Coalescing Find Requests&quot; turned on, the previous code would result in
 multiple network requests:</p>
-<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -452,13 +456,13 @@ multiple network requests:</p>
 6
 7
 </pre></td>
-  <td class="code"><pre>this.store.find('post', '1');
-this.store.find('post', '2');
-this.store.find('post', '3');
+  <td class="code"><pre><span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">1</span><span class="delimiter">'</span></span>);
+<span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">2</span><span class="delimiter">'</span></span>);
+<span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">3</span><span class="delimiter">'</span></span>);
 
-// $.ajax GET /posts/1
-// $.ajax GET /posts/2
-// $.ajax GET /posts/3
+<span class="comment">// $.ajax GET /posts/1</span>
+<span class="comment">// $.ajax GET /posts/2</span>
+<span class="comment">// $.ajax GET /posts/3</span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -468,30 +472,30 @@ query</a>.</p>
 <p>By coalescing (also known as batching) these requests, Ember Data will observe
 that you requested several records of the same type and only send one request
 instead of 3.</p>
-<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
 </pre></td>
-  <td class="code"><pre>this.store.find('post', '1');
-this.store.find('post', '2');
-this.store.find('post', '3');
+  <td class="code"><pre><span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">1</span><span class="delimiter">'</span></span>);
+<span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">2</span><span class="delimiter">'</span></span>);
+<span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">3</span><span class="delimiter">'</span></span>);
 
-// $.ajax GET /posts?ids[]=1&amp;ids[]=2&amp;ids[]=3
+<span class="comment">// $.ajax GET /posts?ids[]=1&amp;ids[]=2&amp;ids[]=3</span>
 </pre></td>
 </tr></table>
 </div></div>
 <p><strong>Coalescing find requests is currently turned off by default</strong>. To turn it on,
 you can use the following code:</p>
-<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 </pre></td>
   <td class="code"><pre>DS.RESTAdapter.reopen({
-  coalesceFindRequests: true
+  <span class="key">coalesceFindRequests</span>: <span class="predefined-constant">true</span>
 });
 </pre></td>
 </tr></table>
@@ -521,20 +525,24 @@ Ember-Inflector. You should now not need definitions for <code>dasherized</code>
 <code>underscore</code> versions of your inflections.</p>
 <h3 class='anchorable-toc' id='toc_handlebars-helpers-for-inflections'>Handlebars Helpers for Inflections</h3>
 <p>You can now use <code>pluralize</code> and <code>singularize</code> in your Handlebars templates:</p>
-<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 </pre></td>
-  <td class="code"><pre>{{pluralize &quot;octopus&quot;}}
-{{singularize &quot;oxen&quot;}}
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">pluralize</span> <span class="error">&quot;</span><span class="attribute-name">octopus</span><span class="error">&quot;</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">singularize</span> <span class="error">&quot;</span><span class="attribute-name">oxen</span><span class="error">&quot;</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>
 <p>The Handlebars helpers are bound, so they will stay up to date if you bind to a
 property:</p>
-
-<p><code>{{pluralize type}}</code></p>
-<h3 class='anchorable-toc' id='toc_performance-improvements'>Performance Improvements</h3>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">pluralize</span> <span class="attribute-name">type</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_performance-improvements'>Performance Improvements</h3>
 <p>Thanks to <a href="https://twitter.com/stefanpenner">Stefan Penner</a> from the Ember.js core team, your apps should be
 faster when used with Ember Data. We&#39;d also like you to try out Ember 1.8
 beta in your apps with Ember Data 1.0.0-beta.9 for additional performance
@@ -544,7 +552,7 @@ improvements.</p>
 Stef landing some commits on improving <code>pushPayload</code> calls and a <a href="https://github.com/ebryn/backburner.js/pull/97">commit
 to Backburner</a> improving many hot code paths in Ember Data.</p>
 <h3 class='anchorable-toc' id='toc_better-support-for-nested-records'>Better Support for Nested Records.</h3>
-<p><code>buildUrl</code> now takes a record, on which you can look up the relationship if you
+<p><code>buildURL</code> now takes a record, on which you can look up the relationship if you
 need to build a nested URL. For example:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -554,14 +562,14 @@ need to build a nested URL. For example:</p>
 5
 </pre></td>
   <td class="code"><pre>App.CommentAdapter = DS.RestAdapter.extend({
-  <span class="function">buildUrl</span>: <span class="keyword">function</span>(type, id, record) {
-    <span class="keyword">return</span> <span class="error">“</span><span class="regexp"><span class="delimiter">/</span><span class="content">posts</span><span class="delimiter">/</span></span><span class="error">”</span> + record.get(<span class="error">‘</span>post.id<span class="error">’</span>) + <span class="error">“</span><span class="regexp"><span class="delimiter">/</span><span class="content">comments</span><span class="delimiter">/</span></span><span class="error">”</span> + id;
+  <span class="function">buildURL</span>: <span class="keyword">function</span>(type, id, record) {
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">'</span><span class="content">/posts/</span><span class="delimiter">'</span></span> + record.get(<span class="string"><span class="delimiter">'</span><span class="content">post.id</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">'</span><span class="content">/comments/</span><span class="delimiter">'</span></span> + id;
   }
 })
 </pre></td>
 </tr></table>
 </div></div><h3 class='anchorable-toc' id='toc_added-support-for-preloading-records'>Added support for preloading records</h3>
-<p>For more information, go to https://github.com/emberjs/data/blob/master/packages/ember-data/lib/system/store.js#L356</p>
+<p>For more information, go to <a href="https://github.com/emberjs/data/blob/master/packages/ember-data/lib/system/store.js#L356">Store documentation</a>.</p>
 <h2 class='anchorable-toc' id='toc_special-thanks'>Special Thanks</h2>
 <p>We&#39;d like to thank the following members of the Ember.js community for their
 continued contributions to Ember Data:</p>
@@ -575,7 +583,7 @@ contributing documentation, bug fixes, and improvements.</li>
 <li>Bill Heaton (@pixelhandler)</li>
 <li>Paul Chavard (@tchak)</li>
 <li>Sylvain Mina (GH @sly7-7)</li>
-<li>Ryunosuke Sato (@tricknotes)<br></li>
+<li>Ryunosuke Sato (@tricknotes)</li>
 <li>Alexandre de Oliveira (@kurko) for his awesome work on the
 <a href="https://github.com/kurko/ember-localstorage-adapter">ember-localstorage-adapter</a> and
 <a href="https://github.com/kurko/ember-indexeddb-adapter">ember-indexeddb-adapter</a>.</li>
