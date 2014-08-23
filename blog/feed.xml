@@ -5,10 +5,188 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2014-08-18T00:00:00Z</updated>
+  <updated>2014-08-23T00:00:00Z</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>Ember 1.7.0 and 1.8 Beta Released</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2014/08/23/ember-1-7-0-released.html"/>
+    <id>http://emberjs.com/blog/2014/08/23/ember-1-7-0-released.html</id>
+    <published>2014-08-23T00:00:00Z</published>
+    <updated>2014-08-23T00:00:00Z</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;We are pleased to announce that both Ember.js 1.7.0 and the first beta in the 1.8 series
+have been released. This comes as the seventh cycle of our release process that began just
+after 1.0 was released.&lt;/p&gt;
+
+&lt;p&gt;This release brings bug fixes, potentially...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;We are pleased to announce that both Ember.js 1.7.0 and the first beta in the 1.8 series
+have been released. This comes as the seventh cycle of our release process that began just
+after 1.0 was released.&lt;/p&gt;
+
+&lt;p&gt;This release brings bug fixes, potentially breaking changes and new features.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_new-features'&gt;New Features&lt;/h2&gt;&lt;h3 class='anchorable-toc' id='toc_nestable-code-this-route-code'&gt;Nestable &lt;code&gt;this.route&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;This change removes the restriction that only &lt;code&gt;this.resource&lt;/code&gt; can have nested
+child routes.&lt;/p&gt;
+
+&lt;p&gt;Prior to this change, using &lt;code&gt;this.resource&lt;/code&gt; would reset the namespace and in order
+to preserve it you had to do the following:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="local-variable"&gt;this&lt;/span&gt;.resource(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;foo&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="keyword"&gt;function&lt;/span&gt;() {
+  &lt;span class="local-variable"&gt;this&lt;/span&gt;.resource(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;foo.bar&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="keyword"&gt;function&lt;/span&gt;() {
+    &lt;span class="local-variable"&gt;this&lt;/span&gt;.resource(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;foo.bar.baz&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="keyword"&gt;function&lt;/span&gt;() {
+      &lt;span class="comment"&gt;// All this repetition to get an&lt;/span&gt;
+      &lt;span class="comment"&gt;// intuitively-named FooBarBazRoute&lt;/span&gt;
+    });
+  });
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;this.route&lt;/code&gt; can be nested like &lt;code&gt;this.resource&lt;/code&gt;, but unlike this.resource, the namespace
+of child routes is appended rather than reset to a top-level namespace, allowing the above to be
+written as:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="local-variable"&gt;this&lt;/span&gt;.route(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;foo&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="keyword"&gt;function&lt;/span&gt;() {
+  &lt;span class="local-variable"&gt;this&lt;/span&gt;.route(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;bar&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="keyword"&gt;function&lt;/span&gt;() {
+    &lt;span class="local-variable"&gt;this&lt;/span&gt;.route(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;baz&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="keyword"&gt;function&lt;/span&gt;() {
+       &lt;span class="comment"&gt;// uses FooBarBazRoute&lt;/span&gt;
+       &lt;span class="comment"&gt;// generates foo.bar.baz.index&lt;/span&gt;
+       &lt;span class="comment"&gt;// generates FooBarBazIndexRoute&lt;/span&gt;
+     });
+   });
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Unnested &lt;code&gt;this.route&lt;/code&gt; works the same way as before.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_query-params'&gt;Query Params&lt;/h3&gt;
+&lt;p&gt;Thanks to the tireless work of &lt;a href="https://github.com/machty"&gt;@machty&lt;/a&gt; and team, query params
+support has finally landed and is a part of the 1.7.0 release!&lt;/p&gt;
+
+&lt;p&gt;Ember now has first class support for URL query parameters (e.g. &lt;code&gt;/?page=1&amp;amp;sort=last_name&lt;/code&gt;).
+With this API, each query param is bound to a property on a controller, such that changes made
+to query params in the URL (e.g. user presses the back button) will update the controller property,
+and vice versa.&lt;/p&gt;
+
+&lt;p&gt;The API handles many of tricky aspects of maintaining a binding to a URL, such as:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;coalescing multiple controller property changes into a single URL update&lt;/li&gt;
+&lt;li&gt;correctly casting new URL query param values to the datatype expected by the controller property
+(e.g. &lt;code&gt;&amp;quot;true&amp;quot;&lt;/code&gt; for a boolean property casts to &lt;code&gt;true&lt;/code&gt;, &lt;code&gt;&amp;quot;123&amp;quot;&lt;/code&gt; for a numeric property casts to &lt;code&gt;123&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;omitting default query param values from the URL so as to not unnecessarily clutter the URL
+with default values&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Please read the &lt;a href="/guides/routing/query-params/"&gt;Query Params Guide&lt;/a&gt; for more information.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_breaking-changes-and-deprecations'&gt;Breaking Changes and Deprecations&lt;/h2&gt;
+&lt;p&gt;The following are a few deprecation warnings and breaking changes that have been included in 1.7.
+Please review the new &lt;a href="http://emberjs.com/guides/deprecations/"&gt;Deprecation Guide&lt;/a&gt; for more details.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_controller-s-code-model-code-property'&gt;Controller&amp;#39;s &lt;code&gt;model&lt;/code&gt; property&lt;/h3&gt;
+&lt;p&gt;On Controllers, the content property is now derived from model. This reduces many caveats
+with model/content, and also sets a simple ground rule: Never set a controller&amp;#39;s content,
+rather always set its model.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_code-bind-attr-code-and-empty-arrays'&gt;&lt;code&gt;bind-attr&lt;/code&gt; and empty arrays&lt;/h3&gt;
+&lt;p&gt;An empty array is treated as falsy value in &lt;code&gt;bind-attr&lt;/code&gt; to be in consistent with &lt;code&gt;if&lt;/code&gt; helper.
+Breaking for apps that relies on the previous behaviour which treats an empty array as
+truthy value in &lt;code&gt;bind-attr&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_other-improvements'&gt;Other Improvements&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;Ember&lt;/code&gt; is now using &lt;code&gt;RSVP&lt;/code&gt; 3.0.13 and brings fixes for &lt;code&gt;RSVP.hash&lt;/code&gt; in IE8.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_ember-1-8-0-beta-1'&gt;Ember 1.8.0-beta.1&lt;/h2&gt;&lt;h3 class='anchorable-toc' id='toc_support-for-ie-6-and-7'&gt;Support for IE 6 and 7&lt;/h3&gt;
+&lt;p&gt;Usage of Ember is deprecated for Internet Explorer 6 and 7, support will be removed
+in the next major version.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_refactored-view-layer'&gt;Refactored view layer&lt;/h3&gt;
+&lt;p&gt;Internal implementation of the view layer has been refactored. Many of you remember
+&lt;code&gt;script&lt;/code&gt; tags in the DOM:&lt;/p&gt;
+&lt;div class="highlight html "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;metamorph-1-start&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-placeholder&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;metamorph-1-end&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-placeholder&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;That&amp;#39;s how &lt;code&gt;Ember&lt;/code&gt; knows how to update the values in the DOM. This refactor removes
+the need for &lt;code&gt;script&lt;/code&gt; tags.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_actions-lookup-on-controller'&gt;Actions lookup on controller&lt;/h3&gt;
+&lt;p&gt;Some of you might remember that you could define action handlers in the root of the
+controller, like so:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;App.HomeController = Ember.ObjectController.extend({
+  &lt;span class="function"&gt;someAction&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;() {
+    &lt;span class="comment"&gt;// handle the action&lt;/span&gt;
+  }
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;A deprecation warning was added in late 2013 that would print a nice deprecation notice
+if you happen to use an action name that was also found in the root of the controller.
+Unfortunately, even with the deprecation, we still have the possibility to conflict
+with controller level methods and properties.&lt;/p&gt;
+
+&lt;p&gt;To define action handler, you should place it under &lt;code&gt;actions&lt;/code&gt; hash, like so:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;App.HomeController = Ember.ObjectController.extend({
+  &lt;span class="key"&gt;actions&lt;/span&gt;: {
+    &lt;span class="function"&gt;someAction&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;() {
+      &lt;span class="comment"&gt;// handle the action&lt;/span&gt;
+    }
+  }
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;This change will remove support for older action lookup in the root of the controller
+completely, and finally allow usage of nearly any action name without the need to
+check if that name was also used by the controller.&lt;/p&gt;
+
+&lt;p&gt;Also, this release introduces numerous bug fixes and small improvements. You can see a list of all the changes in the CHANGELOG:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.7.0/CHANGELOG.md"&gt;Ember.js 1.7.0 CHANGELOG&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.8.0-beta.1/CHANGELOG.md"&gt;Ember.js 1.8.0-beta.1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
   <entry>
     <title>Ember Data v1.0.0-beta.9 Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/08/18/ember-data-1-0-beta-9-released.html"/>
@@ -634,157 +812,6 @@ inadvertently caused the error substates to be completely ignored.&lt;/p&gt;
 &lt;li&gt;Failing &lt;a href="http://emberjs.jsbin.com/juqij/2/edit?html,js,output"&gt;JSBin&lt;/a&gt; from the original &lt;a href="https://github.com/emberjs/ember.js/issues/5148"&gt;bug report&lt;/a&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/pull/5166"&gt;Fixing PR&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.6.1/CHANGELOG.md"&gt;Ember.js 1.6.1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Ember 1.6.0 and 1.7 Beta Released</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2014/07/07/ember-1-6-0-and-ember-1-7-0-beta-released.html"/>
-    <id>http://emberjs.com/blog/2014/07/07/ember-1-6-0-and-ember-1-7-0-beta-released.html</id>
-    <published>2014-07-07T00:00:00Z</published>
-    <updated>2014-07-07T00:00:00Z</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;We are pleased to announce that both Ember.js 1.6.0 and the first beta in the 1.7 series
-have just been released. This comes as the sixth cycle of our release process that began
-just after 1.0 was released.&lt;/p&gt;
-&lt;h3 class="anchorable-toc" id="toc_delays-detailed"&gt;Delays Detailed&lt;/h3&gt;
-&lt;p&gt;As many of you know, the...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;We are pleased to announce that both Ember.js 1.6.0 and the first beta in the 1.7 series
-have just been released. This comes as the sixth cycle of our release process that began
-just after 1.0 was released.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_delays-detailed'&gt;Delays Detailed&lt;/h3&gt;
-&lt;p&gt;As many of you know, the 1.6 release is the first to be published after converting the
-codebase to ES6 modules. The 1.6+ builds are now transpiled by the &lt;a href="https://github.com/square/es6-module-transpiler"&gt;es6-module-transpiler&lt;/a&gt;
-into AMD and use a &lt;a href="https://github.com/stefanpenner/loader.js"&gt;small AMD loader&lt;/a&gt; to handle
-loading the transpiled modules. Unfortunately, adding the additional loader overhead on
-boot has a fairly significant performance impact on boot speed of older mobile clients
-(approximately 5-10% boot time penalty).&lt;/p&gt;
-
-&lt;p&gt;This regression was brought to our attention just before 1.6.0 was intended to ship (late
-May), and we decided to hold the release until a fix could be applied. In retrospect this
-was absolutely the wrong decision. The fix has taken much longer than originally anticipated
-and in the meantime folks are stuck with 1.5.1. Many of our users either are not affected
-or do not care about this regression, and they are forced to use beta/canary channels for
-certain bug fixes that have already been made.&lt;/p&gt;
-
-&lt;p&gt;As a group the core team has decided that this type of delay is absolutely unacceptable and
-apologize for the lack of clarity into what is going on.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_new-features-in-1-6'&gt;New features in 1.6&lt;/h3&gt;&lt;h4 class='anchorable-toc' id='toc_ember-computed-empty'&gt;Ember.computed.empty&lt;/h4&gt;
-&lt;p&gt;&lt;code&gt;Ember.computed.empty&lt;/code&gt; has been updated to automatically respect arrays without forcing users to use &lt;code&gt;array.[]&lt;/code&gt;
-as the dependent key.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_test-friendly-promises'&gt;Test Friendly Promises&lt;/h4&gt;
-&lt;p&gt;With 1.5.1 you were forced to wrap any Promise &lt;code&gt;resolve&lt;/code&gt; and/or &lt;code&gt;reject&lt;/code&gt; calls in an &lt;code&gt;Ember.run&lt;/code&gt; loop
-while in testing, but the same code did not need to be wrapped in a run loop for normal operation.&lt;/p&gt;
-
-&lt;p&gt;In 1.6.0 you do not need to do this promise run loop wrapping simply for the purposes of testing.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_ember-route-prototype-render-now-has-a-model-option'&gt;Ember.Route.prototype.render Now has a model Option&lt;/h4&gt;
-&lt;p&gt;Previously, you would need to set the model explicitly on the other controller using 
-&lt;code&gt;controllerFor&lt;/code&gt; (while trying to render a different template with &lt;code&gt;renderTemplate#render&lt;/code&gt;).&lt;/p&gt;
-
-&lt;p&gt;Now &lt;code&gt;render&lt;/code&gt; has an option to set the model that set the controller&amp;#39;s content after the controller has been
-looked-up.&lt;/p&gt;
-
-&lt;p&gt;Before:&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;App.HomeRoute = Ember.Route.extend({
-  &lt;span class="function"&gt;renderTemplate&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;(controller, model){
-    &lt;span class="local-variable"&gt;this&lt;/span&gt;.controllerFor(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;bio&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).set(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;content&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, model);
-    &lt;span class="local-variable"&gt;this&lt;/span&gt;.render(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;bio&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
-  }
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;After:&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;App.HomeRoute = Ember.Route.extend({
-  &lt;span class="function"&gt;renderTemplate&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;(controller, model){
-    &lt;span class="local-variable"&gt;this&lt;/span&gt;.render(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;bio&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, {
-      &lt;span class="key"&gt;model&lt;/span&gt;: model
-    });
-  }
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;h3 class='anchorable-toc' id='toc_other-notable-changes'&gt;Other Notable Changes&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;Add better debugging for Resolver Lookup&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;A &lt;code&gt;LOG_RESOLVER&lt;/code&gt; flag can now be added to your application instance to get nice logging output
-showing each lookup the resolver is doing, including which were &amp;quot;hits&amp;quot; and which were &amp;quot;misses&amp;quot;
-(checked items are &amp;quot;hits&amp;quot;):&lt;/p&gt;
-&lt;div class="highlight  "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;[ ] route:application ..........................................  App.ApplicationRoute
-[✓] route:index ................................................  App.IndexRoute
-[ ] controller:application .....................................  App.ApplicationController
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;Ensure context is unchanged when using keywords with &lt;code&gt;itemController&lt;/code&gt; for &lt;code&gt;{{each}}&lt;/code&gt; or &lt;code&gt;controller&lt;/code&gt; for &lt;code&gt;{{with}}&lt;/code&gt;.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Previously the following code would bind &lt;code&gt;this&lt;/code&gt; in the template block to the
-itemController&amp;#39;s content (even though the keyword form of &lt;code&gt;{{each}}&lt;/code&gt; or &lt;code&gt;{{with}}&lt;/code&gt; is used). In 1.6.0
-the context of the  block will correctly be unchanged, and the &lt;code&gt;post&lt;/code&gt; property will be wrapped in the &lt;code&gt;post&lt;/code&gt; controller.&lt;/p&gt;
-&lt;div class="highlight  "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;{{#each post in posts itemController='post'}}
-  {{this}} - Should be the surrounding context, NOT changed to that of the itemController.
-{{/each}}
-
-{{#with post as somethingElse controller='post'}}
-  {{this}} - Should be the surrounding context, NOT changed to that of the controller specified.
-{{/with}}
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;Fix swallowed rejections in asynchronous route hooks (this may mean that errors that were previously completely
-swallowed are now surfaced in your application).&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Ember.copy&lt;/code&gt; and &lt;code&gt;Ember.isEqual&lt;/code&gt; now support &lt;code&gt;Date&lt;/code&gt; objects.&lt;/li&gt;
-&lt;li&gt;Backburner and RSVP now use the &lt;code&gt;Ember.onerror&lt;/code&gt; handler if present to log errors.&lt;/li&gt;
-&lt;li&gt;An error is now thrown when injecting a factory into all factories of the same type.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 class='anchorable-toc' id='toc_query-params-in-1-7-beta'&gt;Query Params in 1.7 Beta&lt;/h3&gt;
-&lt;p&gt;Thanks to the tireless work of &lt;a href="https://github.com/machty"&gt;@machty&lt;/a&gt; and team, query params support has finally landed and is
-enabled by default in the 1.7 beta series! Please test and report any issues you come across.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_other-improvements'&gt;Other Improvements&lt;/h3&gt;
-&lt;p&gt;As usual, there are a ton of bug fixes and small improvements in this
-release. You can see a list of all the changes in the CHANGELOG:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.6.0/CHANGELOG.md"&gt;Ember.js 1.6.0 CHANGELOG&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.7.0-beta.1/CHANGELOG.md"&gt;Ember.js 1.7.0-beta.1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </content>
   </entry>

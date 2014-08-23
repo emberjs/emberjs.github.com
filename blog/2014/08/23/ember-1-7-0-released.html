@@ -3,8 +3,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Ember 1.0 RC3</title>
-    <meta property="st:title" content="Ember 1.0 RC3" />
+    <title>Ember.js - Ember 1.7.0 and 1.8 Beta Released</title>
+    <meta property="st:title" content="Ember 1.7.0 and 1.8 Beta Released" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -12,7 +12,7 @@
     
   </head>
 
-  <body class="blog blog_2013 blog_2013_04 blog_2013_04_21 blog_2013_04_21_ember-1-0-rc3">
+  <body class="blog blog_2014 blog_2014_08 blog_2014_08_23 blog_2014_08_23_ember-1-7-0-released">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -191,97 +191,175 @@
       
       <div id="content" class="has-sidebar">
           <article class="blog-post">
-    <h1>Ember 1.0 RC3</h1>
+    <h1>Ember 1.7.0 and 1.8 Beta Released</h1>
     
-      <h3 class="blog-post-author">Posted By: Stefan Penner &ndash; <time>Apr 21, 2013</time></h3>
+      <h3 class="blog-post-author">Posted By: Alex Navasardyan &ndash; <time>Aug 23, 2014</time></h3>
     
 
     <hr>
 
-    <p>Today we are announcing the third Release Candidate of Ember 1.0.
-As we said when we released RC1, all releases until 1.0 is final
-will be about bugfixes and improvements, and should not have any
-breaking changes.</p>
-<h3 class='anchorable-toc' id='toc_performance'>Performance</h3>
-<p>Since RC2, a series of performance improvements have landed.</p>
+    <p>We are pleased to announce that both Ember.js 1.7.0 and the first beta in the 1.8 series
+have been released. This comes as the seventh cycle of our release process that began just
+after 1.0 was released.</p>
 
-<ul>
-<li><p>When adjacent child views are scheduled for insertion they are
-are now batched together, and inserted together rather then one at
-a time.</p></li>
-<li><p>Object deletion is now async, this prevents un-needed churn when destroying
-large interconnected object graphs.</p></li>
-<li><p>The number of objects allocated during view rendering has been cut down.</p></li>
-</ul>
+<p>This release brings bug fixes, potentially breaking changes and new features.</p>
+<h2 class='anchorable-toc' id='toc_new-features'>New Features</h2><h3 class='anchorable-toc' id='toc_nestable-code-this-route-code'>Nestable <code>this.route</code></h3>
+<p>This change removes the restriction that only <code>this.resource</code> can have nested
+child routes.</p>
 
-<p>The ongoing performance effort is being championed 
-by Erik Bryn and Kris Selden.</p>
-<h3 class='anchorable-toc' id='toc_testing'>Testing</h3>
-<p>There have been many fixes and improvements to App#reset, which should now
-correctly clear application state when invoked. Typically this is only used
-for integration tests.</p>
+<p>Prior to this change, using <code>this.resource</code> would reset the namespace and in order
+to preserve it you had to do the following:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
+3
+4
+5
+6
+7
+8
 </pre></td>
-  <td class="code"><pre><span class="comment">// before each integration test</span>
-App.reset();
+  <td class="code"><pre><span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">foo.bar</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.resource(<span class="string"><span class="delimiter">'</span><span class="content">foo.bar.baz</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+      <span class="comment">// All this repetition to get an</span>
+      <span class="comment">// intuitively-named FooBarBazRoute</span>
+    });
+  });
+});
 </pre></td>
 </tr></table>
 </div></div>
-<p>Please Note: <code>App.reset()</code> now brings its own run loop, and no longer
-needs to be wrapped in one.</p>
-
-<p>Initial work on a new <a href="https://github.com/emberjs/ember.js/tree/master/packages/ember-testing">ember-testing package</a>
-has begun. The goal of this project is to make testing Ember applications easier,
-especially when it comes to testing asynchrony. As this effort matures, expect full
-documentation, examples and guides.</p>
-
-<p>Props to Erik Bryn for researching integration testing approaches by many community
-members, including Jo Liss and Katie Gengler, and spearheading initial work on what
-will be our official library.</p>
-<h3 class='anchorable-toc' id='toc_ember-builds'>Ember Builds</h3>
-<p>Each successful <a href="https://travis-ci.org/emberjs/ember.js">CI</a> run now publishes its build results to
-<a href="/builds">http://emberjs.com/builds</a>. This should make
-it much simpler to reference and use the <a href="http://builds.emberjs.com/canary/ember.js">the latest ember build</a>.</p>
-
-<p>Thanks to Stanley Stuart, Luke Melia, Erik Bryn and others for getting this set up.</p>
-<h3 class='anchorable-toc' id='toc_new-input-and-textarea-helpers'>New Input and TextArea helpers</h3>
-<p><code>TextField</code>, <code>TextArea</code> and <code>Checkbox</code> views now have corresponding handlebars helpers.</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p><code>this.route</code> can be nested like <code>this.resource</code>, but unlike this.resource, the namespace
+of child routes is appended rather than reset to a top-level namespace, allowing the above to be
+written as:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
+4
+5
+6
+7
+8
+9
 </pre></td>
-  <td class="code"><pre>  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="attribute-name">Ember.TextField</span> <span class="attribute-name">valueBinding</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
-  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="attribute-name">Ember.Checkbox</span>  <span class="attribute-name">checkedBinding</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">isActive</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
-  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="attribute-name">Ember.TextArea</span>  <span class="attribute-name">valueBinding</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">bar</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+    <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">baz</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+       <span class="comment">// uses FooBarBazRoute</span>
+       <span class="comment">// generates foo.bar.baz.index</span>
+       <span class="comment">// generates FooBarBazIndexRoute</span>
+     });
+   });
+});
 </pre></td>
 </tr></table>
 </div></div>
-<p>can now be expressed as:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>Unnested <code>this.route</code> works the same way as before.</p>
+<h3 class='anchorable-toc' id='toc_query-params'>Query Params</h3>
+<p>Thanks to the tireless work of <a href="https://github.com/machty">@machty</a> and team, query params
+support has finally landed and is a part of the 1.7.0 release!</p>
+
+<p>Ember now has first class support for URL query parameters (e.g. <code>/?page=1&amp;sort=last_name</code>).
+With this API, each query param is bound to a property on a controller, such that changes made
+to query params in the URL (e.g. user presses the back button) will update the controller property,
+and vice versa.</p>
+
+<p>The API handles many of tricky aspects of maintaining a binding to a URL, such as:</p>
+
+<ul>
+<li>coalescing multiple controller property changes into a single URL update</li>
+<li>correctly casting new URL query param values to the datatype expected by the controller property
+(e.g. <code>&quot;true&quot;</code> for a boolean property casts to <code>true</code>, <code>&quot;123&quot;</code> for a numeric property casts to <code>123</code>)</li>
+<li>omitting default query param values from the URL so as to not unnecessarily clutter the URL
+with default values</li>
+</ul>
+
+<p>Please read the <a href="/guides/routing/query-params/">Query Params Guide</a> for more information.</p>
+<h2 class='anchorable-toc' id='toc_breaking-changes-and-deprecations'>Breaking Changes and Deprecations</h2>
+<p>The following are a few deprecation warnings and breaking changes that have been included in 1.7.
+Please review the new <a href="http://emberjs.com/guides/deprecations/">Deprecation Guide</a> for more details.</p>
+<h3 class='anchorable-toc' id='toc_controller-s-code-model-code-property'>Controller&#39;s <code>model</code> property</h3>
+<p>On Controllers, the content property is now derived from model. This reduces many caveats
+with model/content, and also sets a simple ground rule: Never set a controller&#39;s content,
+rather always set its model.</p>
+<h3 class='anchorable-toc' id='toc_code-bind-attr-code-and-empty-arrays'><code>bind-attr</code> and empty arrays</h3>
+<p>An empty array is treated as falsy value in <code>bind-attr</code> to be in consistent with <code>if</code> helper.
+Breaking for apps that relies on the previous behaviour which treats an empty array as
+truthy value in <code>bind-attr</code>.</p>
+<h2 class='anchorable-toc' id='toc_other-improvements'>Other Improvements</h2>
+<p><code>Ember</code> is now using <code>RSVP</code> 3.0.13 and brings fixes for <code>RSVP.hash</code> in IE8.</p>
+<h2 class='anchorable-toc' id='toc_ember-1-8-0-beta-1'>Ember 1.8.0-beta.1</h2><h3 class='anchorable-toc' id='toc_support-for-ie-6-and-7'>Support for IE 6 and 7</h3>
+<p>Usage of Ember is deprecated for Internet Explorer 6 and 7, support will be removed
+in the next major version.</p>
+<h3 class='anchorable-toc' id='toc_refactored-view-layer'>Refactored view layer</h3>
+<p>Internal implementation of the view layer has been refactored. Many of you remember
+<code>script</code> tags in the DOM:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">metamorph-1-start</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-placeholder</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/script&gt;</span>
+<span class="tag">&lt;script</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">metamorph-1-end</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-placeholder</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/script&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>That&#39;s how <code>Ember</code> knows how to update the values in the DOM. This refactor removes
+the need for <code>script</code> tags.</p>
+<h3 class='anchorable-toc' id='toc_actions-lookup-on-controller'>Actions lookup on controller</h3>
+<p>Some of you might remember that you could define action handlers in the root of the
+controller, like so:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
+4
+5
 </pre></td>
-  <td class="code"><pre>  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">input</span> <span class="attribute-name">value</span>=<span class="attribute-value">name</span><span class="inline-delimiter">}}</span></span>
-  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">input</span> <span class="attribute-name">type</span>=<span class="attribute-value">checkbox</span> <span class="attribute-name">checked</span>=<span class="attribute-value">isActive</span><span class="inline-delimiter">}}</span></span>
-  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">textarea</span> <span class="attribute-name">value</span>=<span class="attribute-value">name</span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre>App.HomeController = Ember.ObjectController.extend({
+  <span class="function">someAction</span>: <span class="keyword">function</span>() {
+    <span class="comment">// handle the action</span>
+  }
+});
 </pre></td>
 </tr></table>
 </div></div>
-<p>We recommend using the &quot;dynamic tag&quot; forms rather than the <code>{{view}}</code> forms because
-they are equivalent to the static tags that we all know and love.</p>
+<p>A deprecation warning was added in late 2013 that would print a nice deprecation notice
+if you happen to use an action name that was also found in the root of the controller.
+Unfortunately, even with the deprecation, we still have the possibility to conflict
+with controller level methods and properties.</p>
 
-<p>Note that when using dynamic tags, you do not need to use a <code>Binding</code> suffix and
-must leave out the quotation marks around the values. Ember will interpret quoted
-strings as static strings in this context.</p>
-<h3 class='anchorable-toc' id='toc_documentation'>Documentation</h3>
-<p>The API docs have been refined and filled in by more community members
-than we can mention here. Thank you everyone for helping out!</p>
-<h3 class='anchorable-toc' id='toc_changelog'>Changelog</h3>
-<p>The full <a href="https://github.com/emberjs/ember.js/blob/v1.0.0-rc.3/CHANGELOG">CHANGELOG</a> is available on Github, as always.</p>
+<p>To define action handler, you should place it under <code>actions</code> hash, like so:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>App.HomeController = Ember.ObjectController.extend({
+  <span class="key">actions</span>: {
+    <span class="function">someAction</span>: <span class="keyword">function</span>() {
+      <span class="comment">// handle the action</span>
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>This change will remove support for older action lookup in the root of the controller
+completely, and finally allow usage of nearly any action name without the need to
+check if that name was also used by the controller.</p>
+
+<p>Also, this release introduces numerous bug fixes and small improvements. You can see a list of all the changes in the CHANGELOG:</p>
+
+<ul>
+<li><a href="https://github.com/emberjs/ember.js/blob/v1.7.0/CHANGELOG.md">Ember.js 1.7.0 CHANGELOG</a></li>
+<li><a href="https://github.com/emberjs/ember.js/blob/v1.8.0-beta.1/CHANGELOG.md">Ember.js 1.8.0-beta.1 CHANGELOG</a></li>
+</ul>
 
 
     <hr>
