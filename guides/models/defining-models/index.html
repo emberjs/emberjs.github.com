@@ -892,7 +892,45 @@ App.Post = DS.Model.extend({
 </tr></table>
 </div></div>
 <p>You can also specify an inverse on a <code>belongsTo</code>, which works how you&#39;d expect.</p>
+<h4 class='anchorable-toc' id='toc_reflexive-relation'>Reflexive relation</h4>
+<p>When you want to define a reflexive relation, you must either explicitly define
+the other side, and set the explicit inverse accordingly, and if you don&#39;t need the
+other side, set the inverse to null.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> belongsTo = DS.belongsTo,
+    hasMany = DS.hasMany;
 
+App.Folder = DS.Model.extend({
+  <span class="key">children</span>: hasMany(<span class="string"><span class="delimiter">'</span><span class="content">folder</span><span class="delimiter">'</span></span>, {<span class="key">inverse</span>: <span class="string"><span class="delimiter">'</span><span class="content">parent</span><span class="delimiter">'</span></span>}),
+  <span class="key">parent</span>: belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">folder</span><span class="delimiter">'</span></span>, {<span class="key">inverse</span>: <span class="string"><span class="delimiter">'</span><span class="content">children</span><span class="delimiter">'</span></span>})
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>or</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> belongsTo = DS.belongsTo,
+
+App.Folder = DS.Model.extend({
+  <span class="key">parent</span>: belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">folder</span><span class="delimiter">'</span></span>, {<span class="key">inverse</span>: <span class="predefined-constant">null</span>})
+});
+</pre></td>
+</tr></table>
+</div></div>
     
       <footer>
         
