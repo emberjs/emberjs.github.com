@@ -683,6 +683,23 @@ application.</p>
 });
 </pre></td>
 </tr></table>
+</div></div>
+<p>Note that actions may be attached to any element of the DOM, but not all
+respond to the <code>click</code> event. For example, if an action is attached to an <code>a</code>
+link without an <code>href</code> attribute, or to a <code>div</code>, some browsers won&#39;t execute
+the associated function. If it&#39;s really needed to define actions over such
+elements, a CSS workaround exists to make them clickable, <code>cursor: pointer</code>.
+For example:</p>
+<div class="highlight css "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>[<span class="attribute-name">data-ember-action</span>] {
+  <span class="key">cursor</span>: <span class="value">pointer</span>;
+}
+</pre></td>
+</tr></table>
 </div></div><h3 class='anchorable-toc' id='toc_action-bubbling'>Action Bubbling</h3>
 <p>By default, the <code>{{action}}</code> helper triggers a method on the template&#39;s
 controller, as illustrated above.</p>
@@ -893,7 +910,7 @@ is most commonly used to send actions to a view instead of a controller.</p>
 4
 </pre></td>
   <td class="code"><pre><span class="tag">&lt;p&gt;</span>
-  <span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">select</span><span class="error">&quot;</span> <span class="attribute-name">post</span> <span class="attribute-name">target</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">view</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>✓<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">select</span><span class="error">&quot;</span> <span class="attribute-name">post</span> <span class="attribute-name">target</span>=<span class="attribute-value">view</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>✓<span class="tag">&lt;/button&gt;</span>
   <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">post.title</span><span class="inline-delimiter">}}</span></span>
 <span class="tag">&lt;/p&gt;</span>
 </pre></td>
@@ -916,6 +933,22 @@ is most commonly used to send actions to a view instead of a controller.</p>
     }
   }
 });
+</pre></td>
+</tr></table>
+</div></div>
+<p>Note that actions sent to views in this way do not bubble up the 
+currently rendered view hierarchy. If you want to handle the action in
+a parent view, use the following:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;p&gt;</span>
+  <span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">select</span><span class="error">&quot;</span> <span class="attribute-name">post</span> <span class="attribute-name">target</span>=<span class="attribute-value">view.parentView</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>✓<span class="tag">&lt;/button&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">post.title</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/p&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>

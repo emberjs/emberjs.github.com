@@ -843,9 +843,40 @@ that includes some sort of asynchronous callback. For example:</p>
 </pre></td>
 </tr></table>
 </div></div><h4 class='anchorable-toc' id='toc_what-happens-if-i-forget-to-start-a-run-loop-in-an-async-handler'>What happens if I forget to start a run loop in an async handler?</h4>
-<p>As mentioned above, you should wrap any non-Ember async callbacks in <code>Ember.run</code>.
-If you don&#39;t, Ember will try to approximate a beginning and end for you. Here
-is some pseudocode to describe what happens:</p>
+<p>As mentioned above, you should wrap any non-Ember async callbacks in
+<code>Ember.run</code>. If you don&#39;t, Ember will try to approximate a beginning and end for you.
+Consider the following callback:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre><span class="predefined">$</span>(<span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>).click(<span class="keyword">function</span>(){
+  console.log(<span class="string"><span class="delimiter">'</span><span class="content">Doing things...</span><span class="delimiter">'</span></span>);
+
+  Ember.run.schedule(<span class="string"><span class="delimiter">'</span><span class="content">actions</span><span class="delimiter">'</span></span>, <span class="local-variable">this</span>, <span class="keyword">function</span>() {
+    <span class="comment">// Do more things</span>
+  });
+  Ember.run.scheduleOnce(<span class="string"><span class="delimiter">'</span><span class="content">afterRender</span><span class="delimiter">'</span></span>, <span class="local-variable">this</span>, <span class="keyword">function</span>() {
+    <span class="comment">// Yet more things</span>
+  });
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>The runloop API calls that <em>schedule</em> work i.e. <code>run.schedule</code>,
+<code>run.scheduleOnce</code>, <code>run.once</code> have the property that they will approximate a
+runloop for you if one does not already exist. These automatically created
+runloops we call <em>autoruns</em>.</p>
+
+<p>Here is some pseudocode to describe what happens using the example above:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -858,26 +889,89 @@ is some pseudocode to describe what happens:</p>
 9
 <strong>10</strong>
 11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+22
+23
+24
+25
+26
+27
+28
+29
+<strong>30</strong>
+31
+32
 </pre></td>
   <td class="code"><pre><span class="predefined">$</span>(<span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>).click(<span class="keyword">function</span>(){
-  <span class="comment">// Ember or runloop related code.</span>
-  Ember.run.start();
+  <span class="comment">// 1. autoruns do not change the execution of arbitrary code in a callback.</span>
+  <span class="comment">//    This code is still run when this callback is executed and will not be</span>
+  <span class="comment">//    scheduled on an autorun.</span>
+  console.log(<span class="string"><span class="delimiter">'</span><span class="content">Doing things...</span><span class="delimiter">'</span></span>);
 
-  <span class="comment">// 1. we detect you need a run-loop</span>
-  <span class="comment">// 2. we start one for you, but we don't really know when it ends, so we guess</span>
+  Ember.run.schedule(<span class="string"><span class="delimiter">'</span><span class="content">actions</span><span class="delimiter">'</span></span>, <span class="local-variable">this</span>, <span class="keyword">function</span>() {
+    <span class="comment">// 2. schedule notices that there is no currently available runloop so it</span>
+    <span class="comment">//    creates one. It schedules it to close and flush queues on the next</span>
+    <span class="comment">//    turn of the JS event loop.</span>
+    <span class="keyword">if</span> (! Ember.run.hasOpenRunloop()) {
+      Ember.run.start();
+      nextTick(<span class="keyword">function</span>() {
+          Ember.run.end()
+      }, <span class="integer">0</span>);
+    }
 
-  nextTick(<span class="keyword">function</span>() {
-    Ember.run.end()
-  }, <span class="integer">0</span>);
+    <span class="comment">// 3. There is now a runloop available so schedule adds its item to the</span>
+    <span class="comment">//    given queue</span>
+    Ember.run.schedule(<span class="string"><span class="delimiter">'</span><span class="content">actions</span><span class="delimiter">'</span></span>, <span class="local-variable">this</span>, <span class="keyword">function</span>() {
+      <span class="comment">// Do more things</span>
+    });
+
+  });
+
+  <span class="comment">// 4. scheduleOnce sees the autorun created by schedule above as an available</span>
+  <span class="comment">//    runloop and adds its item to the given queue.</span>
+  Ember.run.scheduleOnce(<span class="string"><span class="delimiter">'</span><span class="content">afterRender</span><span class="delimiter">'</span></span>, <span class="local-variable">this</span>, <span class="keyword">function</span>() {
+    <span class="comment">// Yet more things</span>
+  });
+
 });
 </pre></td>
 </tr></table>
 </div></div>
-<p>This is suboptimal because the current JS frame is allowed to end before the run loop is
-flushed, which sometimes means the browser will take the opportunity to do other things,
-like garbage collection. GC running in between data changing and DOM rerendering can cause visual lag and should be minimized.</p>
-<h4 class='anchorable-toc' id='toc_when-i-am-in-testing-mode-why-are-run-loop-autoruns-disabled'>When I am in testing mode, why are run-loop autoruns disabled?</h4>
-<p>Some of Ember&#39;s test helpers are promises that wait for the run loop to empty before resolving. This leads to resolving too early if there is code that is outside the run loop and gives erroneous test failures. Disabling autoruns help you identify these scenarios and helps both your testing and your application!</p>
+<p>Although autoruns are convenient, they are suboptimal. The current JS frame is
+allowed to end before the run loop is flushed, which sometimes means the browser
+will take the opportunity to do other things, like garbage collection. GC
+running in between data changing and DOM rerendering can cause visual lag and
+should be minimized.</p>
+
+<p>Relying on autoruns is not a rigorous or efficient way to use the runloop.
+Wrapping event handlers manually is preferred.</p>
+<h4 class='anchorable-toc' id='toc_how-is-runloop-behaviour-different-when-testing'>How is runloop behaviour different when testing?</h4>
+<p>When <code>Ember.testing</code> is set i.e. your application is in <em>testing mode</em> then
+Ember will throw an error if you try to schedule work without an available
+runloop.</p>
+
+<p>Autoruns are disabled in testing for several reasons:</p>
+
+<ol>
+<li>Autoruns are Embers way of not punishing you in production if you forget to
+open a runloop before you schedule callbacks on it. While this is useful in
+production, these are still situations that should be revealed in testing to
+help you find and fix them.</li>
+<li>Some of Ember&#39;s test helpers are promises that wait for the run loop to empty
+before resolving. If your application has code that runs <em>outside</em> a runloop,
+these will resolve too early and give erroneous test failures which are
+difficult to find. Disabling autoruns help you identify these scenarios and
+helps both your testing and your application!</li>
+</ol>
 
     
       <footer>
