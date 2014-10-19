@@ -4,8 +4,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Understanding Ember.js: Deprecations</title>
-    <meta property="st:title" content="Understanding Ember.js: Deprecations" />
+    <title>Ember.js - Deprecations: Deprecations</title>
+    <meta property="st:title" content="Deprecations: Deprecations" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
@@ -555,13 +555,17 @@
             </li>
           </ol></li>
           <li class="level-1 selected">
-            <a href="/guides/deprecations">Understanding Ember.js</a>
+            <a href="/guides/deprecations">Deprecations</a>
             <ol class='selected'>
         
             <li class="level-3 sub-selected">
               <a href="/guides/deprecations">Deprecations</a>
             </li>
-          
+          </ol></li>
+          <li class="level-1">
+            <a href="/guides/understanding-ember/the-view-layer">Understanding Ember.js</a>
+            <ol>
+        
             <li class="level-3">
               <a href="/guides/understanding-ember/the-view-layer">The View Layer</a>
             </li>
@@ -639,33 +643,33 @@ instead.</p>
 <h3 class='anchorable-toc' id='toc_deprecations-added-in-1-8'>Deprecations Added in 1.8</h3><h4 class='anchorable-toc' id='toc_global-lookup-of-views'>Global lookup of views</h4>
 <p>Previous to Ember 1.8, views would commonly be fetched from the global
 scope:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 </pre></td>
-  <td class="code"><pre>{{view App.SomeView}}
-{{each itemViewClass=App.SomeView}}
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="attribute-name">App.SomeView</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">each</span> <span class="attribute-name">itemViewClass</span>=<span class="attribute-value">App.SomeView</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>
 <p>Since Ember 1.8, views are more appropriately resolved on the application
 via strings:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 </pre></td>
-  <td class="code"><pre>{{view &quot;some&quot;}}
-{{each itemViewClass=&quot;some&quot;}}
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="error">&quot;</span><span class="attribute-name">some</span><span class="error">&quot;</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">each</span> <span class="attribute-name">itemViewClass</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">some</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>
 <p>They may also be fetched via a binding:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 </pre></td>
-  <td class="code"><pre>{{view view.someViewViaTheCurrentView}}
-{{each itemViewClass=someViewViaAControllerProperty}}
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="attribute-name">view.someViewViaTheCurrentView</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">each</span> <span class="attribute-name">itemViewClass</span>=<span class="attribute-value">someViewViaAControllerProperty</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -679,19 +683,19 @@ the <a href="/api/classes/Ember.TextField.html">Ember.TextField</a> view is used
 <p>The <a href="/api/classes/Ember.Select.html">Ember.Select</a> view has not been upgraded to
 have a helper. Instead, it was suggested that you call it via the global
 class name:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre>{{view Ember.Select content=manyItems}}
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="attribute-name">Ember.Select</span> <span class="attribute-name">content</span>=<span class="attribute-value">manyItems</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>
 <p>Since this lookup is now deprecated, the select view has been registered
 on an application as <code>select</code>. The new usage is:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre>{{view &quot;select&quot; content=manyItems}}
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="error">&quot;</span><span class="attribute-name">select</span><span class="error">&quot;</span> <span class="attribute-name">content</span>=<span class="attribute-value">manyItems</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -726,8 +730,8 @@ views on the the application:</p>
   <td class="code"><pre><span class="comment">// usage is {{view &quot;list&quot;}}</span>
 Ember.Application.initializer({
   <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">list-view</span><span class="delimiter">'</span></span>,
-  <span class="function">initialize</span>: <span class="keyword">function</span>(application, container) {
-    application.register(<span class="string"><span class="delimiter">'</span><span class="content">view:list</span><span class="delimiter">'</span></span>, ListView);
+  <span class="function">initialize</span>: <span class="keyword">function</span>(container, application) {
+    container.register(<span class="string"><span class="delimiter">'</span><span class="content">view:list</span><span class="delimiter">'</span></span>, ListView);
   }
 });
 </pre></td>
@@ -744,10 +748,10 @@ and the <a href="/guides/understanding-ember/dependency-injection-and-service-lo
              ← Cookbook: Continuous Redrawing of Views
           </a>
          
-        <a class="next-guide" href="/guides/understanding-ember/the-view-layer">
-          The View Layer →
-        </a>
-      
+            <a class="next-guide" href="/guides/understanding-ember/the-view-layer">
+               We're done with Deprecations. Next up: Understanding Ember.js - The View Layer →
+            </a>
+          
       </footer>
       
   </div>
