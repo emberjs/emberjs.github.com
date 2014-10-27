@@ -659,7 +659,7 @@ App.FooSlowModelRoute = Ember.Route.extend({
 </pre></td>
 </tr></table>
 </div></div>
-<p>If you navigate to <code>foo/slow_model</code>, and in <code>FooSlowModelRoute#model</code>, 
+<p>If you navigate to <code>foo/slow_model</code>, and in <code>FooSlowModelRoute#model</code>,
 you return an AJAX query promise that takes a long time to complete.
 During this time, your UI isn&#39;t really giving you any feedback as to
 what&#39;s happening; if you&#39;re entering this route after a full page
@@ -668,7 +668,7 @@ finished fully entering any route and haven&#39;t yet displayed any
 templates; if you&#39;re navigating to <code>foo/slow_model</code> from another
 route, you&#39;ll continue to see the templates from the previous route
 until the model finish loading, and then, boom, suddenly all the
-templates for <code>foo/slow_model</code> load. </p>
+templates for <code>foo/slow_model</code> load.</p>
 
 <p>So, how can we provide some visual feedback during the transition?</p>
 
@@ -694,7 +694,7 @@ the following loading substate behavior.</p>
 </tr></table>
 </div></div>
 <p>If a route with the path <code>foo.bar.baz</code> returns a promise that doesn&#39;t immediately
-resolve, Ember will try to find a <code>loading</code> route in the hierarchy 
+resolve, Ember will try to find a <code>loading</code> route in the hierarchy
 above <code>foo.bar.baz</code> that it can transition into, starting with
 <code>foo.bar.baz</code>&#39;s sibling:</p>
 
@@ -704,7 +704,7 @@ above <code>foo.bar.baz</code> that it can transition into, starting with
 <li><code>loading</code></li>
 </ol>
 
-<p>Ember will find a loading route at the above location if either a) a 
+<p>Ember will find a loading route at the above location if either a) a
 Route subclass has been defined for such a route, e.g.</p>
 
 <ol>
@@ -723,14 +723,14 @@ Route subclass has been defined for such a route, e.g.</p>
 
 <p>During a slow asynchronous transition, Ember will transition into the
 first loading sub-state/route that it finds, if one exists. The
-intermediate transition into the loading substate happens immediately 
+intermediate transition into the loading substate happens immediately
 (synchronously), the URL won&#39;t be updated, and, unlike other transitions
 that happen while another asynchronous transition is active, the
 currently active async transition won&#39;t be aborted.</p>
 
 <p>After transitioning into a loading substate, the corresponding template
 for that substate, if present, will be rendered into the main outlet of
-the parent route, e.g. <code>foo.bar.loading</code>&#39;s template would render into 
+the parent route, e.g. <code>foo.bar.loading</code>&#39;s template would render into
 <code>foo.bar</code>&#39;s outlet. (This isn&#39;t particular to loading routes; all
 routes behave this way by default.)</p>
 
@@ -756,8 +756,8 @@ another route fails, a lazy transition will (by default) just remain on the
 previous route, whereas an eager transition will have already left the
 pre-transition route to enter a loading substate.</p>
 <h3 class='anchorable-toc' id='toc_the-code-loading-code-event'>The <code>loading</code> event</h3>
-<p>If you return a promise from the various <code>beforeModel</code>/<code>model</code>/<code>afterModel</code> hooks, 
-and it doesn&#39;t immediately resolve, a <code>loading</code> event will be fired on that route 
+<p>If you return a promise from the various <code>beforeModel</code>/<code>model</code>/<code>afterModel</code> hooks,
+and it doesn&#39;t immediately resolve, a <code>loading</code> event will be fired on that route
 and bubble upward to <code>ApplicationRoute</code>.</p>
 
 <p>If the <code>loading</code> handler is not defined at the specific route,
@@ -796,8 +796,8 @@ route, providing the <code>ApplicationRoute</code> the opportunity to manage it.
 </pre></td>
 </tr></table>
 </div></div>
-<p>The <code>loading</code> handler provides the ability to decide what to do during 
-the loading process. If the last loading handler is not defined 
+<p>The <code>loading</code> handler provides the ability to decide what to do during
+the loading process. If the last loading handler is not defined
 or returns <code>true</code>, Ember will perform the loading substate behavior.</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -827,7 +827,7 @@ or returns <code>true</code>, Ember will perform the loading substate behavior.<
 <p>Ember provides an analogous approach to <code>loading</code> substates in
 the case of errors encountered during a transition.</p>
 
-<p>Similar to how the default <code>loading</code> event handlers are implemented, 
+<p>Similar to how the default <code>loading</code> event handlers are implemented,
 the default <code>error</code> handlers will look for an appropriate error substate to
 enter, if one can be found.</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -846,7 +846,7 @@ enter, if one can be found.</p>
 </tr></table>
 </div></div>
 <p>For instance, an error thrown or rejecting promise returned from
-<code>ArticlesOverviewRoute#model</code> (or <code>beforeModel</code> or <code>afterModel</code>) 
+<code>ArticlesOverviewRoute#model</code> (or <code>beforeModel</code> or <code>afterModel</code>)
 will look for:</p>
 
 <ol>
@@ -855,7 +855,7 @@ will look for:</p>
 </ol>
 
 <p>If one of the above is found, the router will immediately transition into
-that substate (without updating the URL). The &quot;reason&quot; for the error 
+that substate (without updating the URL). The &quot;reason&quot; for the error
 (i.e. the exception thrown or the promise reject value) will be passed
 to that error state as its <code>model</code>.</p>
 
@@ -921,13 +921,13 @@ into <code>foo</code>&#39;s <code>outlet</code> you would need to split the dyna
 </pre></td>
 </tr></table>
 </div></div>
-<p><a href="http://emberjs.jsbin.com/ucanam/4279">Example JSBin</a></p>
+<p><a href="http://jsbin.com/tujepi">Example JSBin</a></p>
 <h3 class='anchorable-toc' id='toc_the-code-error-code-event'>The <code>error</code> event</h3>
 <p>If <code>ArticlesOverviewRoute#model</code> returns a promise that rejects (because, for
 instance, the server returned an error, or the user isn&#39;t logged in,
 etc.), an <code>error</code> event will fire on <code>ArticlesOverviewRoute</code> and bubble upward.
 This <code>error</code> event can be handled and used to display an error message,
-redirect to a login page, etc. </p>
+redirect to a login page, etc.</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -959,7 +959,7 @@ redirect to a login page, etc. </p>
     <span class="function">error</span>: <span class="keyword">function</span>(error, transition) {
 
       <span class="keyword">if</span> (error &amp;&amp; error.status === <span class="integer">400</span>) {
-        <span class="comment">// error substate and parent routes do not handle this error </span>
+        <span class="comment">// error substate and parent routes do not handle this error</span>
         <span class="keyword">return</span> <span class="local-variable">this</span>.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">modelNotFound</span><span class="delimiter">'</span></span>);
       }
 
@@ -973,7 +973,7 @@ redirect to a login page, etc. </p>
 </div></div>
 <p>In analogy with the <code>loading</code> event, you could manage the <code>error</code> event
 at the Application level to perform any app logic and based on the
-result of the last <code>error</code> handler, Ember will decide if substate behavior 
+result of the last <code>error</code> handler, Ember will decide if substate behavior
 must be performed or not.</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -1045,7 +1045,7 @@ App.ApplicationRoute = Ember.Route.extend({
 </pre></td>
 </tr></table>
 </div></div>
-<p><a href="http://emberjs.jsbin.com/ucanam/3307">Example JSBin</a></p>
+<p><a href="http://jsbin.com/leruqa">Example JSBin</a></p>
 
 <p>This will, like the legacy <code>LoadingRoute</code>, append a top-level view when the
 router goes into a loading state, and tear down the view once the
