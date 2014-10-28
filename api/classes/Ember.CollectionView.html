@@ -59,7 +59,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v1.7.0" target="_blank"> Tag: v1.7.0</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v1.8.0" target="_blank"> Tag: v1.8.0</a></li>
 
       
           <li class="level-1 ">
@@ -694,7 +694,7 @@
             
           <li class="level-3 ">
           
-              <a href="/api/classes/Ember.ReduceComputedProperty.html">Ember.ReduceComputedProperty</a>
+              <a href="/api/classes/Ember.ProxyMixin.html">Ember.ProxyMixin</a>
             
           </li>
         
@@ -702,7 +702,7 @@
             
           <li class="level-3 ">
           
-              <a href="/api/classes/Ember.RenderBuffer.html">Ember.RenderBuffer</a>
+              <a href="/api/classes/Ember.ReduceComputedProperty.html">Ember.ReduceComputedProperty</a>
             
           </li>
         
@@ -743,22 +743,6 @@
           <li class="level-3 ">
           
               <a href="/api/classes/Ember.SortableMixin.html">Ember.SortableMixin</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.State.html">Ember.State</a>
-            
-          </li>
-        
-          
-            
-          <li class="level-3 ">
-          
-              <a href="/api/classes/Ember.StateManager.html">Ember.StateManager</a>
             
           </li>
         
@@ -831,6 +815,14 @@
           <li class="level-3 ">
           
               <a href="/api/classes/Ember.TrackedArray.html">Ember.TrackedArray</a>
+            
+          </li>
+        
+          
+            
+          <li class="level-3 ">
+          
+              <a href="/api/classes/Ember.Vertex.html">Ember.Vertex</a>
             
           </li>
         
@@ -940,7 +932,7 @@
   <h1 class="api-header">
   Ember.CollectionView Class
   
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/collection_view.js#L23">packages/ember-views/lib/views/collection_view.js:23</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/collection_view.js#L26">packages/ember-views/lib/views/collection_view.js:26</a>
   
 </h1>
 
@@ -955,7 +947,7 @@
   
 
   
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/collection_view.js#L23">packages/ember-views/lib/views/collection_view.js:23</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/collection_view.js#L26">packages/ember-views/lib/views/collection_view.js:26</a></p>
   
 
   
@@ -985,12 +977,12 @@ instance&#39;s <code>content</code> property.</p>
 </div></div>
 <p>The view for each item in the collection will have its <code>content</code> property set
 to the item.</p>
-<h2 class='anchorable-toc' id='toc_specifying-itemviewclass'>Specifying itemViewClass</h2>
+<h2 class='anchorable-toc' id='toc_specifying-code-itemviewclass-code'>Specifying <code>itemViewClass</code></h2>
 <p>By default the view class for each item in the managed collection will be an
 instance of <code>Ember.View</code>. You can supply a different class by setting the
 <code>CollectionView</code>&#39;s <code>itemViewClass</code> property.</p>
 
-<p>Given an empty <code>&lt;body&gt;</code> and the following code:</p>
+<p>Given the following application code:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -1000,21 +992,27 @@ instance of <code>Ember.View</code>. You can supply a different class by setting
 6
 7
 8
-9
 </pre></td>
-  <td class="code"><pre>someItemsView = Ember.CollectionView.create({
+  <td class="code"><pre><span class="keyword">var</span> App = Ember.Application.create();
+App.ItemListView = Ember.CollectionView.extend({
   <span class="key">classNames</span>: [<span class="string"><span class="delimiter">'</span><span class="content">a-collection</span><span class="delimiter">'</span></span>],
   <span class="key">content</span>: [<span class="string"><span class="delimiter">'</span><span class="content">A</span><span class="delimiter">'</span></span>,<span class="string"><span class="delimiter">'</span><span class="content">B</span><span class="delimiter">'</span></span>,<span class="string"><span class="delimiter">'</span><span class="content">C</span><span class="delimiter">'</span></span>],
   <span class="key">itemViewClass</span>: Ember.View.extend({
     <span class="key">template</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">&quot;</span><span class="content">the letter: {{view.content}}</span><span class="delimiter">&quot;</span></span>)
   })
 });
-
-someItemsView.appendTo(<span class="string"><span class="delimiter">'</span><span class="content">body</span><span class="delimiter">'</span></span>);
 </pre></td>
 </tr></table>
 </div></div>
-<p>Will result in the following HTML structure</p>
+<p>And a simple application template:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="error">'</span><span class="attribute-name">item-list</span><span class="error">'</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>The following HTML will result:</p>
 <div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -1034,7 +1032,7 @@ someItemsView.appendTo(<span class="string"><span class="delimiter">'</span><spa
 &quot;ul&quot;, &quot;ol&quot;, &quot;table&quot;, &quot;thead&quot;, &quot;tbody&quot;, &quot;tfoot&quot;, &quot;tr&quot;, or &quot;select&quot; will result
 in the item views receiving an appropriately matched <code>tagName</code> property.</p>
 
-<p>Given an empty <code>&lt;body&gt;</code> and the following code:</p>
+<p>Given the following application code:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -1044,21 +1042,27 @@ in the item views receiving an appropriately matched <code>tagName</code> proper
 6
 7
 8
-9
 </pre></td>
-  <td class="code"><pre>anUnorderedListView = Ember.CollectionView.create({
+  <td class="code"><pre><span class="keyword">var</span> App = Ember.Application.create();
+App.UnorderedListView = Ember.CollectionView.create({
   <span class="key">tagName</span>: <span class="string"><span class="delimiter">'</span><span class="content">ul</span><span class="delimiter">'</span></span>,
   <span class="key">content</span>: [<span class="string"><span class="delimiter">'</span><span class="content">A</span><span class="delimiter">'</span></span>,<span class="string"><span class="delimiter">'</span><span class="content">B</span><span class="delimiter">'</span></span>,<span class="string"><span class="delimiter">'</span><span class="content">C</span><span class="delimiter">'</span></span>],
   <span class="key">itemViewClass</span>: Ember.View.extend({
     <span class="key">template</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">&quot;</span><span class="content">the letter: {{view.content}}</span><span class="delimiter">&quot;</span></span>)
   })
 });
-
-anUnorderedListView.appendTo(<span class="string"><span class="delimiter">'</span><span class="content">body</span><span class="delimiter">'</span></span>);
 </pre></td>
 </tr></table>
 </div></div>
-<p>Will result in the following HTML structure</p>
+<p>And a simple application template:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="error">'</span><span class="attribute-name">unordered-list-view</span><span class="error">'</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>The following HTML will result:</p>
 <div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -1075,7 +1079,7 @@ anUnorderedListView.appendTo(<span class="string"><span class="delimiter">'</spa
 </tr></table>
 </div></div>
 <p>Additional <code>tagName</code> pairs can be provided by adding to
-<code>Ember.CollectionView.CONTAINER_MAP</code></p>
+<code>Ember.CollectionView.CONTAINER_MAP</code>. For example:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
@@ -1098,7 +1102,7 @@ anUnorderedListView.appendTo(<span class="string"><span class="delimiter">'</spa
 9
 <strong>10</strong>
 </pre></td>
-  <td class="code"><pre>CustomCollectionView = Ember.CollectionView.extend({
+  <td class="code"><pre>App.CustomCollectionView = Ember.CollectionView.extend({
   <span class="function">createChildView</span>: <span class="keyword">function</span>(viewClass, attrs) {
     <span class="keyword">if</span> (attrs.content.kind == <span class="string"><span class="delimiter">'</span><span class="content">album</span><span class="delimiter">'</span></span>) {
       viewClass = App.AlbumView;
@@ -1124,21 +1128,27 @@ will be the <code>CollectionView</code>s only child.</p>
 6
 7
 8
-9
 </pre></td>
-  <td class="code"><pre>aListWithNothing = Ember.CollectionView.create({
-  <span class="key">classNames</span>: [<span class="string"><span class="delimiter">'</span><span class="content">nothing</span><span class="delimiter">'</span></span>]
-  content: <span class="predefined-constant">null</span>,
+  <td class="code"><pre><span class="keyword">var</span> App = Ember.Application.create();
+App.ListWithNothing = Ember.CollectionView.create({
+  <span class="key">classNames</span>: [<span class="string"><span class="delimiter">'</span><span class="content">nothing</span><span class="delimiter">'</span></span>],
+  <span class="key">content</span>: <span class="predefined-constant">null</span>,
   <span class="key">emptyView</span>: Ember.View.extend({
     <span class="key">template</span>: Ember.Handlebars.compile(<span class="string"><span class="delimiter">&quot;</span><span class="content">The collection is empty</span><span class="delimiter">&quot;</span></span>)
   })
 });
-
-aListWithNothing.appendTo(<span class="string"><span class="delimiter">'</span><span class="content">body</span><span class="delimiter">'</span></span>);
 </pre></td>
 </tr></table>
 </div></div>
-<p>Will result in the following HTML structure</p>
+<p>And a simple application template:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="error">'</span><span class="attribute-name">list-with-nothing</span><span class="error">'</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>The following HTML will result:</p>
 <div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -1234,19 +1244,7 @@ This will trigger appropriate changes to its rendered HTML.</p>
             </li>
           
             <li class="method private inherited">
-              <a href="#method__elementDidChange">_elementDidChange</a>
-            </li>
-          
-            <li class="method private inherited">
-              <a href="#method__insertElementLater">_insertElementLater</a>
-            </li>
-          
-            <li class="method private inherited">
               <a href="#method__isVisibleDidChange">_isVisibleDidChange</a>
-            </li>
-          
-            <li class="method private inherited">
-              <a href="#method__notifyWillDestroyElement">_notifyWillDestroyElement</a>
             </li>
           
             <li class="method private inherited">
@@ -1259,6 +1257,10 @@ This will trigger appropriate changes to its rendered HTML.</p>
           
             <li class="method private inherited">
               <a href="#method__scheduledDestroy">_scheduledDestroy</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_addClass">addClass</a>
             </li>
           
             <li class="method inherited">
@@ -1279,6 +1281,10 @@ This will trigger appropriate changes to its rendered HTML.</p>
           
             <li class="method ">
               <a href="#method_arrayWillChange">arrayWillChange</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_attr">attr</a>
             </li>
           
             <li class="method inherited">
@@ -1329,6 +1335,10 @@ This will trigger appropriate changes to its rendered HTML.</p>
               <a href="#method_eachComputedProperty">eachComputedProperty</a>
             </li>
           
+            <li class="method ">
+              <a href="#method_element">element</a>
+            </li>
+          
             <li class="method inherited">
               <a href="#method_endPropertyChanges">endPropertyChanges</a>
             </li>
@@ -1365,16 +1375,16 @@ This will trigger appropriate changes to its rendered HTML.</p>
               <a href="#method_hasObserverFor">hasObserverFor</a>
             </li>
           
+            <li class="method ">
+              <a href="#method_id">id</a>
+            </li>
+          
             <li class="method inherited">
               <a href="#method_incrementProperty">incrementProperty</a>
             </li>
           
             <li class="method ">
               <a href="#method_init">init</a>
-            </li>
-          
-            <li class="method private inherited">
-              <a href="#method_invokeRecursively">invokeRecursively</a>
             </li>
           
             <li class="method inherited">
@@ -1413,6 +1423,10 @@ This will trigger appropriate changes to its rendered HTML.</p>
               <a href="#method_one">one</a>
             </li>
           
+            <li class="method ">
+              <a href="#method_prop">prop</a>
+            </li>
+          
             <li class="method inherited">
               <a href="#method_propertyDidChange">propertyDidChange</a>
             </li>
@@ -1421,12 +1435,20 @@ This will trigger appropriate changes to its rendered HTML.</p>
               <a href="#method_propertyWillChange">propertyWillChange</a>
             </li>
           
+            <li class="method ">
+              <a href="#method_push">push</a>
+            </li>
+          
             <li class="method inherited">
               <a href="#method_remove">remove</a>
             </li>
           
             <li class="method inherited">
               <a href="#method_removeAllChildren">removeAllChildren</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_removeAttr">removeAttr</a>
             </li>
           
             <li class="method inherited">
@@ -1441,12 +1463,16 @@ This will trigger appropriate changes to its rendered HTML.</p>
               <a href="#method_removeObserver">removeObserver</a>
             </li>
           
+            <li class="method ">
+              <a href="#method_removeProp">removeProp</a>
+            </li>
+          
             <li class="method private inherited">
               <a href="#method_render">render</a>
             </li>
           
-            <li class="method private inherited">
-              <a href="#method_renderToBuffer">renderToBuffer</a>
+            <li class="method ">
+              <a href="#method_renderBuffer">renderBuffer</a>
             </li>
           
             <li class="method inherited">
@@ -1479,6 +1505,14 @@ This will trigger appropriate changes to its rendered HTML.</p>
           
             <li class="method private inherited">
               <a href="#method_setUnknownProperty">setUnknownProperty</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_string">string</a>
+            </li>
+          
+            <li class="method ">
+              <a href="#method_style">style</a>
             </li>
           
             <li class="method inherited">
@@ -1538,6 +1572,10 @@ This will trigger appropriate changes to its rendered HTML.</p>
               <a href="#property_classNames">classNames</a>
             </li>
           
+            <li class="property ">
+              <a href="#property_classes">classes</a>
+            </li>
+          
             <li class="property inherited">
               <a href="#property_concatenatedProperties">concatenatedProperties</a>
             </li>
@@ -1556,6 +1594,30 @@ This will trigger appropriate changes to its rendered HTML.</p>
           
             <li class="property inherited">
               <a href="#property_element">element</a>
+            </li>
+          
+            <li class="property ">
+              <a href="#property_elementAttributes">elementAttributes</a>
+            </li>
+          
+            <li class="property private">
+              <a href="#property_elementClasses">elementClasses</a>
+            </li>
+          
+            <li class="property ">
+              <a href="#property_elementId">elementId</a>
+            </li>
+          
+            <li class="property ">
+              <a href="#property_elementProperties">elementProperties</a>
+            </li>
+          
+            <li class="property ">
+              <a href="#property_elementStyle">elementStyle</a>
+            </li>
+          
+            <li class="property ">
+              <a href="#property_elementTag">elementTag</a>
             </li>
           
             <li class="property ">
@@ -1692,7 +1754,7 @@ This will trigger appropriate changes to its rendered HTML.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_$">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1315">packages/ember-views/lib/views/view.js:1315</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1279">packages/ember-views/lib/views/view.js:1279</a>
 
     
   </div>
@@ -1769,7 +1831,7 @@ all of the <code>li</code> elements inside the DOM element of this view.</p>
           <a href="/api/classes/Ember.ContainerView.html#method__applyAttributeBindings">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1202">packages/ember-views/lib/views/view.js:1202</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1172">packages/ember-views/lib/views/view.js:1172</a>
 
     
   </div>
@@ -1796,7 +1858,7 @@ then applies the current value of the attributes to the passed render buffer.</p
 
       <dl>
         
-          <dt><strong>buffer</strong> <span class="type"><a href="/api/classes/Ember.RenderBuffer.html">Ember.RenderBuffer</a></span></dt>
+          <dt><strong>buffer</strong> <span class="type">Ember.RenderBuffer</span></dt>
           <dd>
             
 
@@ -1831,7 +1893,7 @@ then applies the current value of the attributes to the passed render buffer.</p
           <a href="/api/classes/Ember.ContainerView.html#method__applyClassNameBindings">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1121">packages/ember-views/lib/views/view.js:1121</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1091">packages/ember-views/lib/views/view.js:1091</a>
 
     
   </div>
@@ -1881,7 +1943,7 @@ in the future.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/collection_view.js#L255">packages/ember-views/lib/views/collection_view.js:255</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/collection_view.js#L273">packages/ember-views/lib/views/collection_view.js:273</a>
 
     
   </div>
@@ -1930,7 +1992,7 @@ in the future.</p>
           <a href="/api/classes/Ember.ContainerView.html#method__classStringForProperty">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1274">packages/ember-views/lib/views/view.js:1274</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1244">packages/ember-views/lib/views/view.js:1244</a>
 
     
   </div>
@@ -1999,7 +2061,7 @@ passing <code>isUrgent</code> to this method will return <code>&quot;is-urgent&q
           <a href="/api/classes/Ember.ContainerView.html#method__classStringForValue">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L2292">packages/ember-views/lib/views/view.js:2292</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L2061">packages/ember-views/lib/views/view.js:2061</a>
 
     
   </div>
@@ -2100,7 +2162,7 @@ is returned</li>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/collection_view.js#L234">packages/ember-views/lib/views/collection_view.js:234</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/collection_view.js#L252">packages/ember-views/lib/views/collection_view.js:252</a>
 
     
   </div>
@@ -2150,7 +2212,7 @@ bindings have synchronized and vice versa.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/collection_view.js#L219">packages/ember-views/lib/views/collection_view.js:219</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/collection_view.js#L237">packages/ember-views/lib/views/collection_view.js:237</a>
 
     
   </div>
@@ -2197,7 +2259,7 @@ entire array content will change.</p>
           <a href="/api/classes/Ember.ContainerView.html#method__contextDidChange">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L879">packages/ember-views/lib/views/view.js:879</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L864">packages/ember-views/lib/views/view.js:864</a>
 
     
   </div>
@@ -2225,138 +2287,6 @@ re-rendered to reflect the new value.</p>
 
       
         
-<div id="method__elementDidChange" class="method private inherited item-entry">
-  <h3 data-id="method__elementDidChange" class="name anchorable-toc"><code>_elementDidChange</code></h3>
-
-
-
-
-  <span class="flag private">private</span>
-
-
-
-
-
-  <div class="meta">
-      
-        
-          Inherited from
-          <a href="/api/classes/Ember.ContainerView.html#method__elementDidChange">Ember.ContainerView</a>
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1656">packages/ember-views/lib/views/view.js:1656</a>
-
-    
-  </div>
-
-  
-
-  
-    <div class="description">
-      <p>If this view&#39;s element changes, we need to invalidate the caches of our
-child views so that we do not retain references to DOM elements that are
-no longer needed.</p>
-
-    </div>
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-
-  
-</div>
-
-      
-        
-<div id="method__insertElementLater" class="method private inherited item-entry">
-  <h3 data-id="method__insertElementLater" class="name anchorable-toc"><code>_insertElementLater</code></h3>
-  <span class="args">
-    (fn)
-  </span>
-
-
-
-
-  <span class="flag private">private</span>
-
-
-
-
-
-  <div class="meta">
-      
-        
-          Inherited from
-          <a href="/api/classes/Ember.ContainerView.html#method__insertElementLater">Ember.ContainerView</a>
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1417">packages/ember-views/lib/views/view.js:1417</a>
-
-    
-  </div>
-
-  
-
-  
-    <div class="description">
-      <p>Schedules a DOM operation to occur during the next render phase. This
-ensures that all bindings have finished synchronizing before the view is
-rendered.</p>
-
-<p>To use, pass a function that performs a DOM operation.</p>
-
-<p>Before your function is called, this view and all child views will receive
-the <code>willInsertElement</code> event. After your function is invoked, this view
-and all of its child views will receive the <code>didInsertElement</code> event.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-</pre></td>
-  <td class="code"><pre>view._insertElementLater(<span class="keyword">function</span>() {
-  <span class="local-variable">this</span>.createElement();
-  <span class="local-variable">this</span>.<span class="predefined">$</span>().appendTo(<span class="string"><span class="delimiter">'</span><span class="content">body</span><span class="delimiter">'</span></span>);
-});
-</pre></td>
-</tr></table>
-</div></div>
-    </div>
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-        
-          <dt><strong>fn</strong> <span class="type"><a href="/api/classes/Function.html">Function</a></span></dt>
-          <dd>
-            the function that inserts the element into the DOM
-
-            
-          </dd>
-        
-      </dl>
-    </div>
-  
-
-  
-</div>
-
-      
-        
 <div id="method__isVisibleDidChange" class="method private inherited item-entry">
   <h3 data-id="method__isVisibleDidChange" class="name anchorable-toc"><code>_isVisibleDidChange</code></h3>
 
@@ -2376,7 +2306,7 @@ and all of its child views will receive the <code>didInsertElement</code> event.
           <a href="/api/classes/Ember.ContainerView.html#method__isVisibleDidChange">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L2039">packages/ember-views/lib/views/view.js:2039</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1859">packages/ember-views/lib/views/view.js:1859</a>
 
     
   </div>
@@ -2387,57 +2317,6 @@ and all of its child views will receive the <code>didInsertElement</code> event.
     <div class="description">
       <p>When the view&#39;s <code>isVisible</code> property changes, toggle the visibility
 element of the actual DOM element.</p>
-
-    </div>
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-
-  
-</div>
-
-      
-        
-<div id="method__notifyWillDestroyElement" class="method private inherited item-entry">
-  <h3 data-id="method__notifyWillDestroyElement" class="name anchorable-toc"><code>_notifyWillDestroyElement</code></h3>
-
-
-
-
-  <span class="flag private">private</span>
-
-
-
-
-
-  <div class="meta">
-      
-        
-          Inherited from
-          <a href="/api/classes/Ember.ContainerView.html#method__notifyWillDestroyElement">Ember.ContainerView</a>
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1638">packages/ember-views/lib/views/view.js:1638</a>
-
-    
-  </div>
-
-  
-
-  
-    <div class="description">
-      <p>Triggers the <code>willDestroyElement</code> event (which invokes the
-<code>willDestroyElement()</code> method if it exists) on this view and all child
-views.</p>
-
-<p>Before triggering <code>willDestroyElement</code>, it first triggers the
-<code>willClearRender</code> event recursively.</p>
 
     </div>
   
@@ -2474,7 +2353,7 @@ views.</p>
           <a href="/api/classes/Ember.ContainerView.html#method__parentViewDidChange">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1003">packages/ember-views/lib/views/view.js:1003</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L988">packages/ember-views/lib/views/view.js:988</a>
 
     
   </div>
@@ -2521,7 +2400,7 @@ views.</p>
           <a href="/api/classes/Ember.ContainerView.html#method__parsePropertyPath">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L2249">packages/ember-views/lib/views/view.js:2249</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L2019">packages/ember-views/lib/views/view.js:2019</a>
 
     
   </div>
@@ -2586,7 +2465,7 @@ following object:</p>
           <a href="/api/classes/Ember.ContainerView.html#method__scheduledDestroy">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/system/core_object.js#L370">packages/ember-runtime/lib/system/core_object.js:370</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/system/core_object.js#L380">packages/ember-runtime/lib/system/core_object.js:380</a>
 
     
   </div>
@@ -2607,6 +2486,70 @@ scheduled for execution by the <code>destroy</code> method.</p>
 
   
 
+  
+
+  
+</div>
+
+      
+        
+<div id="method_addClass" class="method  item-entry">
+  <h3 data-id="method_addClass" class="name anchorable-toc"><code>addClass</code></h3>
+  <span class="args">
+    (className)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/system/render_buffer.js#L317">packages/ember-views/lib/system/render_buffer.js:317</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>Adds a class to the buffer, which will be rendered to the class attribute.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>className</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            Class name to add to the buffer
+
+            
+          </dd>
+        
+      </dl>
+    </div>
   
 
   
@@ -2635,7 +2578,7 @@ scheduled for execution by the <code>destroy</code> method.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_addObserver">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/observable.js#L339">packages/ember-runtime/lib/mixins/observable.js:339</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/observable.js#L339">packages/ember-runtime/lib/mixins/observable.js:339</a>
 
     
   </div>
@@ -2751,7 +2694,7 @@ any of these values, to write an observer that has no parameters at all.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_append">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1448">packages/ember-views/lib/views/view.js:1448</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1379">packages/ember-views/lib/views/view.js:1379</a>
 
     
   </div>
@@ -2818,7 +2761,7 @@ finished synchronizing.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_appendTo">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1360">packages/ember-views/lib/views/view.js:1360</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1324">packages/ember-views/lib/views/view.js:1324</a>
 
     
   </div>
@@ -2903,7 +2846,7 @@ have an ancestor element that is associated with an Ember view.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/collection_view.js#L326">packages/ember-views/lib/views/collection_view.js:326</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/collection_view.js#L334">packages/ember-views/lib/views/collection_view.js:334</a>
 
     
   </div>
@@ -2993,7 +2936,7 @@ have an ancestor element that is associated with an Ember view.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/collection_view.js#L283">packages/ember-views/lib/views/collection_view.js:283</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/collection_view.js#L301">packages/ember-views/lib/views/collection_view.js:301</a>
 
     
   </div>
@@ -3054,6 +2997,86 @@ content array.</p>
 
       
         
+<div id="method_attr" class="method  item-entry">
+  <h3 data-id="method_attr" class="name anchorable-toc"><code>attr</code></h3>
+  <span class="args">
+    (name, value)
+  </span>
+
+  <span class="type">Ember.RenderBuffer|String</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/system/render_buffer.js#L357">packages/ember-views/lib/system/render_buffer.js:357</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>Adds an attribute which will be rendered to the element.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            The name of the attribute
+
+            
+          </dd>
+        
+          <dt><strong>value</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            The value to add to the attribute
+
+            
+          </dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Ember.RenderBuffer|String</span>
+        <dd> this or the current attribute value</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
 <div id="method_beginPropertyChanges" class="method inherited item-entry">
   <h3 data-id="method_beginPropertyChanges" class="name anchorable-toc"><code>beginPropertyChanges</code></h3>
 
@@ -3073,7 +3096,7 @@ content array.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_beginPropertyChanges">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/observable.js#L238">packages/ember-runtime/lib/mixins/observable.js:238</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/observable.js#L238">packages/ember-runtime/lib/mixins/observable.js:238</a>
 
     
   </div>
@@ -3138,7 +3161,7 @@ deferring.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_cacheFor">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/observable.js#L492">packages/ember-runtime/lib/mixins/observable.js:492</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/observable.js#L492">packages/ember-runtime/lib/mixins/observable.js:492</a>
 
     
   </div>
@@ -3213,7 +3236,7 @@ generated lazily.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_childViewsDidChange">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/container_view.js#L302">packages/ember-views/lib/views/container_view.js:302</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/container_view.js#L299">packages/ember-views/lib/views/container_view.js:299</a>
 
     
   </div>
@@ -3304,7 +3327,7 @@ appropriate place in the buffer.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_childViewsWillChange">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/container_view.js#L273">packages/ember-views/lib/views/container_view.js:273</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/container_view.js#L270">packages/ember-views/lib/views/container_view.js:270</a>
 
     
   </div>
@@ -3386,7 +3409,7 @@ it is removed from the DOM.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_create">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/system/core_object.js#L579">packages/ember-runtime/lib/system/core_object.js:579</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/system/core_object.js#L591">packages/ember-runtime/lib/system/core_object.js:591</a>
 
     
   </div>
@@ -3496,7 +3519,7 @@ properties when using <code>extend</code> or use the <code>createWithMixins</cod
           but overwritten in
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/collection_view.js#L388">packages/ember-views/lib/views/collection_view.js:388</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/collection_view.js#L389">packages/ember-views/lib/views/collection_view.js:389</a>
 
     
   </div>
@@ -3579,7 +3602,7 @@ passed in.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_createElement">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1504">packages/ember-views/lib/views/view.js:1504</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1432">packages/ember-views/lib/views/view.js:1432</a>
 
     
   </div>
@@ -3588,10 +3611,10 @@ passed in.</p>
 
   
     <div class="description">
-      <p>Creates a DOM representation of the view and all of its
-child views by recursively calling the <code>render()</code> method.</p>
+      <p>Creates a DOM representation of the view and all of its child views by
+recursively calling the <code>render()</code> method.</p>
 
-<p>After the element has been created, <code>didInsertElement</code> will
+<p>After the element has been inserted into the DOM, <code>didInsertElement</code> will
 be called on this view and all of its child views.</p>
 
     </div>
@@ -3640,7 +3663,7 @@ be called on this view and all of its child views.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_createWithMixins">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/system/core_object.js#L558">packages/ember-runtime/lib/system/core_object.js:558</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/system/core_object.js#L570">packages/ember-runtime/lib/system/core_object.js:570</a>
 
     
   </div>
@@ -3705,7 +3728,7 @@ If possible use the normal <code>create</code> method instead.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_decrementProperty">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/observable.js#L455">packages/ember-runtime/lib/mixins/observable.js:455</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/observable.js#L455">packages/ember-runtime/lib/mixins/observable.js:455</a>
 
     
   </div>
@@ -3789,7 +3812,7 @@ orc.decrementProperty(<span class="string"><span class="delimiter">'</span><span
           but overwritten in
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/collection_view.js#L265">packages/ember-views/lib/views/collection_view.js:265</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/collection_view.js#L283">packages/ember-views/lib/views/collection_view.js:283</a>
 
     
   </div>
@@ -3835,7 +3858,7 @@ orc.decrementProperty(<span class="string"><span class="delimiter">'</span><span
           <a href="/api/classes/Ember.ContainerView.html#method_destroyElement">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1607">packages/ember-views/lib/views/view.js:1607</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1479">packages/ember-views/lib/views/view.js:1479</a>
 
     
   </div>
@@ -3903,7 +3926,7 @@ want to implement the above callbacks.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_eachComputedProperty">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/system/core_object.js#L810">packages/ember-runtime/lib/system/core_object.js:810</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/system/core_object.js#L822">packages/ember-runtime/lib/system/core_object.js:822</a>
 
     
   </div>
@@ -3953,6 +3976,57 @@ and any associated metadata (see <code>metaForProperty</code>) to the callback.<
 
       
         
+<div id="method_element" class="method  item-entry">
+  <h3 data-id="method_element" class="name anchorable-toc"><code>element</code></h3>
+
+  <span class="type">DOMElement</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/system/render_buffer.js#L507">packages/ember-views/lib/system/render_buffer.js:507</a>
+
+    
+  </div>
+
+  
+
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">DOMElement</span>
+        <dd> The element corresponding to the generated HTML
+  of this buffer</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
 <div id="method_endPropertyChanges" class="method inherited item-entry">
   <h3 data-id="method_endPropertyChanges" class="name anchorable-toc"><code>endPropertyChanges</code></h3>
 
@@ -3972,7 +4046,7 @@ and any associated metadata (see <code>metaForProperty</code>) to the callback.<
           <a href="/api/classes/Ember.ContainerView.html#method_endPropertyChanges">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/observable.js#L257">packages/ember-runtime/lib/mixins/observable.js:257</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/observable.js#L257">packages/ember-runtime/lib/mixins/observable.js:257</a>
 
     
   </div>
@@ -4036,7 +4110,7 @@ deliver the deferred change notifications and end deferring.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_extend">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/system/core_object.js#L456">packages/ember-runtime/lib/system/core_object.js:456</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/system/core_object.js#L467">packages/ember-runtime/lib/system/core_object.js:467</a>
 
     
   </div>
@@ -4229,7 +4303,7 @@ App.BroadwayStar = App.Person.extend(App.SingingMixin, {
           <a href="/api/classes/Ember.ContainerView.html#method_findElementInParentElement">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1488">packages/ember-views/lib/views/view.js:1488</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1416">packages/ember-views/lib/views/view.js:1416</a>
 
     
   </div>
@@ -4305,7 +4379,7 @@ element using a CSS class name instead of an ID.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_get">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/observable.js#L101">packages/ember-runtime/lib/mixins/observable.js:101</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/observable.js#L101">packages/ember-runtime/lib/mixins/observable.js:101</a>
 
     
   </div>
@@ -4408,7 +4482,7 @@ not defined upfront.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_getProperties">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/observable.js#L143">packages/ember-runtime/lib/mixins/observable.js:143</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/observable.js#L143">packages/ember-runtime/lib/mixins/observable.js:143</a>
 
     
   </div>
@@ -4417,7 +4491,7 @@ not defined upfront.</p>
 
   
     <div class="description">
-      <p>To get multiple properties at once, call <code>getProperties</code>
+      <p>To get the values of multiple properties at once, call <code>getProperties</code>
 with a list of strings or an array:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -4499,7 +4573,7 @@ with a list of strings or an array:</p>
           <a href="/api/classes/Ember.ContainerView.html#method_getWithDefault">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/observable.js#L418">packages/ember-runtime/lib/mixins/observable.js:418</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/observable.js#L418">packages/ember-runtime/lib/mixins/observable.js:418</a>
 
     
   </div>
@@ -4585,7 +4659,7 @@ property returns <code>undefined</code>.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_handleEvent">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L2135">packages/ember-views/lib/views/view.js:2135</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1945">packages/ember-views/lib/views/view.js:1945</a>
 
     
   </div>
@@ -4656,7 +4730,7 @@ property returns <code>undefined</code>.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_has">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/evented.js#L144">packages/ember-runtime/lib/mixins/evented.js:144</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/evented.js#L144">packages/ember-runtime/lib/mixins/evented.js:144</a>
 
     
   </div>
@@ -4728,7 +4802,7 @@ property returns <code>undefined</code>.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_hasObserverFor">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/observable.js#L404">packages/ember-runtime/lib/mixins/observable.js:404</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/observable.js#L404">packages/ember-runtime/lib/mixins/observable.js:404</a>
 
     
   </div>
@@ -4781,6 +4855,70 @@ on the object.</p>
 
       
         
+<div id="method_id" class="method  item-entry">
+  <h3 data-id="method_id" class="name anchorable-toc"><code>id</code></h3>
+  <span class="args">
+    (id)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/system/render_buffer.js#L342">packages/ember-views/lib/system/render_buffer.js:342</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>Sets the elementID to be used for the element.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>id</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+            
+          </dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
 <div id="method_incrementProperty" class="method inherited item-entry">
   <h3 data-id="method_incrementProperty" class="name anchorable-toc"><code>incrementProperty</code></h3>
   <span class="args">
@@ -4803,7 +4941,7 @@ on the object.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_incrementProperty">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/observable.js#L435">packages/ember-runtime/lib/mixins/observable.js:435</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/observable.js#L435">packages/ember-runtime/lib/mixins/observable.js:435</a>
 
     
   </div>
@@ -4887,7 +5025,7 @@ team.incrementProperty(<span class="string"><span class="delimiter">'</span><spa
           but overwritten in
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/collection_view.js#L208">packages/ember-views/lib/views/collection_view.js:208</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/collection_view.js#L226">packages/ember-views/lib/views/collection_view.js:226</a>
 
     
   </div>
@@ -4907,77 +5045,6 @@ team.incrementProperty(<span class="string"><span class="delimiter">'</span><spa
 
   
 
-  
-
-  
-</div>
-
-      
-        
-<div id="method_invokeRecursively" class="method private inherited item-entry">
-  <h3 data-id="method_invokeRecursively" class="name anchorable-toc"><code>invokeRecursively</code></h3>
-  <span class="args">
-    (fn, includeSelf)
-  </span>
-
-
-
-
-  <span class="flag private">private</span>
-
-
-
-
-
-  <div class="meta">
-      
-        
-          Inherited from
-          <a href="/api/classes/Ember.ContainerView.html#method_invokeRecursively">Ember.ContainerView</a>
-        
-      
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1548">packages/ember-views/lib/views/view.js:1548</a>
-
-    
-  </div>
-
-  
-
-  
-    <div class="description">
-      <p>Run this callback on the current view (unless includeSelf is false) and recursively on child views.</p>
-
-    </div>
-  
-
-  <p>
-    
-  </p>
-
-  
-
-  
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-        
-          <dt><strong>fn</strong> <span class="type"><a href="/api/classes/Function.html">Function</a></span></dt>
-          <dd>
-            
-
-            
-          </dd>
-        
-          <dt><strong>includeSelf</strong> <span class="type">Boolean</span></dt>
-          <dd>
-            Includes itself if true.
-
-            
-          </dd>
-        
-      </dl>
-    </div>
   
 
   
@@ -5006,7 +5073,7 @@ team.incrementProperty(<span class="string"><span class="delimiter">'</span><spa
           <a href="/api/classes/Ember.ContainerView.html#method_metaForProperty">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/system/core_object.js#L755">packages/ember-runtime/lib/system/core_object.js:755</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/system/core_object.js#L767">packages/ember-runtime/lib/system/core_object.js:767</a>
 
     
   </div>
@@ -5098,7 +5165,7 @@ property from your class like this:</p>
           <a href="/api/classes/Ember.ContainerView.html#method_nearestChildOf">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L986">packages/ember-views/lib/views/view.js:986</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L971">packages/ember-views/lib/views/view.js:971</a>
 
     
   </div>
@@ -5172,7 +5239,7 @@ property from your class like this:</p>
           <a href="/api/classes/Ember.ContainerView.html#method_nearestInstanceOf">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L930">packages/ember-views/lib/views/view.js:930</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L915">packages/ember-views/lib/views/view.js:915</a>
 
     
   </div>
@@ -5245,7 +5312,7 @@ class.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_nearestOfType">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L949">packages/ember-views/lib/views/view.js:949</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L934">packages/ember-views/lib/views/view.js:934</a>
 
     
   </div>
@@ -5319,7 +5386,7 @@ class or mixin.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_nearestWithProperty">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L970">packages/ember-views/lib/views/view.js:970</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L955">packages/ember-views/lib/views/view.js:955</a>
 
     
   </div>
@@ -5391,7 +5458,7 @@ class or mixin.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_notifyPropertyChange">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/observable.js#L321">packages/ember-runtime/lib/mixins/observable.js:321</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/observable.js#L321">packages/ember-runtime/lib/mixins/observable.js:321</a>
 
     
   </div>
@@ -5464,7 +5531,7 @@ succession.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_off">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/evented.js#L130">packages/ember-runtime/lib/mixins/evented.js:130</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/evented.js#L130">packages/ember-runtime/lib/mixins/evented.js:130</a>
 
     
   </div>
@@ -5550,7 +5617,7 @@ succession.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_on">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/evented.js#L51">packages/ember-runtime/lib/mixins/evented.js:51</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/evented.js#L51">packages/ember-runtime/lib/mixins/evented.js:51</a>
 
     
   </div>
@@ -5651,7 +5718,7 @@ parameter is used the callback becomes the third argument.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_one">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/evented.js#L76">packages/ember-runtime/lib/mixins/evented.js:76</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/evented.js#L76">packages/ember-runtime/lib/mixins/evented.js:76</a>
 
     
   </div>
@@ -5721,6 +5788,86 @@ becomes the function.</p>
 
       
         
+<div id="method_prop" class="method  item-entry">
+  <h3 data-id="method_prop" class="name anchorable-toc"><code>prop</code></h3>
+  <span class="args">
+    (name, value)
+  </span>
+
+  <span class="type">Ember.RenderBuffer|String</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/system/render_buffer.js#L392">packages/ember-views/lib/system/render_buffer.js:392</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>Adds a property which will be rendered to the element.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            The name of the property
+
+            
+          </dd>
+        
+          <dt><strong>value</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            The value to add to the property
+
+            
+          </dd>
+        
+      </dl>
+    </div>
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Ember.RenderBuffer|String</span>
+        <dd> this or the current property value</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
 <div id="method_propertyDidChange" class="method inherited item-entry">
   <h3 data-id="method_propertyDidChange" class="name anchorable-toc"><code>propertyDidChange</code></h3>
   <span class="args">
@@ -5743,7 +5890,7 @@ becomes the function.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_propertyDidChange">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/observable.js#L298">packages/ember-runtime/lib/mixins/observable.js:298</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/observable.js#L298">packages/ember-runtime/lib/mixins/observable.js:298</a>
 
     
   </div>
@@ -5826,7 +5973,7 @@ like.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_propertyWillChange">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/observable.js#L275">packages/ember-runtime/lib/mixins/observable.js:275</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/observable.js#L275">packages/ember-runtime/lib/mixins/observable.js:275</a>
 
     
   </div>
@@ -5887,6 +6034,70 @@ like.</p>
 
       
         
+<div id="method_push" class="method  item-entry">
+  <h3 data-id="method_push" class="name anchorable-toc"><code>push</code></h3>
+  <span class="args">
+    (string)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/system/render_buffer.js#L302">packages/ember-views/lib/system/render_buffer.js:302</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>Adds a string of HTML to the <code>RenderBuffer</code>.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>string</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            HTML to push into the buffer
+
+            
+          </dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
 <div id="method_remove" class="method inherited item-entry">
   <h3 data-id="method_remove" class="name anchorable-toc"><code>remove</code></h3>
 
@@ -5906,7 +6117,7 @@ like.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_remove">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1468">packages/ember-views/lib/views/view.js:1468</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1399">packages/ember-views/lib/views/view.js:1399</a>
 
     
   </div>
@@ -5960,7 +6171,7 @@ like.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_removeAllChildren">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1908">packages/ember-views/lib/views/view.js:1908</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1738">packages/ember-views/lib/views/view.js:1738</a>
 
     
   </div>
@@ -5995,6 +6206,70 @@ like.</p>
 
       
         
+<div id="method_removeAttr" class="method  item-entry">
+  <h3 data-id="method_removeAttr" class="name anchorable-toc"><code>removeAttr</code></h3>
+  <span class="args">
+    (name)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/system/render_buffer.js#L378">packages/ember-views/lib/system/render_buffer.js:378</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>Remove an attribute from the list of attributes to render.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            The name of the attribute
+
+            
+          </dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
 <div id="method_removeChild" class="method inherited item-entry">
   <h3 data-id="method_removeChild" class="name anchorable-toc"><code>removeChild</code></h3>
   <span class="args">
@@ -6017,7 +6292,7 @@ like.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_removeChild">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1882">packages/ember-views/lib/views/view.js:1882</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1712">packages/ember-views/lib/views/view.js:1712</a>
 
     
   </div>
@@ -6086,7 +6361,7 @@ like.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_removeFromParent">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1926">packages/ember-views/lib/views/view.js:1926</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1756">packages/ember-views/lib/views/view.js:1756</a>
 
     
   </div>
@@ -6143,7 +6418,7 @@ does nothing.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_removeObserver">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/observable.js#L390">packages/ember-runtime/lib/mixins/observable.js:390</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/observable.js#L390">packages/ember-runtime/lib/mixins/observable.js:390</a>
 
     
   </div>
@@ -6201,6 +6476,70 @@ target will no longer receive notifications.</p>
 
       
         
+<div id="method_removeProp" class="method  item-entry">
+  <h3 data-id="method_removeProp" class="name anchorable-toc"><code>removeProp</code></h3>
+  <span class="args">
+    (name)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/system/render_buffer.js#L413">packages/ember-views/lib/system/render_buffer.js:413</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>Remove an property from the list of properties to render.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            The name of the property
+
+            
+          </dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
 <div id="method_render" class="method private inherited item-entry">
   <h3 data-id="method_render" class="name anchorable-toc"><code>render</code></h3>
   <span class="args">
@@ -6224,7 +6563,7 @@ target will no longer receive notifications.</p>
           but overwritten in
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/container_view.js#L258">packages/ember-views/lib/views/container_view.js:258</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/container_view.js#L258">packages/ember-views/lib/views/container_view.js:258</a>
 
     
   </div>
@@ -6250,7 +6589,7 @@ target will no longer receive notifications.</p>
 
       <dl>
         
-          <dt><strong>buffer</strong> <span class="type"><a href="/api/classes/Ember.RenderBuffer.html">Ember.RenderBuffer</a></span></dt>
+          <dt><strong>buffer</strong> <span class="type">Ember.RenderBuffer</span></dt>
           <dd>
             the buffer to render to
 
@@ -6266,16 +6605,15 @@ target will no longer receive notifications.</p>
 
       
         
-<div id="method_renderToBuffer" class="method private inherited item-entry">
-  <h3 data-id="method_renderToBuffer" class="name anchorable-toc"><code>renderToBuffer</code></h3>
+<div id="method_renderBuffer" class="method  item-entry">
+  <h3 data-id="method_renderBuffer" class="name anchorable-toc"><code>renderBuffer</code></h3>
   <span class="args">
-    (buffer)
+    (tagName)
   </span>
 
 
 
 
-  <span class="flag private">private</span>
 
 
 
@@ -6284,11 +6622,12 @@ target will no longer receive notifications.</p>
   <div class="meta">
       
         
-          Inherited from
-          <a href="/api/classes/Ember.ContainerView.html#method_renderToBuffer">Ember.ContainerView</a>
+          
+            Defined in
+          
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/core_view.js#L86">packages/ember-views/lib/views/core_view.js:86</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/system/render_buffer.js#L127">packages/ember-views/lib/system/render_buffer.js:127</a>
 
     
   </div>
@@ -6297,16 +6636,16 @@ target will no longer receive notifications.</p>
 
   
     <div class="description">
-      <p>Invoked by the view system when this view needs to produce an HTML
-representation. This method will create a new render buffer, if needed,
-then apply any default attributes, such as class names and visibility.
-Finally, the <code>render()</code> method is invoked, which is responsible for
-doing the bulk of the rendering.</p>
-
-<p>You should not need to override this method; instead, implement the
-<code>template</code> property, or if you need more control, override the <code>render</code>
-method.</p>
-
+      <p><code>Ember.renderBuffer</code> gathers information regarding the view and generates the
+final representation. <code>Ember.renderBuffer</code> will generate HTML which can be pushed
+to the DOM.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre> <span class="keyword">var</span> buffer = Ember.renderBuffer(<span class="string"><span class="delimiter">'</span><span class="content">div</span><span class="delimiter">'</span></span>, contextualElement);
+</pre></td>
+</tr></table>
+</div></div>
     </div>
   
 
@@ -6322,11 +6661,9 @@ method.</p>
 
       <dl>
         
-          <dt><strong>buffer</strong> <span class="type"><a href="/api/classes/Ember.RenderBuffer.html">Ember.RenderBuffer</a></span></dt>
+          <dt><strong>tagName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
           <dd>
-            the render buffer. If no buffer is
-  passed, a default buffer, using the current view's `tagName`, will
-  be used.
+            tag name (such as 'div' or 'p') used for the buffer
 
             
           </dd>
@@ -6358,7 +6695,7 @@ method.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_reopen">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/system/core_object.js#L629">packages/ember-runtime/lib/system/core_object.js:629</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/system/core_object.js#L641">packages/ember-runtime/lib/system/core_object.js:641</a>
 
     
   </div>
@@ -6445,7 +6782,7 @@ see <code>reopenClass</code></p>
           <a href="/api/classes/Ember.ContainerView.html#method_reopenClass">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/system/core_object.js#L673">packages/ember-runtime/lib/system/core_object.js:673</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/system/core_object.js#L685">packages/ember-runtime/lib/system/core_object.js:685</a>
 
     
   </div>
@@ -6580,7 +6917,7 @@ see <code>reopen</code></p>
           <a href="/api/classes/Ember.ContainerView.html#method_replaceIn">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1392">packages/ember-views/lib/views/view.js:1392</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1355">packages/ember-views/lib/views/view.js:1355</a>
 
     
   </div>
@@ -6654,7 +6991,7 @@ finished synchronizing</p>
           <a href="/api/classes/Ember.ContainerView.html#method_rerender">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1086">packages/ember-views/lib/views/view.js:1086</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1071">packages/ember-views/lib/views/view.js:1071</a>
 
     
   </div>
@@ -6713,7 +7050,7 @@ be slow.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_send">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/action_handler.js#L177">packages/ember-runtime/lib/mixins/action_handler.js:177</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/action_handler.js#L177">packages/ember-runtime/lib/mixins/action_handler.js:177</a>
 
     
   </div>
@@ -6817,7 +7154,7 @@ action target function returns <code>true</code>.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_set">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/observable.js#L167">packages/ember-runtime/lib/mixins/observable.js:167</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/observable.js#L167">packages/ember-runtime/lib/mixins/observable.js:167</a>
 
     
   </div>
@@ -6930,7 +7267,7 @@ itself so you can do chaining like this:</p>
           <a href="/api/classes/Ember.ContainerView.html#method_setProperties">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/observable.js#L221">packages/ember-runtime/lib/mixins/observable.js:221</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/observable.js#L221">packages/ember-runtime/lib/mixins/observable.js:221</a>
 
     
   </div>
@@ -7010,7 +7347,7 @@ observers will be buffered.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_setUnknownProperty">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1251">packages/ember-views/lib/views/view.js:1251</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1221">packages/ember-views/lib/views/view.js:1221</a>
 
     
   </div>
@@ -7062,6 +7399,132 @@ properties that aren&#39;t defined on a view at initialization time.</p>
 
       
         
+<div id="method_string" class="method  item-entry">
+  <h3 data-id="method_string" class="name anchorable-toc"><code>string</code></h3>
+
+  <span class="type"><a href="/api/classes/String.html">String</a></span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/system/render_buffer.js#L534">packages/ember-views/lib/system/render_buffer.js:534</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>Generates the HTML content for this buffer.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+
+  
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/String.html">String</a></span>
+        <dd> The generated HTML</dd>
+      </dl>
+    </div>
+  
+</div>
+
+      
+        
+<div id="method_style" class="method  item-entry">
+  <h3 data-id="method_style" class="name anchorable-toc"><code>style</code></h3>
+  <span class="args">
+    (name, value)
+  </span>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/system/render_buffer.js#L427">packages/ember-views/lib/system/render_buffer.js:427</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>Adds a style to the style attribute which will be rendered to the element.</p>
+
+    </div>
+  
+
+  <p>
+    
+  </p>
+
+  
+
+  
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+        
+          <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            Name of the style
+
+            
+          </dd>
+        
+          <dt><strong>value</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+            
+          </dd>
+        
+      </dl>
+    </div>
+  
+
+  
+</div>
+
+      
+        
 <div id="method_toString" class="method inherited item-entry">
   <h3 data-id="method_toString" class="name anchorable-toc"><code>toString</code></h3>
 
@@ -7081,7 +7544,7 @@ properties that aren&#39;t defined on a view at initialization time.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_toString">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/system/core_object.js#L389">packages/ember-runtime/lib/system/core_object.js:389</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/system/core_object.js#L399">packages/ember-runtime/lib/system/core_object.js:399</a>
 
     
   </div>
@@ -7184,7 +7647,7 @@ teacher.toString(); <span class="comment">//=&gt; &quot;&lt;App.Teacher:ember102
           <a href="/api/classes/Ember.ContainerView.html#method_toggleProperty">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/observable.js#L475">packages/ember-runtime/lib/mixins/observable.js:475</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/observable.js#L475">packages/ember-runtime/lib/mixins/observable.js:475</a>
 
     
   </div>
@@ -7264,7 +7727,7 @@ current value.</p>
           but overwritten in
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/core_view.js#L135">packages/ember-views/lib/views/core_view.js:135</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/core_view.js#L83">packages/ember-views/lib/views/core_view.js:83</a>
 
     
   </div>
@@ -7325,7 +7788,7 @@ also call methods with the given name.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_willDestroy">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/system/core_object.js#L363">packages/ember-runtime/lib/system/core_object.js:363</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/system/core_object.js#L373">packages/ember-runtime/lib/system/core_object.js:373</a>
 
     
   </div>
@@ -7371,7 +7834,7 @@ also call methods with the given name.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_willMergeMixin">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/action_handler.js#L148">packages/ember-runtime/lib/mixins/action_handler.js:148</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/action_handler.js#L148">packages/ember-runtime/lib/mixins/action_handler.js:148</a>
 
     
   </div>
@@ -7446,7 +7909,7 @@ is practically of little consequence. This may change in the future.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/collection_view.js#L417">packages/ember-views/lib/views/collection_view.js:417</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/collection_view.js#L418">packages/ember-views/lib/views/collection_view.js:418</a>
 
     
   </div>
@@ -7494,7 +7957,7 @@ a particular parent tag to default to a child tag.</p>
           <a href="/api/classes/Ember.ContainerView.html#method__context">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L846">packages/ember-views/lib/views/view.js:846</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L831">packages/ember-views/lib/views/view.js:831</a>
 
     
   </div>
@@ -7554,7 +8017,7 @@ something of a hack and should be revisited.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_actions">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/mixins/action_handler.js#L28">packages/ember-runtime/lib/mixins/action_handler.js:28</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/mixins/action_handler.js#L28">packages/ember-runtime/lib/mixins/action_handler.js:28</a>
 
     
   </div>
@@ -7789,7 +8252,7 @@ App.AlbumSongRoute = Ember.Route.extend({
           <a href="/api/classes/Ember.ContainerView.html#method_ariaRole">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1752">packages/ember-views/lib/views/view.js:1752</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1580">packages/ember-views/lib/views/view.js:1580</a>
 
     
   </div>
@@ -7842,7 +8305,7 @@ visually challenged users navigate rich web applications.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_attributeBindings">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1821">packages/ember-views/lib/views/view.js:1821</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1649">packages/ember-views/lib/views/view.js:1649</a>
 
     
   </div>
@@ -7923,7 +8386,7 @@ Ember.View.extend({
           <a href="/api/classes/Ember.ContainerView.html#method_childViews">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L899">packages/ember-views/lib/views/view.js:899</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L884">packages/ember-views/lib/views/view.js:884</a>
 
     
   </div>
@@ -7972,7 +8435,7 @@ Instead, use <code>appendChild</code> and <code>removeFromParent</code>.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_classNameBindings">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1778">packages/ember-views/lib/views/view.js:1778</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1606">packages/ember-views/lib/views/view.js:1606</a>
 
     
   </div>
@@ -8072,7 +8535,7 @@ Ember.View.extend({
           <a href="/api/classes/Ember.ContainerView.html#method_classNames">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1767">packages/ember-views/lib/views/view.js:1767</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1595">packages/ember-views/lib/views/view.js:1595</a>
 
     
   </div>
@@ -8091,6 +8554,58 @@ superclasses as well.</p>
   <p>
     
       <strong>Default:</strong> <code>['ember-view']</code>
+    
+  </p>
+
+  
+
+  
+
+  
+</div>
+
+      
+        
+<div id="property_classes" class="property  item-entry">
+  <h3 data-id="property_classes" class="name anchorable-toc"><code>classes</code></h3>
+
+
+  <span class="type">Array</span>
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/system/render_buffer.js#L186">packages/ember-views/lib/system/render_buffer.js:186</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>Array of class names which will be applied in the class attribute.</p>
+
+<p>You can use <code>setClasses()</code> to set this property directly. If you
+use <code>addClass()</code>, it will be maintained for you.</p>
+
+    </div>
+  
+
+  <p>
+    
+      <strong>Default:</strong> <code>null</code>
     
   </p>
 
@@ -8122,7 +8637,7 @@ superclasses as well.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_concatenatedProperties">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/system/core_object.js#L251">packages/ember-runtime/lib/system/core_object.js:251</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/system/core_object.js#L261">packages/ember-runtime/lib/system/core_object.js:261</a>
 
     
   </div>
@@ -8257,7 +8772,7 @@ mislead your users to think they can override the property in a subclass).</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/collection_view.js#L173">packages/ember-views/lib/views/collection_view.js:173</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/collection_view.js#L191">packages/ember-views/lib/views/collection_view.js:191</a>
 
     
   </div>
@@ -8305,7 +8820,7 @@ mislead your users to think they can override the property in a subclass).</p>
           <a href="/api/classes/Ember.ContainerView.html#method_context">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L825">packages/ember-views/lib/views/view.js:825</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L810">packages/ember-views/lib/views/view.js:810</a>
 
     
   </div>
@@ -8357,7 +8872,7 @@ to do with it.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_controller">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L772">packages/ember-views/lib/views/view.js:772</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L757">packages/ember-views/lib/views/view.js:757</a>
 
     
   </div>
@@ -8404,7 +8919,7 @@ made available for use by the template.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_element">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1301">packages/ember-views/lib/views/view.js:1301</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1271">packages/ember-views/lib/views/view.js:1271</a>
 
     
   </div>
@@ -8419,6 +8934,333 @@ made available for use by the template.</p>
   
 
   <p>
+    
+  </p>
+
+  
+
+  
+
+  
+</div>
+
+      
+        
+<div id="property_elementAttributes" class="property  item-entry">
+  <h3 data-id="property_elementAttributes" class="name anchorable-toc"><code>elementAttributes</code></h3>
+
+
+  <span class="type">Hash</span>
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/system/render_buffer.js#L210">packages/ember-views/lib/system/render_buffer.js:210</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>A hash keyed on the name of the attribute and whose value will be
+applied to that attribute. For example, if you wanted to apply a
+<code>data-view=&quot;Foo.bar&quot;</code> property to an element, you would set the
+elementAttributes hash to <code>{&#39;data-view&#39;:&#39;Foo.bar&#39;}</code>.</p>
+
+<p>You should not maintain this hash yourself, rather, you should use
+the <code>attr()</code> method of <code>Ember.RenderBuffer</code>.</p>
+
+    </div>
+  
+
+  <p>
+    
+      <strong>Default:</strong> <code>{}</code>
+    
+  </p>
+
+  
+
+  
+
+  
+</div>
+
+      
+        
+<div id="property_elementClasses" class="property private item-entry">
+  <h3 data-id="property_elementClasses" class="name anchorable-toc"><code>elementClasses</code></h3>
+
+
+  <span class="type">Array</span>
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/system/render_buffer.js#L174">packages/ember-views/lib/system/render_buffer.js:174</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>An internal set used to de-dupe class names when <code>addClass()</code> is
+used. After each call to <code>addClass()</code>, the <code>classes</code> property
+will be updated.</p>
+
+    </div>
+  
+
+  <p>
+    
+      <strong>Default:</strong> <code>null</code>
+    
+  </p>
+
+  
+
+  
+
+  
+</div>
+
+      
+        
+<div id="property_elementId" class="property  item-entry">
+  <h3 data-id="property_elementId" class="name anchorable-toc"><code>elementId</code></h3>
+
+
+  <span class="type"><a href="/api/classes/String.html">String</a></span>
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/system/render_buffer.js#L198">packages/ember-views/lib/system/render_buffer.js:198</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>The id in of the element, to be applied in the id attribute.</p>
+
+<p>You should not set this property yourself, rather, you should use
+the <code>id()</code> method of <code>Ember.RenderBuffer</code>.</p>
+
+    </div>
+  
+
+  <p>
+    
+      <strong>Default:</strong> <code>null</code>
+    
+  </p>
+
+  
+
+  
+
+  
+</div>
+
+      
+        
+<div id="property_elementProperties" class="property  item-entry">
+  <h3 data-id="property_elementProperties" class="name anchorable-toc"><code>elementProperties</code></h3>
+
+
+  <span class="type">Hash</span>
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/system/render_buffer.js#L225">packages/ember-views/lib/system/render_buffer.js:225</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>A hash keyed on the name of the properties and whose value will be
+applied to that property. For example, if you wanted to apply a
+<code>checked=true</code> property to an element, you would set the
+elementProperties hash to <code>{&#39;checked&#39;:true}</code>.</p>
+
+<p>You should not maintain this hash yourself, rather, you should use
+the <code>prop()</code> method of <code>Ember.RenderBuffer</code>.</p>
+
+    </div>
+  
+
+  <p>
+    
+      <strong>Default:</strong> <code>{}</code>
+    
+  </p>
+
+  
+
+  
+
+  
+</div>
+
+      
+        
+<div id="property_elementStyle" class="property  item-entry">
+  <h3 data-id="property_elementStyle" class="name anchorable-toc"><code>elementStyle</code></h3>
+
+
+  <span class="type">Hash</span>
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/system/render_buffer.js#L256">packages/ember-views/lib/system/render_buffer.js:256</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>A hash keyed on the name of the style attribute and whose value will
+be applied to that attribute. For example, if you wanted to apply a
+<code>background-color:black;</code> style to an element, you would set the
+elementStyle hash to <code>{&#39;background-color&#39;:&#39;black&#39;}</code>.</p>
+
+<p>You should not maintain this hash yourself, rather, you should use
+the <code>style()</code> method of <code>Ember.RenderBuffer</code>.</p>
+
+    </div>
+  
+
+  <p>
+    
+      <strong>Default:</strong> <code>{}</code>
+    
+  </p>
+
+  
+
+  
+
+  
+</div>
+
+      
+        
+<div id="property_elementTag" class="property  item-entry">
+  <h3 data-id="property_elementTag" class="name anchorable-toc"><code>elementTag</code></h3>
+
+
+  <span class="type"><a href="/api/classes/String.html">String</a></span>
+
+
+
+
+
+
+
+  <div class="meta">
+      
+        
+          
+            Defined in
+          
+        
+      
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/system/render_buffer.js#L240">packages/ember-views/lib/system/render_buffer.js:240</a>
+
+    
+  </div>
+
+  
+
+  
+    <div class="description">
+      <p>The tagname of the element an instance of <code>Ember.RenderBuffer</code> represents.</p>
+
+<p>Usually, this gets set as the first parameter to <code>Ember.RenderBuffer</code>. For
+example, if you wanted to create a <code>p</code> tag, then you would call</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>Ember.RenderBuffer(<span class="string"><span class="delimiter">'</span><span class="content">p</span><span class="delimiter">'</span></span>, contextualElement)
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+  
+
+  <p>
+    
+      <strong>Default:</strong> <code>null</code>
     
   </p>
 
@@ -8451,7 +9293,7 @@ made available for use by the template.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/collection_view.js#L192">packages/ember-views/lib/views/collection_view.js:192</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/collection_view.js#L210">packages/ember-views/lib/views/collection_view.js:210</a>
 
     
   </div>
@@ -8500,7 +9342,7 @@ made available for use by the template.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/collection_view.js#L182">packages/ember-views/lib/views/collection_view.js:182</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/collection_view.js#L200">packages/ember-views/lib/views/collection_view.js:200</a>
 
     
   </div>
@@ -8548,7 +9390,7 @@ system (like Handlebars)</p>
           <a href="/api/classes/Ember.ContainerView.html#method_instrumentDisplay">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L738">packages/ember-views/lib/views/view.js:738</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L723">packages/ember-views/lib/views/view.js:723</a>
 
     
   </div>
@@ -8593,7 +9435,7 @@ system (like Handlebars)</p>
           <a href="/api/classes/Ember.ContainerView.html#method_isDestroyed">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/system/core_object.js#L319">packages/ember-runtime/lib/system/core_object.js:319</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/system/core_object.js#L329">packages/ember-runtime/lib/system/core_object.js:329</a>
 
     
   </div>
@@ -8643,7 +9485,7 @@ removed by the effect of calling the <code>destroy()</code> method.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_isDestroying">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-runtime/lib/system/core_object.js#L330">packages/ember-runtime/lib/system/core_object.js:330</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-runtime/lib/system/core_object.js#L340">packages/ember-runtime/lib/system/core_object.js:340</a>
 
     
   </div>
@@ -8695,7 +9537,7 @@ the <code>isDestroyed</code> flag is set.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_isView">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L702">packages/ember-views/lib/views/view.js:702</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L687">packages/ember-views/lib/views/view.js:687</a>
 
     
   </div>
@@ -8738,7 +9580,7 @@ the <code>isDestroyed</code> flag is set.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_isVisible">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L890">packages/ember-views/lib/views/view.js:890</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L875">packages/ember-views/lib/views/view.js:875</a>
 
     
   </div>
@@ -8787,7 +9629,7 @@ the <code>isDestroyed</code> flag is set.</p>
           
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/collection_view.js#L201">packages/ember-views/lib/views/collection_view.js:201</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/collection_view.js#L219">packages/ember-views/lib/views/collection_view.js:219</a>
 
     
   </div>
@@ -8830,7 +9672,7 @@ the <code>isDestroyed</code> flag is set.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_layout">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L784">packages/ember-views/lib/views/view.js:784</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L769">packages/ember-views/lib/views/view.js:769</a>
 
     
   </div>
@@ -8884,7 +9726,7 @@ on a subclass.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_layoutName">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L726">packages/ember-views/lib/views/view.js:726</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L711">packages/ember-views/lib/views/view.js:711</a>
 
     
   </div>
@@ -8935,7 +9777,7 @@ on a subclass.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_parentView">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/core_view.js#L50">packages/ember-views/lib/views/core_view.js:50</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/core_view.js#L47">packages/ember-views/lib/views/core_view.js:47</a>
 
     
   </div>
@@ -8984,7 +9826,7 @@ property will point to the parent of the view.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_tagName">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1736">packages/ember-views/lib/views/view.js:1736</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1564">packages/ember-views/lib/views/view.js:1564</a>
 
     
   </div>
@@ -9036,7 +9878,7 @@ must destroy and recreate the view element.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_template">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L750">packages/ember-views/lib/views/view.js:750</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L735">packages/ember-views/lib/views/view.js:735</a>
 
     
   </div>
@@ -9087,7 +9929,7 @@ the template yourself.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_templateName">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L714">packages/ember-views/lib/views/view.js:714</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L699">packages/ember-views/lib/views/view.js:699</a>
 
     
   </div>
@@ -9139,7 +9981,7 @@ the template yourself.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_views">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L2370">packages/ember-views/lib/views/view.js:2370</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L2139">packages/ember-views/lib/views/view.js:2139</a>
 
     
   </div>
@@ -9208,7 +10050,7 @@ the template yourself.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_didInsertElement">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1530">packages/ember-views/lib/views/view.js:1530</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1458">packages/ember-views/lib/views/view.js:1458</a>
 
     
   </div>
@@ -9220,6 +10062,9 @@ the template yourself.</p>
       <p>Called when the element of the view has been inserted into the DOM
 or after the view was re-rendered. Override this function to do any
 set up that requires an element in the document body.</p>
+
+<p>When a view has children, didInsertElement will be called on the
+child view(s) first, bubbling upwards through the hierarchy.</p>
 
     </div>
   
@@ -9255,7 +10100,7 @@ set up that requires an element in the document body.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_parentViewDidChange">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1668">packages/ember-views/lib/views/view.js:1668</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1513">packages/ember-views/lib/views/view.js:1513</a>
 
     
   </div>
@@ -9300,7 +10145,7 @@ set up that requires an element in the document body.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_willClearRender">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1539">packages/ember-views/lib/views/view.js:1539</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1470">packages/ember-views/lib/views/view.js:1470</a>
 
     
   </div>
@@ -9347,7 +10192,7 @@ observers you have installed based on the DOM state</p>
           <a href="/api/classes/Ember.ContainerView.html#method_willDestroyElement">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1629">packages/ember-views/lib/views/view.js:1629</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1501">packages/ember-views/lib/views/view.js:1501</a>
 
     
   </div>
@@ -9359,6 +10204,9 @@ observers you have installed based on the DOM state</p>
       <p>Called when the element of the view is going to be destroyed. Override
 this function to do any teardown that requires an element, like removing
 event listeners.</p>
+
+<p>Please note: any property changes made during this event will have no
+effect on object observers.</p>
 
     </div>
   
@@ -9394,7 +10242,7 @@ event listeners.</p>
           <a href="/api/classes/Ember.ContainerView.html#method_willInsertElement">Ember.ContainerView</a>
         
       
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.7.0/packages/ember-views/lib/views/view.js#L1523">packages/ember-views/lib/views/view.js:1523</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.8.0/packages/ember-views/lib/views/view.js#L1451">packages/ember-views/lib/views/view.js:1451</a>
 
     
   </div>
