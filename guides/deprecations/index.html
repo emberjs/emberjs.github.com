@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -7,8 +6,8 @@
     <title>Ember.js - Deprecations: Deprecations</title>
     <meta property="st:title" content="Deprecations: Deprecations" />
     <link rel="shortcut icon" href="/images/favicon.png" />
-    <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
-    <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
+    <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
+    <link href="/stylesheets/site.css" rel="stylesheet" type="text/css" />
     <link href="/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
     
   </head>
@@ -41,11 +40,8 @@
     
 
     <div id="content-wrapper">
-      
-      
         <div id="sidebar">
-          
-    <ol id="toc-list">
+              <ol id="toc-list">
           <li class="level-1">
             <a href="/guides/getting-started">Getting Started</a>
             <ol>
@@ -602,15 +598,11 @@
               <a href="/guides/contributing/repositories">Repositories</a>
             </li>
           </ol></li></ol>
-  
+
           <div id="back-to-top"><a id="back-top-top" href="#">&#11014; Back to Top</a></div>
         </div>
-      
       <div id="content" class="has-sidebar">
-          
-  
-
-  
+        
   <div class="chapter">
     
         <h1>Deprecations
@@ -741,12 +733,38 @@ Ember.Application.initializer({
 in the <a href="/api/classes/Ember.Application.html#toc_initializers">initializer API documentation</a>
 and the <a href="/guides/understanding-ember/dependency-injection-and-service-lookup">dependency injection guide</a>.</p>
 <h4 class='anchorable-toc' id='toc_deprecate-location-hash-paths-that-don-t-include-a-forward-slash-e-g-foo-not-foo'>Deprecate location: &#39;hash&#39; paths that don&#39;t include a forward slash. e.g. #/foo NOT #foo</h4>
-<p>Prior to this release, if you were using <code>location: &#39;hash&#39;</code> (which is the default), you were able able to link to a route with a <code>location.hash</code> that didn&#39;t contain the expected leading forward slash. e.g. <code>#foo</code> instead of the correct <code>#/foo</code>. Very few, if any, should be impacted by this since the router always produces the correct form.</p>
+<p>Prior to this release, if you were using <code>location: &#39;hash&#39;</code> (which is the default), you were able to link to a route with a <code>location.hash</code> that didn&#39;t contain the expected leading forward slash. e.g. <code>#foo</code> instead of the correct <code>#/foo</code>. Very few, if any, should be impacted by this since the router always produces the correct form.</p>
 
 <p>Doing so is ambiguous because you may also be trying to link to an element on the page who&#39;s id matches <code>&lt;div id=&quot;foo&quot;&gt;</code> and it also erroneously will create an extra history state if a user clicks on something that transitions to that route again, since it will change <code>location.hash === &#39;#/foo&#39;</code>.</p>
 
 <p>This ability will be removed quickly to allow us to mimick the browser&#39;s behavior of scrolling the page to an element who&#39;s id matches, but in our case doing so after the transition ends and everything is rendered. Once this feature is added, you&#39;ll be able to link to id&#39;s even with doubled up hashes: <code>#/foo#some-id</code> as well as the expected <code>#some-id</code>.</p>
+<h3 class='anchorable-toc' id='toc_deprecations-added-in-1-10'>Deprecations Added in 1.10</h3><h4 class='anchorable-toc' id='toc_deprecate-beforeobservers'>Deprecate beforeObservers</h4>
+<p>beforeObservers are deprecated due to the negative performance implications they have for Ember internals and applications.</p>
 
+<p>Typically they were used to have access to the old value of a property when it&#39;s about to change, but you can get same functionality in an even more efficient way with just a few lines of code:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre><span class="keyword">function</span> <span class="function">fooObserver</span>(obj){
+  <span class="keyword">var</span> newFoo = obj.get(<span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>);
+  <span class="keyword">if</span> (obj._oldFoo !== newFoo) {
+    <span class="comment">// do your stuff here</span>
+    obj._oldFoo = newFoo;
+  }
+}
+addObserver(obj, <span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>, fooObserver);
+fooObserver(obj); <span class="comment">// Optionally call the observer immediately</span>
+</pre></td>
+</tr></table>
+</div></div>
     
       <footer>
         
@@ -793,10 +811,9 @@ and the <a href="/guides/understanding-ember/dependency-injection-and-service-lo
 <!--[if gte IE 9]><!-->
     <script type="text/javascript" src="/javascripts/common-modern.js"></script>
 <!--<![endif]-->
-    
-    <script type="text/javascript" src="/javascripts/guides.js"></script>
+        <script type="text/javascript" src="/javascripts/guides.js"></script>
     <script src="http://static.jsbin.com/js/embed.js"></script>
-  
+
     <script type="text/javascript">
       var _gaq = _gaq || [];
       var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';

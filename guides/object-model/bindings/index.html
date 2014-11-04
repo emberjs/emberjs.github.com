@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -7,8 +6,8 @@
     <title>Ember.js - The Object Model: Bindings</title>
     <meta property="st:title" content="The Object Model: Bindings" />
     <link rel="shortcut icon" href="/images/favicon.png" />
-    <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
-    <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
+    <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
+    <link href="/stylesheets/site.css" rel="stylesheet" type="text/css" />
     <link href="/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
     
   </head>
@@ -41,11 +40,8 @@
     
 
     <div id="content-wrapper">
-      
-      
         <div id="sidebar">
-          
-    <ol id="toc-list">
+              <ol id="toc-list">
           <li class="level-1">
             <a href="/guides/getting-started">Getting Started</a>
             <ol>
@@ -602,15 +598,11 @@
               <a href="/guides/contributing/repositories">Repositories</a>
             </li>
           </ol></li></ol>
-  
+
           <div id="back-to-top"><a id="back-top-top" href="#">&#11014; Back to Top</a></div>
         </div>
-      
       <div id="content" class="has-sidebar">
-          
-  
-
-  
+        
   <div class="chapter">
     
         <h1>Bindings
@@ -641,14 +633,20 @@ specifies the path to another object.</p>
 12
 13
 14
+15
+16
+17
 </pre></td>
   <td class="code"><pre>wife = Ember.Object.create({
   <span class="key">householdIncome</span>: <span class="integer">80000</span>
 });
 
-husband = Ember.Object.create({
-  <span class="key">wife</span>: wife,
+Husband = Ember.Object.extend({
   <span class="key">householdIncome</span>: Ember.computed.alias(<span class="string"><span class="delimiter">'</span><span class="content">wife.householdIncome</span><span class="delimiter">'</span></span>)
+});
+
+husband = Husband.create({
+  <span class="key">wife</span>: wife
 });
 
 husband.get(<span class="string"><span class="delimiter">'</span><span class="content">householdIncome</span><span class="delimiter">'</span></span>); <span class="comment">// 80000</span>
@@ -689,14 +687,20 @@ shipping address that starts the same as a billing address but can later be chan
 16
 17
 18
+19
+<strong>20</strong>
+21
 </pre></td>
   <td class="code"><pre>user = Ember.Object.create({
   <span class="key">fullName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Kara Gates</span><span class="delimiter">&quot;</span></span>
 });
 
-userView = Ember.View.create({
-  <span class="key">user</span>: user,
+UserView = Ember.View.extend({
   <span class="key">userName</span>: Ember.computed.oneWay(<span class="string"><span class="delimiter">'</span><span class="content">user.fullName</span><span class="delimiter">'</span></span>)
+});
+
+userView = UserView.create({
+  <span class="key">user</span>: user
 });
 
 <span class="comment">// Changing the name of the user object changes</span>
@@ -757,10 +761,9 @@ user.get(<span class="string"><span class="delimiter">'</span><span class="conte
 <!--[if gte IE 9]><!-->
     <script type="text/javascript" src="/javascripts/common-modern.js"></script>
 <!--<![endif]-->
-    
-    <script type="text/javascript" src="/javascripts/guides.js"></script>
+        <script type="text/javascript" src="/javascripts/guides.js"></script>
     <script src="http://static.jsbin.com/js/embed.js"></script>
-  
+
     <script type="text/javascript">
       var _gaq = _gaq || [];
       var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';

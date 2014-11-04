@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -7,8 +6,8 @@
     <title>Ember.js - Testing: Testing Components</title>
     <meta property="st:title" content="Testing: Testing Components" />
     <link rel="shortcut icon" href="/images/favicon.png" />
-    <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
-    <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
+    <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
+    <link href="/stylesheets/site.css" rel="stylesheet" type="text/css" />
     <link href="/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
     
   </head>
@@ -41,11 +40,8 @@
     
 
     <div id="content-wrapper">
-      
-      
         <div id="sidebar">
-          
-    <ol id="toc-list">
+              <ol id="toc-list">
           <li class="level-1">
             <a href="/guides/getting-started">Getting Started</a>
             <ol>
@@ -602,15 +598,11 @@
               <a href="/guides/contributing/repositories">Repositories</a>
             </li>
           </ol></li></ol>
-  
+
           <div id="back-to-top"><a id="back-top-top" href="#">&#11014; Back to Top</a></div>
         </div>
-      
       <div id="content" class="has-sidebar">
-          
-  
-
-  
+        
   <div class="chapter">
     
         <h1>Testing Components
@@ -621,7 +613,7 @@
     <p><em>Unit testing methods and computed properties follows previous patterns shown 
 in <a href="/guides/testing/unit-testing-basics">Unit Testing Basics</a> because Ember.Component extends Ember.Object.</em></p>
 <h4 class='anchorable-toc' id='toc_setup'>Setup</h4>
-<p>Before testing components, be sure to add testing application div to your testing html file:</p>
+<p>Before testing components, be sure to add the testing application div to your testing html file:</p>
 <div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -631,7 +623,7 @@ in <a href="/guides/testing/unit-testing-basics">Unit Testing Basics</a> because
 </pre></td>
 </tr></table>
 </div></div>
-<p>and then you&#39;ll also need to tell Ember to use this element for rendering the application in</p>
+<p>You&#39;ll also need to tell Ember to use this element for rendering the application:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
@@ -639,7 +631,7 @@ in <a href="/guides/testing/unit-testing-basics">Unit Testing Basics</a> because
 </pre></td>
 </tr></table>
 </div></div>
-<p>Components can be tested using the <code>moduleForComponent</code> helper. Here is a 
+<p>You can test components using the <code>moduleForComponent</code> helper. Testing this 
 simple Ember component:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -660,7 +652,7 @@ simple Ember component:</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>with an accompanying Handlebars template:</p>
+<p>... with an accompanying Handlebars template:</p>
 <div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
@@ -668,9 +660,9 @@ simple Ember component:</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>Unit testing this component can be done using the <code>moduleForComponent</code> helper.
-This helper will find the component by name (pretty-color) and it&#39;s template (if
-available).</p>
+<p>... can be done using the <code>moduleForComponent</code> helper.
+The following helper will find a component named &quot;pretty-color&quot; and its template
+(if available).</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
@@ -678,11 +670,11 @@ available).</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>Now each of our tests has a function <code>subject()</code> which aliases the create
-method on the component factory.</p>
+<p>Now each test following the <code>moduleForComponent</code> call has a <code>subject()</code> function,
+which aliases the create method on the component factory.</p>
 
-<p>Here&#39;s how we would test to make sure rendered HTML changes when changing the
-color on the component:</p>
+<p>We can test to make sure that changing the component&#39;s color property updates
+the rendered HTML:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -728,8 +720,8 @@ color on the component:</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>Another test that we might perform on this component would be to ensure the
-template is being rendered properly.</p>
+<p>We might also test this component to ensure the template is being 
+rendered properly.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -769,11 +761,10 @@ template is being rendered properly.</p>
 Components</a></p>
 <h3 class='anchorable-toc' id='toc_interacting-with-components-in-the-dom'>Interacting with Components in the DOM</h3>
 <p>Ember Components are a great way to create powerful, interactive, self-contained 
-custom HTML elements. Because of this, it is important to not only test the 
-methods on the component itself, but also the user&#39;s interaction with the
-component.</p>
+custom HTML elements. Because of this, it is important to test the 
+component&#39;s methods <em>and</em> the user&#39;s interaction with the component.</p>
 
-<p>Let&#39;s look at a very simple component which does nothing more than set it&#39;s own
+<p>Let&#39;s look at a very simple component that simply sets its own
 title when clicked:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -798,7 +789,8 @@ title when clicked:</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>We would use <a href="/guides/testing/test-helpers">Integration Test Helpers</a> to interact with the rendered component:</p>
+<p>We would use <a href="/guides/testing/test-helpers">Integration Test Helpers</a> to interact with the rendered component
+and test its behavior:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -842,9 +834,9 @@ test(<span class="string"><span class="delimiter">'</span><span class="content">
 </div></div><h4 class='anchorable-toc' id='toc_live-example'>Live Example</h4>
 <p><a class="jsbin-embed" href="http://jsbin.com/liqog/embed?output">Unit 
 Testing Components</a></p>
-<h3 class='anchorable-toc' id='toc_components-with-built-in-layout'>Components with built in layout</h3>
-<p>Some components do not use a separate template. The template can be embedded
-into the component via the <a href="/api/classes/Ember.Component.html#property_layout">layout</a> property. For example:</p>
+<h3 class='anchorable-toc' id='toc_components-with-embedded-layout'>Components with embedded layout</h3>
+<p>Some components do not use a separate template. Instead, the template is embedded
+into the component via the <a href="/api/classes/Ember.Component.html#property_layout">layout</a> property and inline HTML. For example:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -882,7 +874,8 @@ into the component via the <a href="/api/classes/Ember.Component.html#property_l
 </pre></td>
 </tr></table>
 </div></div>
-<p>In this example, we would still perform our test by interacting with the DOM.</p>
+<p>In this example, we would still use <a href="/guides/testing/test-helpers">Integration Test Helpers</a> to
+test a user&#39;s DOM interaction.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -928,8 +921,8 @@ test(<span class="string"><span class="delimiter">'</span><span class="content">
 Components with Built-in Layout</a></p>
 <h3 class='anchorable-toc' id='toc_programmatically-interacting-with-components'>Programmatically interacting with components</h3>
 <p>Another way we can test our components is to perform function calls directly
-on the component instead of through DOM interaction. Let&#39;s use the same code
-example we have above as our component, but perform the tests programatically:</p>
+on the component instead of through DOM interaction. Let&#39;s use the same component
+example from above, but perform the tests programatically:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -952,7 +945,7 @@ example we have above as our component, but perform the tests programatically:</
 </pre></td>
   <td class="code"><pre>moduleForComponent(<span class="string"><span class="delimiter">'</span><span class="content">my-foo</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">MyFooComponent</span><span class="delimiter">'</span></span>);
 
-test(<span class="string"><span class="delimiter">'</span><span class="content">clicking link updates the title</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+test(<span class="string"><span class="delimiter">'</span><span class="content">sending changeName message updates the title</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
   <span class="keyword">var</span> component = <span class="local-variable">this</span>.subject();
 
   <span class="comment">// append the component to the DOM, returns DOM instance</span>
@@ -975,7 +968,7 @@ test(<span class="string"><span class="delimiter">'</span><span class="content">
 Testing Components</a></p>
 <h3 class='anchorable-toc' id='toc_code-sendaction-code-validation-in-components'><code>sendAction</code> validation in components</h3>
 <p>Components often utilize <code>sendAction</code>, which is a way to interact with the Ember
-application. Here&#39;s a simple component which sends the action <code>internalAction</code>
+application. Here&#39;s a simple component that sends the action <code>internalAction</code>
 when a button is clicked:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -1000,8 +993,8 @@ when a button is clicked:</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>In our test, we will create a dummy object that receives the action being sent
-by the component.</p>
+<p>In our test, we will create a test double (dummy object) that receives 
+the action being sent by the component.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -1072,7 +1065,7 @@ test(<span class="string"><span class="delimiter">'</span><span class="content">
 <p><a class="jsbin-embed" href="http://jsbin.com/siwil/embed?output">sendAction 
 Validation in Components</a></p>
 <h3 class='anchorable-toc' id='toc_components-using-other-components'>Components Using Other Components</h3>
-<p>Sometimes components are easier to maintain when broken up into parent and child
+<p>Sometimes components are easier to maintain if they&#39;re broken up into parent and child
 components. Here is a simple example:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -1131,8 +1124,8 @@ App.MyKittenComponent = Ember.Component.extend({
 </pre></td>
 </tr></table>
 </div></div>
-<p>Testing components like these which include child components is very simple using
-the <code>needs</code> callback.</p>
+<p>Using the <code>needs</code> callback greatly simplifies testing components 
+with a parent-child relationship.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -1191,7 +1184,7 @@ test(<span class="string"><span class="delimiter">'</span><span class="content">
 <p><a class="jsbin-embed" href="http://jsbin.com/xebih/embed?output">Components 
 with Embedded Components</a></p>
 
-<script src="http://static.jsbin.com/js/embed.js"></script>
+<p><script src="http://static.jsbin.com/js/embed.js"></script></p>
 
     
       <footer>
@@ -1239,10 +1232,9 @@ with Embedded Components</a></p>
 <!--[if gte IE 9]><!-->
     <script type="text/javascript" src="/javascripts/common-modern.js"></script>
 <!--<![endif]-->
-    
-    <script type="text/javascript" src="/javascripts/guides.js"></script>
+        <script type="text/javascript" src="/javascripts/guides.js"></script>
     <script src="http://static.jsbin.com/js/embed.js"></script>
-  
+
     <script type="text/javascript">
       var _gaq = _gaq || [];
       var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';

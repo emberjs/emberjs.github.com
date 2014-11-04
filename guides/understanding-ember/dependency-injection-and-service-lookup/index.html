@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -7,8 +6,8 @@
     <title>Ember.js - Understanding Ember.js: Dependency Injection & Service Lookup</title>
     <meta property="st:title" content="Understanding Ember.js: Dependency Injection & Service Lookup" />
     <link rel="shortcut icon" href="/images/favicon.png" />
-    <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
-    <link href="/stylesheets/site.css" media="screen" rel="stylesheet" type="text/css" />
+    <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
+    <link href="/stylesheets/site.css" rel="stylesheet" type="text/css" />
     <link href="/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
     
   </head>
@@ -41,11 +40,8 @@
     
 
     <div id="content-wrapper">
-      
-      
         <div id="sidebar">
-          
-    <ol id="toc-list">
+              <ol id="toc-list">
           <li class="level-1">
             <a href="/guides/getting-started">Getting Started</a>
             <ol>
@@ -602,15 +598,11 @@
               <a href="/guides/contributing/repositories">Repositories</a>
             </li>
           </ol></li></ol>
-  
+
           <div id="back-to-top"><a id="back-top-top" href="#">&#11014; Back to Top</a></div>
         </div>
-      
       <div id="content" class="has-sidebar">
-          
-  
-
-  
+        
   <div class="chapter">
     
         <h1>Dependency Injection & Service Lookup
@@ -836,9 +828,21 @@ App.IndexController = Ember.Controller.extend({
   <td class="line-numbers"><pre>1
 2
 3
+4
+5
+6
+7
+8
+9
 </pre></td>
   <td class="code"><pre>App = Ember.Application.create();
-App.register(<span class="string"><span class="delimiter">'</span><span class="content">logger:main</span><span class="delimiter">'</span></span>, {<span class="function">log</span>: <span class="keyword">function</span>(m){ console.log(m); }}, {<span class="key">instantiate</span>: <span class="predefined-constant">false</span>});
+
+App.register(<span class="string"><span class="delimiter">'</span><span class="content">logger:main</span><span class="delimiter">'</span></span>, {
+  <span class="function">log</span>: <span class="keyword">function</span>(m) {
+    console.log(m);
+  }
+}, { <span class="key">instantiate</span>: <span class="predefined-constant">false</span> });
+
 App.inject(<span class="string"><span class="delimiter">'</span><span class="content">route</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">logger</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">logger:main</span><span class="delimiter">'</span></span>);
 </pre></td>
 </tr></table>
@@ -854,16 +858,26 @@ App.inject(<span class="string"><span class="delimiter">'</span><span class="con
 7
 8
 9
+<strong>10</strong>
+11
+12
+13
+14
 </pre></td>
-  <td class="code"><pre>App = Ember.Application.extend();
-Ember.Application.initializer({
+  <td class="code"><pre>Ember.Application.initializer({
   <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">logger</span><span class="delimiter">'</span></span>,
-  <span class="function">initialize</span>: <span class="keyword">function</span>(container, application){
-    application.register(<span class="string"><span class="delimiter">'</span><span class="content">logger:main</span><span class="delimiter">'</span></span>, {<span class="function">log</span>: <span class="keyword">function</span>(m){ console.log(m); }}, {<span class="key">instantiate</span>: <span class="predefined-constant">false</span>});
+
+  <span class="function">initialize</span>: <span class="keyword">function</span>(container, application) {
+    <span class="keyword">var</span> logger = {
+      <span class="function">log</span>: <span class="keyword">function</span>(m) {
+        console.log(m);
+      }
+    };
+
+    application.register(<span class="string"><span class="delimiter">'</span><span class="content">logger:main</span><span class="delimiter">'</span></span>, logger, { <span class="key">instantiate</span>: <span class="predefined-constant">false</span> });
     application.inject(<span class="string"><span class="delimiter">'</span><span class="content">route</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">logger</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">logger:main</span><span class="delimiter">'</span></span>);
   }
 });
-App.create();
 </pre></td>
 </tr></table>
 </div></div>
@@ -873,9 +887,19 @@ App.create();
 <div class="highlight JavaScript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
+3
+4
+5
+6
+7
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> logger = {<span class="function">log</span>: <span class="keyword">function</span>(m){ console.log(m); }};
-application.register(<span class="string"><span class="delimiter">'</span><span class="content">logger:main</span><span class="delimiter">'</span></span>, logger, {<span class="key">instantiate</span>: <span class="predefined-constant">false</span>});
+  <td class="code"><pre><span class="keyword">var</span> logger = {
+  <span class="function">log</span>: <span class="keyword">function</span>(m) {
+    console.log(m);
+  }
+};
+
+application.register(<span class="string"><span class="delimiter">'</span><span class="content">logger:main</span><span class="delimiter">'</span></span>, logger, { <span class="key">instantiate</span>: <span class="predefined-constant">false</span> });
 </pre></td>
 </tr></table>
 </div></div>
@@ -885,8 +909,18 @@ application.register(<span class="string"><span class="delimiter">'</span><span 
 <div class="highlight JavaScript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
+3
+4
+5
+6
+7
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> Logger = Ember.Object.extend({ <span class="function">log</span>: <span class="keyword">function</span>(m){ console.log(m); } });
+  <td class="code"><pre><span class="keyword">var</span> Logger = Ember.Object.extend({
+  <span class="function">log</span>: <span class="keyword">function</span>(m) {
+    console.log(m);
+  }
+});
+
 application.register(<span class="string"><span class="delimiter">'</span><span class="content">logger:main</span><span class="delimiter">'</span></span>, Logger);
 </pre></td>
 </tr></table>
@@ -923,11 +957,20 @@ application.register(<span class="string"><span class="delimiter">'</span><span 
 18
 19
 <strong>20</strong>
+21
+22
+23
+24
+25
 </pre></td>
   <td class="code"><pre>App = Ember.Application.extend();
+
 App.Logger = Ember.Object.extend({
-  <span class="function">log</span>: <span class="keyword">function</span>(m){ console.log(m); }
+  <span class="function">log</span>: <span class="keyword">function</span>(m) {
+    console.log(m);
+  }
 });
+
 App.IndexRoute = Ember.Route.extend({
   <span class="function">activate</span>: <span class="keyword">function</span>(){
     <span class="comment">// The logger property is injected into all routes</span>
@@ -937,7 +980,8 @@ App.IndexRoute = Ember.Route.extend({
 
 Ember.Application.initializer({
   <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">logger</span><span class="delimiter">'</span></span>,
-  <span class="function">initialize</span>: <span class="keyword">function</span>(container, application){
+
+  <span class="function">initialize</span>: <span class="keyword">function</span>(container, application) {
     application.register(<span class="string"><span class="delimiter">'</span><span class="content">logger:main</span><span class="delimiter">'</span></span>, App.Logger);
     application.inject(<span class="string"><span class="delimiter">'</span><span class="content">route</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">logger</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">logger:main</span><span class="delimiter">'</span></span>);
   }
@@ -956,6 +1000,19 @@ App.create();
 </tr></table>
 </div></div>
 <p>Injections can be made onto all of Ember&#39;s major framework classes, including views, helpers, components, controllers, routes, and the router.</p>
+
+<aside>
+  **Note:** For injections into models (if not using ember-cli), you need to enable the `MODEL_FACTORY_INJECTIONS` 
+  flag before you initialize your application. You can do this like so:
+  
+```JavaScript
+Ember.MODEL_FACTORY_INJECTIONS = true;
+
+var App = Ember.Application.create({
+  // Enable any options
+});
+```
+</aside>
 
 <p>What follows is a full implementation of the above logger service:</p>
 
@@ -1009,10 +1066,9 @@ App.create();
 <!--[if gte IE 9]><!-->
     <script type="text/javascript" src="/javascripts/common-modern.js"></script>
 <!--<![endif]-->
-    
-    <script type="text/javascript" src="/javascripts/guides.js"></script>
+        <script type="text/javascript" src="/javascripts/guides.js"></script>
     <script src="http://static.jsbin.com/js/embed.js"></script>
-  
+
     <script type="text/javascript">
       var _gaq = _gaq || [];
       var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';

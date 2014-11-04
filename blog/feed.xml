@@ -5,16 +5,126 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2014-10-26T00:00:00Z</updated>
+  <updated>2014-11-03T19:00:00-05:00</updated>
   <author>
     <name>Ember</name>
   </author>
   <entry>
+    <title>Ember.js 1.8.1 and 1.9 Beta Released</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2014/11/04/ember-1-8-1-released.html"/>
+    <id>http://emberjs.com/blog/2014/11/04/ember-1-8-1-released.html</id>
+    <published>2014-11-03T19:00:00-05:00</published>
+    <updated>2014-11-03T19:00:00-05:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Today we are releasing Ember.js 1.8.1, a patch-level release of Ember that
+fixes several minor regressions introduced in the 1.8 release.&lt;/p&gt;
+&lt;h3 class="anchorable-toc" id="toc_throw-assertion-when-code-attributebindings-code-includes-code-class-code"&gt;Throw assertion when &lt;code&gt;attributeBindings&lt;/code&gt; includes &lt;code&gt;class&lt;/code&gt;
+&lt;/h3&gt;
+&lt;p&gt;Prior to 1.8, it was possible to make &lt;code&gt;class&lt;/code&gt; part of &lt;code&gt;attributeBindings&lt;/code&gt;&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;Today we are releasing Ember.js 1.8.1, a patch-level release of Ember that
+fixes several minor regressions introduced in the 1.8 release.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_throw-assertion-when-code-attributebindings-code-includes-code-class-code'&gt;Throw assertion when &lt;code&gt;attributeBindings&lt;/code&gt; includes &lt;code&gt;class&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;Prior to 1.8, it was possible to make &lt;code&gt;class&lt;/code&gt; part of &lt;code&gt;attributeBindings&lt;/code&gt; and have
+those values merged with &lt;code&gt;classNameBindings&lt;/code&gt;. For example, with the following template
+and code &amp;quot;from-template&amp;quot; and &amp;quot;from-class&amp;quot; would be merged into the DOM node&amp;#39;s class
+list.&lt;/p&gt;
+&lt;div class="highlight hbs "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;{{foo-bar class=&amp;quot;from-template&amp;quot;}}
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;App.FooBarComponent = Ember.Component.extend({
+  &lt;span class="key"&gt;classNameBindings&lt;/span&gt;: [&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;:from-class&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;],
+  &lt;span class="key"&gt;attributeBindings&lt;/span&gt;: [&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;class&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;]
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;The intent of this code is unclear and the pre-1.8 behavior was unintentional. In Ember
+1.8.1 an assertion is thrown for including &lt;code&gt;class&lt;/code&gt; in &lt;code&gt;attributeBindings&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_view-instances'&gt;View instances&lt;/h3&gt;
+&lt;p&gt;Passing view instances to the &lt;code&gt;{{view&lt;/code&gt; helper was broken in Ember.js 1.8. This behavior
+has been restored.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_work-around-provided-for-more-ios8-armv7-jit-bugs'&gt;Work-around provided for more iOS8 ARMv7 JIT Bugs&lt;/h3&gt;
+&lt;p&gt;iOS8 has introduced a severe bug in optimized ARMv7 code. In 1.8.0 we worked around the issue
+in a number of modules, and we have expanded our work around for more modules in 1.8.1&lt;/p&gt;
+
+&lt;p&gt;Further Reading:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;https://bugs.webkit.org/show_bug.cgi?id=138038&lt;/li&gt;
+&lt;li&gt;https://github.com/emberjs/ember.js/issues/5606&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 class='anchorable-toc' id='toc_support-rendering-of-null-prototype-objects'&gt;Support rendering of null-prototype objects&lt;/h3&gt;
+&lt;p&gt;meta-data objects in Ember-Data are null-prototype, a special kind of object created
+with &lt;code&gt;Object.create(null)&lt;/code&gt;. In 1.8 these objects could not be rendered. 1.8.1 repairs
+this.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_support-non-string-unescaped-content'&gt;Support non-string unescaped content&lt;/h3&gt;
+&lt;p&gt;In Ember 1.8 rendering an unescaped value that was not a string &lt;code&gt;{{{someNumberLiteral}}}&lt;/code&gt;
+would raise an exception. This has been fixed.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_support-multiple-option-rendering-template-blocks'&gt;Support multiple option-rendering template blocks&lt;/h3&gt;
+&lt;p&gt;In Ember 1.8, template strings are parsed into DOM via &lt;code&gt;innerHTML&lt;/code&gt;. Creating a stand-alone
+option tag this way results in that tag being considered &amp;quot;selected&amp;quot; even if it is not
+explicitly so. Consequently the last option of a select would often be selected upon
+render instead of the first.&lt;/p&gt;
+
+&lt;p&gt;We&amp;#39;ve restored support for templates like this:&lt;/p&gt;
+&lt;div class="highlight hbs "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&amp;lt;select&amp;gt;
+  &amp;lt;option&amp;gt;First option is selected at render in 1.8.1&amp;lt;/option&amp;gt;
+  {{#each item in items}}
+    &amp;lt;option&amp;gt;{{item.name}}&amp;lt;/option&amp;gt;
+  {{/each}}
+&amp;lt;/select&amp;gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;h3 class='anchorable-toc' id='toc_known-whitespace-issues-in-chrome'&gt;Known whitespace issues in Chrome&lt;/h3&gt;
+&lt;p&gt;Some templates may result in missing whitespace in Chrome. For example,
+if the following template renders initially with no names, then updates
+via data-binding later, the space between names may not be visible.&lt;/p&gt;
+&lt;div class="highlight hbs "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;{{firstName}} {{lastName}}
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;In Ember.js 1.9 we expect to land a refactor to the morph library that
+updates dynamic DOM content, and this should alleviate this issue. Merging
+the refactor into a point release is
+too risky, so we have labelled this issues a wont-fix.&lt;/p&gt;
+
+&lt;p&gt;The Chrome team has been notified of this bug and you can track
+progress &lt;a href="https://code.google.com/p/chromium/issues/detail?id=428313"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_changelogs'&gt;Changelogs&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/compare/v1.8.0...stable"&gt;Ember.js 1.8.0 to 1.8.1 commit log&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.8.1/CHANGELOG.md"&gt;Ember.js 1.8.1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
     <title>Ember.js 1.8.0 and 1.9 Beta Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/10/26/ember-1-8-0-released.html"/>
     <id>http://emberjs.com/blog/2014/10/26/ember-1-8-0-released.html</id>
-    <published>2014-10-26T00:00:00Z</published>
-    <updated>2014-10-26T00:00:00Z</updated>
+    <published>2014-10-25T20:00:00-04:00</published>
+    <updated>2014-10-25T20:00:00-04:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -193,8 +303,8 @@ for more details.&lt;/li&gt;
     <title>Handlebars Version Compatibility</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/10/16/handlebars-update.html"/>
     <id>http://emberjs.com/blog/2014/10/16/handlebars-update.html</id>
-    <published>2014-10-16T00:00:00Z</published>
-    <updated>2014-10-16T00:00:00Z</updated>
+    <published>2014-10-15T20:00:00-04:00</published>
+    <updated>2014-10-15T20:00:00-04:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -259,8 +369,8 @@ following template precompiler packages:&lt;/p&gt;
     <title>Core Team Meeting Minutes - 2014/09/12</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/09/13/core-team-meeting-minutes-2014-09-12.html"/>
     <id>http://emberjs.com/blog/2014/09/13/core-team-meeting-minutes-2014-09-12.html</id>
-    <published>2014-09-13T00:00:00Z</published>
-    <updated>2014-09-13T00:00:00Z</updated>
+    <published>2014-09-12T20:00:00-04:00</published>
+    <updated>2014-09-12T20:00:00-04:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -316,8 +426,8 @@ and &lt;a href="https://github.com/tildeio/htmlbars/pull/91"&gt;Internet Explore
     <title>Core Team Meeting Minutes - 2014/08/01</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/09/13/core-team-meeting-minutes-2014-08-14.html"/>
     <id>http://emberjs.com/blog/2014/09/13/core-team-meeting-minutes-2014-08-14.html</id>
-    <published>2014-09-13T00:00:00Z</published>
-    <updated>2014-09-13T00:00:00Z</updated>
+    <published>2014-09-12T20:00:00-04:00</published>
+    <updated>2014-09-12T20:00:00-04:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -380,8 +490,8 @@ and API to a subdomains and version them:&lt;/p&gt;
     <title>Core Team Meeting Minutes - 2014/08/01</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/09/13/core-team-meeting-minutes-2014-08-01.html"/>
     <id>http://emberjs.com/blog/2014/09/13/core-team-meeting-minutes-2014-08-01.html</id>
-    <published>2014-09-13T00:00:00Z</published>
-    <updated>2014-09-13T00:00:00Z</updated>
+    <published>2014-09-12T20:00:00-04:00</published>
+    <updated>2014-09-12T20:00:00-04:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -455,45 +565,5 @@ deprecation warnings:&lt;/p&gt;
 &lt;/pre&gt;&lt;/td&gt;
 &lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;&lt;/div&gt;</content>
-  </entry>
-  <entry>
-    <title>Ember Data Meeting Minutes - 2014/08/20</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2014/08/23/ember-data-meeting-minutes-2014-08-20.html"/>
-    <id>http://emberjs.com/blog/2014/08/23/ember-data-meeting-minutes-2014-08-20.html</id>
-    <published>2014-08-23T00:00:00Z</published>
-    <updated>2014-08-23T00:00:00Z</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Every week, the Ember Data team meets to discuss improvements and vision for
-the Ember Data Project.&lt;/p&gt;
-&lt;h2 class="anchorable-toc" id="toc_attendees"&gt;Attendees&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;Tom Dale (@tomdale)&lt;/li&gt;
-&lt;li&gt;Igor Terzic (@terzicigor)&lt;/li&gt;
-&lt;li&gt;Stanley Stuart (@fivetanley)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 class="anchorable-toc" id="toc_single-source-of-truth"&gt;Single Source of Truth&lt;/h2&gt;
-&lt;p&gt;This was a fairly brief meeting and mostly...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Every week, the Ember Data team meets to discuss improvements and vision for
-the Ember Data Project.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_attendees'&gt;Attendees&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;Tom Dale (@tomdale)&lt;/li&gt;
-&lt;li&gt;Igor Terzic (@terzicigor)&lt;/li&gt;
-&lt;li&gt;Stanley Stuart (@fivetanley)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 class='anchorable-toc' id='toc_single-source-of-truth'&gt;Single Source of Truth&lt;/h2&gt;
-&lt;p&gt;This was a fairly brief meeting and mostly involved a code review of Igor&amp;#39;s
-excellent work on the Single Source of Truth Branch. At a high level, the work
-in this branch vastly simplifies many internals in Ember Data on how
-relationships keep up to date. These changes will also bring many bugfixes
-around inconsistencies related to relationships. You can read more about the
-goals of this branch in &amp;quot;The Road to Ember Data 1.0&amp;quot; &lt;a href="http://emberjs.com/blog/2014/03/18/the-road-to-ember-data-1-0.html"&gt;blog post&lt;/a&gt;.
-You can read about the bug fixes referenced in the &lt;a href="https://github.com/emberjs/data/pull/2208"&gt;pull request&lt;/a&gt;. The
-Single Source of Truth changes are expected to land in Ember Data v1.0.0-beta.10.&lt;/p&gt;
-
-&lt;!-- Links --&gt;
-</content>
   </entry>
 </feed>
