@@ -640,7 +640,7 @@ scope:</p>
 2
 </pre></td>
   <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="attribute-name">App.SomeView</span><span class="inline-delimiter">}}</span></span>
-<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">each</span> <span class="attribute-name">itemViewClass</span>=<span class="attribute-value">App.SomeView</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">each</span> <span class="attribute-name">item</span> <span class="attribute-name">in</span> <span class="attribute-name">items</span> <span class="attribute-name">itemViewClass</span>=<span class="attribute-value">App.SomeView</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -651,7 +651,7 @@ via strings:</p>
 2
 </pre></td>
   <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view</span> <span class="error">&quot;</span><span class="attribute-name">some</span><span class="error">&quot;</span><span class="inline-delimiter">}}</span></span>
-<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">each</span> <span class="attribute-name">itemViewClass</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">some</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">each</span> <span class="attribute-name">item</span> <span class="attribute-name">in</span> <span class="attribute-name">items</span> <span class="attribute-name">itemViewClass</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">some</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -738,7 +738,135 @@ and the <a href="/guides/understanding-ember/dependency-injection-and-service-lo
 <p>Doing so is ambiguous because you may also be trying to link to an element on the page who&#39;s id matches <code>&lt;div id=&quot;foo&quot;&gt;</code> and it also erroneously will create an extra history state if a user clicks on something that transitions to that route again, since it will change <code>location.hash === &#39;#/foo&#39;</code>.</p>
 
 <p>This ability will be removed quickly to allow us to mimick the browser&#39;s behavior of scrolling the page to an element who&#39;s id matches, but in our case doing so after the transition ends and everything is rendered. Once this feature is added, you&#39;ll be able to link to id&#39;s even with doubled up hashes: <code>#/foo#some-id</code> as well as the expected <code>#some-id</code>.</p>
-<h3 class='anchorable-toc' id='toc_deprecations-added-in-1-10'>Deprecations Added in 1.10</h3><h4 class='anchorable-toc' id='toc_deprecate-beforeobservers'>Deprecate beforeObservers</h4>
+<h3 class='anchorable-toc' id='toc_deprecations-added-in-1-9'>Deprecations Added in 1.9</h3><h4 class='anchorable-toc' id='toc_more-consistent-handlebars-scope'>More Consistent Handlebars Scope</h4>
+<p>In today&#39;s Ember, the <code>each</code> and <code>with</code> helpers come in two flavors: a &quot;context-switching&quot; flavor and a &quot;named-parameter&quot; flavor.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">post</span> <span class="attribute-name">in</span> <span class="attribute-name">posts</span><span class="inline-delimiter">}}</span></span>
+  <span class="comment">{{!-- the context in here is the same as the outside context,
+        and `post` references the current iteration --}}</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">posts</span><span class="inline-delimiter">}}</span></span>
+  <span class="comment">{{!-- the context in here has shifted to the individual post.
+        the outer context is no longer accessible --}}</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">with</span> <span class="attribute-name">post</span> <span class="attribute-name">as</span> <span class="attribute-name">otherPost</span><span class="inline-delimiter">}}</span></span>
+  <span class="comment">{{!-- the context in here is the same as the outside context }}</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">with</span><span class="inline-delimiter">}}</span></span>
+
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">with</span> <span class="attribute-name">post</span><span class="inline-delimiter">}}</span></span>
+  <span class="comment">{{!-- the context in here has shifted to the post.
+        the outer context is no longer accessible --}}</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">with</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>This has proven to be one of the more confusing parts of the Ember templating system. It is also not clear to
+beginners which to use, and when they choose the context-shifting form, they lose access to values in the outer
+context that may be important.</p>
+
+<p>Because the helper itself offers no clue about the context-shifting behavior, it is easy (even for more experienced
+Ember developers) to get confused when skimming a template about which object a value refers to.</p>
+
+<p>The context-shifting forms of <code>#each</code> and <code>#with</code> have been deprecated in favor of the named-parameter forms.</p>
+<h5 class='anchorable-toc' id='toc_transition-plan'>Transition Plan</h5>
+<p>To transition your code to the new syntax, you can change templates that look like this:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">people</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;p&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">firstName</span><span class="inline-delimiter">}}</span></span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">lastName</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;p&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">address</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/p&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>with:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">person</span> <span class="attribute-name">in</span> <span class="attribute-name">people</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;p&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">person.firstName</span><span class="inline-delimiter">}}</span></span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">person.lastName</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;p&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">person.address</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/p&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>In preparation for further work on HTMLBars, the context switching form of <code>{{each}}</code> is deprecated. This is mostly a &quot;mechanical&quot; refactor and drammatically
+simplifies how to think about the context in your templates. This change should be entirely mechanical.</p>
+
+<p>In prior versions you may have done one of the following:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;ul&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+    <span class="tag">&lt;li&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">name</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/li&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/ul&gt;</span>
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;ul&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">people</span><span class="inline-delimiter">}}</span></span>
+    <span class="tag">&lt;li&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">name</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/li&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/ul&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>You should now be using:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;ul&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">person</span> <span class="attribute-name">in</span> <span class="attribute-name">people</span><span class="inline-delimiter">}}</span></span>
+    <span class="tag">&lt;li&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">person.name</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/li&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/ul&gt;</span>
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-1-10'>Deprecations Added in 1.10</h3><h4 class='anchorable-toc' id='toc_deprecate-beforeobservers'>Deprecate beforeObservers</h4>
 <p>beforeObservers are deprecated due to the negative performance implications they have for Ember internals and applications.</p>
 
 <p>Typically they were used to have access to the old value of a property when it&#39;s about to change, but you can get same functionality in an even more efficient way with just a few lines of code:</p>
