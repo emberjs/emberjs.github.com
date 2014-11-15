@@ -219,10 +219,6 @@
             </li>
           
             <li class="level-3">
-              <a href="/guides/templates/changing-scope">Changing Scope</a>
-            </li>
-          
-            <li class="level-3">
               <a href="/guides/templates/binding-element-attributes">Binding Element Attributes</a>
             </li>
           
@@ -1261,10 +1257,6 @@ is automatically instantiated, if necessary, and added to the
 <p>Standard Handlebars templates have the concept of a <em>context</em>--the
 object from which expressions will be looked up.</p>
 
-<p>Some helpers, like <code>{{#with}}</code>, change the context inside their block.
-Others, like <code>{{#if}}</code>, preserve the context. These are called
-&quot;context-preserving helpers.&quot;</p>
-
 <p>When a Handlebars template in an Ember app uses an expression
 (<code>{{#if foo.bar}}</code>), Ember will automatically set up an
 observer for that path on the current context.</p>
@@ -1278,29 +1270,16 @@ path as the context.</p>
   <td class="line-numbers"><pre>1
 2
 3
-4
-5
-6
-7
 </pre></td>
   <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">controller.isAuthenticated</span><span class="inline-delimiter">}}</span></span>
   <span class="tag">&lt;h1&gt;</span>Welcome <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">controller.name</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/h1&gt;</span>
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
-
-<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">with</span> <span class="attribute-name">controller.user</span><span class="inline-delimiter">}}</span></span>
-  <span class="tag">&lt;p&gt;</span>You have <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">notificationCount</span><span class="inline-delimiter">}}</span></span> notifications.<span class="tag">&lt;/p&gt;</span>
-<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">with</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>
 <p>In the above template, when the <code>isAuthenticated</code> property changes from
 false to true, Ember will render the block, using the original outer
 scope as its context.</p>
-
-<p>The <code>{{#with}}</code> helper changes the context of its block to the <code>user</code>
-property on the current controller. When the <code>user</code> property changes,
-Ember re-renders the block, using the new value of <code>controller.user</code> as
-its context.</p>
 <h4 class='anchorable-toc' id='toc_view-scope'>View Scope</h4>
 <p>In addition to the Handlebars context, templates in Ember also have the
 notion of the current view. No matter what the current context is, the
@@ -1332,18 +1311,12 @@ You can get access to a view&#39;s parent using <code>view.parentView</code>.</p
 <p>…and the following template:</p>
 <div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
-2
-3
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">with</span> <span class="attribute-name">controller</span><span class="inline-delimiter">}}</span></span>
-  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view.bulletText</span><span class="inline-delimiter">}}</span></span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">name</span><span class="inline-delimiter">}}</span></span>
-<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">with</span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view.bulletText</span><span class="inline-delimiter">}}</span></span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">name</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>
-<p>Even though the Handlebars context has changed to the current
-controller, you can still access the view&#39;s <code>bulletText</code> by referencing
-<code>view.bulletText</code>.</p>
+<p>You can still access the view&#39;s <code>bulletText</code> by referencing <code>view.bulletText</code>.</p>
 <h3 class='anchorable-toc' id='toc_template-variables'>Template Variables</h3>
 <p>So far in this guide, we&#39;ve been handwaving around the use of the
 <code>controller</code> property in our Handlebars templates. Where does it come
@@ -1388,18 +1361,14 @@ but remain in the same scope as where the template invoked the <code>each</code>
 5
 6
 7
-8
-9
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">with</span> <span class="attribute-name">controller.preferences</span><span class="inline-delimiter">}}</span></span>
-  <span class="tag">&lt;h1&gt;</span>Title<span class="tag">&lt;/h1&gt;</span>
-  <span class="tag">&lt;ul&gt;</span>
-  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">person</span> <span class="attribute-name">in</span> <span class="attribute-name">controller.people</span><span class="inline-delimiter">}}</span></span>
-    <span class="comment">{{! prefix here is controller.preferences.prefix }}</span>
-    <span class="tag">&lt;li&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">prefix</span><span class="inline-delimiter">}}</span></span>: <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">person.fullName</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/li&gt;</span>
-  <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
-  <span class="tag">&lt;ul&gt;</span>
-<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">with</span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="tag">&lt;h1&gt;</span>Title<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;ul&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">person</span> <span class="attribute-name">in</span> <span class="attribute-name">controller.people</span><span class="inline-delimiter">}}</span></span>
+  <span class="comment">{{! prefix here is controller.preferences.prefix }}</span>
+  <span class="tag">&lt;li&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">prefix</span><span class="inline-delimiter">}}</span></span>: <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">person.fullName</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/li&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;ul&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
