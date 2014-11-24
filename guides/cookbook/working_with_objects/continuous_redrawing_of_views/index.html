@@ -617,7 +617,7 @@ refreshed when the <code>pulse</code> attribute increments.</p>
 <p>The clock object can be used to create new instances for binding to new views
 generated within the application, like a list of comments.</p>
 <h2 class='anchorable-toc' id='toc_discussion'>Discussion</h2>
-<p><a class="jsbin-embed" href="http://jsbin.com/iLETUTI/17/embed?output">
+<p><a class="jsbin-embed" href="http://jsbin.com/somosocuni/1/embed?output">
 Cookbook: Continuous Redrawing of Views
 </a><script src="http://static.jsbin.com/js/embed.js"></script></p>
 <h3 class='anchorable-toc' id='toc_clockservice-object'>ClockService object</h3>
@@ -745,20 +745,22 @@ comment was created.</p>
 14
 15
 16
+17
 </pre></td>
   <td class="code"><pre>App.CommentItemController = Ember.ObjectController.extend({
   <span class="key">seconds</span>: Ember.computed.oneWay(<span class="string"><span class="delimiter">'</span><span class="content">clock.pulse</span><span class="delimiter">'</span></span>).readOnly()
 });
 
 App.CommentsController = Ember.ArrayController.extend({
-  <span class="key">needs</span>: [<span class="string"><span class="delimiter">'</span><span class="content">interval</span><span class="delimiter">'</span></span>],
   <span class="key">itemController</span>: <span class="string"><span class="delimiter">'</span><span class="content">commentItem</span><span class="delimiter">'</span></span>,
+  <span class="key">comment</span>: <span class="predefined-constant">null</span>,
   <span class="key">actions</span>: {
     <span class="function">add</span>: <span class="keyword">function</span> () {
       <span class="local-variable">this</span>.addObject(Em.Object.create({
-        <span class="key">comment</span>: <span class="predefined">$</span>(<span class="string"><span class="delimiter">'</span><span class="content">#comment</span><span class="delimiter">'</span></span>).val(),
+        <span class="key">comment</span>: <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>),
         <span class="key">clock</span>: ClockService.create()
       }));
+      <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>, <span class="predefined-constant">null</span>);
     }
   }
 });
@@ -796,7 +798,7 @@ has a few properties to select a component to render, <code>fullSecond</code>,
 <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">threeQuarterSecond</span><span class="inline-delimiter">}}</span></span>
   <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">nyan-middle</span><span class="inline-delimiter">}}</span></span>
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
-<span class="tag">&lt;h3&gt;</span>You<span class="entity">&amp;apos;</span>ve nyaned for <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">digital_clock</span> <span class="attribute-name">seconds</span><span class="inline-delimiter">}}</span></span> (h:m:s)<span class="tag">&lt;/h3&gt;</span>
+<span class="tag">&lt;h3&gt;</span>You<span class="entity">&amp;apos;</span>ve nyaned for <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">digital-clock</span> <span class="attribute-name">seconds</span><span class="inline-delimiter">}}</span></span> (h:m:s)<span class="tag">&lt;/h3&gt;</span>
 <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">render</span> <span class="error">'</span><span class="attribute-name">comments</span><span class="error">'</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
@@ -810,18 +812,22 @@ has a few properties to select a component to render, <code>fullSecond</code>,
 5
 6
 7
+8
+9
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;input</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">comment</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-<span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">'</span><span class="attribute-name">add</span><span class="error">'</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>Add Comment<span class="tag">&lt;/button&gt;</span>
+  <td class="code"><pre><span class="tag">&lt;form</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">add</span><span class="error">&quot;</span> <span class="attribute-name">on</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">submit</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">input</span> <span class="attribute-name">value</span>=<span class="attribute-value">comment</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;button&gt;</span>Add Comment<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/form&gt;</span>
 <span class="tag">&lt;ul&gt;</span>
-  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
-    <span class="tag">&lt;li&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">comment</span><span class="inline-delimiter">}}</span></span> (<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">digital_clock</span> <span class="attribute-name">clock.pulse</span><span class="inline-delimiter">}}</span></span>)<span class="tag">&lt;/li&gt;</span>
-  <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">item</span> <span class="attribute-name">in</span> <span class="attribute-name">this</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;li&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">item.comment</span><span class="inline-delimiter">}}</span></span> (<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">digital-clock</span> <span class="attribute-name">item.seconds</span><span class="inline-delimiter">}}</span></span>)<span class="tag">&lt;/li&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
 <span class="tag">&lt;/ul&gt;</span>
 </pre></td>
 </tr></table>
 </div></div><h3 class='anchorable-toc' id='toc_handlebars-helper-to-format-the-clock-display-h-m-s'>Handlebars helper to format the clock display (h:m:s)</h3>
-<p>This helper is used in the template like so <code>{{digital_clock seconds}}</code>,
+<p>This helper is used in the template like so <code>{{digital-clock seconds}}</code>,
 <code>seconds</code> is the property of the controller that will be displayed (h:m:s).</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -840,7 +846,7 @@ has a few properties to select a component to render, <code>fullSecond</code>,
 14
 15
 </pre></td>
-  <td class="code"><pre>Ember.Handlebars.registerBoundHelper(<span class="string"><span class="delimiter">'</span><span class="content">digital_clock</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(seconds) {
+  <td class="code"><pre>Ember.Handlebars.registerBoundHelper(<span class="string"><span class="delimiter">'</span><span class="content">digital-clock</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(seconds) {
   <span class="keyword">var</span> h = Math.floor(seconds / <span class="integer">3600</span>);
   <span class="keyword">var</span> m = Math.floor((seconds % <span class="integer">3600</span>) / <span class="integer">60</span>);
   <span class="keyword">var</span> s = Math.floor(seconds % <span class="integer">60</span>);
@@ -866,7 +872,7 @@ after waking.</p>
 <p>The source code:</p>
 
 <ul>
-<li><a href="http://jsbin.com/iLETUTI/17/edit?html,js,output">http://jsbin.com/iLETUTI/17/edit?html,js,output</a></li>
+<li><a href="http://jsbin.com/somosocuni/1/edit?html,js,output">http://jsbin.com/somosocuni/1/edit?html,js,output</a></li>
 </ul>
 
 <p>Further reading:</p>

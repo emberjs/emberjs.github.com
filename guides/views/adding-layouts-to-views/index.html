@@ -670,69 +670,6 @@ The HTML contents of a view&#39;s rendered <code>template</code> will be inserte
 <span class="tag">&lt;/div&gt;</span>
 </pre></td>
 </tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_applying-layouts-in-practice'>Applying Layouts in Practice</h4>
-<p>Layouts are extremely useful when you have a view with a common wrapper and behavior, but its main template might change.
-One possible scenario is a Popup View.</p>
-
-<p>You can define your popup layout template:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-handlebars</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">data-template-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">popup</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-<span class="inline">  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">popup</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    <span class="tag">&lt;button</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">popup-dismiss</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>x<span class="tag">&lt;/button&gt;</span>
-    <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">popup-content</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    {{yield}}
-    <span class="tag">&lt;/div&gt;</span>
-  &lt;<span class="regexp"><span class="delimiter">/</span><span class="content">div&gt;</span></span></span>
-<span class="tag">&lt;/script&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>Then define your popup view:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre>App.PopupView = Ember.View.extend({
-  <span class="key">layoutName</span>: <span class="string"><span class="delimiter">'</span><span class="content">popup</span><span class="delimiter">'</span></span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Now you can re-use your popup with different templates:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-</pre></td>
-  <td class="code"><pre>{{#view &quot;popup&quot;}}
-  <span class="tag">&lt;form&gt;</span>
-    <span class="tag">&lt;label</span> <span class="attribute-name">for</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Name:<span class="tag">&lt;/label&gt;</span>
-    <span class="tag">&lt;input</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-  <span class="tag">&lt;/form&gt;</span>
-{{/view}}
-
-{{#view &quot;popup&quot;}}
-  <span class="tag">&lt;p&gt;</span> Thank you for signing up! <span class="tag">&lt;/p&gt;</span>
-{{/view}}
-</pre></td>
-</tr></table>
 </div></div>
     
       <footer>
