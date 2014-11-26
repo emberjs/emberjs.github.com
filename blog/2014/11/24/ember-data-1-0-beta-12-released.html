@@ -3,8 +3,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - The Post-1.0 Release Cycle</title>
-    <meta property="st:title" content="The Post-1.0 Release Cycle" />
+    <title>Ember.js - Ember Data v1.0.0-beta.12 Released</title>
+    <meta property="st:title" content="Ember Data v1.0.0-beta.12 Released" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" rel="stylesheet" type="text/css" />
@@ -12,7 +12,7 @@
     
   </head>
 
-  <body class="blog blog_2013 blog_2013_09 blog_2013_09_06 blog_2013_09_06_new-ember-release-process">
+  <body class="blog blog_2014 blog_2014_11 blog_2014_11_24 blog_2014_11_24_ember-data-1-0-beta-12-released">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -136,127 +136,138 @@
         </div>
       <div id="content" class="has-sidebar">
           <article class="blog-post">
-    <h1>The Post-1.0 Release Cycle</h1>
-      <h3 class="blog-post-author">Posted By: Yehuda Katz &ndash; <time>Sep 06, 2013</time></h3>
+    <h1>Ember Data v1.0.0-beta.12 Released</h1>
+      <h3 class="blog-post-author">Posted By: Stanley Stuart &ndash; <time>Nov 24, 2014</time></h3>
 
     <hr>
 
-    <p>Now that we&#39;ve shipped Ember 1.0 final, it&#39;s time to look forward to future 
-releases.</p>
+    <h2 class='anchorable-toc' id='toc_new-core-contributors'>New Core Contributors</h2>
+<p>Long-time contributors <a href="https://github.com/bmac">Brendan McLoughlin</a> and <a href="https://github.com/sly7-7">Sylvain Mina</a>
+have been given collaborator status and will help us triage issues, merge pull
+requests, and contribute bugfixes and documentation.</p>
+<h2 class='anchorable-toc' id='toc_new-features'>New Features</h2><h3 class='anchorable-toc' id='toc_store-fetch'>store.fetch</h3>
+<p>When using Ember Data, the most common pattern in the <code>model</code> hook is to call
+<code>store.find</code> for your model:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> <span class="keyword">var</span> PostRoute = Ember.Route.extend({
+  <span class="function">model</span>: <span class="keyword">function</span>(params) {
+    <span class="keyword">return</span> <span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, params.post_id);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p><code>store.find</code> will return the instance of the <code>Post</code> record if it has already
+been fetched in the store. Sometimes, this is not desirable. For example, you
+may not know if you have already loaded the post in another request via
+sideloading, or you want the most up to date information. You could either
+check if the record existed using
+<a href="http://emberjs.com/api/data/classes/DS.Store.html#method_hasRecordForId">store.hasRecordForId</a>, or just always call
+<a href="http://emberjs.com/api/data/classes/DS.Model.html#method_reload">reload</a> on your model in the route&#39;s <code>afterModel</code>hook.</p>
 
-<p>The plan moving forward is to adopt a Chrome-like release cycle: more frequent releases with more clarity about where features are in the pipeline.</p>
-
-<p></p>
-<h3 class='anchorable-toc' id='toc_tl-dr'>TL;DR</h3>
-<p>The Ember.js 1.x Schedule:</p>
-
-<ul>
-<li>Every six weeks: A new stable version of Ember.js.</li>
-<li>Every week: A new beta of the next version of Ember.js. When
-Ember 1.1 is released, the first beta of Ember 1.2 will be released
-at the same time.</li>
-<li>Every day: A new &quot;canary&quot; build, which is the last successful build of
-the day.</li>
-<li>Every successful build: The <code>ember-latest.js</code> build is updated</li>
-</ul>
-
-<p>All builds will be available on the new <a href="/builds/">Ember.js Builds</a> section of the
-Ember website.</p>
-
-<p>All new features will start out on master, behind a feature flag. Canary
-and <code>latest</code> builds will ship with all experimental features, enable-able
-at runtime.</p>
-
-<p>Beta and Stable releases will only ship with features that the core team
-believes are stable.</p>
-
-<p>Read on for more details about how we plan to organize new features. If
-you plan to contribute features to Ember.js, or are just interested in
-the full nitty-gritty, you should check out the <a href="/guides/contributing/adding-new-features">Adding New
-Features</a> guide, which lays
-out all of the mechanics for the process going forward.</p>
-<h3 class='anchorable-toc' id='toc_feature-flags'>Feature Flags</h3>
-<p>Starting today, all new features on master that introduce new public APIs
-will be wrapped in a feature flag. This will make it very easy for the core
-team and the community to see which features are in development and how far
-along they are.</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p><code>store.fetch</code> wraps this common pattern by reloading a record if it exists in
+the store, or reloads the record if it doesn&#39;t exist:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 </pre></td>
-  <td class="code"><pre><span class="keyword">if</span> (Ember.FEATURES.isEnabled(<span class="string"><span class="delimiter">'</span><span class="content">link-to</span><span class="delimiter">'</span></span>)) {
-  <span class="comment">// implementation here</span>
+  <td class="code"><pre><span class="function">model</span>: <span class="keyword">function</span>(params){
+  <span class="keyword">return</span> store.fetch(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, params.post_id);
 }
 </pre></td>
 </tr></table>
-</div></div><h3 class='anchorable-toc' id='toc_cross-browser-builds'>Cross Browser Builds</h3>
-<p>Moving forward, builds will be tested (via Travis and SauceLabs) against
-every supported browser. This means that we&#39;ll know whether a commit broke
-the build on any browser we support.</p>
-<h3 class='anchorable-toc' id='toc_ember-latest'>Ember Latest</h3>
-<p>Every time the build passes across all browsers, the <code>ember-latest</code> build
-will be updated. This is the most bleeding of bleeding-edge builds.</p>
-
-<p>You can get all of the latest builds at <a href="/builds/#/canary/latest">http://emberjs.com/builds/#/canary/latest</a>.</p>
-<h3 class='anchorable-toc' id='toc_canary-builds'>Canary Builds</h3>
-<p>At the end of every day, <code>ember-latest</code> will be saved off to a canary build
-for that day. That means that the last successful build of a given day will
-be saved for posterity.</p>
-
-<p>This is a bleeding-edge build with no manual testing applied, so use at
-your own peril.</p>
-
-<p>On the latest or canary builds, you can enable any experimental feature
-using a flag:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div>
+<p>Please give a warm thanks to <a href="https://github.com/thaume">Tom Coquereau</a> for his <a href="https://github.com/emberjs/data/pull/2478">pull
+request</a> implementing this feature!</p>
+<h2 class='anchorable-toc' id='toc_bugfixes'>Bugfixes</h2><h3 class='anchorable-toc' id='toc_relationship-createrecord-returns-the-record-instead-of-a-promise'>relationship.createRecord() returns the record instead of a promise</h3>
+<p>Prior to Ember Data v1.0.0-beta.11, the following code would give you direct
+access to a record:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 </pre></td>
-  <td class="code"><pre>Ember.FEATURES[<span class="string"><span class="delimiter">'</span><span class="content">link-to</span><span class="delimiter">'</span></span>] = <span class="predefined-constant">true</span>;
-Ember.FEATURES[<span class="string"><span class="delimiter">'</span><span class="content">router-facelift</span><span class="delimiter">'</span></span>] = <span class="predefined-constant">true</span>;
+  <td class="code"><pre><span class="keyword">var</span> post    = store.createRecord(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>);
+<span class="keyword">var</span> comment = post.get(<span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>).createRecord(<span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>);
 </pre></td>
 </tr></table>
 </div></div>
-<p>This means that latest and canary ship with all experimental features,
-and will be bigger in byte-size than using beta or released builds.</p>
-<h3 class='anchorable-toc' id='toc_beta-builds'>Beta Builds</h3>
-<p>Every six weeks, we will:</p>
-<h4 class='anchorable-toc' id='toc_branch-beta-to-release'>Branch Beta to Release</h4>
-<p>See more on the release branch below.</p>
-<h4 class='anchorable-toc' id='toc_branch-master-to-beta'>Branch Master to Beta</h4>
-<p>First, the core team will review all feature flags on <code>master</code>, and make
-a Go/No-Go decision for each of them.</p>
+<p>In beta.11, it returned a Promise, meaning you couldn&#39;t call things like
+<code>set/get</code> on the resulting record. This regression has been fixed in beta.12
+thanks to <a href="https://github.com/ZenCocoon">Sébastien Grosjean</a>.</p>
+<h2 class='anchorable-toc' id='toc_breaking-changes'>Breaking Changes</h2><h3 class='anchorable-toc' id='toc_internet-explorer-8-requires-ember-1-8'>Internet Explorer 8 Requires Ember 1.8</h3>
+<p>A bug in Ember 1.7&#39;s <code>Ember.create</code> method (which is a polyfill for
+<code>Object.create</code>) combined with a bug in es5-shim&#39;s <code>Object.create</code> prevent us
+from giving Ember Data users a good alternative to use. Internally, Ember Data
+uses <code>Object.create</code> for efficient caches. Ember 1.8 ships a working
+<code>Object.create</code> polyfill on <code>Ember.create</code> so if you are using Internet
+Explorer 8 and Ember Data in production, you should upgrade to Ember 1.8 as
+soon as you can.</p>
 
-<p>Any feature that is not ready to go will be stripped from the beta build.</p>
+<p>If you are using browsers that provide <code>Object.create</code>, you do not need to do
+any additional work here. This includes mobile browsers, evergreen browsers
+(Chrome, Opera, Firefox), Safari, and IE9+.</p>
+<h3 class='anchorable-toc' id='toc_ember-1-7-support-will-be-completely-dropped-in-beta-13'>Ember 1.7 Support Will Be Completely Dropped in Beta.13</h3>
+<p>Ember Data relies heavily on JavaScript language-level shims (such as the
+<code>Object.create</code> issue mentioned above) and other useful internals that Ember
+provides. Rather than creating our own detection algorithms and more polyfills
+for broken code in Ember 1.7, we are deciding to drop 1.7 support in the next
+release of Ember Data. We do so in order to not increase the final size of
+Ember Data&#39;s build. You should upgrade to Ember 1.8 as soon as you can.</p>
+<h3 class='anchorable-toc' id='toc_observing-code-data-code-for-changes-has-been-removed'>Observing <code>data</code> For Changes Has Been Removed</h3>
+<p>Although <code>model.get(&#39;data&#39;)</code> has been private in Ember Data for a long time, we
+have noticed users may subscribe to changes on <code>data</code> for any change to the
+model&#39;s attributes. This means that the following code:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> Post = DS.Model.extend({
+  <span class="function">doSomethingWhenDataChanges</span>: <span class="keyword">function</span>(){
+    <span class="comment">// do the work</span>
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">data</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p><strong>no longer works</strong>. Instead, you should just watch each attribute like you
+would with any <code>Ember.Object</code>:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> Post = DS.Model.extend({
+  <span class="key">name</span>: DS.attr(),
+  <span class="key">date</span>: DS.attr(),
+  <span class="function">doSomethingWhenDataChanges</span>: <span class="keyword">function</span>(){
+    <span class="comment">// do the work</span>
+  }.property(<span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">date</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>This change fixed some bugs around observers. Thanks to <a href="https://github.com/wecc">Christoffer
+Persson</a> for helping to clean this up and fix some observer bugs around
+this!</p>
+<h2 class='anchorable-toc' id='toc_special-thanks'>Special Thanks</h2>
+<p>Thanks to <a href="https://github.com/wecc">Christoffer Persson</a> for helping us implement bugfixes and API
+changes, as well as triaging issues.</p>
 
-<p>Feature development will continue on master, and get another shot at the
-next departing train, six weeks hence.</p>
-<h4 class='anchorable-toc' id='toc_the-beta-branch'>The Beta Branch</h4>
-<p>The <code>beta</code> branch is designed to get more eyeballs on new features that
-look ready to go.</p>
-
-<p>The only changes to the <code>beta</code> branch should be bug fixes and removing
-features that looked ready originally but which aren&#39;t going to make the
-cut for the next stable build.</p>
-
-<p>You can get the latest successful build off of the beta branch at
-<a href="/builds/#/beta/latest">http://emberjs.com/builds/#/beta/latest</a>.</p>
-<h3 class='anchorable-toc' id='toc_release-build'>Release Build</h3>
-<p>Once the <code>beta</code> branch has gone through its paces, there will be another
-Go/No-Go decision for each new feature still remaining on the branch.</p>
-
-<p>This decision is made every six weeks, and the features that make the cut
-will end up in the next release of Ember.js!</p>
-<h3 class='anchorable-toc' id='toc_new-release-management-team'>New Release Management Team</h3>
-<p>A number of Ember contributors have really stepped up to automate the
-process and build out tooling: Stanley Stuart (fivetanley), Robert
-Jackson (rwjblue), Alex Navasardyan (twokul) and Thomas Boyt (tboyt).</p>
-
-<p>They are now the (drumroll please) Ember.js release management team!</p>
-
-<p>Thanks for all your hard work in making the new release process
-possible.</p>
+<!-- Links -->
 
 
     <hr>

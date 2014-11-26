@@ -5,16 +5,160 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2014-11-15T16:00:00-08:00</updated>
+  <updated>2014-11-23T18:00:00-06:00</updated>
   <author>
     <name>Ember</name>
   </author>
   <entry>
+    <title>Ember Data v1.0.0-beta.12 Released</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2014/11/24/ember-data-1-0-beta-12-released.html"/>
+    <id>http://emberjs.com/blog/2014/11/24/ember-data-1-0-beta-12-released.html</id>
+    <published>2014-11-23T18:00:00-06:00</published>
+    <updated>2014-11-23T18:00:00-06:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;h2 class="anchorable-toc" id="toc_new-core-contributors"&gt;New Core Contributors&lt;/h2&gt;
+&lt;p&gt;Long-time contributors &lt;a href="https://github.com/bmac"&gt;Brendan McLoughlin&lt;/a&gt; and &lt;a href="https://github.com/sly7-7"&gt;Sylvain Mina&lt;/a&gt;
+have been given collaborator status and will help us triage issues, merge pull
+requests, and contribute bugfixes and documentation.&lt;/p&gt;
+&lt;h2 class="anchorable-toc" id="toc_new-features"&gt;New Features&lt;/h2&gt;&lt;h3 class="anchorable-toc" id="toc_store-fetch"&gt;store.fetch&lt;/h3&gt;
+&lt;p&gt;When using...&lt;/p&gt;</summary>
+    <content type="html">&lt;h2 class='anchorable-toc' id='toc_new-core-contributors'&gt;New Core Contributors&lt;/h2&gt;
+&lt;p&gt;Long-time contributors &lt;a href="https://github.com/bmac"&gt;Brendan McLoughlin&lt;/a&gt; and &lt;a href="https://github.com/sly7-7"&gt;Sylvain Mina&lt;/a&gt;
+have been given collaborator status and will help us triage issues, merge pull
+requests, and contribute bugfixes and documentation.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_new-features'&gt;New Features&lt;/h2&gt;&lt;h3 class='anchorable-toc' id='toc_store-fetch'&gt;store.fetch&lt;/h3&gt;
+&lt;p&gt;When using Ember Data, the most common pattern in the &lt;code&gt;model&lt;/code&gt; hook is to call
+&lt;code&gt;store.find&lt;/code&gt; for your model:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; &lt;span class="keyword"&gt;var&lt;/span&gt; PostRoute = Ember.Route.extend({
+  &lt;span class="function"&gt;model&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;(params) {
+    &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="local-variable"&gt;this&lt;/span&gt;.store.find(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;post&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, params.post_id);
+  }
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;store.find&lt;/code&gt; will return the instance of the &lt;code&gt;Post&lt;/code&gt; record if it has already
+been fetched in the store. Sometimes, this is not desirable. For example, you
+may not know if you have already loaded the post in another request via
+sideloading, or you want the most up to date information. You could either
+check if the record existed using
+&lt;a href="http://emberjs.com/api/data/classes/DS.Store.html#method_hasRecordForId"&gt;store.hasRecordForId&lt;/a&gt;, or just always call
+&lt;a href="http://emberjs.com/api/data/classes/DS.Model.html#method_reload"&gt;reload&lt;/a&gt; on your model in the route&amp;#39;s &lt;code&gt;afterModel&lt;/code&gt;hook.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;store.fetch&lt;/code&gt; wraps this common pattern by reloading a record if it exists in
+the store, or reloads the record if it doesn&amp;#39;t exist:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="function"&gt;model&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;(params){
+  &lt;span class="keyword"&gt;return&lt;/span&gt; store.fetch(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;post&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, params.post_id);
+}
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Please give a warm thanks to &lt;a href="https://github.com/thaume"&gt;Tom Coquereau&lt;/a&gt; for his &lt;a href="https://github.com/emberjs/data/pull/2478"&gt;pull
+request&lt;/a&gt; implementing this feature!&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_bugfixes'&gt;Bugfixes&lt;/h2&gt;&lt;h3 class='anchorable-toc' id='toc_relationship-createrecord-returns-the-record-instead-of-a-promise'&gt;relationship.createRecord() returns the record instead of a promise&lt;/h3&gt;
+&lt;p&gt;Prior to Ember Data v1.0.0-beta.11, the following code would give you direct
+access to a record:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; post    = store.createRecord(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;post&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+&lt;span class="keyword"&gt;var&lt;/span&gt; comment = post.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).createRecord(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comment&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;In beta.11, it returned a Promise, meaning you couldn&amp;#39;t call things like
+&lt;code&gt;set/get&lt;/code&gt; on the resulting record. This regression has been fixed in beta.12
+thanks to &lt;a href="https://github.com/ZenCocoon"&gt;Sébastien Grosjean&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_breaking-changes'&gt;Breaking Changes&lt;/h2&gt;&lt;h3 class='anchorable-toc' id='toc_internet-explorer-8-requires-ember-1-8'&gt;Internet Explorer 8 Requires Ember 1.8&lt;/h3&gt;
+&lt;p&gt;A bug in Ember 1.7&amp;#39;s &lt;code&gt;Ember.create&lt;/code&gt; method (which is a polyfill for
+&lt;code&gt;Object.create&lt;/code&gt;) combined with a bug in es5-shim&amp;#39;s &lt;code&gt;Object.create&lt;/code&gt; prevent us
+from giving Ember Data users a good alternative to use. Internally, Ember Data
+uses &lt;code&gt;Object.create&lt;/code&gt; for efficient caches. Ember 1.8 ships a working
+&lt;code&gt;Object.create&lt;/code&gt; polyfill on &lt;code&gt;Ember.create&lt;/code&gt; so if you are using Internet
+Explorer 8 and Ember Data in production, you should upgrade to Ember 1.8 as
+soon as you can.&lt;/p&gt;
+
+&lt;p&gt;If you are using browsers that provide &lt;code&gt;Object.create&lt;/code&gt;, you do not need to do
+any additional work here. This includes mobile browsers, evergreen browsers
+(Chrome, Opera, Firefox), Safari, and IE9+.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_ember-1-7-support-will-be-completely-dropped-in-beta-13'&gt;Ember 1.7 Support Will Be Completely Dropped in Beta.13&lt;/h3&gt;
+&lt;p&gt;Ember Data relies heavily on JavaScript language-level shims (such as the
+&lt;code&gt;Object.create&lt;/code&gt; issue mentioned above) and other useful internals that Ember
+provides. Rather than creating our own detection algorithms and more polyfills
+for broken code in Ember 1.7, we are deciding to drop 1.7 support in the next
+release of Ember Data. We do so in order to not increase the final size of
+Ember Data&amp;#39;s build. You should upgrade to Ember 1.8 as soon as you can.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_observing-code-data-code-for-changes-has-been-removed'&gt;Observing &lt;code&gt;data&lt;/code&gt; For Changes Has Been Removed&lt;/h3&gt;
+&lt;p&gt;Although &lt;code&gt;model.get(&amp;#39;data&amp;#39;)&lt;/code&gt; has been private in Ember Data for a long time, we
+have noticed users may subscribe to changes on &lt;code&gt;data&lt;/code&gt; for any change to the
+model&amp;#39;s attributes. This means that the following code:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; Post = DS.Model.extend({
+  &lt;span class="function"&gt;doSomethingWhenDataChanges&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;(){
+    &lt;span class="comment"&gt;// do the work&lt;/span&gt;
+  }.property(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;data&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;no longer works&lt;/strong&gt;. Instead, you should just watch each attribute like you
+would with any &lt;code&gt;Ember.Object&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; Post = DS.Model.extend({
+  &lt;span class="key"&gt;name&lt;/span&gt;: DS.attr(),
+  &lt;span class="key"&gt;date&lt;/span&gt;: DS.attr(),
+  &lt;span class="function"&gt;doSomethingWhenDataChanges&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;(){
+    &lt;span class="comment"&gt;// do the work&lt;/span&gt;
+  }.property(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;name&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;date&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;This change fixed some bugs around observers. Thanks to &lt;a href="https://github.com/wecc"&gt;Christoffer
+Persson&lt;/a&gt; for helping to clean this up and fix some observer bugs around
+this!&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_special-thanks'&gt;Special Thanks&lt;/h2&gt;
+&lt;p&gt;Thanks to &lt;a href="https://github.com/wecc"&gt;Christoffer Persson&lt;/a&gt; for helping us implement bugfixes and API
+changes, as well as triaging issues.&lt;/p&gt;
+
+&lt;!-- Links --&gt;
+</content>
+  </entry>
+  <entry>
     <title>Igor Terzic Joins the Core Team</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/11/16/igor-terzic-joins-the-core-team.html"/>
     <id>http://emberjs.com/blog/2014/11/16/igor-terzic-joins-the-core-team.html</id>
-    <published>2014-11-15T16:00:00-08:00</published>
-    <updated>2014-11-15T16:00:00-08:00</updated>
+    <published>2014-11-15T18:00:00-06:00</published>
+    <updated>2014-11-15T18:00:00-06:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -51,8 +195,8 @@ all of your hard work, and welcome to the core team!&lt;/p&gt;
     <title>Ember.js 1.8.1 Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/11/04/ember-1-8-1-released.html"/>
     <id>http://emberjs.com/blog/2014/11/04/ember-1-8-1-released.html</id>
-    <published>2014-11-03T16:00:00-08:00</published>
-    <updated>2014-11-03T16:00:00-08:00</updated>
+    <published>2014-11-03T18:00:00-06:00</published>
+    <updated>2014-11-03T18:00:00-06:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -161,8 +305,8 @@ progress &lt;a href="https://code.google.com/p/chromium/issues/detail?id=428313"
     <title>Ember.js 1.8.0 and 1.9 Beta Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/10/26/ember-1-8-0-released.html"/>
     <id>http://emberjs.com/blog/2014/10/26/ember-1-8-0-released.html</id>
-    <published>2014-10-25T17:00:00-07:00</published>
-    <updated>2014-10-25T17:00:00-07:00</updated>
+    <published>2014-10-25T19:00:00-05:00</published>
+    <updated>2014-10-25T19:00:00-05:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -341,8 +485,8 @@ for more details.&lt;/li&gt;
     <title>Handlebars Version Compatibility</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/10/16/handlebars-update.html"/>
     <id>http://emberjs.com/blog/2014/10/16/handlebars-update.html</id>
-    <published>2014-10-15T17:00:00-07:00</published>
-    <updated>2014-10-15T17:00:00-07:00</updated>
+    <published>2014-10-15T19:00:00-05:00</published>
+    <updated>2014-10-15T19:00:00-05:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -407,8 +551,8 @@ following template precompiler packages:&lt;/p&gt;
     <title>Core Team Meeting Minutes - 2014/09/12</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/09/13/core-team-meeting-minutes-2014-09-12.html"/>
     <id>http://emberjs.com/blog/2014/09/13/core-team-meeting-minutes-2014-09-12.html</id>
-    <published>2014-09-12T17:00:00-07:00</published>
-    <updated>2014-09-12T17:00:00-07:00</updated>
+    <published>2014-09-12T19:00:00-05:00</published>
+    <updated>2014-09-12T19:00:00-05:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -458,70 +602,6 @@ parts of the
 &lt;a href="https://github.com/emberjs/ember.js/pull/5571"&gt;DOM where a browser will &amp;quot;helpfully&amp;quot; insert &amp;quot;missing&amp;quot; tags&lt;/a&gt;
 (like auto-insertion of &lt;code&gt;tbody&lt;/code&gt; into a &lt;code&gt;table&lt;/code&gt;),
 and &lt;a href="https://github.com/tildeio/htmlbars/pull/91"&gt;Internet Explorer bugs and performance&lt;/a&gt;&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Core Team Meeting Minutes - 2014/08/01</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2014/09/13/core-team-meeting-minutes-2014-08-14.html"/>
-    <id>http://emberjs.com/blog/2014/09/13/core-team-meeting-minutes-2014-08-14.html</id>
-    <published>2014-09-12T17:00:00-07:00</published>
-    <updated>2014-09-12T17:00:00-07:00</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
-(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
-the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
-Friday at 2pm EST/11am PST through Google Hangout for a weekly
-discussion of all things Ember...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Although most of our collaboration takes place on Github, IRC
-(&lt;code&gt;#emberjs&lt;/code&gt; on freenode.net), and our &lt;a href="http://discuss.emberjs.com/"&gt;Discourse site&lt;/a&gt;
-the &lt;a href="/team"&gt;Ember.js Core Team&lt;/a&gt; meets privately every
-Friday at 2pm EST/11am PST through Google Hangout for a weekly
-discussion of all things Ember.&lt;/p&gt;
-
-&lt;p&gt;If you have a topic you&amp;#39;d like to see covered, contact your favorite
-core team member and let them know!&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_attendees'&gt;Attendees&lt;/h4&gt;
-&lt;!--   [@ebryn](https://twitter.com/ebryn),
-  [@krisselden](https://twitter.com/krisselden),
-  [@machty](https://twitter.com/machty),
-  [@mixonic](https://twitter.com/mixonic)
-  [@_mmun](https://twitter.com/_mmun),
-  [@rwjblue](https://twitter.com/rwjblue),
-  [@trek](https://twitter.com/trek),
-  [@stefanpenner](https://twitter.com/stefanpenner),
-  [@wagenet](https://twitter.com/wagenet),
-  [@tomdale](https://twitter.com/tomdale),
-  [@wifelette](https://twitter.com/wifelette),
-  [@wycats](https://twitter.com/wycats) --&gt;
-
-&lt;p&gt;&lt;a href="https://twitter.com/ebryn"&gt;@ebryn&lt;/a&gt;,
-&lt;a href="https://twitter.com/krisselden"&gt;@krisselden&lt;/a&gt;,
-&lt;a href="https://twitter.com/machty"&gt;@machty&lt;/a&gt;,
-&lt;a href="https://twitter.com/mixonic"&gt;@mixonic&lt;/a&gt;
-&lt;a href="https://twitter.com/_mmun"&gt;@_mmun&lt;/a&gt;,
-&lt;a href="https://twitter.com/rwjblue"&gt;@rwjblue&lt;/a&gt;,
-&lt;a href="https://twitter.com/trek"&gt;@trek&lt;/a&gt;,
-&lt;a href="https://twitter.com/stefanpenner"&gt;@stefanpenner&lt;/a&gt;,
-&lt;a href="https://twitter.com/wagenet"&gt;@wagenet&lt;/a&gt;,
-&lt;a href="https://twitter.com/tomdale"&gt;@tomdale&lt;/a&gt;,
-&lt;a href="https://twitter.com/wycats"&gt;@wycats&lt;/a&gt;&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_explore-using-lodash'&gt;Explore using Lodash&lt;/h3&gt;
-&lt;p&gt;We reviewed a &lt;a href="https://github.com/emberjs/ember.js/pull/5019"&gt;PR that replaces Ember builtin array extensions internals with Lodash&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Assuming no performance regressions, we&amp;#39;re in favor.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_guides-and-api-versioned-and-subdomained'&gt;Guides and API versioned and subdomained&lt;/h3&gt;
-&lt;p&gt;Currently the Guides and API are not versioned, which increasingly leads to
-pain around new feature documentation. The plan is to beging publishing guides
-and API to a subdomains and version them:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;http://guides.emberjs.com/ (defaults to latest)&lt;/li&gt;
-&lt;li&gt;http://guides.emberjs.com/1.8&lt;/li&gt;
-&lt;li&gt;http://api.ember.js.com/ (defaults to latest)&lt;/li&gt;
-&lt;li&gt;http://api.ember.js.com/1.8&lt;/li&gt;
-&lt;/ul&gt;
 </content>
   </entry>
 </feed>

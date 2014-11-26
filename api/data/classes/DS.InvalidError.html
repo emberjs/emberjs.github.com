@@ -53,7 +53,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v1.0.0-beta.11" target="_blank"> Tag: v1.0.0-beta.11</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v1.0.0-beta.12" target="_blank"> Tag: v1.0.0-beta.12</a></li>
 
 
           <li class="level-1 ">
@@ -241,7 +241,7 @@
         
   <h1 class="api-header">
   DS.InvalidError Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v1.0.0-beta.11/packages/ember-data/lib/system/adapter.js#L17">packages/ember-data/lib/system/adapter.js:17</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v1.0.0-beta.12/packages/ember-data/lib/system/adapter.js#L17">packages/ember-data/lib/system/adapter.js:17</a>
 </h1>
 
 <hr>
@@ -253,7 +253,7 @@
 <div class="class-info">
 
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.11/packages/ember-data/lib/system/adapter.js#L17">packages/ember-data/lib/system/adapter.js:17</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.12/packages/ember-data/lib/system/adapter.js#L17">packages/ember-data/lib/system/adapter.js:17</a></p>
 
     <p>Module: <a href="/api/data/modules/ember-data.html">ember-data</a></p>
 </div>
@@ -266,6 +266,10 @@ record failed some form of server side validation. When a promise
 from an adapter is rejected with a <code>DS.InvalidError</code> the record will
 transition to the <code>invalid</code> state and the errors will be set to the
 <code>errors</code> property on the record.</p>
+
+<p>This function should return the entire payload as received from the
+server.  Error object extraction and normalization of model errors
+should be performed by <code>extractErrors</code> on the serializer.</p>
 
 <p>Example</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -287,7 +291,7 @@ transition to the <code>invalid</code> state and the errors will be set to the
     <span class="keyword">var</span> error = <span class="local-variable">this</span>._super(jqXHR);
 
     <span class="keyword">if</span> (jqXHR &amp;&amp; jqXHR.status === <span class="integer">422</span>) {
-      <span class="keyword">var</span> jsonErrors = Ember.<span class="predefined">$</span>.parseJSON(jqXHR.responseText)[<span class="string"><span class="delimiter">&quot;</span><span class="content">errors</span><span class="delimiter">&quot;</span></span>];
+      <span class="keyword">var</span> jsonErrors = Ember.<span class="predefined">$</span>.parseJSON(jqXHR.responseText);
       <span class="keyword">return</span> <span class="keyword">new</span> DS.InvalidError(jsonErrors);
     } <span class="keyword">else</span> {
       <span class="keyword">return</span> error;
@@ -308,9 +312,9 @@ corresponding error messages. For example:</p>
 </pre></td>
   <td class="code"><pre><span class="keyword">return</span> <span class="keyword">new</span> DS.InvalidError({
   <span class="key">length</span>: <span class="string"><span class="delimiter">'</span><span class="content">Must be less than 15</span><span class="delimiter">'</span></span>,
-  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Must not be blank
+  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Must not be blank</span><span class="delimiter">'</span></span>
 });
-</span></span></pre></td>
+</pre></td>
 </tr></table>
 </div></div>
   </div>
