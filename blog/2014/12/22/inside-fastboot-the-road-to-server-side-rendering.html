@@ -3,8 +3,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Core Team Meeting Minutes - 2014/08/01</title>
-    <meta property="st:title" content="Core Team Meeting Minutes - 2014/08/01" />
+    <title>Ember.js - Inside FastBoot: The Road to Server-Side Rendering</title>
+    <meta property="st:title" content="Inside FastBoot: The Road to Server-Side Rendering" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" rel="stylesheet" type="text/css" />
@@ -12,7 +12,7 @@
     
   </head>
 
-  <body class="blog blog_2014 blog_2014_09 blog_2014_09_13 blog_2014_09_13_core-team-meeting-minutes-2014-08-14">
+  <body class="blog blog_2014 blog_2014_12 blog_2014_12_22 blog_2014_12_22_inside-fastboot-the-road-to-server-side-rendering">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -139,59 +139,82 @@
         </div>
       <div id="content" class="has-sidebar">
           <article class="blog-post">
-    <h1>Core Team Meeting Minutes - 2014/08/01</h1>
-      <h3 class="blog-post-author">Posted By: Trek Glowacki &ndash; <time>Sep 13, 2014</time></h3>
+    <h1>Inside FastBoot: The Road to Server-Side Rendering</h1>
+      <h3 class="blog-post-author">Posted By: Yehuda Katz & Tom Dale &ndash; <time>Dec 22, 2014</time></h3>
 
     <hr>
 
-    <p>Although most of our collaboration takes place on Github, IRC
-(<code>#emberjs</code> on freenode.net), and our <a href="http://discuss.emberjs.com/">Discourse site</a>
-the <a href="/team">Ember.js Core Team</a> meets privately every
-Friday at 2pm EST/11am PST through Google Hangout for a weekly
-discussion of all things Ember.</p>
+    <p>Using JavaScript to write fast, interactive web applications has exploded in popularity over the past few years. JavaScript apps offer many strengths over traditional server-rendered applications. Most notably, rich interactions and lightning-fast responses to user clicks allow for UIs that previously were only the domain of native apps.</p>
 
-<p>If you have a topic you&#39;d like to see covered, contact your favorite
-core team member and let them know!</p>
-<h4 class='anchorable-toc' id='toc_attendees'>Attendees</h4>
-<!--   [@ebryn](https://twitter.com/ebryn),
-  [@krisselden](https://twitter.com/krisselden),
-  [@machty](https://twitter.com/machty),
-  [@mixonic](https://twitter.com/mixonic)
-  [@_mmun](https://twitter.com/_mmun),
-  [@rwjblue](https://twitter.com/rwjblue),
-  [@trek](https://twitter.com/trek),
-  [@stefanpenner](https://twitter.com/stefanpenner),
-  [@wagenet](https://twitter.com/wagenet),
-  [@tomdale](https://twitter.com/tomdale),
-  [@wifelette](https://twitter.com/wifelette),
-  [@wycats](https://twitter.com/wycats) -->
+<p>The first JavaScript-heavy applications were productivity apps, and the experience of loading an app on the web, even with a spinner, was far better than the equivalent experience of downloading and installing a native app.</p>
 
-<p><a href="https://twitter.com/ebryn">@ebryn</a>,
-<a href="https://twitter.com/krisselden">@krisselden</a>,
-<a href="https://twitter.com/machty">@machty</a>,
-<a href="https://twitter.com/mixonic">@mixonic</a>
-<a href="https://twitter.com/_mmun">@_mmun</a>,
-<a href="https://twitter.com/rwjblue">@rwjblue</a>,
-<a href="https://twitter.com/trek">@trek</a>,
-<a href="https://twitter.com/stefanpenner">@stefanpenner</a>,
-<a href="https://twitter.com/wagenet">@wagenet</a>,
-<a href="https://twitter.com/tomdale">@tomdale</a>,
-<a href="https://twitter.com/wycats">@wycats</a></p>
-<h3 class='anchorable-toc' id='toc_explore-using-lodash'>Explore using Lodash</h3>
-<p>We reviewed a <a href="https://github.com/emberjs/ember.js/pull/5019">PR that replaces Ember builtin array extensions internals with Lodash</a>.</p>
+<p>Increasingly, though, content-rich destinations such as news or video sites are starting to move to JavaScript to gain the benefits of improved interactivity. Unlike productivity apps, where the user logs in once at the beginning of the day and stays logged in, content sites are loaded many times per day, often via search engines or social sharing.</p>
 
-<p>Assuming no performance regressions, we&#39;re in favor.</p>
-<h3 class='anchorable-toc' id='toc_guides-and-api-versioned-and-subdomained'>Guides and API versioned and subdomained</h3>
-<p>Currently the Guides and API are not versioned, which increasingly leads to
-pain around new feature documentation. The plan is to beging publishing guides
-and API to a subdomains and version them:</p>
+<p>In this context, where the JavaScript app looks like a &quot;normal&quot; web page, loading spinners or long delays feel out-of-place and not very web-like. Indeed, this is the reason that <a href="https://blog.twitter.com/2012/improving-performance-on-twittercom">Twitter migrated from a client-side JavaScript approach back to server-rendered content</a>.</p>
 
-<ul>
-<li>http://guides.emberjs.com/ (defaults to latest)</li>
-<li>http://guides.emberjs.com/1.8</li>
-<li>http://api.ember.js.com/ (defaults to latest)</li>
-<li>http://api.ember.js.com/1.8</li>
-</ul>
+<p>Being able to boot JavaScript apps on the server and &quot;rehydrate&quot; in the browser has been considered a Holy Grail for some time. However, most  attempts have focused solely on rendering the view layer on the server into HTML. This is an important step, but this alone does not sufficiently solve the problem.</p>
+
+<p>Solving the whole problem involves not just the view layer, but the entire lifecycle of booting an application: routing, fetching models, and rendering. By leaning heavily on Ember&#39;s conventional application structure, we can move this complexity out of each application and into the framework.</p>
+
+<p>We are building this feature into Ember.js, <strong>and we&#39;re calling it FastBoot</strong>.</p>
+
+<p>FastBoot will allow you to deliver the HTML and CSS for a page in your Ember app right away, then allow the JavaScript to take over once it has finished loading. Your Ember app will behave no differently than server-rendered apps when it comes to search engines, mobile users, cURL, or users with JavaScript disabled.</p>
+
+<p>For everyone else, you&#39;ll still have the responsiveness and interactivity users have come to expect from Ember apps.</p>
+
+<p>Because of the Ember community&#39;s strong focus on conventional app structure, we believe that we can make server rendering so simple to enable and deploy that, in the long run, very few Ember apps would choose not to use it.</p>
+
+<p>In this series of blog posts, we will demystify our efforts, and talk about implementation details. We will also give you a sense of our progress. Like every Ember feature, FastBoot will be landing a bit at a time, so every new release will unlock more capabilities. As features land, we will talk about how you can take advantage of them in your own apps.</p>
+
+<p><strong>The Journey So Far</strong></p>
+
+<p>From the beginning, we knew that we would eventually want to tackle running JavaScript apps on the server, but we didn&#39;t want to bet Ember on a boil-the-ocean effort to solve every aspect of client-side development at once.</p>
+
+<p>That being said, we have always kept this feature in mind as we were architecting the framework. We carefully isolated all parts of the system that depend on a full-fledged browser environment.</p>
+
+<p>Even during the most recent HTMLBars effort, which is inherently a DOM-based rendering engine, we made sure to use an <a href="https://github.com/tildeio/htmlbars/blob/master/packages/morph/lib/dom-helper.js">abstraction</a> whenever we touched the DOM, so that we could swap it out for something else on the server. Similarly, when we designed the router, all communication with the URL went through a &quot;<a href="https://github.com/emberjs/ember.js/blob/master/packages/ember-routing/lib/location/api.js">location</a>&quot; abstraction, instead of touching the URL bar directly. The routing microlibraries we built (<a href="https://github.com/tildeio/router.js">router.js</a> and <a href="https://github.com/tildeio/route-recognizer">route-recognizer</a>) were designed from the beginning to be decoupled from the DOM.</p>
+
+<p>Because of this, we were able to get the Ember framework executing in Node in just a day of work, and were able to get an app completely booted and routing in under a week.</p>
+
+<p><strong>Abstracting Feature Detection</strong></p>
+
+<p>One of the first problems we encountered when trying to execute Ember in node was top-level feature detection. Because Ember previously assumed it was running inside a browser, it inadvertently relied on the existence of basic DOM APIs, like <code>window</code>, the <code>document</code> and <code>navigator</code>.</p>
+
+<p>While the vast majority of the subsequent code was resilient to environments without a DOM, the feature detection and helpful assertion messages (&quot;you&#39;re using an old version of jQuery&quot;) was sloppy because it historically wasn&#39;t expecting to run in Node.</p>
+
+<p>To address this issue, we moved all top-level assumptions into <a href="https://github.com/emberjs/ember.js/blob/master/packages/ember-metal/lib/environment.js">an <code>environment</code> abstraction</a>. If you look at it, it&#39;s really boring; it just lets top-level code throughout the framework quickly short-circuit if basic DOM facilities are missing.</p>
+
+<p><strong>The Container and Session</strong></p>
+
+<p>Ember&#39;s powerful dependency injection (&quot;DI&quot;) system has been a boon for managing application state, supporting the transition from globals to modules, and ensuring tests are fast and robust.</p>
+
+<p>Rather than storing application state globally (either in a global variable or as a property on a global object like <code>App</code>), all state in an idiomatic Ember app is stored inside an object called the &quot;container&quot;. This makes it easy to throw away state between each automated test, ensuring you&#39;re testing what you think you&#39;re testing and not the side-effects of a previous test. It also improves the speed of tests, allowing you to run your test suite as you develop instead of waiting hours for a CI server.</p>
+
+<p>The container also serves as a registry of your application code, and its &quot;resolver&quot; paved the way for Ember to move from globals-based code to <a href="http://jsmodules.io/">JavaScript modules</a> by abstracting lookups (e.g. Ember asking for a controller named &quot;users&quot;) from the actual location of code.</p>
+
+<p>The good news is that this means that the internals of Ember always look up (and create) objects through the container. </p>
+
+<p>Unfortunately, we made a minor mistake in our original design. Currently, every application has only a single container. This assumption works fine when running your application in the browser, since you only load and run the application once per browser page load.</p>
+
+<p>This also works fine in tests, with the exception that we are doing more work than absolutely necessary between each test run. In essence, we conflated the &quot;code registry&quot; and &quot;application state&quot; responsibilities into the same container object. Between test runs, we throw away the container to reset application state, but by also throwing out the code registry, which doesn&#39;t change between tests, we are throwing the baby out with the bath water.</p>
+
+<p><img src="/images/blog/2014-12-22-inside-fastboot-the-road-to-server-side-rendering/old-school.png" alt="Architecture diagram showing state and code registry inside same Application object"></p>
+
+<p>When running on the server, however, we realized that a single Ember application needs to be able to continue serving requests even if a previous request is waiting for an async operation (such as fetching a model) to complete.</p>
+
+<p>This means that we needed to tweak our approach and allow applications to host multiple of what we call &quot;sessions&quot; at a time. Sessions allow us to separate the code registry (which doesn&#39;t change once the app is booted) from the application state.</p>
+
+<p><img src="/images/blog/2014-12-22-inside-fastboot-the-road-to-server-side-rendering/new-school.png" alt="Architecture diagram showing state extracted into Session objects"></p>
+
+<p>This approach also has a side-benefit for testing: it allows us to reduce the amount of work we need to do between each test.</p>
+
+<p>Both of these efforts (breaking out an environment and the design of the session) are incremental pieces that provide value on their own, and <a href="https://github.com/emberjs/ember.js/pull/9981">have already landed on master</a> thanks to the tireless work of <a href="https://twitter.com/dgeb">Dan Gebhardt</a>. Working with <a href="https://www.linkedin.com">LinkedIn</a> and <a href="http://www.bustle.com">Bustle</a> closely has helped us to work through the initial requirements, and identify steps that we could take that would help enterprising teams make progress while we take the next steps.</p>
+
+<p><strong>Next Steps</strong></p>
+
+<p>In the coming weeks, we are going to dive head-first into HTMLbars, getting it ready for its new life running inside a Node.js environment. We&#39;ll start by making sure that the <a href="https://github.com/tildeio/htmlbars/blob/master/packages/morph/lib/dom-helper.js"><code>DOMHelper</code></a> abstraction is used everywhere that interacts with the DOM, providing us a chokepoint to implement a fake DOM on the server that builds up strings of HTML instead of interacting with a real DOM.</p>
+
+<p>We plan on keeping you updated with more posts in the Inside FastBoot series as we continue to make progress, so please stay tuned for more!</p>
 
 
     <hr>
