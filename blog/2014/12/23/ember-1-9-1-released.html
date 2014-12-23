@@ -3,8 +3,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Core Team Meeting Minutes - 2014/07/25</title>
-    <meta property="st:title" content="Core Team Meeting Minutes - 2014/07/25" />
+    <title>Ember.js - Ember.js 1.9.1 Released</title>
+    <meta property="st:title" content="Ember.js 1.9.1 Released" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" rel="stylesheet" type="text/css" />
@@ -12,7 +12,7 @@
     
   </head>
 
-  <body class="blog blog_2014 blog_2014_07 blog_2014_07_26 blog_2014_07_26_core-team-meeting-minutes-2014-07-25">
+  <body class="blog blog_2014 blog_2014_12 blog_2014_12_23 blog_2014_12_23_ember-1-9-1-released">
     <div id="header">
       <div id="wrapper">
         <a id="logo" href="/">&nbsp;</a>
@@ -141,61 +141,111 @@
         </div>
       <div id="content" class="has-sidebar">
           <article class="blog-post">
-    <h1>Core Team Meeting Minutes - 2014/07/25</h1>
-      <h3 class="blog-post-author">Posted By: Trek Glowacki &ndash; <time>Jul 26, 2014</time></h3>
+    <h1>Ember.js 1.9.1 Released</h1>
+      <h3 class="blog-post-author">Posted By: Tom Dale &ndash; <time>Dec 23, 2014</time></h3>
 
     <hr>
 
-    <p>Although most of our collaboration takes place on Github, IRC
-(<code>#emberjs</code> on freenode.net), and our <a href="http://discuss.emberjs.com/">Discourse site</a>
-the <a href="/team">Ember.js Core Team</a> meets privately every
-Friday at 2pm EST/11am PST through Google Hangout for a weekly
-discussion of all things Ember.</p>
+    <p>Today, the Ember team is pleased to announce the release of Ember.js
+1.9.1. Ember 1.9.1 fixes one regression and introduces more conservative
+escaping of attributes to help developers guard against inadvertent cross-site
+scripting (XSS) vulnerabilities.</p>
+<h3 class='anchorable-toc' id='toc_view-helper-instances'>{{view}} Helper &amp; Instances</h3>
+<p>The 1.9.0 release introduced a regression where the Handlebars
+<code>{{view}}</code> helper would only work with <code>Ember.View</code> subclasses, not
+instances. In 1.9.1, passing a view instance to the helper has been
+fully restored.</p>
 
-<p>If you have a topic you&#39;d like to see covered, contact your favorite
-core team member and let them know!</p>
-<h4 class='anchorable-toc' id='toc_attendees'>Attendees</h4>
-<!--   [@ebryn](https://twitter.com/ebryn),
-  [@krisselden](https://twitter.com/krisselden),
-  [@machty](https://twitter.com/machty),
-  [@mixonic](https://twitter.com/mixonic)
-  [@_mmun](https://twitter.com/_mmun),
-  [@rwjblue](https://twitter.com/rwjblue),
-  [@trek](https://twitter.com/trek),
-  [@stefanpenner](https://twitter.com/stefanpenner),
-  [@wagenet](https://twitter.com/wagenet),
-  [@tomdale](https://twitter.com/tomdale),
-  [@wifelette](https://twitter.com/wifelette),
-  [@wycats](https://twitter.com/wycats) -->
+<p>We intended to deprecate this functionality, not remove it entirely.
+If your app was relying on this behavior, first, please accept our
+apologies for the accidental regression. Second, please consider
+refactoring your code to use components instead of views, as support for
+this API will be removed in Ember 2.0.</p>
+<h3 class='anchorable-toc' id='toc_xss-improvements-for-bound-attributes'>XSS Improvements for Bound Attributes</h3>
+<p>XSS vulnerabilities happen when you unintentionally put unescaped
+user-supplied content into the DOM, creating a vector for attackers
+to trick the browser into evaluating JavaScript that has the same access
+to data as your legitimate JavaScript.</p>
 
-<p><a href="https://twitter.com/krisselden">@krisselden</a>,
-<a href="https://twitter.com/machty">@machty</a>,
-<a href="https://twitter.com/mixonic">@mixonic</a>
-<a href="https://twitter.com/_mmun">@_mmun</a>,
-<a href="https://twitter.com/rwjblue">@rwjblue</a>,
-<a href="https://twitter.com/trek">@trek</a>,
-<a href="https://twitter.com/stefanpenner">@stefanpenner</a>,
-<a href="https://twitter.com/wagenet">@wagenet</a>,
-<a href="https://twitter.com/wycats">@wycats</a></p>
-<h3 class='anchorable-toc' id='toc_face-to-face-july-2014'>Face to Face July 2014</h3>
-<p>Last week the core team (and those on path to core) met in New York City for
-our periodic face to face meeting. Tom and Yehuda will be posting notes from
-that meeting in the coming weeks. Thank you to our friends at <a href="http://pivotallabs.com/">Pivotal
-Labs</a> for hosting us in their awesome new office.</p>
-<h3 class='anchorable-toc' id='toc_built-with-ember'>Built With Ember</h3>
-<p>A few months ago we <a href="https://docs.google.com/document/d/1ZWYq3gwkPTzUiyqr4x_asSj8wIgfvg8XyLmU3Yx_FPE/edit">began tracking</a> some of the ambitious apps made
-with Ember.js. The folks at <a href="http://www.getblimp.com/">Blimp</a> have turned that
-document into a curated list of awesome Ember.js applications. <a href="http://builtwithember.io/">Check it
-out</a>.</p>
-<h3 class='anchorable-toc' id='toc_ember-cli-website'>ember-cli website</h3>
-<p><code>ember-cli</code>, our ES6 module-based build tool has a new site. <a href="http://www.ember-cli.com/">Give it a
-browse</a></p>
-<h3 class='anchorable-toc' id='toc_modularizing-ember-js-s-repository'>Modularizing Ember.js&#39;s Repository</h3>
-<p>We&#39;ve started moving more external dependencies out of the Ember.js repository
-and have begun work to turn some infrequently used parts of the framework into
-their own libraries. These will still be built into the <code>1.x</code> series of
-releases, but will not come bundled by default when we have the next major
-versions release.</p>
+<p>Since its inception, Ember.js has automatically guarded against these
+attacks by HTML-escaping any bound data that goes into the DOM. For
+example, given this model data:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">firstName</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">&lt;script type=javascript&gt;alert('pwned!');&lt;/script&gt;</span><span class="delimiter">&quot;</span></span>
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>The following template would not be vulnerable to XSS:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>Hello, <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">firstName</span><span class="inline-delimiter">}}</span></span>!
+</pre></td>
+</tr></table>
+</div></div>
+<p>That&#39;s because Ember automatically replaces the &lt; and &gt; characters
+with <code>&amp;lt;</code> and <code>&amp;gt;</code>.</p>
+
+<p>However, there is still another potential exploit vector: bound attributes.</p>
+
+<p>Let&#39;s say you display a profile for your users and allow them to supply
+an arbitrary homepage that your app links to:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="comment">{{!-- templates/user.hbs --}}</span>
+First Name: <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">firstName</span><span class="inline-delimiter">}}</span></span>
+Homepage: <span class="tag">&lt;a</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bind-attr</span> <span class="attribute-name">href</span>=<span class="attribute-value">homepageUrl</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">homepageUrl</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/a&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>While this template may look harmless at first glance, imagine a
+malicious user provides the following data:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">firstName</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Guardians of Peace</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">homepageUrl</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">javascript:alert('Kim Jong Un is not to be
+disrespected!')</span><span class="delimiter">&quot;</span></span>
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>If the attacker can induce another user to click the profile link, you
+will have inadvertently allowed their JavaScript to be evaluated in the
+same origin as your trusted code.</p>
+
+<p>As of Ember 1.9.1, we will automatically escape any bound <code>href</code>, <code>src</code>
+or <code>background</code> attributes that contain a <code>javascript:</code> or <code>vbscript:</code>
+protocol handler by prefixing their value with <code>unsafe:</code>.</p>
+
+<p>We are also releasing a new beta version of Ember 1.10 that contains
+even more targeted fixes. Thanks to the additional power the HTMLbars
+parser gives us, these attributes will only be escaped on elements where
+they trigger a top-level navigation and thus a potential exploit: <code>a</code>,
+<code>body</code>, <code>link</code>, <code>iframe</code>, and <code>img</code>.</p>
+
+<p>We&#39;d like to thank Mano and Manoharan from Zoho for responsibly disclosing
+this potential XSS vector and working with us to find a solution that makes
+it as easy as possible for developers to write secure apps.</p>
+<h2 class='anchorable-toc' id='toc_changelogs'>Changelogs</h2>
+<ul>
+<li><a href="https://github.com/emberjs/ember.js/blob/v1.9.1/CHANGELOG.md">Ember.js 1.9.1 CHANGELOG</a></li>
+<li><a href="https://github.com/emberjs/ember.js/blob/v1.10.0-beta.2/CHANGELOG.md">Ember.js 1.10.0-beta.2 CHANGELOG</a></li>
+</ul>
 
 
     <hr>

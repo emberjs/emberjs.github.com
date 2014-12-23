@@ -5,16 +5,131 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2014-12-21T16:00:00-08:00</updated>
+  <updated>2014-12-22T19:00:00-05:00</updated>
   <author>
     <name>Ember</name>
   </author>
   <entry>
+    <title>Ember.js 1.9.1 Released</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2014/12/23/ember-1-9-1-released.html"/>
+    <id>http://emberjs.com/blog/2014/12/23/ember-1-9-1-released.html</id>
+    <published>2014-12-22T19:00:00-05:00</published>
+    <updated>2014-12-22T19:00:00-05:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Today, the Ember team is pleased to announce the release of Ember.js
+1.9.1. Ember 1.9.1 fixes one regression and introduces more conservative
+escaping of attributes to help developers guard against inadvertent cross-site
+scripting (XSS) vulnerabilities...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;Today, the Ember team is pleased to announce the release of Ember.js
+1.9.1. Ember 1.9.1 fixes one regression and introduces more conservative
+escaping of attributes to help developers guard against inadvertent cross-site
+scripting (XSS) vulnerabilities.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_view-helper-instances'&gt;{{view}} Helper &amp;amp; Instances&lt;/h3&gt;
+&lt;p&gt;The 1.9.0 release introduced a regression where the Handlebars
+&lt;code&gt;{{view}}&lt;/code&gt; helper would only work with &lt;code&gt;Ember.View&lt;/code&gt; subclasses, not
+instances. In 1.9.1, passing a view instance to the helper has been
+fully restored.&lt;/p&gt;
+
+&lt;p&gt;We intended to deprecate this functionality, not remove it entirely.
+If your app was relying on this behavior, first, please accept our
+apologies for the accidental regression. Second, please consider
+refactoring your code to use components instead of views, as support for
+this API will be removed in Ember 2.0.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_xss-improvements-for-bound-attributes'&gt;XSS Improvements for Bound Attributes&lt;/h3&gt;
+&lt;p&gt;XSS vulnerabilities happen when you unintentionally put unescaped
+user-supplied content into the DOM, creating a vector for attackers
+to trick the browser into evaluating JavaScript that has the same access
+to data as your legitimate JavaScript.&lt;/p&gt;
+
+&lt;p&gt;Since its inception, Ember.js has automatically guarded against these
+attacks by HTML-escaping any bound data that goes into the DOM. For
+example, given this model data:&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;{
+  &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;firstName&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;&amp;lt;script type=javascript&amp;gt;alert('pwned!');&amp;lt;/script&amp;gt;&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;
+}
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;The following template would not be vulnerable to XSS:&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;Hello, &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;firstName&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;!
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;That&amp;#39;s because Ember automatically replaces the &amp;lt; and &amp;gt; characters
+with &lt;code&gt;&amp;amp;lt;&lt;/code&gt; and &lt;code&gt;&amp;amp;gt;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;However, there is still another potential exploit vector: bound attributes.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s say you display a profile for your users and allow them to supply
+an arbitrary homepage that your app links to:&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;{{!-- templates/user.hbs --}}&lt;/span&gt;
+First Name: &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;firstName&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+Homepage: &lt;span class="tag"&gt;&amp;lt;a&lt;/span&gt; &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;bind-attr&lt;/span&gt; &lt;span class="attribute-name"&gt;href&lt;/span&gt;=&lt;span class="attribute-value"&gt;homepageUrl&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;homepageUrl&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;While this template may look harmless at first glance, imagine a
+malicious user provides the following data:&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;{
+  &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;firstName&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;Guardians of Peace&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;,
+  &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;homepageUrl&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;javascript:alert('Kim Jong Un is not to be
+disrespected!')&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;
+}
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;If the attacker can induce another user to click the profile link, you
+will have inadvertently allowed their JavaScript to be evaluated in the
+same origin as your trusted code.&lt;/p&gt;
+
+&lt;p&gt;As of Ember 1.9.1, we will automatically escape any bound &lt;code&gt;href&lt;/code&gt;, &lt;code&gt;src&lt;/code&gt;
+or &lt;code&gt;background&lt;/code&gt; attributes that contain a &lt;code&gt;javascript:&lt;/code&gt; or &lt;code&gt;vbscript:&lt;/code&gt;
+protocol handler by prefixing their value with &lt;code&gt;unsafe:&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;We are also releasing a new beta version of Ember 1.10 that contains
+even more targeted fixes. Thanks to the additional power the HTMLbars
+parser gives us, these attributes will only be escaped on elements where
+they trigger a top-level navigation and thus a potential exploit: &lt;code&gt;a&lt;/code&gt;,
+&lt;code&gt;body&lt;/code&gt;, &lt;code&gt;link&lt;/code&gt;, &lt;code&gt;iframe&lt;/code&gt;, and &lt;code&gt;img&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;We&amp;#39;d like to thank Mano and Manoharan from Zoho for responsibly disclosing
+this potential XSS vector and working with us to find a solution that makes
+it as easy as possible for developers to write secure apps.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_changelogs'&gt;Changelogs&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.9.1/CHANGELOG.md"&gt;Ember.js 1.9.1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.10.0-beta.2/CHANGELOG.md"&gt;Ember.js 1.10.0-beta.2 CHANGELOG&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
     <title>Inside FastBoot: The Road to Server-Side Rendering</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/12/22/inside-fastboot-the-road-to-server-side-rendering.html"/>
     <id>http://emberjs.com/blog/2014/12/22/inside-fastboot-the-road-to-server-side-rendering.html</id>
-    <published>2014-12-21T16:00:00-08:00</published>
-    <updated>2014-12-21T16:00:00-08:00</updated>
+    <published>2014-12-21T19:00:00-05:00</published>
+    <updated>2014-12-21T19:00:00-05:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -96,8 +211,8 @@
     <title>Ember.js 1.9.0 and 1.10 Beta Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/12/08/ember-1-9-0-released.html"/>
     <id>http://emberjs.com/blog/2014/12/08/ember-1-9-0-released.html</id>
-    <published>2014-12-07T16:00:00-08:00</published>
-    <updated>2014-12-07T16:00:00-08:00</updated>
+    <published>2014-12-07T19:00:00-05:00</published>
+    <updated>2014-12-07T19:00:00-05:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -556,8 +671,8 @@ may be added to the 1.10 release.&lt;/p&gt;
     <title>Ember Data v1.0.0-beta.12 Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/11/24/ember-data-1-0-beta-12-released.html"/>
     <id>http://emberjs.com/blog/2014/11/24/ember-data-1-0-beta-12-released.html</id>
-    <published>2014-11-23T16:00:00-08:00</published>
-    <updated>2014-11-23T16:00:00-08:00</updated>
+    <published>2014-11-23T19:00:00-05:00</published>
+    <updated>2014-11-23T19:00:00-05:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -700,8 +815,8 @@ changes, as well as triaging issues.&lt;/p&gt;
     <title>Igor Terzic Joins the Core Team</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/11/16/igor-terzic-joins-the-core-team.html"/>
     <id>http://emberjs.com/blog/2014/11/16/igor-terzic-joins-the-core-team.html</id>
-    <published>2014-11-15T16:00:00-08:00</published>
-    <updated>2014-11-15T16:00:00-08:00</updated>
+    <published>2014-11-15T19:00:00-05:00</published>
+    <updated>2014-11-15T19:00:00-05:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -738,8 +853,8 @@ all of your hard work, and welcome to the core team!&lt;/p&gt;
     <title>Ember.js 1.8.1 Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/11/04/ember-1-8-1-released.html"/>
     <id>http://emberjs.com/blog/2014/11/04/ember-1-8-1-released.html</id>
-    <published>2014-11-03T16:00:00-08:00</published>
-    <updated>2014-11-03T16:00:00-08:00</updated>
+    <published>2014-11-03T19:00:00-05:00</published>
+    <updated>2014-11-03T19:00:00-05:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -841,186 +956,6 @@ progress &lt;a href="https://code.google.com/p/chromium/issues/detail?id=428313"
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/compare/v1.8.0...stable"&gt;Ember.js 1.8.0 to 1.8.1 commit log&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.8.1/CHANGELOG.md"&gt;Ember.js 1.8.1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Ember.js 1.8.0 and 1.9 Beta Released</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2014/10/26/ember-1-8-0-released.html"/>
-    <id>http://emberjs.com/blog/2014/10/26/ember-1-8-0-released.html</id>
-    <published>2014-10-25T17:00:00-07:00</published>
-    <updated>2014-10-25T17:00:00-07:00</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;We are pleased to announce that both Ember.js 1.8.0 and the first beta in the
-1.9 series have been released. This comes as the eighth cycle of our release
-process that began just after 1.0 was released.&lt;/p&gt;
-
-&lt;p&gt;This release represents the effort of at least...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;We are pleased to announce that both Ember.js 1.8.0 and the first beta in the
-1.9 series have been released. This comes as the eighth cycle of our release
-process that began just after 1.0 was released.&lt;/p&gt;
-
-&lt;p&gt;This release represents the effort of at least 40 contributors across over 600 commits.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_major-rendering-layer-refactor-metal-views'&gt;Major rendering-layer refactor (&amp;quot;metal-views&amp;quot;)&lt;/h2&gt;
-&lt;p&gt;In previous versions of Ember.js, the HTML of a page was created (via
-Handlebars) and assembled (via the render tree) using string concatenation. In
-Ember.js 1.8, fragments of a page are still created (via Handlebars) as
-strings, but are then parsed into DOM and assembled as a DOM tree.&lt;/p&gt;
-
-&lt;p&gt;Metal-views is the first part of the HTMLBars effort to land in Ember. It is
-an important step towards the complete removal of strings from the Ember.js
-rendering pipeline.&lt;/p&gt;
-
-&lt;p&gt;Introducing HTMLBars into Ember incrementally demonstrates the community&amp;#39;s
-commitment to semantic versioning, and to improving the framework without
-abandoning existing codebases.&lt;/p&gt;
-
-&lt;p&gt;Some of the immediate benefits of this refactor are:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The removal of recursion from the rendering layer. This decreases garbage
-collection pressure during rendering and allows the re-use of objects during
-render (for example, the render buffer).&lt;/li&gt;
-&lt;li&gt;Improved HTML namespace and contextual element tracking. This introduces
-support for components, data-binding, and logic within inline SVG documents.
-&lt;a href="http://jsbin.com/woxes/8/"&gt;Example JSBin&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Prior versions of Ember.js relied upon script tags to mark
-regions of data bound content. For example a simple template of &lt;code&gt;{{name}}&lt;/code&gt;
-might be rendered into the page as:&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class="highlight html "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;metamorph-1-start&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-placeholder&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-Bob
-&lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;metamorph-1-end&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-placeholder&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;These script tags could interfere with &lt;code&gt;:first-child&lt;/code&gt; and other CSS selectors,
-and were a general nuisance. In Ember.js 1.8 the library powering these
-bindings (&lt;a href="https://github.com/tomhuda/metamorph.js/"&gt;metamorph.js&lt;/a&gt;) has been
-replaced with a completely re-written engine that uses blank text nodes
-(&lt;a href="https://github.com/tildeio/htmlbars/blob/master/packages/morph/lib/morph.js"&gt;morph.js&lt;/a&gt;). One of the major touted benefits of HTMLBars, the Ember team is
-happy to make this a reality in 1.8.&lt;/p&gt;
-
-&lt;p&gt;Many thanks to &lt;a href="https://twitter.com/krisselden"&gt;@krisselden&lt;/a&gt;,
-&lt;a href="https://twitter.com/ebryn"&gt;@ebryn&lt;/a&gt;, &lt;a href="https://twitter.com/_mmun"&gt;@mmun&lt;/a&gt;,
-&lt;a href="https://twitter.com/mixonic"&gt;@mixonic&lt;/a&gt;, and all developers who took time to
-test their applications on 1.8 beta. Delivering this update without breaking
-1.x API compatibility took a significant community effort.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_performance-improvements'&gt;Performance Improvements&lt;/h2&gt;
-&lt;p&gt;Ember.js 1.8 comes with several performance improvements in other parts of the
-codebase.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Ember.js APIs often require the use of a string to lookup a class or route.
-Often these strings must be passed through a normalization step before they are
-used, such as pluralizing, singularizing, or changing snake_case to camelCase.
-1.8 introduces several caches for these operations, resulting in common
-operations being performed far fewer times.&lt;/li&gt;
-&lt;li&gt;The refactoring of commonly de-optimized functions in v8 and other browsers.&lt;/li&gt;
-&lt;li&gt;The conversion of &lt;code&gt;MANDATORY_SETTER&lt;/code&gt; from a runtime flag into a build-time
-feature flag. This allows relevant code paths in &lt;code&gt;get&lt;/code&gt; and &lt;code&gt;set&lt;/code&gt; to be slimmer
-in production builds.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Thanks to &lt;a href="https://twitter.com/stefanpenner/"&gt;@stefanpenner&lt;/a&gt; and
-&lt;a href="https://twitter.com/twokul"&gt;@twokul&lt;/a&gt; for their continued efforts on
-performance tuning.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_notable-deprecations'&gt;Notable Deprecations&lt;/h2&gt;
-&lt;p&gt;As Ember.js moves forward, various APIs are deprecated to allow for their
-removal in a later major release (such as 2.0). With this release a
-&lt;a href="http://emberjs.com/guides/deprecations/"&gt;deprecations guide&lt;/a&gt; has been added to
-the Ember.js website. This guide will help developers refactor their code away
-from old APIs.&lt;/p&gt;
-
-&lt;p&gt;Four notable deprecations are added with the release of 1.8.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Ember.Set&lt;/code&gt; is a class for managing an unordered collection of objects (&lt;a href="http://emberjs.com/api/classes/Ember.Set.html"&gt;api
-docs&lt;/a&gt;). It is a private API and
-thus subject to change, however several libraries have chosen to use it despite
-this. Since the addition of this API to Ember, the ES6 draft has matured in its
-description of a native JavaScript Set class. &lt;code&gt;Ember.Set&lt;/code&gt; is not compatible
-with the upcoming API, and is now deprecated.&lt;/li&gt;
-&lt;li&gt;In an effort to more closely align &lt;code&gt;Ember.Map&lt;/code&gt; with ES6, the &lt;code&gt;remove&lt;/code&gt; method
-has been deprecated in favor of &lt;code&gt;delete&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;The &lt;code&gt;currentWhen&lt;/code&gt; property on links is deprecated in favor of &lt;code&gt;current-when&lt;/code&gt;.
-This property name more closely tracks how component properties will be used in the
-future.&lt;/li&gt;
-&lt;li&gt;Old versions of Ember.js, the guides, and the API documentation suggested
-looking up views as globals. For example &lt;code&gt;{{view App.SomeView}}&lt;/code&gt;. In
-Ember.js 1.8 this style of view lookup is deprecated in favor of using a
-string, similar to how other class lookups behave in Ember. &lt;a href="http://emberjs.com/guides/deprecations/#toc_global-lookup-of-views"&gt;See
-this guide&lt;/a&gt;
-for details about transitioning away from global view lookups.&lt;/li&gt;
-&lt;li&gt;URLs containing a hash and no &lt;code&gt;/&lt;/code&gt;, such as &lt;code&gt;/foo#bar&lt;/code&gt; are handled by the
-router&amp;#39;s &lt;code&gt;hash&lt;/code&gt; location handler. When using the &lt;code&gt;auto&lt;/code&gt; location handler, the
-presence of &lt;code&gt;#&lt;/code&gt; will cause the &lt;code&gt;hash&lt;/code&gt; handler to be chosen over the &lt;code&gt;history&lt;/code&gt;
-handlers, despite the lack of a leading &lt;code&gt;/&lt;/code&gt; in the path (for example &lt;code&gt;/foo#/bar&lt;/code&gt;.
-This makes using anchors with the &lt;code&gt;history&lt;/code&gt; handler impossible. Ember.js
-1.9 will correct this bug, and in 1.8 a deprecation is raised.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 class='anchorable-toc' id='toc_breaking-changes'&gt;Breaking Changes&lt;/h2&gt;
-&lt;p&gt;Ember.js strives to maintain strict API compatibility across minor releases.
-In cases of API inconsistency or where behavior is unspecified, breaking changes
-may be introduced to resolve the issue. Additionally, deprecated APIs may
-be removed if they were from a previous major release (such as pre-1.0
-deprecations).&lt;/p&gt;
-
-&lt;p&gt;In this release there are several small breaking changes that may impact your
-application.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;didInsertElement&lt;/code&gt; is now always called on a child view before it is called
-on a rendering parent view. In previous releases of Ember.js &lt;code&gt;didInsertElement&lt;/code&gt;
-would often be called first on a parent view, however this behavior was
-inconsistent. In general, developers are encouraged
-to consider scheduling work into the &lt;code&gt;afterRender&lt;/code&gt; queue if it includes
-accessing DOM not immediately under that view&amp;#39;s control.&lt;/li&gt;
-&lt;li&gt;Actions defined directly on the controller object
-and not in the &lt;code&gt;actions:&lt;/code&gt; hash have been deprecated since Ember.js 1.0. In
-Ember.js 1.8 support for those actions has been removed.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Ember.Map&lt;/code&gt; has been tweaked to more closely match the ES6 spec for &lt;code&gt;Map&lt;/code&gt;. The
-&lt;code&gt;forEach&lt;/code&gt; callback now takes &lt;code&gt;value,key,map&lt;/code&gt; as arguments. Previously it was passed
-&lt;code&gt;key,value&lt;/code&gt;. This API is private, but several libraries have chosen to use it
-despite this. Ember-Data now includes &lt;a href="https://github.com/emberjs/data/blob/master/packages/ember-data/lib/system/map.js"&gt;a polyfill&lt;/a&gt;. &lt;code&gt;Ember.OrderedSet&lt;/code&gt;, a super class of &lt;code&gt;Ember.Map&lt;/code&gt;, has
-also had minor ES6 cleanups applied.
-to allow consistent usage across the pre-1.8 and 1.8 API.&lt;/li&gt;
-&lt;li&gt;Ember.js has long had an run-time flag called &lt;code&gt;MANDATORY_SETTER&lt;/code&gt;. With this
-flag enabled, attempts to set an observed object property without the use of
-&lt;code&gt;Ember.set()&lt;/code&gt; would throw an error (a desirable behavior for development
-builds). This runtime flag has been changed to a
-standard build-time feature flag named &lt;code&gt;mandatory-setter&lt;/code&gt;, allowing it to
-be removed from production builds entirely.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 class='anchorable-toc' id='toc_ember-js-1-9-beta'&gt;Ember.js 1.9 beta&lt;/h2&gt;
-&lt;p&gt;As with any minor release of Ember.js, the current canary branch is forked
-to become the next beta. This ensures a constant graduation of features and
-improvements from master to release. Builds of beta are made available every
-week for six weeks, then promoted to release.&lt;/p&gt;
-
-&lt;p&gt;In Ember.js 1.9 several new features and changes will be introduced.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&amp;quot;Streams&amp;quot; are a new Ember.js internal that replace bindings at the lowest
-level of the Ember rendering pipeline. They greatly simplify the implementation
-of template helpers and are yet another important step toward the landing of
-HTMLBars.&lt;/li&gt;
-&lt;li&gt;Handlebars 2.0 will be required for Ember.js 1.9. See &lt;a href="http://emberjs.com/blog/2014/10/16/handlebars-update.html"&gt;this summary
-of the transition&lt;/a&gt;
-for more details.&lt;/li&gt;
-&lt;li&gt;Further performance improvements and bugfixes.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 class='anchorable-toc' id='toc_changelogs'&gt;Changelogs&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.8.0/CHANGELOG.md"&gt;Ember.js 1.8.0 CHANGELOG&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.9.0-beta.1/CHANGELOG.md"&gt;Ember.js 1.9.0-beta.1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </content>
   </entry>
