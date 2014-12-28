@@ -258,23 +258,38 @@ serializer and do the logic yourself:</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>Or if you want to restore the old behavior for all of your models:
-<code>javascript
-// app/serializers/application.js
-// or App.ApplicationSerializer
-export default DS.RESTSerializer.extend({
-  normalize: function(type, hash, prop) {
-    hash = this._super(type, hash, prop);
-    type.eachAttribute(function(key) {
-      if (!hash.hasOwnProperty(key)) {
-        hash[key] = null;
+<p>Or if you want to restore the old behavior for all of your models:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/serializers/application.js</span>
+<span class="comment">// or App.ApplicationSerializer</span>
+<span class="reserved">export</span> <span class="keyword">default</span> DS.RESTSerializer.extend({
+  <span class="function">normalize</span>: <span class="keyword">function</span>(type, hash, prop) {
+    hash = <span class="local-variable">this</span>._super(type, hash, prop);
+    type.eachAttribute(<span class="keyword">function</span>(key) {
+      <span class="keyword">if</span> (!hash.hasOwnProperty(key)) {
+        hash[key] = <span class="predefined-constant">null</span>;
       }
-    }, this);
-    return hash;
+    }, <span class="local-variable">this</span>);
+    <span class="keyword">return</span> hash;
   }
 });
-</code></p>
-<h2 class='anchorable-toc' id='toc_special-thanks'>Special Thanks</h2>
+</pre></td>
+</tr></table>
+</div></div><h2 class='anchorable-toc' id='toc_special-thanks'>Special Thanks</h2>
 <p>A special thanks to <a href="http://dockyard.com">Dockyard</a> for sponsoring Igor during the
 month of December!</p>
 
