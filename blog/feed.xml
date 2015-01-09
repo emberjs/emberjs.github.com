@@ -5,16 +5,114 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2014-12-30T19:00:00-05:00</updated>
+  <updated>2015-01-07T16:00:00-08:00</updated>
   <author>
     <name>Ember</name>
   </author>
   <entry>
+    <title>Inside FastBoot: Faking the DOM in Node</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2015/01/08/inside-fastboot-faking-the-dom-in-node.html"/>
+    <id>http://emberjs.com/blog/2015/01/08/inside-fastboot-faking-the-dom-in-node.html</id>
+    <published>2015-01-07T16:00:00-08:00</published>
+    <updated>2015-01-07T16:00:00-08:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;As we &lt;a href="/inside-fastboot-the-road-to-server-side-rendering.html"&gt;announced in the inaugural blog post in our Inside FastBoot
+series&lt;/a&gt;, we
+have begun working on giving Ember.js developers the ability to run
+their apps in Node.js. Once complete, this feature will allow your users
+to see HTML and CSS right away...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;As we &lt;a href="/inside-fastboot-the-road-to-server-side-rendering.html"&gt;announced in the inaugural blog post in our Inside FastBoot
+series&lt;/a&gt;, we
+have begun working on giving Ember.js developers the ability to run
+their apps in Node.js. Once complete, this feature will allow your users
+to see HTML and CSS right away, with the JavaScript downloading
+in the background and taking over once it has fully loaded.&lt;/p&gt;
+
+&lt;p&gt;Before the holidays, we had already succeeded in getting the Ember.js
+framework loading in Node.js (where it cannot rely on things like the
+DOM) without throwing any exceptions. We also were able to get Ember
+apps booting, parsing URLs, and completing most of the functionality
+necessary to start the app, including loading controllers, routes and
+models, etc.&lt;/p&gt;
+
+&lt;p&gt;This week, we&amp;#39;ve made good progress on the next major piece of
+functionality: allowing HTMLbars templates to render in Node.js where,
+again, there is no native DOM available.&lt;/p&gt;
+
+&lt;p&gt;So how does HTMLbars, a DOM-based templating library, work in an
+environment without a DOM?&lt;/p&gt;
+
+&lt;p&gt;As it turns out, we can introduce a &amp;quot;virtual DOM&amp;quot; into the server-side
+environment, implemented in pure JavaScript. That&amp;#39;s exactly what we&amp;#39;ve
+done, thanks to the work of Kris Selden and his &lt;a href="https://github.com/krisselden/simple-dom"&gt;simple-dom&lt;/a&gt;
+library.&lt;/p&gt;
+
+&lt;p&gt;Importantly, &lt;code&gt;simple-dom&lt;/code&gt; implements a very, very small subset of the W3C
+DOM specification, optimized for performance, and for the requirements
+of the Ember view layer. For example, it does not implement any part of
+the DOM that would require the use of accessors; it&amp;#39;s just an attempt to
+faithfully represent the DOM as a &lt;strong&gt;data structure&lt;/strong&gt;, not its complete
+API surface. (If you need the whole enchilada, check out something like
+&lt;a href="https://github.com/tmpvar/jsdom"&gt;jsdom&lt;/a&gt;, which is much more complete.)&lt;/p&gt;
+
+&lt;p&gt;While working on FastBoot, we have created a series of integration tests
+we run in Node.js that verify everything is working correctly. In those
+tests, we swap out the code that accesses the DOM (encapsulated inside
+an object we call a &lt;code&gt;DOMHelper&lt;/code&gt;) with a version that uses a &lt;code&gt;Document&lt;/code&gt;
+provided by &lt;code&gt;simple-dom&lt;/code&gt; rather than relying on the global &lt;code&gt;document&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;This week, with our implementation of &amp;quot;the little DOM that could,&amp;quot; we were
+able to get more and more sophisticated templates rendering to a string.&lt;/p&gt;
+
+&lt;p&gt;First, we started with just a simple template that printed a string:
+&lt;code&gt;&amp;lt;h1&amp;gt;Hello&amp;lt;/h1&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Then we moved on to bound expressions, so &lt;code&gt;&amp;lt;h1&amp;gt;Hello {{location}}&amp;lt;/h1&amp;gt;&lt;/code&gt;
+became &lt;code&gt;&amp;lt;h1&amp;gt;Hello World&amp;lt;/h1&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Yesterday, we got &lt;code&gt;{{#if}}&lt;/code&gt; helpers and nested components working as
+well.  (Other helpers likely work, we just have not written tests for
+them yet.)&lt;/p&gt;
+
+&lt;p&gt;Now that we have bare-bones rendering in place, we are theoretically
+able to start booting Ember apps in Node.js, connecting their router
+with a server-side routing library like Express, and serving up requests
+as they come in.&lt;/p&gt;
+
+&lt;p&gt;Next week, we&amp;#39;ll begin working on giving Ember CLI the ability to
+compile Ember apps to be consumed by Node.js. Once that&amp;#39;s in place, our
+plan is to start updating all of the tests in Ember&amp;#39;s test suite that
+flex the templating and view layers, ensuring that they pass in a
+DOM-less environment.&lt;/p&gt;
+
+&lt;p&gt;Our goal is to have something alpha quality but useable as soon as
+possible, so those with simpler apps can start taking advantage and
+helping us test right away. As people run into incompatibilities in the
+real world, we can incorporate fixes into the codebase and our test
+suite and rapidly increase the number of compatible apps.&lt;/p&gt;
+
+&lt;p&gt;If you&amp;#39;re interested in following along at home, you may want to star
+these repos on GitHub to watch our progress:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js"&gt;https://github.com/emberjs/ember.js&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/krisselden/simple-dom"&gt;https://github.com/krisselden/simple-dom&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/tildeio/htmlbars"&gt;https://github.com/tildeio/htmlbars&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We&amp;#39;ll have more for you in future posts in the Inside FastBoot series,
+cataloging implementation challenges and successes, so stay tuned for
+more.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
     <title>Ember Data v1.0.0-beta.14.1 Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/12/31/ember-data-1-0-beta-14-1-released.html"/>
     <id>http://emberjs.com/blog/2014/12/31/ember-data-1-0-beta-14-1-released.html</id>
-    <published>2014-12-30T19:00:00-05:00</published>
-    <updated>2014-12-30T19:00:00-05:00</updated>
+    <published>2014-12-30T16:00:00-08:00</published>
+    <updated>2014-12-30T16:00:00-08:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -35,8 +133,8 @@ in the code and by your package manager files.&lt;/p&gt;
     <title>Ember Data v1.0.0-beta.14 Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/12/25/ember-data-1-0-beta-14-released.html"/>
     <id>http://emberjs.com/blog/2014/12/25/ember-data-1-0-beta-14-released.html</id>
-    <published>2014-12-24T19:00:00-05:00</published>
-    <updated>2014-12-24T19:00:00-05:00</updated>
+    <published>2014-12-24T16:00:00-08:00</published>
+    <updated>2014-12-24T16:00:00-08:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -197,8 +295,8 @@ month of December!&lt;/p&gt;
     <title>Ember.js 1.9.1 Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/12/23/ember-1-9-1-released.html"/>
     <id>http://emberjs.com/blog/2014/12/23/ember-1-9-1-released.html</id>
-    <published>2014-12-22T19:00:00-05:00</published>
-    <updated>2014-12-22T19:00:00-05:00</updated>
+    <published>2014-12-22T16:00:00-08:00</published>
+    <updated>2014-12-22T16:00:00-08:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -312,8 +410,8 @@ it as easy as possible for developers to write secure apps.&lt;/p&gt;
     <title>Inside FastBoot: The Road to Server-Side Rendering</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/12/22/inside-fastboot-the-road-to-server-side-rendering.html"/>
     <id>http://emberjs.com/blog/2014/12/22/inside-fastboot-the-road-to-server-side-rendering.html</id>
-    <published>2014-12-21T19:00:00-05:00</published>
-    <updated>2014-12-21T19:00:00-05:00</updated>
+    <published>2014-12-21T16:00:00-08:00</published>
+    <updated>2014-12-21T16:00:00-08:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -395,8 +493,8 @@ it as easy as possible for developers to write secure apps.&lt;/p&gt;
     <title>Ember.js 1.9.0 and 1.10 Beta Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/12/08/ember-1-9-0-released.html"/>
     <id>http://emberjs.com/blog/2014/12/08/ember-1-9-0-released.html</id>
-    <published>2014-12-07T19:00:00-05:00</published>
-    <updated>2014-12-07T19:00:00-05:00</updated>
+    <published>2014-12-07T16:00:00-08:00</published>
+    <updated>2014-12-07T16:00:00-08:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -849,150 +947,6 @@ may be added to the 1.10 release.&lt;/p&gt;
 &lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.9.0/CHANGELOG.md"&gt;Ember.js 1.9.0 CHANGELOG&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.10.0-beta.1/CHANGELOG.md"&gt;Ember.js 1.10.0-beta.1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Ember Data v1.0.0-beta.12 Released</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2014/11/24/ember-data-1-0-beta-12-released.html"/>
-    <id>http://emberjs.com/blog/2014/11/24/ember-data-1-0-beta-12-released.html</id>
-    <published>2014-11-23T19:00:00-05:00</published>
-    <updated>2014-11-23T19:00:00-05:00</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;h2 class="anchorable-toc" id="toc_new-core-contributors"&gt;New Core Contributors&lt;/h2&gt;
-&lt;p&gt;Long-time contributors &lt;a href="https://github.com/bmac"&gt;Brendan McLoughlin&lt;/a&gt; and &lt;a href="https://github.com/sly7-7"&gt;Sylvain Mina&lt;/a&gt;
-have been given collaborator status and will help us triage issues, merge pull
-requests, and contribute bugfixes and documentation.&lt;/p&gt;
-&lt;h2 class="anchorable-toc" id="toc_new-features"&gt;New Features&lt;/h2&gt;&lt;h3 class="anchorable-toc" id="toc_store-fetch"&gt;store.fetch&lt;/h3&gt;
-&lt;p&gt;When using...&lt;/p&gt;</summary>
-    <content type="html">&lt;h2 class='anchorable-toc' id='toc_new-core-contributors'&gt;New Core Contributors&lt;/h2&gt;
-&lt;p&gt;Long-time contributors &lt;a href="https://github.com/bmac"&gt;Brendan McLoughlin&lt;/a&gt; and &lt;a href="https://github.com/sly7-7"&gt;Sylvain Mina&lt;/a&gt;
-have been given collaborator status and will help us triage issues, merge pull
-requests, and contribute bugfixes and documentation.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_new-features'&gt;New Features&lt;/h2&gt;&lt;h3 class='anchorable-toc' id='toc_store-fetch'&gt;store.fetch&lt;/h3&gt;
-&lt;p&gt;When using Ember Data, the most common pattern in the &lt;code&gt;model&lt;/code&gt; hook is to call
-&lt;code&gt;store.find&lt;/code&gt; for your model:&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; &lt;span class="keyword"&gt;var&lt;/span&gt; PostRoute = Ember.Route.extend({
-  &lt;span class="function"&gt;model&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;(params) {
-    &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="local-variable"&gt;this&lt;/span&gt;.store.find(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;post&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, params.post_id);
-  }
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code&gt;store.find&lt;/code&gt; will return the instance of the &lt;code&gt;Post&lt;/code&gt; record if it has already
-been fetched in the store. Sometimes, this is not desirable. For example, you
-may not know if you have already loaded the post in another request via
-sideloading, or you want the most up to date information. You could either
-check if the record existed using
-&lt;a href="http://emberjs.com/api/data/classes/DS.Store.html#method_hasRecordForId"&gt;store.hasRecordForId&lt;/a&gt;, or just always call
-&lt;a href="http://emberjs.com/api/data/classes/DS.Model.html#method_reload"&gt;reload&lt;/a&gt; on your model in the route&amp;#39;s &lt;code&gt;afterModel&lt;/code&gt;hook.&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;store.fetch&lt;/code&gt; wraps this common pattern by reloading a record if it exists in
-the store, or reloads the record if it doesn&amp;#39;t exist:&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="function"&gt;model&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;(params){
-  &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="local-variable"&gt;this&lt;/span&gt;.store.fetch(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;post&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, params.post_id);
-}
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Please give a warm thanks to &lt;a href="https://github.com/thaume"&gt;Tom Coquereau&lt;/a&gt; for his &lt;a href="https://github.com/emberjs/data/pull/2478"&gt;pull
-request&lt;/a&gt; implementing this feature!&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_bugfixes'&gt;Bugfixes&lt;/h2&gt;&lt;h3 class='anchorable-toc' id='toc_relationship-createrecord-returns-the-record-instead-of-a-promise'&gt;relationship.createRecord() returns the record instead of a promise&lt;/h3&gt;
-&lt;p&gt;Prior to Ember Data v1.0.0-beta.11, the following code would give you direct
-access to a record:&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; post    = store.createRecord(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;post&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
-&lt;span class="keyword"&gt;var&lt;/span&gt; comment = post.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).createRecord(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comment&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;In beta.11, it returned a Promise, meaning you couldn&amp;#39;t call things like
-&lt;code&gt;set/get&lt;/code&gt; on the resulting record. This regression has been fixed in beta.12
-thanks to &lt;a href="https://github.com/ZenCocoon"&gt;Sébastien Grosjean&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_breaking-changes'&gt;Breaking Changes&lt;/h2&gt;&lt;h3 class='anchorable-toc' id='toc_internet-explorer-8-requires-ember-1-8'&gt;Internet Explorer 8 Requires Ember 1.8&lt;/h3&gt;
-&lt;p&gt;A bug in Ember 1.7&amp;#39;s &lt;code&gt;Ember.create&lt;/code&gt; method (which is a polyfill for
-&lt;code&gt;Object.create&lt;/code&gt;) combined with a bug in es5-shim&amp;#39;s &lt;code&gt;Object.create&lt;/code&gt; prevent us
-from giving Ember Data users a good alternative to use. Internally, Ember Data
-uses &lt;code&gt;Object.create&lt;/code&gt; for efficient caches. Ember 1.8 ships a working
-&lt;code&gt;Object.create&lt;/code&gt; polyfill on &lt;code&gt;Ember.create&lt;/code&gt; so if you are using Internet
-Explorer 8 and Ember Data in production, you should upgrade to Ember 1.8 as
-soon as you can.&lt;/p&gt;
-
-&lt;p&gt;If you are using browsers that provide &lt;code&gt;Object.create&lt;/code&gt;, you do not need to do
-any additional work here. This includes mobile browsers, evergreen browsers
-(Chrome, Opera, Firefox), Safari, and IE9+.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_ember-1-7-support-will-be-completely-dropped-in-beta-13'&gt;Ember 1.7 Support Will Be Completely Dropped in Beta.13&lt;/h3&gt;
-&lt;p&gt;Ember Data relies heavily on JavaScript language-level shims (such as the
-&lt;code&gt;Object.create&lt;/code&gt; issue mentioned above) and other useful internals that Ember
-provides. Rather than creating our own detection algorithms and more polyfills
-for broken code in Ember 1.7, we are deciding to drop 1.7 support in the next
-release of Ember Data. We do so in order to not increase the final size of
-Ember Data&amp;#39;s build. You should upgrade to Ember 1.8 as soon as you can.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_observing-code-data-code-for-changes-has-been-removed'&gt;Observing &lt;code&gt;data&lt;/code&gt; For Changes Has Been Removed&lt;/h3&gt;
-&lt;p&gt;Although &lt;code&gt;model.get(&amp;#39;data&amp;#39;)&lt;/code&gt; has been private in Ember Data for a long time, we
-have noticed users may subscribe to changes on &lt;code&gt;data&lt;/code&gt; for any change to the
-model&amp;#39;s attributes. This means that the following code:&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; Post = DS.Model.extend({
-  &lt;span class="function"&gt;doSomethingWhenDataChanges&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;(){
-    &lt;span class="comment"&gt;// do the work&lt;/span&gt;
-  }.property(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;data&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;strong&gt;no longer works&lt;/strong&gt;. Instead, you should just watch each attribute like you
-would with any &lt;code&gt;Ember.Object&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; Post = DS.Model.extend({
-  &lt;span class="key"&gt;name&lt;/span&gt;: DS.attr(),
-  &lt;span class="key"&gt;date&lt;/span&gt;: DS.attr(),
-  &lt;span class="function"&gt;doSomethingWhenDataChanges&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;(){
-    &lt;span class="comment"&gt;// do the work&lt;/span&gt;
-  }.property(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;name&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;date&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;This change fixed some bugs around observers. Thanks to &lt;a href="https://github.com/wecc"&gt;Christoffer
-Persson&lt;/a&gt; for helping to clean this up and fix some observer bugs around
-this!&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_special-thanks'&gt;Special Thanks&lt;/h2&gt;
-&lt;p&gt;Thanks to &lt;a href="https://github.com/wecc"&gt;Christoffer Persson&lt;/a&gt; for helping us implement bugfixes and API
-changes, as well as triaging issues.&lt;/p&gt;
-
-&lt;!-- Links --&gt;
 </content>
   </entry>
 </feed>
