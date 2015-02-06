@@ -5,16 +5,116 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2015-01-07T16:00:00-08:00</updated>
+  <updated>2015-02-04T19:00:00-05:00</updated>
   <author>
     <name>Ember</name>
   </author>
   <entry>
+    <title>Compiling templates with Ember 1.10</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2015/02/05/compiling-templates-in-1-10-0.html"/>
+    <id>http://emberjs.com/blog/2015/02/05/compiling-templates-in-1-10-0.html</id>
+    <published>2015-02-04T19:00:00-05:00</published>
+    <updated>2015-02-04T19:00:00-05:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;As many of you know, Ember 1.10 will be the first version of Ember that uses &lt;a href="https://github.com/tildeio/htmlbars"&gt;HTMLBars&lt;/a&gt; as its templating engine. With this change you may need to change the way you compile your templates.&lt;/p&gt;
+
+&lt;p&gt;The HTMLBars API is evolving and not 1.0.0 yet, so to ensure...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;As many of you know, Ember 1.10 will be the first version of Ember that uses &lt;a href="https://github.com/tildeio/htmlbars"&gt;HTMLBars&lt;/a&gt; as its templating engine. With this change you may need to change the way you compile your templates.&lt;/p&gt;
+
+&lt;p&gt;The HTMLBars API is evolving and not 1.0.0 yet, so to ensure that templates are compiled compatibly with your Ember version we have updated the Ember build system to generate a &lt;code&gt;ember-template-compiler.js&lt;/code&gt; file alongside every build of Ember. This template compiler can be used server-side for precompilation or in the browser to compile templates on the fly. If you do not need to compile templates at runtime (in the browser) the &lt;code&gt;ember.debug.js&lt;/code&gt; or &lt;code&gt;ember.prod.js&lt;/code&gt; file alone is sufficient. There is no need to include a runtime dependency. This is a departure from previous versions, where you would always include either &lt;code&gt;handlebars.js&lt;/code&gt; or &lt;code&gt;handlebars.runtime.js&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Most of the time you will use a third party library like &lt;a href="https://github.com/ember-cli/ember-cli"&gt;ember-cli&lt;/a&gt;, &lt;a href="https://github.com/rondale-sc/ember-cli-htmlbars"&gt;ember-cli-htmlbars&lt;/a&gt;, or &lt;a href="https://github.com/dgeb/grunt-ember-templates"&gt;grunt-ember-templates&lt;/a&gt; to precompile templates, but this post will discuss how libraries like this should work internally.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_server-side-compilation'&gt;Server Side Compilation&lt;/h3&gt;
+&lt;p&gt;If possible, it is definitely a best practice to compile your templates server side. This is much faster due to less total size (you don&amp;#39;t need the compiler on the client) and less work that the app needs to do.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_ember-1-0-through-1-9'&gt;Ember 1.0 through 1.9&lt;/h4&gt;
+&lt;p&gt;In prior versions, you would typically use the &lt;code&gt;ember-template-compiler&lt;/code&gt; NPM package that corresponded to your Ember version to precompile your templates. That might look something like the following:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; fs = require(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;fs&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+&lt;span class="keyword"&gt;var&lt;/span&gt; compiler = require(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-template-compiler&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+&lt;span class="keyword"&gt;var&lt;/span&gt; input = fs.readFileSync(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;path/to/template.hbs&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, { &lt;span class="key"&gt;encoding&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;utf8&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; });
+&lt;span class="keyword"&gt;var&lt;/span&gt; template = compiler.precompile(input, &lt;span class="predefined-constant"&gt;false&lt;/span&gt;);
+&lt;span class="keyword"&gt;var&lt;/span&gt; output = &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;export default Ember.Handlebars.template(&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; + template + &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;);&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+fs.writeFileSync(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;path/to/output.js&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, output, { &lt;span class="key"&gt;encoding&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;utf8&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; });
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;You would also need to include &lt;code&gt;handlebars.runtime.js&lt;/code&gt; in your final build&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_ember-1-10'&gt;Ember 1.10+&lt;/h4&gt;
+&lt;p&gt;With Ember 1.10, you will use the &lt;code&gt;ember-template-compiler.js&lt;/code&gt; file that is paired with your Ember version. If you use our &lt;a href="https://github.com/components/ember"&gt;Bower repo&lt;/a&gt;, &lt;a href="https://rubygems.org/gems/ember-source"&gt;RubyGem&lt;/a&gt;, or simply download Ember from our &lt;a href="http://emberjs.com/builds/"&gt;builds site&lt;/a&gt; there is a &lt;code&gt;ember-template-compiler.js&lt;/code&gt; in the same path as &lt;code&gt;ember.debug.js&lt;/code&gt; and &lt;code&gt;ember.prod.js&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;You can use this template compiler directly  and without additional requirements. For example:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; fs = require(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;fs&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+&lt;span class="keyword"&gt;var&lt;/span&gt; compiler = require(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;./bower_components/ember/ember-template-compiler&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+&lt;span class="keyword"&gt;var&lt;/span&gt; input = fs.readFileSync(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;path/to/template.hbs&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, { &lt;span class="key"&gt;encoding&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;utf8&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; });
+&lt;span class="keyword"&gt;var&lt;/span&gt; template = compiler.precompile(input, &lt;span class="predefined-constant"&gt;false&lt;/span&gt;);
+&lt;span class="keyword"&gt;var&lt;/span&gt; output = &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;export default Ember.HTMLBars.template(&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; + template + &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;);&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+fs.writeFileSync(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;path/to/output.js&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, output, { &lt;span class="key"&gt;encoding&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;utf8&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; });
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;As you will notice, the new API for server-side compilation is nearly identical to that of prior versions. The main change is the usage of the local &lt;code&gt;bower_components/ember/ember-template-compiler.js&lt;/code&gt; file as opposed to the NPM module.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_client-side-compilation'&gt;Client Side Compilation&lt;/h3&gt;
+&lt;p&gt;Generally speaking, you should avoid compiling templates on the client, but there are times that you cannot avoid this. Live demo apps like &lt;a href="http://emberjs.jsbin.com"&gt;JSBin&lt;/a&gt; are one example.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_ember-1-0-through-1-9'&gt;Ember 1.0 through 1.9&lt;/h3&gt;
+&lt;p&gt;In prior versions of Ember you would need to ensure that the full version of &lt;a href="handlebarsjs.com"&gt;Handlebars.js&lt;/a&gt; was present to allow compiling of templates. Perhaps something like the following in your &lt;code&gt;index.html&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight html "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;src&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;assets/handlebars.js&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;src&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;assets/ember.prod.js&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;h3 class='anchorable-toc' id='toc_ember-1-10'&gt;Ember 1.10+&lt;/h3&gt;
+&lt;p&gt;With Ember 1.10, you will include the &lt;code&gt;ember-template-compiler.js&lt;/code&gt; for your specific Ember version.  Something like the following:&lt;/p&gt;
+&lt;div class="highlight html "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;src&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;assets/ember-template-compiler.js&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;src&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;assets/ember.prod.js&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;If you include the &lt;code&gt;ember.debug.js&lt;/code&gt; file instead of a production file the compiler is still required.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_template-compilation-build-tools'&gt;Template Compilation Build Tools&lt;/h3&gt;
+&lt;p&gt;There are any number of build tool libraries that are intended to make the server side compilation of templates easier. Here are just a few (please let us know of others):&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/rondale-sc/ember-cli-htmlbars"&gt;ember-cli-htmlbars&lt;/a&gt; - Can be used either as a standalone Broccoli plugin, or as an ember-cli addon.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/dgeb/grunt-ember-templates"&gt;grunt-ember-templates&lt;/a&gt; - Works as a Grunt plugin. To precompile HTMLBars templates, you must supply specific parameters to your task definition as mentioned in &lt;a href="https://github.com/dgeb/grunt-ember-templates/pull/77"&gt;this PR&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/dbashford/mimosa-ember-htmlbars"&gt;mimosa-ember-htmbars&lt;/a&gt; - A plugin for the &lt;a href="http://mimosa.io/"&gt;mimosa&lt;/a&gt; build tool.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/ember-rails"&gt;ember-rails&lt;/a&gt; - The Rails Asset Pipeline plugin supports HTMLBars templates.&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
     <title>Inside FastBoot: Faking the DOM in Node</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/01/08/inside-fastboot-faking-the-dom-in-node.html"/>
     <id>http://emberjs.com/blog/2015/01/08/inside-fastboot-faking-the-dom-in-node.html</id>
-    <published>2015-01-07T16:00:00-08:00</published>
-    <updated>2015-01-07T16:00:00-08:00</updated>
+    <published>2015-01-07T19:00:00-05:00</published>
+    <updated>2015-01-07T19:00:00-05:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -111,8 +211,8 @@ more.&lt;/p&gt;
     <title>Ember Data v1.0.0-beta.14.1 Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/12/31/ember-data-1-0-beta-14-1-released.html"/>
     <id>http://emberjs.com/blog/2014/12/31/ember-data-1-0-beta-14-1-released.html</id>
-    <published>2014-12-30T16:00:00-08:00</published>
-    <updated>2014-12-30T16:00:00-08:00</updated>
+    <published>2014-12-30T19:00:00-05:00</published>
+    <updated>2014-12-30T19:00:00-05:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -133,8 +233,8 @@ in the code and by your package manager files.&lt;/p&gt;
     <title>Ember Data v1.0.0-beta.14 Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/12/25/ember-data-1-0-beta-14-released.html"/>
     <id>http://emberjs.com/blog/2014/12/25/ember-data-1-0-beta-14-released.html</id>
-    <published>2014-12-24T16:00:00-08:00</published>
-    <updated>2014-12-24T16:00:00-08:00</updated>
+    <published>2014-12-24T19:00:00-05:00</published>
+    <updated>2014-12-24T19:00:00-05:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -295,8 +395,8 @@ month of December!&lt;/p&gt;
     <title>Ember.js 1.9.1 Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/12/23/ember-1-9-1-released.html"/>
     <id>http://emberjs.com/blog/2014/12/23/ember-1-9-1-released.html</id>
-    <published>2014-12-22T16:00:00-08:00</published>
-    <updated>2014-12-22T16:00:00-08:00</updated>
+    <published>2014-12-22T19:00:00-05:00</published>
+    <updated>2014-12-22T19:00:00-05:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -410,8 +510,8 @@ it as easy as possible for developers to write secure apps.&lt;/p&gt;
     <title>Inside FastBoot: The Road to Server-Side Rendering</title>
     <link rel="alternate" href="http://emberjs.com/blog/2014/12/22/inside-fastboot-the-road-to-server-side-rendering.html"/>
     <id>http://emberjs.com/blog/2014/12/22/inside-fastboot-the-road-to-server-side-rendering.html</id>
-    <published>2014-12-21T16:00:00-08:00</published>
-    <updated>2014-12-21T16:00:00-08:00</updated>
+    <published>2014-12-21T19:00:00-05:00</published>
+    <updated>2014-12-21T19:00:00-05:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -487,466 +587,6 @@ it as easy as possible for developers to write secure apps.&lt;/p&gt;
 &lt;p&gt;In the coming weeks, we are going to dive head-first into HTMLbars, getting it ready for its new life running inside a Node.js environment. We&amp;#39;ll start by making sure that the &lt;a href="https://github.com/tildeio/htmlbars/blob/master/packages/morph/lib/dom-helper.js"&gt;&lt;code&gt;DOMHelper&lt;/code&gt;&lt;/a&gt; abstraction is used everywhere that interacts with the DOM, providing us a chokepoint to implement a fake DOM on the server that builds up strings of HTML instead of interacting with a real DOM.&lt;/p&gt;
 
 &lt;p&gt;We plan on keeping you updated with more posts in the Inside FastBoot series as we continue to make progress, so please stay tuned for more!&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Ember.js 1.9.0 and 1.10 Beta Released</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2014/12/08/ember-1-9-0-released.html"/>
-    <id>http://emberjs.com/blog/2014/12/08/ember-1-9-0-released.html</id>
-    <published>2014-12-07T16:00:00-08:00</published>
-    <updated>2014-12-07T16:00:00-08:00</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;We are pleased to announce the release of both Ember.js 1.9.0 and the
-first beta in the 1.10 series. This comes as the ninth cycle of our
-release process that began just after 1.0 was released.&lt;/p&gt;
-
-&lt;p&gt;The 1.9 release represents the effort of at least 52...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;We are pleased to announce the release of both Ember.js 1.9.0 and the
-first beta in the 1.10 series. This comes as the ninth cycle of our
-release process that began just after 1.0 was released.&lt;/p&gt;
-
-&lt;p&gt;The 1.9 release represents the effort of at least 52 contributors across over 436 commits.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_the-road-to-ember-2-0'&gt;The Road to Ember 2.0&lt;/h2&gt;
-&lt;p&gt;In early November Tom, Yehuda, and the Ember.js Core Team shared &lt;a href="https://github.com/emberjs/rfcs/pull/15"&gt;The Road to Ember 2.0&lt;/a&gt;.
-This RFC document acts as a map for the next several releases of Ember.js.&lt;/p&gt;
-
-&lt;p&gt;Ember.js 1.9 introduces several important deprecations that signal upcoming changes. Additionally, many view-layer internals are
-refactored to take advantage of the &amp;quot;streams&amp;quot; observation pattern.&lt;/p&gt;
-
-&lt;p&gt;Ember.js 1.10 (beta) begins a series of releases that will
-introduce new APIs while deprecating ones to be removed in 2.0.&lt;/p&gt;
-
-&lt;p&gt;To that end, and with much excitement, &lt;strong&gt;we are extremely pleased to announce the introduction
-of the HTMLBars templating engine into Ember.js 1.10&lt;/strong&gt;. This new rendering pipeline
-marks a significant milestone for the framework, and by maintaining
-complete API compatibility it demonstrates our commitment to stability without stagnation.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_new-features-and-deprecations-in-ember-js-1-9'&gt;New Features and Deprecations in Ember.js 1.9&lt;/h2&gt;&lt;h4 class='anchorable-toc' id='toc_handlebars-2-0'&gt;Handlebars 2.0&lt;/h4&gt;
-&lt;p&gt;As &lt;a href="http://emberjs.com/blog/2014/10/16/handlebars-update.html"&gt;announced in October&lt;/a&gt;, Ember.js 1.9
-adds support for Handlebars 2.0 templates and removes support for Handlebars 1.x templates. This
-change does not affect the template syntax or public API of Ember applications.&lt;/p&gt;
-
-&lt;p&gt;Projects using an Ember-CLI version less than 0.1.5 will require a bump
-of the Handlebars dependency version:&lt;/p&gt;
-&lt;div class="highlight  "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;bower install --save handlebars#2.0.0
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Additionally the template pre-compiler (installed via npm)
-will require an update:&lt;/p&gt;
-&lt;div class="highlight  "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;npm uninstall --save-dev broccoli-ember-hbs-template-compiler
-npm install --save-dev ember-cli-htmlbars
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Non-CLI applications will likewise require a bump of their Handlebars dependency version.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_streams'&gt;Streams&lt;/h4&gt;
-&lt;p&gt;Data-binding in Ember.js has traditionally been based on the concept of a key-value
-observer. In Ember 1.x, KVO observers fire immediately upon the change of a value,
-giving them performance characteristics that cannot be changed until Ember 2.0. In
-comparison, streams distinguish change notification from value calculation. The value of
-a stream can be described as &amp;quot;lazy&amp;quot;, as it is not computed until needed.&lt;/p&gt;
-
-&lt;p&gt;The addition of streams to Ember and their use throughout the view layer
-improves the performance of rendering, simplifies many helpers, and prepares
-Ember&amp;#39;s codebase for HTMLBars.&lt;/p&gt;
-
-&lt;p&gt;Thanks to &lt;a href="https://twitter.com/_mmun"&gt;@_mmun&lt;/a&gt;, &lt;a href="https://twitter.com/ebryn"&gt;@ebryn&lt;/a&gt;, and &lt;a href="https://twitter.com/krisselden"&gt;@krisselden&lt;/a&gt; who wrote an Ember.js stream
-implementation then updated every Handlebars helper to the new API.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_activate-and-deactivate-events'&gt;Activate and Deactivate Events&lt;/h4&gt;
-&lt;p&gt;Ember.js routes have long supported an &lt;code&gt;activate&lt;/code&gt; and &lt;code&gt;deactivate&lt;/code&gt; hook.
-For example:&lt;/p&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// app/routes/index.js&lt;/span&gt;
-&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Ember.Route.extend({
-  &lt;span class="function"&gt;activate&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;(){
-    collectAnalytics();
-  }
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Ember.js 1.9 introduces corresponding events for these hooks.&lt;/p&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// app/routes/index.js&lt;/span&gt;
-&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Ember.Route.extend({
-  &lt;span class="function"&gt;collectAnalytics&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;(){
-    collectAnalytics();
-  }.on(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;activate&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Thanks to &lt;a href="https://twitter.com/pangratz"&gt;@pangratz&lt;/a&gt; for the addition of this feature.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_pausetest'&gt;pauseTest&lt;/h4&gt;
-&lt;p&gt;When debugging an Ember acceptance test, it can be helpful to
-pause and inspect the DOM or application state.
-Ember.js 1.9 adds a new test helper for indefinitely pausing
-test execution.&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;test(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;clicking login authenticates&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="keyword"&gt;function&lt;/span&gt;(){
-  visit(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;/&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
-  &lt;span class="keyword"&gt;return&lt;/span&gt; pauseTest();
-  &lt;span class="comment"&gt;// The test will never proceed to execute this click&lt;/span&gt;
-  click(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;a:contains(Login)&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Thanks to &lt;a href="https://twitter.com/katiegengler"&gt;@katiegengler&lt;/a&gt; for the addition of this feature.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_key-up-and-key-down-actions'&gt;key-up and key-down actions&lt;/h4&gt;
-&lt;p&gt;The &lt;code&gt;{{input}}&lt;/code&gt; and &lt;code&gt;{{textarea}}&lt;/code&gt; helpers in Ember emit several
-actions, including &lt;code&gt;enter&lt;/code&gt;, &lt;code&gt;insert-newline&lt;/code&gt;, &lt;code&gt;escape-press&lt;/code&gt;, &lt;code&gt;focus-in&lt;/code&gt;,
-&lt;code&gt;focus-out&lt;/code&gt;, and &lt;code&gt;key-press&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;This release introduces &lt;code&gt;key-up&lt;/code&gt; and &lt;code&gt;key-down&lt;/code&gt; actions. For example:&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;{{! call the `validateName` action on the current controller
-    or component scope: }}&lt;/span&gt;
-&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;input&lt;/span&gt; &lt;span class="attribute-name"&gt;value&lt;/span&gt;=&lt;span class="attribute-value"&gt;name&lt;/span&gt; &lt;span class="attribute-name"&gt;key-up&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;validateName&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;h4 class='anchorable-toc' id='toc_performance-improvements'&gt;Performance Improvements&lt;/h4&gt;
-&lt;p&gt;Ember.js 1.9 comes with several performance improvements.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The implementation of &lt;code&gt;_super&lt;/code&gt; in Ember is fairly complex, and can
-perform badly. Ember 1.9 uses a check against the string version of a
-function to determine if all parts of the implementation are needed, or
-if some work can be skipped.&lt;/li&gt;
-&lt;li&gt;Additional improvements to the performance of &lt;code&gt;Ember.Map&lt;/code&gt; have been made.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Thanks to &lt;a href="https://twitter.com/stefanpenner"&gt;@stefanpenner&lt;/a&gt; for his continued
-efforts on performance tuning.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_notable-deprecations'&gt;Notable Deprecations&lt;/h4&gt;
-&lt;p&gt;As Ember.js moves forward, various APIs are deprecated to allow for their
-removal in a later major release (such as 2.0). The
-&lt;a href="http://emberjs.com/guides/deprecations/"&gt;deprecations guide&lt;/a&gt; summarizes
-deprecations and demonstrates how to update to a new API.&lt;/p&gt;
-
-&lt;p&gt;Ember 1.9 deprecates context switching in templates. Templates with context
-switching are difficult to read, and the concept is challenging for new
-developers. The removal of context switching from templates in 
-Ember 2.0 aims to make scoping consistent and predictable. This deprecation
-is a step toward that goal.&lt;/p&gt;
-
-&lt;p&gt;Two Ember helpers support context switching. The first is &lt;code&gt;{{each}}&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;{{! app/templates/people.hbs }}&lt;/span&gt;
-
-&lt;span class="comment"&gt;{{! this context is the controller }}&lt;/span&gt;
-&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{#&lt;/span&gt;&lt;span class="attribute-name"&gt;each&lt;/span&gt; &lt;span class="attribute-name"&gt;model&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;name&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt; &lt;span class="comment"&gt;{{! this context is each person }}&lt;/span&gt;
-&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{/&lt;/span&gt;&lt;span class="attribute-name"&gt;each&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;The non-context switching version of this helper is now preferred:&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;{{! app/templates/people.hbs }}&lt;/span&gt;
-
-&lt;span class="comment"&gt;{{! this context is the controller }}&lt;/span&gt;
-&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{#&lt;/span&gt;&lt;span class="attribute-name"&gt;each&lt;/span&gt; &lt;span class="attribute-name"&gt;person&lt;/span&gt; &lt;span class="attribute-name"&gt;in&lt;/span&gt; &lt;span class="attribute-name"&gt;model&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;person.name&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt; &lt;span class="comment"&gt;{{! this context is still the controller }}&lt;/span&gt;
-&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{/&lt;/span&gt;&lt;span class="attribute-name"&gt;each&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;The second helper is &lt;code&gt;{{with}}&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;{{! app/templates/person.hbs }}&lt;/span&gt;
-
-&lt;span class="comment"&gt;{{! this context is the controller }}&lt;/span&gt;
-&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{#&lt;/span&gt;&lt;span class="attribute-name"&gt;with&lt;/span&gt; &lt;span class="attribute-name"&gt;model&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;name&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt; &lt;span class="comment"&gt;{{! this context is the person }}&lt;/span&gt;
-&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{/&lt;/span&gt;&lt;span class="attribute-name"&gt;with&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;The non-context switching version of this helper is now preferred:&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;{{! app/templates/person.hbs }}&lt;/span&gt;
-
-&lt;span class="comment"&gt;{{! this context is the controller }}&lt;/span&gt;
-&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{#&lt;/span&gt;&lt;span class="attribute-name"&gt;with&lt;/span&gt; &lt;span class="attribute-name"&gt;model&lt;/span&gt; &lt;span class="attribute-name"&gt;as&lt;/span&gt; &lt;span class="attribute-name"&gt;person&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;person.name&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt; &lt;span class="comment"&gt;{{! this context is still the controller }}&lt;/span&gt;
-&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{/&lt;/span&gt;&lt;span class="attribute-name"&gt;with&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;h2 class='anchorable-toc' id='toc_new-features-and-deprecations-in-ember-js-1-10'&gt;New Features and Deprecations in Ember.js 1.10&lt;/h2&gt;
-&lt;p&gt;Ember.js 1.10 marks the migration of Ember&amp;#39;s rendering pipeline from a
-string-based process to a DOM-based one. &lt;strong&gt;Existing application templates require
-no modification to run HTMLBars&lt;/strong&gt;. New syntaxes enabled by Ember&amp;#39;s DOM-based
-rendering pipeline and HTMLBars will land over the next several releases.&lt;/p&gt;
-
-&lt;p&gt;Before branching into 1.10 beta, HTMLBars was available for nearly two weeks
-behind a canary feature flag. We thank the community members who took time from
-work or weekends to test the change and provide feedback.&lt;/p&gt;
-
-&lt;p&gt;Teasing apart the HTMLBars project to ship it incrementally has ensured
-that existing codebases can make the jump without modification. This release
-lays the infrastructural groundwork for features and even greater performance
-improvements to come.&lt;/p&gt;
-
-&lt;p&gt;Input and feedback on the 1.10 beta from real-world use will help us ensure a
-smooth transition to release.&lt;/p&gt;
-
-&lt;p&gt;To test your Ember-CLI codebase on Ember.js 1.10 and HTMLBars, follow these steps
-to upgrade Ember:&lt;/p&gt;
-&lt;div class="highlight  "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;rm -rf bower_components
-bower install --save ember#beta
-bower install
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Then update your template compiler to HTMLBars:&lt;/p&gt;
-&lt;div class="highlight  "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;npm uninstall --save-dev broccoli-ember-hbs-template-compiler
-npm install --save-dev ember-cli-htmlbars
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Over the beta cycle, we expect to see 3rd party libraries and
-build pipelines update to support HTMLBars. If you manage a project
-and have any difficulty, reach out to the community and core team
-on the &lt;a href="http://discuss.emberjs.com/"&gt;forum&lt;/a&gt; or &lt;code&gt;#ember-dev&lt;/code&gt; IRC chatroom.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_block-params'&gt;Block Params&lt;/h4&gt;
-&lt;p&gt;Block parameters are a new feature introduced with 1.10. They address
-two problems in Ember:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The non-context switching version of &lt;code&gt;{{#each}}&lt;/code&gt; and &lt;code&gt;{{#with}}&lt;/code&gt; are inconsistent.
-&lt;code&gt;{{#each car in cars}}&lt;/code&gt; and &lt;code&gt;{{#with model as car}}&lt;/code&gt; have similar meaning but
-different syntaxes.&lt;/li&gt;
-&lt;li&gt;Ember&amp;#39;s components are strictly encapsulated. Values are explicitly passed
-in, and only actions are emitted from components. The inability to pass values
-makes composition of components difficult.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Block params add a template syntax that allows values to be yielded from
-one helper or component to a child scope. The new syntax makes
-the named value version of &lt;code&gt;{{#each}}&lt;/code&gt; and &lt;code&gt;{{#with}}&lt;/code&gt; consistent. For
-example:&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;currentUser.name&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt; &lt;span class="comment"&gt;{{! available on the controller }}&lt;/span&gt;
-&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{#&lt;/span&gt;&lt;span class="attribute-name"&gt;each&lt;/span&gt; &lt;span class="attribute-name"&gt;cars&lt;/span&gt; &lt;span class="attribute-name"&gt;as&lt;/span&gt; &lt;span class="error"&gt;|&lt;/span&gt;&lt;span class="attribute-name"&gt;car&lt;/span&gt;&lt;span class="error"&gt;|&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{#&lt;/span&gt;&lt;span class="attribute-name"&gt;with&lt;/span&gt; &lt;span class="attribute-name"&gt;car.manufacturer&lt;/span&gt; &lt;span class="attribute-name"&gt;as&lt;/span&gt; &lt;span class="error"&gt;|&lt;/span&gt;&lt;span class="attribute-name"&gt;make&lt;/span&gt;&lt;span class="error"&gt;|&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-    &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;make.name&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-    &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;currentUser.name&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt; &lt;span class="comment"&gt;{{! still the controller scope }}&lt;/span&gt;
-  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{/&lt;/span&gt;&lt;span class="attribute-name"&gt;with&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{/&lt;/span&gt;&lt;span class="attribute-name"&gt;each&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Preserving template scope context results in easier to read templates.&lt;/p&gt;
-
-&lt;p&gt;Any component in Ember 1.10 can use this feature. For example:&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;{{! app/templates/components/my-unordered-list.hbs }}&lt;/span&gt;
-&lt;span class="tag"&gt;&amp;lt;ul&amp;gt;&lt;/span&gt;
-  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{#&lt;/span&gt;&lt;span class="attribute-name"&gt;each&lt;/span&gt; &lt;span class="attribute-name"&gt;items&lt;/span&gt; &lt;span class="attribute-name"&gt;as&lt;/span&gt; &lt;span class="error"&gt;|&lt;/span&gt;&lt;span class="attribute-name"&gt;item&lt;/span&gt;&lt;span class="error"&gt;|&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-    &lt;span class="tag"&gt;&amp;lt;li&amp;gt;&lt;/span&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;yield&lt;/span&gt; &lt;span class="attribute-name"&gt;item&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
-  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{#&lt;/span&gt;&lt;span class="attribute-name"&gt;each&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-&lt;span class="tag"&gt;&amp;lt;/ul&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;{{! app/templates/index.hbs }}&lt;/span&gt;
-&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{#&lt;/span&gt;&lt;span class="attribute-name"&gt;my-unordered-list&lt;/span&gt; &lt;span class="attribute-name"&gt;items&lt;/span&gt;=&lt;span class="attribute-value"&gt;cars&lt;/span&gt; &lt;span class="attribute-name"&gt;as&lt;/span&gt; &lt;span class="error"&gt;|&lt;/span&gt;&lt;span class="attribute-name"&gt;car&lt;/span&gt;&lt;span class="error"&gt;|&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-  Auto: &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;car.name&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{/&lt;/span&gt;&lt;span class="attribute-name"&gt;my-unordered-list&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;The &lt;code&gt;my-unordered-list&lt;/code&gt; component is called, passing &lt;code&gt;cars&lt;/code&gt; as &lt;code&gt;items&lt;/code&gt;. The
-component template iterates through
-each &lt;code&gt;item&lt;/code&gt; in &lt;code&gt;items&lt;/code&gt;, yielding to the calling template with a block
-param. The calling template accepts the block param as &lt;code&gt;car&lt;/code&gt; and displays the
-car&amp;#39;s name.&lt;/p&gt;
-
-&lt;p&gt;Many thanks to &lt;a href="https://twitter.com/_mmun"&gt;@_mmun&lt;/a&gt; for the implementation of this important new feature.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_renaming-release-files'&gt;Renaming Release Files&lt;/h4&gt;
-&lt;p&gt;A release of Ember.js consists of three files:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;ember.prod.js&lt;/code&gt; - an un-minified production build (no asserts)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;ember.min.js&lt;/code&gt; - a minified production build&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;ember.js&lt;/code&gt; - a development build (with asserts)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The non-production build of Ember will not perform as well as the
-production build. To ensure there is no confusion about using the
-&lt;code&gt;ember.js&lt;/code&gt; build in production, Ember.js 1.10 and later will use a
-new filename:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;ember.prod.js&lt;/code&gt; - an un-minified production build (no asserts)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;ember.min.js&lt;/code&gt; - a minified production build&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;ember.debug.js&lt;/code&gt; - a development build (with asserts)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;An &lt;code&gt;ember.js&lt;/code&gt; file will continue to be provided with a deprecation warning.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_notable-deprecations-in-1-10'&gt;Notable Deprecations in 1.10&lt;/h4&gt;
-&lt;p&gt;The following deprecations are scheduled for release with Ember.js 1.10:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Setting the &lt;code&gt;childViews&lt;/code&gt; property on a view definition will be deprecated in
-1.10. For example:&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; ChildB = Ember.View.extend();
-
-&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Ember.ContainerView.extend({
-  &lt;span class="key"&gt;childViews&lt;/span&gt;: [ &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;childA&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, ChildB ],
-  &lt;span class="key"&gt;childA&lt;/span&gt;: Ember.View.extend()
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;This use of &lt;code&gt;childViews&lt;/code&gt; is inconsistent with other uses throughout Ember, and
-as a result is difficult to implement with good performance. Explicitly creating
-views upon initialization is preferred:&lt;/p&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-&lt;strong&gt;10&lt;/strong&gt;
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; ChildB = Ember.View.extend();
-
-&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Ember.ContainerView.extend({
-  &lt;span class="function"&gt;init&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;(){
-    &lt;span class="local-variable"&gt;this&lt;/span&gt;._super();
-    &lt;span class="local-variable"&gt;this&lt;/span&gt;.pushObject(&lt;span class="local-variable"&gt;this&lt;/span&gt;.createChildView(&lt;span class="local-variable"&gt;this&lt;/span&gt;.childA));
-    &lt;span class="local-variable"&gt;this&lt;/span&gt;.pushObject(&lt;span class="local-variable"&gt;this&lt;/span&gt;.createChildView(ChildB));
-  },
-  &lt;span class="key"&gt;childA&lt;/span&gt;: Ember.View.extend()
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;The &lt;code&gt;beforeObserver&lt;/code&gt; feature is deprecated in Ember 1.10. Before observers
-are rarely used, but introduce significant overhead to the observer system
-in general. For observer use that requires the previous value of a property
-be known, implementing a cache is simple and more efficient. Read more about
-how to do this in &lt;a href="http://emberjs.com/guides/deprecations/#toc_deprecate-beforeobservers"&gt;the deprecation guide&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;Quote-less outlet names are deprecated in 1.10. An example of this is
-&lt;code&gt;{{outlet modal}}&lt;/code&gt;, which would be re-written as &lt;code&gt;{{outlet &amp;quot;modal&amp;quot;}}&lt;/code&gt;.
-This ensures the outlet helper is consistent with others, where unquoted
-words are values and not string literals.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;As the features included in Ember 1.11 are developed, additional deprecations
-may be added to the 1.10 release.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_changelogs'&gt;Changelogs&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.9.0/CHANGELOG.md"&gt;Ember.js 1.9.0 CHANGELOG&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.10.0-beta.1/CHANGELOG.md"&gt;Ember.js 1.10.0-beta.1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
 </content>
   </entry>
 </feed>
