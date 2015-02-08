@@ -172,7 +172,7 @@ across over 553 commits.</p>
 <h2 class='anchorable-toc' id='toc_the-htmlbars-templating-engine'>The HTMLBars Templating Engine</h2>
 <p>Throughout 2014 the Ember.js community has poured its shared effort into
 a new templating solution. This new library, dubbed HTMLBars, makes available
-new feature and performance improvements impossible to support with Handlebars
+features and performance improvements impossible to support with Handlebars
 (the previous library). We are delighted to announce the inclusion of
 the HTMLBars templating engine in Ember.js 1.10.</p>
 
@@ -197,29 +197,30 @@ stagnation&quot; is made of.</p>
 library version changes, Ember&#39;s template compiler will be packaged as a
 part of the release files. For example, a JSBin in Ember 1.9 would need to be
 updated from:</p>
-<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 </pre></td>
-  <td class="code"><pre>&lt;script src=&quot;http://builds.handlebarsjs.com.s3.amazonaws.com/handlebars-v2.0.0.js&quot;&gt;&lt;/script&gt;
-&lt;script src=&quot;http://builds.emberjs.com/tags/v1.9.1/ember.js&quot;&gt;&lt;/script&gt;
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://builds.handlebarsjs.com.s3.amazonaws.com/handlebars-v2.0.0.js</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/script&gt;</span>
+<span class="tag">&lt;script</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://builds.emberjs.com/tags/v1.9.1/ember.js</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/script&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
 <p>to</p>
-<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 </pre></td>
-  <td class="code"><pre>&lt;script src=&quot;http://builds.emberjs.com/tags/v1.10.0/ember-template-compiler.js&quot;&gt;&lt;/script&gt;
-&lt;script src=&quot;http://builds.emberjs.com/tags/v1.10.0/ember.debug.js&quot;&gt;&lt;/script&gt;
+  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://builds.emberjs.com/tags/v1.10.0/ember-template-compiler.js</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/script&gt;</span>
+<span class="tag">&lt;script</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://builds.emberjs.com/tags/v1.10.0/ember.debug.js</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/script&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
 <p>The <code>ember-template-compiler.js</code> is only required for template compilation. The
 runtime dependencies for HTMLBars are built into the framework file.</p>
 
-<p>Ember-CLI users should update to a version at or after 0.1.12, then remove
+<p>To smoothly upgrade to 1.10 and HTMLBars, Ember-CLI users should update to a
+version at or after 0.1.12 and then remove
 their application&#39;s Handlebars dependency. Ember App-Kit users should upgrade
 to Ember-CLI.</p>
 
@@ -249,18 +250,18 @@ object model.</p>
 <p>HTMLBars is built using the Handlebars parser, and will continue to gain
 features related to template syntax. Ember 1.10 features support for chained
 else helpers, the most common use being <code>else if</code>. An example:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
 </pre></td>
-  <td class="code"><pre>{{#if isAtWork}}
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">isAtWork</span><span class="inline-delimiter">}}</span></span>
   Ship that code!
-{{else if isReading}}
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">else</span> <span class="attribute-name">if</span> <span class="attribute-name">isReading</span><span class="inline-delimiter">}}</span></span>
   You can finish War and Peace eventually...
-{{/if}}
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -294,7 +295,7 @@ scope.</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>Preserving template scope context results in easier to read templates, and passing
+<p>Preserving template context results in easier to read templates, and passing
 variables into child scopes allows for new patterns of component composition.</p>
 
 <p>Block params are passed from a template via the <code>yield</code> helper. For example, this
@@ -362,9 +363,9 @@ component yields the <code>fullName</code> and <code>age</code> values:</p>
 <h4 class='anchorable-toc' id='toc_injected-properties'>Injected Properties</h4>
 <p>Ember 1.x has exposed two APIs for managing dependency injection. The first is
 the application initializer API, using <code>register</code> and <code>inject</code> methods on an
-application instance. The second allows configuration of an injection on the
-class itself via <code>needs</code>. You can read more about these patterns in
-<a href="http://emberjs.com/guides/understanding-ember/dependency-injection-and-service-lookup/">the dependency injection guide</a>.</p>
+application instance. The second allows configuration of an injection on
+controllers via <code>needs</code>. You can read more about these patterns in
+<a href="/guides/understanding-ember/dependency-injection-and-service-lookup/">the dependency injection guide</a>.</p>
 
 <p>The new injected properties offer a more declarative API for dependency injection.</p>
 
@@ -430,14 +431,14 @@ be passed during <code>create</code>. For example:</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>Refer to the <a href="add%20this">API documentation</a> to read about this new feature in
+<p>Refer to the <a href="/api/#method_inject_service">API documentation</a> to read about this new feature in
 detail.</p>
 
 <p>Thanks to <a href="https://github.com/slindberg">slindberg</a> for his implementation of this feature.</p>
 <h4 class='anchorable-toc' id='toc_notable-deprecations'>Notable Deprecations</h4>
 <p>As Ember.js moves forward, various APIs are deprecated to allow for their
 removal in a later major release (such as 2.0). The
-<a href="http://emberjs.com/guides/deprecations/">deprecations guide</a> summarizes
+<a href="/guides/deprecations/">deprecations guide</a> summarizes
 deprecations and demonstrates how to update to a new API.</p>
 
 <ul>
@@ -452,7 +453,7 @@ words are values and not string literals.</li>
 are rarely used, but introduce significant overhead to the observer system
 in general. For observer use that requires the previous value of a property
 be known, implementing a cache is simple and more efficient. Read more about
-how to do this in <a href="http://emberjs.com/guides/deprecations/#toc_deprecate-beforeobservers">the deprecation guide</a>.</li>
+how to do this in <a href="/guides/deprecations/#toc_deprecate-beforeobservers">the deprecation guide</a>.</li>
 <li>Observing the <code>childViews</code> array of a <code>ContainerView</code> is deprecated.</li>
 <li>Setting the <code>childViews</code> property on a view definition is deprecated in
 1.10. For example:</li>
@@ -540,27 +541,27 @@ motivation for HTMLBars was to improve on this syntax.</p>
 
 <p>Ember 1.11 introduces a more intuitive API for attribute binding. For
 example, here the <code>color</code> variable is bound to the class of a div:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre>&lt;div class=&quot;{{color}}&quot;&gt;&lt;/div&gt;
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span></span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">color</span><span class="inline-delimiter">}}</span></span><span class="string"><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/div&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
 <p>The inline if helper can also be used in these contexts:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre>&lt;div class=&quot;{{color}} {{if isEnabled 'active' 'disabled'}}&quot;&gt;&lt;/div&gt;
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span></span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">color</span><span class="inline-delimiter">}}</span></span><span class="string"> </span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">if</span> <span class="attribute-name">isEnabled</span> <span class="error">'</span><span class="attribute-name">active</span><span class="error">'</span> <span class="error">'</span><span class="attribute-name">disabled</span><span class="error">'</span><span class="inline-delimiter">}}</span></span><span class="string"><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/div&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
 <p>For some attributes, like the <code>disabled</code> boolean, passing a literal value
 is desirable. An example:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre>&lt;input disabled={{isDisabled}}&gt;
+  <td class="code"><pre><span class="tag">&lt;input</span> <span class="attribute-name">disabled</span>=<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">isDisabled</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -571,10 +572,10 @@ custom element properties, bound attributes are implemented with a
 <p>When binding to an attribute, Ember first checks to see if that attribute is a
 property of the element&#39;s DOM node (with normalization of capitalization). If it
 is, the value is set with a property. For example:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre>&lt;input disabled={{isDisabled}}&gt;
+  <td class="code"><pre><span class="tag">&lt;input</span> <span class="attribute-name">disabled</span>=<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">isDisabled</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
 </pre></td>
 </tr></table>
 </div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -588,10 +589,10 @@ input.disabled = <span class="predefined-constant">true</span>;
 </div></div>
 <p>If the attribute is not present as a property, then its value is set as an
 attribute:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre>&lt;div class={{color}}&gt;
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">color</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
 </pre></td>
 </tr></table>
 </div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -627,7 +628,7 @@ onto the substate. So a valid loading substate for <code>application</code> can 
 <h4 class='anchorable-toc' id='toc_component-helper'>Component Helper</h4>
 <p>Ember components can be bound via the <code>component</code> helper. For example this logic
 in a template:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -638,23 +639,23 @@ in a template:</p>
 8
 9
 </pre></td>
-  <td class="code"><pre>{{#if isRed}}
-  {{x-red}}
-{{/if}}
-{{if isBlue}}
-  {{x-blue}}
-{{/if}}
-{{if isGreen}}
-  {{x-green}}
-{{/if}}
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">isRed</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">x-red</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">if</span> <span class="attribute-name">isBlue</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">x-blue</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">if</span> <span class="attribute-name">isGreen</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">x-green</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>
 <p>Can now be replaced by a computed property and the <code>component</code> helper.</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre>{{component colorComponentName}}
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">component</span> <span class="attribute-name">colorComponentName</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>
