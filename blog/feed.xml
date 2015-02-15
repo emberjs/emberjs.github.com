@@ -5,10 +5,131 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2015-02-06T19:00:00-05:00</updated>
+  <updated>2015-02-13T19:00:00-05:00</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>Ember Data v1.0.0-beta.15 Released</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2015/02/14/ember-data-1-0-beta-15-released.html"/>
+    <id>http://emberjs.com/blog/2015/02/14/ember-data-1-0-beta-15-released.html</id>
+    <published>2015-02-13T19:00:00-05:00</published>
+    <updated>2015-02-13T19:00:00-05:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;We are pleased to announce the release Ember Data 1.0.0-beta.15. It
+includes many bug fixes as well as several new features. As always
+this release can be obtained from npm (for use with ember-cli),
+rubygems, or bower. The builds are also available...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;We are pleased to announce the release Ember Data 1.0.0-beta.15. It
+includes many bug fixes as well as several new features. As always
+this release can be obtained from npm (for use with ember-cli),
+rubygems, or bower. The builds are also available as static files at
+emberjs.com/builds&lt;/p&gt;
+
+&lt;p&gt;The 1.0.0-beta.15 release represents the effort of at least 30
+contributors across over 168 commits.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_improvements'&gt;Improvements&lt;/h2&gt;&lt;h3 class='anchorable-toc' id='toc_snapshot-api'&gt;Snapshot API&lt;/h3&gt;
+&lt;p&gt;In Ember Data serializers will now be given a snapshot instance
+instead of a record instance when serializing records. A snapshot
+represents the frozen state of a record at a particular moment in
+time. Its initial purpose is to be passed to serializers instead of
+the real record. This allows the serializer to examine the current
+state of that record in the moment without triggering side-effects,
+like loading relationships.&lt;/p&gt;
+
+&lt;p&gt;The snapshot has a different API from a record for accessing
+properties so you will know you are working with a snapshot. Using
+&lt;code&gt;snapshot.get&lt;/code&gt; is still supported for compatibility however it will
+log a deprecated warning to encourage you to use the new apis.&lt;/p&gt;
+
+&lt;p&gt;To access attributes you should now use the &lt;code&gt;attr&lt;/code&gt; function.&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// Ember Data 1.0.0-beta.14.1&lt;/span&gt;
+post.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;title&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+&lt;span class="comment"&gt;// Ember Data 1.0.0-beta.15&lt;/span&gt;
+postSnapshot.attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;title&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;To access a belongsTo relationship you should use &lt;code&gt;.belongsTo()&lt;/code&gt; method.&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// Ember Data 1.0.0-beta.14.1&lt;/span&gt;
+post.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;author&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+&lt;span class="comment"&gt;// Ember Data 1.0.0-beta.15&lt;/span&gt;
+postSnapshot.belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;author&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;To access a hasMany relationship you should use &lt;code&gt;.hasMany()&lt;/code&gt; method.&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// Ember Data 1.0.0-beta.14.1&lt;/span&gt;
+post.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+&lt;span class="comment"&gt;// Ember Data 1.0.0-beta.15&lt;/span&gt;
+postSnapshot.hasMany(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Please give a warm thanks to &lt;a href="https://github.com/wecc"&gt;Christoffer Persson&lt;/a&gt; for all his
+work implementing this feature!&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_errors-on-arbitrary-properties'&gt;Errors on arbitrary properties&lt;/h3&gt;
+&lt;p&gt;Previously, Ember Data would only attach errors to a record&amp;#39;s error
+object if they matched a property that was already on the record. Now
+thanks to &lt;a href="https://github.com/alexspeller"&gt;Alex Speller&lt;/a&gt;&amp;#39;s
+&lt;a href="https://github.com/emberjs/data/pull/1984"&gt;work&lt;/a&gt; any error returned
+by the backend can be attached to the error object.&lt;/p&gt;
+
+&lt;p&gt;Please note that if your backend is returning an error property that
+is not an attribute on the record you will need to manually clear it
+before the record can transition out of the error state.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_sort-query-params-in-ajax-calls'&gt;Sort query params in ajax calls.&lt;/h3&gt;
+&lt;p&gt;When developing APIs, it is common to use a caching mechanism, like
+Varnish, to cache requests to public API endpoints, and those tools
+use the URL string to determine if they have a cached response.&lt;/p&gt;
+
+&lt;p&gt;As an example, if one user requests &lt;code&gt;/posts?sort=price&amp;amp;category=pets&lt;/code&gt;
+and another requests &lt;code&gt;/posts?category=pets&amp;amp;sort=price&lt;/code&gt;, the cached
+request won&amp;#39;t be used in the second call.&lt;/p&gt;
+
+&lt;p&gt;Ember Data&amp;#39;s &lt;code&gt;RESTAdapter&lt;/code&gt; will now sort the query parameters by their
+field name when making an ajax request.&lt;/p&gt;
+
+&lt;p&gt;It is possible to disable this behavior, by setting &lt;code&gt;sortQueryParams&lt;/code&gt;
+to be false on your adapter.&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;App.ApplicationAdapter = DS.RESTAdapter.extend({
+  &lt;span class="key"&gt;namespace&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;api/v1&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;,
+  &lt;span class="key"&gt;sortQueryParams&lt;/span&gt;: &lt;span class="predefined-constant"&gt;false&lt;/span&gt;
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Thanks to &lt;a href="https://github.com/cibernox"&gt;Miguel Camba&lt;/a&gt; for implementing this feature.&lt;/p&gt;
+
+&lt;!-- Links --&gt;
+</content>
+  </entry>
   <entry>
     <title>Ember.js 1.10.0 and 1.11 Beta Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/02/07/ember-1-10-0-released.html"/>
@@ -929,121 +1050,6 @@ serializer and do the logic yourself:&lt;/p&gt;
 month of December!&lt;/p&gt;
 
 &lt;!-- Links --&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Ember.js 1.9.1 Released</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2014/12/23/ember-1-9-1-released.html"/>
-    <id>http://emberjs.com/blog/2014/12/23/ember-1-9-1-released.html</id>
-    <published>2014-12-22T19:00:00-05:00</published>
-    <updated>2014-12-22T19:00:00-05:00</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Today, the Ember team is pleased to announce the release of Ember.js
-1.9.1. Ember 1.9.1 fixes one regression and introduces more conservative
-escaping of attributes to help developers guard against inadvertent cross-site
-scripting (XSS) vulnerabilities...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Today, the Ember team is pleased to announce the release of Ember.js
-1.9.1. Ember 1.9.1 fixes one regression and introduces more conservative
-escaping of attributes to help developers guard against inadvertent cross-site
-scripting (XSS) vulnerabilities.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_view-helper-instances'&gt;{{view}} Helper &amp;amp; Instances&lt;/h3&gt;
-&lt;p&gt;The 1.9.0 release introduced a regression where the Handlebars
-&lt;code&gt;{{view}}&lt;/code&gt; helper would only work with &lt;code&gt;Ember.View&lt;/code&gt; subclasses, not
-instances. In 1.9.1, passing a view instance to the helper has been
-fully restored.&lt;/p&gt;
-
-&lt;p&gt;We intended to deprecate this functionality, not remove it entirely.
-If your app was relying on this behavior, first, please accept our
-apologies for the accidental regression. Second, please consider
-refactoring your code to use components instead of views, as support for
-this API will be removed in Ember 2.0.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_xss-improvements-for-bound-attributes'&gt;XSS Improvements for Bound Attributes&lt;/h3&gt;
-&lt;p&gt;XSS vulnerabilities happen when you unintentionally put unescaped
-user-supplied content into the DOM, creating a vector for attackers
-to trick the browser into evaluating JavaScript that has the same access
-to data as your legitimate JavaScript.&lt;/p&gt;
-
-&lt;p&gt;Since its inception, Ember.js has automatically guarded against these
-attacks by HTML-escaping any bound data that goes into the DOM. For
-example, given this model data:&lt;/p&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;{
-  &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;firstName&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;&amp;lt;script type=javascript&amp;gt;alert('pwned!');&amp;lt;/script&amp;gt;&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;
-}
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;The following template would not be vulnerable to XSS:&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;Hello, &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;firstName&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;!
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;That&amp;#39;s because Ember automatically replaces the &amp;lt; and &amp;gt; characters
-with &lt;code&gt;&amp;amp;lt;&lt;/code&gt; and &lt;code&gt;&amp;amp;gt;&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;However, there is still another potential exploit vector: bound attributes.&lt;/p&gt;
-
-&lt;p&gt;Let&amp;#39;s say you display a profile for your users and allow them to supply
-an arbitrary homepage that your app links to:&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;{{!-- templates/user.hbs --}}&lt;/span&gt;
-First Name: &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;firstName&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-Homepage: &lt;span class="tag"&gt;&amp;lt;a&lt;/span&gt; &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;bind-attr&lt;/span&gt; &lt;span class="attribute-name"&gt;href&lt;/span&gt;=&lt;span class="attribute-value"&gt;homepageUrl&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;homepageUrl&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;While this template may look harmless at first glance, imagine a
-malicious user provides the following data:&lt;/p&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;{
-  &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;firstName&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;Guardians of Peace&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;,
-  &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;homepageUrl&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;javascript:alert('Kim Jong Un is not to be
-disrespected!')&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;
-}
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;If the attacker can induce another user to click the profile link, you
-will have inadvertently allowed their JavaScript to be evaluated in the
-same origin as your trusted code.&lt;/p&gt;
-
-&lt;p&gt;As of Ember 1.9.1, we will automatically escape any bound &lt;code&gt;href&lt;/code&gt;, &lt;code&gt;src&lt;/code&gt;
-or &lt;code&gt;background&lt;/code&gt; attributes that contain a &lt;code&gt;javascript:&lt;/code&gt; or &lt;code&gt;vbscript:&lt;/code&gt;
-protocol handler by prefixing their value with &lt;code&gt;unsafe:&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;We are also releasing a new beta version of Ember 1.10 that contains
-even more targeted fixes. Thanks to the additional power the HTMLbars
-parser gives us, these attributes will only be escaped on elements where
-they trigger a top-level navigation and thus a potential exploit: &lt;code&gt;a&lt;/code&gt;,
-&lt;code&gt;body&lt;/code&gt;, &lt;code&gt;link&lt;/code&gt;, &lt;code&gt;iframe&lt;/code&gt;, and &lt;code&gt;img&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;We&amp;#39;d like to thank Mano and Manoharan from Zoho for responsibly disclosing
-this potential XSS vector and working with us to find a solution that makes
-it as easy as possible for developers to write secure apps.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_changelogs'&gt;Changelogs&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.9.1/CHANGELOG.md"&gt;Ember.js 1.9.1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.10.0-beta.2/CHANGELOG.md"&gt;Ember.js 1.10.0-beta.2 CHANGELOG&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
 </content>
   </entry>
 </feed>
