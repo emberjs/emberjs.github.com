@@ -64,7 +64,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/data/commits/1.0.0-beta.15" target="_blank"> Tag: 1.0.0-beta.15</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v1.0.0-beta.16" target="_blank"> Tag: v1.0.0-beta.16</a></li>
 
 
           <li class="level-1 ">
@@ -129,6 +129,11 @@
         
           <li class="level-3 ">
                         <a href="/api/data/classes/DS.BooleanTransform.html">DS.BooleanTransform</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/api/data/classes/DS.BuildURLMixin.html">DS.BuildURLMixin</a>
 
           </li>
         
@@ -267,7 +272,7 @@
         
   <h1 class="api-header">
   DS.Adapter Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/1.0.0-beta.15/packages/ember-data/lib/system/adapter.js#L72">packages/ember-data/lib/system/adapter.js:72</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v1.0.0-beta.16/packages/ember-data/lib/system/adapter.js#L95">packages/ember-data/lib/system/adapter.js:95</a>
 </h1>
 
 <hr>
@@ -280,7 +285,7 @@
     <p>Extends: Ember.Object</p>
 
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.0.0-beta.15/packages/ember-data/lib/system/adapter.js#L72">packages/ember-data/lib/system/adapter.js:72</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.16/packages/ember-data/lib/system/adapter.js#L95">packages/ember-data/lib/system/adapter.js:95</a></p>
 
     <p>Module: <a href="/api/data/modules/ember-data.html">ember-data</a></p>
 </div>
@@ -448,7 +453,7 @@ included REST adapter.</p>
 <div id="method_createRecord" class="method  item-entry">
   <h3 data-id="method_createRecord" class="name anchorable-toc"><code>createRecord</code></h3>
   <span class="args">
-    (store, type, record)
+    (store, type, snapshot)
   </span>
 
   <span class="type">Promise</span>
@@ -462,7 +467,7 @@ included REST adapter.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.0.0-beta.15/packages/ember-data/lib/system/adapter.js#L304">packages/ember-data/lib/system/adapter.js:304</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.16/packages/ember-data/lib/system/adapter.js#L328">packages/ember-data/lib/system/adapter.js:328</a>
 
   </div>
 
@@ -497,8 +502,8 @@ new records.</p>
 <strong>20</strong>
 </pre></td>
   <td class="code"><pre>App.ApplicationAdapter = DS.Adapter.extend({
-  <span class="function">createRecord</span>: <span class="keyword">function</span>(store, type, record) {
-    <span class="keyword">var</span> data = <span class="local-variable">this</span>.serialize(record, { <span class="key">includeId</span>: <span class="predefined-constant">true</span> });
+  <span class="function">createRecord</span>: <span class="keyword">function</span>(store, type, snapshot) {
+    <span class="keyword">var</span> data = <span class="local-variable">this</span>.serialize(snapshot, { <span class="key">includeId</span>: <span class="predefined-constant">true</span> });
     <span class="keyword">var</span> url = type;
 
     <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
@@ -539,7 +544,7 @@ new records.</p>
             the DS.Model class of the record
 
           </dd>
-          <dt><strong>record</strong> <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span></dt>
+          <dt><strong>snapshot</strong> <span class="type"><a href="/api/data/classes/DS.Snapshot.html">DS.Snapshot</a></span></dt>
           <dd>
             
 
@@ -560,7 +565,7 @@ new records.</p>
 <div id="method_deleteRecord" class="method  item-entry">
   <h3 data-id="method_deleteRecord" class="name anchorable-toc"><code>deleteRecord</code></h3>
   <span class="args">
-    (store, type, record)
+    (store, type, snapshot)
   </span>
 
   <span class="type">Promise</span>
@@ -574,7 +579,7 @@ new records.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.0.0-beta.15/packages/ember-data/lib/system/adapter.js#L383">packages/ember-data/lib/system/adapter.js:383</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.16/packages/ember-data/lib/system/adapter.js#L407">packages/ember-data/lib/system/adapter.js:407</a>
 
   </div>
 
@@ -610,9 +615,9 @@ a record.</p>
 21
 </pre></td>
   <td class="code"><pre>App.ApplicationAdapter = DS.Adapter.extend({
-  <span class="function">deleteRecord</span>: <span class="keyword">function</span>(store, type, record) {
-    <span class="keyword">var</span> data = <span class="local-variable">this</span>.serialize(record, { <span class="key">includeId</span>: <span class="predefined-constant">true</span> });
-    <span class="keyword">var</span> id = record.get(<span class="string"><span class="delimiter">'</span><span class="content">id</span><span class="delimiter">'</span></span>);
+  <span class="function">deleteRecord</span>: <span class="keyword">function</span>(store, type, snapshot) {
+    <span class="keyword">var</span> data = <span class="local-variable">this</span>.serialize(snapshot, { <span class="key">includeId</span>: <span class="predefined-constant">true</span> });
+    <span class="keyword">var</span> id = snapshot.id;
     <span class="keyword">var</span> url = [type, id].join(<span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>);
 
     <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
@@ -653,7 +658,7 @@ a record.</p>
             the DS.Model class of the record
 
           </dd>
-          <dt><strong>record</strong> <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span></dt>
+          <dt><strong>snapshot</strong> <span class="type"><a href="/api/data/classes/DS.Snapshot.html">DS.Snapshot</a></span></dt>
           <dd>
             
 
@@ -674,7 +679,7 @@ a record.</p>
 <div id="method_find" class="method  item-entry">
   <h3 data-id="method_find" class="name anchorable-toc"><code>find</code></h3>
   <span class="args">
-    (store, type, id)
+    (store, type, id, snapshot)
   </span>
 
   <span class="type">Promise</span>
@@ -688,7 +693,7 @@ a record.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.0.0-beta.15/packages/ember-data/lib/system/adapter.js#L150">packages/ember-data/lib/system/adapter.js:150</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.16/packages/ember-data/lib/system/adapter.js#L173">packages/ember-data/lib/system/adapter.js:173</a>
 
   </div>
 
@@ -718,7 +723,7 @@ the record into the store.</p>
 14
 </pre></td>
   <td class="code"><pre>App.ApplicationAdapter = DS.Adapter.extend({
-  <span class="function">find</span>: <span class="keyword">function</span>(store, type, id) {
+  <span class="function">find</span>: <span class="keyword">function</span>(store, type, id, snapshot) {
     <span class="keyword">var</span> url = [type.typeKey, id].join(<span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>);
 
     <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
@@ -759,6 +764,11 @@ the record into the store.</p>
             
 
           </dd>
+          <dt><strong>snapshot</strong> <span class="type"><a href="/api/data/classes/DS.Snapshot.html">DS.Snapshot</a></span></dt>
+          <dd>
+            
+
+          </dd>
       </dl>
     </div>
 
@@ -790,7 +800,7 @@ the record into the store.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.0.0-beta.15/packages/ember-data/lib/system/adapter.js#L184">packages/ember-data/lib/system/adapter.js:184</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.16/packages/ember-data/lib/system/adapter.js#L208">packages/ember-data/lib/system/adapter.js:208</a>
 
   </div>
 
@@ -874,7 +884,7 @@ without an ID (i.e. <code>store.find(&#39;post&#39;)</code>).</p>
 <div id="method_findMany" class="method  item-entry">
   <h3 data-id="method_findMany" class="name anchorable-toc"><code>findMany</code></h3>
   <span class="args">
-    (store, type, ids, records)
+    (store, type, ids, snapshots)
   </span>
 
   <span class="type">Promise</span>
@@ -888,7 +898,7 @@ without an ID (i.e. <code>store.find(&#39;post&#39;)</code>).</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.0.0-beta.15/packages/ember-data/lib/system/adapter.js#L434">packages/ember-data/lib/system/adapter.js:434</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.16/packages/ember-data/lib/system/adapter.js#L458">packages/ember-data/lib/system/adapter.js:458</a>
 
   </div>
 
@@ -921,7 +931,7 @@ without an ID (i.e. <code>store.find(&#39;post&#39;)</code>).</p>
             
 
           </dd>
-          <dt><strong>records</strong> <span class="type">Array</span></dt>
+          <dt><strong>snapshots</strong> <span class="type">Array</span></dt>
           <dd>
             
 
@@ -957,7 +967,7 @@ without an ID (i.e. <code>store.find(&#39;post&#39;)</code>).</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.0.0-beta.15/packages/ember-data/lib/system/adapter.js#L216">packages/ember-data/lib/system/adapter.js:216</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.16/packages/ember-data/lib/system/adapter.js#L240">packages/ember-data/lib/system/adapter.js:240</a>
 
   </div>
 
@@ -1059,7 +1069,7 @@ page: 1 })</code>).</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.0.0-beta.15/packages/ember-data/lib/system/adapter.js#L249">packages/ember-data/lib/system/adapter.js:249</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.16/packages/ember-data/lib/system/adapter.js#L273">packages/ember-data/lib/system/adapter.js:273</a>
 
   </div>
 
@@ -1127,7 +1137,7 @@ the first parameter and the newly created record as the second parameter:</p>
 <div id="method_groupRecordsForFindMany" class="method  item-entry">
   <h3 data-id="method_groupRecordsForFindMany" class="name anchorable-toc"><code>groupRecordsForFindMany</code></h3>
   <span class="args">
-    (store, records)
+    (store, snapshots)
   </span>
 
   <span class="type">Array</span>
@@ -1141,7 +1151,7 @@ the first parameter and the newly created record as the second parameter:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.0.0-beta.15/packages/ember-data/lib/system/adapter.js#L445">packages/ember-data/lib/system/adapter.js:445</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.16/packages/ember-data/lib/system/adapter.js#L469">packages/ember-data/lib/system/adapter.js:469</a>
 
   </div>
 
@@ -1170,7 +1180,7 @@ want to group records by their parent.</p>
             
 
           </dd>
-          <dt><strong>records</strong> <span class="type">Array</span></dt>
+          <dt><strong>snapshots</strong> <span class="type">Array</span></dt>
           <dd>
             
 
@@ -1206,7 +1216,7 @@ want to group records by their parent.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.0.0-beta.15/packages/ember-data/lib/system/adapter.js#L278">packages/ember-data/lib/system/adapter.js:278</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.16/packages/ember-data/lib/system/adapter.js#L302">packages/ember-data/lib/system/adapter.js:302</a>
 
   </div>
 
@@ -1226,8 +1236,8 @@ want to group records by their parent.</p>
 8
 </pre></td>
   <td class="code"><pre>App.ApplicationAdapter = DS.Adapter.extend({
-  <span class="function">createRecord</span>: <span class="keyword">function</span>(store, type, record) {
-    <span class="keyword">var</span> data = <span class="local-variable">this</span>.serialize(record, { <span class="key">includeId</span>: <span class="predefined-constant">true</span> });
+  <span class="function">createRecord</span>: <span class="keyword">function</span>(store, type, snapshot) {
+    <span class="keyword">var</span> data = <span class="local-variable">this</span>.serialize(snapshot, { <span class="key">includeId</span>: <span class="predefined-constant">true</span> });
     <span class="keyword">var</span> url = type;
 
     <span class="comment">// ...</span>
@@ -1272,7 +1282,7 @@ want to group records by their parent.</p>
 <div id="method_updateRecord" class="method  item-entry">
   <h3 data-id="method_updateRecord" class="name anchorable-toc"><code>updateRecord</code></h3>
   <span class="args">
-    (store, type, record)
+    (store, type, snapshot)
   </span>
 
   <span class="type">Promise</span>
@@ -1286,7 +1296,7 @@ want to group records by their parent.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.0.0-beta.15/packages/ember-data/lib/system/adapter.js#L343">packages/ember-data/lib/system/adapter.js:343</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.16/packages/ember-data/lib/system/adapter.js#L367">packages/ember-data/lib/system/adapter.js:367</a>
 
   </div>
 
@@ -1322,9 +1332,9 @@ a record.</p>
 21
 </pre></td>
   <td class="code"><pre>App.ApplicationAdapter = DS.Adapter.extend({
-  <span class="function">updateRecord</span>: <span class="keyword">function</span>(store, type, record) {
-    <span class="keyword">var</span> data = <span class="local-variable">this</span>.serialize(record, { <span class="key">includeId</span>: <span class="predefined-constant">true</span> });
-    <span class="keyword">var</span> id = record.get(<span class="string"><span class="delimiter">'</span><span class="content">id</span><span class="delimiter">'</span></span>);
+  <span class="function">updateRecord</span>: <span class="keyword">function</span>(store, type, snapshot) {
+    <span class="keyword">var</span> data = <span class="local-variable">this</span>.serialize(snapshot, { <span class="key">includeId</span>: <span class="predefined-constant">true</span> });
+    <span class="keyword">var</span> id = snapshot.id;
     <span class="keyword">var</span> url = [type, id].join(<span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>);
 
     <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
@@ -1365,7 +1375,7 @@ a record.</p>
             the DS.Model class of the record
 
           </dd>
-          <dt><strong>record</strong> <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span></dt>
+          <dt><strong>snapshot</strong> <span class="type"><a href="/api/data/classes/DS.Snapshot.html">DS.Snapshot</a></span></dt>
           <dd>
             
 
@@ -1419,7 +1429,7 @@ a record.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.0.0-beta.15/packages/ember-data/lib/system/adapter.js#L423">packages/ember-data/lib/system/adapter.js:423</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.16/packages/ember-data/lib/system/adapter.js#L447">packages/ember-data/lib/system/adapter.js:447</a>
 
   </div>
 
@@ -1454,7 +1464,7 @@ coalesceFindRequests to false</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.0.0-beta.15/packages/ember-data/lib/system/adapter.js#L131">packages/ember-data/lib/system/adapter.js:131</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.16/packages/ember-data/lib/system/adapter.js#L154">packages/ember-data/lib/system/adapter.js:154</a>
 
   </div>
 
