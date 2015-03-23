@@ -626,14 +626,14 @@ of change management is commonly referred to as <a href="http://semver.org/">Sem
 
 <p>What follows is a list of deprecations introduced to Ember.js during the 1.x
 cycle.</p>
-<h3 class='anchorable-toc' id='toc_deprecations-added-in-1-7'>Deprecations Added in 1.7</h3><h4 class='anchorable-toc' id='toc_deprecate-observing-container-views-like-arrays'>Deprecate observing container views like arrays.</h4>
+<h3 class='anchorable-toc' id='toc_deprecations-added-in-1-7'>Deprecations Added in 1.7</h3><h4 class='anchorable-toc' id='toc_observing-container-views-like-arrays'>Observing container views like arrays.</h4>
 <p>ContainerViews have been observable as arrays, where the items in
 the array are childViews. This introduces complexity into container
 views despite the feature being a rarely used one.</p>
-<h4 class='anchorable-toc' id='toc_deprecate-ember-deferredmixin-and-ember-deferred'>Deprecate Ember.DeferredMixin and Ember.Deferred.</h4>
+<h4 class='anchorable-toc' id='toc_ember-deferredmixin-and-ember-deferred'>Ember.DeferredMixin and Ember.Deferred.</h4>
 <p><code>Ember.DeferredMixin</code> and <code>Ember.Deferred</code> have been deprecated in favor
 of using <code>RSVP.Promise</code>s.</p>
-<h4 class='anchorable-toc' id='toc_deprecate-code-then-code-on-ember-application'>Deprecate <code>.then</code> on Ember.Application.</h4>
+<h4 class='anchorable-toc' id='toc_code-then-code-on-ember-application'><code>.then</code> on Ember.Application.</h4>
 <p>As part of the <code>Ember.DeferredMixin</code> deprecation, using <code>.then</code> on an
 Ember.Application instance itself has been deprecated.</p>
 
@@ -739,7 +739,7 @@ Ember.Application.initializer({
 <p>More details on how to register an Ember.js framework component are available
 in the <a href="/api/classes/Ember.Application.html#toc_initializers">initializer API documentation</a>
 and the <a href="/guides/understanding-ember/dependency-injection-and-service-lookup">dependency injection guide</a>.</p>
-<h4 class='anchorable-toc' id='toc_deprecate-location-hash-paths-that-don-t-include-a-forward-slash-e-g-foo-not-foo'>Deprecate location: &#39;hash&#39; paths that don&#39;t include a forward slash. e.g. #/foo NOT #foo</h4>
+<h4 class='anchorable-toc' id='toc_hash-location-paths-without-leading-slashes'>Hash Location Paths Without Leading Slashes.</h4>
 <p>Prior to this release, if you were using <code>location: &#39;hash&#39;</code> (which is the default), you were able to link to a route with a <code>location.hash</code> that didn&#39;t contain the expected leading forward slash. e.g. <code>#foo</code> instead of the correct <code>#/foo</code>. Very few, if any, should be impacted by this since the router always produces the correct form.</p>
 
 <p>Doing so is ambiguous because you may also be trying to link to an element on the page who&#39;s id matches <code>&lt;div id=&quot;foo&quot;&gt;</code> and it also erroneously will create an extra history state if a user clicks on something that transitions to that route again, since it will change <code>location.hash === &#39;#/foo&#39;</code>.</p>
@@ -873,8 +873,8 @@ simplifies how to think about the context in your templates. This change should 
 <span class="tag">&lt;/ul&gt;</span>
 </pre></td>
 </tr></table>
-</div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-1-10'>Deprecations Added in 1.10</h3><h4 class='anchorable-toc' id='toc_deprecate-beforeobservers'>Deprecate beforeObservers</h4>
-<p>beforeObservers are deprecated due to the negative performance implications they have for Ember internals and applications.</p>
+</div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-1-10'>Deprecations Added in 1.10</h3><h4 class='anchorable-toc' id='toc_beforeobserver'>beforeObserver</h4>
+<p>Before observers are deprecated due to the negative performance implications they have for Ember internals and applications.</p>
 
 <p>Typically they were used to have access to the old value of a property when it&#39;s about to change, but you can get same functionality in an even more efficient way with just a few lines of code:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -899,7 +899,127 @@ addObserver(obj, <span class="string"><span class="delimiter">'</span><span clas
 fooObserver(obj); <span class="comment">// Optionally call the observer immediately</span>
 </pre></td>
 </tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-1-11'>Deprecations Added in 1.11</h3><h4 class='anchorable-toc' id='toc_objectcontroller'>ObjectController</h4>
+<p>Experienced Ember users have enjoyed the use of proxying behavior in
+the <code>Ember.ObjectController</code> class since 1.0. However, this behavior
+will be removed in Ember 2.0 as the framework migrates to routable components.</p>
+
+<p>New users hit three roadbumps when learning about the object controller pattern.</p>
+
+<ul>
+<li>Given a certain model, which of the three controller options should I be using?</li>
+<li>Which controller is generated by the framework if I do not specify one?</li>
+<li>When using an object controller, why should the <code>this</code> context not be passed
+to actions if it has the properties of my model?</li>
+</ul>
+
+<p>For these reasons, the <a href="https://github.com/emberjs/rfcs/pull/15">Road to Ember 2.0 RFC</a>
+listed object controllers as a concept to be removed from the framework.</p>
+
+<p>To migrate from an explicitly defined object controller, first convert
+the class definition to inherit from <code>Ember.Controller</code>. For example:</p>
+<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre>import Ember from &quot;ember&quot;;
+
+// Change:
+export default Ember.ObjectController.extend({
+// To:
+export default Ember.Controller.extend({
+
+// ...
+</pre></td>
+</tr></table>
 </div></div>
+<p>Next update any use of <code>{{modelPropertyName}}</code> in templates with <code>{{model.modelPropertyName}}</code>.
+You should also review any computed property dependent keys, observer keys, and <code>get</code> and <code>set</code>
+statements on the route and controller. An example of how to make this migration can
+be found <a href="https://github.com/TryGhost/Ghost/pull/4748">in this PR to the Ghost project</a>.</p>
+
+<p>If a controller is not explicitly defined, but instead is being auto-generated
+by the framework, it will only throw a deprecation message if the proxying
+behavior is being used.</p>
+
+<p>Added in <a href="https://github.com/emberjs/ember.js/pull/10062">PR #10062</a>.</p>
+<h4 class='anchorable-toc' id='toc_access-to-instances-in-initializers'>Access to Instances in Initializers</h4>
+<p>Previously, initializers had access to an object that allowed them to
+both register new classes and get instances of those classes.</p>
+
+<p>If you have an initializer that gets instances of a class, you need to
+change it to use an instance initializer.</p>
+
+<p>Change code that looks like this:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre>App.initializer({
+  <span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">clock</span><span class="delimiter">&quot;</span></span>,
+
+  <span class="function">initialize</span>: <span class="keyword">function</span>(container, application) {
+    application.register(<span class="string"><span class="delimiter">&quot;</span><span class="content">clock:main</span><span class="delimiter">&quot;</span></span>, Clock);
+    <span class="keyword">var</span> clock = container.lookup(<span class="string"><span class="delimiter">&quot;</span><span class="content">clock:main</span><span class="delimiter">&quot;</span></span>);
+    clock.setStartTime(Date.now());
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>To:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+</pre></td>
+  <td class="code"><pre>App.initializer({
+  <span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">clock</span><span class="delimiter">&quot;</span></span>,
+
+  <span class="function">initialize</span>: <span class="keyword">function</span>(registry, application) {
+    application.register(<span class="string"><span class="delimiter">&quot;</span><span class="content">clock:main</span><span class="delimiter">&quot;</span></span>, Clock);
+  }
+});
+
+App.instanceInitializer({
+  <span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">clock</span><span class="delimiter">&quot;</span></span>,
+
+  <span class="function">initialize</span>: <span class="keyword">function</span>(instance) {
+    <span class="keyword">var</span> clock = instance.container.lookup(<span class="string"><span class="delimiter">&quot;</span><span class="content">clock:main</span><span class="delimiter">&quot;</span></span>);
+    clock.setStartTime(Date.now());
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Added in <a href="https://github.com/emberjs/ember.js/pull/10256">PR #10256</a>.</p>
+
     
       <footer>
         

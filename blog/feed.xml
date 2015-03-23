@@ -5,10 +5,151 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2015-02-13T19:00:00-05:00</updated>
+  <updated>2015-03-22T20:00:00-04:00</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>Ember Data v1.0.0-beta.16 Released</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2015/03/23/ember-data-1-0-beta-16-released.html"/>
+    <id>http://emberjs.com/blog/2015/03/23/ember-data-1-0-beta-16-released.html</id>
+    <published>2015-03-22T20:00:00-04:00</published>
+    <updated>2015-03-22T20:00:00-04:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;We are pleased to announce the release Ember Data 1.0.0-beta.16. It
+includes many bug fixes as well as several new features. As always
+this release can be obtained from npm (for use with ember-cli),
+rubygems, or bower. The builds are also available...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;We are pleased to announce the release Ember Data 1.0.0-beta.16. It
+includes many bug fixes as well as several new features. As always
+this release can be obtained from npm (for use with ember-cli),
+rubygems, or bower. The builds are also available as static files at
+emberjs.com/builds&lt;/p&gt;
+
+&lt;p&gt;The 1.0.0-beta.16 release represents the effort of at least 31
+contributors across over 112 commits.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_new-core-contributor'&gt;New Core Contributor&lt;/h2&gt;
+&lt;p&gt;Contributor &lt;a href="https://github.com/wecc"&gt;Christoffer Persson&lt;/a&gt; has been given collaborator
+status and will help us triage issues, merge pull requests, and
+contribute bug fixes and documentation. Christoffer has been extremely
+active in triaging issues and contributing features and bug fixes to
+the Ember Data project.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_breaking-changes'&gt;Breaking Changes&lt;/h2&gt;&lt;h3 class='anchorable-toc' id='toc_the-store-now-passes-snapshots-instead-of-records-to-adapter-methods'&gt;The store now passes snapshots instead of records to adapter methods&lt;/h3&gt;
+&lt;p&gt;In 1.0.0-beta.15 Ember Data introduce the Snapshot API and began
+passing snapshot instances into all serializers to prevent
+side-effects from occurring when inspecting relationships for
+serialization. This introduces some pain points in 3rd party adapters
+and serializers since they could not easily create snapshot instances
+without using using private APIs. In Ember Data 1.0.0-beta.16 the
+store will now pass snapshot instances into adapters methods instead
+of record instances.&lt;/p&gt;
+
+&lt;p&gt;The following adapter methods now receive snapshots instead of records:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;find(store, type, id, snapshot)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;findMany(store, type, ids, snapshots)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;findHasMany(store, snapshot, url, relationship)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;findBelongsTo(store, snapshot, url, relationship)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;createRecord(store, type, snapshot)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;updateRecord(store, type, snapshot)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;deleteRecord(store, type, snapshot)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The signature of &lt;code&gt;buildURL(type, id, snapshot)&lt;/code&gt; has also been updated to receive
+snapshots instead of records.&lt;/p&gt;
+
+&lt;p&gt;This change removes the need for adapters to create snapshots manually using the
+private API &lt;code&gt;record._createSnapshot()&lt;/code&gt; to be able to pass snapshots to
+serializers.&lt;/p&gt;
+
+&lt;p&gt;Snapshots are backwards-compatible with records (with deprecation warnings) and
+it should be pretty straight forward to update current code to the public
+Snapshot API:&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;post.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;id&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)           =&amp;gt; postSnapshot.id
+post.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;title&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)        =&amp;gt; postSnapshot.attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;title&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
+post.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;author&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)       =&amp;gt; postSnapshot.belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;author&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
+post.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)     =&amp;gt; postSnapshot.hasMany(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
+post.constructor         =&amp;gt; postSnapshot.type;
+post.constructor.typeKey =&amp;gt; postSnapshot.typeKey
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;If you need to access the underlying record of a snapshot you can do so by
+accessing &lt;code&gt;snapshot.record&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The full API reference of &lt;code&gt;DS.Snapshot&lt;/code&gt; can be found &lt;a href="http://emberjs.com/api/data/classes/DS.Snapshot.html"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_improvements'&gt;Improvements&lt;/h2&gt;&lt;h3 class='anchorable-toc' id='toc_store-as-a-service'&gt;Store as a Service&lt;/h3&gt;
+&lt;p&gt;The store has now been registered as a service. So when you are using
+Ember Data 1.0.0-beta.16 with Ember 1.10+ you can now inject the store
+into any Ember object managed by the container.&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;App.TweetComposerComponent = Ember.Component.extend({
+  &lt;span class="key"&gt;store&lt;/span&gt;: Ember.inject.service(),
+  &lt;span class="function"&gt;newTweet&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;() {
+    &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="local-variable"&gt;this&lt;/span&gt;.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;store&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).createRecord(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;tweet&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, {});
+  }
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Please give a warm thanks to &lt;a href="https://github.com/martndemus"&gt;martndemus&lt;/a&gt; for his
+work implementing this feature!&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_mixins-in-polymorphic-relationships'&gt;Mixins in Polymorphic Relationships&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://github.com/igorT"&gt;Igor Terzic&lt;/a&gt; Added support for using mixins in polymorphic
+relationships. This allows Ember Data to reference Mixins instead of
+Model classes as the type argument for relationships.&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;App.Comment = DS.Model.extend({
+  &lt;span class="key"&gt;owner&lt;/span&gt;: belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;commentable&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;. { &lt;span class="key"&gt;polymorphic&lt;/span&gt;: &lt;span class="predefined-constant"&gt;true&lt;/span&gt; })
+});
+
+App.CommentableMixin = Ember.Mixin.create({
+  &lt;span class="key"&gt;comments&lt;/span&gt;: hasMany(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comment&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;h3 class='anchorable-toc' id='toc_better-support-for-using-multiple-stores'&gt;Better Support for using multiple stores&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://github.com/jmurphyau"&gt;James Murphy&lt;/a&gt; landed an
+&lt;a href="https://github.com/emberjs/data/pull/2617"&gt;awesome PR&lt;/a&gt; that makes it
+easier to use multiple stores in your Ember Application.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_changelog'&gt;Changelog&lt;/h2&gt;
+&lt;p&gt;In addition to the major changes mentioned above this release also
+includes many bug fixes and documentation updates. Be sure to check
+out the change log for the full list of updates.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/data/blob/v1.0.0-beta.16/CHANGELOG.md"&gt;Ember Data 1.0.0-beta.16 CHANGELOG&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!-- Links --&gt;
+</content>
+  </entry>
   <entry>
     <title>Ember Data v1.0.0-beta.15 Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/02/14/ember-data-1-0-beta-15-released.html"/>
@@ -886,168 +1027,6 @@ to your build pipeline in Ember CLI and Rails. Additionally support
 for versions of Ember &amp;lt;= 1.7.1 have been removed. This was mentioned
 in the &lt;a href="http://emberjs.com/blog/2014/12/25/ember-data-1-0-beta-14-released.html"&gt;beta.12 blogpost&lt;/a&gt;, and is now enforced via an assertion
 in the code and by your package manager files.&lt;/p&gt;
-
-&lt;!-- Links --&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Ember Data v1.0.0-beta.14 Released</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2014/12/25/ember-data-1-0-beta-14-released.html"/>
-    <id>http://emberjs.com/blog/2014/12/25/ember-data-1-0-beta-14-released.html</id>
-    <published>2014-12-24T19:00:00-05:00</published>
-    <updated>2014-12-24T19:00:00-05:00</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Due to a hiccup during the publishing step while releasing beta.13,
-we've removed beta.13 from npm and instead published beta.14. This
-release is available to you whether you are using npm and ember-cli,
-rubygems, or bower. Of course, the builds are...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Due to a hiccup during the publishing step while releasing beta.13,
-we&amp;#39;ve removed beta.13 from npm and instead published beta.14. This
-release is available to you whether you are using npm and ember-cli,
-rubygems, or bower. Of course, the builds are always available as static
-files at &lt;a href="http://emberjs.com/builds"&gt;emberjs.com/builds&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_improvements'&gt;Improvements&lt;/h2&gt;
-&lt;p&gt;&lt;a href="https://twitter.com/terzicigor"&gt;Igor Terzic&lt;/a&gt;, &lt;a href="https://twitter.com/hjdivad"&gt;David Hamilton&lt;/a&gt;, and &lt;a href="https://twitter.com/stefanpenner"&gt;Stefan
-Penner&lt;/a&gt; put in some great strides to improve performance around
-how relationships work together in Ember Data. These performance changes
-have wide-reaching effects into everything you do in Ember Data:
-querying records, pushing records into the store, and creating records.
-Since everyone on the Ember Data team works on real apps, we tested
-these changes in our applications and saw improvements averaging 50% or
-higher around pushing and creating records into the store.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_breaking-changes'&gt;Breaking Changes&lt;/h2&gt;&lt;h3 class='anchorable-toc' id='toc_code-store-update-code-has-been-deprecated'&gt;&lt;code&gt;store.update()&lt;/code&gt; has been deprecated&lt;/h3&gt;
-&lt;p&gt;Calling &lt;code&gt;store.update()&lt;/code&gt; has been deprecated in favor of &lt;code&gt;store.push()&lt;/code&gt;
-now
-handling partial payloads:&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-&lt;strong&gt;10&lt;/strong&gt;
-11
-12
-13
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; post = store.push(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;post&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, {
-  &lt;span class="key"&gt;id&lt;/span&gt;: &lt;span class="integer"&gt;1&lt;/span&gt;,
-  &lt;span class="key"&gt;title&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Ember.js is fantastic&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;,
-  &lt;span class="key"&gt;author&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Tomster&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;
-});
-
-post.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;title&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;); &lt;span class="comment"&gt;// =&amp;gt; 'Ember.js is fantastic'&lt;/span&gt;
-post.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;author&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;); &lt;span class="comment"&gt;// =&amp;gt; 'Tomster'&lt;/span&gt;
-
-store.push(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;post&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, { &lt;span class="key"&gt;id&lt;/span&gt;: &lt;span class="integer"&gt;1&lt;/span&gt;, &lt;span class="key"&gt;author&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Tom Dale&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; });
-
-post.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;title&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;); &lt;span class="comment"&gt;// =&amp;gt; 'Ember.js is fantastic'&lt;/span&gt;
-post.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;author&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;); &lt;span class="comment"&gt;// =&amp;gt; 'Tom Dale'&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;This also means that properties missing in the payload will no longer be
-reset,
-but stay the same.&lt;/p&gt;
-
-&lt;p&gt;If you need to reset values to null, you should have your server
-explicitly
-send back null values in the payload:&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;{
-  &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;person&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: {
-    &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;firstName&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="predefined-constant"&gt;null&lt;/span&gt;,
-    &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;lastName&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="predefined-constant"&gt;null&lt;/span&gt;
-    &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;role&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;Computer Science Pioneer&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;
-  }
-}
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;If you cannot change your API and you desire this behavior, you can
-create a
-serializer and do the logic yourself:&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-&lt;strong&gt;10&lt;/strong&gt;
-11
-12
-13
-14
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// app/serializers/person.js&lt;/span&gt;
-&lt;span class="comment"&gt;// or App.PersonSerializer if you aren't using Ember CLI&lt;/span&gt;
-&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; DS.RESTSerializer.extend({
-  &lt;span class="function"&gt;normalize&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;(type, hash, prop) {
-    hash = &lt;span class="local-variable"&gt;this&lt;/span&gt;._super(type, hash, prop);
-    &lt;span class="keyword"&gt;if&lt;/span&gt; (!hash.hasOwnProperty(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;firstName&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)){
-      hash.firstName = &lt;span class="predefined-constant"&gt;null&lt;/span&gt;;
-    }
-    &lt;span class="keyword"&gt;if&lt;/span&gt; (!hash.hasOwnProperty(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;lastName&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)){
-      hash.lastName = &lt;span class="predefined-constant"&gt;null&lt;/span&gt;;
-    }
-    &lt;span class="keyword"&gt;return&lt;/span&gt; hash;
-  }
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Or if you want to restore the old behavior for all of your models:&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-&lt;strong&gt;10&lt;/strong&gt;
-11
-12
-13
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// app/serializers/application.js&lt;/span&gt;
-&lt;span class="comment"&gt;// or App.ApplicationSerializer&lt;/span&gt;
-&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; DS.RESTSerializer.extend({
-  &lt;span class="function"&gt;normalize&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;(type, hash, prop) {
-    hash = &lt;span class="local-variable"&gt;this&lt;/span&gt;._super(type, hash, prop);
-    type.eachAttribute(&lt;span class="keyword"&gt;function&lt;/span&gt;(key) {
-      &lt;span class="keyword"&gt;if&lt;/span&gt; (!hash.hasOwnProperty(key)) {
-        hash[key] = &lt;span class="predefined-constant"&gt;null&lt;/span&gt;;
-      }
-    }, &lt;span class="local-variable"&gt;this&lt;/span&gt;);
-    &lt;span class="keyword"&gt;return&lt;/span&gt; hash;
-  }
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;h2 class='anchorable-toc' id='toc_special-thanks'&gt;Special Thanks&lt;/h2&gt;
-&lt;p&gt;A special thanks to &lt;a href="http://dockyard.com"&gt;Dockyard&lt;/a&gt; for sponsoring Igor during the
-month of December!&lt;/p&gt;
 
 &lt;!-- Links --&gt;
 </content>
