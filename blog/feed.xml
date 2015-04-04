@@ -5,10 +5,66 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2015-03-26T20:00:00-04:00</updated>
+  <updated>2015-04-03T20:00:00-04:00</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>Ember.js 1.11.1 Released</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2015/04/04/ember-1-11-1-released.html"/>
+    <id>http://emberjs.com/blog/2015/04/04/ember-1-11-1-released.html</id>
+    <published>2015-04-03T20:00:00-04:00</published>
+    <updated>2015-04-03T20:00:00-04:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Today we are releasing Ember.js 1.11.1, a patch-level release of Ember that
+fixes several regressions introduced in the 1.11.0 release.&lt;/p&gt;
+&lt;h3 class="anchorable-toc" id="toc_collectionview-with-code-attributebindings-code"&gt;CollectionView with &lt;code&gt;attributeBindings&lt;/code&gt;
+&lt;/h3&gt;
+&lt;p&gt;During the 1.11.0 cycle much effort was put into making sure that &lt;code&gt;attributeBindings&lt;/code&gt;&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;Today we are releasing Ember.js 1.11.1, a patch-level release of Ember that
+fixes several regressions introduced in the 1.11.0 release.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_collectionview-with-code-attributebindings-code'&gt;CollectionView with &lt;code&gt;attributeBindings&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;During the 1.11.0 cycle much effort was put into making sure that &lt;code&gt;attributeBindings&lt;/code&gt; used
+the same logic that template bound attributes use.  Namely, that &lt;code&gt;attributeBindings&lt;/code&gt; use
+HTMLBars&amp;#39; attribute helpers instead of jQuery&amp;#39;s.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, this work lead to an error when &lt;code&gt;CollectionView&lt;/code&gt; instances were used with
+&lt;code&gt;attributeBindings&lt;/code&gt; specified.  This regression is fixed in 1.11.1.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_invalid-urls'&gt;Invalid URLs&lt;/h3&gt;
+&lt;p&gt;Refactoring in the router initialization process lead to a bug that caused the browsers URL
+to become out of sync with the correct URL when the back button was pressed while using 
+&lt;code&gt;HistoryLocation&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;This regression is fixed in 1.11.1.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_handlebars-helper-issues'&gt;Handlebars Helper Issues&lt;/h3&gt;
+&lt;p&gt;A couple regressions were fixed for Handlebars helpers with 1.11.1:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The inverse template (aka &lt;code&gt;{{else}}&lt;/code&gt; block) of Handlebars helpers was not properly accounted
+for during the HTMLBars transition. Using an &lt;code&gt;{{else}}&lt;/code&gt; block with a Handlebars helper has
+not been function since 1.9.0.&lt;/li&gt;
+&lt;li&gt;The main block could not be rendered even if &lt;code&gt;options.fn()&lt;/code&gt; was called within the helper. This
+regression was first introduced in 1.11.0-beta.4.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 class='anchorable-toc' id='toc_incorrect-assertion-for-each-foos-itemcontroler-bar'&gt;Incorrect Assertion for {{each foos itemControler=&amp;#39;bar&amp;#39;}}&lt;/h3&gt;
+&lt;p&gt;During the 1.11.0 cycle an issue regarding &lt;code&gt;{{each}}&lt;/code&gt; with prototype extensions disabled was reported.
+The solution to that issue was to add a much more helpful assertion when an &lt;code&gt;ArrayController&lt;/code&gt;&amp;#39;s model
+did not have &lt;code&gt;Ember.Array&lt;/code&gt; mixed into it. Unfortunately, this assertion also was triggered when the
+model was simply &lt;code&gt;undefined&lt;/code&gt;. The assertion has been updated to ignore falsey &lt;code&gt;model&lt;/code&gt;&amp;#39;s in 1.11.1.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_render-helper-with-view'&gt;{{render}} helper with View&lt;/h3&gt;
+&lt;p&gt;In 1.11.0 using the &lt;code&gt;{{render}}&lt;/code&gt; helper (i.e. &lt;code&gt;{{render &amp;#39;post&amp;#39;}}&lt;/code&gt;) when a &lt;code&gt;PostView&lt;/code&gt; is present would not
+provide the view with a template (it was assumed to be manually specified in the view via &lt;code&gt;templateName&lt;/code&gt;
+property). As of 1.11.1 you can specify the &lt;code&gt;templateName&lt;/code&gt; in the &lt;code&gt;{{render}}&lt;/code&gt; helpers view (just like in 1.11.0),
+but if you do not the views template will be defaulted to a template with the same name as the view itself.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_changelogs'&gt;Changelogs&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/compare/v1.11.0...v1.11.1"&gt;Ember.js 1.11.0 to 1.11.1 commit log&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/releases/tag/v1.11.1"&gt;Ember.js 1.11.1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
   <entry>
     <title>Ember.js 1.11.0 and 1.12 Beta Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/03/27/ember-1-11-0-released.html"/>
@@ -1162,106 +1218,6 @@ may be added to the 1.11 release.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Using Ember? Please take ten minutes to share your
 feedback by participating in the &lt;a href="http://goo.gl/forms/6yIsF3TNsQ"&gt;2015 Ember Community Survey&lt;/a&gt;. Open
 until February 20th.&lt;/em&gt;&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Compiling templates with Ember 1.10</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2015/02/05/compiling-templates-in-1-10-0.html"/>
-    <id>http://emberjs.com/blog/2015/02/05/compiling-templates-in-1-10-0.html</id>
-    <published>2015-02-04T19:00:00-05:00</published>
-    <updated>2015-02-04T19:00:00-05:00</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;As many of you know, Ember 1.10 will be the first version of Ember that uses &lt;a href="https://github.com/tildeio/htmlbars"&gt;HTMLBars&lt;/a&gt; as its templating engine. With this change you may need to change the way you compile your templates.&lt;/p&gt;
-
-&lt;p&gt;The HTMLBars API is evolving and not 1.0.0 yet, so to ensure...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;As many of you know, Ember 1.10 will be the first version of Ember that uses &lt;a href="https://github.com/tildeio/htmlbars"&gt;HTMLBars&lt;/a&gt; as its templating engine. With this change you may need to change the way you compile your templates.&lt;/p&gt;
-
-&lt;p&gt;The HTMLBars API is evolving and not 1.0.0 yet, so to ensure that templates are compiled compatibly with your Ember version we have updated the Ember build system to generate a &lt;code&gt;ember-template-compiler.js&lt;/code&gt; file alongside every build of Ember. This template compiler can be used server-side for precompilation or in the browser to compile templates on the fly. If you do not need to compile templates at runtime (in the browser) the &lt;code&gt;ember.debug.js&lt;/code&gt; or &lt;code&gt;ember.prod.js&lt;/code&gt; file alone is sufficient. There is no need to include a runtime dependency. This is a departure from previous versions, where you would always include either &lt;code&gt;handlebars.js&lt;/code&gt; or &lt;code&gt;handlebars.runtime.js&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Most of the time you will use a third party library like &lt;a href="https://github.com/ember-cli/ember-cli"&gt;ember-cli&lt;/a&gt;, &lt;a href="https://github.com/rondale-sc/ember-cli-htmlbars"&gt;ember-cli-htmlbars&lt;/a&gt;, or &lt;a href="https://github.com/dgeb/grunt-ember-templates"&gt;grunt-ember-templates&lt;/a&gt; to precompile templates, but this post will discuss how libraries like this should work internally.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_server-side-compilation'&gt;Server Side Compilation&lt;/h3&gt;
-&lt;p&gt;If possible, it is definitely a best practice to compile your templates server side. This is much faster due to less total size (you don&amp;#39;t need the compiler on the client) and less work that the app needs to do.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_ember-1-0-through-1-9'&gt;Ember 1.0 through 1.9&lt;/h4&gt;
-&lt;p&gt;In prior versions, you would typically use the &lt;code&gt;ember-template-compiler&lt;/code&gt; NPM package that corresponded to your Ember version to precompile your templates. That might look something like the following:&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; fs = require(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;fs&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
-&lt;span class="keyword"&gt;var&lt;/span&gt; compiler = require(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-template-compiler&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
-&lt;span class="keyword"&gt;var&lt;/span&gt; input = fs.readFileSync(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;path/to/template.hbs&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, { &lt;span class="key"&gt;encoding&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;utf8&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; });
-&lt;span class="keyword"&gt;var&lt;/span&gt; template = compiler.precompile(input, &lt;span class="predefined-constant"&gt;false&lt;/span&gt;);
-&lt;span class="keyword"&gt;var&lt;/span&gt; output = &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;export default Ember.Handlebars.template(&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; + template + &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;);&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
-
-fs.writeFileSync(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;path/to/output.js&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, output, { &lt;span class="key"&gt;encoding&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;utf8&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; });
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;You would also need to include &lt;code&gt;handlebars.runtime.js&lt;/code&gt; in your final build&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_ember-1-10'&gt;Ember 1.10+&lt;/h4&gt;
-&lt;p&gt;With Ember 1.10, you will use the &lt;code&gt;ember-template-compiler.js&lt;/code&gt; file that is paired with your Ember version. If you use our &lt;a href="https://github.com/components/ember"&gt;Bower repo&lt;/a&gt;, &lt;a href="https://rubygems.org/gems/ember-source"&gt;RubyGem&lt;/a&gt;, or simply download Ember from our &lt;a href="http://emberjs.com/builds/"&gt;builds site&lt;/a&gt; there is a &lt;code&gt;ember-template-compiler.js&lt;/code&gt; in the same path as &lt;code&gt;ember.debug.js&lt;/code&gt; and &lt;code&gt;ember.prod.js&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;You can use this template compiler directly  and without additional requirements. For example:&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; fs = require(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;fs&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
-&lt;span class="keyword"&gt;var&lt;/span&gt; compiler = require(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;./bower_components/ember/ember-template-compiler&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
-&lt;span class="keyword"&gt;var&lt;/span&gt; input = fs.readFileSync(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;path/to/template.hbs&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, { &lt;span class="key"&gt;encoding&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;utf8&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; });
-&lt;span class="keyword"&gt;var&lt;/span&gt; template = compiler.precompile(input, &lt;span class="predefined-constant"&gt;false&lt;/span&gt;);
-&lt;span class="keyword"&gt;var&lt;/span&gt; output = &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;export default Ember.HTMLBars.template(&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; + template + &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;);&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
-
-fs.writeFileSync(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;path/to/output.js&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, output, { &lt;span class="key"&gt;encoding&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;utf8&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; });
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;As you will notice, the new API for server-side compilation is nearly identical to that of prior versions. The main change is the usage of the local &lt;code&gt;bower_components/ember/ember-template-compiler.js&lt;/code&gt; file as opposed to the NPM module.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_client-side-compilation'&gt;Client Side Compilation&lt;/h3&gt;
-&lt;p&gt;Generally speaking, you should avoid compiling templates on the client, but there are times that you cannot avoid this. Live demo apps like &lt;a href="http://emberjs.jsbin.com"&gt;JSBin&lt;/a&gt; are one example.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_ember-1-0-through-1-9'&gt;Ember 1.0 through 1.9&lt;/h3&gt;
-&lt;p&gt;In prior versions of Ember you would need to ensure that the full version of &lt;a href="handlebarsjs.com"&gt;Handlebars.js&lt;/a&gt; was present to allow compiling of templates. Perhaps something like the following in your &lt;code&gt;index.html&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight html "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;src&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;assets/handlebars.js&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-&lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;src&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;assets/ember.prod.js&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;h3 class='anchorable-toc' id='toc_ember-1-10'&gt;Ember 1.10+&lt;/h3&gt;
-&lt;p&gt;With Ember 1.10, you will include the &lt;code&gt;ember-template-compiler.js&lt;/code&gt; for your specific Ember version.  Something like the following:&lt;/p&gt;
-&lt;div class="highlight html "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;src&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;assets/ember-template-compiler.js&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-&lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;src&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;assets/ember.prod.js&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;If you include the &lt;code&gt;ember.debug.js&lt;/code&gt; file instead of a production file the compiler is still required.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_template-compilation-build-tools'&gt;Template Compilation Build Tools&lt;/h3&gt;
-&lt;p&gt;There are any number of build tool libraries that are intended to make the server side compilation of templates easier. Here are just a few (please let us know of others):&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/rondale-sc/ember-cli-htmlbars"&gt;ember-cli-htmlbars&lt;/a&gt; - Can be used either as a standalone Broccoli plugin, or as an ember-cli addon.&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/dgeb/grunt-ember-templates"&gt;grunt-ember-templates&lt;/a&gt; - Works as a Grunt plugin. To precompile HTMLBars templates, you must supply specific parameters to your task definition as mentioned in &lt;a href="https://github.com/dgeb/grunt-ember-templates/pull/77"&gt;this PR&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/dbashford/mimosa-ember-htmlbars"&gt;mimosa-ember-htmbars&lt;/a&gt; - A plugin for the &lt;a href="http://mimosa.io/"&gt;mimosa&lt;/a&gt; build tool.&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/emberjs/ember-rails"&gt;ember-rails&lt;/a&gt; - The Rails Asset Pipeline plugin supports HTMLBars templates.&lt;/li&gt;
-&lt;/ul&gt;
 </content>
   </entry>
 </feed>

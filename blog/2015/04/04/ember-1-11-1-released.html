@@ -3,8 +3,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Ember 1.0 RC2</title>
-    <meta property="st:title" content="Ember 1.0 RC2" />
+    <title>Ember.js - Ember.js 1.11.1 Released</title>
+    <meta property="st:title" content="Ember.js 1.11.1 Released" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" rel="stylesheet" type="text/css" />
@@ -12,7 +12,7 @@
     
   </head>
 
-  <body class="blog blog_2013 blog_2013_03 blog_2013_03_30 blog_2013_03_30_ember-1-0-rc2">
+  <body class="blog blog_2015 blog_2015_04 blog_2015_04_04 blog_2015_04_04_ember-1-11-1-released">
 
 
     <!--[if lt IE 9]>
@@ -163,148 +163,51 @@
         </div>
       <div id="content" class="has-sidebar">
           <article class="blog-post">
-    <h1>Ember 1.0 RC2</h1>
-      <h3 class="blog-post-author">Posted By: Yehuda Katz &ndash; <time>Mar 30, 2013</time></h3>
+    <h1>Ember.js 1.11.1 Released</h1>
+      <h3 class="blog-post-author">Posted By: Robert Jackson &ndash; <time>Apr 04, 2015</time></h3>
 
     <hr>
 
-    <p>Today, we&#39;re releasing the second Release Candidate of Ember 1.0.
-As we said when we released RC1, the next few releases will be
-about bugfixes and improvements, and should not have any breaking
-changes.</p>
-<h3 class='anchorable-toc' id='toc_namespace-lookup-for-controllers'>Namespace Lookup for Controllers</h3>
-<p>It is now possible to look up controllers that are included in a
-namespace other than the main application namespace.</p>
+    <p>Today we are releasing Ember.js 1.11.1, a patch-level release of Ember that
+fixes several regressions introduced in the 1.11.0 release.</p>
+<h3 class='anchorable-toc' id='toc_collectionview-with-code-attributebindings-code'>CollectionView with <code>attributeBindings</code></h3>
+<p>During the 1.11.0 cycle much effort was put into making sure that <code>attributeBindings</code> used
+the same logic that template bound attributes use.  Namely, that <code>attributeBindings</code> use
+HTMLBars&#39; attribute helpers instead of jQuery&#39;s.</p>
 
-<p>For example, when using the render helper:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">render</span> <span class="error">'</span><span class="attribute-name">posts</span><span class="error">'</span><span class="inline-delimiter">}}</span></span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>This will render the <code>posts</code> template with the controller <code>App.PostsController</code>, where <code>App</code> is the main application namespace.</p>
+<p>Unfortunately, this work lead to an error when <code>CollectionView</code> instances were used with
+<code>attributeBindings</code> specified.  This regression is fixed in 1.11.1.</p>
+<h3 class='anchorable-toc' id='toc_invalid-urls'>Invalid URLs</h3>
+<p>Refactoring in the router initialization process lead to a bug that caused the browsers URL
+to become out of sync with the correct URL when the back button was pressed while using 
+<code>HistoryLocation</code>.</p>
 
-<p>If you want to use an alternative namespace, you can use a
-<code>/</code>-separated path.</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">render</span> <span class="error">'</span><span class="attribute-name">blog</span><span class="error">/</span><span class="attribute-name">posts</span><span class="error">'</span><span class="inline-delimiter">}}</span></span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>This will render the <code>blog/posts</code> template with the controller
-<code>Blog.PostsController</code>.</p>
-<h3 class='anchorable-toc' id='toc_using-render-with-multiple-models'>Using Render With Multiple Models</h3>
-<p>In RC1, you could use <code>{{render &#39;posts&#39;}}</code> to render the <code>posts</code>
-template using the app&#39;s instance of <code>App.PostsController</code>. Using
-<code>render</code> in this way will always render the template using the same
-singleton controller.</p>
+<p>This regression is fixed in 1.11.1.</p>
+<h3 class='anchorable-toc' id='toc_handlebars-helper-issues'>Handlebars Helper Issues</h3>
+<p>A couple regressions were fixed for Handlebars helpers with 1.11.1:</p>
 
-<p>In RC2, we are adding the ability to render a template with a
-particular model: <code>{{render &#39;post&#39; post}}</code>. When you supply a model,
-Ember.js will create a new instance of the <code>App.PostController</code> each
-time it is used.</p>
-
-<p>This allows you to use <code>{{render}}</code> in a loop:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">post</span> <span class="attribute-name">in</span> <span class="attribute-name">posts</span><span class="inline-delimiter">}}</span></span>
-  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">render</span> <span class="error">'</span><span class="attribute-name">post</span><span class="error">'</span> <span class="attribute-name">post</span><span class="inline-delimiter">}}</span></span>
-<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
-</pre></td>
-</tr></table>
-</div></div><h3 class='anchorable-toc' id='toc_unwrapping-an-code-objectcontroller-code-s-model'>Unwrapping an <code>ObjectController</code>&#39;s Model</h3>
-<p>When passing an <code>ObjectController</code> as a parameter to the <code>action</code>
-or <code>linkTo</code> helpers, Ember now unwraps the underlying model and 
-passes it through.</p>
-
-<p>Most importantly, this allows you to add an <code>itemController</code> to
-<code>{{#each}}</code> without affecting action handlers in your controller
-or router.</p>
-
-<p>If you have a template like this:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre><span class="comment">&lt;!-- posts.handlebars --&gt;</span>
-
-<span class="tag">&lt;ul&gt;</span>
-<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">controller</span> <span class="attribute-name">itemController</span>=<span class="string"><span class="delimiter">'</span><span class="content">postItem</span><span class="delimiter">'</span></span><span class="inline-delimiter">}}</span></span>
-  <span class="tag">&lt;li&gt;</span><span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">'</span><span class="attribute-name">selectPost</span><span class="error">'</span> <span class="attribute-name">this</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">name</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/button&gt;</span><span class="tag">&lt;/li&gt;</span>
-<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
-<span class="tag">&lt;/ul&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>Your <code>App.PostsController</code> would look like this:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-</pre></td>
-  <td class="code"><pre>App.PostsController = Ember.ArrayController.extend({
-  <span class="key">needs</span>: <span class="string"><span class="delimiter">'</span><span class="content">currentPost</span><span class="delimiter">'</span></span>,
-
-  <span class="function">selectPost</span>: <span class="keyword">function</span>(post) {
-    <span class="comment">// `post` here is an `App.Post`, not an</span>
-    <span class="comment">// `App.PostItemController`</span>
-    <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">controllers.currentPost.model</span><span class="delimiter">'</span></span>, post);
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>This should make using <code>itemController</code> less gotcha-prone.</p>
-<h3 class='anchorable-toc' id='toc_support-for-jquery-2-0'>Support for jQuery 2.0</h3>
-<p>Ember 1.0 RC2 supports <a href="http://blog.jquery.com/2013/03/01/jquery-2-0-beta-2-released/">jQuery 2.0</a>.</p>
-
-<p>This allows you to use a smaller, optimized build for newer browsers
-that is fully compatible with Ember.</p>
-
-<p>If you&#39;re targeting both older IE and modern browsers, you can use
-the following snippet to get the best of both worlds:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-</pre></td>
-  <td class="code"><pre><span class="comment">&lt;!--[if lt IE 9]&gt;
-    &lt;script src=&quot;jquery-1.9.1.js&quot;&gt;&lt;/script&gt;
-&lt;![endif]--&gt;</span>
-<span class="comment">&lt;!--[if gte IE 9]&gt;&lt;!--&gt;</span>
-    <span class="tag">&lt;script</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">jquery-2.0.0.js</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/script&gt;</span>
-<span class="comment">&lt;!--&lt;![endif]--&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>Because jQuery 1.9 and 2.0 are API-compatible, this strategy will
-allow you to target the widest range of browsers, but ship a
-smaller build for modern browsers.</p>
-
-<p>The future is here!</p>
-<h3 class='anchorable-toc' id='toc_changelog'>Changelog</h3>
-<p>The full <a href="https://github.com/emberjs/ember.js/blob/7e012d9e7f4c5e5b7ce6e60307aac7cd653df5b9/CHANGELOG#L1">CHANGELOG</a> is available on Github, as always.</p>
+<ul>
+<li>The inverse template (aka <code>{{else}}</code> block) of Handlebars helpers was not properly accounted
+for during the HTMLBars transition. Using an <code>{{else}}</code> block with a Handlebars helper has
+not been function since 1.9.0.</li>
+<li>The main block could not be rendered even if <code>options.fn()</code> was called within the helper. This
+regression was first introduced in 1.11.0-beta.4.</li>
+</ul>
+<h3 class='anchorable-toc' id='toc_incorrect-assertion-for-each-foos-itemcontroler-bar'>Incorrect Assertion for {{each foos itemControler=&#39;bar&#39;}}</h3>
+<p>During the 1.11.0 cycle an issue regarding <code>{{each}}</code> with prototype extensions disabled was reported.
+The solution to that issue was to add a much more helpful assertion when an <code>ArrayController</code>&#39;s model
+did not have <code>Ember.Array</code> mixed into it. Unfortunately, this assertion also was triggered when the
+model was simply <code>undefined</code>. The assertion has been updated to ignore falsey <code>model</code>&#39;s in 1.11.1.</p>
+<h3 class='anchorable-toc' id='toc_render-helper-with-view'>{{render}} helper with View</h3>
+<p>In 1.11.0 using the <code>{{render}}</code> helper (i.e. <code>{{render &#39;post&#39;}}</code>) when a <code>PostView</code> is present would not
+provide the view with a template (it was assumed to be manually specified in the view via <code>templateName</code>
+property). As of 1.11.1 you can specify the <code>templateName</code> in the <code>{{render}}</code> helpers view (just like in 1.11.0),
+but if you do not the views template will be defaulted to a template with the same name as the view itself.</p>
+<h2 class='anchorable-toc' id='toc_changelogs'>Changelogs</h2>
+<ul>
+<li><a href="https://github.com/emberjs/ember.js/compare/v1.11.0...v1.11.1">Ember.js 1.11.0 to 1.11.1 commit log</a></li>
+<li><a href="https://github.com/emberjs/ember.js/releases/tag/v1.11.1">Ember.js 1.11.1 CHANGELOG</a></li>
+</ul>
 
 
     <hr>
