@@ -62,7 +62,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v1.0.0-beta.16.1" target="_blank"> Tag: v1.0.0-beta.16.1</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/data/commits/e038e41" target="_blank"> Tag: e038e41</a></li>
 
 
           <li class="level-1 ">
@@ -127,11 +127,6 @@
         
           <li class="level-3 ">
                         <a href="/api/data/classes/DS.BooleanTransform.html">DS.BooleanTransform</a>
-
-          </li>
-        
-          <li class="level-3 ">
-                        <a href="/api/data/classes/DS.BuildURLMixin.html">DS.BuildURLMixin</a>
 
           </li>
         
@@ -270,7 +265,7 @@
         
   <h1 class="api-header">
   DS.InvalidError Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v1.0.0-beta.16.1/packages/ember-data/lib/system/adapter.js#L17">packages/ember-data/lib/system/adapter.js:17</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/e038e41/packages/ember-data/lib/system/adapter.js#L17">packages/ember-data/lib/system/adapter.js:17</a>
 </h1>
 
 <hr>
@@ -282,7 +277,7 @@
 <div class="class-info">
 
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.16.1/packages/ember-data/lib/system/adapter.js#L17">packages/ember-data/lib/system/adapter.js:17</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/e038e41/packages/ember-data/lib/system/adapter.js#L17">packages/ember-data/lib/system/adapter.js:17</a></p>
 
     <p>Module: <a href="/api/data/modules/ember-data.html">ember-data</a></p>
 </div>
@@ -296,54 +291,9 @@ from an adapter is rejected with a <code>DS.InvalidError</code> the record will
 transition to the <code>invalid</code> state and the errors will be set to the
 <code>errors</code> property on the record.</p>
 
-<p>For Ember Data to correctly map errors to their corresponding
-properties on the model, Ember Data expects each error to be
-namespaced under a key that matches the property name. For example
-if you had a Post model that looked like this.</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-</pre></td>
-  <td class="code"><pre>App.Post = DS.Model.extend({
-  <span class="key">title</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
-  <span class="key">content</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>)
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>To show an error from the server related to the <code>title</code> and
-<code>content</code> properties your adapter could return a promise that
-rejects with a <code>DS.InvalidError</code> object that looks like this:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-</pre></td>
-  <td class="code"><pre>App.PostAdapter = DS.RESTAdapter.extend({
-  <span class="function">updateRecord</span>: <span class="keyword">function</span>() {
-    <span class="comment">// Fictional adapter that always rejects</span>
-    <span class="keyword">return</span> Ember.RSVP.reject(<span class="keyword">new</span> DS.InvalidError({
-      <span class="key">title</span>: [<span class="string"><span class="delimiter">'</span><span class="content">Must be unique</span><span class="delimiter">'</span></span>],
-      <span class="key">content</span>: [<span class="string"><span class="delimiter">'</span><span class="content">Must not be blank</span><span class="delimiter">'</span></span>],
-    }));
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Your backend may use different property names for your records the
-store will attempt extract and normalize the errors using the
-serializer&#39;s <code>extractErrors</code> method before the errors get added to
-the the model. As a result, it is safe for the <code>InvalidError</code> to
-wrap the error payload unaltered.</p>
+<p>This function should return the entire payload as received from the
+server.  Error object extraction and normalization of model errors
+should be performed by <code>extractErrors</code> on the serializer.</p>
 
 <p>Example</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -359,26 +309,34 @@ wrap the error payload unaltered.</p>
 <strong>10</strong>
 11
 12
-13
-14
-15
-16
 </pre></td>
   <td class="code"><pre>App.ApplicationAdapter = DS.RESTAdapter.extend({
   <span class="function">ajaxError</span>: <span class="keyword">function</span>(jqXHR) {
     <span class="keyword">var</span> error = <span class="local-variable">this</span>._super(jqXHR);
 
-    <span class="comment">// 422 is used by this fictional server to signal a validation error</span>
     <span class="keyword">if</span> (jqXHR &amp;&amp; jqXHR.status === <span class="integer">422</span>) {
       <span class="keyword">var</span> jsonErrors = Ember.<span class="predefined">$</span>.parseJSON(jqXHR.responseText);
       <span class="keyword">return</span> <span class="keyword">new</span> DS.InvalidError(jsonErrors);
     } <span class="keyword">else</span> {
-      <span class="comment">// The ajax request failed however it is not a result of this</span>
-      <span class="comment">// record being in an invalid state so we do not return a</span>
-      <span class="comment">// `InvalidError` object.</span>
       <span class="keyword">return</span> error;
     }
   }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>The <code>DS.InvalidError</code> must be constructed with a single object whose
+keys are the invalid model properties, and whose values contain
+arrays of the corresponding error messages. For example:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="keyword">return</span> <span class="keyword">new</span> DS.InvalidError({
+  <span class="key">length</span>: [<span class="string"><span class="delimiter">'</span><span class="content">Must be less than 15</span><span class="delimiter">'</span></span>],
+  <span class="key">name</span>: [<span class="string"><span class="delimiter">'</span><span class="content">Must not be blank</span><span class="delimiter">'</span></span>]
 });
 </pre></td>
 </tr></table>
