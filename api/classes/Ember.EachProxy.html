@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Ember.DefaultResolver</title>
-    <meta property="st:title" content="Ember.DefaultResolver" />
+    <title>Ember.js - Ember.EachProxy</title>
+    <meta property="st:title" content="Ember.EachProxy" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" rel="stylesheet" type="text/css" />
@@ -310,7 +310,7 @@
 
           </li>
         
-          <li class="level-3 sub-selected">
+          <li class="level-3 ">
                         <a href="/api/classes/Ember.DefaultResolver.html">Ember.DefaultResolver</a>
 
           </li>
@@ -325,7 +325,7 @@
 
           </li>
         
-          <li class="level-3 ">
+          <li class="level-3 sub-selected">
                         <a href="/api/classes/Ember.EachProxy.html">Ember.EachProxy</a>
 
           </li>
@@ -619,122 +619,30 @@
       <div id="content" class="has-sidebar">
         
   <h1 class="api-header">
-  Ember.DefaultResolver Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/ember.js/tree/v1.11.1/packages/ember-application/lib/system/resolver.js#L35">packages/ember-application/lib/system/resolver.js:35</a>
+  Ember.EachProxy Class
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/ember.js/tree/v1.11.1/packages/ember-runtime/lib/system/each_proxy.js#L104">packages/ember-runtime/lib/system/each_proxy.js:104</a>
 </h1>
 
 <hr>
 
 
 
-
+<p>PRIVATE</p>
 
 <div class="class-info">
     <p>Extends: <a href="/api/classes/Ember.Object.html">Ember.Object</a></p>
 
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.11.1/packages/ember-application/lib/system/resolver.js#L35">packages/ember-application/lib/system/resolver.js:35</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.11.1/packages/ember-runtime/lib/system/each_proxy.js#L104">packages/ember-runtime/lib/system/each_proxy.js:104</a></p>
 
-    <p>Module: <a href="/api/modules/ember-application.html">ember-application</a></p>
+    <p>Module: <a href="/api/modules/ember-runtime.html">ember-runtime</a></p>
 </div>
 
   <div class="description">
-    <p>The DefaultResolver defines the default lookup rules to resolve
-container lookups before consulting the container for registered
-items:</p>
+    <p>This is the object instance returned when you get the <code>@each</code> property on an
+array. It uses the unknownProperty handler to automatically create
+EachArray instances for property names.</p>
 
-<ul>
-<li>templates are looked up on <code>Ember.TEMPLATES</code></li>
-<li>other names are looked up on the application after converting
-the name. For example, <code>controller:post</code> looks up
-<code>App.PostController</code> by default.</li>
-<li>there are some nuances (see examples below)</li>
-</ul>
-<h3 class='anchorable-toc' id='toc_how-resolving-works'>How Resolving Works</h3>
-<p>The container calls this object&#39;s <code>resolve</code> method with the
-<code>fullName</code> argument.</p>
-
-<p>It first parses the fullName into an object using <code>parseName</code>.</p>
-
-<p>Then it checks for the presence of a type-specific instance
-method of the form <code>resolve[Type]</code> and calls it if it exists.
-For example if it was resolving &#39;template:post&#39;, it would call
-the <code>resolveTemplate</code> method.</p>
-
-<p>Its last resort is to call the <code>resolveOther</code> method.</p>
-
-<p>The methods of this object are designed to be easy to override
-in a subclass. For example, you could enhance how a template
-is resolved like so:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-</pre></td>
-  <td class="code"><pre>App = Ember.Application.create({
-  <span class="key">Resolver</span>: Ember.DefaultResolver.extend({
-    <span class="function">resolveTemplate</span>: <span class="keyword">function</span>(parsedName) {
-      <span class="keyword">var</span> resolvedTemplate = <span class="local-variable">this</span>._super(parsedName);
-      <span class="keyword">if</span> (resolvedTemplate) { <span class="keyword">return</span> resolvedTemplate; }
-      <span class="keyword">return</span> Ember.TEMPLATES[<span class="string"><span class="delimiter">'</span><span class="content">not_found</span><span class="delimiter">'</span></span>];
-    }
-  })
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Some examples of how names are resolved:</p>
-<div class="highlight  "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
-14
-15
-16
-17
-18
-19
-<strong>20</strong>
-</pre></td>
-  <td class="code"><pre>'template:post'           //=&gt; Ember.TEMPLATES['post']
-'template:posts/byline'   //=&gt; Ember.TEMPLATES['posts/byline']
-'template:posts.byline'   //=&gt; Ember.TEMPLATES['posts/byline']
-'template:blogPost'       //=&gt; Ember.TEMPLATES['blogPost']
-                          //   OR
-                          //   Ember.TEMPLATES['blog_post']
-'controller:post'         //=&gt; App.PostController
-'controller:posts.index'  //=&gt; App.PostsIndexController
-'controller:blog/post'    //=&gt; Blog.PostController
-'controller:basic'        //=&gt; Ember.Controller
-'route:post'              //=&gt; App.PostRoute
-'route:posts.index'       //=&gt; App.PostsIndexRoute
-'route:blog/post'         //=&gt; Blog.PostRoute
-'route:basic'             //=&gt; Ember.Route
-'view:post'               //=&gt; App.PostView
-'view:posts.index'        //=&gt; App.PostsIndexView
-'view:blog/post'          //=&gt; Blog.PostView
-'view:basic'              //=&gt; Ember.View
-'foo:post'                //=&gt; App.PostFoo
-'model:post'              //=&gt; App.Post
-</pre></td>
-</tr></table>
-</div></div>
   </div>
 
 
@@ -769,9 +677,6 @@ is resolved like so:</p>
         <ul class="index-list">
             <li class="method inherited">
               <a href="#method__lazyInjections">_lazyInjections</a>
-            </li>
-            <li class="method private">
-              <a href="#method__logLookup">_logLookup</a>
             </li>
             <li class="method private inherited">
               <a href="#method__onLookup">_onLookup</a>
@@ -827,17 +732,11 @@ is resolved like so:</p>
             <li class="method inherited">
               <a href="#method_init">init</a>
             </li>
-            <li class="method protected">
-              <a href="#method_lookupDescription">lookupDescription</a>
-            </li>
             <li class="method inherited">
               <a href="#method_metaForProperty">metaForProperty</a>
             </li>
             <li class="method inherited">
               <a href="#method_notifyPropertyChange">notifyPropertyChange</a>
-            </li>
-            <li class="method protected">
-              <a href="#method_parseName">parseName</a>
             </li>
             <li class="method inherited">
               <a href="#method_propertyDidChange">propertyDidChange</a>
@@ -854,30 +753,6 @@ is resolved like so:</p>
             <li class="method inherited">
               <a href="#method_reopenClass">reopenClass</a>
             </li>
-            <li class="method ">
-              <a href="#method_resolve">resolve</a>
-            </li>
-            <li class="method protected">
-              <a href="#method_resolveController">resolveController</a>
-            </li>
-            <li class="method protected">
-              <a href="#method_resolveHelper">resolveHelper</a>
-            </li>
-            <li class="method protected">
-              <a href="#method_resolveModel">resolveModel</a>
-            </li>
-            <li class="method protected">
-              <a href="#method_resolveOther">resolveOther</a>
-            </li>
-            <li class="method protected">
-              <a href="#method_resolveRoute">resolveRoute</a>
-            </li>
-            <li class="method protected">
-              <a href="#method_resolveTemplate">resolveTemplate</a>
-            </li>
-            <li class="method protected">
-              <a href="#method_resolveView">resolveView</a>
-            </li>
             <li class="method inherited">
               <a href="#method_set">set</a>
             </li>
@@ -890,8 +765,8 @@ is resolved like so:</p>
             <li class="method inherited">
               <a href="#method_toggleProperty">toggleProperty</a>
             </li>
-            <li class="method protected">
-              <a href="#method_useRouterNaming">useRouterNaming</a>
+            <li class="method ">
+              <a href="#method_unknownProperty">unknownProperty</a>
             </li>
             <li class="method inherited">
               <a href="#method_willDestroy">willDestroy</a>
@@ -907,9 +782,6 @@ is resolved like so:</p>
             </li>
             <li class="property inherited">
               <a href="#property_isDestroying">isDestroying</a>
-            </li>
-            <li class="property ">
-              <a href="#property_namespace">namespace</a>
             </li>
         </ul>
     </div>
@@ -973,53 +845,6 @@ properties will lookup on the container lazily.</p>
         <dd> Hash of all lazy injected property keys to container names</dd>
       </dl>
     </div>
-</div>
-
-        
-<div id="method__logLookup" class="method private item-entry">
-  <h3 data-id="method__logLookup" class="name anchorable-toc"><code>_logLookup</code></h3>
-  <span class="args">
-    (found, parsedName)
-  </span>
-
-
-
-
-  <span class="flag private">private</span>
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.11.1/packages/ember-application/lib/system/resolver.js#L379">packages/ember-application/lib/system/resolver.js:379</a>
-
-  </div>
-
-
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>found</strong> <span class="type">Boolean</span></dt>
-          <dd>
-            
-
-          </dd>
-          <dt><strong>parsedName</strong> <span class="type">Object</span></dt>
-          <dd>
-            
-
-          </dd>
-      </dl>
-    </div>
-
 </div>
 
         
@@ -2235,55 +2060,6 @@ application.</p>
 </div>
 
         
-<div id="method_lookupDescription" class="method protected item-entry">
-  <h3 data-id="method_lookupDescription" class="name anchorable-toc"><code>lookupDescription</code></h3>
-  <span class="args">
-    (fullName)
-  </span>
-
-
-
-
-  <span class="flag protected">protected</span>
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.11.1/packages/ember-application/lib/system/resolver.js#L228">packages/ember-application/lib/system/resolver.js:228</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>Returns a human-readable description for a fullName. Used by the
-Application namespace in assertions to describe the
-precise name of the class that Ember is looking for, rather than
-container keys.</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>fullName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
-          <dd>
-            the lookup string
-
-          </dd>
-      </dl>
-    </div>
-
-</div>
-
-        
 <div id="method_metaForProperty" class="method inherited item-entry">
   <h3 data-id="method_metaForProperty" class="name anchorable-toc"><code>metaForProperty</code></h3>
   <span class="args">
@@ -2411,54 +2187,6 @@ succession.</p>
         <dd> </dd>
       </dl>
     </div>
-</div>
-
-        
-<div id="method_parseName" class="method protected item-entry">
-  <h3 data-id="method_parseName" class="name anchorable-toc"><code>parseName</code></h3>
-  <span class="args">
-    (fullName)
-  </span>
-
-
-
-
-  <span class="flag protected">protected</span>
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.11.1/packages/ember-application/lib/system/resolver.js#L177">packages/ember-application/lib/system/resolver.js:177</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>Convert the string name of the form &#39;type:name&#39; to
-a Javascript object with the parsed aspects of the name
-broken out.</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>fullName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
-          <dd>
-            the lookup string
-
-          </dd>
-      </dl>
-    </div>
-
 </div>
 
         
@@ -2842,392 +2570,6 @@ see <code>reopen</code></p>
 </div>
 
         
-<div id="method_resolve" class="method  item-entry">
-  <h3 data-id="method_resolve" class="name anchorable-toc"><code>resolve</code></h3>
-  <span class="args">
-    (fullName)
-  </span>
-
-  <span class="type">Object</span>
-
-
-
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.11.1/packages/ember-application/lib/system/resolver.js#L150">packages/ember-application/lib/system/resolver.js:150</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>This method is called via the container&#39;s resolver method.
-It parses the provided <code>fullName</code> and then looks up and
-returns the appropriate template or class.</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>fullName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
-          <dd>
-            the lookup string
-
-          </dd>
-      </dl>
-    </div>
-
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type">Object</span>
-        <dd> the resolved factory</dd>
-      </dl>
-    </div>
-</div>
-
-        
-<div id="method_resolveController" class="method protected item-entry">
-  <h3 data-id="method_resolveController" class="name anchorable-toc"><code>resolveController</code></h3>
-  <span class="args">
-    (parsedName)
-  </span>
-
-
-
-
-  <span class="flag protected">protected</span>
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.11.1/packages/ember-application/lib/system/resolver.js#L308">packages/ember-application/lib/system/resolver.js:308</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>Lookup the controller using <code>resolveOther</code></p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>parsedName</strong> <span class="type">Object</span></dt>
-          <dd>
-            a parseName object with the parsed
-  fullName lookup string
-
-          </dd>
-      </dl>
-    </div>
-
-</div>
-
-        
-<div id="method_resolveHelper" class="method protected item-entry">
-  <h3 data-id="method_resolveHelper" class="name anchorable-toc"><code>resolveHelper</code></h3>
-  <span class="args">
-    (parsedName)
-  </span>
-
-
-
-
-  <span class="flag protected">protected</span>
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.11.1/packages/ember-application/lib/system/resolver.js#L347">packages/ember-application/lib/system/resolver.js:347</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>Look up the specified object (from parsedName) on the appropriate
-namespace (usually on the Application)</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>parsedName</strong> <span class="type">Object</span></dt>
-          <dd>
-            a parseName object with the parsed
-  fullName lookup string
-
-          </dd>
-      </dl>
-    </div>
-
-</div>
-
-        
-<div id="method_resolveModel" class="method protected item-entry">
-  <h3 data-id="method_resolveModel" class="name anchorable-toc"><code>resolveModel</code></h3>
-  <span class="args">
-    (parsedName)
-  </span>
-
-
-
-
-  <span class="flag protected">protected</span>
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.11.1/packages/ember-application/lib/system/resolver.js#L333">packages/ember-application/lib/system/resolver.js:333</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>Lookup the model on the Application namespace</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>parsedName</strong> <span class="type">Object</span></dt>
-          <dd>
-            a parseName object with the parsed
-  fullName lookup string
-
-          </dd>
-      </dl>
-    </div>
-
-</div>
-
-        
-<div id="method_resolveOther" class="method protected item-entry">
-  <h3 data-id="method_resolveOther" class="name anchorable-toc"><code>resolveOther</code></h3>
-  <span class="args">
-    (parsedName)
-  </span>
-
-
-
-
-  <span class="flag protected">protected</span>
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.11.1/packages/ember-application/lib/system/resolver.js#L359">packages/ember-application/lib/system/resolver.js:359</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>Look up the specified object (from parsedName) on the appropriate
-namespace (usually on the Application)</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>parsedName</strong> <span class="type">Object</span></dt>
-          <dd>
-            a parseName object with the parsed
-  fullName lookup string
-
-          </dd>
-      </dl>
-    </div>
-
-</div>
-
-        
-<div id="method_resolveRoute" class="method protected item-entry">
-  <h3 data-id="method_resolveRoute" class="name anchorable-toc"><code>resolveRoute</code></h3>
-  <span class="args">
-    (parsedName)
-  </span>
-
-
-
-
-  <span class="flag protected">protected</span>
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.11.1/packages/ember-application/lib/system/resolver.js#L320">packages/ember-application/lib/system/resolver.js:320</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>Lookup the route using <code>resolveOther</code></p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>parsedName</strong> <span class="type">Object</span></dt>
-          <dd>
-            a parseName object with the parsed
-  fullName lookup string
-
-          </dd>
-      </dl>
-    </div>
-
-</div>
-
-        
-<div id="method_resolveTemplate" class="method protected item-entry">
-  <h3 data-id="method_resolveTemplate" class="name anchorable-toc"><code>resolveTemplate</code></h3>
-  <span class="args">
-    (parsedName)
-  </span>
-
-
-
-
-  <span class="flag protected">protected</span>
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.11.1/packages/ember-application/lib/system/resolver.js#L274">packages/ember-application/lib/system/resolver.js:274</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>Look up the template in Ember.TEMPLATES</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>parsedName</strong> <span class="type">Object</span></dt>
-          <dd>
-            a parseName object with the parsed
-  fullName lookup string
-
-          </dd>
-      </dl>
-    </div>
-
-</div>
-
-        
-<div id="method_resolveView" class="method protected item-entry">
-  <h3 data-id="method_resolveView" class="name anchorable-toc"><code>resolveView</code></h3>
-  <span class="args">
-    (parsedName)
-  </span>
-
-
-
-
-  <span class="flag protected">protected</span>
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.11.1/packages/ember-application/lib/system/resolver.js#L295">packages/ember-application/lib/system/resolver.js:295</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>Lookup the view using <code>resolveOther</code></p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>parsedName</strong> <span class="type">Object</span></dt>
-          <dd>
-            a parseName object with the parsed
-  fullName lookup string
-
-          </dd>
-      </dl>
-    </div>
-
-</div>
-
-        
 <div id="method_set" class="method inherited item-entry">
   <h3 data-id="method_set" class="name anchorable-toc"><code>set</code></h3>
   <span class="args">
@@ -3530,16 +2872,15 @@ current value.</p>
 </div>
 
         
-<div id="method_useRouterNaming" class="method protected item-entry">
-  <h3 data-id="method_useRouterNaming" class="name anchorable-toc"><code>useRouterNaming</code></h3>
+<div id="method_unknownProperty" class="method  item-entry">
+  <h3 data-id="method_unknownProperty" class="name anchorable-toc"><code>unknownProperty</code></h3>
   <span class="args">
-    (parsedName)
+    (keyName, value)
   </span>
 
 
 
 
-  <span class="flag protected">protected</span>
 
 
 
@@ -3547,14 +2888,14 @@ current value.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.11.1/packages/ember-application/lib/system/resolver.js#L259">packages/ember-application/lib/system/resolver.js:259</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.11.1/packages/ember-runtime/lib/system/each_proxy.js#L128">packages/ember-runtime/lib/system/each_proxy.js:128</a>
 
   </div>
 
 
     <div class="description">
-      <p>Given a parseName object (output from <code>parseName</code>), apply
-the conventions expected by <code>Ember.Router</code></p>
+      <p>You can directly access mapped properties by simply requesting them.
+The <code>unknownProperty</code> handler will generate an EachArray of each item.</p>
 
     </div>
 
@@ -3566,10 +2907,14 @@ the conventions expected by <code>Ember.Router</code></p>
       <h3>Parameters:</h3>
 
       <dl>
-          <dt><strong>parsedName</strong> <span class="type">Object</span></dt>
+          <dt><strong>keyName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
           <dd>
-            a parseName object with the parsed
-  fullName lookup string
+            
+
+          </dd>
+          <dt><strong>value</strong> <span class="type">*</span></dt>
+          <dd>
+            
 
           </dd>
       </dl>
@@ -3817,40 +3162,6 @@ the <code>isDestroyed</code> flag is set.</p>
 
   <p>
       <strong>Default:</strong> <code>false</code>
-  </p>
-
-
-
-</div>
-
-        
-<div id="property_namespace" class="property  item-entry">
-  <h3 data-id="property_namespace" class="name anchorable-toc"><code>namespace</code></h3>
-
-
-
-
-
-
-
-
-
-  <div class="meta">
-        Inherited from
-        <a href="/api/classes/Ember.DefaultResolver.html#method_namespace">Ember.DefaultResolver</a>
-          but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v1.11.1/packages/ember-application/lib/system/resolver.js#L108">packages/ember-application/lib/system/resolver.js:108</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>This will be set to the Application instance when it is
-created.</p>
-
-    </div>
-
-  <p>
   </p>
 
 
