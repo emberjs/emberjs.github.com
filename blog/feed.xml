@@ -5,16 +5,205 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2015-04-19T17:00:00-07:00</updated>
+  <updated>2015-05-04T20:00:00-04:00</updated>
   <author>
     <name>Ember</name>
   </author>
   <entry>
+    <title>Glimmer's In Canary, Test Your Apps!</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2015/05/05/glimmer-merging.html"/>
+    <id>http://emberjs.com/blog/2015/05/05/glimmer-merging.html</id>
+    <published>2015-05-04T20:00:00-04:00</published>
+    <updated>2015-05-04T20:00:00-04:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;After months of work, &lt;strong&gt;Glimmer is landing in Canary today&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;What this means:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The test suite passes.&lt;/li&gt;
+&lt;li&gt;We have tested Glimmer on our own apps, and, for the most part, apps boot and
+run correctly.&lt;/li&gt;
+&lt;li&gt;There are still known issues (see below), including with...&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    <content type="html">&lt;p&gt;After months of work, &lt;strong&gt;Glimmer is landing in Canary today&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;What this means:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The test suite passes.&lt;/li&gt;
+&lt;li&gt;We have tested Glimmer on our own apps, and, for the most part, apps boot and
+run correctly.&lt;/li&gt;
+&lt;li&gt;There are still known issues (see below), including with the test helpers.&lt;/li&gt;
+&lt;li&gt;At this point, we need community help to identify compatibility issues not
+covered by the test suite.&lt;/li&gt;
+&lt;li&gt;We expect to continue improving compatibility with the pre-Glimmer engine for
+some time, as new issues come to light.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Glimmer is the new rendering engine the Ember community has been working on for
+the past several months. It is the first ground-up change to the templating
+engine since SproutCore 2.0, and takes advantage of the groundwork laid by
+HTMLBars to dramatically improve re-rendering performance. It also sets the
+stage for more performance improvements during the 2.x series, and
+React-inspired improvements to the Ember programming model. Best of all, we are
+landing Glimmer in Ember 1.13, compatible with the full public API of Ember
+1.x.&lt;/p&gt;
+
+&lt;p&gt;It&amp;#39;s also worth noting that while our apps feel faster, not every
+performance benchmark will necessarily show marked improvement. There
+will be more on this below, but the Glimmer refactor focused primarily
+on dramatic improvements to re-rendering performance and programming
+model improvements.&lt;/p&gt;
+
+&lt;p&gt;Initial render of component-heavy pages shows some improvement in most
+of our tests, but you should expect to see the biggest improvements when
+re-rendering lists, especially when you are not using deprecated
+functionality.&lt;/p&gt;
+
+&lt;p&gt;Once we land Glimmer, you will probably see a variety of different
+benchmarks testing various aspects of Ember. We expect to see benchmarks
+showing that there are still pathologically slow scenarios in Ember,
+especially in areas that we did not focus on improving. We expect to
+continue to improve performance across Ember throughout the 2.x series,
+and discuss that more below.&lt;/p&gt;
+
+&lt;p&gt;Also note that while we took great pains to support features present in
+Ember 1.12 (including many long-deprecated features), that compatibility
+often comes with significant performance costs. In some cases, seemingly
+similar constructs (e.g. &lt;code&gt;{{#each posts as |post|]}&lt;/code&gt; vs. &lt;code&gt;{{#each posts
+itemController=&amp;#39;post&amp;#39; as |post|}}&lt;/code&gt;) have significantly different
+internal implementation, and the Ember 2.0 version has vastly better
+performance.&lt;/p&gt;
+
+&lt;p&gt;Finally, there will be an upcoming guide in the next week or so that
+describes the new features of the Glimmer engine (&lt;code&gt;attrs&lt;/code&gt;, new lifecycle
+hooks, keys in &lt;code&gt;#each&lt;/code&gt;), but at the moment we are focusing on
+compatibility with 1.x and testing the 1.x API with existing
+applications.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_upgrading'&gt;Upgrading&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Someone needs to fill in the steps to use Glimmer with Ember CLI&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_known-issues'&gt;Known Issues&lt;/h2&gt;
+&lt;p&gt;There are several known issues that you should consider when evaluating
+Glimmer:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;There are still a few memory leaks that we have identified and are
+quickly addressing.&lt;/li&gt;
+&lt;li&gt;The concept of &lt;code&gt;controller&lt;/code&gt; in templates and actions in Ember 1.x was
+fairly nuanced. Glimmer started with a simpler model and layered
+compatibility on top. There are known gaps in the compatibility layer
+that we are still addressing.&lt;/li&gt;
+&lt;li&gt;There are still a number of issues in the testing helpers (especially
+the faux unit tests that use &amp;quot;isolated containers&amp;quot;) that are causing
+apps that work correctly to fail tests. We are working to fix the test
+helpers, and should have that work done before we release 1.13 beta.&lt;/li&gt;
+&lt;li&gt;There are likely a number of not-yet-known compatibility issues in
+Glimmer. You should assume that the vast majority of issues you
+encounter when testing Glimmer over the next few weeks will be addressed
+before the final release.&lt;/li&gt;
+&lt;li&gt;The compatibility layer is quite slow in some areas, making the
+overall Glimmer engine slower than we would like. We have plans to
+improve overall performance through the canary and beta cycle, and
+then of course in the 2.0 release cycle.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;In general, the Glimmer effort was an attempt to improve
+re-rendering performance, especially in large lists.&lt;/strong&gt; It also laid
+the groundwork for significant performance work in initial render and
+throughout the framework, but that work is not yet done. Expect to see
+continued performance improvements in Ember throughout the 2.x cycle
+as a result of this change.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The most critical of these caveats should be addressed before we release 1.13
+beta, and we expect to continue work on the remaining issues throughout the
+1.13 beta cycle.&lt;/p&gt;
+
+&lt;p&gt;Because of the magnitude of this change, and the proximity to the Ember 2.0
+&amp;quot;cruft removal&amp;quot; pass, we plan to aggressively fix reported bugs during the 1.13
+beta period. There will be another post describing our 1.13 and 2.0 release
+plans with more precision in the next few weeks.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_performance-gains'&gt;Performance Gains&lt;/h2&gt;
+&lt;p&gt;The biggest performance gains in Glimmer come from moving to a simpler
+rendering model, built on top of HTMLBars.&lt;/p&gt;
+
+&lt;p&gt;First, this allowed us to remove &lt;strong&gt;all&lt;/strong&gt; internal views for constructs
+like &lt;code&gt;{{foo}}&lt;/code&gt;, &lt;code&gt;{{#if bar}}&lt;/code&gt; and even in &lt;code&gt;{{#each posts as |post|}}&lt;/code&gt;.
+This view removal has an impact on initial render, because these
+constructs are very common in real-world templates.&lt;/p&gt;
+
+&lt;p&gt;Second, as we have discussed extensively, this allows us to
+significantly improve the performance of re-rendering, which makes it
+practical to re-render lists with entirely new arrays with very good
+performance. Previously, achieving reasonable performance was very
+difficult, and even when possible, came with significant bookkeeping
+overhead.&lt;/p&gt;
+
+&lt;p&gt;Interestingly, we have found that when testing real apps, the
+performance gains are much more widespread than we expected, in large
+part because of the simplification of the overall model.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Glimmer&amp;#39;s performance in real applications has pleasantly surprised
+us, exceeding the improvements we&amp;#39;ve seen in benchmarks designed to
+stress-test pathological cases.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;When upgrading to Glimmer, please pay special attention to the
+real-world performance of your application &lt;strong&gt;in production mode&lt;/strong&gt; and
+after clearing any deprecations with performance warnings.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_deprecated-features'&gt;Deprecated Features&lt;/h2&gt;
+&lt;p&gt;Throughout the 1.x series, Ember has deprecated features we intended to
+remove in 2.0. That process has continued with Ember 1.13, which will
+contain Glimmer.&lt;/p&gt;
+
+&lt;p&gt;However, it&amp;#39;s worth noting that Glimmer is the first major change to
+many parts of the view layer since SproutCore 2! As a result,
+perfect compatibility, especially in private APIs, was more
+challenging.&lt;/p&gt;
+
+&lt;p&gt;During the process of building Glimmer, we found various semantics of
+&amp;quot;controller&amp;quot;s to be the most challenging. For the most part, this is
+because the concept of controller has a number of different meanings
+depending on context (routes, &lt;code&gt;{{render}}&lt;/code&gt;, &lt;code&gt;{{#each posts
+itemController=&amp;#39;post&amp;#39;}}&lt;/code&gt;, &lt;code&gt;{{#each posts itemController=&amp;#39;post&amp;#39; as
+|post|}}&lt;/code&gt;, &lt;code&gt;{{#with someController}}&lt;/code&gt;, etc.).&lt;/p&gt;
+
+&lt;p&gt;Controllers and components both mange a template&amp;#39;s &amp;quot;context&amp;quot; (called
+&amp;quot;self&amp;quot; in Glimmer) and serve as a target for actions. Mirroring these
+semantics, which are effectively derived from implementation details of
+Ember 1.x&amp;#39;s rendering engine, has been a challenge. We&amp;#39;re confident they
+are very close, but encourage you to open an issue if they have changed.&lt;/p&gt;
+
+&lt;p&gt;Glimmer, through HTMLBars, has a much clearer concept of &amp;quot;scope&amp;quot;, and
+features like &lt;code&gt;{{yield}}&lt;/code&gt; work directly with that scope object. We were
+able to get the Ember test suite passing by implementing the old
+semantics on top of the new scope concept, but &lt;strong&gt;we are aware that we
+have gaps in our implementation.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Please let us know if you find controller semantics that we have
+implemented incorrectly. Bug reports would help, JSBins would help more,
+and pull requests with failing tests would help even more.&lt;/p&gt;
+
+&lt;p&gt;Finally, for the best experience with Glimmer, you should try to move
+your application away from &lt;code&gt;itemController&lt;/code&gt;, &lt;code&gt;{{render}}&lt;/code&gt; and other
+constructs that manipulate the controller from the template. We know
+that this is not always possible (our applications all still make
+use of some cases of these features),  which is why we worked so hard on
+compatibility.&lt;/p&gt;
+
+&lt;p&gt;That said, you&amp;#39;ll get better performance and a quicker upgrade path to
+2.0 if you work on eliminating uses of these features soon. Implementing
+them correctly added enough complexity that we will want to move
+somewhat aggressively in 2.x to enable us to further improve
+performance.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
     <title>Internet Explorer 8 Support Will Be Removed in Ember 2.0</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/04/20/ie8-support-update.html"/>
     <id>http://emberjs.com/blog/2015/04/20/ie8-support-update.html</id>
-    <published>2015-04-19T17:00:00-07:00</published>
-    <updated>2015-04-19T17:00:00-07:00</updated>
+    <published>2015-04-19T20:00:00-04:00</published>
+    <updated>2015-04-19T20:00:00-04:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -129,8 +318,8 @@ community.&lt;/p&gt;
     <title>Security and Bugfix Releases - Ember 1.10.1, 1.11.2, 1.11.3</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/04/14/security-and-bugfix-releases-ember-1-10-1-1-11-2-1-11-3.html"/>
     <id>http://emberjs.com/blog/2015/04/14/security-and-bugfix-releases-ember-1-10-1-1-11-2-1-11-3.html</id>
-    <published>2015-04-13T17:00:00-07:00</published>
-    <updated>2015-04-13T17:00:00-07:00</updated>
+    <published>2015-04-13T20:00:00-04:00</published>
+    <updated>2015-04-13T20:00:00-04:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -195,8 +384,8 @@ in addition to the security patch.&lt;/p&gt;
     <title>Ember.js 1.11.1 Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/04/04/ember-1-11-1-released.html"/>
     <id>http://emberjs.com/blog/2015/04/04/ember-1-11-1-released.html</id>
-    <published>2015-04-03T17:00:00-07:00</published>
-    <updated>2015-04-03T17:00:00-07:00</updated>
+    <published>2015-04-03T20:00:00-04:00</published>
+    <updated>2015-04-03T20:00:00-04:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -251,8 +440,8 @@ but if you do not the views template will be defaulted to a template with the sa
     <title>Ember.js 1.11.0 and 1.12 Beta Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/03/27/ember-1-11-0-released.html"/>
     <id>http://emberjs.com/blog/2015/03/27/ember-1-11-0-released.html</id>
-    <published>2015-03-26T17:00:00-07:00</published>
-    <updated>2015-03-26T17:00:00-07:00</updated>
+    <published>2015-03-26T20:00:00-04:00</published>
+    <updated>2015-03-26T20:00:00-04:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -554,8 +743,8 @@ since Ember 1.10. It has been removed in Ember.js 1.11.&lt;/li&gt;
     <title>Ember Data v1.0.0-beta.16.1 Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/03/24/ember-data-1-0-beta-16-1-released.html"/>
     <id>http://emberjs.com/blog/2015/03/24/ember-data-1-0-beta-16-1-released.html</id>
-    <published>2015-03-23T17:00:00-07:00</published>
-    <updated>2015-03-23T17:00:00-07:00</updated>
+    <published>2015-03-23T20:00:00-04:00</published>
+    <updated>2015-03-23T20:00:00-04:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -595,147 +784,6 @@ this issue.&lt;/p&gt;
 &lt;h2 class='anchorable-toc' id='toc_changelog'&gt;Changelog&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="https://github.com/emberjs/data/blob/v1.0.0-beta.16.1/CHANGELOG.md"&gt;Ember Data 1.0.0-beta.16.1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;!-- Links --&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Ember Data v1.0.0-beta.16 Released</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2015/03/23/ember-data-1-0-beta-16-released.html"/>
-    <id>http://emberjs.com/blog/2015/03/23/ember-data-1-0-beta-16-released.html</id>
-    <published>2015-03-22T17:00:00-07:00</published>
-    <updated>2015-03-22T17:00:00-07:00</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;We are pleased to announce the release Ember Data 1.0.0-beta.16. It
-includes many bug fixes as well as several new features. As always
-this release can be obtained from npm (for use with ember-cli),
-rubygems, or bower. The builds are also available...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;We are pleased to announce the release Ember Data 1.0.0-beta.16. It
-includes many bug fixes as well as several new features. As always
-this release can be obtained from npm (for use with ember-cli),
-rubygems, or bower. The builds are also available as static files at
-emberjs.com/builds&lt;/p&gt;
-
-&lt;p&gt;The 1.0.0-beta.16 release represents the effort of at least 31
-contributors across over 112 commits.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_new-core-contributor'&gt;New Core Contributor&lt;/h2&gt;
-&lt;p&gt;Contributor &lt;a href="https://github.com/wecc"&gt;Christoffer Persson&lt;/a&gt; has been given collaborator
-status and will help us triage issues, merge pull requests, and
-contribute bug fixes and documentation. Christoffer has been extremely
-active in triaging issues and contributing features and bug fixes to
-the Ember Data project.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_breaking-changes'&gt;Breaking Changes&lt;/h2&gt;&lt;h3 class='anchorable-toc' id='toc_the-store-now-passes-snapshots-instead-of-records-to-adapter-methods'&gt;The store now passes snapshots instead of records to adapter methods&lt;/h3&gt;
-&lt;p&gt;In 1.0.0-beta.15 Ember Data introduce the Snapshot API and began
-passing snapshot instances into all serializers to prevent
-side-effects from occurring when inspecting relationships for
-serialization. This introduces some pain points in 3rd party adapters
-and serializers since they could not easily create snapshot instances
-without using private APIs. In Ember Data 1.0.0-beta.16 the
-store will now pass snapshot instances into adapters methods instead
-of record instances.&lt;/p&gt;
-
-&lt;p&gt;The following adapter methods now receive snapshots instead of records:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;find(store, type, id, snapshot)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;findMany(store, type, ids, snapshots)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;findHasMany(store, snapshot, url, relationship)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;findBelongsTo(store, snapshot, url, relationship)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;createRecord(store, type, snapshot)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;updateRecord(store, type, snapshot)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;deleteRecord(store, type, snapshot)&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The signature of &lt;code&gt;buildURL(type, id, snapshot)&lt;/code&gt; has also been updated to receive
-snapshots instead of records.&lt;/p&gt;
-
-&lt;p&gt;This change removes the need for adapters to create snapshots manually using the
-private API &lt;code&gt;record._createSnapshot()&lt;/code&gt; to be able to pass snapshots to
-serializers.&lt;/p&gt;
-
-&lt;p&gt;Snapshots are backwards-compatible with records (with deprecation warnings) and
-it should be pretty straight forward to update current code to the public
-Snapshot API:&lt;/p&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;post.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;id&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)           =&amp;gt; postSnapshot.id
-post.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;title&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)        =&amp;gt; postSnapshot.attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;title&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
-post.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;author&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)       =&amp;gt; postSnapshot.belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;author&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
-post.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)     =&amp;gt; postSnapshot.hasMany(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
-post.constructor         =&amp;gt; postSnapshot.type;
-post.constructor.typeKey =&amp;gt; postSnapshot.typeKey
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;If you need to access the underlying record of a snapshot you can do so by
-accessing &lt;code&gt;snapshot.record&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;The full API reference of &lt;code&gt;DS.Snapshot&lt;/code&gt; can be found &lt;a href="http://emberjs.com/api/data/classes/DS.Snapshot.html"&gt;here&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_improvements'&gt;Improvements&lt;/h2&gt;&lt;h3 class='anchorable-toc' id='toc_store-as-a-service'&gt;Store as a Service&lt;/h3&gt;
-&lt;p&gt;The store has now been registered as a service. So when you are using
-Ember Data 1.0.0-beta.16 with Ember 1.10+ you can now inject the store
-into any Ember object managed by the container.&lt;/p&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;App.TweetComposerComponent = Ember.Component.extend({
-  &lt;span class="key"&gt;store&lt;/span&gt;: Ember.inject.service(),
-  &lt;span class="function"&gt;newTweet&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;() {
-    &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="local-variable"&gt;this&lt;/span&gt;.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;store&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).createRecord(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;tweet&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, {});
-  }
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Please give a warm thanks to &lt;a href="https://github.com/martndemus"&gt;martndemus&lt;/a&gt; for his
-work implementing this feature!&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_mixins-in-polymorphic-relationships'&gt;Mixins in Polymorphic Relationships&lt;/h3&gt;
-&lt;p&gt;&lt;a href="https://github.com/igorT"&gt;Igor Terzic&lt;/a&gt; Added support for using mixins in polymorphic
-relationships. This allows Ember Data to reference Mixins instead of
-Model classes as the type argument for relationships.&lt;/p&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;App.Comment = DS.Model.extend({
-  &lt;span class="key"&gt;owner&lt;/span&gt;: belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;commentable&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, { &lt;span class="key"&gt;polymorphic&lt;/span&gt;: &lt;span class="predefined-constant"&gt;true&lt;/span&gt; })
-});
-
-App.CommentableMixin = Ember.Mixin.create({
-  &lt;span class="key"&gt;comments&lt;/span&gt;: hasMany(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comment&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;h3 class='anchorable-toc' id='toc_better-support-for-using-multiple-stores'&gt;Better Support for using multiple stores&lt;/h3&gt;
-&lt;p&gt;&lt;a href="https://github.com/jmurphyau"&gt;James Murphy&lt;/a&gt; landed an
-&lt;a href="https://github.com/emberjs/data/pull/2617"&gt;awesome PR&lt;/a&gt; that makes it
-easier to use multiple stores in your Ember Application.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_changelog'&gt;Changelog&lt;/h2&gt;
-&lt;p&gt;In addition to the major changes mentioned above this release also
-includes many bug fixes and documentation updates. Be sure to check
-out the change log for the full list of updates.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/emberjs/data/blob/v1.0.0-beta.16/CHANGELOG.md"&gt;Ember Data 1.0.0-beta.16 CHANGELOG&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;!-- Links --&gt;

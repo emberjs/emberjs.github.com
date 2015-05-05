@@ -3,8 +3,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Ember.js 1.8.0 and 1.9 Beta Released</title>
-    <meta property="st:title" content="Ember.js 1.8.0 and 1.9 Beta Released" />
+    <title>Ember.js - Glimmer's In Canary, Test Your Apps!</title>
+    <meta property="st:title" content="Glimmer's In Canary, Test Your Apps!" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" rel="stylesheet" type="text/css" />
@@ -12,7 +12,7 @@
     
   </head>
 
-  <body class="blog blog_2014 blog_2014_10 blog_2014_10_26 blog_2014_10_26_ember-1-8-0-released">
+  <body class="blog blog_2015 blog_2015_05 blog_2015_05_05 blog_2015_05_05_glimmer-merging">
 
 
     <!--[if lt IE 9]>
@@ -165,175 +165,179 @@
         </div>
       <div id="content" class="has-sidebar">
           <article class="blog-post">
-    <h1>Ember.js 1.8.0 and 1.9 Beta Released</h1>
-      <h3 class="blog-post-author">Posted By: Matthew Beale &ndash; <time>Oct 26, 2014</time></h3>
+    <h1>Glimmer's In Canary, Test Your Apps!</h1>
+      <h3 class="blog-post-author">Posted By: Yehuda &ndash; <time>May 05, 2015</time></h3>
 
     <hr>
 
-    <p>We are pleased to announce that both Ember.js 1.8.0 and the first beta in the
-1.9 series have been released. This comes as the eighth cycle of our release
-process that began just after 1.0 was released.</p>
+    <p>After months of work, <strong>Glimmer is landing in Canary today</strong>.</p>
 
-<p>This release represents the effort of at least 40 contributors across over 600 commits.</p>
-<h2 class='anchorable-toc' id='toc_major-rendering-layer-refactor-metal-views'>Major rendering-layer refactor (&quot;metal-views&quot;)</h2>
-<p>In previous versions of Ember.js, the HTML of a page was created (via
-Handlebars) and assembled (via the render tree) using string concatenation. In
-Ember.js 1.8, fragments of a page are still created (via Handlebars) as
-strings, but are then parsed into DOM and assembled as a DOM tree.</p>
-
-<p>Metal-views is the first part of the HTMLBars effort to land in Ember. It is
-an important step towards the complete removal of strings from the Ember.js
-rendering pipeline.</p>
-
-<p>Introducing HTMLBars into Ember incrementally demonstrates the community&#39;s
-commitment to semantic versioning, and to improving the framework without
-abandoning existing codebases.</p>
-
-<p>Some of the immediate benefits of this refactor are:</p>
+<p>What this means:</p>
 
 <ul>
-<li>The removal of recursion from the rendering layer. This decreases garbage
-collection pressure during rendering and allows the re-use of objects during
-render (for example, the render buffer).</li>
-<li>Improved HTML namespace and contextual element tracking. This introduces
-support for components, data-binding, and logic within inline SVG documents.
-<a href="http://jsbin.com/woxes/8/">Example JSBin</a></li>
-<li>Prior versions of Ember.js relied upon script tags to mark
-regions of data bound content. For example a simple template of <code>{{name}}</code>
-might be rendered into the page as:</li>
+<li>The test suite passes.</li>
+<li>We have tested Glimmer on our own apps, and, for the most part, apps boot and
+run correctly.</li>
+<li>There are still known issues (see below), including with the test helpers.</li>
+<li>At this point, we need community help to identify compatibility issues not
+covered by the test suite.</li>
+<li>We expect to continue improving compatibility with the pre-Glimmer engine for
+some time, as new issues come to light.</li>
 </ul>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;script</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">metamorph-1-start</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-placeholder</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/script&gt;</span>
-Bob
-<span class="tag">&lt;script</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">metamorph-1-end</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">text/x-placeholder</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/script&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>These script tags could interfere with <code>:first-child</code> and other CSS selectors,
-and were a general nuisance. In Ember.js 1.8 the library powering these
-bindings (<a href="https://github.com/tomhuda/metamorph.js/">metamorph.js</a>) has been
-replaced with a completely re-written engine that uses blank text nodes
-(<a href="https://github.com/tildeio/htmlbars/blob/master/packages/morph/lib/morph.js">morph.js</a>). One of the major touted benefits of HTMLBars, the Ember team is
-happy to make this a reality in 1.8.</p>
 
-<p>Many thanks to <a href="https://twitter.com/krisselden">@krisselden</a>,
-<a href="https://twitter.com/ebryn">@ebryn</a>, <a href="https://twitter.com/_mmun">@mmun</a>,
-<a href="https://twitter.com/mixonic">@mixonic</a>, and all developers who took time to
-test their applications on 1.8 beta. Delivering this update without breaking
-1.x API compatibility took a significant community effort.</p>
-<h2 class='anchorable-toc' id='toc_performance-improvements'>Performance Improvements</h2>
-<p>Ember.js 1.8 comes with several performance improvements in other parts of the
-codebase.</p>
+<p>Glimmer is the new rendering engine the Ember community has been working on for
+the past several months. It is the first ground-up change to the templating
+engine since SproutCore 2.0, and takes advantage of the groundwork laid by
+HTMLBars to dramatically improve re-rendering performance. It also sets the
+stage for more performance improvements during the 2.x series, and
+React-inspired improvements to the Ember programming model. Best of all, we are
+landing Glimmer in Ember 1.13, compatible with the full public API of Ember
+1.x.</p>
+
+<p>It&#39;s also worth noting that while our apps feel faster, not every
+performance benchmark will necessarily show marked improvement. There
+will be more on this below, but the Glimmer refactor focused primarily
+on dramatic improvements to re-rendering performance and programming
+model improvements.</p>
+
+<p>Initial render of component-heavy pages shows some improvement in most
+of our tests, but you should expect to see the biggest improvements when
+re-rendering lists, especially when you are not using deprecated
+functionality.</p>
+
+<p>Once we land Glimmer, you will probably see a variety of different
+benchmarks testing various aspects of Ember. We expect to see benchmarks
+showing that there are still pathologically slow scenarios in Ember,
+especially in areas that we did not focus on improving. We expect to
+continue to improve performance across Ember throughout the 2.x series,
+and discuss that more below.</p>
+
+<p>Also note that while we took great pains to support features present in
+Ember 1.12 (including many long-deprecated features), that compatibility
+often comes with significant performance costs. In some cases, seemingly
+similar constructs (e.g. <code>{{#each posts as |post|]}</code> vs. <code>{{#each posts
+itemController=&#39;post&#39; as |post|}}</code>) have significantly different
+internal implementation, and the Ember 2.0 version has vastly better
+performance.</p>
+
+<p>Finally, there will be an upcoming guide in the next week or so that
+describes the new features of the Glimmer engine (<code>attrs</code>, new lifecycle
+hooks, keys in <code>#each</code>), but at the moment we are focusing on
+compatibility with 1.x and testing the 1.x API with existing
+applications.</p>
+<h2 class='anchorable-toc' id='toc_upgrading'>Upgrading</h2>
+<p><strong>Someone needs to fill in the steps to use Glimmer with Ember CLI</strong></p>
+<h2 class='anchorable-toc' id='toc_known-issues'>Known Issues</h2>
+<p>There are several known issues that you should consider when evaluating
+Glimmer:</p>
 
 <ul>
-<li>Ember.js APIs often require the use of a string to lookup a class or route.
-Often these strings must be passed through a normalization step before they are
-used, such as pluralizing, singularizing, or changing snake_case to camelCase.
-1.8 introduces several caches for these operations, resulting in common
-operations being performed far fewer times.</li>
-<li>The refactoring of commonly de-optimized functions in v8 and other browsers.</li>
-<li>The conversion of <code>MANDATORY_SETTER</code> from a runtime flag into a build-time
-feature flag. This allows relevant code paths in <code>get</code> and <code>set</code> to be slimmer
-in production builds.</li>
+<li>There are still a few memory leaks that we have identified and are
+quickly addressing.</li>
+<li>The concept of <code>controller</code> in templates and actions in Ember 1.x was
+fairly nuanced. Glimmer started with a simpler model and layered
+compatibility on top. There are known gaps in the compatibility layer
+that we are still addressing.</li>
+<li>There are still a number of issues in the testing helpers (especially
+the faux unit tests that use &quot;isolated containers&quot;) that are causing
+apps that work correctly to fail tests. We are working to fix the test
+helpers, and should have that work done before we release 1.13 beta.</li>
+<li>There are likely a number of not-yet-known compatibility issues in
+Glimmer. You should assume that the vast majority of issues you
+encounter when testing Glimmer over the next few weeks will be addressed
+before the final release.</li>
+<li>The compatibility layer is quite slow in some areas, making the
+overall Glimmer engine slower than we would like. We have plans to
+improve overall performance through the canary and beta cycle, and
+then of course in the 2.0 release cycle.</li>
+<li><strong>In general, the Glimmer effort was an attempt to improve
+re-rendering performance, especially in large lists.</strong> It also laid
+the groundwork for significant performance work in initial render and
+throughout the framework, but that work is not yet done. Expect to see
+continued performance improvements in Ember throughout the 2.x cycle
+as a result of this change.</li>
 </ul>
 
-<p>Thanks to <a href="https://twitter.com/stefanpenner/">@stefanpenner</a> and
-<a href="https://twitter.com/twokul">@twokul</a> for their continued efforts on
-performance tuning.</p>
-<h2 class='anchorable-toc' id='toc_notable-deprecations'>Notable Deprecations</h2>
-<p>As Ember.js moves forward, various APIs are deprecated to allow for their
-removal in a later major release (such as 2.0). With this release a
-<a href="http://emberjs.com/deprecations/">deprecations page</a> has been added to
-the Ember.js website. This guide will help developers refactor their code away
-from old APIs.</p>
+<p>The most critical of these caveats should be addressed before we release 1.13
+beta, and we expect to continue work on the remaining issues throughout the
+1.13 beta cycle.</p>
 
-<p>Four notable deprecations are added with the release of 1.8.</p>
+<p>Because of the magnitude of this change, and the proximity to the Ember 2.0
+&quot;cruft removal&quot; pass, we plan to aggressively fix reported bugs during the 1.13
+beta period. There will be another post describing our 1.13 and 2.0 release
+plans with more precision in the next few weeks.</p>
+<h2 class='anchorable-toc' id='toc_performance-gains'>Performance Gains</h2>
+<p>The biggest performance gains in Glimmer come from moving to a simpler
+rendering model, built on top of HTMLBars.</p>
 
-<ul>
-<li><code>Ember.Set</code> is a class for managing an unordered collection of objects (<a href="http://emberjs.com/api/classes/Ember.Set.html">api
-docs</a>). It is a private API and
-thus subject to change, however several libraries have chosen to use it despite
-this. Since the addition of this API to Ember, the ES6 draft has matured in its
-description of a native JavaScript Set class. <code>Ember.Set</code> is not compatible
-with the upcoming API, and is now deprecated.</li>
-<li>In an effort to more closely align <code>Ember.Map</code> with ES6, the <code>remove</code> method
-has been deprecated in favor of <code>delete</code>.</li>
-<li>The <code>currentWhen</code> property on links is deprecated in favor of <code>current-when</code>.
-This property name more closely tracks how component properties will be used in the
-future.</li>
-<li>Old versions of Ember.js, the guides, and the API documentation suggested
-looking up views as globals. For example <code>{{view App.SomeView}}</code>. In
-Ember.js 1.8 this style of view lookup is deprecated in favor of using a
-string, similar to how other class lookups behave in Ember. <a href="http://emberjs.com/deprecations/v1.x#toc_global-lookup-of-views">See
-this page</a>
-for details about transitioning away from global view lookups.</li>
-<li>URLs containing a hash and no <code>/</code>, such as <code>/foo#bar</code> are handled by the
-router&#39;s <code>hash</code> location handler. When using the <code>auto</code> location handler, the
-presence of <code>#</code> will cause the <code>hash</code> handler to be chosen over the <code>history</code>
-handlers, despite the lack of a leading <code>/</code> in the path (for example <code>/foo#/bar</code>.
-This makes using anchors with the <code>history</code> handler impossible. Ember.js
-1.9 will correct this bug, and in 1.8 a deprecation is raised.</li>
-</ul>
-<h2 class='anchorable-toc' id='toc_breaking-changes'>Breaking Changes</h2>
-<p>Ember.js strives to maintain strict API compatibility across minor releases.
-In cases of API inconsistency or where behavior is unspecified, breaking changes
-may be introduced to resolve the issue. Additionally, deprecated APIs may
-be removed if they were from a previous major release (such as pre-1.0
-deprecations).</p>
+<p>First, this allowed us to remove <strong>all</strong> internal views for constructs
+like <code>{{foo}}</code>, <code>{{#if bar}}</code> and even in <code>{{#each posts as |post|}}</code>.
+This view removal has an impact on initial render, because these
+constructs are very common in real-world templates.</p>
 
-<p>In this release there are several small breaking changes that may impact your
-application.</p>
+<p>Second, as we have discussed extensively, this allows us to
+significantly improve the performance of re-rendering, which makes it
+practical to re-render lists with entirely new arrays with very good
+performance. Previously, achieving reasonable performance was very
+difficult, and even when possible, came with significant bookkeeping
+overhead.</p>
 
-<ul>
-<li><code>didInsertElement</code> is now always called on a child view before it is called
-on a rendering parent view. In previous releases of Ember.js <code>didInsertElement</code>
-would often be called first on a parent view, however this behavior was
-inconsistent. In general, developers are encouraged
-to consider scheduling work into the <code>afterRender</code> queue if it includes
-accessing DOM not immediately under that view&#39;s control.</li>
-<li>Actions defined directly on the controller object
-and not in the <code>actions:</code> hash have been deprecated since Ember.js 1.0. In
-Ember.js 1.8 support for those actions has been removed.</li>
-<li><code>Ember.Map</code> has been tweaked to more closely match the ES6 spec for <code>Map</code>. The
-<code>forEach</code> callback now takes <code>value,key,map</code> as arguments. Previously it was passed
-<code>key,value</code>. This API is private, but several libraries have chosen to use it
-despite this. Ember-Data now includes <a href="https://github.com/emberjs/data/blob/master/packages/ember-data/lib/system/map.js">a polyfill</a>. <code>Ember.OrderedSet</code>, a super class of <code>Ember.Map</code>, has
-also had minor ES6 cleanups applied.
-to allow consistent usage across the pre-1.8 and 1.8 API.</li>
-<li>Ember.js has long had an run-time flag called <code>MANDATORY_SETTER</code>. With this
-flag enabled, attempts to set an observed object property without the use of
-<code>Ember.set()</code> would throw an error (a desirable behavior for development
-builds). This runtime flag has been changed to a
-standard build-time feature flag named <code>mandatory-setter</code>, allowing it to
-be removed from production builds entirely.</li>
-</ul>
-<h2 class='anchorable-toc' id='toc_ember-js-1-9-beta'>Ember.js 1.9 beta</h2>
-<p>As with any minor release of Ember.js, the current canary branch is forked
-to become the next beta. This ensures a constant graduation of features and
-improvements from master to release. Builds of beta are made available every
-week for six weeks, then promoted to release.</p>
+<p>Interestingly, we have found that when testing real apps, the
+performance gains are much more widespread than we expected, in large
+part because of the simplification of the overall model.</p>
 
-<p>In Ember.js 1.9 several new features and changes will be introduced.</p>
+<p><strong>Glimmer&#39;s performance in real applications has pleasantly surprised
+us, exceeding the improvements we&#39;ve seen in benchmarks designed to
+stress-test pathological cases.</strong></p>
 
-<ul>
-<li>&quot;Streams&quot; are a new Ember.js internal that replace bindings at the lowest
-level of the Ember rendering pipeline. They greatly simplify the implementation
-of template helpers and are yet another important step toward the landing of
-HTMLBars.</li>
-<li>Handlebars 2.0 will be required for Ember.js 1.9. See <a href="http://emberjs.com/blog/2014/10/16/handlebars-update.html">this summary
-of the transition</a>
-for more details.</li>
-<li>Further performance improvements and bugfixes.</li>
-</ul>
-<h2 class='anchorable-toc' id='toc_changelogs'>Changelogs</h2>
-<ul>
-<li><a href="https://github.com/emberjs/ember.js/blob/v1.8.0/CHANGELOG.md">Ember.js 1.8.0 CHANGELOG</a></li>
-<li><a href="https://github.com/emberjs/ember.js/blob/v1.9.0-beta.1/CHANGELOG.md">Ember.js 1.9.0-beta.1 CHANGELOG</a></li>
-</ul>
+<p>When upgrading to Glimmer, please pay special attention to the
+real-world performance of your application <strong>in production mode</strong> and
+after clearing any deprecations with performance warnings.</p>
+<h2 class='anchorable-toc' id='toc_deprecated-features'>Deprecated Features</h2>
+<p>Throughout the 1.x series, Ember has deprecated features we intended to
+remove in 2.0. That process has continued with Ember 1.13, which will
+contain Glimmer.</p>
+
+<p>However, it&#39;s worth noting that Glimmer is the first major change to
+many parts of the view layer since SproutCore 2! As a result,
+perfect compatibility, especially in private APIs, was more
+challenging.</p>
+
+<p>During the process of building Glimmer, we found various semantics of
+&quot;controller&quot;s to be the most challenging. For the most part, this is
+because the concept of controller has a number of different meanings
+depending on context (routes, <code>{{render}}</code>, <code>{{#each posts
+itemController=&#39;post&#39;}}</code>, <code>{{#each posts itemController=&#39;post&#39; as
+|post|}}</code>, <code>{{#with someController}}</code>, etc.).</p>
+
+<p>Controllers and components both mange a template&#39;s &quot;context&quot; (called
+&quot;self&quot; in Glimmer) and serve as a target for actions. Mirroring these
+semantics, which are effectively derived from implementation details of
+Ember 1.x&#39;s rendering engine, has been a challenge. We&#39;re confident they
+are very close, but encourage you to open an issue if they have changed.</p>
+
+<p>Glimmer, through HTMLBars, has a much clearer concept of &quot;scope&quot;, and
+features like <code>{{yield}}</code> work directly with that scope object. We were
+able to get the Ember test suite passing by implementing the old
+semantics on top of the new scope concept, but <strong>we are aware that we
+have gaps in our implementation.</strong></p>
+
+<p>Please let us know if you find controller semantics that we have
+implemented incorrectly. Bug reports would help, JSBins would help more,
+and pull requests with failing tests would help even more.</p>
+
+<p>Finally, for the best experience with Glimmer, you should try to move
+your application away from <code>itemController</code>, <code>{{render}}</code> and other
+constructs that manipulate the controller from the template. We know
+that this is not always possible (our applications all still make
+use of some cases of these features),  which is why we worked so hard on
+compatibility.</p>
+
+<p>That said, you&#39;ll get better performance and a quicker upgrade path to
+2.0 if you work on eliminating uses of these features soon. Implementing
+them correctly added enough complexity that we will want to move
+somewhat aggressively in 2.x to enable us to further improve
+performance.</p>
 
 
     <hr>

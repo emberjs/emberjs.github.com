@@ -60096,7 +60096,7 @@ function generateViewerApp($elem, files) {
     }
   });
 
-  App.TabItemController = Ember.ObjectController.extend({
+  App.TabItemController = Ember.Controller.extend({
     needs: 'application',
 
     isSelected: function() {
