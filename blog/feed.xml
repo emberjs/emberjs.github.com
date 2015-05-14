@@ -5,10 +5,331 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2015-05-09T20:00:00-04:00</updated>
+  <updated>2015-05-12T20:00:00-04:00</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>Ember.js 1.12 and 1.13 Beta (Glimmer!) Released</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2015/05/13/ember-1-12-released.html"/>
+    <id>http://emberjs.com/blog/2015/05/13/ember-1-12-released.html</id>
+    <published>2015-05-12T20:00:00-04:00</published>
+    <updated>2015-05-12T20:00:00-04:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;We are please to announce the release of Ember.js 1.12 and the first beta in the 1.13 series.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;1.13 beta is the first Ember.js release that includes Glimmer, the new Ember
+rendering engine, as well as the final batch of Ember 2.0 features.&lt;/strong&gt; We will...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;We are please to announce the release of Ember.js 1.12 and the first beta in the 1.13 series.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;1.13 beta is the first Ember.js release that includes Glimmer, the new Ember
+rendering engine, as well as the final batch of Ember 2.0 features.&lt;/strong&gt; We will
+discuss those details more below.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_new-features-in-ember-1-12'&gt;New Features in Ember 1.12&lt;/h2&gt;
+&lt;p&gt;Ember 1.12 is a relatively light release, and includes features that move Ember
+closer to ES6 class syntax and the first parts of the internal implementation
+needed for a stable release of the FastBoot addon.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_new-computed-syntax'&gt;New Computed Syntax&lt;/h4&gt;
+&lt;p&gt;Per &lt;a href="https://github.com/emberjs/rfcs/pull/11"&gt;RFC #11&lt;/a&gt;, Ember is introducing a
+new syntax for computed properties. This change better aligns computed property
+syntax with JavaScript getters and setters and makes writing settable computed
+properties developer friendly.&lt;/p&gt;
+
+&lt;p&gt;It also has the nice side effect of improving performance, as the old syntax,
+with its two-in-one function signatures, was harder for JavaScript engines to
+optimize.&lt;/p&gt;
+
+&lt;p&gt;The simplest syntax for a computed property is to define the getter as a function:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Ember.Object.extend({
+
+  &lt;span class="key"&gt;height&lt;/span&gt;: &lt;span class="integer"&gt;100&lt;/span&gt;,
+  &lt;span class="key"&gt;goldenRatioWidth&lt;/span&gt;: Ember.computed(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;height&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="keyword"&gt;function&lt;/span&gt;(){
+    &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="local-variable"&gt;this&lt;/span&gt;.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;height&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;) * &lt;span class="float"&gt;1.618&lt;/span&gt;;
+  })
+
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;This is still the way to write simple getters, the most common use-case for
+computed properties, in Ember 1.12.&lt;/p&gt;
+
+&lt;p&gt;To create a settable computed property in Ember 1.11 an &lt;code&gt;if&lt;/code&gt; statement was used
+to differentiate the get from the set logic. For example:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Ember.Object.extend({
+
+  &lt;span class="key"&gt;height&lt;/span&gt;: &lt;span class="integer"&gt;100&lt;/span&gt;,
+  &lt;span class="key"&gt;goldenRatioWidth&lt;/span&gt;: Ember.computed(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;height&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="keyword"&gt;function&lt;/span&gt;(key, value){
+    &lt;span class="keyword"&gt;if&lt;/span&gt; (&lt;span class="local-variable"&gt;arguments&lt;/span&gt;.length &amp;gt; &lt;span class="integer"&gt;1&lt;/span&gt;) {
+      &lt;span class="local-variable"&gt;this&lt;/span&gt;.set(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;height&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, value / &lt;span class="float"&gt;1.618&lt;/span&gt;);
+    } &lt;span class="keyword"&gt;else&lt;/span&gt; {
+      &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="local-variable"&gt;this&lt;/span&gt;.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;height&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;) * &lt;span class="float"&gt;1.618&lt;/span&gt;;
+    }
+  })
+
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;This syntax was functional but error-prone, verbose, and hard to understand
+(for both humans and JavaScript engines).&lt;/p&gt;
+
+&lt;p&gt;In Ember 1.12, you can nicely separate the getter and setter into two different
+functions.&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+13
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Ember.Object.extend({
+
+  &lt;span class="key"&gt;width&lt;/span&gt;: &lt;span class="integer"&gt;100&lt;/span&gt;,
+  &lt;span class="key"&gt;goldenRatioWidth&lt;/span&gt;: Ember.computed(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;height&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, {
+    get() {
+      &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="local-variable"&gt;this&lt;/span&gt;.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;height&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;) * &lt;span class="float"&gt;1.618&lt;/span&gt;;
+    },
+    set(value) {
+      &lt;span class="local-variable"&gt;this&lt;/span&gt;.set(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;height&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, value / &lt;span class="float"&gt;1.618&lt;/span&gt;);
+    }
+  });
+
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;This also aligns Ember&amp;#39;s API with JavaScript getters and setters, and
+simplifies the path towards using JavaScript getters in Ember 2.0, after IE8
+support is dropped.&lt;/p&gt;
+
+&lt;p&gt;For more information see the initial implementation in &lt;a href="https://github.com/emberjs/ember.js/pull/9527"&gt;#9527&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Many thanks to &lt;a href="https://twitter.com/stefanpenner"&gt;@stefanpenner&lt;/a&gt; and
+&lt;a href="https://twitter.com/MiguelCamba"&gt;@MiguelCamba&lt;/a&gt; for championing and shipping
+this feature.&lt;/p&gt;
+
+&lt;p&gt;One last thing: thanks to the experimental support for &lt;a href="https://github.com/wycats/javascript-decorators"&gt;JavaScript
+decorators&lt;/a&gt; in Babel, we are also planning a further improvement in
+the near future:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+13
+14
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Ember.Object.extend({
+
+  &lt;span class="key"&gt;width&lt;/span&gt;: &lt;span class="integer"&gt;100&lt;/span&gt;,
+
+  &lt;span class="error"&gt;@&lt;/span&gt;computed(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;height&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
+  get goldenRatioWidth() {
+    &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="local-variable"&gt;this&lt;/span&gt;.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;height&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;) * &lt;span class="float"&gt;1.1618&lt;/span&gt;;
+  }
+
+  set goldenRatioWidth(value) {
+    &lt;span class="local-variable"&gt;this&lt;/span&gt;.set(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;height&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, value / &lt;span class="float"&gt;1.618&lt;/span&gt;);
+  }
+
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;h4 class='anchorable-toc' id='toc_instance-initializers'&gt;Instance Initializers&lt;/h4&gt;
+&lt;p&gt;The next feature, instance initializers, makes it possible for FastBoot
+applications to run many requests concurrently.&lt;/p&gt;
+
+&lt;p&gt;Before FastBoot, you would only ever run applications one at a time. Even in
+automated tests, tests were run one at a time, in serial, so one application
+was destroyed before the next one was created.&lt;/p&gt;
+
+&lt;p&gt;In FastBoot, it is important for a single node server to be able to serve
+a second request while the first one is fetching its data.&lt;/p&gt;
+
+&lt;p&gt;Thankfully, Ember already ensures that all state is stored in the container,
+so in theory, all you need to do is give each request its own container
+instance and you get concurrent requests in FastBoot.&lt;/p&gt;
+
+&lt;p&gt;In practice, there was a minor API change we needed to make in order to
+make it work involving initializers. In Ember 1.11, initializers would
+run on app boot (or once per test). Some initializers were setting up
+code (and injection rules), which are the same across all FastBoot requests,
+while other initializers were creating instances, which are different
+across requests.&lt;/p&gt;
+
+&lt;p&gt;In Ember.js 1.12 application boot is separated into two phases:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Application initializers run. At this phase of boot, the goal of initializers
+should be to register dependencies and injections. These initializers are doing
+work that is shared across all FastBoot requests, and therefore should not
+create instances. This phase runs &lt;em&gt;once&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;Instance initializers run next. This is the right time to do work that is
+specific to each FastBoot request. You can create instances and modify their
+state here. This phase runs when the browser application runs, for each
+integration test, and for each FastBoot request.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The two-phase initialization process is safer when multiple addons may be
+registering factories and injections.&lt;/p&gt;
+
+&lt;p&gt;Ember-CLI 0.2.3 supports instance initializers. For example:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// app/instance-initializers/sleep.js&lt;/span&gt;
+
+&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; &lt;span class="keyword"&gt;function&lt;/span&gt; &lt;span class="function"&gt;initialize&lt;/span&gt;(application) {
+  application.deferReadiness();
+  &lt;span class="comment"&gt;// Wait 3s before continuing to boot the app&lt;/span&gt;
+  Ember.run.later(application, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;advanceReadiness&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="integer"&gt;3000&lt;/span&gt;);
+}
+
+&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; {
+  &lt;span class="key"&gt;name&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;sleep&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;,
+  &lt;span class="key"&gt;initialize&lt;/span&gt;: initialize
+};
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;To define an instance initializer in globals mode use the &lt;code&gt;Ember.Application.instanceInitializer&lt;/code&gt;
+method. For more information about instance intializers see the
+implementation in &lt;a href="https://github.com/emberjs/ember.js/pull/10256"&gt;#10256&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Thanks to &lt;a href="https://twitter.com/tomdale"&gt;@tomdale&lt;/a&gt;, &lt;a href="https://twitter.com/wycats"&gt;@wycats&lt;/a&gt; and
+&lt;a href="https://twitter.com/dgeb"&gt;@dgeb&lt;/a&gt; for this feature and other
+refactoring work around application initialization.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_initializer-context'&gt;Initializer Context&lt;/h4&gt;
+&lt;p&gt;Previously, the &lt;code&gt;this&lt;/code&gt; scope of an initializer was simply the global scope.
+&lt;a href="https://github.com/emberjs/ember.js/pull/10179"&gt;#10179&lt;/a&gt; changed initializer
+scopes to be the initializer object itself.&lt;/p&gt;
+
+&lt;p&gt;Thanks to &lt;a href="https://twitter.com/gf3"&gt;@gf3&lt;/a&gt; for suggesting and adding this feature.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_ember-1-13-beta'&gt;Ember 1.13 Beta&lt;/h2&gt;
+&lt;p&gt;And now, the big enchilada!&lt;/p&gt;
+
+&lt;p&gt;Together with the release of Ember 1.12, we are releasing the first beta of Ember 1.13.&lt;/p&gt;
+
+&lt;p&gt;Ember 1.13 is:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;the last minor release in the 1.x series&lt;/li&gt;
+&lt;li&gt;the first release that includes the new &lt;strong&gt;Glimmer rendering engine&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Just to recap; what is Glimmer?&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A new faster rendering engine that is especially fast at updates.&lt;/li&gt;
+&lt;li&gt;An implementation of the React-inspired &amp;quot;just re-render it&amp;quot; programming model
+for components, with one-way data flow by default and better enforcement for
+data-down, actions-up.&lt;/li&gt;
+&lt;li&gt;Supports angle-bracket components (&lt;code&gt;&amp;lt;my-component /&amp;gt;&lt;/code&gt;), ergonomic attributes
+(&lt;code&gt;&amp;lt;my-link href=&amp;quot;{{url}}.html&amp;quot;&amp;gt;go home&amp;lt;/my-link&amp;gt;&lt;/code&gt;), that hews closely to HTML
+syntax with a few small enhancements.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We&amp;#39;ll be writing a blog post that expands on the programming model of Ember 2.0
+and talks about the most important new features in the next few days, and full
+docs are coming as well.&lt;/p&gt;
+
+&lt;p&gt;We&amp;#39;d like to give a big thank you to the entire community for all the nights and
+weekends over the past few months getting Glimmer (&lt;a href="https://www.isemberfastyet.com"&gt;almost&lt;/a&gt;) over the
+finish line. It&amp;#39;s inspiring.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_the-1-13-x-series'&gt;The 1.13.x Series&lt;/h4&gt;
+&lt;p&gt;In most cases, you should expect Glimmer to be faster at both initial rendering
+and updates. If you find performance regressions in idiomatic usage in your app,
+we definitely want to hear about it. Please file bugs.&lt;/p&gt;
+
+&lt;p&gt;The Glimmer rendering engine changes parts of Ember that have been largely
+untouched since the days of SproutCore 2.0. In practice, this means that you
+may be relying on implementation details of the pre-Glimmer implementation
+that were not captured by tests, and that were not discovered during the
+Canary period.&lt;/p&gt;
+
+&lt;p&gt;Because of the magnitude of the internal change, we expect the first few
+Ember 1.13 betas to be less stable than other betas in the 1.x series. &lt;strong&gt;We
+need your help to find and fix compatibility regressions.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Please report any incompatibilities that you discover. We will investigate and
+consider shimming any regression that affects a significant number of apps,
+even if the root cause is a change in internal implementation details.&lt;/p&gt;
+
+&lt;p&gt;We know that there will likely be some compatibility regressions, especially
+in implementation details, that we do not catch during the 1.13 beta period.
+We plan to continue to release point releases to the 1.13 series to fix
+those details after 2.0 beta is released, and perhaps even for a while after
+2.0 final is released.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Our goal is to ensure that most applications can upgrade to Ember 1.13.x,
+remove deprecations, and then upgrade to Ember 2.0 with minimal fuss.&lt;/strong&gt; If
+a significant number of apps that are earnestly trying to upgrade this way
+cannot, we will continue to fix problems that are blocking upgrades.&lt;/p&gt;
+
+&lt;p&gt;For an in-depth look into our transition plan for users with existing Ember 1.x
+apps, please see the recent &lt;a href="http://emberjs.com/blog/2015/05/10/run-up-to-two-oh.html"&gt;Transition to Ember 2.0 in
+Detail&lt;/a&gt; blog post.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_changelogs'&gt;CHANGELOGS&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.12.0/CHANGELOG.md"&gt;Ember 1.12.0 CHANGELOG&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.13.0-beta.1/CHANGELOG.md"&gt;Ember 1.13.0-beta.1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
   <entry>
     <title>The Transition to Ember 2.0 in Detail</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/05/10/run-up-to-two-oh.html"/>
@@ -993,309 +1314,6 @@ but if you do not the views template will be defaulted to a template with the sa
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/compare/v1.11.0...v1.11.1"&gt;Ember.js 1.11.0 to 1.11.1 commit log&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/releases/tag/v1.11.1"&gt;Ember.js 1.11.1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Ember.js 1.11.0 and 1.12 Beta Released</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2015/03/27/ember-1-11-0-released.html"/>
-    <id>http://emberjs.com/blog/2015/03/27/ember-1-11-0-released.html</id>
-    <published>2015-03-26T20:00:00-04:00</published>
-    <updated>2015-03-26T20:00:00-04:00</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;We are pleased to announce the release of both Ember.js 1.11.0 and the
-first beta in the 1.12 series. This comes as the eleventh cycle of our
-release process that began just after 1.0 was released.&lt;/p&gt;
-
-&lt;p&gt;The 1.11 release represents the effort of at least...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;We are pleased to announce the release of both Ember.js 1.11.0 and the
-first beta in the 1.12 series. This comes as the eleventh cycle of our
-release process that began just after 1.0 was released.&lt;/p&gt;
-
-&lt;p&gt;The 1.11 release represents the effort of at least 87 contributors
-across over 646 commits.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_new-features-in-ember-js-1-11'&gt;New Features in Ember.js 1.11&lt;/h2&gt;&lt;h4 class='anchorable-toc' id='toc_bound-attribute-syntax'&gt;Bound Attribute Syntax&lt;/h4&gt;
-&lt;p&gt;Current Ember developers are familiar with the &lt;code&gt;bind-attr&lt;/code&gt; syntax, used
-to declare an attribute binding on an HTML element. An original
-motivation for HTMLBars was to improve on this syntax.&lt;/p&gt;
-
-&lt;p&gt;Ember 1.11 introduces a more intuitive API for attribute binding. For
-example, here the &lt;code&gt;color&lt;/code&gt; variable is bound to the class of a div:&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="attribute-name"&gt;class&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;color&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;The inline if helper can also be used in these contexts:&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="attribute-name"&gt;class&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;color&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="string"&gt; &lt;/span&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;if&lt;/span&gt; &lt;span class="attribute-name"&gt;isEnabled&lt;/span&gt; &lt;span class="error"&gt;'&lt;/span&gt;&lt;span class="attribute-name"&gt;active&lt;/span&gt;&lt;span class="error"&gt;'&lt;/span&gt; &lt;span class="error"&gt;'&lt;/span&gt;&lt;span class="attribute-name"&gt;disabled&lt;/span&gt;&lt;span class="error"&gt;'&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;For some attributes, like the &lt;code&gt;disabled&lt;/code&gt; boolean, passing a literal value
-is desirable. An example:&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;input&lt;/span&gt; &lt;span class="attribute-name"&gt;disabled&lt;/span&gt;=&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;isDisabled&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;To allow the data-binding of non-string values to boolean properties and
-custom element properties, bound attributes are implemented with a
-&lt;strong&gt;property-first&lt;/strong&gt; setter.&lt;/p&gt;
-
-&lt;p&gt;When binding to an attribute, Ember first checks to see if that attribute is a
-property of the element&amp;#39;s DOM node (with normalization of capitalization). If it
-is, the value is set with a property. For example:&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;input&lt;/span&gt; &lt;span class="attribute-name"&gt;disabled&lt;/span&gt;=&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;isDisabled&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// disabled is a property of input elements, so...&lt;/span&gt;
-input.disabled = &lt;span class="predefined-constant"&gt;true&lt;/span&gt;;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;If the attribute is not present as a property, then its value is set as an
-attribute:&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="attribute-name"&gt;class&lt;/span&gt;=&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;color&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// class is not a property of div elements, do...&lt;/span&gt;
-div.setAttribute(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;class&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;red&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;For SVG attributes and the style attribute, we&amp;#39;ve made an exception to this pattern
-and simply use &lt;code&gt;setAttribute&lt;/code&gt; at all times.
-Despite these exceptions, the property-first rule is a good way to describe what is
-happening behind the scenes. In practice, the binding syntax feels natural.&lt;/p&gt;
-
-&lt;p&gt;Many thanks to &lt;a href="http://twitter.com/mixonic"&gt;@mixonic&lt;/a&gt;, &lt;a href="http://twitter.com/_mmun"&gt;@_mmun&lt;/a&gt;,
-and &lt;a href="http://twitter.com/wycats"&gt;@wycats&lt;/a&gt; for their effort on the design and implementation
-of this feature.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_escaping-content-in-htmlbars'&gt;Escaping Content in HTMLBars&lt;/h4&gt;
-&lt;p&gt;Bound attribute syntax introduces several new uses of mustaches
-(the &lt;code&gt;{{&lt;/code&gt; syntax used in Ember templates). These new uses
-come with new security considerations.&lt;/p&gt;
-
-&lt;p&gt;Two notable new considerations are mustache use inside style
-contexts, and inside JavaScript contexts. For example, without
-escaping this
-binding would be vulnerable to an XSS attack (via ActiveX
-controls) in IE8:&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="attribute-name"&gt;style&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="key"&gt;width&lt;/span&gt;: &lt;/span&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;userProvidedWidth&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="attribute-name"&gt;px&lt;/span&gt;&lt;span class="error"&gt;;&lt;/span&gt;&lt;span class="error"&gt;&amp;quot;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Implementing CSS and JavaScript context-sensitive escaping
-will require further research and development. In Ember 1.11,
-bound &lt;code&gt;style&lt;/code&gt; attributes will warn when the value is not marked safe.&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;{{! No escaping strategy, log a warning }}&lt;/span&gt;
-&lt;span class="tag"&gt;&amp;lt;a&lt;/span&gt; &lt;span class="attribute-name"&gt;style&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="key"&gt;width&lt;/span&gt;: &lt;/span&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;someProperty&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="attribute-name"&gt;px&lt;/span&gt;&lt;span class="error"&gt;&amp;quot;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;The examples that follow are intended to demonstrate how this
-works in practice. For example these bindings Just Work:&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-8
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;{{! Works as expected }}&lt;/span&gt;
-&lt;span class="tag"&gt;&amp;lt;a&lt;/span&gt; &lt;span class="attribute-name"&gt;class&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;someProperty&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
-
-&lt;span class="comment"&gt;{{! Works as expected, and escapes unsafe urls }}&lt;/span&gt;
-&lt;span class="tag"&gt;&amp;lt;a&lt;/span&gt; &lt;span class="attribute-name"&gt;href&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;someProperty&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
-
-&lt;span class="comment"&gt;{{! Works as expected, and escapes unsafe urls }}&lt;/span&gt;
-&lt;span class="tag"&gt;&amp;lt;img&lt;/span&gt; &lt;span class="attribute-name"&gt;src&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;someProperty&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Warnings about unsafe bindings other than &lt;code&gt;style&lt;/code&gt; will be introduced
-before Ember 2.0.&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;{{! No escaping strategy in 1.11 }}&lt;/span&gt;
-&lt;span class="tag"&gt;&amp;lt;a&lt;/span&gt; &lt;span class="attribute-name"&gt;onmouseover&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;alert(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;someProperty&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="error"&gt;'&lt;/span&gt;&lt;span class="error"&gt;)&lt;/span&gt;&lt;span class="error"&gt;;&lt;/span&gt;&lt;span class="error"&gt;&amp;quot;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
-
-&lt;span class="comment"&gt;{{! No escaping strategy in 1.11 }}&lt;/span&gt;
-&lt;span class="tag"&gt;&amp;lt;style&amp;gt;&lt;/span&gt;&lt;span class="inline"&gt;&lt;span class="tag"&gt;width&lt;/span&gt;: &lt;/span&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;someProperty&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;px&lt;span class="tag"&gt;&amp;lt;/style&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Strings that are known to be adequately escaped can be
-passed through the &lt;code&gt;htmlSafe&lt;/code&gt; function to mark them safe.&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-8
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;import&lt;/span&gt; Ember from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;ember&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;;
-
-&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Ember.Component.extend({
-  &lt;span class="key"&gt;layout&lt;/span&gt;: Ember.HTMLBars.compile(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;&amp;lt;a style='width: {{someProperty}}px'&amp;gt;&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;),
-  &lt;span class="function"&gt;someProperty&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;(){
-    &lt;span class="keyword"&gt;return&lt;/span&gt; Ember.String.htmlSafe(&lt;span class="local-variable"&gt;this&lt;/span&gt;.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;someKnownSafeProperty&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;));
-  }.property(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;someKnownSafeProperty&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;A less savory alternative is to use the &lt;code&gt;{{{&lt;/code&gt; &amp;quot;escaped mustache&amp;quot; style. There are
-plans to improve escaped content as we approach 2.0.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_inline-if'&gt;Inline if&lt;/h4&gt;
-&lt;p&gt;In 1.11 Ember&amp;#39;s &lt;code&gt;if&lt;/code&gt; helper can be used in the inline form:&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;if&lt;/span&gt; &lt;span class="attribute-name"&gt;isEnabled&lt;/span&gt; &lt;span class="error"&gt;'&lt;/span&gt;&lt;span class="attribute-name"&gt;active&lt;/span&gt;&lt;span class="error"&gt;'&lt;/span&gt; &lt;span class="error"&gt;'&lt;/span&gt;&lt;span class="attribute-name"&gt;disabled&lt;/span&gt;&lt;span class="error"&gt;'&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Thanks to &lt;a href="https://twitter.com/eaf4"&gt;@eaf4&lt;/a&gt; and &lt;a href="https://twitter.com/marciojunior_me"&gt;@marciojunior_me&lt;/a&gt; for
-implementing this feature.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_each-with-index'&gt;Each with Index&lt;/h4&gt;
-&lt;p&gt;The &lt;code&gt;each&lt;/code&gt; helper will support an &lt;code&gt;index&lt;/code&gt; block param in Ember 1.11:&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{#&lt;/span&gt;&lt;span class="attribute-name"&gt;each&lt;/span&gt; &lt;span class="attribute-name"&gt;people&lt;/span&gt; &lt;span class="attribute-name"&gt;as&lt;/span&gt; &lt;span class="error"&gt;|&lt;/span&gt;&lt;span class="attribute-name"&gt;person&lt;/span&gt; &lt;span class="attribute-name"&gt;index&lt;/span&gt;&lt;span class="error"&gt;|&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-  &lt;span class="comment"&gt;{{! The first index value will be 0 }}&lt;/span&gt;
-  &lt;span class="tag"&gt;&amp;lt;div&amp;gt;&lt;/span&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;index&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;: &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;person.name&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
-&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{/&lt;/span&gt;&lt;span class="attribute-name"&gt;each&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Thanks to &lt;a href="https://twitter.com/timmyce"&gt;@timmyce&lt;/a&gt; and &lt;a href="https://twitter.com/_mmun"&gt;@_mmun&lt;/a&gt; for
-implementing this feature.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_named-substates'&gt;Named Substates&lt;/h4&gt;
-&lt;p&gt;Two routing substates exist for Ember routes. The &lt;code&gt;loading&lt;/code&gt; substate will be entered
-if the async hooks of a route are still processing, and the &lt;code&gt;error&lt;/code&gt; substate will be
-entered when an async hook promise is rejected.&lt;/p&gt;
-
-&lt;p&gt;Substates are sibling routes. When the &lt;code&gt;new&lt;/code&gt; route of &lt;code&gt;cars.new&lt;/code&gt; is loading, the &lt;code&gt;cars.loading&lt;/code&gt;
-substate is entered. The &lt;code&gt;application&lt;/code&gt; route has no parent namespace to nest its siblings.
-This makes using the &lt;code&gt;loading&lt;/code&gt; and &lt;code&gt;error&lt;/code&gt; substates impossible for an application route.&lt;/p&gt;
-
-&lt;p&gt;Named substates add a new lookup method for substates. The name of the route is pre-pended
-onto the substate. So a valid loading substate for &lt;code&gt;application&lt;/code&gt; can be defined as
-&lt;code&gt;application_loading&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Thanks to &lt;a href="http://twitter.com/machty"&gt;@machty&lt;/a&gt; for landing this feature.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_component-helper'&gt;Component Helper&lt;/h4&gt;
-&lt;p&gt;Ember components can be bound via the &lt;code&gt;component&lt;/code&gt; helper. For example this logic
-in a template:&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{#&lt;/span&gt;&lt;span class="attribute-name"&gt;if&lt;/span&gt; &lt;span class="attribute-name"&gt;isRed&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;x-red&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;else&lt;/span&gt; &lt;span class="attribute-name"&gt;if&lt;/span&gt; &lt;span class="attribute-name"&gt;isBlue&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;x-blue&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;else&lt;/span&gt; &lt;span class="attribute-name"&gt;if&lt;/span&gt; &lt;span class="attribute-name"&gt;isGreen&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;x-green&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{/&lt;/span&gt;&lt;span class="attribute-name"&gt;if&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Can now be replaced by a computed property and the &lt;code&gt;component&lt;/code&gt; helper.&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;component&lt;/span&gt; &lt;span class="attribute-name"&gt;colorComponentName&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;The property &lt;code&gt;colorComponentName&lt;/code&gt; should either have a value of &lt;code&gt;x-red&lt;/code&gt;, or &lt;code&gt;x-blue&lt;/code&gt; etc. As
-the value of the property changes, the rendered component will also change.&lt;/p&gt;
-
-&lt;p&gt;A big thank you to &lt;a href="https://twitter.com/lukemelia"&gt;@lukemelia&lt;/a&gt; for shipping
-this new feature.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_performance-improvements'&gt;Performance Improvements&lt;/h4&gt;
-&lt;p&gt;Ember.js 1.10 has favorable rendering performance compared to previous releases. We&amp;#39;re
-pleased that Ember 1.11 builds upon that progress. Compared to 1.10, common list
-rendering scenarios have improved by about twenty percent and view instance
-creation is over twice as fast. These measurements were made using the
-&lt;a href="https://github.com/eviltrout/ember-performance"&gt;ember-performance&lt;/a&gt; repo.&lt;/p&gt;
-
-&lt;p&gt;Progress continues on the &lt;a href="https://github.com/emberjs/ember.js/pull/10501"&gt;Glimmer rendering engine&lt;/a&gt;
-announced at EmberConf 2015. This dramatic performance improvement is expected to
-land in Ember.js 1.13.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_notable-deprecations-in-1-11'&gt;Notable Deprecations in 1.11&lt;/h4&gt;
-&lt;p&gt;The following deprecations are scheduled for release with Ember.js 1.11:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The &lt;code&gt;ObjectController&lt;/code&gt; will be removed in Ember 2.0. In Ember 1.11,
-both explicitly using an &lt;code&gt;ObjectController&lt;/code&gt; and using the proxying behavior
-of a generated &lt;code&gt;ObjectController&lt;/code&gt; will raise deprecation warnings. See the
-&lt;a href="/guides/deprecations#toc_objectcontroller"&gt;deprecation guide&lt;/a&gt; for more details.&lt;/li&gt;
-&lt;li&gt;Initializing instances (via &lt;code&gt;container.lookup&lt;/code&gt;) in initializers is deprecated. For
-initialization that requires instances Ember has introduced &amp;quot;instance initializers&amp;quot;. See
-the &lt;a href="/guides/deprecations#toc_access-to-instances-in-initializers"&gt;deprecation guide&lt;/a&gt;
-for more information, as well as this &lt;a href="https://github.com/emberjs/website/pull/1951"&gt;documentation PR&lt;/a&gt;
-and &lt;a href="https://github.com/emberjs/ember.js/pull/10256"&gt;the implementation PR&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;Not a deprecation, but related: The &lt;code&gt;{{bind}}&lt;/code&gt; template helper was a private
-helper, and has been deprecated
-since Ember 1.10. It has been removed in Ember.js 1.11.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 class='anchorable-toc' id='toc_changelogs'&gt;Changelogs&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.11.0/CHANGELOG.md"&gt;Ember.js 1.11.0 CHANGELOG&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.12.0-beta.1/CHANGELOG.md"&gt;Ember.js 1.12.0-beta.1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </content>
   </entry>
