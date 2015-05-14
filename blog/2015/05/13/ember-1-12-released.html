@@ -207,12 +207,12 @@ functions.</p>
 </pre></td>
   <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> Ember.Object.extend({
 
-  <span class="key">width</span>: <span class="integer">100</span>,
+  <span class="key">height</span>: <span class="integer">100</span>,
   <span class="key">goldenRatioWidth</span>: Ember.computed(<span class="string"><span class="delimiter">'</span><span class="content">height</span><span class="delimiter">'</span></span>, {
-    get() {
+    get(key) {
       <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">height</span><span class="delimiter">'</span></span>) * <span class="float">1.618</span>;
     },
-    set(value) {
+    set(key, value) {
       <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">height</span><span class="delimiter">'</span></span>, value / <span class="float">1.618</span>);
     }
   });
@@ -252,14 +252,14 @@ the near future:</p>
 </pre></td>
   <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> Ember.Object.extend({
 
-  <span class="key">width</span>: <span class="integer">100</span>,
+  <span class="key">height</span>: <span class="integer">100</span>,
 
   <span class="error">@</span>computed(<span class="string"><span class="delimiter">'</span><span class="content">height</span><span class="delimiter">'</span></span>)
-  get goldenRatioWidth() {
+  get goldenRatioWidth(key) {
     <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">height</span><span class="delimiter">'</span></span>) * <span class="float">1.1618</span>;
   }
 
-  set goldenRatioWidth(value) {
+  set goldenRatioWidth(key, value) {
     <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">height</span><span class="delimiter">'</span></span>, value / <span class="float">1.618</span>);
   }
 
@@ -321,7 +321,7 @@ registering factories and injections.</p>
 </pre></td>
   <td class="code"><pre><span class="comment">// app/instance-initializers/sleep.js</span>
 
-<span class="reserved">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="function">initialize</span>(application) {
+<span class="reserved">export</span> <span class="keyword">function</span> <span class="function">initialize</span>(application) {
   application.deferReadiness();
   <span class="comment">// Wait 3s before continuing to boot the app</span>
   Ember.run.later(application, <span class="string"><span class="delimiter">'</span><span class="content">advanceReadiness</span><span class="delimiter">'</span></span>, <span class="integer">3000</span>);

@@ -119,12 +119,12 @@ functions.&lt;/p&gt;
 &lt;/pre&gt;&lt;/td&gt;
   &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Ember.Object.extend({
 
-  &lt;span class="key"&gt;width&lt;/span&gt;: &lt;span class="integer"&gt;100&lt;/span&gt;,
+  &lt;span class="key"&gt;height&lt;/span&gt;: &lt;span class="integer"&gt;100&lt;/span&gt;,
   &lt;span class="key"&gt;goldenRatioWidth&lt;/span&gt;: Ember.computed(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;height&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, {
-    get() {
+    get(key) {
       &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="local-variable"&gt;this&lt;/span&gt;.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;height&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;) * &lt;span class="float"&gt;1.618&lt;/span&gt;;
     },
-    set(value) {
+    set(key, value) {
       &lt;span class="local-variable"&gt;this&lt;/span&gt;.set(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;height&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, value / &lt;span class="float"&gt;1.618&lt;/span&gt;);
     }
   });
@@ -164,14 +164,14 @@ the near future:&lt;/p&gt;
 &lt;/pre&gt;&lt;/td&gt;
   &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Ember.Object.extend({
 
-  &lt;span class="key"&gt;width&lt;/span&gt;: &lt;span class="integer"&gt;100&lt;/span&gt;,
+  &lt;span class="key"&gt;height&lt;/span&gt;: &lt;span class="integer"&gt;100&lt;/span&gt;,
 
   &lt;span class="error"&gt;@&lt;/span&gt;computed(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;height&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
-  get goldenRatioWidth() {
+  get goldenRatioWidth(key) {
     &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="local-variable"&gt;this&lt;/span&gt;.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;height&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;) * &lt;span class="float"&gt;1.1618&lt;/span&gt;;
   }
 
-  set goldenRatioWidth(value) {
+  set goldenRatioWidth(key, value) {
     &lt;span class="local-variable"&gt;this&lt;/span&gt;.set(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;height&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, value / &lt;span class="float"&gt;1.618&lt;/span&gt;);
   }
 
@@ -233,7 +233,7 @@ registering factories and injections.&lt;/p&gt;
 &lt;/pre&gt;&lt;/td&gt;
   &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// app/instance-initializers/sleep.js&lt;/span&gt;
 
-&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; &lt;span class="keyword"&gt;function&lt;/span&gt; &lt;span class="function"&gt;initialize&lt;/span&gt;(application) {
+&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;function&lt;/span&gt; &lt;span class="function"&gt;initialize&lt;/span&gt;(application) {
   application.deferReadiness();
   &lt;span class="comment"&gt;// Wait 3s before continuing to boot the app&lt;/span&gt;
   Ember.run.later(application, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;advanceReadiness&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="integer"&gt;3000&lt;/span&gt;);
