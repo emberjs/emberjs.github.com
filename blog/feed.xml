@@ -5,16 +5,162 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2015-05-12T20:00:00-04:00</updated>
+  <updated>2015-05-20T19:00:00-05:00</updated>
   <author>
     <name>Ember</name>
   </author>
   <entry>
+    <title>Ember Data v1.0.0-beta.17/18 Released</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2015/05/21/ember-data-1-0-beta-18-released.html"/>
+    <id>http://emberjs.com/blog/2015/05/21/ember-data-1-0-beta-18-released.html</id>
+    <published>2015-05-20T19:00:00-05:00</published>
+    <updated>2015-05-20T19:00:00-05:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Beta.17 and Beta.18 contained many bugfixes from the community! Please check
+them out in the &lt;a href="https://github.com/emberjs/data/blob/master/CHANGELOG.md"&gt;CHANGELOG&lt;/a&gt;. Thank you to everyone who submitted
+patches!&lt;/p&gt;
+
+&lt;p&gt;While many bugs were stomped, some important changes are worth calling out:&lt;/p&gt;
+&lt;h1 class="anchorable-toc" id="toc_possibly-breaking-deprecations"&gt;(Possibly) Breaking Deprecations&lt;/h1&gt;</summary>
+    <content type="html">&lt;p&gt;Beta.17 and Beta.18 contained many bugfixes from the community! Please check
+them out in the &lt;a href="https://github.com/emberjs/data/blob/master/CHANGELOG.md"&gt;CHANGELOG&lt;/a&gt;. Thank you to everyone who submitted
+patches!&lt;/p&gt;
+
+&lt;p&gt;While many bugs were stomped, some important changes are worth calling out:&lt;/p&gt;
+&lt;h1 class='anchorable-toc' id='toc_possibly-breaking-deprecations'&gt;(Possibly) Breaking Deprecations&lt;/h1&gt;&lt;h2 class='anchorable-toc' id='toc_record-constructor-typekey-is-now-record-constructor-modelname'&gt;record.constructor.typeKey is now record.constructor.modelName&lt;/h2&gt;
+&lt;p&gt;In Ember Data, when you ask for a model, Ember Data looks its class up using
+Ember&amp;#39;s &lt;a href="http://guides.emberjs.com/v1.10.0/understanding-ember/dependency-injection-and-service-lookup/"&gt;Dependency Injection&lt;/a&gt; API.  When the model class is looked
+up, Ember Data stores the type on the model class.&lt;/p&gt;
+
+&lt;p&gt;For example, when the following code runs in your application:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; post = &lt;span class="local-variable"&gt;this&lt;/span&gt;.store.getById(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;post&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="integer"&gt;1&lt;/span&gt;);
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;and Ember Data will store the string &amp;quot;post&amp;quot; on the model class:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;console.log(post.constructor.typeKey); &lt;span class="comment"&gt;// 'post'&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Ember Data uses this &lt;code&gt;typeKey&lt;/code&gt; property internally when creating and extracting
+payloads in Serializers, and when locating models in Adapters. The &lt;code&gt;typeKey&lt;/code&gt; is
+also currently available on Snapshots, which are passed to adapter and
+serializer methods. &lt;code&gt;typeKey&lt;/code&gt; was previously always normalized to be a
+camelCased string.&lt;/p&gt;
+
+&lt;p&gt;In Ember Data 1.0.0-beta.18, this property is now called &lt;code&gt;modelName&lt;/code&gt;. In
+addition, the &lt;code&gt;modelName&lt;/code&gt; is a dasherized string. For example, if you had a
+model called &lt;code&gt;TacoShop&lt;/code&gt;, it would be stored on the model&amp;#39;s constructor&amp;#39;s
+&lt;code&gt;modelName&lt;/code&gt; property as &lt;code&gt;taco-shop&lt;/code&gt;, whereas previously it would be stored as
+&lt;code&gt;tacoShop&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Accessing the &lt;code&gt;typeKey&lt;/code&gt; property should still work, but will trigger
+deprecation warnings.&lt;/p&gt;
+
+&lt;p&gt;If you don&amp;#39;t have any custom serializers or adapters, you are good to go;
+outgoing payloads and URLs shouldn&amp;#39;t change. If you&amp;#39;ve overridden a method in
+your subclass, remember to call &lt;code&gt;this._super&lt;/code&gt;, or to normalize modelName in
+your code. If you need to transform this string, you can use Ember.String&amp;#39;s
+&lt;a href="http://emberjs.com/api/classes/Ember.String.html#method_camelize"&gt;camelize&lt;/a&gt; and &lt;a href="http://emberjs.com/api/classes/Ember.String.html#method_underscore"&gt;underscore&lt;/a&gt; functions. Keep in mind you
+can&amp;#39;t change &lt;code&gt;modelName&lt;/code&gt; on the model&amp;#39;s constructor; it is &lt;strong&gt;read-only&lt;/strong&gt; and
+will trigger an assertion error if you try to override it.&lt;/p&gt;
+
+&lt;p&gt;We changed &lt;code&gt;typeKey&lt;/code&gt; to &lt;code&gt;modelName&lt;/code&gt; to allow us to align to dasherized strings
+as Ember and Ember CLI also align with dasherized strings. Changing the name
+allows us to make this change with a deprecation phase.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_ds-restserializer-typeforroot-is-now'&gt;DS.RESTSerializer.typeForRoot is now&lt;/h2&gt;
+&lt;p&gt;DS.RESTSerializer.modelNameFromPayloadKey&lt;/p&gt;
+
+&lt;p&gt;To gain more consistency in the naming change of  &lt;code&gt;typeKey&lt;/code&gt; to &lt;code&gt;modelName&lt;/code&gt;,
+&lt;code&gt;typeForRoot&lt;/code&gt; has been renamed to &lt;code&gt;modelNameFromPayloadKey&lt;/code&gt;. The function
+serves the same purpose, so this should be a quick refactor you can achieve via
+search and replace in your project. While &lt;em&gt;calling&lt;/em&gt; typeForRoot will trigger a
+deprecation warning, overriding in a subclass won&amp;#39;t.&lt;/p&gt;
+&lt;h1 class='anchorable-toc' id='toc_new-features'&gt;New Features&lt;/h1&gt;&lt;h2 class='anchorable-toc' id='toc_ds-restserializer-payloadkeyfrommodelname'&gt;DS.RESTSerializer.payloadKeyFromModelName&lt;/h2&gt;
+&lt;p&gt;While &lt;code&gt;modelNameFromPayloadKey&lt;/code&gt; returns a &lt;em&gt;model&lt;/em&gt; for a JSON payload key,
+&lt;code&gt;payloadKeyFromModelName&lt;/code&gt; can be used to override the serialization of a model
+&lt;em&gt;to the server.&lt;/em&gt; For instance, you may have a Post model, but your server
+expects a &lt;code&gt;message&lt;/code&gt; as the root. You can override it like so:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// app/serializers/application.js&lt;/span&gt;
+
+&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; DS.RESTSerializer.extend({
+  &lt;span class="key"&gt;payloadKeyFromModelName&lt;/span&gt;: (modelName) {
+    &lt;span class="keyword"&gt;if&lt;/span&gt; (modelName === &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;post&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;) {
+      &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;message&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+    }
+    &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="local-variable"&gt;this&lt;/span&gt;._super(modelName);
+  }
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;This would produce the following payload:&lt;/p&gt;
+&lt;div class="highlight json "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;{
+  &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;message&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: {
+    &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;id&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;1&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;,
+    &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;title&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;Action Cable comes with 3 Months of Free HBO&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;
+  }
+}
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Another example is that ActiveModelSerializer uses this hook to convert a
+dasherized &lt;code&gt;modelName&lt;/code&gt; to an &lt;code&gt;under_scored&lt;/code&gt; string.&lt;/p&gt;
+
+&lt;p&gt;While this was possible previously in Ember Data, we noticed that users used
+several different hooks to achieve this goal, so it made sense to make one
+unifying place for this kind of serialization.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_store-unloadall-can-now-unload-all-models-when-not-passed-a-modelname'&gt;store.unloadAll() can now unload all models when not passed a modelName&lt;/h2&gt;
+&lt;p&gt;Previously, &lt;code&gt;store.unloadAll&lt;/code&gt; required a &lt;code&gt;modelName&lt;/code&gt; argument to unload records
+of a type.  Now, you can unload all records without calling &lt;code&gt;store.destroy&lt;/code&gt;.
+Thanks to &lt;a href="https://github.com/emberjs/data/pull/2999"&gt;svox1&lt;/a&gt; for this pull
+request!&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_ds-restadapter-buildurl-refactored-into-different-hooks'&gt;DS.RESTAdapter.buildURL refactored into different hooks&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;buildURL&lt;/code&gt; has been refactored into several hooks like &lt;code&gt;urlForFindQuery&lt;/code&gt;. This
+makes overriding methods like &lt;code&gt;buildURL&lt;/code&gt; easier to reason about and easier to
+change without breaking other request types. Thanks to
+&lt;a href="https://github.com/emberjs/data/pull/2966"&gt;thejameskyle&lt;/a&gt; for taking on this
+refactor!&lt;/p&gt;
+
+&lt;p&gt;While beta.17 did introduce a regression, this has been fixed in beta.18.&lt;/p&gt;
+
+&lt;!-- Links --&gt;
+</content>
+  </entry>
+  <entry>
     <title>Ember.js 1.12 and 1.13 Beta (Glimmer!) Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/05/13/ember-1-12-released.html"/>
     <id>http://emberjs.com/blog/2015/05/13/ember-1-12-released.html</id>
-    <published>2015-05-12T20:00:00-04:00</published>
-    <updated>2015-05-12T20:00:00-04:00</updated>
+    <published>2015-05-12T19:00:00-05:00</published>
+    <updated>2015-05-12T19:00:00-05:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -334,8 +480,8 @@ Detail&lt;/a&gt; blog post.&lt;/p&gt;
     <title>The Transition to Ember 2.0 in Detail</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/05/10/run-up-to-two-oh.html"/>
     <id>http://emberjs.com/blog/2015/05/10/run-up-to-two-oh.html</id>
-    <published>2015-05-09T20:00:00-04:00</published>
-    <updated>2015-05-09T20:00:00-04:00</updated>
+    <published>2015-05-09T19:00:00-05:00</published>
+    <updated>2015-05-09T19:00:00-05:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -890,8 +1036,8 @@ compatibility while making major changes is hard, but well worth it.&lt;/p&gt;
     <title>Glimmer's In Canary, Test Your Apps!</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/05/05/glimmer-merging.html"/>
     <id>http://emberjs.com/blog/2015/05/05/glimmer-merging.html</id>
-    <published>2015-05-04T20:00:00-04:00</published>
-    <updated>2015-05-04T20:00:00-04:00</updated>
+    <published>2015-05-04T19:00:00-05:00</published>
+    <updated>2015-05-04T19:00:00-05:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -1083,8 +1229,8 @@ performance.&lt;/p&gt;
     <title>Internet Explorer 8 Support Will Be Removed in Ember 2.0</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/04/20/ie8-support-update.html"/>
     <id>http://emberjs.com/blog/2015/04/20/ie8-support-update.html</id>
-    <published>2015-04-19T20:00:00-04:00</published>
-    <updated>2015-04-19T20:00:00-04:00</updated>
+    <published>2015-04-19T19:00:00-05:00</published>
+    <updated>2015-04-19T19:00:00-05:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -1199,8 +1345,8 @@ community.&lt;/p&gt;
     <title>Security and Bugfix Releases - Ember 1.10.1, 1.11.2, 1.11.3</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/04/14/security-and-bugfix-releases-ember-1-10-1-1-11-2-1-11-3.html"/>
     <id>http://emberjs.com/blog/2015/04/14/security-and-bugfix-releases-ember-1-10-1-1-11-2-1-11-3.html</id>
-    <published>2015-04-13T20:00:00-04:00</published>
-    <updated>2015-04-13T20:00:00-04:00</updated>
+    <published>2015-04-13T19:00:00-05:00</published>
+    <updated>2015-04-13T19:00:00-05:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -1258,62 +1404,6 @@ in addition to the security patch.&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;1.11.3 -- &lt;a href="https://github.com/emberjs/ember.js/compare/v1.11.2...v1.11.3"&gt;Compare View&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Ember.js 1.11.1 Released</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2015/04/04/ember-1-11-1-released.html"/>
-    <id>http://emberjs.com/blog/2015/04/04/ember-1-11-1-released.html</id>
-    <published>2015-04-03T20:00:00-04:00</published>
-    <updated>2015-04-03T20:00:00-04:00</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Today we are releasing Ember.js 1.11.1, a patch-level release of Ember that
-fixes several regressions introduced in the 1.11.0 release.&lt;/p&gt;
-&lt;h3 class="anchorable-toc" id="toc_collectionview-with-code-attributebindings-code"&gt;CollectionView with &lt;code&gt;attributeBindings&lt;/code&gt;
-&lt;/h3&gt;
-&lt;p&gt;During the 1.11.0 cycle much effort was put into making sure that &lt;code&gt;attributeBindings&lt;/code&gt;&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Today we are releasing Ember.js 1.11.1, a patch-level release of Ember that
-fixes several regressions introduced in the 1.11.0 release.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_collectionview-with-code-attributebindings-code'&gt;CollectionView with &lt;code&gt;attributeBindings&lt;/code&gt;&lt;/h3&gt;
-&lt;p&gt;During the 1.11.0 cycle much effort was put into making sure that &lt;code&gt;attributeBindings&lt;/code&gt; used
-the same logic that template bound attributes use.  Namely, that &lt;code&gt;attributeBindings&lt;/code&gt; use
-HTMLBars&amp;#39; attribute helpers instead of jQuery&amp;#39;s.&lt;/p&gt;
-
-&lt;p&gt;Unfortunately, this work lead to an error when &lt;code&gt;CollectionView&lt;/code&gt; instances were used with
-&lt;code&gt;attributeBindings&lt;/code&gt; specified.  This regression is fixed in 1.11.1.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_invalid-urls'&gt;Invalid URLs&lt;/h3&gt;
-&lt;p&gt;Refactoring in the router initialization process lead to a bug that caused the browsers URL
-to become out of sync with the correct URL when the back button was pressed while using 
-&lt;code&gt;HistoryLocation&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;This regression is fixed in 1.11.1.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_handlebars-helper-issues'&gt;Handlebars Helper Issues&lt;/h3&gt;
-&lt;p&gt;A couple regressions were fixed for Handlebars helpers with 1.11.1:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The inverse template (aka &lt;code&gt;{{else}}&lt;/code&gt; block) of Handlebars helpers was not properly accounted
-for during the HTMLBars transition. Using an &lt;code&gt;{{else}}&lt;/code&gt; block with a Handlebars helper has
-not been function since 1.9.0.&lt;/li&gt;
-&lt;li&gt;The main block could not be rendered even if &lt;code&gt;options.fn()&lt;/code&gt; was called within the helper. This
-regression was first introduced in 1.11.0-beta.4.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 class='anchorable-toc' id='toc_incorrect-assertion-for-each-foos-itemcontroler-bar'&gt;Incorrect Assertion for {{each foos itemControler=&amp;#39;bar&amp;#39;}}&lt;/h3&gt;
-&lt;p&gt;During the 1.11.0 cycle an issue regarding &lt;code&gt;{{each}}&lt;/code&gt; with prototype extensions disabled was reported.
-The solution to that issue was to add a much more helpful assertion when an &lt;code&gt;ArrayController&lt;/code&gt;&amp;#39;s model
-did not have &lt;code&gt;Ember.Array&lt;/code&gt; mixed into it. Unfortunately, this assertion also was triggered when the
-model was simply &lt;code&gt;undefined&lt;/code&gt;. The assertion has been updated to ignore falsey &lt;code&gt;model&lt;/code&gt;&amp;#39;s in 1.11.1.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_render-helper-with-view'&gt;{{render}} helper with View&lt;/h3&gt;
-&lt;p&gt;In 1.11.0 using the &lt;code&gt;{{render}}&lt;/code&gt; helper (i.e. &lt;code&gt;{{render &amp;#39;post&amp;#39;}}&lt;/code&gt;) when a &lt;code&gt;PostView&lt;/code&gt; is present would not
-provide the view with a template (it was assumed to be manually specified in the view via &lt;code&gt;templateName&lt;/code&gt;
-property). As of 1.11.1 you can specify the &lt;code&gt;templateName&lt;/code&gt; in the &lt;code&gt;{{render}}&lt;/code&gt; helpers view (just like in 1.11.0),
-but if you do not the views template will be defaulted to a template with the same name as the view itself.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_changelogs'&gt;Changelogs&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/compare/v1.11.0...v1.11.1"&gt;Ember.js 1.11.0 to 1.11.1 commit log&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/releases/tag/v1.11.1"&gt;Ember.js 1.11.1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </content>
   </entry>

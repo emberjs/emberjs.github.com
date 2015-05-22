@@ -3,8 +3,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - Ember Data v1.0.0-beta.12 Released</title>
-    <meta property="st:title" content="Ember Data v1.0.0-beta.12 Released" />
+    <title>Ember.js - Ember Data v1.0.0-beta.17/18 Released</title>
+    <meta property="st:title" content="Ember Data v1.0.0-beta.17/18 Released" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" rel="stylesheet" type="text/css" />
@@ -12,7 +12,7 @@
     
   </head>
 
-  <body class="blog blog_2014 blog_2014_11 blog_2014_11_24 blog_2014_11_24_ember-data-1-0-beta-12-released">
+  <body class="blog blog_2015 blog_2015_05 blog_2015_05_21 blog_2015_05_21_ember-data-1-0-beta-18-released">
 
 
     <!--[if lt IE 9]>
@@ -105,111 +105,76 @@
         </div>
       <div id="content" class="has-sidebar">
           <article class="blog-post">
-    <h1>Ember Data v1.0.0-beta.12 Released</h1>
-      <h3 class="blog-post-author">Posted By: Stanley Stuart &ndash; <time>Nov 24, 2014</time></h3>
+    <h1>Ember Data v1.0.0-beta.17/18 Released</h1>
+      <h3 class="blog-post-author">Posted By: Stanley Stuart &ndash; <time>May 21, 2015</time></h3>
 
     <hr>
 
-    <h2 class='anchorable-toc' id='toc_new-core-contributors'>New Core Contributors</h2>
-<p>Long-time contributors <a href="https://github.com/bmac">Brendan McLoughlin</a> and <a href="https://github.com/sly7-7">Sylvain Mina</a>
-have been given collaborator status and will help us triage issues, merge pull
-requests, and contribute bugfixes and documentation.</p>
-<h2 class='anchorable-toc' id='toc_new-features'>New Features</h2><h3 class='anchorable-toc' id='toc_store-fetch'>store.fetch</h3>
-<p>When using Ember Data, the most common pattern in the <code>model</code> hook is to call
-<code>store.find</code> for your model:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> <span class="keyword">var</span> PostRoute = Ember.Route.extend({
-  <span class="function">model</span>: <span class="keyword">function</span>(params) {
-    <span class="keyword">return</span> <span class="local-variable">this</span>.store.find(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, params.post_id);
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p><code>store.find</code> will return the instance of the <code>Post</code> record if it has already
-been fetched in the store. Sometimes, this is not desirable. For example, you
-may not know if you have already loaded the post in another request via
-sideloading, or you want the most up to date information. You could either
-check if the record existed using
-<a href="http://emberjs.com/api/data/classes/DS.Store.html#method_hasRecordForId">store.hasRecordForId</a>, or just always call
-<a href="http://emberjs.com/api/data/classes/DS.Model.html#method_reload">reload</a> on your model in the route&#39;s <code>afterModel</code>hook.</p>
+    <p>Beta.17 and Beta.18 contained many bugfixes from the community! Please check
+them out in the <a href="https://github.com/emberjs/data/blob/master/CHANGELOG.md">CHANGELOG</a>. Thank you to everyone who submitted
+patches!</p>
 
-<p><code>store.fetch</code> wraps this common pattern by reloading a record if it exists in
-the store, or reloads the record if it doesn&#39;t exist:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre><span class="function">model</span>: <span class="keyword">function</span>(params){
-  <span class="keyword">return</span> <span class="local-variable">this</span>.store.fetch(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, params.post_id);
-}
-</pre></td>
-</tr></table>
-</div></div>
-<p>Please give a warm thanks to <a href="https://github.com/thaume">Tom Coquereau</a> for his <a href="https://github.com/emberjs/data/pull/2478">pull
-request</a> implementing this feature!</p>
-<h2 class='anchorable-toc' id='toc_bugfixes'>Bugfixes</h2><h3 class='anchorable-toc' id='toc_relationship-createrecord-returns-the-record-instead-of-a-promise'>relationship.createRecord() returns the record instead of a promise</h3>
-<p>Prior to Ember Data v1.0.0-beta.11, the following code would give you direct
-access to a record:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-</pre></td>
-  <td class="code"><pre><span class="keyword">var</span> post    = store.createRecord(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>);
-<span class="keyword">var</span> comment = post.get(<span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>).createRecord(<span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>);
-</pre></td>
-</tr></table>
-</div></div>
-<p>In beta.11, it returned a Promise, meaning you couldn&#39;t call things like
-<code>set/get</code> on the resulting record. This regression has been fixed in beta.12
-thanks to <a href="https://github.com/ZenCocoon">Sébastien Grosjean</a>.</p>
-<h2 class='anchorable-toc' id='toc_breaking-changes'>Breaking Changes</h2><h3 class='anchorable-toc' id='toc_internet-explorer-8-requires-ember-1-8'>Internet Explorer 8 Requires Ember 1.8</h3>
-<p>A bug in Ember 1.7&#39;s <code>Ember.create</code> method (which is a polyfill for
-<code>Object.create</code>) combined with a bug in es5-shim&#39;s <code>Object.create</code> prevent us
-from giving Ember Data users a good alternative to use. Internally, Ember Data
-uses <code>Object.create</code> for efficient caches. Ember 1.8 ships a working
-<code>Object.create</code> polyfill on <code>Ember.create</code> so if you are using Internet
-Explorer 8 and Ember Data in production, you should upgrade to Ember 1.8 as
-soon as you can.</p>
+<p>While many bugs were stomped, some important changes are worth calling out:</p>
+<h1 class='anchorable-toc' id='toc_possibly-breaking-deprecations'>(Possibly) Breaking Deprecations</h1><h2 class='anchorable-toc' id='toc_record-constructor-typekey-is-now-record-constructor-modelname'>record.constructor.typeKey is now record.constructor.modelName</h2>
+<p>In Ember Data, when you ask for a model, Ember Data looks its class up using
+Ember&#39;s <a href="http://guides.emberjs.com/v1.10.0/understanding-ember/dependency-injection-and-service-lookup/">Dependency Injection</a> API.  When the model class is looked
+up, Ember Data stores the type on the model class.</p>
 
-<p>If you are using browsers that provide <code>Object.create</code>, you do not need to do
-any additional work here. This includes mobile browsers, evergreen browsers
-(Chrome, Opera, Firefox), Safari, and IE9+.</p>
-<h3 class='anchorable-toc' id='toc_ember-1-7-support-will-be-completely-dropped-in-beta-13'>Ember 1.7 Support Will Be Completely Dropped in Beta.13</h3>
-<p>Ember Data relies heavily on JavaScript language-level shims (such as the
-<code>Object.create</code> issue mentioned above) and other useful internals that Ember
-provides. Rather than creating our own detection algorithms and more polyfills
-for broken code in Ember 1.7, we are deciding to drop 1.7 support in the next
-release of Ember Data. We do so in order to not increase the final size of
-Ember Data&#39;s build. You should upgrade to Ember 1.8 as soon as you can.</p>
-<h3 class='anchorable-toc' id='toc_observing-code-data-code-for-changes-has-been-removed'>Observing <code>data</code> For Changes Has Been Removed</h3>
-<p>Although <code>model.get(&#39;data&#39;)</code> has been private in Ember Data for a long time, we
-have noticed users may subscribe to changes on <code>data</code> for any change to the
-model&#39;s attributes. This means that the following code:</p>
+<p>For example, when the following code runs in your application:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
-2
-3
-4
-5
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> Post = DS.Model.extend({
-  <span class="function">doSomethingWhenDataChanges</span>: <span class="keyword">function</span>(){
-    <span class="comment">// do the work</span>
-  }.property(<span class="string"><span class="delimiter">'</span><span class="content">data</span><span class="delimiter">'</span></span>)
-});
+  <td class="code"><pre><span class="keyword">var</span> post = <span class="local-variable">this</span>.store.getById(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="integer">1</span>);
 </pre></td>
 </tr></table>
 </div></div>
-<p><strong>no longer works</strong>. Instead, you should just watch each attribute like you
-would with any <code>Ember.Object</code>:</p>
+<p>and Ember Data will store the string &quot;post&quot; on the model class:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>console.log(post.constructor.typeKey); <span class="comment">// 'post'</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Ember Data uses this <code>typeKey</code> property internally when creating and extracting
+payloads in Serializers, and when locating models in Adapters. The <code>typeKey</code> is
+also currently available on Snapshots, which are passed to adapter and
+serializer methods. <code>typeKey</code> was previously always normalized to be a
+camelCased string.</p>
+
+<p>In Ember Data 1.0.0-beta.18, this property is now called <code>modelName</code>. In
+addition, the <code>modelName</code> is a dasherized string. For example, if you had a
+model called <code>TacoShop</code>, it would be stored on the model&#39;s constructor&#39;s
+<code>modelName</code> property as <code>taco-shop</code>, whereas previously it would be stored as
+<code>tacoShop</code>.</p>
+
+<p>Accessing the <code>typeKey</code> property should still work, but will trigger
+deprecation warnings.</p>
+
+<p>If you don&#39;t have any custom serializers or adapters, you are good to go;
+outgoing payloads and URLs shouldn&#39;t change. If you&#39;ve overridden a method in
+your subclass, remember to call <code>this._super</code>, or to normalize modelName in
+your code. If you need to transform this string, you can use Ember.String&#39;s
+<a href="http://emberjs.com/api/classes/Ember.String.html#method_camelize">camelize</a> and <a href="http://emberjs.com/api/classes/Ember.String.html#method_underscore">underscore</a> functions. Keep in mind you
+can&#39;t change <code>modelName</code> on the model&#39;s constructor; it is <strong>read-only</strong> and
+will trigger an assertion error if you try to override it.</p>
+
+<p>We changed <code>typeKey</code> to <code>modelName</code> to allow us to align to dasherized strings
+as Ember and Ember CLI also align with dasherized strings. Changing the name
+allows us to make this change with a deprecation phase.</p>
+<h2 class='anchorable-toc' id='toc_ds-restserializer-typeforroot-is-now'>DS.RESTSerializer.typeForRoot is now</h2>
+<p>DS.RESTSerializer.modelNameFromPayloadKey</p>
+
+<p>To gain more consistency in the naming change of  <code>typeKey</code> to <code>modelName</code>,
+<code>typeForRoot</code> has been renamed to <code>modelNameFromPayloadKey</code>. The function
+serves the same purpose, so this should be a quick refactor you can achieve via
+search and replace in your project. While <em>calling</em> typeForRoot will trigger a
+deprecation warning, overriding in a subclass won&#39;t.</p>
+<h1 class='anchorable-toc' id='toc_new-features'>New Features</h1><h2 class='anchorable-toc' id='toc_ds-restserializer-payloadkeyfrommodelname'>DS.RESTSerializer.payloadKeyFromModelName</h2>
+<p>While <code>modelNameFromPayloadKey</code> returns a <em>model</em> for a JSON payload key,
+<code>payloadKeyFromModelName</code> can be used to override the serialization of a model
+<em>to the server.</em> For instance, you may have a Post model, but your server
+expects a <code>message</code> as the root. You can override it like so:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -218,23 +183,60 @@ would with any <code>Ember.Object</code>:</p>
 5
 6
 7
+8
+9
+<strong>10</strong>
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> Post = DS.Model.extend({
-  <span class="key">name</span>: DS.attr(),
-  <span class="key">date</span>: DS.attr(),
-  <span class="function">doSomethingWhenDataChanges</span>: <span class="keyword">function</span>(){
-    <span class="comment">// do the work</span>
-  }.property(<span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">date</span><span class="delimiter">'</span></span>)
+  <td class="code"><pre><span class="comment">// app/serializers/application.js</span>
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.RESTSerializer.extend({
+  <span class="key">payloadKeyFromModelName</span>: (modelName) {
+    <span class="keyword">if</span> (modelName === <span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>) {
+      <span class="keyword">return</span> <span class="string"><span class="delimiter">'</span><span class="content">message</span><span class="delimiter">'</span></span>;
+    }
+    <span class="keyword">return</span> <span class="local-variable">this</span>._super(modelName);
+  }
 });
 </pre></td>
 </tr></table>
 </div></div>
-<p>This change fixed some bugs around observers. Thanks to <a href="https://github.com/wecc">Christoffer
-Persson</a> for helping to clean this up and fix some observer bugs around
-this!</p>
-<h2 class='anchorable-toc' id='toc_special-thanks'>Special Thanks</h2>
-<p>Thanks to <a href="https://github.com/wecc">Christoffer Persson</a> for helping us implement bugfixes and API
-changes, as well as triaging issues.</p>
+<p>This would produce the following payload:</p>
+<div class="highlight json "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">message</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Action Cable comes with 3 Months of Free HBO</span><span class="delimiter">&quot;</span></span>
+  }
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>Another example is that ActiveModelSerializer uses this hook to convert a
+dasherized <code>modelName</code> to an <code>under_scored</code> string.</p>
+
+<p>While this was possible previously in Ember Data, we noticed that users used
+several different hooks to achieve this goal, so it made sense to make one
+unifying place for this kind of serialization.</p>
+<h2 class='anchorable-toc' id='toc_store-unloadall-can-now-unload-all-models-when-not-passed-a-modelname'>store.unloadAll() can now unload all models when not passed a modelName</h2>
+<p>Previously, <code>store.unloadAll</code> required a <code>modelName</code> argument to unload records
+of a type.  Now, you can unload all records without calling <code>store.destroy</code>.
+Thanks to <a href="https://github.com/emberjs/data/pull/2999">svox1</a> for this pull
+request!</p>
+<h2 class='anchorable-toc' id='toc_ds-restadapter-buildurl-refactored-into-different-hooks'>DS.RESTAdapter.buildURL refactored into different hooks</h2>
+<p><code>buildURL</code> has been refactored into several hooks like <code>urlForFindQuery</code>. This
+makes overriding methods like <code>buildURL</code> easier to reason about and easier to
+change without breaking other request types. Thanks to
+<a href="https://github.com/emberjs/data/pull/2966">thejameskyle</a> for taking on this
+refactor!</p>
+
+<p>While beta.17 did introduce a regression, this has been fixed in beta.18.</p>
 
 <!-- Links -->
 
