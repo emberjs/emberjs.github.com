@@ -5,16 +5,136 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2015-05-20T19:00:00-05:00</updated>
+  <updated>2015-05-23T17:00:00-07:00</updated>
   <author>
     <name>Ember</name>
   </author>
   <entry>
+    <title>Another Ember 2.x Status Update</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2015/05/24/another-two-oh-status-update.html"/>
+    <id>http://emberjs.com/blog/2015/05/24/another-two-oh-status-update.html</id>
+    <published>2015-05-23T17:00:00-07:00</published>
+    <updated>2015-05-23T17:00:00-07:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;We're just a few weeks away from the release of Ember 1.13 and Ember 2.0 beta, and while there's been a lot of focus on those releases, the trains will keep rolling on June 12. There will be a 2.1 release 6 weeks hence, and a 2.2 release 6 weeks later...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;We&amp;#39;re just a few weeks away from the release of Ember 1.13 and Ember 2.0 beta, and while there&amp;#39;s been a lot of focus on those releases, the trains will keep rolling on June 12. There will be a 2.1 release 6 weeks hence, and a 2.2 release 6 weeks later.&lt;/p&gt;
+
+&lt;p&gt;With all of the focus on Ember 2.0, it&amp;#39;s easy to forget that 2.0 is just a six-week release, with the added ability to remove some built-up cruft. Because of the symbolic nature of 2.0, discussions about the future have had an artificial end date of June 12, which is now just three weeks away.&lt;/p&gt;
+
+&lt;p&gt;This post gives some more details about what cruft will be removed in Ember 2.0, but, since the first features in Ember 2.1 will land in Canary just three weeks hence, what we plan to do in the early releases of Ember 2.x.&lt;/p&gt;
+
+&lt;p&gt;It&amp;#39;s important to note that we&amp;#39;ve talked a lot about an improved &amp;quot;Ember 2 programming model&amp;quot; over the past several months, significantly inspired by React. While much of the model will be in place in Ember 2.0, the early releases of Ember 2.x (especially 2.1 and 2.2), will finish up some important features. This blog post details the expected timeline.&lt;/p&gt;
+
+&lt;p&gt;Of course, the six-week release cycle means that we ship on a train cycle, so the precise versions of specific features may change before they land in a final release.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_removals'&gt;Removals&lt;/h2&gt;
+&lt;p&gt;While we&amp;#39;ve spent a lot of time talking about the new features that Ember is getting over the next few months, the 2.0 release itself is more about removals and de-cruft-ification.&lt;/p&gt;
+
+&lt;p&gt;Some notable examples:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Context-shifting helpers (&lt;code&gt;#with item&lt;/code&gt; becomes &lt;code&gt;#with item as |i|&lt;/code&gt;,
+&lt;code&gt;#each list&lt;/code&gt; becomes &lt;code&gt;#each list as |item|&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Fake block params versions of helpers (&lt;code&gt;#with foo as bar&lt;/code&gt; becomes
+&lt;code&gt;#with foo as |bar|&lt;/code&gt;, &lt;code&gt;#each item in list&lt;/code&gt; becomes
+&lt;code&gt;#each list as |item|&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;ArrayPolyfills&lt;/code&gt; and &lt;code&gt;EnumerableUtils&lt;/code&gt; libraries are being
+pulled out into a library; most apps should prefer lodash or other
+utility libs.&lt;/li&gt;
+&lt;li&gt;In &lt;code&gt;#each&lt;/code&gt;, the options &lt;code&gt;itemController&lt;/code&gt;, &lt;code&gt;itemViewClass&lt;/code&gt;,
+&lt;code&gt;itemView&lt;/code&gt;; superseded by using a component inside the loop&lt;/li&gt;
+&lt;li&gt;In &lt;code&gt;#with&lt;/code&gt;, the &lt;code&gt;controller&lt;/code&gt; option&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;Ember.Handlebars&lt;/code&gt; namespace and all of its properties&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;bind-attr&lt;/code&gt;, superseded by just using attributes&lt;/li&gt;
+&lt;li&gt;The legacy names &lt;code&gt;bindAttr&lt;/code&gt; and &lt;code&gt;linkTo&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;{{collection}}&lt;/code&gt; helper&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;{{template}}&lt;/code&gt; helper; superseded by &lt;code&gt;{{partial}}&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;{{render}}&lt;/code&gt; helper; superseded in most cases by components&lt;/li&gt;
+&lt;li&gt;Manually rendering a string into the buffer in a view&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Ember.Deferred&lt;/code&gt;; superseded by normal promises&lt;/li&gt;
+&lt;li&gt;The globals resolver, which will be moved into an external library;
+superseded in normal use by the ES6 module resolver&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;While top-level controllers will not be removed in 2.0 (see more below), we will remove all of the other uses of controllers from templates (such as &lt;code&gt;#with controller=&lt;/code&gt;, &lt;code&gt;{{render}}&lt;/code&gt;, &lt;code&gt;itemController&lt;/code&gt; and others).&lt;/p&gt;
+
+&lt;p&gt;In all of these cases, we did significant work in the 1.x series, especially in 1.12 and 1.13, to make sure that the dominant use-cases for these features were addressed by existing or new features.&lt;/p&gt;
+
+&lt;p&gt;You can learn about all of the deprecations added in the 1.x era, along with the expected transition to the features that superseded them, in the &lt;a href="http://emberjs.com/deprecations/v1.x/"&gt;1.x deprecations guide&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_the-glimmer-engine'&gt;The Glimmer Engine&lt;/h2&gt;
+&lt;p&gt;The Glimmer engine, with its improved performance and improved support for the &amp;quot;data down, actions up&amp;quot; model, landed in Ember 1.13 beta.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_fast-re-render'&gt;Fast Re-Render&lt;/h2&gt;
+&lt;p&gt;In Ember 1.12, calling rerender() on a component is an extremely expensive operation, and blows away all of the existing DOM (together with its internal state, such as selection, cursor, focus, scroll position and more).&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;In Ember 1.13&lt;/strong&gt;, thanks to the Glimmer engine, you can safely invoke rerender() and it will only update the parts of the template that have actually changed.&lt;/p&gt;
+
+&lt;p&gt;This allows you to replace an entire data structure with a totally new POJO, rerender the component, and get highly performant updates that preserve the DOM.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_new-lifecycle-hooks'&gt;New Lifecycle Hooks&lt;/h2&gt;
+&lt;p&gt;Because &lt;code&gt;rerender()&lt;/code&gt; is now fast and reliable, any call to &lt;code&gt;component.set()&lt;/code&gt; will trigger a re-render on the component. When a component re-renders, that may change the attributes of child components, which likewise are re-rendered.&lt;/p&gt;
+
+&lt;p&gt;As a result of the fact that &lt;code&gt;rerender()&lt;/code&gt; is now such an important part of the programming model, &lt;strong&gt;Ember 1.13 beta&lt;/strong&gt; got a bunch of new React-inspired lifecycle hooks:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;didUpdateAttrs&lt;/code&gt;, invoked when a component&amp;#39;s attributes have changed
+but before the component is rendered.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;willUpdate&lt;/code&gt;, invoked before a component will rerender, whether
+the update was triggered by new attributes or by rerender.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;didUpdate&lt;/code&gt;, invoked after a component has been rerendered.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;didReceiveAttrs&lt;/code&gt;, invoked when a component gets attributes, either
+initially or due to an update.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;willRender&lt;/code&gt;, invoked before a component will render, either
+initially or due to an update, and regardless of how the rerender
+was triggered.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;didRender&lt;/code&gt;, invoked after a component has been rendered, either
+initially or due to an update.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;These lifecycle hooks will fire on all components (but not views), regardless of invocation style (both curlies and angle bracket style).&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_angle-bracket-components'&gt;Angle Bracket Components&lt;/h2&gt;
+&lt;p&gt;Angle bracket components (&lt;code&gt;&amp;lt;my-component&amp;gt;&lt;/code&gt;) are a very important part of the Ember 2.x programming model. In addition to nicer syntax, they serve as an opt-in for component changes that we could not easily make compatibly, such as default one-way bindings.&lt;/p&gt;
+
+&lt;p&gt;We originally thought that angle-bracket components would land in time for Ember 1.13, and they have already landed on Canary, and were included in the first 1.13 beta release.&lt;/p&gt;
+
+&lt;p&gt;However, there were some late-breaking concerns, and we have decided to defer this feature so we can write an RFC and go through the regular process. We have already written an implementation of the RFC, which we will land on Canary and keep up to date with the RFC discussions.&lt;/p&gt;
+
+&lt;p&gt;Because we are so close to the Ember 2.0 branch point, &lt;strong&gt;this feature is likely to land in Ember 2.1.&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_routeable-components'&gt;Routeable Components&lt;/h2&gt;
+&lt;p&gt;The routeable components RFC was first published several months ago, and has been the subject of vigorous discussion. It is one of the most anticipated features of the Ember 2.x programming model.&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;(the following two paragraphs are a bit of insider baseball)&lt;/p&gt;
+
+&lt;p&gt;The primary reason to attempt to land this feature in Ember 2.0, despite the fact that its development is at a relatively early stage, was a desire to deprecate controllers for 2.0. In Ember, in order to deprecate a public API, we require an alternate path for all of the use-cases of the old feature. In order to remove a feature in 2.0, it would have needed to be deprecated in 1.13.&lt;/p&gt;
+
+&lt;p&gt;Together, that means that in order to remove controllers in 2.0, we needed to land routeable components, the transition from controllers, in 1.13. During the 1.13 canary cycle, it became obvious that removing controllers in 2.0 would be too aggressive, so the pressure to ship Routeable Components exactly in 2.0.0 is less.&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;The work on Routeable Components, as well as work to make it possible to move query parameters fully to routes, is ongoing.&lt;/p&gt;
+
+&lt;p&gt;There are less than three weeks left until the 2.0-beta branch point, and given that the feature has not yet landed in Canary (and the importance and magnitude of the feature), it will probably land in 2.1 at the earliest.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;It is extremely likely to land in 2.1, or 2.2 at the latest.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The Routeable Component feature also includes a change that makes it possible to provide multiple asynchronous attributes to the component you are routing to, rather than just the &lt;code&gt;model&lt;/code&gt; attribute. The &lt;code&gt;attrs&lt;/code&gt; hook will run on every transition into the route, in contrast to the &lt;code&gt;model&lt;/code&gt; hook, which doesn&amp;#39;t run again in some cases.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_fastboot'&gt;FastBoot&lt;/h2&gt;
+&lt;p&gt;An early version of the FastBoot feature, suitable for SEO, is already available as an Ember addon that works with Ember 1.12. We expect the addon to work with the final release of 1.13.&lt;/p&gt;
+
+&lt;p&gt;Work on rehydrating FastBoot will begin very soon, and we hope to land it in Canary early in the 2.x release cycle.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_engines'&gt;Engines&lt;/h2&gt;
+&lt;p&gt;The Engines feature was first proposed as an &lt;a href="https://github.com/tomdale/rfcs/blob/master/active/0000-engines.md"&gt;RFC&lt;/a&gt; last year, and work on the feature itself will likely begin very soon.&lt;/p&gt;
+
+&lt;p&gt;We expect the Engines feature to land in Canary early in the 2.x release cycle.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
     <title>Ember Data v1.0.0-beta.17/18 Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/05/21/ember-data-1-0-beta-18-released.html"/>
     <id>http://emberjs.com/blog/2015/05/21/ember-data-1-0-beta-18-released.html</id>
-    <published>2015-05-20T19:00:00-05:00</published>
-    <updated>2015-05-20T19:00:00-05:00</updated>
+    <published>2015-05-20T17:00:00-07:00</published>
+    <updated>2015-05-20T17:00:00-07:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -159,8 +279,8 @@ refactor!&lt;/p&gt;
     <title>Ember.js 1.12 and 1.13 Beta (Glimmer!) Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/05/13/ember-1-12-released.html"/>
     <id>http://emberjs.com/blog/2015/05/13/ember-1-12-released.html</id>
-    <published>2015-05-12T19:00:00-05:00</published>
-    <updated>2015-05-12T19:00:00-05:00</updated>
+    <published>2015-05-12T17:00:00-07:00</published>
+    <updated>2015-05-12T17:00:00-07:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -480,8 +600,8 @@ Detail&lt;/a&gt; blog post.&lt;/p&gt;
     <title>The Transition to Ember 2.0 in Detail</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/05/10/run-up-to-two-oh.html"/>
     <id>http://emberjs.com/blog/2015/05/10/run-up-to-two-oh.html</id>
-    <published>2015-05-09T19:00:00-05:00</published>
-    <updated>2015-05-09T19:00:00-05:00</updated>
+    <published>2015-05-09T17:00:00-07:00</published>
+    <updated>2015-05-09T17:00:00-07:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -1036,8 +1156,8 @@ compatibility while making major changes is hard, but well worth it.&lt;/p&gt;
     <title>Glimmer's In Canary, Test Your Apps!</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/05/05/glimmer-merging.html"/>
     <id>http://emberjs.com/blog/2015/05/05/glimmer-merging.html</id>
-    <published>2015-05-04T19:00:00-05:00</published>
-    <updated>2015-05-04T19:00:00-05:00</updated>
+    <published>2015-05-04T17:00:00-07:00</published>
+    <updated>2015-05-04T17:00:00-07:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -1229,8 +1349,8 @@ performance.&lt;/p&gt;
     <title>Internet Explorer 8 Support Will Be Removed in Ember 2.0</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/04/20/ie8-support-update.html"/>
     <id>http://emberjs.com/blog/2015/04/20/ie8-support-update.html</id>
-    <published>2015-04-19T19:00:00-05:00</published>
-    <updated>2015-04-19T19:00:00-05:00</updated>
+    <published>2015-04-19T17:00:00-07:00</published>
+    <updated>2015-04-19T17:00:00-07:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -1339,72 +1459,6 @@ Ember/jQuery integration at this time.&lt;/p&gt;
 &lt;p&gt;Thank you again for everyone who took the time to help us make this
 decision, and thank you so much for being a part of the Ember
 community.&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Security and Bugfix Releases - Ember 1.10.1, 1.11.2, 1.11.3</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2015/04/14/security-and-bugfix-releases-ember-1-10-1-1-11-2-1-11-3.html"/>
-    <id>http://emberjs.com/blog/2015/04/14/security-and-bugfix-releases-ember-1-10-1-1-11-2-1-11-3.html</id>
-    <published>2015-04-13T19:00:00-05:00</published>
-    <updated>2015-04-13T19:00:00-05:00</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Because developers trust Ember.js to handle sensitive customer data in
-production, we take the security of the project extremely seriously. Ember
-remains one of the few JavaScript projects that has a &lt;a href="/security/"&gt;clearly
-outlined security policy&lt;/a&gt; and a
-&lt;a href="https://groups.google.com/forum/#!forum/ember-security"&gt;low-traffic...&lt;/a&gt;&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Because developers trust Ember.js to handle sensitive customer data in
-production, we take the security of the project extremely seriously. Ember
-remains one of the few JavaScript projects that has a &lt;a href="/security/"&gt;clearly
-outlined security policy&lt;/a&gt; and a
-&lt;a href="https://groups.google.com/forum/#!forum/ember-security"&gt;low-traffic mailing list exclusively for security
-announcements&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_security-releases-ember-js-1-10-1-1-11-2'&gt;Security Releases: Ember.js 1.10.1, 1.11.2&lt;/h2&gt;
-&lt;p&gt;Today we are announcing the release of Ember.js 1.10.1 and 1.11.2, which
-contain an important security fix.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;1.10.1 -- &lt;a href="https://github.com/emberjs/ember.js/compare/v1.10.0...v1.10.1"&gt;Compare View&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;1.11.2 -- &lt;a href="https://github.com/emberjs/ember.js/compare/v1.11.1...v1.11.2"&gt;Compare View&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Additionally the stable, beta, and master branches have all been patched&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;These releases contain a fix for an XSS vulnerability that
-you can learn more about on our security mailing list:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://groups.google.com/forum/#!topic/ember-security/nbntfs2EbRU"&gt;CVE-2015-1866&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;It is recommended that you update immediately. In order to ease
-upgrading, the only change in each release is the security fix.&lt;/p&gt;
-
-&lt;p&gt;We would like to thank Phillip Haines of &lt;a href="http://zestia.com/"&gt;Zestia&lt;/a&gt;
-for working with us on identifying the issue and on the advisory process.&lt;/p&gt;
-
-&lt;p&gt;If you discover what you believe may be a security issue in Ember.js, we
-ask that you follow our &lt;a href="/security/"&gt;responsible disclosure
-policy&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;If you are using Ember.js in production, please consider subscribing to
-our &lt;a href="https://groups.google.com/forum/#!forum/ember-security"&gt;security announcements mailing
-list&lt;/a&gt;.  It is
-extremely low-traffic and only contains announcements such as these.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_additional-reading'&gt;Additional Reading&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="/blog/2013/04/05/announcing-the-ember-security-policy.html"&gt;Ember.js Security Policy Announcement&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="/security/"&gt;Ember.js Security Policy&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://groups.google.com/forum/#!forum/ember-security"&gt;Ember.js Security Group&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 class='anchorable-toc' id='toc_ember-js-1-11-3'&gt;Ember.js 1.11.3&lt;/h2&gt;
-&lt;p&gt;Ember.js 1.11.3 has also been released with a fix for nested &lt;code&gt;{{render}}&lt;/code&gt; helpers. This is
-in addition to the security patch.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;1.11.3 -- &lt;a href="https://github.com/emberjs/ember.js/compare/v1.11.2...v1.11.3"&gt;Compare View&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
 </content>
   </entry>
 </feed>
