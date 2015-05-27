@@ -1,0 +1,1 @@
+$(function(){var t=$("#faq-questions").find("li");t.length&&t.on("click",function(t){t.preventDefault();var n=$(this).find("a").attr("href");$("html, body").animate({scrollTop:$(n).offset().top-20},"slow")})});
