@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - DS.InvalidError</title>
-    <meta property="st:title" content="DS.InvalidError" />
+    <title>Ember.js - ContainerInstanceCache</title>
+    <meta property="st:title" content="ContainerInstanceCache" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" rel="stylesheet" type="text/css" />
@@ -11,7 +11,7 @@
     
   </head>
 
-  <body class="api api_data api_data_classes api_data_classes_DS">
+  <body class="api api_data api_data_classes api_data_classes_ContainerInstanceCache">
 
 
     <!--[if lt IE 9]>
@@ -105,7 +105,7 @@
 
           <ol class="selected">
           
-          <li class="level-3 ">
+          <li class="level-3 sub-selected">
                         <a href="/api/data/classes/ContainerInstanceCache.html">ContainerInstanceCache</a>
 
           </li>
@@ -180,7 +180,7 @@
 
           </li>
         
-          <li class="level-3 sub-selected">
+          <li class="level-3 ">
                         <a href="/api/data/classes/DS.InvalidError.html">DS.InvalidError</a>
 
           </li>
@@ -279,154 +279,38 @@
       <div id="content" class="has-sidebar">
         
   <h1 class="api-header">
-  DS.InvalidError Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/model/errors/invalid.js#L4">packages/ember-data/lib/system/model/errors/invalid.js:4</a>
+  ContainerInstanceCache Class
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/store/container-instance-cache.js#L3">packages/ember-data/lib/system/store/container-instance-cache.js:3</a>
 </h1>
 
 <hr>
 
 
 
-
+<p>PRIVATE</p>
 
 <div class="class-info">
 
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/model/errors/invalid.js#L4">packages/ember-data/lib/system/model/errors/invalid.js:4</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/store/container-instance-cache.js#L3">packages/ember-data/lib/system/store/container-instance-cache.js:3</a></p>
 
     <p>Module: <a href="/api/data/modules/ember-data.html">ember-data</a></p>
 </div>
 
   <div class="description">
-    <p>A <code>DS.InvalidError</code> is used by an adapter to signal the external API
-was unable to process a request because the content was not
-semantically correct or meaningful per the API. Usually this means a
-record failed some form of server side validation. When a promise
-from an adapter is rejected with a <code>DS.InvalidError</code> the record will
-transition to the <code>invalid</code> state and the errors will be set to the
-<code>errors</code> property on the record.</p>
+    <p>The <code>ContainerInstanceCache</code> serves as a lazy cache for looking up
+instances of serializers and adapters. It has some additional logic for
+finding the &#39;fallback&#39; adapter or serializer.</p>
 
-<p>For Ember Data to correctly map errors to their corresponding
-properties on the model, Ember Data expects each error to be
-namespaced under a key that matches the property name. For example
-if you had a Post model that looked like this.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
-  <thead>
-    <tr>
-      <td colspan="2">app/models/post.js</td>
-    </tr>
-  </thead>
-<tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-</pre></td>
-  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+<p>The &#39;fallback&#39; adapter or serializer is an adapter or serializer that is looked up
+when the preferred lookup fails. For example, say you try to look up <code>adapter:post</code>,
+but there is no entry (app/adapters/post.js in EmberCLI) for <code>adapter:post</code> in the registry.</p>
 
-<span class="reserved">export</span> <span class="keyword">default</span> DS.Model.extend({
-  <span class="key">title</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
-  <span class="key">content</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>)
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>To show an error from the server related to the <code>title</code> and
-<code>content</code> properties your adapter could return a promise that
-rejects with a <code>DS.InvalidError</code> object that looks like this:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
-  <thead>
-    <tr>
-      <td colspan="2">app/adapters/post.js</td>
-    </tr>
-  </thead>
-<tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-</pre></td>
-  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
-<span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+<p>The <code>fallbacks</code> array passed will then be used; the first entry in the fallbacks array
+that exists in the container will then be cached for <code>adapter:post</code>. So, the next time you
+look up <code>adapter:post</code>, you&#39;ll get the <code>adapter:application</code> instance (or whatever the fallback
+was if <code>adapter:application</code> doesn&#39;t exist).</p>
 
-<span class="reserved">export</span> <span class="keyword">default</span> DS.RESTAdapter.extend({
-  <span class="function">updateRecord</span>: <span class="keyword">function</span>() {
-    <span class="comment">// Fictional adapter that always rejects</span>
-    <span class="keyword">return</span> Ember.RSVP.reject(<span class="keyword">new</span> DS.InvalidError({
-      <span class="key">title</span>: [<span class="string"><span class="delimiter">'</span><span class="content">Must be unique</span><span class="delimiter">'</span></span>],
-      <span class="key">content</span>: [<span class="string"><span class="delimiter">'</span><span class="content">Must not be blank</span><span class="delimiter">'</span></span>],
-    }));
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Your backend may use different property names for your records the
-store will attempt extract and normalize the errors using the
-serializer&#39;s <code>extractErrors</code> method before the errors get added to
-the the model. As a result, it is safe for the <code>InvalidError</code> to
-wrap the error payload unaltered.</p>
-
-<p>Example</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
-  <thead>
-    <tr>
-      <td colspan="2">app/adapters/application.js</td>
-    </tr>
-  </thead>
-<tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
-14
-15
-16
-17
-18
-19
-</pre></td>
-  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
-<span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
-
-<span class="reserved">export</span> <span class="keyword">default</span> DS.RESTAdapter.extend({
-  <span class="function">ajaxError</span>: <span class="keyword">function</span>(jqXHR) {
-    <span class="keyword">var</span> error = <span class="local-variable">this</span>._super(jqXHR);
-
-    <span class="comment">// 422 is used by this fictional server to signal a validation error</span>
-    <span class="keyword">if</span> (jqXHR &amp;&amp; jqXHR.status === <span class="integer">422</span>) {
-      <span class="keyword">var</span> jsonErrors = Ember.<span class="predefined">$</span>.parseJSON(jqXHR.responseText);
-      <span class="keyword">return</span> <span class="keyword">new</span> DS.InvalidError(jsonErrors);
-    } <span class="keyword">else</span> {
-      <span class="comment">// The ajax request failed however it is not a result of this</span>
-      <span class="comment">// record being in an invalid state so we do not return a</span>
-      <span class="comment">// `InvalidError` object.</span>
-      <span class="keyword">return</span> error;
-    }
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
   </div>
 
 

@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - DS.RecordArray</title>
-    <meta property="st:title" content="DS.RecordArray" />
+    <title>Ember.js - DS.InternalModel</title>
+    <meta property="st:title" content="DS.InternalModel" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" rel="stylesheet" type="text/css" />
@@ -175,7 +175,7 @@
 
           </li>
         
-          <li class="level-3 ">
+          <li class="level-3 sub-selected">
                         <a href="/api/data/classes/DS.InternalModel.html">DS.InternalModel</a>
 
           </li>
@@ -230,7 +230,7 @@
 
           </li>
         
-          <li class="level-3 sub-selected">
+          <li class="level-3 ">
                         <a href="/api/data/classes/DS.RecordArray.html">DS.RecordArray</a>
 
           </li>
@@ -279,8 +279,8 @@
       <div id="content" class="has-sidebar">
         
   <h1 class="api-header">
-  DS.RecordArray Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/record-arrays/record-array.js#L9">packages/ember-data/lib/system/record-arrays/record-array.js:9</a>
+  DS.InternalModel Class
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/model/internal-model.js#L34">packages/ember-data/lib/system/model/internal-model.js:34</a>
 </h1>
 
 <hr>
@@ -290,21 +290,25 @@
 
 
 <div class="class-info">
-    <p>Extends: Ember.ArrayProxy</p>
 
-      <p>Uses: Ember.Evented</p>
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/record-arrays/record-array.js#L9">packages/ember-data/lib/system/record-arrays/record-array.js:9</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/model/internal-model.js#L34">packages/ember-data/lib/system/model/internal-model.js:34</a></p>
 
     <p>Module: <a href="/api/data/modules/ember-data.html">ember-data</a></p>
 </div>
 
   <div class="description">
-    <p>A record array is an array that contains records of a certain type. The record
-array materializes records as needed when they are retrieved for the first
-time. You should not create record arrays yourself. Instead, an instance of
-<code>DS.RecordArray</code> or its subclasses will be returned by your application&#39;s store
-in response to queries.</p>
+    <p><code>InternalModel</code> is the Model class that we use internally inside Ember Data to represent models.
+Internal ED methods should only deal with <code>InternalModel</code> objects. It is a fast, plain Javascript class.</p>
+
+<p>We expose <code>DS.Model</code> to application code, by materializing a <code>DS.Model</code> from <code>InternalModel</code> lazily, as
+a performance optimization.</p>
+
+<p><code>InternalModel</code> should never be exposed to application code. At the boundaries of the system, in places
+like <code>find</code>, <code>push</code>, etc. we convert between Models and InternalModels.</p>
+
+<p>We need to make sure that the properties from <code>InternalModel</code> are correctly exposed/proxied on <code>Model</code>
+if they are needed.</p>
 
   </div>
 
@@ -313,7 +317,6 @@ in response to queries.</p>
     <ul>
       <li><a href="#index">Index</a></li>
         <li><a href="#methods">Methods</a></li>
-        <li><a href="#properties">Properties</a></li>
     </ul>
     <div class="pane" id="index">
       <div id='api-options'>
@@ -339,40 +342,52 @@ in response to queries.</p>
         <p><h2>Methods</h2></p>
         <ul class="index-list">
             <li class="method private">
-              <a href="#method__unregisterFromManager">_unregisterFromManager</a>
-            </li>
-            <li class="method private">
-              <a href="#method_addInternalModel">addInternalModel</a>
-            </li>
-            <li class="method private">
-              <a href="#method_objectAtContent">objectAtContent</a>
-            </li>
-            <li class="method private">
-              <a href="#method_removeInternalModel">removeInternalModel</a>
+              <a href="#method__preloadData">_preloadData</a>
             </li>
             <li class="method ">
-              <a href="#method_save">save</a>
+              <a href="#method_adapterDidCommit">adapterDidCommit</a>
             </li>
-            <li class="method ">
-              <a href="#method_update">update</a>
+            <li class="method private">
+              <a href="#method_adapterDidDirty">adapterDidDirty</a>
             </li>
-        </ul>
-        <p><h2>Properties</h2></p>
-        <ul class="index-list">
-            <li class="property private">
-              <a href="#property_content">content</a>
+            <li class="method private">
+              <a href="#method_adapterDidError">adapterDidError</a>
             </li>
-            <li class="property ">
-              <a href="#property_isLoaded">isLoaded</a>
+            <li class="method private">
+              <a href="#method_adapterDidInvalidate">adapterDidInvalidate</a>
             </li>
-            <li class="property ">
-              <a href="#property_isUpdating">isUpdating</a>
+            <li class="method private">
+              <a href="#method_adapterWillCommit">adapterWillCommit</a>
             </li>
-            <li class="property private">
-              <a href="#property_store">store</a>
+            <li class="method private">
+              <a href="#method_clearRelationships">clearRelationships</a>
             </li>
-            <li class="property ">
-              <a href="#property_type">type</a>
+            <li class="method private">
+              <a href="#method_createSnapshot">createSnapshot</a>
+            </li>
+            <li class="method private">
+              <a href="#method_loadedData">loadedData</a>
+            </li>
+            <li class="method private">
+              <a href="#method_loadingData">loadingData</a>
+            </li>
+            <li class="method private">
+              <a href="#method_notFound">notFound</a>
+            </li>
+            <li class="method private">
+              <a href="#method_pushedData">pushedData</a>
+            </li>
+            <li class="method private">
+              <a href="#method_send">send</a>
+            </li>
+            <li class="method private">
+              <a href="#method_transitionTo">transitionTo</a>
+            </li>
+            <li class="method private">
+              <a href="#method_updateRecordArrays">updateRecordArrays</a>
+            </li>
+            <li class="method private">
+              <a href="#method_updateRecordArraysLater">updateRecordArraysLater</a>
             </li>
         </ul>
     </div>
@@ -398,38 +413,10 @@ in response to queries.</p>
 </div>
 
         
-<div id="method__unregisterFromManager" class="method private item-entry">
-  <h3 data-id="method__unregisterFromManager" class="name anchorable-toc"><code>_unregisterFromManager</code></h3>
-
-
-
-
-  <span class="flag private">private</span>
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/record-arrays/record-array.js#L187">packages/ember-data/lib/system/record-arrays/record-array.js:187</a>
-
-  </div>
-
-
-
-  <p>
-  </p>
-
-
-
-</div>
-
-        
-<div id="method_addInternalModel" class="method private item-entry">
-  <h3 data-id="method_addInternalModel" class="name anchorable-toc"><code>addInternalModel</code></h3>
+<div id="method__preloadData" class="method private item-entry">
+  <h3 data-id="method__preloadData" class="name anchorable-toc"><code>_preloadData</code></h3>
   <span class="args">
-    (internalModel, an)
+    (preload)
   </span>
 
 
@@ -443,13 +430,21 @@ in response to queries.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/record-arrays/record-array.js#L121">packages/ember-data/lib/system/record-arrays/record-array.js:121</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/model/internal-model.js#L481">packages/ember-data/lib/system/model/internal-model.js:481</a>
 
   </div>
 
 
     <div class="description">
-      <p>Adds an internal model to the <code>RecordArray</code> without duplicates</p>
+      <p>When a find request is triggered on the store, the user can optionally pass in
+attributes and relationships to be preloaded. These are meant to behave as if they
+came back from the server, except the user obtained them out of band and is informing
+the store of their existence. The most common use case is for supporting client side
+nested URLs, such as <code>/posts/1/comments/2</code> so the user can do
+<code>store.find(&#39;comment&#39;, 2, {post:1})</code> without having to fetch the post.</p>
+
+<p>Preloaded data can be attributes and relationships passed in either as IDs or as actual
+models.</p>
 
     </div>
 
@@ -461,14 +456,9 @@ in response to queries.</p>
       <h3>Parameters:</h3>
 
       <dl>
-          <dt><strong>internalModel</strong> <span class="type">InternalModel</span></dt>
+          <dt><strong>preload</strong> <span class="type">Object</span></dt>
           <dd>
             
-
-          </dd>
-          <dt><strong>an</strong> <span class="type">Number</span></dt>
-          <dd>
-            optional index to insert at
 
           </dd>
       </dl>
@@ -477,13 +467,241 @@ in response to queries.</p>
 </div>
 
         
-<div id="method_objectAtContent" class="method private item-entry">
-  <h3 data-id="method_objectAtContent" class="name anchorable-toc"><code>objectAtContent</code></h3>
+<div id="method_adapterDidCommit" class="method  item-entry">
+  <h3 data-id="method_adapterDidCommit" class="name anchorable-toc"><code>adapterDidCommit</code></h3>
+
+
+
+
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/model/internal-model.js#L579">packages/ember-data/lib/system/model/internal-model.js:579</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>If the adapter did not return a hash in response to a commit,
+merge the changed attributes and relationships into the existing
+saved data.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+
+</div>
+
+        
+<div id="method_adapterDidDirty" class="method private item-entry">
+  <h3 data-id="method_adapterDidDirty" class="name anchorable-toc"><code>adapterDidDirty</code></h3>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/model/internal-model.js#L273">packages/ember-data/lib/system/model/internal-model.js:273</a>
+
+  </div>
+
+
+
+  <p>
+  </p>
+
+
+
+</div>
+
+        
+<div id="method_adapterDidError" class="method private item-entry">
+  <h3 data-id="method_adapterDidError" class="name anchorable-toc"><code>adapterDidError</code></h3>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/model/internal-model.js#L646">packages/ember-data/lib/system/model/internal-model.js:646</a>
+
+  </div>
+
+
+
+  <p>
+  </p>
+
+
+
+</div>
+
+        
+<div id="method_adapterDidInvalidate" class="method private item-entry">
+  <h3 data-id="method_adapterDidInvalidate" class="name anchorable-toc"><code>adapterDidInvalidate</code></h3>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/model/internal-model.js#L634">packages/ember-data/lib/system/model/internal-model.js:634</a>
+
+  </div>
+
+
+
+  <p>
+  </p>
+
+
+
+</div>
+
+        
+<div id="method_adapterWillCommit" class="method private item-entry">
+  <h3 data-id="method_adapterWillCommit" class="name anchorable-toc"><code>adapterWillCommit</code></h3>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/model/internal-model.js#L265">packages/ember-data/lib/system/model/internal-model.js:265</a>
+
+  </div>
+
+
+
+  <p>
+  </p>
+
+
+
+</div>
+
+        
+<div id="method_clearRelationships" class="method private item-entry">
+  <h3 data-id="method_clearRelationships" class="name anchorable-toc"><code>clearRelationships</code></h3>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/model/internal-model.js#L440">packages/ember-data/lib/system/model/internal-model.js:440</a>
+
+  </div>
+
+
+
+  <p>
+  </p>
+
+
+
+</div>
+
+        
+<div id="method_createSnapshot" class="method private item-entry">
+  <h3 data-id="method_createSnapshot" class="name anchorable-toc"><code>createSnapshot</code></h3>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/model/internal-model.js#L218">packages/ember-data/lib/system/model/internal-model.js:218</a>
+
+  </div>
+
+
+
+  <p>
+  </p>
+
+
+
+</div>
+
+        
+<div id="method_loadedData" class="method private item-entry">
+  <h3 data-id="method_loadedData" class="name anchorable-toc"><code>loadedData</code></h3>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/model/internal-model.js#L235">packages/ember-data/lib/system/model/internal-model.js:235</a>
+
+  </div>
+
+
+
+  <p>
+  </p>
+
+
+
+</div>
+
+        
+<div id="method_loadingData" class="method private item-entry">
+  <h3 data-id="method_loadingData" class="name anchorable-toc"><code>loadingData</code></h3>
   <span class="args">
-    (index)
+    (promise)
   </span>
 
-  <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span>
 
 
 
@@ -495,15 +713,11 @@ in response to queries.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/record-arrays/record-array.js#L83">packages/ember-data/lib/system/record-arrays/record-array.js:83</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/model/internal-model.js#L226">packages/ember-data/lib/system/model/internal-model.js:226</a>
 
   </div>
 
 
-    <div class="description">
-      <p>Retrieves an object from the content by index.</p>
-
-    </div>
 
   <p>
   </p>
@@ -513,7 +727,7 @@ in response to queries.</p>
       <h3>Parameters:</h3>
 
       <dl>
-          <dt><strong>index</strong> <span class="type">Number</span></dt>
+          <dt><strong>promise</strong> <span class="type">Promise</span></dt>
           <dd>
             
 
@@ -521,20 +735,69 @@ in response to queries.</p>
       </dl>
     </div>
 
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span>
-        <dd> record</dd>
-      </dl>
-    </div>
 </div>
 
         
-<div id="method_removeInternalModel" class="method private item-entry">
-  <h3 data-id="method_removeInternalModel" class="name anchorable-toc"><code>removeInternalModel</code></h3>
+<div id="method_notFound" class="method private item-entry">
+  <h3 data-id="method_notFound" class="name anchorable-toc"><code>notFound</code></h3>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/model/internal-model.js#L244">packages/ember-data/lib/system/model/internal-model.js:244</a>
+
+  </div>
+
+
+
+  <p>
+  </p>
+
+
+
+</div>
+
+        
+<div id="method_pushedData" class="method private item-entry">
+  <h3 data-id="method_pushedData" class="name anchorable-toc"><code>pushedData</code></h3>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/model/internal-model.js#L252">packages/ember-data/lib/system/model/internal-model.js:252</a>
+
+  </div>
+
+
+
+  <p>
+  </p>
+
+
+
+</div>
+
+        
+<div id="method_send" class="method private item-entry">
+  <h3 data-id="method_send" class="name anchorable-toc"><code>send</code></h3>
   <span class="args">
-    (internalModel)
+    (name, context)
   </span>
 
 
@@ -548,15 +811,11 @@ in response to queries.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/record-arrays/record-array.js#L138">packages/ember-data/lib/system/record-arrays/record-array.js:138</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/model/internal-model.js#L282">packages/ember-data/lib/system/model/internal-model.js:282</a>
 
   </div>
 
 
-    <div class="description">
-      <p>Removes an internalModel to the <code>RecordArray</code>.</p>
-
-    </div>
 
   <p>
   </p>
@@ -566,7 +825,12 @@ in response to queries.</p>
       <h3>Parameters:</h3>
 
       <dl>
-          <dt><strong>internalModel</strong> <span class="type">InternalModel</span></dt>
+          <dt><strong>name</strong> <span class="type">String</span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>context</strong> <span class="type">Object</span></dt>
           <dd>
             
 
@@ -577,13 +841,16 @@ in response to queries.</p>
 </div>
 
         
-<div id="method_save" class="method  item-entry">
-  <h3 data-id="method_save" class="name anchorable-toc"><code>save</code></h3>
+<div id="method_transitionTo" class="method private item-entry">
+  <h3 data-id="method_transitionTo" class="name anchorable-toc"><code>transitionTo</code></h3>
+  <span class="args">
+    (name)
+  </span>
 
-  <span class="type"><a href="/api/data/classes/DS.PromiseArray.html">DS.PromiseArray</a></span>
 
 
 
+  <span class="flag private">private</span>
 
 
 
@@ -591,120 +858,35 @@ in response to queries.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/record-arrays/record-array.js#L149">packages/ember-data/lib/system/record-arrays/record-array.js:149</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/model/internal-model.js#L354">packages/ember-data/lib/system/model/internal-model.js:354</a>
 
   </div>
 
 
-    <div class="description">
-      <p>Saves all of the records in the <code>RecordArray</code>.</p>
-
-<p>Example</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre><span class="keyword">var</span> messages = store.all(<span class="string"><span class="delimiter">'</span><span class="content">message</span><span class="delimiter">'</span></span>);
-messages.forEach(<span class="keyword">function</span>(message) {
-  message.set(<span class="string"><span class="delimiter">'</span><span class="content">hasBeenSeen</span><span class="delimiter">'</span></span>, <span class="predefined-constant">true</span>);
-});
-messages.save();
-</pre></td>
-</tr></table>
-</div></div>
-    </div>
 
   <p>
   </p>
 
 
+    <div class="params">
+      <h3>Parameters:</h3>
 
-    <div class="return">
-      <h3>Returns:</h3>
       <dl>
-        <dt><span class="type"><a href="/api/data/classes/DS.PromiseArray.html">DS.PromiseArray</a></span>
-        <dd> promise</dd>
+          <dt><strong>name</strong> <span class="type">String</span></dt>
+          <dd>
+            
+
+          </dd>
       </dl>
     </div>
+
 </div>
 
         
-<div id="method_update" class="method  item-entry">
-  <h3 data-id="method_update" class="name anchorable-toc"><code>update</code></h3>
+<div id="method_updateRecordArrays" class="method private item-entry">
+  <h3 data-id="method_updateRecordArrays" class="name anchorable-toc"><code>updateRecordArrays</code></h3>
 
 
-
-
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/record-arrays/record-array.js#L97">packages/ember-data/lib/system/record-arrays/record-array.js:97</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>Used to get the latest version of all of the records in this array
-from the adapter.</p>
-
-<p>Example</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-</pre></td>
-  <td class="code"><pre><span class="keyword">var</span> people = store.all(<span class="string"><span class="delimiter">'</span><span class="content">person</span><span class="delimiter">'</span></span>);
-people.get(<span class="string"><span class="delimiter">'</span><span class="content">isUpdating</span><span class="delimiter">'</span></span>); <span class="comment">// false</span>
-people.update();
-people.get(<span class="string"><span class="delimiter">'</span><span class="content">isUpdating</span><span class="delimiter">'</span></span>); <span class="comment">// true</span>
-</pre></td>
-</tr></table>
-</div></div>
-    </div>
-
-  <p>
-  </p>
-
-
-
-</div>
-
-    </div>
-    <div class="pane" id="properties">
-      <div id='api-options'>
-  Show:
-  <label>
-    <input type='checkbox' data-type='inherited' checked>
-    Inherited
-  </label>
-  <label>
-    <input type='checkbox' data-type='protected'>
-    Protected
-  </label>
-  <label>
-    <input type='checkbox' data-type='private'>
-    Private
-  </label>
-  <label>
-    <input type='checkbox' data-type='deprecated'>
-    Deprecated
-  </label>
-</div>
-
-        
-<div id="property_content" class="property private item-entry">
-  <h3 data-id="property_content" class="name anchorable-toc"><code>content</code></h3>
-
-
-  <span class="type">Ember.Array</span>
 
 
   <span class="flag private">private</span>
@@ -715,18 +897,11 @@ people.get(<span class="string"><span class="delimiter">'</span><span class="con
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/record-arrays/record-array.js#L31">packages/ember-data/lib/system/record-arrays/record-array.js:31</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/model/internal-model.js#L551">packages/ember-data/lib/system/model/internal-model.js:551</a>
 
   </div>
 
 
-    <div class="description">
-      <p>The array of client ids backing the record array. When a
-record is requested from the record array, the record
-for the client id at the same index is materialized, if
-necessary, by the store.</p>
-
-    </div>
 
   <p>
   </p>
@@ -736,99 +911,10 @@ necessary, by the store.</p>
 </div>
 
         
-<div id="property_isLoaded" class="property  item-entry">
-  <h3 data-id="property_isLoaded" class="name anchorable-toc"><code>isLoaded</code></h3>
+<div id="method_updateRecordArraysLater" class="method private item-entry">
+  <h3 data-id="method_updateRecordArraysLater" class="name anchorable-toc"><code>updateRecordArraysLater</code></h3>
 
 
-  <span class="type">Boolean</span>
-
-
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/record-arrays/record-array.js#L43">packages/ember-data/lib/system/record-arrays/record-array.js:43</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>The flag to signal a <code>RecordArray</code> is finished loading data.</p>
-
-<p>Example</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-</pre></td>
-  <td class="code"><pre><span class="keyword">var</span> people = store.all(<span class="string"><span class="delimiter">'</span><span class="content">person</span><span class="delimiter">'</span></span>);
-people.get(<span class="string"><span class="delimiter">'</span><span class="content">isLoaded</span><span class="delimiter">'</span></span>); <span class="comment">// true</span>
-</pre></td>
-</tr></table>
-</div></div>
-    </div>
-
-  <p>
-  </p>
-
-
-
-</div>
-
-        
-<div id="property_isUpdating" class="property  item-entry">
-  <h3 data-id="property_isUpdating" class="name anchorable-toc"><code>isUpdating</code></h3>
-
-
-  <span class="type">Boolean</span>
-
-
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/record-arrays/record-array.js#L57">packages/ember-data/lib/system/record-arrays/record-array.js:57</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>The flag to signal a <code>RecordArray</code> is currently loading data.</p>
-
-<p>Example</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-</pre></td>
-  <td class="code"><pre><span class="keyword">var</span> people = store.all(<span class="string"><span class="delimiter">'</span><span class="content">person</span><span class="delimiter">'</span></span>);
-people.get(<span class="string"><span class="delimiter">'</span><span class="content">isUpdating</span><span class="delimiter">'</span></span>); <span class="comment">// false</span>
-people.update();
-people.get(<span class="string"><span class="delimiter">'</span><span class="content">isUpdating</span><span class="delimiter">'</span></span>); <span class="comment">// true</span>
-</pre></td>
-</tr></table>
-</div></div>
-    </div>
-
-  <p>
-  </p>
-
-
-
-</div>
-
-        
-<div id="property_store" class="property private item-entry">
-  <h3 data-id="property_store" class="name anchorable-toc"><code>store</code></h3>
-
-
-  <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span>
 
 
   <span class="flag private">private</span>
@@ -839,47 +925,11 @@ people.get(<span class="string"><span class="delimiter">'</span><span class="con
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/record-arrays/record-array.js#L74">packages/ember-data/lib/system/record-arrays/record-array.js:74</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/model/internal-model.js#L606">packages/ember-data/lib/system/model/internal-model.js:606</a>
 
   </div>
 
 
-    <div class="description">
-      <p>The store that created this record array.</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-
-</div>
-
-        
-<div id="property_type" class="property  item-entry">
-  <h3 data-id="property_type" class="name anchorable-toc"><code>type</code></h3>
-
-
-  <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span>
-
-
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19/packages/ember-data/lib/system/record-arrays/record-array.js#L23">packages/ember-data/lib/system/record-arrays/record-array.js:23</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>The model type contained by this record array.</p>
-
-    </div>
 
   <p>
   </p>
