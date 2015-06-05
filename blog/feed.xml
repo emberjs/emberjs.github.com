@@ -5,10 +5,73 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2015-05-23T19:00:00-05:00</updated>
+  <updated>2015-06-04T19:00:00-05:00</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>Ember Data v1.0.0-beta.19 Released</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2015/06/05/ember-data-1-0-beta-19-released.html"/>
+    <id>http://emberjs.com/blog/2015/06/05/ember-data-1-0-beta-19-released.html</id>
+    <published>2015-06-04T19:00:00-05:00</published>
+    <updated>2015-06-04T19:00:00-05:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Ember Data 1.0.0-beta.19 contains a lot of bugfixes from the comunity!
+Thank you for helping us push toward a stable release of Ember Data!&lt;/p&gt;
+&lt;h2 class="anchorable-toc" id="toc_new-features"&gt;New Features&lt;/h2&gt;&lt;h3 class="anchorable-toc" id="toc_snapshots-have-changedattributes"&gt;Snapshots have changedAttributes&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;changedAttributes&lt;/code&gt;, which represents the changes that have happened...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;Ember Data 1.0.0-beta.19 contains a lot of bugfixes from the comunity!
+Thank you for helping us push toward a stable release of Ember Data!&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_new-features'&gt;New Features&lt;/h2&gt;&lt;h3 class='anchorable-toc' id='toc_snapshots-have-changedattributes'&gt;Snapshots have changedAttributes&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;changedAttributes&lt;/code&gt;, which represents the changes that have happened
+since the model was last synced with the server, are now available on
+the snapshot in your adapters and serializers, instead of just on
+&lt;code&gt;DS.Model&lt;/code&gt; instances.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_breaking-changes'&gt;Breaking Changes&lt;/h2&gt;&lt;h3 class='anchorable-toc' id='toc_passing-classes-to-store-methods'&gt;Passing Classes to Store Methods&lt;/h3&gt;
+&lt;p&gt;Previously, you were allowed to pass a classes directly to store methods
+like &lt;code&gt;store.push&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; record = store.push(App.Post, {&lt;span class="key"&gt;id&lt;/span&gt;: &lt;span class="integer"&gt;1&lt;/span&gt;});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;While this isn&amp;#39;t a very popular way and generally not recommended in the
+documentation, it did remain the preferred way to do things in Ember
+Data&amp;#39;s tests for a long time. As we move toward to using Ember&amp;#39;s
+Dependency Injection framework for consistency, passing these classes
+directly to store methods has been removed. Instead, you should pass a
+dasherized string:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; record = store.push(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;post&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, {&lt;span class="key"&gt;id&lt;/span&gt;: &lt;span class="integer"&gt;1&lt;/span&gt;});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;To help you upgrade through this change easily, we&amp;#39;ve written an &lt;a href="https://github.com/abuiles/ember-watson#ember-watsonconvert-ember-data-model-lookups"&gt;Ember
+Watson command&lt;/a&gt;.
+You can use this command-line tool in both Ember-CLI projects and
+&amp;quot;globals mode&amp;quot; style projects.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_important-deprecations'&gt;Important Deprecations&lt;/h2&gt;&lt;h3 class='anchorable-toc' id='toc_fixture-adapter-removed'&gt;Fixture Adapter Removed&lt;/h3&gt;
+&lt;p&gt;Support for the Fixture Adapter has been deprecated. After some thought,
+the Ember Data team decided it was not the right approach for
+integration-style tests. We recommend using an AJAX/data transport
+stubbing strategy like &lt;a href="https://github.com/trek/pretender"&gt;Pretender&lt;/a&gt; or
+&lt;a href="http://sinonjs.org/"&gt;sinon&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;We&amp;#39;ll be including docs on integration test strategies using Pretender in the
+final release.&lt;/p&gt;
+
+&lt;p&gt;The Fixture Adapter now lives as an &lt;a href="https://github.com/emberjs/ember-data-fixture-adapter"&gt;addon&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_internet-explorer-8'&gt;Internet Explorer 8&lt;/h2&gt;
+&lt;p&gt;This will be the last release to support Internet Explorer 8. Future
+versions of Ember Data will not support Internet Explorer 8.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>Another Ember 2.x Status Update</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/05/24/another-two-oh-status-update.html"/>
@@ -1341,122 +1404,6 @@ compatibility.&lt;/p&gt;
 them correctly added enough complexity that we will want to move
 somewhat aggressively in 2.x to enable us to further improve
 performance.&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Internet Explorer 8 Support Will Be Removed in Ember 2.0</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2015/04/20/ie8-support-update.html"/>
-    <id>http://emberjs.com/blog/2015/04/20/ie8-support-update.html</id>
-    <published>2015-04-19T19:00:00-05:00</published>
-    <updated>2015-04-19T19:00:00-05:00</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;After reviewing &lt;a href="https://github.com/emberjs/rfcs/pull/45"&gt;this thread&lt;/a&gt;, it seems clear that the vast majority of
-Ember users who have responded, including people working at large
-corporations, are comfortable with dropping IE8 support in Ember 2.0.
-On the other hand, while there is enormous...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;After reviewing &lt;a href="https://github.com/emberjs/rfcs/pull/45"&gt;this thread&lt;/a&gt;, it seems clear that the vast majority of
-Ember users who have responded, including people working at large
-corporations, are comfortable with dropping IE8 support in Ember 2.0.
-On the other hand, while there is enormous support for dropping IE9
-support as well, a number of people still rely on support for IE9, and
-the benefits of dropping IE9 in Ember 2.0 are not as strong.&lt;/p&gt;
-
-&lt;p&gt;After reviewing discussion on the RFC proposal, many in-person conversations with Ember
-users in large companies, and reviewing the private data sent to us via
-email, we have decided that Ember 2.0 will support IE9+.&lt;/p&gt;
-
-&lt;p&gt;So how are we going to manage this transition, and what should you do
-if your business still requires IE8 support for the time being?&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_1-13-with-extended-browser-support'&gt;1.13 with Extended Browser Support&lt;/h2&gt;
-&lt;p&gt;The core team will continue to periodically release point releases in
-the 1.13 series to patch security bugs and browser compatibility
-issues, including issues in IE8.&lt;/p&gt;
-
-&lt;p&gt;No new features will be added, and we should be clear that we do not
-intend people to stay on this release unless they must support IE8. Our
-Semantic Version guarantees mean that the vast majority of the
-community should migrate to the 2.x series as soon as possible.&lt;/p&gt;
-
-&lt;p&gt;It is important to note that Ember 1.13 will come with deprecation
-warnings for everything that we will break in Ember 2.0. As a result,
-if you are running Ember 1.13 without any deprecation warnings, you
-should be able to easily upgrade to Ember 2.0. And because of the
-Semantic Versioning guarantees in the Ember 2.x series, it should be
-relatively simple to upgrade from Ember 1.13 to the most recent version
-of Ember 2.x when you are able to drop IE8 support.&lt;/p&gt;
-
-&lt;p&gt;For example, imagine you build the Ember app for Big Widget Enterprise
-Co. that requires IE8 support. You upgrade to 1.13 (the last release in
-the 1.x series) and, over time, refactor code to eliminate all
-deprecation warnings. Periodically, you apply 1.13 patch releases to
-maintain browser compatibility and to fix potential security issues.&lt;/p&gt;
-
-&lt;p&gt;Then, in April of 2016, management decides that enough customers have
-moved off IE8 that you no longer need to support it. At that time,
-Ember 2.6 will be the most recent stable release. Because 1.13 without
-deprecation warnings is forwards-compatible with Ember 2.6, you can
-upgrade from 1.13 to 2.6 with little hassle.&lt;/p&gt;
-
-&lt;p&gt;With the integration of Ember CLI and Ember Data into the Semantic
-Versioning guarantees, many of your dependencies will follow a similar
-upgrade path.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_ecosystem'&gt;Ecosystem&lt;/h2&gt;
-&lt;p&gt;Of course, the above guarantees only apply to Ember, Ember Data, Ember
-CLI, and the rest of the core-supported packages. Addon authors are
-free to define their own support matrices. We encourage those who
-depend on older browsers to contribute back by submitting PRs to the
-addons they use with compatibility patches. Likewise, we encourage
-authors of existing addons to work with users to offer a browser
-compatibility matrix as close to the core projects as possible.&lt;/p&gt;
-
-&lt;p&gt;If you require support for IE8 (and as a result, Ember 1.13), make sure
-to make your voice heard across the addon ecosystem.&lt;/p&gt;
-
-&lt;p&gt;That said, you should expect that new addons that come out after Ember
-2.0 will not target Ember 1.13, and you should factor that into your
-decision to remain on the 1.13 Extended Browser Support release of
-Ember.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_fastboot'&gt;FastBoot&lt;/h2&gt;
-&lt;p&gt;FastBoot, our effort to bring server-side rendering to all Ember apps,
-is designed to offer even users with slow, low-feature browsers a fast
-experience. While most people think of this as a benefit to mobile
-users, IE8 certainly qualifies as a slow, low-feature browser.&lt;/p&gt;
-
-&lt;p&gt;Because Ember applications are written &amp;quot;route first&amp;quot;, any idiomatic
-Ember content app that uses links as the primary mode of navigation
-will be able to provide a passable experience for users with an
-unsupported version of JavaScript, or no JavaScript at all.&lt;/p&gt;
-
-&lt;p&gt;It is worth noting that FastBoot, in the medium term, will have good
-support for read-only content sites. However, while it is possible to
-support forms pretty easily, forms without JavaScript (using cookie
-authentication) introduce the prospect of CSRF attacks. A good solution
-for FastBoot forms that is also secure is probably a longer-term
-project. We would encourage the community to experiment with a secure
-approach to forms that works with FastBoot.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_jquery-compatibility'&gt;jQuery Compatibility&lt;/h2&gt;
-&lt;p&gt;In our RFC, we mentioned that dropping IE8 will give us the opportunity
-to remove jQuery as a strict dependency. We should have been clearer
-that we have no intent to remove the Ember APIs that delegate to jQuery
-(such a Ember.$ and this.$() inside components).&lt;/p&gt;
-
-&lt;p&gt;Because these APIs will remain in 2.0, both for ease of upgrade and
-because we have not yet made the jQuery dependency optional, Semantic
-Versioning prohibits us from removing them until at least Ember 3.0.&lt;/p&gt;
-
-&lt;p&gt;On a personal note, we rely on jQuery heavily in our own apps. We think
-it&amp;#39;s a great library that remains hugely valuable to smooth over clunky
-DOM APIs and browser quirks (even in modern browsers). For those users
-who need the absolute smallest payload size, we don&amp;#39;t want to saddle
-you with a dependency that you don&amp;#39;t need. But we expect the majority
-of users to continue using jQuery, and we have no plans to remove the
-Ember/jQuery integration at this time.&lt;/p&gt;
-
-&lt;p&gt;Thank you again for everyone who took the time to help us make this
-decision, and thank you so much for being a part of the Ember
-community.&lt;/p&gt;
 </content>
   </entry>
 </feed>
