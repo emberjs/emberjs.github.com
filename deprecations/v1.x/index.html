@@ -634,6 +634,455 @@ syntax introduced in 1.12:</p>
 </tr></table>
 </div></div>
 <p>For further reading, review the <a href="https://github.com/emberjs/rfcs/blob/master/active/0001-improved-cp-syntax.md">RFC</a> describing this feature and the <a href="https://github.com/emberjs/ember.js/pull/9527">pull request of the initial implementation</a>.</p>
+<h3 class='anchorable-toc' id='toc_deprecations-added-in-1-13'>Deprecations Added in 1.13</h3>
+<p>Ember.js 1.13 is the last minor release of Ember 1.x before 2.0. Consequently,
+it has a rather large number of notable deprecations.</p>
+<h4 class='anchorable-toc' id='toc_ember-view'>Ember.View</h4>
+<p>Ember 1.x encouraged a Model-View-Controller-Route architecture. Since then,
+the web has consolidated around a Model-Component-Route pattern for web
+development that Ember 2.0 also embraces.</p>
+
+<p>Views are removed from the Ember 2.0 API. However a single release is likely
+insufficient for large apps to upgrade their entire codebase away from routeable
+views, and consequently Ember is providing extended support for views via the
+<a href="https://github.com/emberjs/ember-legacy-views">ember-legacy-views</a> addon.
+This addon will remain compatible with Ember until v2.4 of the framework
+is released.</p>
+<h5 class='anchorable-toc' id='toc_migrating-away-from-the-view-helper'>Migrating away from the view helper</h5>
+<p>In most cases Ember views can be replaced with a component. For example
+this view and usage:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre><span class="comment">{{! app/templates/show-menu.hbs }}</span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view.title</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/views/show-menu.js</span>
+<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">&quot;</span><span class="content">ember</span><span class="delimiter">&quot;</span></span>;
+
+<span class="comment">// Usage: {{view &quot;show-menu&quot;}}</span>
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.View.extend({
+  <span class="key">templateName</span>: <span class="string"><span class="delimiter">'</span><span class="content">some-menu</span><span class="delimiter">'</span></span>,
+  <span class="key">title</span>: <span class="string"><span class="delimiter">'</span><span class="content">My Menu</span><span class="delimiter">'</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Can be replaced with this component:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre><span class="comment">{{! app/templates/components/show-menu.hbs }}</span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">title</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/components/show-menu.js</span>
+<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">&quot;</span><span class="content">ember</span><span class="delimiter">&quot;</span></span>;
+
+<span class="comment">// Usage: {{show-menu}}</span>
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+  <span class="key">title</span>: <span class="string"><span class="delimiter">'</span><span class="content">My Menu</span><span class="delimiter">'</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Note that a component is always its own context in a template. A view&#39;s template
+may have had access to other variables that were present where it was called,
+such as a <code>controller</code>. A component template will always be isolated, and
+if data is needed it should be passed upon invocation. For example:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">show-menu</span> <span class="attribute-name">options</span>=<span class="attribute-value">controller.menuOptions</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div><h5 class='anchorable-toc' id='toc_differences-in-yielded-blocks'>Differences in yielded blocks</h5>
+<p>Some notable differences exist between yielded view blocks and yielded component
+blocks. A view could be used this way:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/views/reverse-name.js</span>
+<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">&quot;</span><span class="content">ember</span><span class="delimiter">&quot;</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.View.extend({
+  <span class="key">reversedName</span>: Ember.computed(<span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>).split(<span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>).reverse().join(<span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>);
+  })
+});
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">view</span> <span class="error">&quot;</span><span class="attribute-name">reverse-name</span><span class="error">&quot;</span> <span class="attribute-name">name</span>=<span class="attribute-value">controller.name</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">view.reversedName</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">view</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Components introduced block params. This concept achieves data passing
+without the confusion over what <code>{{view}}</code> refers to. For example:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/components/reverse-name.js</span>
+<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">&quot;</span><span class="content">ember</span><span class="delimiter">&quot;</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+  <span class="key">reversedName</span>: Ember.computed(<span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>).split(<span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>).reverse().join(<span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>);
+  })
+});
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre>// app/templates/components/reverse-name.hbs
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">yield</span> <span class="attribute-name">reversedName</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">reverse-name</span> <span class="attribute-name">name</span>=<span class="attribute-value">controller.name</span> <span class="attribute-name">as</span> <span class="error">|</span><span class="attribute-name">reversedName</span><span class="error">|</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">reversedName</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">view</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Just as passing values to a component allow access to those values in the
+isolated template of that component, yielding block params allow for values
+from the component to be passed to the location the component was called at.</p>
+<h5 class='anchorable-toc' id='toc_routable-views'>Routable Views</h5>
+<p>When a template for a given route is rendered, if there is a view with the
+same name that view will also be used. For example this view is attached
+to the rendered route template:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/router.js</span>
+<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">&quot;</span><span class="content">ember</span><span class="delimiter">&quot;</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">about</span><span class="delimiter">'</span></span>);
+});
+</pre></td>
+</tr></table>
+</div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/views/about.js</span>
+<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">&quot;</span><span class="content">ember</span><span class="delimiter">&quot;</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.View.extend({
+  <span class="key">classNameBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">controller.isActive:active</span><span class="delimiter">'</span></span>]
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>There are only two reasons a view may be used for a route.</p>
+
+<ul>
+<li>To set attribute bindings</li>
+<li>To attach event handlers</li>
+</ul>
+
+<p>You should migrate away from routed views. For example to attach
+bindings an element in the template is sufficient:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/router.js</span>
+<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">&quot;</span><span class="content">ember</span><span class="delimiter">&quot;</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">about</span><span class="delimiter">'</span></span>);
+});
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="comment">{{! app/templates/about.hbs }}</span>
+<span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span></span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">if</span> <span class="attribute-name">isActive</span> <span class="error">'</span><span class="attribute-name">active</span><span class="error">'</span><span class="inline-delimiter">}}</span></span><span class="string"><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="comment">&lt;!-- something something --&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>If attaching events or sharing DOM is necessary, consider a component:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/router.js</span>
+<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">&quot;</span><span class="content">ember</span><span class="delimiter">&quot;</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">about</span><span class="delimiter">'</span></span>);
+});
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="comment">{{! app/templates/about.hbs }}</span>
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">active-layout</span> <span class="attribute-name">isActive</span>=<span class="attribute-value">isActive</span><span class="inline-delimiter">}}</span></span>
+  <span class="comment">&lt;!-- something something --&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">active-layout</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/components/active-layout.js</span>
+<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">&quot;</span><span class="content">ember</span><span class="delimiter">&quot;</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+  <span class="key">classNameBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">isActive:active</span><span class="delimiter">'</span></span>],
+  click() {
+    <span class="comment">// Handle click</span>
+  }
+});
+</pre></td>
+</tr></table>
+</div></div><h5 class='anchorable-toc' id='toc_view-and-controller-template-keywords'>view and controller template keywords</h5>
+<p>View and controller keywords provided a way to access the view or controller
+backing a template, even across scopes that you might expect to be isolated. In
+many ways their behavior is emergent, and generally is poorly designed.</p>
+
+<p>Accessing data via <code>{{view.someProp}}</code> or <code>{{controller.thisThing}}</code> can
+nearly always be replaced by proper use of data passing and block params. See
+the guide on <a href="http://emberjs.com/deprecations/v1.x#toc_differences-in-yielded-blocks">differences in yielded blocks</a>
+for a complete example of using block params over the <code>{{view}}</code> keyword.</p>
+<h4 class='anchorable-toc' id='toc_ember-linkview'>Ember.LinkView</h4>
+<p>As a consequence of the deprecation of <code>Ember.View</code>, many internal views have
+been ported to component. <code>Ember.LinkView</code>, the class that backs the
+<code>{{link-to}}</code> helper, have been ported to <code>Ember.LinkComponent</code>.</p>
+
+<p>Most uses of <code>Ember.LinkView</code> can be directly ported to the <code>Ember.LinkComponent</code>
+class.</p>
+<h4 class='anchorable-toc' id='toc_ember-select'>Ember.Select</h4>
+<p>Using the <code>Ember.Select</code> global and its view helper form (<code>{{view &#39;select&#39;}}</code>)
+is deprecated. <code>Ember.Select</code> in Ember 1.x is implemented in a legacy coding
+style that uses patterns such as observers and two-way data binding that
+can cause pathological performance problems and provide an experience that
+is not consistent with idiomatic Ember 2.0 development.</p>
+
+<p>Legacy support of <code>Ember.Select</code> will be provided via the <a href="https://github.com/emberjs/ember-legacy-views">ember-legacy-views</a> addon.</p>
+
+<p>Ember 2.0 provides several new features that make it much more straightforward
+to implement &lt;select&gt; tag functionality via the
+data-down, actions-up paradigm in one&#39;s codebase.
+For example, to create a component that displays a prompt and a list of
+dropdown options, the following code could be used:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre><span class="comment">{{! app/templates/components/my-select.hbs}}</span>
+<span class="tag">&lt;select</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">'</span><span class="attribute-name">change</span><span class="error">'</span> <span class="attribute-name">on</span>=<span class="string"><span class="delimiter">'</span><span class="content">change</span><span class="delimiter">'</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">content</span> <span class="attribute-name">key</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">@index</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">as</span> <span class="error">|</span><span class="attribute-name">item</span><span class="error">|</span><span class="inline-delimiter">}}</span></span>
+    <span class="tag">&lt;option</span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span></span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">item</span><span class="inline-delimiter">}}</span></span><span class="string"><span class="delimiter">&quot;</span></span> <span class="attribute-name">selected</span>=<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">is-equal</span> <span class="attribute-name">item</span> <span class="attribute-name">selectedValue</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+      <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">item</span><span class="inline-delimiter">}}</span></span>
+    <span class="tag">&lt;/option&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/select&gt;</span>
+</pre></td>
+</tr></table>
+</div></div><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/components/my-select.js</span>
+<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">&quot;</span><span class="content">ember</span><span class="delimiter">&quot;</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+  <span class="key">content</span>: [],
+  <span class="key">selectedValue</span>: <span class="predefined-constant">null</span>,
+
+  <span class="key">actions</span>: {
+    change() {
+      const changeAction = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">action</span><span class="delimiter">'</span></span>);
+      const selectedEl = <span class="local-variable">this</span>.<span class="predefined">$</span>(<span class="string"><span class="delimiter">'</span><span class="content">select</span><span class="delimiter">'</span></span>)[<span class="integer">0</span>];
+      const selectedIndex = selectedEl.selectedIndex;
+      const content = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">content</span><span class="delimiter">'</span></span>);
+      const selectedValue = content[selectedIndex];
+
+      <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">selectedValue</span><span class="delimiter">'</span></span>, selectedValue);
+      changeAction(selectedValue);
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="comment">// is-equal helper is necessary to determine which option is currently selected.</span>
+<span class="comment">// app/helpers/is-equal.js</span>
+<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">&quot;</span><span class="content">ember</span><span class="delimiter">&quot;</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Helper.helper(<span class="keyword">function</span>([leftSide, rightSide]) {
+  <span class="keyword">return</span> leftSide === rightSide;
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>This component could be used in a template by supplying it an array of strings
+as <code>content</code> and an action to call when the user makes a selection as <code>change</code>:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre><span class="comment">{{! app/templates/application.hbs}}</span>
+
+The currently selected item: <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">mySelectedItem</span><span class="inline-delimiter">}}</span></span>.
+
+<span class="comment">{{! myItems is an array of strings: ['first', 'second', 'third',...] }}</span>
+<span class="comment">{{! This uses the `action` and `mut` helpers to pass in an action that
+    will update the (outer scope) `mySelectedItem` property with the user's
+    selection. }}</span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">my-select</span> <span class="attribute-name">content</span>=<span class="attribute-value">myItems</span> <span class="attribute-name">action</span>=<span class="error">(</span><span class="attribute-value">action</span> <span class="error">(</span><span class="attribute-name">mut</span> <span class="attribute-name">mySelectedItem</span><span class="error">)</span><span class="error">)</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>A more complete example of a <code>select</code> component that mimics many features of the
+deprecated <code>Ember.Select</code> is <a href="http://emberjs.jsbin.com/fotuqa">available in this jsbin</a>.</p>
+
+<p>Here is an <a href="http://emberjs.jsbin.com/zezapu">example jsbin showing usage of the select tag directly in a template without a component</a>.</p>
+
+<p>There are many <a href="http://emberobserver.com/categories/select">Ember-CLI addons that provide select-like functionality</a>.
+<a href="http://emberobserver.com/addons/emberx-select">emberx-select</a> in particular
+aims to provide a select component based on the native html select. Alternative
+<code>select</code> component implementations can be iterated upon in addons to identify
+best practices and perhaps moved into an official Ember 2.x implementation in
+the future.</p>
+<h4 class='anchorable-toc' id='toc_ember-reducecomputed-ember-arraycomputed'>Ember.ReduceComputed / Ember.ArrayComputed</h4>
+<p>This two little monsters served us well for a long time. They provided semantics that allowed to
+perform in-place modifications of an existing array instead of replacing the entire array like the
+regular <code>map/reduce</code> methods in javascript do, which was necessary to avoid expensive repaintings when
+rendering lists with the <code>{{each}}</code> helper.</p>
+
+<p>But now that with the new glimmer engine you can generate a entirely new array and let glimmer handle
+the diffing for you they&#39;ve become an unnecesary and overcomplicated abstraction that adds no value
+over the native counterparts.</p>
+
+<p>They will be extracted as an ember addon in case you need to keep using them, but the recomendation now is to
+just use the native array methods or those in libraries like Underscore/Lodash.</p>
 
 
       </div>
