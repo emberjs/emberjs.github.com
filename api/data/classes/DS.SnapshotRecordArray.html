@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Ember.js - DS.InvalidError</title>
-    <meta property="st:title" content="DS.InvalidError" />
+    <title>Ember.js - DS.SnapshotRecordArray</title>
+    <meta property="st:title" content="DS.SnapshotRecordArray" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
     <link href="/stylesheets/site.css" rel="stylesheet" type="text/css" />
@@ -190,7 +190,7 @@
 
           </li>
         
-          <li class="level-3 sub-selected">
+          <li class="level-3 ">
                         <a href="/api/data/classes/DS.InvalidError.html">DS.InvalidError</a>
 
           </li>
@@ -275,7 +275,7 @@
 
           </li>
         
-          <li class="level-3 ">
+          <li class="level-3 sub-selected">
                         <a href="/api/data/classes/DS.SnapshotRecordArray.html">DS.SnapshotRecordArray</a>
 
           </li>
@@ -309,118 +309,24 @@
       <div id="content" class="has-sidebar">
         
   <h1 class="api-header">
-  DS.InvalidError Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/adapters/errors.js#L26">packages/ember-data/lib/adapters/errors.js:26</a>
+  DS.SnapshotRecordArray Class
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/snapshot-record-array.js#L5">packages/ember-data/lib/system/snapshot-record-array.js:5</a>
 </h1>
 
 <hr>
 
 
 
-
+<p>PRIVATE</p>
 
 <div class="class-info">
 
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/adapters/errors.js#L26">packages/ember-data/lib/adapters/errors.js:26</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/snapshot-record-array.js#L5">packages/ember-data/lib/system/snapshot-record-array.js:5</a></p>
 
     <p>Module: <a href="/api/data/modules/ember-data.html">ember-data</a></p>
 </div>
 
-  <div class="description">
-    <p>A <code>DS.InvalidError</code> is used by an adapter to signal the external API
-was unable to process a request because the content was not
-semantically correct or meaningful per the API. Usually this means a
-record failed some form of server side validation. When a promise
-from an adapter is rejected with a <code>DS.InvalidError</code> the record will
-transition to the <code>invalid</code> state and the errors will be set to the
-<code>errors</code> property on the record.</p>
-
-<p>For Ember Data to correctly map errors to their corresponding
-properties on the model, Ember Data expects each error to be
-a valid json-api error object with a <code>source/pointer</code> that matches
-the property name. For example if you had a Post model that
-looked like this.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
-  <thead>
-    <tr>
-      <td colspan="2">app/models/post.js</td>
-    </tr>
-  </thead>
-<tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-</pre></td>
-  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
-
-<span class="reserved">export</span> <span class="keyword">default</span> DS.Model.extend({
-  <span class="key">title</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
-  <span class="key">content</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>)
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>To show an error from the server related to the <code>title</code> and
-<code>content</code> properties your adapter could return a promise that
-rejects with a <code>DS.InvalidError</code> object that looks like this:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
-  <thead>
-    <tr>
-      <td colspan="2">app/adapters/post.js</td>
-    </tr>
-  </thead>
-<tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
-14
-15
-16
-17
-18
-</pre></td>
-  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
-<span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
-
-<span class="reserved">export</span> <span class="keyword">default</span> DS.RESTAdapter.extend({
-  <span class="function">updateRecord</span>: <span class="keyword">function</span>() {
-    <span class="comment">// Fictional adapter that always rejects</span>
-    <span class="keyword">return</span> Ember.RSVP.reject(<span class="keyword">new</span> DS.InvalidError([
-      {
-        <span class="key">details</span>: <span class="string"><span class="delimiter">'</span><span class="content">Must be unique</span><span class="delimiter">'</span></span>,
-        <span class="key">source</span>: { <span class="key">pointer</span>: <span class="string"><span class="delimiter">'</span><span class="content">data/attributes/title</span><span class="delimiter">'</span></span> }
-      },
-      {
-        <span class="key">details</span>: <span class="string"><span class="delimiter">'</span><span class="content">Must not be blank</span><span class="delimiter">'</span></span>,
-        <span class="key">source</span>: { <span class="key">pointer</span>: <span class="string"><span class="delimiter">'</span><span class="content">data/attributes/content</span><span class="delimiter">'</span></span>}
-      }
-    ]));
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Your backend may use different property names for your records the
-store will attempt extract and normalize the errors using the
-serializer&#39;s <code>extractErrors</code> method before the errors get added to
-the the model. As a result, it is safe for the <code>InvalidError</code> to
-wrap the error payload unaltered.</p>
-
-  </div>
 
 
 

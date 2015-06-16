@@ -62,7 +62,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v1.0.0-beta.19.1" target="_blank"> Tag: v1.0.0-beta.19.1</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/data/commits/1.13.0" target="_blank"> Tag: 1.13.0</a></li>
 
 
           <li class="level-1 ">
@@ -111,6 +111,11 @@
           </li>
         
           <li class="level-3 ">
+                        <a href="/api/data/classes/DS.AbortError.html">DS.AbortError</a>
+
+          </li>
+        
+          <li class="level-3 ">
                         <a href="/api/data/classes/DS.ActiveModelAdapter.html">DS.ActiveModelAdapter</a>
 
           </li>
@@ -122,6 +127,11 @@
         
           <li class="level-3 sub-selected">
                         <a href="/api/data/classes/DS.Adapter.html">DS.Adapter</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/api/data/classes/DS.AdapterError.html">DS.AdapterError</a>
 
           </li>
         
@@ -182,6 +192,16 @@
         
           <li class="level-3 ">
                         <a href="/api/data/classes/DS.InvalidError.html">DS.InvalidError</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/api/data/classes/DS.JSONAPIAdapter.html">DS.JSONAPIAdapter</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/api/data/classes/DS.JSONAPISerializer.html">DS.JSONAPISerializer</a>
 
           </li>
         
@@ -256,12 +276,22 @@
           </li>
         
           <li class="level-3 ">
+                        <a href="/api/data/classes/DS.SnapshotRecordArray.html">DS.SnapshotRecordArray</a>
+
+          </li>
+        
+          <li class="level-3 ">
                         <a href="/api/data/classes/DS.Store.html">DS.Store</a>
 
           </li>
         
           <li class="level-3 ">
                         <a href="/api/data/classes/DS.StringTransform.html">DS.StringTransform</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/api/data/classes/DS.TimeoutError.html">DS.TimeoutError</a>
 
           </li>
         
@@ -280,7 +310,7 @@
         
   <h1 class="api-header">
   DS.Adapter Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19.1/packages/ember-data/lib/system/adapter.js#L9">packages/ember-data/lib/system/adapter.js:9</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/adapter.js#L7">packages/ember-data/lib/system/adapter.js:7</a>
 </h1>
 
 <hr>
@@ -293,7 +323,7 @@
     <p>Extends: Ember.Object</p>
 
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19.1/packages/ember-data/lib/system/adapter.js#L9">packages/ember-data/lib/system/adapter.js:9</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/adapter.js#L7">packages/ember-data/lib/system/adapter.js:7</a></p>
 
     <p>Module: <a href="/api/data/modules/ember-data.html">ember-data</a></p>
 </div>
@@ -356,12 +386,12 @@ application to customize it for your backend. The minimum set of methods
 that you should implement is:</p>
 
 <ul>
-<li><code>find()</code></li>
+<li><code>findRecord()</code></li>
 <li><code>createRecord()</code></li>
 <li><code>updateRecord()</code></li>
 <li><code>deleteRecord()</code></li>
 <li><code>findAll()</code></li>
-<li><code>findQuery()</code></li>
+<li><code>query()</code></li>
 </ul>
 
 <p>To improve the network performance of your application, you can optimize
@@ -406,6 +436,18 @@ included REST adapter.</p>
 
         <p><h2>Methods</h2></p>
         <ul class="index-list">
+            <li class="method private">
+              <a href="#method__normalizeSerializerPayload">_normalizeSerializerPayload</a>
+            </li>
+            <li class="method private">
+              <a href="#method__normalizeSerializerPayloadItem">_normalizeSerializerPayloadItem</a>
+            </li>
+            <li class="method private">
+              <a href="#method__pushResourceObject">_pushResourceObject</a>
+            </li>
+            <li class="method ">
+              <a href="#method_convertResourceObject">convertResourceObject</a>
+            </li>
             <li class="method ">
               <a href="#method_createRecord">createRecord</a>
             </li>
@@ -413,16 +455,13 @@ included REST adapter.</p>
               <a href="#method_deleteRecord">deleteRecord</a>
             </li>
             <li class="method ">
-              <a href="#method_find">find</a>
-            </li>
-            <li class="method private">
               <a href="#method_findAll">findAll</a>
             </li>
             <li class="method ">
               <a href="#method_findMany">findMany</a>
             </li>
-            <li class="method private">
-              <a href="#method_findQuery">findQuery</a>
+            <li class="method ">
+              <a href="#method_findRecord">findRecord</a>
             </li>
             <li class="method ">
               <a href="#method_generateIdForRecord">generateIdForRecord</a>
@@ -431,7 +470,34 @@ included REST adapter.</p>
               <a href="#method_groupRecordsForFindMany">groupRecordsForFindMany</a>
             </li>
             <li class="method ">
+              <a href="#method_normalizeResponseHelper">normalizeResponseHelper</a>
+            </li>
+            <li class="method ">
+              <a href="#method_pushPayload">pushPayload</a>
+            </li>
+            <li class="method ">
+              <a href="#method_pushPayloadData">pushPayloadData</a>
+            </li>
+            <li class="method ">
+              <a href="#method_pushPayloadIncluded">pushPayloadIncluded</a>
+            </li>
+            <li class="method private">
+              <a href="#method_query">query</a>
+            </li>
+            <li class="method ">
+              <a href="#method_queryRecord">queryRecord</a>
+            </li>
+            <li class="method ">
               <a href="#method_serialize">serialize</a>
+            </li>
+            <li class="method ">
+              <a href="#method_shouldBackgroundReloadAll">shouldBackgroundReloadAll</a>
+            </li>
+            <li class="method ">
+              <a href="#method_shouldBackgroundReloadRecord">shouldBackgroundReloadRecord</a>
+            </li>
+            <li class="method ">
+              <a href="#method_shouldReloadRecord">shouldReloadRecord</a>
             </li>
             <li class="method ">
               <a href="#method_updateRecord">updateRecord</a>
@@ -469,6 +535,235 @@ included REST adapter.</p>
 </div>
 
         
+<div id="method__normalizeSerializerPayload" class="method private item-entry">
+  <h3 data-id="method__normalizeSerializerPayload" class="name anchorable-toc"><code>_normalizeSerializerPayload</code></h3>
+  <span class="args">
+    (modelClass, payload)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/store/serializer-response.js#L35">packages/ember-data/lib/system/store/serializer-response.js:35</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Convert the payload from <code>serializer.extract</code> to a JSON-API Document.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>modelClass</strong> <span class="type">subclass of DS.Model</span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>payload</strong> <span class="type">Object</span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Object</span>
+        <dd> JSON-API Document</dd>
+      </dl>
+    </div>
+</div>
+
+        
+<div id="method__normalizeSerializerPayloadItem" class="method private item-entry">
+  <h3 data-id="method__normalizeSerializerPayloadItem" class="name anchorable-toc"><code>_normalizeSerializerPayloadItem</code></h3>
+  <span class="args">
+    (modelClass, payload)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/store/serializer-response.js#L60">packages/ember-data/lib/system/store/serializer-response.js:60</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Convert the payload representing a single record from <code>serializer.extract</code> to
+a JSON-API Resource Object.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>modelClass</strong> <span class="type">subclass of DS.Model</span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>payload</strong> <span class="type">Object</span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Object</span>
+        <dd> JSON-API Resource Object</dd>
+      </dl>
+    </div>
+</div>
+
+        
+<div id="method__pushResourceObject" class="method private item-entry">
+  <h3 data-id="method__pushResourceObject" class="name anchorable-toc"><code>_pushResourceObject</code></h3>
+  <span class="args">
+    (resourceObject)
+  </span>
+
+  <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span>
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/store/serializer-response.js#L206">packages/ember-data/lib/system/store/serializer-response.js:206</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Push a single JSON-API Resource Object to the store.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>resourceObject</strong> <span class="type">Object</span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span>
+        <dd> a record</dd>
+      </dl>
+    </div>
+</div>
+
+        
+<div id="method_convertResourceObject" class="method  item-entry">
+  <h3 data-id="method_convertResourceObject" class="name anchorable-toc"><code>convertResourceObject</code></h3>
+  <span class="args">
+    (payload)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/store/serializer-response.js#L218">packages/ember-data/lib/system/store/serializer-response.js:218</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>This method converts a JSON-API Resource Object to a format that DS.Store
+understands.</p>
+
+<p>TODO: This method works as an interim until DS.Store understands JSON-API.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>payload</strong> <span class="type">Object</span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Object</span>
+        <dd> an object formatted the way DS.Store understands</dd>
+      </dl>
+    </div>
+</div>
+
+        
 <div id="method_createRecord" class="method  item-entry">
   <h3 data-id="method_createRecord" class="name anchorable-toc"><code>createRecord</code></h3>
   <span class="args">
@@ -486,7 +781,7 @@ included REST adapter.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19.1/packages/ember-data/lib/system/adapter.js#L252">packages/ember-data/lib/system/adapter.js:252</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/adapter.js#L285">packages/ember-data/lib/system/adapter.js:285</a>
 
   </div>
 
@@ -608,7 +903,7 @@ new records.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19.1/packages/ember-data/lib/system/adapter.js#L335">packages/ember-data/lib/system/adapter.js:335</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/adapter.js#L368">packages/ember-data/lib/system/adapter.js:368</a>
 
   </div>
 
@@ -715,133 +1010,16 @@ a record.</p>
 </div>
 
         
-<div id="method_find" class="method  item-entry">
-  <h3 data-id="method_find" class="name anchorable-toc"><code>find</code></h3>
-  <span class="args">
-    (store, type, id, snapshot)
-  </span>
-
-  <span class="type">Promise</span>
-
-
-
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19.1/packages/ember-data/lib/system/adapter.js#L89">packages/ember-data/lib/system/adapter.js:89</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>The <code>find()</code> method is invoked when the store is asked for a record that
-has not previously been loaded. In response to <code>find()</code> being called, you
-should query your persistence layer for a record with the given ID. Once
-found, you can asynchronously call the store&#39;s <code>push()</code> method to push
-the record into the store.</p>
-
-<p>Here is an example <code>find</code> implementation:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
-  <thead>
-    <tr>
-      <td colspan="2">app/adapters/application.js</td>
-    </tr>
-  </thead>
-<tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
-14
-15
-16
-</pre></td>
-  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
-
-<span class="reserved">export</span> <span class="keyword">default</span> DS.Adapter.extend({
-  <span class="function">find</span>: <span class="keyword">function</span>(store, type, id, snapshot) {
-    <span class="keyword">var</span> url = [type.modelName, id].join(<span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>);
-
-    <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
-      jQuery.getJSON(url).then(<span class="keyword">function</span>(data) {
-        Ember.run(<span class="predefined-constant">null</span>, resolve, data);
-      }, <span class="keyword">function</span>(jqXHR) {
-        jqXHR.then = <span class="predefined-constant">null</span>; <span class="comment">// tame jQuery's ill mannered promises</span>
-        Ember.run(<span class="predefined-constant">null</span>, reject, jqXHR);
-      });
-    });
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
-          <dd>
-            
-
-          </dd>
-          <dt><strong>type</strong> <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span></dt>
-          <dd>
-            
-
-          </dd>
-          <dt><strong>id</strong> <span class="type">String</span></dt>
-          <dd>
-            
-
-          </dd>
-          <dt><strong>snapshot</strong> <span class="type"><a href="/api/data/classes/DS.Snapshot.html">DS.Snapshot</a></span></dt>
-          <dd>
-            
-
-          </dd>
-      </dl>
-    </div>
-
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type">Promise</span>
-        <dd> promise</dd>
-      </dl>
-    </div>
-</div>
-
-        
-<div id="method_findAll" class="method private item-entry">
+<div id="method_findAll" class="method  item-entry">
   <h3 data-id="method_findAll" class="name anchorable-toc"><code>findAll</code></h3>
   <span class="args">
-    (store, type, sinceToken)
+    (store, type, sinceToken, snapshotRecordArray)
   </span>
 
   <span class="type">Promise</span>
 
 
 
-  <span class="flag private">private</span>
 
 
 
@@ -849,14 +1027,13 @@ the record into the store.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19.1/packages/ember-data/lib/system/adapter.js#L126">packages/ember-data/lib/system/adapter.js:126</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/adapter.js#L124">packages/ember-data/lib/system/adapter.js:124</a>
 
   </div>
 
 
     <div class="description">
-      <p>The <code>findAll()</code> method is called when you call <code>find</code> on the store
-without an ID (i.e. <code>store.find(&#39;post&#39;)</code>).</p>
+      <p>The <code>findAll()</code> method is used to retrieve all records for a given type.</p>
 
 <p>Example</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
@@ -927,6 +1104,11 @@ without an ID (i.e. <code>store.find(&#39;post&#39;)</code>).</p>
             
 
           </dd>
+          <dt><strong>snapshotRecordArray</strong> <span class="type"><a href="/api/data/classes/DS.SnapshotRecordArray.html">DS.SnapshotRecordArray</a></span></dt>
+          <dd>
+            
+
+          </dd>
       </dl>
     </div>
 
@@ -957,7 +1139,7 @@ without an ID (i.e. <code>store.find(&#39;post&#39;)</code>).</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19.1/packages/ember-data/lib/system/adapter.js#L388">packages/ember-data/lib/system/adapter.js:388</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/adapter.js#L421">packages/ember-data/lib/system/adapter.js:421</a>
 
   </div>
 
@@ -1008,17 +1190,16 @@ without an ID (i.e. <code>store.find(&#39;post&#39;)</code>).</p>
 </div>
 
         
-<div id="method_findQuery" class="method private item-entry">
-  <h3 data-id="method_findQuery" class="name anchorable-toc"><code>findQuery</code></h3>
+<div id="method_findRecord" class="method  item-entry">
+  <h3 data-id="method_findRecord" class="name anchorable-toc"><code>findRecord</code></h3>
   <span class="args">
-    (store, type, query, recordArray)
+    (store, type, id, snapshot)
   </span>
 
   <span class="type">Promise</span>
 
 
 
-  <span class="flag private">private</span>
 
 
 
@@ -1026,17 +1207,19 @@ without an ID (i.e. <code>store.find(&#39;post&#39;)</code>).</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19.1/packages/ember-data/lib/system/adapter.js#L160">packages/ember-data/lib/system/adapter.js:160</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/adapter.js#L87">packages/ember-data/lib/system/adapter.js:87</a>
 
   </div>
 
 
     <div class="description">
-      <p>This method is called when you call <code>find</code> on the store with a
-query object as the second parameter (i.e. <code>store.find(&#39;person&#39;, {
-page: 1 })</code>).</p>
+      <p>The <code>findRecord()</code> method is invoked when the store is asked for a record that
+has not previously been loaded. In response to <code>findRecord()</code> being called, you
+should query your persistence layer for a record with the given ID. Once
+found, you can asynchronously call the store&#39;s <code>push()</code> method to push
+the record into the store.</p>
 
-<p>Example</p>
+<p>Here is an example <code>findRecord</code> implementation:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
   <thead>
     <tr>
@@ -1059,14 +1242,16 @@ page: 1 })</code>).</p>
 13
 14
 15
+16
 </pre></td>
   <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
 
 <span class="reserved">export</span> <span class="keyword">default</span> DS.Adapter.extend({
-  <span class="function">findQuery</span>: <span class="keyword">function</span>(store, type, query) {
-    <span class="keyword">var</span> url = type;
+  <span class="function">findRecord</span>: <span class="keyword">function</span>(store, type, id, snapshot) {
+    <span class="keyword">var</span> url = [type.modelName, id].join(<span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>);
+
     <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
-      jQuery.getJSON(url, query).then(<span class="keyword">function</span>(data) {
+      jQuery.getJSON(url).then(<span class="keyword">function</span>(data) {
         Ember.run(<span class="predefined-constant">null</span>, resolve, data);
       }, <span class="keyword">function</span>(jqXHR) {
         jqXHR.then = <span class="predefined-constant">null</span>; <span class="comment">// tame jQuery's ill mannered promises</span>
@@ -1098,12 +1283,12 @@ page: 1 })</code>).</p>
             
 
           </dd>
-          <dt><strong>query</strong> <span class="type">Object</span></dt>
+          <dt><strong>id</strong> <span class="type">String</span></dt>
           <dd>
             
 
           </dd>
-          <dt><strong>recordArray</strong> <span class="type"><a href="/api/data/classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a></span></dt>
+          <dt><strong>snapshot</strong> <span class="type"><a href="/api/data/classes/DS.Snapshot.html">DS.Snapshot</a></span></dt>
           <dd>
             
 
@@ -1138,7 +1323,7 @@ page: 1 })</code>).</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19.1/packages/ember-data/lib/system/adapter.js#L195">packages/ember-data/lib/system/adapter.js:195</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/adapter.js#L228">packages/ember-data/lib/system/adapter.js:228</a>
 
   </div>
 
@@ -1225,7 +1410,7 @@ the first parameter and the newly created record as the second parameter:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19.1/packages/ember-data/lib/system/adapter.js#L399">packages/ember-data/lib/system/adapter.js:399</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/adapter.js#L432">packages/ember-data/lib/system/adapter.js:432</a>
 
   </div>
 
@@ -1273,6 +1458,491 @@ want to group records by their parent.</p>
 </div>
 
         
+<div id="method_normalizeResponseHelper" class="method  item-entry">
+  <h3 data-id="method_normalizeResponseHelper" class="name anchorable-toc"><code>normalizeResponseHelper</code></h3>
+  <span class="args">
+    (serializer, store, modelClass, payload, id, requestType)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/store/serializer-response.js#L7">packages/ember-data/lib/system/store/serializer-response.js:7</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>This is a helper method that always returns a JSON-API Document.</p>
+
+<p>If the current serializer has <code>isNewSerializerAPI</code> set to <code>true</code>
+this helper calls <code>normalizeResponse</code> instead of <code>extract</code>.</p>
+
+<p>All the built-in serializers get <code>isNewSerializerAPI</code> set to <code>true</code> automatically
+if the feature flag is enabled.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>serializer</strong> <span class="type"><a href="/api/data/classes/DS.Serializer.html">DS.Serializer</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>modelClass</strong> <span class="type">subclass of DS.Model</span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>payload</strong> <span class="type">Object</span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>id</strong> <span class="type">String|Number</span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>requestType</strong> <span class="type">String</span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Object</span>
+        <dd> JSON-API Document</dd>
+      </dl>
+    </div>
+</div>
+
+        
+<div id="method_pushPayload" class="method  item-entry">
+  <h3 data-id="method_pushPayload" class="name anchorable-toc"><code>pushPayload</code></h3>
+  <span class="args">
+    (store, payload)
+  </span>
+
+  <span class="type">DS.Model|Array</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/store/serializer-response.js#L145">packages/ember-data/lib/system/store/serializer-response.js:145</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Push a JSON-API Document to the store.</p>
+
+<p>This will push both primary data located in <code>data</code> and secondary data located
+in <code>included</code> (if present).</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>payload</strong> <span class="type">Object</span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">DS.Model|Array</span>
+        <dd> one or multiple records from `data`</dd>
+      </dl>
+    </div>
+</div>
+
+        
+<div id="method_pushPayloadData" class="method  item-entry">
+  <h3 data-id="method_pushPayloadData" class="name anchorable-toc"><code>pushPayloadData</code></h3>
+  <span class="args">
+    (store, payload)
+  </span>
+
+  <span class="type">DS.Model|Array</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/store/serializer-response.js#L162">packages/ember-data/lib/system/store/serializer-response.js:162</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Push the primary data of a JSON-API Document to the store.</p>
+
+<p>This method only pushes the primary data located in <code>data</code>.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>payload</strong> <span class="type">Object</span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">DS.Model|Array</span>
+        <dd> one or multiple records from `data`</dd>
+      </dl>
+    </div>
+</div>
+
+        
+<div id="method_pushPayloadIncluded" class="method  item-entry">
+  <h3 data-id="method_pushPayloadIncluded" class="name anchorable-toc"><code>pushPayloadIncluded</code></h3>
+  <span class="args">
+    (store, payload)
+  </span>
+
+  <span class="type">Array</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/store/serializer-response.js#L186">packages/ember-data/lib/system/store/serializer-response.js:186</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Push the secondary data of a JSON-API Document to the store.</p>
+
+<p>This method only pushes the secondary data located in <code>included</code>.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>payload</strong> <span class="type">Object</span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Array</span>
+        <dd> an array containing zero or more records from `included`</dd>
+      </dl>
+    </div>
+</div>
+
+        
+<div id="method_query" class="method private item-entry">
+  <h3 data-id="method_query" class="name anchorable-toc"><code>query</code></h3>
+  <span class="args">
+    (store, type, query, recordArray)
+  </span>
+
+  <span class="type">Promise</span>
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/adapter.js#L157">packages/ember-data/lib/system/adapter.js:157</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>This method is called when you call <code>query</code> on the store.</p>
+
+<p>Example</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/adapters/application.js</td>
+    </tr>
+  </thead>
+<tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.Adapter.extend({
+  <span class="function">query</span>: <span class="keyword">function</span>(store, type, query) {
+    <span class="keyword">var</span> url = type;
+    <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
+      jQuery.getJSON(url, query).then(<span class="keyword">function</span>(data) {
+        Ember.run(<span class="predefined-constant">null</span>, resolve, data);
+      }, <span class="keyword">function</span>(jqXHR) {
+        jqXHR.then = <span class="predefined-constant">null</span>; <span class="comment">// tame jQuery's ill mannered promises</span>
+        Ember.run(<span class="predefined-constant">null</span>, reject, jqXHR);
+      });
+    });
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>type</strong> <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>query</strong> <span class="type">Object</span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>recordArray</strong> <span class="type"><a href="/api/data/classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a></span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Promise</span>
+        <dd> promise</dd>
+      </dl>
+    </div>
+</div>
+
+        
+<div id="method_queryRecord" class="method  item-entry">
+  <h3 data-id="method_queryRecord" class="name anchorable-toc"><code>queryRecord</code></h3>
+  <span class="args">
+    (store, type, query, id)
+  </span>
+
+  <span class="type">Promise</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/adapter.js#L190">packages/ember-data/lib/system/adapter.js:190</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>The <code>queryRecord()</code> method is invoked when the store is asked for a single
+record through a query object.</p>
+
+<p>In response to <code>queryRecord()</code> being called, you should always fetch fresh
+data. Once found, you can asynchronously call the store&#39;s <code>push()</code> method
+to push the record into the store.</p>
+
+<p>Here is an example <code>queryRecord</code> implementation:</p>
+
+<p>Example</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+</pre></td>
+  <td class="code"><pre>App.ApplicationAdapter = DS.Adapter.extend({
+  <span class="function">queryRecord</span>: <span class="keyword">function</span>(store, typeClass, query) {
+    <span class="keyword">var</span> url = [type.typeKey, id].join(<span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>);
+
+    <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
+      jQuery.getJSON(url, query).then(<span class="keyword">function</span>(data) {
+        Ember.run(<span class="predefined-constant">null</span>, resolve, data);
+      }, <span class="keyword">function</span>(jqXHR) {
+        jqXHR.then = <span class="predefined-constant">null</span>; <span class="comment">// tame jQuery's ill mannered promises</span>
+        Ember.run(<span class="predefined-constant">null</span>, reject, jqXHR);
+      });
+    });
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>type</strong> <span class="type">subclass of DS.Model</span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>query</strong> <span class="type">Object</span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>id</strong> <span class="type">String</span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Promise</span>
+        <dd> promise</dd>
+      </dl>
+    </div>
+</div>
+
+        
 <div id="method_serialize" class="method  item-entry">
   <h3 data-id="method_serialize" class="name anchorable-toc"><code>serialize</code></h3>
   <span class="args">
@@ -1290,7 +1960,7 @@ want to group records by their parent.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19.1/packages/ember-data/lib/system/adapter.js#L225">packages/ember-data/lib/system/adapter.js:225</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/adapter.js#L258">packages/ember-data/lib/system/adapter.js:258</a>
 
   </div>
 
@@ -1363,6 +2033,204 @@ want to group records by their parent.</p>
 </div>
 
         
+<div id="method_shouldBackgroundReloadAll" class="method  item-entry">
+  <h3 data-id="method_shouldBackgroundReloadAll" class="name anchorable-toc"><code>shouldBackgroundReloadAll</code></h3>
+  <span class="args">
+    (store, snapshotRecordArray)
+  </span>
+
+  <span class="type">Boolean</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/adapter.js#L511">packages/ember-data/lib/system/adapter.js:511</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>This method is used by the store to determine if the store should
+reload a record array after the <code>store.findAll</code> method resolves
+with a chached record array.</p>
+
+<p>This method is <em>only</em> checked by the store when the store is
+returning a cached record array.</p>
+
+<p>If this method returns true the store will re-fetch all records
+form the adapter.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>snapshotRecordArray</strong> <span class="type"><a href="/api/data/classes/DS.SnapshotRecordArray.html">DS.SnapshotRecordArray</a></span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Boolean</span>
+        <dd> </dd>
+      </dl>
+    </div>
+</div>
+
+        
+<div id="method_shouldBackgroundReloadRecord" class="method  item-entry">
+  <h3 data-id="method_shouldBackgroundReloadRecord" class="name anchorable-toc"><code>shouldBackgroundReloadRecord</code></h3>
+  <span class="args">
+    (store, snapshot)
+  </span>
+
+  <span class="type">Boolean</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/adapter.js#L490">packages/ember-data/lib/system/adapter.js:490</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>This method is used by the store to determine if the store should
+reload a record after the <code>store.findRecord</code> method resolves a
+chached record.</p>
+
+<p>This method is <em>only</em> checked by the store when the store is
+returning a cached record.</p>
+
+<p>If this method returns true the store will re-fetch a record form
+the adapter.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>snapshot</strong> <span class="type"><a href="/api/data/classes/DS.Snapshot.html">DS.Snapshot</a></span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Boolean</span>
+        <dd> </dd>
+      </dl>
+    </div>
+</div>
+
+        
+<div id="method_shouldReloadRecord" class="method  item-entry">
+  <h3 data-id="method_shouldReloadRecord" class="name anchorable-toc"><code>shouldReloadRecord</code></h3>
+  <span class="args">
+    (store, snapshotRecordArray)
+  </span>
+
+  <span class="type">Boolean</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+        Inherited from
+        <a href="/api/data/classes/DS.Adapter.html#method_shouldReloadRecord">DS.Adapter</a>
+          but overwritten in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/adapter.js#L470">packages/ember-data/lib/system/adapter.js:470</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>This method is used by the store to determine if the store should
+reload all records from the adapter when records are requested by
+<code>store.findAll</code>.</p>
+
+<p>If this method returns true the store will re fetch all records form
+the adapter. If is method returns false the store will resolve
+immediately using the cached record.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>snapshotRecordArray</strong> <span class="type"><a href="/api/data/classes/DS.SnapshotRecordArray.html">DS.SnapshotRecordArray</a></span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Boolean</span>
+        <dd> </dd>
+      </dl>
+    </div>
+</div>
+
+        
 <div id="method_updateRecord" class="method  item-entry">
   <h3 data-id="method_updateRecord" class="name anchorable-toc"><code>updateRecord</code></h3>
   <span class="args">
@@ -1380,7 +2248,7 @@ want to group records by their parent.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19.1/packages/ember-data/lib/system/adapter.js#L293">packages/ember-data/lib/system/adapter.js:293</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/adapter.js#L326">packages/ember-data/lib/system/adapter.js:326</a>
 
   </div>
 
@@ -1523,7 +2391,7 @@ a record.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19.1/packages/ember-data/lib/system/adapter.js#L377">packages/ember-data/lib/system/adapter.js:377</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/adapter.js#L410">packages/ember-data/lib/system/adapter.js:410</a>
 
   </div>
 
@@ -1558,7 +2426,7 @@ coalesceFindRequests to false</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.0.0-beta.19.1/packages/ember-data/lib/system/adapter.js#L67">packages/ember-data/lib/system/adapter.js:67</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/1.13.0/packages/ember-data/lib/system/adapter.js#L65">packages/ember-data/lib/system/adapter.js:65</a>
 
   </div>
 
