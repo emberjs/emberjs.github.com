@@ -294,11 +294,13 @@ across requests.</p>
 <li>Application initializers run. At this phase of boot, the goal of initializers
 should be to register dependencies and injections. These initializers are doing
 work that is shared across all FastBoot requests, and therefore should not
-create instances. This phase runs <em>once</em>.</li>
+create instances. This phase runs <em>once</em>. Because these initializers may
+load code, they are allowed to defer application readiness and advance it.</li>
 <li>Instance initializers run next. This is the right time to do work that is
 specific to each FastBoot request. You can create instances and modify their
 state here. This phase runs when the browser application runs, for each
-integration test, and for each FastBoot request.</li>
+integration test, and for each FastBoot request. These initializers run
+after code has loaded and are not allowed to defer readiness.</li>
 </ul>
 
 <p>The two-phase initialization process is safer when multiple addons may be
@@ -316,15 +318,11 @@ registering factories and injections.</p>
 8
 9
 <strong>10</strong>
-11
-12
 </pre></td>
   <td class="code"><pre><span class="comment">// app/instance-initializers/sleep.js</span>
 
 <span class="reserved">export</span> <span class="keyword">function</span> <span class="function">initialize</span>(application) {
-  application.deferReadiness();
-  <span class="comment">// Wait 3s before continuing to boot the app</span>
-  Ember.run.later(application, <span class="string"><span class="delimiter">'</span><span class="content">advanceReadiness</span><span class="delimiter">'</span></span>, <span class="integer">3000</span>);
+  application.container.lookup(<span class="string"><span class="delimiter">'</span><span class="content">service:websocket</span><span class="delimiter">'</span></span>).connect();
 }
 
 <span class="reserved">export</span> <span class="keyword">default</span> {
