@@ -326,32 +326,6 @@ simplifies how to think about the context in your templates. This change should 
 <span class="tag">&lt;/ul&gt;</span>
 </pre></td>
 </tr></table>
-</div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-1-10'>Deprecations Added in 1.10</h3><h4 class='anchorable-toc' id='toc_beforeobserver'>beforeObserver</h4>
-<p>Before observers are deprecated due to the negative performance implications they have for Ember internals and applications.</p>
-
-<p>Typically they were used to have access to the old value of a property when it&#39;s about to change, but you can get same functionality in an even more efficient way with just a few lines of code:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-</pre></td>
-  <td class="code"><pre><span class="keyword">function</span> <span class="function">fooObserver</span>(obj){
-  <span class="keyword">var</span> newFoo = obj.get(<span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>);
-  <span class="keyword">if</span> (obj._oldFoo !== newFoo) {
-    <span class="comment">// do your stuff here</span>
-    obj._oldFoo = newFoo;
-  }
-}
-addObserver(obj, <span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>, fooObserver);
-fooObserver(obj); <span class="comment">// Optionally call the observer immediately</span>
-</pre></td>
-</tr></table>
 </div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-1-11'>Deprecations Added in 1.11</h3><h4 class='anchorable-toc' id='toc_objectcontroller'>ObjectController</h4>
 <p>Experienced Ember users have enjoyed the use of proxying behavior in
 the <code>Ember.ObjectController</code> class since 1.0. However, this behavior
@@ -507,10 +481,10 @@ making the content a <code>SafeString</code>. For example:</p>
 3
 4
 </pre></td>
-  <td class="code"><pre>  <span class="function">myStyle</span>: <span class="keyword">function</span>() {
+  <td class="code"><pre>  myStyle: Ember.computed(<span class="string"><span class="delimiter">'</span><span class="content">color</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
     <span class="keyword">var</span> color = escapeCSS(<span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">color</span><span class="delimiter">'</span></span>));
-    <span class="keyword">return</span> (<span class="string"><span class="delimiter">&quot;</span><span class="content">color: </span><span class="delimiter">&quot;</span></span> + color).htmlSafe();
-  }.property(<span class="string"><span class="delimiter">'</span><span class="content">color</span><span class="delimiter">'</span></span>)
+    <span class="keyword">return</span> <span class="keyword">new</span> Ember.Handlebars.SafeString(<span class="string"><span class="delimiter">&quot;</span><span class="content">color: </span><span class="delimiter">&quot;</span></span> + color);
+  })
 </pre></td>
 </tr></table>
 </div></div>
@@ -993,13 +967,31 @@ dropdown options, the following code could be used:</p>
 18
 19
 <strong>20</strong>
+21
+22
+23
+24
+25
+26
+27
+28
+29
 </pre></td>
   <td class="code"><pre><span class="comment">// app/components/my-select.js</span>
 <span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">&quot;</span><span class="content">ember</span><span class="delimiter">&quot;</span></span>;
 
 <span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
-  <span class="key">content</span>: [],
+  <span class="key">content</span>: <span class="predefined-constant">null</span>,
   <span class="key">selectedValue</span>: <span class="predefined-constant">null</span>,
+
+  didInitAttrs(attrs) {
+    <span class="local-variable">this</span>._super(...<span class="local-variable">arguments</span>);
+    <span class="keyword">var</span> content = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">content</span><span class="delimiter">'</span></span>);
+
+    <span class="keyword">if</span> (!content) {
+      <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">content</span><span class="delimiter">'</span></span>, []);
+    }
+  },
 
   <span class="key">actions</span>: {
     change() {
@@ -1083,6 +1075,35 @@ over the native counterparts.</p>
 
 <p>They will be extracted as an ember addon in case you need to keep using them, but the recomendation now is to
 just use the native array methods or those in libraries like Underscore/Lodash.</p>
+<h4 class='anchorable-toc' id='toc_beforeobserver'>beforeObserver</h4>
+<p>Before observers are deprecated due to the negative performance implications they have for Ember internals and applications.</p>
+
+<p>Typically they were used to have access to the old value of a property when it&#39;s about to change, but you can get same functionality in an even more efficient way with just a few lines of code:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre><span class="keyword">function</span> <span class="function">fooObserver</span>(obj){
+  <span class="keyword">var</span> newFoo = obj.get(<span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>);
+  <span class="keyword">if</span> (obj._oldFoo !== newFoo) {
+    <span class="comment">// do your stuff here</span>
+    obj._oldFoo = newFoo;
+  }
+}
+addObserver(obj, <span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>, fooObserver);
+fooObserver(obj); <span class="comment">// Optionally call the observer immediately</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>The related function <code>Ember.addBeforeObserver</code>, <code>Ember.removeBeforeObserver</code> and <code>Ember.beforeObserversFor</code>
+are deprecated too.</p>
 
 
       </div>
