@@ -1104,6 +1104,45 @@ fooObserver(obj); <span class="comment">// Optionally call the observer immediat
 </div></div>
 <p>The related function <code>Ember.addBeforeObserver</code>, <code>Ember.removeBeforeObserver</code> and <code>Ember.beforeObserversFor</code>
 are deprecated too.</p>
+<h4 class='anchorable-toc' id='toc_arraycontroller'>ArrayController</h4>
+<p>Just like <code>Ember.ObjectController</code>, <code>Ember.ArrayController</code> will be removed in
+Ember 2.0 for the same reasons mentioned in <a href="http://emberjs.com/deprecations/v1.x/#toc_objectcontroller">1.11&#39;s ObjectController
+deprecation</a>.</p>
+
+<p>To migrate from an explicitly defined array controller, first convert
+the class definition to inherit from <code>Ember.Controller</code>. For example:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">&quot;</span><span class="content">ember</span><span class="delimiter">&quot;</span></span>;
+
+<span class="comment">// Change:</span>
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.ArrayController.extend({
+<span class="comment">// To:</span>
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Controller.extend({
+
+<span class="comment">// ...</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Next update any use of <code>{{modelPropertyName}}</code> in templates with <code>{{model.modelPropertyName}}</code>.
+You should also review any computed property dependent keys, observer keys, and <code>get</code> and <code>set</code>
+statements on the route and controller. An example of how to make this migration can
+be found <a href="https://github.com/TryGhost/Ghost/pull/5468">in this PR to the Ghost project</a>.</p>
+
+<p>Opposite to <a href="http://emberjs.com/deprecations/v1.x/#toc_objectcontroller">1.11&#39;s ObjectController deprecation</a>,
+if a controller is not explicitly defined, but instead is being auto-generated
+by the framework, it will <strong>not</strong> throw a deprecation message even if the
+proxying behavior is being used.</p>
+
+<p>Added in <a href="https://github.com/emberjs/ember.js/pull/11476">PR #11476</a>.</p>
 
 
       </div>
