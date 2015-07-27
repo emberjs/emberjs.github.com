@@ -1143,6 +1143,46 @@ by the framework, it will <strong>not</strong> throw a deprecation message even 
 proxying behavior is being used.</p>
 
 <p>Added in <a href="https://github.com/emberjs/ember.js/pull/11476">PR #11476</a>.</p>
+<h4 class='anchorable-toc' id='toc_controller-needs'>Controller.needs</h4>
+<p><code>needs</code> for controllers will be removed in Ember 2.0. You can migrate away from this using <code>Ember.inject.controller</code></p>
+
+<p>Lets say you have a <code>post</code> controller like this:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Controller.extend({
+  <span class="key">needs</span>: [<span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>],
+  <span class="key">newComments</span>: Ember.computed.alias(<span class="string"><span class="delimiter">'</span><span class="content">controllers.comments.newest</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>You can upgrade to <code>Ember.inject.controller</code> like this:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Controller.extend({
+  <span class="key">comments</span>: Ember.inject.controller(),
+  <span class="key">newComments</span>: Ember.computed.alias(<span class="string"><span class="delimiter">'</span><span class="content">comments.newest</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>You can <a href="http://emberjs.com/api/classes/Ember.inject.html#method_controller">read more about <code>Ember.inject.controller</code> in the Ember API documentation</a></p>
 
 
       </div>
