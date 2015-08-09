@@ -1183,7 +1183,59 @@ proxying behavior is being used.</p>
 </tr></table>
 </div></div>
 <p>You can <a href="http://emberjs.com/api/classes/Ember.inject.html#method_controller">read more about <code>Ember.inject.controller</code> in the Ember API documentation</a></p>
+<h4 class='anchorable-toc' id='toc_block-and-multi-argument-unbound-helper'>Block and multi-argument unbound helper</h4>
+<p>The unbound helper is mostly a legacy API in Ember, although it is not being
+removed in 2.0. It was almost exclusively used to manage performance issues
+which are well addressed in Ember 1.13&#39;s new rendering engine.</p>
 
+<p>The first form being deprecated is the block form of unbound. For example:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">unbound</span> <span class="attribute-name">if</span> <span class="attribute-name">someState</span><span class="inline-delimiter">}}</span></span>
+  Show this
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">unbound</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Instead, replace this form with a nested helper:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="error">(</span><span class="attribute-name">unbound</span> <span class="attribute-name">someState</span><span class="error">)</span><span class="inline-delimiter">}}</span></span>
+  Show this
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>The second form being deprecated is the non-nested helper lookup. For example:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">unbound</span> <span class="attribute-name">some-custom-helper</span> <span class="attribute-name">withArg</span> <span class="attribute-name">anotherArg</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Replace this form with nested helper call:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">unbound</span> <span class="error">(</span><span class="attribute-name">some-custom-helper</span> <span class="attribute-name">withArg</span> <span class="attribute-name">anotherArg</span><span class="error">)</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Or make all inputs to the helper unbound:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">some-custom-helper</span> <span class="error">(</span><span class="attribute-name">unbound</span> <span class="attribute-name">withArg</span><span class="error">)</span> <span class="error">(</span><span class="attribute-name">unbound</span> <span class="attribute-name">anotherArg</span><span class="error">)</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
 
       </div>
     </div>
