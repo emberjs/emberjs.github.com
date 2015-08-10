@@ -1063,6 +1063,125 @@ aims to provide a select component based on the native html select. Alternative
 <code>select</code> component implementations can be iterated upon in addons to identify
 best practices and perhaps moved into an official Ember 2.x implementation in
 the future.</p>
+<h4 class='anchorable-toc' id='toc_ember-containerview'>Ember.ContainerView</h4>
+<p><code>Ember.ContainerView</code> is deprecated as a consequence of the deprecation of <code>Ember.View</code>.</p>
+
+<p>Legacy support of <code>Ember.ContainerView</code> will be provided via the <a href="https://github.com/emberjs/ember-legacy-views">ember-legacy-views</a> addon.</p>
+<h5 class='anchorable-toc' id='toc_migrating-away-from-code-ember-containerview-code'>Migrating away from <code>Ember.ContainerView</code></h5>
+<p>In most cases container view can be replaced using the <code>{{each}}</code> helper in combination with the <code>{{component}}</code> helper.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/components/component-container.js</span>
+<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+  <span class="key">classNames</span>: [<span class="string"><span class="delimiter">'</span><span class="content">the-container</span><span class="delimiter">'</span></span>],
+  <span class="key">childComponents</span>: [<span class="string"><span class="delimiter">'</span><span class="content">a-component</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">b-component</span><span class="delimiter">'</span></span>]
+})
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="comment">{{! app/templates/components/component-container.hbs }}</span>
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">childComponents</span> <span class="attribute-name">as</span> <span class="error">|</span><span class="attribute-name">childComponent</span><span class="error">|</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">component</span> <span class="attribute-name">childComponent</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_ember-collectionview'>Ember.CollectionView</h4>
+<p><code>Ember.CollectionView</code> is deprecated as a consequence of the deprecation of <code>Ember.View</code>.</p>
+
+<p>Legacy support of <code>Ember.CollectionView</code> will be provided via the <a href="https://github.com/emberjs/ember-legacy-views">ember-legacy-views</a> addon.</p>
+<h5 class='anchorable-toc' id='toc_migrating-away-from-code-ember-collectionview-code'>Migrating away from <code>Ember.CollectionView</code></h5>
+<p>In most cases collection view can be replaced using the <code>{{each}}</code> helper in combination with the <code>{{component}}</code> helper.</p>
+
+<p>To be able to programmatically decide which component to use for an item, you can use a <code>Ember.Helper</code>
+```javascript
+// app/helpers/animal-component.js
+import Ember from &#39;ember&#39;;</p>
+
+<p>export default Ember.Helper.extend({
+  compute: function(params, hash) {
+    var type = params[0];
+    return type + &#39;-component&#39;;
+  }
+});
+```</p>
+
+<p>Then if you have these two components:
+<code>handlebars
+{{! app/templates/components/dog-component.hbs }}
+{{animal.name}} is a dog!
+</code></p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre><span class="comment">{{! app/templates/components/cat-component.hbs }}</span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">animal.name</span><span class="inline-delimiter">}}</span></span> is a cat!
+</pre></td>
+</tr></table>
+</div></div>
+<p>Then you can render your different animals like this:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/controllers/animals.js</span>
+<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Controller.extend({
+  <span class="key">animals</span>: [
+    { <span class="key">type</span>: <span class="string"><span class="delimiter">'</span><span class="content">cat</span><span class="delimiter">'</span></span>, <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Buttons</span><span class="delimiter">'</span></span> },
+    { <span class="key">type</span>: <span class="string"><span class="delimiter">'</span><span class="content">dog</span><span class="delimiter">'</span></span>, <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Fido</span><span class="delimiter">'</span></span>}
+  ]
+});
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre><span class="comment">{{! app/templates/animals.hbs}}</span>
+<span class="tag">&lt;ul&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">animals</span> <span class="attribute-name">as</span> <span class="error">|</span><span class="attribute-name">animal</span><span class="error">|</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;li&gt;</span>
+    <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">component</span> <span class="error">(</span><span class="attribute-name">animal-component</span> <span class="attribute-name">animal.type</span><span class="error">)</span> <span class="attribute-name">animal</span>=<span class="attribute-value">animal</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;/li&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">else</span><span class="inline-delimiter">}}</span></span>
+  You have no animals.
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/ul&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>You can <a href="http://emberjs.jsbin.com/qegikoliri/1/edit?html,js,output">view and manipulate this example on jsbin</a></p>
 <h4 class='anchorable-toc' id='toc_ember-reducecomputed-ember-arraycomputed'>Ember.ReduceComputed / Ember.ArrayComputed</h4>
 <p>This two little monsters served us well for a long time. They provided semantics that allowed to
 perform in-place modifications of an existing array instead of replacing the entire array like the
