@@ -611,7 +611,69 @@ syntax introduced in 1.12:</p>
 <h3 class='anchorable-toc' id='toc_deprecations-added-in-1-13'>Deprecations Added in 1.13</h3>
 <p>Ember.js 1.13 is the last minor release of Ember 1.x before 2.0. Consequently,
 it has a rather large number of notable deprecations.</p>
-<h4 class='anchorable-toc' id='toc_ember-view'>Ember.View</h4>
+<h4 class='anchorable-toc' id='toc_ember-create'>Ember.create</h4>
+<p><code>Ember.create</code> is deprecated in favor for <code>Object.create</code>. For more information
+regarding <code>Object.create</code>, please
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create">read the MDN documentataion</a>.</p>
+
+<p>Please change this:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>const doug = Ember.create({
+  <span class="key">firstName</span>: <span class="string"><span class="delimiter">'</span><span class="content">Doug</span><span class="delimiter">'</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>to</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>const doug = Object.create({
+  <span class="key">firstName</span>: <span class="string"><span class="delimiter">'</span><span class="content">Doug</span><span class="delimiter">'</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_ember-keys'>Ember.keys</h4>
+<p><code>Ember.keys</code> is deprecated in favor for <code>Object.keys</code>. For more information
+regarding <code>Object.keys</code>, please
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys">read the MDN documentation</a>.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>const food = Ember.keys({
+  <span class="key">yellow</span>: <span class="string"><span class="delimiter">'</span><span class="content">banana</span><span class="delimiter">'</span></span>
+}, {
+  <span class="key">green</span>: <span class="string"><span class="delimiter">'</span><span class="content">pickle</span><span class="delimiter">'</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>to</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>const food = Object.keys({
+  <span class="key">yellow</span>: <span class="string"><span class="delimiter">'</span><span class="content">banana</span><span class="delimiter">'</span></span>
+}, {
+  <span class="key">green</span>: <span class="string"><span class="delimiter">'</span><span class="content">pickle</span><span class="delimiter">'</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_ember-view'>Ember.View</h4>
 <p>Ember 1.x encouraged a Model-View-Controller-Route architecture. Since then,
 the web has consolidated around a Model-Component-Route pattern for web
 development that Ember 2.0 also embraces.</p>
@@ -1352,6 +1414,95 @@ which are well addressed in Ember 1.13&#39;s new rendering engine.</p>
   <td class="line-numbers"><pre>1
 </pre></td>
   <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">some-custom-helper</span> <span class="error">(</span><span class="attribute-name">unbound</span> <span class="attribute-name">withArg</span><span class="error">)</span> <span class="error">(</span><span class="attribute-name">unbound</span> <span class="attribute-name">anotherArg</span><span class="error">)</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_ember-freezeable'>Ember Freezeable</h4>
+<p>The Freezeable Mixin has been deprecated because the spec has been added to
+the javascript core.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre></td>
+  <td class="code"><pre>Contact = Ember.Object.extend(Ember.Freezable, {
+  <span class="key">firstName</span>: <span class="predefined-constant">null</span>,
+  <span class="key">lastName</span>: <span class="predefined-constant">null</span>,
+
+  <span class="comment">// swaps the names</span>
+  <span class="function">swapNames</span>: <span class="keyword">function</span>() {
+    <span class="keyword">if</span> (<span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">isFrozen</span><span class="delimiter">'</span></span>)) <span class="keyword">throw</span> Ember.FROZEN_ERROR;
+    <span class="keyword">var</span> tmp = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>);
+    <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>));
+    <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, tmp);
+    <span class="keyword">return</span> <span class="local-variable">this</span>;
+  }
+
+});
+
+c = Contact.create({ <span class="key">firstName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">John</span><span class="delimiter">&quot;</span></span>, <span class="key">lastName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Doe</span><span class="delimiter">&quot;</span></span> });
+c.swapNames();  <span class="comment">// returns c</span>
+c.freeze();
+c.swapNames();  <span class="comment">// EXCEPTION</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Replace code above with this:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre></td>
+  <td class="code"><pre>Contact = Ember.Object.extend({
+  <span class="key">firstName</span>: <span class="predefined-constant">null</span>,
+  <span class="key">lastName</span>: <span class="predefined-constant">null</span>,
+
+  <span class="comment">// swaps the names</span>
+  <span class="function">swapNames</span>: <span class="keyword">function</span>() {
+    <span class="keyword">if</span> (Object.isFrozen(<span class="local-variable">this</span>)) <span class="keyword">throw</span> Ember.FROZEN_ERROR;
+    <span class="keyword">var</span> tmp = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>);
+    <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>));
+    <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, tmp);
+    <span class="keyword">return</span> <span class="local-variable">this</span>;
+  }
+
+});
+
+c = Contact.create({ <span class="key">firstName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">John</span><span class="delimiter">&quot;</span></span>, <span class="key">lastName</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Doe</span><span class="delimiter">&quot;</span></span> });
+c.swapNames();  <span class="comment">// returns c</span>
+Object.freeze(c);
+c.swapNames();  <span class="comment">// EXCEPTION</span>
 </pre></td>
 </tr></table>
 </div></div>
