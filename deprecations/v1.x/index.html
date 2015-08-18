@@ -1630,11 +1630,71 @@ the function as the last argument:</p>
 </tr></table>
 </div></div>
 <p>This makes it possible to express a number of concepts directly in the template that previously were awkward to represent and required computer properties, and could even require <code>itemController</code>.</p>
-
+<h5 class='anchorable-toc' id='toc_dasherized-boolean-values'>Dasherized boolean values</h5>
+<p>Ember 1.11 new syntax no longer supports dasherizing for boolean values. For example:</p>
+<div class="highlight component "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>// app/components/user-profile.js
+export default Ember.Component.extend({
+  isActiveUser: true
+});
+</pre></td>
+</tr></table>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="comment">{{! app/templates/components/user-profile.hbs }}</span>
+<span class="tag">&lt;div</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">bind-attr</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">isActiveUser</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Should be replaced with:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="comment">{{! app/templates/components/user-profile.hbs }}</span>
+<span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span></span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">if</span> <span class="attribute-name">isActiveUser</span> <span class="error">'</span><span class="attribute-name">is-active-user</span><span class="error">'</span><span class="inline-delimiter">}}</span></span><span class="string"><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div><h5 class='anchorable-toc' id='toc_legacy-code-bind-attr-code'>Legacy <code>bind-attr</code></h5>
 <p>Ember 1.13 deprecated <code>bind-attr</code> in favor of the new syntax.</p>
 
 <p>To aid in the migration, you can use the <a href="https://github.com/emberjs/legacy-bind-attr">legacy-bind-attr plugin</a> to restore this behavior in Ember 2.0 and silence the deprecation warning.</p>
-
+<h4 class='anchorable-toc' id='toc_ember-computed-any'>Ember.computed.any</h4>
+<p><code>Ember.computed.any</code> is deprecated in favor of <code>Ember.computed.or</code>. This change is required because the computed value is the first value ( like || ) rather than a boolean value ( like Array.prototype.any ). For example:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>let Hamster = Ember.Object.extend({
+  <span class="key">hasClothes</span>: Ember.computed.any(<span class="string"><span class="delimiter">'</span><span class="content">hat</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">shirt</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>The above code will be changed to</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>let Hamster = Ember.Object.extend({
+  <span class="key">hasClothes</span>: Ember.computed.or(<span class="string"><span class="delimiter">'</span><span class="content">hat</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">shirt</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
 
       </div>
     </div>
