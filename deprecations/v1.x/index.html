@@ -723,6 +723,9 @@ views, and consequently Ember is providing extended support for views via the
 <a href="https://github.com/emberjs/ember-legacy-views">ember-legacy-views</a> addon.
 This addon will remain compatible with Ember until v2.4 of the framework
 is released.</p>
+
+<p>Along with the deprecation of <code>Ember.View</code>, the <code>Ember.CoreView</code> class is also
+deprecated. If you were using this class, please migrate to <code>Ember.Component</code>.</p>
 <h5 class='anchorable-toc' id='toc_migrating-away-from-the-view-helper'>Migrating away from the view helper</h5>
 <p>In most cases Ember views can be replaced with a component. For example
 this view and usage:</p>
@@ -1694,7 +1697,62 @@ export default Ember.Component.extend({
 });
 </pre></td>
 </tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_view-and-controller-options-on-the-code-each-code-helper'>View and Controller options on the <code>{{each}}</code> helper</h4>
+<p>The options <code>itemView</code>, <code>itemViewClass</code>, <code>tagName</code>, <code>emptyView</code>,
+<code>emptyViewClass</code> and <code>itemController</code> on the <code>{{each}}</code> helper have been deprecated.</p>
+
+<p>These options were added when controllers were more prominent, and the
+component story was less fully fleshed out. In Ember 1.13+, using these options
+triggers a less performant compatibility mode.</p>
+
+<p>The usage of all the above mentioned options should be replaced with components.</p>
+<h5 class='anchorable-toc' id='toc_an-example'>An example</h5><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">each</span> <span class="attribute-name">view.comments</span> <span class="attribute-name">itemController</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">comment</span><span class="delimiter">&quot;</span></span>
+                     <span class="attribute-name">itemView</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">commentView</span><span class="delimiter">&quot;</span></span>
+                     <span class="attribute-name">emptyView</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">noCommentsView</span><span class="delimiter">&quot;</span></span>
+                     <span class="attribute-name">tagName</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ul</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
 </div></div>
+<p>Can be replaced with:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;ul&gt;</span>
+  <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">comments</span> <span class="attribute-name">as</span> <span class="error">|</span><span class="attribute-name">comment</span><span class="error">|</span><span class="inline-delimiter">}}</span></span>
+    <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">post-comment</span> <span class="attribute-name">comment</span>=<span class="attribute-value">comment</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">else</span><span class="inline-delimiter">}}</span></span>
+    <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">no-comments</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+<span class="tag">&lt;/ul&gt;</span>
+</pre></td>
+</tr></table>
+</div></div><h5 class='anchorable-toc' id='toc_breaking-the-example-down'>Breaking the example down</h5>
+<p>The <code>comment</code> controller and <code>commentView</code> view have been refactored into the
+<code>{{post-comment}}</code> component.</p>
+
+<p>The <code>noCommentsView</code> has been refactored in to the `{{no-comments}} component.</p>
+
+<p>Instead of the <code>itemController=&quot;comment&quot;</code> and <code>itemView=&quot;commentView&quot;</code> we use
+the newly created <code>{{post-comment}}</code> component.</p>
+
+<p>Instead of the <code>emptyView=&quot;noCommentsView&quot;</code> we use the <code>{{no-comments}}</code>
+component.</p>
+
+<p>We replaced <code>tagName=&quot;ul&quot;</code> part by just surrounding the <code>{{each}}</code> block with
+<code>&lt;ul&gt;</code> tags.</p>
+
 
       </div>
     </div>
