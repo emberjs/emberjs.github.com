@@ -69,7 +69,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v1.13.9" target="_blank"> Tag: v1.13.9</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v2.0.0" target="_blank"> Tag: v2.0.0</a></li>
 
 
           <li class="level-1 ">
@@ -119,16 +119,6 @@
         
           <li class="level-3 ">
                         <a href="/api/data/classes/DS.AbortError.html">DS.AbortError</a>
-
-          </li>
-        
-          <li class="level-3 ">
-                        <a href="/api/data/classes/DS.ActiveModelAdapter.html">DS.ActiveModelAdapter</a>
-
-          </li>
-        
-          <li class="level-3 ">
-                        <a href="/api/data/classes/DS.ActiveModelSerializer.html">DS.ActiveModelSerializer</a>
 
           </li>
         
@@ -317,7 +307,7 @@
         
   <h1 class="api-header">
   DS.RESTAdapter Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L26">packages/ember-data/lib/adapters/rest-adapter.js:26</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L19">packages/ember-data/lib/adapters/rest-adapter.js:19</a>
 </h1>
 
 <hr>
@@ -331,7 +321,7 @@
 
       <p>Uses: <a href="/api/data/classes/DS.BuildURLMixin.html">DS.BuildURLMixin</a></p>
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L26">packages/ember-data/lib/adapters/rest-adapter.js:26</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L19">packages/ember-data/lib/adapters/rest-adapter.js:19</a></p>
 
     <p>Module: <a href="/api/data/modules/ember-data.html">ember-data</a></p>
 </div>
@@ -478,7 +468,7 @@ property on the adapter:</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>Requests for <code>App.Person</code> would now target <code>/api/1/people/1</code>.</p>
+<p>Requests for the <code>Person</code> model would now target <code>/api/1/people/1</code>.</p>
 <h3 class='anchorable-toc' id='toc_host-customization'>Host customization</h3>
 <p>An adapter can target other hosts by setting the <code>host</code> property.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
@@ -556,12 +546,12 @@ injected into an adapter by Ember&#39;s container.</p>
   <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
 
 <span class="reserved">export</span> <span class="keyword">default</span> DS.RESTAdapter.extend({
-  <span class="function">headers</span>: <span class="keyword">function</span>() {
+  <span class="key">headers</span>: Ember.computed(<span class="string"><span class="delimiter">'</span><span class="content">session.authToken</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
     <span class="keyword">return</span> {
       <span class="key"><span class="delimiter">&quot;</span><span class="content">API_KEY</span><span class="delimiter">&quot;</span></span>: <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">session.authToken</span><span class="delimiter">&quot;</span></span>),
       <span class="key"><span class="delimiter">&quot;</span><span class="content">ANOTHER_HEADER</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Some header value</span><span class="delimiter">&quot;</span></span>
     };
-  }.property(<span class="string"><span class="delimiter">&quot;</span><span class="content">session.authToken</span><span class="delimiter">&quot;</span></span>)
+  })
 });
 </pre></td>
 </tr></table>
@@ -593,12 +583,12 @@ be recomputed with every request.</p>
   <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
 
 <span class="reserved">export</span> <span class="keyword">default</span> DS.RESTAdapter.extend({
-  <span class="function">headers</span>: <span class="keyword">function</span>() {
+  <span class="key">headers</span>: Ember.computed(<span class="keyword">function</span>() {
     <span class="keyword">return</span> {
       <span class="key"><span class="delimiter">&quot;</span><span class="content">API_KEY</span><span class="delimiter">&quot;</span></span>: Ember.get(document.cookie.match(<span class="regexp"><span class="delimiter">/</span><span class="content">apiKey</span><span class="content">\=</span><span class="content">([^;]*)</span><span class="delimiter">/</span></span>), <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>),
       <span class="key"><span class="delimiter">&quot;</span><span class="content">ANOTHER_HEADER</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Some header value</span><span class="delimiter">&quot;</span></span>
     };
-  }.property().<span class="reserved">volatile</span>()
+  }).<span class="reserved">volatile</span>()
 });
 </pre></td>
 </tr></table>
@@ -644,20 +634,11 @@ be recomputed with every request.</p>
             <li class="method private inherited">
               <a href="#method__normalizeSerializerPayloadItem">_normalizeSerializerPayloadItem</a>
             </li>
-            <li class="method private inherited">
-              <a href="#method__pushResourceObject">_pushResourceObject</a>
-            </li>
             <li class="method private">
               <a href="#method_ajax">ajax</a>
             </li>
-            <li class="method deprecated">
-              <a href="#method_ajaxError">ajaxError</a>
-            </li>
             <li class="method private">
               <a href="#method_ajaxOptions">ajaxOptions</a>
-            </li>
-            <li class="method deprecated">
-              <a href="#method_ajaxSuccess">ajaxSuccess</a>
             </li>
             <li class="method inherited">
               <a href="#method_buildURL">buildURL</a>
@@ -671,9 +652,6 @@ be recomputed with every request.</p>
             <li class="method ">
               <a href="#method_deleteRecord">deleteRecord</a>
             </li>
-            <li class="method deprecated">
-              <a href="#method_find">find</a>
-            </li>
             <li class="method private">
               <a href="#method_findAll">findAll</a>
             </li>
@@ -685,9 +663,6 @@ be recomputed with every request.</p>
             </li>
             <li class="method ">
               <a href="#method_findMany">findMany</a>
-            </li>
-            <li class="method private deprecated">
-              <a href="#method_findQuery">findQuery</a>
             </li>
             <li class="method ">
               <a href="#method_findRecord">findRecord</a>
@@ -718,15 +693,6 @@ be recomputed with every request.</p>
             </li>
             <li class="method inherited">
               <a href="#method_pathForType">pathForType</a>
-            </li>
-            <li class="method inherited">
-              <a href="#method_pushPayload">pushPayload</a>
-            </li>
-            <li class="method inherited">
-              <a href="#method_pushPayloadData">pushPayloadData</a>
-            </li>
-            <li class="method inherited">
-              <a href="#method_pushPayloadIncluded">pushPayloadIncluded</a>
             </li>
             <li class="method private">
               <a href="#method_query">query</a>
@@ -762,9 +728,6 @@ be recomputed with every request.</p>
               <a href="#method_urlForDeleteRecord">urlForDeleteRecord</a>
             </li>
             <li class="method inherited">
-              <a href="#method_urlForFind">urlForFind</a>
-            </li>
-            <li class="method inherited">
               <a href="#method_urlForFindAll">urlForFindAll</a>
             </li>
             <li class="method inherited">
@@ -776,10 +739,7 @@ be recomputed with every request.</p>
             <li class="method inherited">
               <a href="#method_urlForFindMany">urlForFindMany</a>
             </li>
-            <li class="method deprecated inherited">
-              <a href="#method_urlForFindQuery">urlForFindQuery</a>
-            </li>
-            <li class="method deprecated inherited">
+            <li class="method inherited">
               <a href="#method_urlForFindRecord">urlForFindRecord</a>
             </li>
             <li class="method inherited">
@@ -858,7 +818,7 @@ be recomputed with every request.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.BuildURLMixin.html#method__buildURL">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/build-url-mixin.js#L85">packages/ember-data/lib/adapters/build-url-mixin.js:85</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/build-url-mixin.js#L79">packages/ember-data/lib/adapters/build-url-mixin.js:79</a>
 
   </div>
 
@@ -914,7 +874,7 @@ be recomputed with every request.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.Adapter.html#method__normalizeSerializerPayload">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/system/store/serializer-response.js#L111">packages/ember-data/lib/system/store/serializer-response.js:111</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/system/store/serializer-response.js#L91">packages/ember-data/lib/system/store/serializer-response.js:91</a>
 
   </div>
 
@@ -974,7 +934,7 @@ be recomputed with every request.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.Adapter.html#method__normalizeSerializerPayloadItem">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/system/store/serializer-response.js#L136">packages/ember-data/lib/system/store/serializer-response.js:136</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/system/store/serializer-response.js#L114">packages/ember-data/lib/system/store/serializer-response.js:114</a>
 
   </div>
 
@@ -1016,61 +976,6 @@ a JSON-API Resource Object.</p>
 </div>
 
         
-<div id="method__pushResourceObject" class="method private inherited item-entry">
-  <h3 data-id="method__pushResourceObject" class="name anchorable-toc"><code>_pushResourceObject</code></h3>
-  <span class="args">
-    (resourceObject)
-  </span>
-
-  <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span>
-
-
-
-  <span class="flag private">private</span>
-
-
-
-
-
-  <div class="meta">
-          Inherited from
-          <a href="/api/data/classes/DS.Adapter.html#method__pushResourceObject">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/system/store/serializer-response.js#L282">packages/ember-data/lib/system/store/serializer-response.js:282</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>Push a single JSON-API Resource Object to the store.</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>resourceObject</strong> <span class="type">Object</span></dt>
-          <dd>
-            
-
-          </dd>
-      </dl>
-    </div>
-
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span>
-        <dd> a record</dd>
-      </dl>
-    </div>
-</div>
-
-        
 <div id="method_ajax" class="method private item-entry">
   <h3 data-id="method_ajax" class="name anchorable-toc"><code>ajax</code></h3>
   <span class="args">
@@ -1089,7 +994,7 @@ a JSON-API Resource Object.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L881">packages/ember-data/lib/adapters/rest-adapter.js:881</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L785">packages/ember-data/lib/adapters/rest-adapter.js:785</a>
 
   </div>
 
@@ -1151,74 +1056,6 @@ data is the serialized record in the case of a save.</li>
 </div>
 
         
-<div id="method_ajaxError" class="method deprecated item-entry">
-  <h3 data-id="method_ajaxError" class="name anchorable-toc"><code>ajaxError</code></h3>
-  <span class="args">
-    (jqXHR, responseText, errorThrown)
-  </span>
-
-  <span class="type">Object</span>
-
-
-  <span class="flag deprecated" title="Use [handleResponse](#method_handleResponse) instead">deprecated</span>
-
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L793">packages/ember-data/lib/adapters/rest-adapter.js:793</a>
-
-  </div>
-
-    <div class="deprecation">
-      <p>Use <a href="#method_handleResponse">handleResponse</a> instead</p>
-
-    </div>
-
-    <div class="description">
-      <p>Takes an ajax response, and returns an error payload.</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>jqXHR</strong> <span class="type">Object</span></dt>
-          <dd>
-            
-
-          </dd>
-          <dt><strong>responseText</strong> <span class="type">Object</span></dt>
-          <dd>
-            
-
-          </dd>
-          <dt><strong>errorThrown</strong> <span class="type">Object</span></dt>
-          <dd>
-            
-
-          </dd>
-      </dl>
-    </div>
-
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type">Object</span>
-        <dd> jqXHR</dd>
-      </dl>
-    </div>
-</div>
-
-        
 <div id="method_ajaxOptions" class="method private item-entry">
   <h3 data-id="method_ajaxOptions" class="name anchorable-toc"><code>ajaxOptions</code></h3>
   <span class="args">
@@ -1237,7 +1074,7 @@ data is the serialized record in the case of a save.</li>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L971">packages/ember-data/lib/adapters/rest-adapter.js:971</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L859">packages/ember-data/lib/adapters/rest-adapter.js:859</a>
 
   </div>
 
@@ -1279,69 +1116,6 @@ data is the serialized record in the case of a save.</li>
 </div>
 
         
-<div id="method_ajaxSuccess" class="method deprecated item-entry">
-  <h3 data-id="method_ajaxSuccess" class="name anchorable-toc"><code>ajaxSuccess</code></h3>
-  <span class="args">
-    (jqXHR, jsonPayload)
-  </span>
-
-  <span class="type">Object</span>
-
-
-  <span class="flag deprecated" title="Use [handleResponse](#method_handleResponse) instead">deprecated</span>
-
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L804">packages/ember-data/lib/adapters/rest-adapter.js:804</a>
-
-  </div>
-
-    <div class="deprecation">
-      <p>Use <a href="#method_handleResponse">handleResponse</a> instead</p>
-
-    </div>
-
-    <div class="description">
-      <p>Takes an ajax response, and returns the json payload.</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>jqXHR</strong> <span class="type">Object</span></dt>
-          <dd>
-            
-
-          </dd>
-          <dt><strong>jsonPayload</strong> <span class="type">Object</span></dt>
-          <dd>
-            
-
-          </dd>
-      </dl>
-    </div>
-
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type">Object</span>
-        <dd> jsonPayload</dd>
-      </dl>
-    </div>
-</div>
-
-        
 <div id="method_buildURL" class="method inherited item-entry">
   <h3 data-id="method_buildURL" class="name anchorable-toc"><code>buildURL</code></h3>
   <span class="args">
@@ -1360,7 +1134,7 @@ data is the serialized record in the case of a save.</li>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.BuildURLMixin.html#method_buildURL">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/build-url-mixin.js#L31">packages/ember-data/lib/adapters/build-url-mixin.js:31</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/build-url-mixin.js#L31">packages/ember-data/lib/adapters/build-url-mixin.js:31</a>
 
   </div>
 
@@ -1444,7 +1218,7 @@ will be arrays of ids and snapshots.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.Adapter.html#method_convertResourceObject">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/system/store/serializer-response.js#L294">packages/ember-data/lib/system/store/serializer-response.js:294</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/system/store/serializer-response.js#L197">packages/ember-data/lib/system/store/serializer-response.js:197</a>
 
   </div>
 
@@ -1502,7 +1276,7 @@ understands.</p>
         Inherited from
         <a href="/api/data/classes/DS.Adapter.html#method_createRecord">DS.Adapter</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L635">packages/ember-data/lib/adapters/rest-adapter.js:635</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L563">packages/ember-data/lib/adapters/rest-adapter.js:563</a>
 
   </div>
 
@@ -1574,7 +1348,7 @@ of a record.</p>
         Inherited from
         <a href="/api/data/classes/DS.Adapter.html#method_deleteRecord">DS.Adapter</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L689">packages/ember-data/lib/adapters/rest-adapter.js:689</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L617">packages/ember-data/lib/adapters/rest-adapter.js:617</a>
 
   </div>
 
@@ -1622,75 +1396,6 @@ of a record.</p>
 </div>
 
         
-<div id="method_find" class="method deprecated item-entry">
-  <h3 data-id="method_find" class="name anchorable-toc"><code>find</code></h3>
-  <span class="args">
-    (store, type, id, snapshot)
-  </span>
-
-  <span class="type">Promise</span>
-
-
-  <span class="flag deprecated" title="Use [findRecord](#method_findRecord) instead">deprecated</span>
-
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L359">packages/ember-data/lib/adapters/rest-adapter.js:359</a>
-
-  </div>
-
-    <div class="deprecation">
-      <p>Use <a href="#method_findRecord">findRecord</a> instead</p>
-
-    </div>
-
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
-          <dd>
-            
-
-          </dd>
-          <dt><strong>type</strong> <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span></dt>
-          <dd>
-            
-
-          </dd>
-          <dt><strong>id</strong> <span class="type">String</span></dt>
-          <dd>
-            
-
-          </dd>
-          <dt><strong>snapshot</strong> <span class="type"><a href="/api/data/classes/DS.Snapshot.html">DS.Snapshot</a></span></dt>
-          <dd>
-            
-
-          </dd>
-      </dl>
-    </div>
-
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type">Promise</span>
-        <dd> promise</dd>
-      </dl>
-    </div>
-</div>
-
-        
 <div id="method_findAll" class="method private item-entry">
   <h3 data-id="method_findAll" class="name anchorable-toc"><code>findAll</code></h3>
   <span class="args">
@@ -1711,7 +1416,7 @@ of a record.</p>
         Inherited from
         <a href="/api/data/classes/DS.Adapter.html#method_findAll">DS.Adapter</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L404">packages/ember-data/lib/adapters/rest-adapter.js:404</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L372">packages/ember-data/lib/adapters/rest-adapter.js:372</a>
 
   </div>
 
@@ -1778,7 +1483,7 @@ promise for the resulting payload.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L600">packages/ember-data/lib/adapters/rest-adapter.js:600</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L528">packages/ember-data/lib/adapters/rest-adapter.js:528</a>
 
   </div>
 
@@ -1867,7 +1572,7 @@ specified as a URL (inside of <code>links</code>).</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L564">packages/ember-data/lib/adapters/rest-adapter.js:564</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L492">packages/ember-data/lib/adapters/rest-adapter.js:492</a>
 
   </div>
 
@@ -1958,7 +1663,7 @@ specified as a URL (inside of <code>links</code>).</p>
         Inherited from
         <a href="/api/data/classes/DS.Adapter.html#method_findMany">DS.Adapter</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L526">packages/ember-data/lib/adapters/rest-adapter.js:526</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L454">packages/ember-data/lib/adapters/rest-adapter.js:454</a>
 
   </div>
 
@@ -2040,82 +1745,6 @@ promise for the resulting payload.</p>
 </div>
 
         
-<div id="method_findQuery" class="method private deprecated item-entry">
-  <h3 data-id="method_findQuery" class="name anchorable-toc"><code>findQuery</code></h3>
-  <span class="args">
-    (store, type, query)
-  </span>
-
-  <span class="type">Promise</span>
-
-
-  <span class="flag deprecated" title="Use [query](#method_query) instead">deprecated</span>
-
-  <span class="flag private">private</span>
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L430">packages/ember-data/lib/adapters/rest-adapter.js:430</a>
-
-  </div>
-
-    <div class="deprecation">
-      <p>Use <a href="#method_query">query</a> instead</p>
-
-    </div>
-
-    <div class="description">
-      <p>Called by the store in order to fetch a JSON array for
-the records that match a particular query.</p>
-
-<p>The <code>findQuery</code> method makes an Ajax (HTTP GET) request to a URL computed by <code>buildURL</code>, and returns a
-promise for the resulting payload.</p>
-
-<p>The <code>query</code> argument is a simple JavaScript object that will be passed directly
-to the server as parameters.</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
-          <dd>
-            
-
-          </dd>
-          <dt><strong>type</strong> <span class="type"><a href="/api/data/classes/DS.Model.html">DS.Model</a></span></dt>
-          <dd>
-            
-
-          </dd>
-          <dt><strong>query</strong> <span class="type">Object</span></dt>
-          <dd>
-            
-
-          </dd>
-      </dl>
-    </div>
-
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type">Promise</span>
-        <dd> promise</dd>
-      </dl>
-    </div>
-</div>
-
-        
 <div id="method_findRecord" class="method  item-entry">
   <h3 data-id="method_findRecord" class="name anchorable-toc"><code>findRecord</code></h3>
   <span class="args">
@@ -2135,7 +1764,7 @@ to the server as parameters.</p>
         Inherited from
         <a href="/api/data/classes/DS.Adapter.html#method_findRecord">DS.Adapter</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L376">packages/ember-data/lib/adapters/rest-adapter.js:376</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L352">packages/ember-data/lib/adapters/rest-adapter.js:352</a>
 
   </div>
 
@@ -2210,7 +1839,7 @@ type and ID.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.Adapter.html#method_generateIdForRecord">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/system/adapter.js#L230">packages/ember-data/lib/system/adapter.js:230</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/system/adapter.js#L230">packages/ember-data/lib/system/adapter.js:230</a>
 
   </div>
 
@@ -2299,7 +1928,7 @@ the first parameter and the newly created record as the second parameter:</p>
         Inherited from
         <a href="/api/data/classes/DS.Adapter.html#method_groupRecordsForFindMany">DS.Adapter</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L726">packages/ember-data/lib/adapters/rest-adapter.js:726</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L654">packages/ember-data/lib/adapters/rest-adapter.js:654</a>
 
   </div>
 
@@ -2371,7 +2000,7 @@ and <code>/posts/2/comments/3</code></p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L814">packages/ember-data/lib/adapters/rest-adapter.js:814</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L718">packages/ember-data/lib/adapters/rest-adapter.js:718</a>
 
   </div>
 
@@ -2453,7 +2082,7 @@ method.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L867">packages/ember-data/lib/adapters/rest-adapter.js:867</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L771">packages/ember-data/lib/adapters/rest-adapter.js:771</a>
 
   </div>
 
@@ -2517,7 +2146,7 @@ response is a an invalid error.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L853">packages/ember-data/lib/adapters/rest-adapter.js:853</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L757">packages/ember-data/lib/adapters/rest-adapter.js:757</a>
 
   </div>
 
@@ -2582,7 +2211,7 @@ response is a success.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L1019">packages/ember-data/lib/adapters/rest-adapter.js:1019</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L905">packages/ember-data/lib/adapters/rest-adapter.js:905</a>
 
   </div>
 
@@ -2642,19 +2271,13 @@ response is a success.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.Adapter.html#method_normalizeResponseHelper">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/system/store/serializer-response.js#L70">packages/ember-data/lib/system/store/serializer-response.js:70</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/system/store/serializer-response.js#L64">packages/ember-data/lib/system/store/serializer-response.js:64</a>
 
   </div>
 
 
     <div class="description">
       <p>This is a helper method that always returns a JSON-API Document.</p>
-
-<p>If the current serializer has <code>isNewSerializerAPI</code> set to <code>true</code>
-this helper calls <code>normalizeResponse</code> instead of <code>extract</code>.</p>
-
-<p>All the built-in serializers get <code>isNewSerializerAPI</code> set to <code>true</code> automatically
-if the feature flag is enabled.</p>
 
     </div>
 
@@ -2727,7 +2350,7 @@ if the feature flag is enabled.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L1003">packages/ember-data/lib/adapters/rest-adapter.js:1003</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L889">packages/ember-data/lib/adapters/rest-adapter.js:889</a>
 
   </div>
 
@@ -2777,7 +2400,7 @@ if the feature flag is enabled.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.BuildURLMixin.html#method_pathForType">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/build-url-mixin.js#L293">packages/ember-data/lib/adapters/build-url-mixin.js:293</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/build-url-mixin.js#L254">packages/ember-data/lib/adapters/build-url-mixin.js:254</a>
 
   </div>
 
@@ -2845,190 +2468,6 @@ endpoint of &quot;/line_items/&quot;.</p>
 </div>
 
         
-<div id="method_pushPayload" class="method inherited item-entry">
-  <h3 data-id="method_pushPayload" class="name anchorable-toc"><code>pushPayload</code></h3>
-  <span class="args">
-    (store, payload)
-  </span>
-
-  <span class="type">DS.Model|Array</span>
-
-
-
-
-
-
-
-
-  <div class="meta">
-          Inherited from
-          <a href="/api/data/classes/DS.Adapter.html#method_pushPayload">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/system/store/serializer-response.js#L221">packages/ember-data/lib/system/store/serializer-response.js:221</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>Push a JSON-API Document to the store.</p>
-
-<p>This will push both primary data located in <code>data</code> and secondary data located
-in <code>included</code> (if present).</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
-          <dd>
-            
-
-          </dd>
-          <dt><strong>payload</strong> <span class="type">Object</span></dt>
-          <dd>
-            
-
-          </dd>
-      </dl>
-    </div>
-
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type">DS.Model|Array</span>
-        <dd> one or multiple records from `data`</dd>
-      </dl>
-    </div>
-</div>
-
-        
-<div id="method_pushPayloadData" class="method inherited item-entry">
-  <h3 data-id="method_pushPayloadData" class="name anchorable-toc"><code>pushPayloadData</code></h3>
-  <span class="args">
-    (store, payload)
-  </span>
-
-  <span class="type">DS.Model|Array</span>
-
-
-
-
-
-
-
-
-  <div class="meta">
-          Inherited from
-          <a href="/api/data/classes/DS.Adapter.html#method_pushPayloadData">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/system/store/serializer-response.js#L238">packages/ember-data/lib/system/store/serializer-response.js:238</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>Push the primary data of a JSON-API Document to the store.</p>
-
-<p>This method only pushes the primary data located in <code>data</code>.</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
-          <dd>
-            
-
-          </dd>
-          <dt><strong>payload</strong> <span class="type">Object</span></dt>
-          <dd>
-            
-
-          </dd>
-      </dl>
-    </div>
-
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type">DS.Model|Array</span>
-        <dd> one or multiple records from `data`</dd>
-      </dl>
-    </div>
-</div>
-
-        
-<div id="method_pushPayloadIncluded" class="method inherited item-entry">
-  <h3 data-id="method_pushPayloadIncluded" class="name anchorable-toc"><code>pushPayloadIncluded</code></h3>
-  <span class="args">
-    (store, payload)
-  </span>
-
-  <span class="type">Array</span>
-
-
-
-
-
-
-
-
-  <div class="meta">
-          Inherited from
-          <a href="/api/data/classes/DS.Adapter.html#method_pushPayloadIncluded">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/system/store/serializer-response.js#L262">packages/ember-data/lib/system/store/serializer-response.js:262</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>Push the secondary data of a JSON-API Document to the store.</p>
-
-<p>This method only pushes the secondary data located in <code>included</code>.</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>store</strong> <span class="type"><a href="/api/data/classes/DS.Store.html">DS.Store</a></span></dt>
-          <dd>
-            
-
-          </dd>
-          <dt><strong>payload</strong> <span class="type">Object</span></dt>
-          <dd>
-            
-
-          </dd>
-      </dl>
-    </div>
-
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type">Array</span>
-        <dd> an array containing zero or more records from `included`</dd>
-      </dl>
-    </div>
-</div>
-
-        
 <div id="method_query" class="method private item-entry">
   <h3 data-id="method_query" class="name anchorable-toc"><code>query</code></h3>
   <span class="args">
@@ -3049,7 +2488,7 @@ in <code>included</code> (if present).</p>
         Inherited from
         <a href="/api/data/classes/DS.Adapter.html#method_query">DS.Adapter</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L462">packages/ember-data/lib/adapters/rest-adapter.js:462</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L398">packages/ember-data/lib/adapters/rest-adapter.js:398</a>
 
   </div>
 
@@ -3058,8 +2497,9 @@ in <code>included</code> (if present).</p>
       <p>Called by the store in order to fetch a JSON array for
 the records that match a particular query.</p>
 
-<p>The <code>findQuery</code> method makes an Ajax (HTTP GET) request to a URL computed by <code>buildURL</code>, and returns a
-promise for the resulting payload.</p>
+<p>The <code>query</code> method makes an Ajax (HTTP GET) request to a URL
+computed by <code>buildURL</code>, and returns a promise for the resulting
+payload.</p>
 
 <p>The <code>query</code> argument is a simple JavaScript object that will be passed directly
 to the server as parameters.</p>
@@ -3122,7 +2562,7 @@ to the server as parameters.</p>
         Inherited from
         <a href="/api/data/classes/DS.Adapter.html#method_queryRecord">DS.Adapter</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L498">packages/ember-data/lib/adapters/rest-adapter.js:498</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L426">packages/ember-data/lib/adapters/rest-adapter.js:426</a>
 
   </div>
 
@@ -3194,7 +2634,7 @@ to the server as parameters.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.Adapter.html#method_serialize">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/system/adapter.js#L260">packages/ember-data/lib/system/adapter.js:260</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/system/adapter.js#L260">packages/ember-data/lib/system/adapter.js:260</a>
 
   </div>
 
@@ -3285,7 +2725,7 @@ to the server as parameters.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.Adapter.html#method_shouldBackgroundReloadAll">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/system/adapter.js#L513">packages/ember-data/lib/system/adapter.js:513</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/system/adapter.js#L510">packages/ember-data/lib/system/adapter.js:510</a>
 
   </div>
 
@@ -3352,7 +2792,7 @@ from the adapter.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.Adapter.html#method_shouldBackgroundReloadRecord">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/system/adapter.js#L492">packages/ember-data/lib/system/adapter.js:492</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/system/adapter.js#L490">packages/ember-data/lib/system/adapter.js:490</a>
 
   </div>
 
@@ -3419,7 +2859,7 @@ the adapter.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.Adapter.html#method_shouldReloadAll">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/system/adapter.js#L472">packages/ember-data/lib/system/adapter.js:472</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/system/adapter.js#L472">packages/ember-data/lib/system/adapter.js:472</a>
 
   </div>
 
@@ -3484,7 +2924,7 @@ immediately using the cached record.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.Adapter.html#method_shouldReloadRecord">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/system/adapter.js#L454">packages/ember-data/lib/system/adapter.js:454</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/system/adapter.js#L454">packages/ember-data/lib/system/adapter.js:454</a>
 
   </div>
 
@@ -3548,7 +2988,7 @@ immediately using the cached record.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L197">packages/ember-data/lib/adapters/rest-adapter.js:197</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L190">packages/ember-data/lib/adapters/rest-adapter.js:190</a>
 
   </div>
 
@@ -3659,7 +3099,7 @@ in the backend.</p>
         Inherited from
         <a href="/api/data/classes/DS.Adapter.html#method_updateRecord">DS.Adapter</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L661">packages/ember-data/lib/adapters/rest-adapter.js:661</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L589">packages/ember-data/lib/adapters/rest-adapter.js:589</a>
 
   </div>
 
@@ -3730,7 +3170,7 @@ of a record.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.BuildURLMixin.html#method_urlForCreateRecord">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/build-url-mixin.js#L218">packages/ember-data/lib/adapters/build-url-mixin.js:218</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/build-url-mixin.js#L179">packages/ember-data/lib/adapters/build-url-mixin.js:179</a>
 
   </div>
 
@@ -3785,67 +3225,7 @@ of a record.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.BuildURLMixin.html#method_urlForDeleteRecord">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/build-url-mixin.js#L239">packages/ember-data/lib/adapters/build-url-mixin.js:239</a>
-
-  </div>
-
-
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>id</strong> <span class="type">String</span></dt>
-          <dd>
-            
-
-          </dd>
-          <dt><strong>modelName</strong> <span class="type">String</span></dt>
-          <dd>
-            
-
-          </dd>
-          <dt><strong>snapshot</strong> <span class="type"><a href="/api/data/classes/DS.Snapshot.html">DS.Snapshot</a></span></dt>
-          <dd>
-            
-
-          </dd>
-      </dl>
-    </div>
-
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type">String</span>
-        <dd> url</dd>
-      </dl>
-    </div>
-</div>
-
-        
-<div id="method_urlForFind" class="method inherited item-entry">
-  <h3 data-id="method_urlForFind" class="name anchorable-toc"><code>urlForFind</code></h3>
-  <span class="args">
-    (id, modelName, snapshot)
-  </span>
-
-  <span class="type">String</span>
-
-
-
-
-
-
-
-
-  <div class="meta">
-          Inherited from
-          <a href="/api/data/classes/DS.BuildURLMixin.html#method_urlForFind">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/build-url-mixin.js#L124">packages/ember-data/lib/adapters/build-url-mixin.js:124</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/build-url-mixin.js#L200">packages/ember-data/lib/adapters/build-url-mixin.js:200</a>
 
   </div>
 
@@ -3905,7 +3285,7 @@ of a record.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.BuildURLMixin.html#method_urlForFindAll">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/build-url-mixin.js#L142">packages/ember-data/lib/adapters/build-url-mixin.js:142</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/build-url-mixin.js#L119">packages/ember-data/lib/adapters/build-url-mixin.js:119</a>
 
   </div>
 
@@ -3955,7 +3335,7 @@ of a record.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.BuildURLMixin.html#method_urlForFindBelongTo">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/build-url-mixin.js#L208">packages/ember-data/lib/adapters/build-url-mixin.js:208</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/build-url-mixin.js#L169">packages/ember-data/lib/adapters/build-url-mixin.js:169</a>
 
   </div>
 
@@ -4010,7 +3390,7 @@ of a record.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.BuildURLMixin.html#method_urlForFindHasMany">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/build-url-mixin.js#L198">packages/ember-data/lib/adapters/build-url-mixin.js:198</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/build-url-mixin.js#L159">packages/ember-data/lib/adapters/build-url-mixin.js:159</a>
 
   </div>
 
@@ -4065,7 +3445,7 @@ of a record.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.BuildURLMixin.html#method_urlForFindMany">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/build-url-mixin.js#L187">packages/ember-data/lib/adapters/build-url-mixin.js:187</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/build-url-mixin.js#L148">packages/ember-data/lib/adapters/build-url-mixin.js:148</a>
 
   </div>
 
@@ -4107,67 +3487,7 @@ of a record.</p>
 </div>
 
         
-<div id="method_urlForFindQuery" class="method deprecated inherited item-entry">
-  <h3 data-id="method_urlForFindQuery" class="name anchorable-toc"><code>urlForFindQuery</code></h3>
-  <span class="args">
-    (query, modelName)
-  </span>
-
-  <span class="type">String</span>
-
-
-  <span class="flag deprecated" title="Use [urlForQuery](#method_urlForQuery) instead">deprecated</span>
-
-
-
-
-
-
-  <div class="meta">
-          Inherited from
-          <a href="/api/data/classes/DS.BuildURLMixin.html#method_urlForFindQuery">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/build-url-mixin.js#L151">packages/ember-data/lib/adapters/build-url-mixin.js:151</a>
-
-  </div>
-
-    <div class="deprecation">
-      <p>Use <a href="#method_urlForQuery">urlForQuery</a> instead</p>
-
-    </div>
-
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>query</strong> <span class="type">Object</span></dt>
-          <dd>
-            
-
-          </dd>
-          <dt><strong>modelName</strong> <span class="type">String</span></dt>
-          <dd>
-            
-
-          </dd>
-      </dl>
-    </div>
-
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type">String</span>
-        <dd> url</dd>
-      </dl>
-    </div>
-</div>
-
-        
-<div id="method_urlForFindRecord" class="method deprecated inherited item-entry">
+<div id="method_urlForFindRecord" class="method inherited item-entry">
   <h3 data-id="method_urlForFindRecord" class="name anchorable-toc"><code>urlForFindRecord</code></h3>
   <span class="args">
     (id, modelName, snapshot)
@@ -4176,7 +3496,6 @@ of a record.</p>
   <span class="type">String</span>
 
 
-  <span class="flag deprecated" title="Use [urlForFindRecord](#method_urlForFindRecord) instead">deprecated</span>
 
 
 
@@ -4186,14 +3505,10 @@ of a record.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.BuildURLMixin.html#method_urlForFindRecord">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/build-url-mixin.js#L114">packages/ember-data/lib/adapters/build-url-mixin.js:114</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/build-url-mixin.js#L108">packages/ember-data/lib/adapters/build-url-mixin.js:108</a>
 
   </div>
 
-    <div class="deprecation">
-      <p>Use <a href="#method_urlForFindRecord">urlForFindRecord</a> instead</p>
-
-    </div>
 
 
   <p>
@@ -4250,7 +3565,7 @@ of a record.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.BuildURLMixin.html#method_urlForQuery">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/build-url-mixin.js#L160">packages/ember-data/lib/adapters/build-url-mixin.js:160</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/build-url-mixin.js#L128">packages/ember-data/lib/adapters/build-url-mixin.js:128</a>
 
   </div>
 
@@ -4305,7 +3620,7 @@ of a record.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.BuildURLMixin.html#method_urlForQueryRecord">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/build-url-mixin.js#L177">packages/ember-data/lib/adapters/build-url-mixin.js:177</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/build-url-mixin.js#L138">packages/ember-data/lib/adapters/build-url-mixin.js:138</a>
 
   </div>
 
@@ -4360,7 +3675,7 @@ of a record.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.BuildURLMixin.html#method_urlForUpdateRecord">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/build-url-mixin.js#L228">packages/ember-data/lib/adapters/build-url-mixin.js:228</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/build-url-mixin.js#L189">packages/ember-data/lib/adapters/build-url-mixin.js:189</a>
 
   </div>
 
@@ -4421,7 +3736,7 @@ of a record.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.BuildURLMixin.html#method_urlPrefix">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/build-url-mixin.js#L250">packages/ember-data/lib/adapters/build-url-mixin.js:250</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/build-url-mixin.js#L211">packages/ember-data/lib/adapters/build-url-mixin.js:211</a>
 
   </div>
 
@@ -4476,7 +3791,7 @@ of a record.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.Adapter.html#method_validateDocumentStructure">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/system/store/serializer-response.js#L11">packages/ember-data/lib/system/store/serializer-response.js:11</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/system/store/serializer-response.js#L5">packages/ember-data/lib/system/store/serializer-response.js:5</a>
 
   </div>
 
@@ -4553,7 +3868,7 @@ of a record.</p>
         Inherited from
         <a href="/api/data/classes/DS.Adapter.html#method_coalesceFindRequests">DS.Adapter</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L253">packages/ember-data/lib/adapters/rest-adapter.js:253</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L246">packages/ember-data/lib/adapters/rest-adapter.js:246</a>
 
   </div>
 
@@ -4642,7 +3957,7 @@ store.findRecord(<span class="string"><span class="delimiter">'</span><span clas
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.Adapter.html#method_defaultSerializer">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/system/adapter.js#L65">packages/ember-data/lib/system/adapter.js:65</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/system/adapter.js#L65">packages/ember-data/lib/system/adapter.js:65</a>
 
   </div>
 
@@ -4700,7 +4015,7 @@ a model specific serializer (i.e. <code>PostSerializer</code>) or the
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L337">packages/ember-data/lib/adapters/rest-adapter.js:337</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L330">packages/ember-data/lib/adapters/rest-adapter.js:330</a>
 
   </div>
 
@@ -4762,7 +4077,7 @@ customization</a>.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L320">packages/ember-data/lib/adapters/rest-adapter.js:320</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L313">packages/ember-data/lib/adapters/rest-adapter.js:313</a>
 
   </div>
 
@@ -4790,7 +4105,7 @@ customization</a>.</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>Requests for <code>App.Post</code> would now target <code>https://api.example.com/post/</code>.</p>
+<p>Requests for the <code>Post</code> model would now target <code>https://api.example.com/post/</code>.</p>
 
     </div>
 
@@ -4816,7 +4131,7 @@ customization</a>.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v1.13.9/packages/ember-data/lib/adapters/rest-adapter.js#L302">packages/ember-data/lib/adapters/rest-adapter.js:302</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.0.0/packages/ember-data/lib/adapters/rest-adapter.js#L295">packages/ember-data/lib/adapters/rest-adapter.js:295</a>
 
   </div>
 
@@ -4845,7 +4160,7 @@ property on the adapter:</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>Requests for <code>App.Post</code> would now target <code>/api/1/post/</code>.</p>
+<p>Requests for the <code>Post</code> model would now target <code>/api/1/post/</code>.</p>
 
     </div>
 
