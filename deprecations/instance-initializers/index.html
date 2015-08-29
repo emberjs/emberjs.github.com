@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Ember.js - </title>
+		<meta property="st:title" content="Ember.js: " />
+		<meta property="og:title" content="Ember.js: " />
+		<meta property="og:description" content="Ember.js helps developers be more productive out of the box. Designed with developer ergonomics in mind, its friendly APIs help you get your job done—fast." />
+		<meta property="og:image" content="http://emberjs.com/images/tomster-sm.png" />
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:site" content="@emberjs" />
+		<meta name="twitter:title" content=""/>
+		<meta name="twitter:image" content="http://emberjs.com/images/tomster-twitter-card.png" />
+    <link rel="shortcut icon" href="/images/favicon.png" />
+    <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
+    <link href="/stylesheets/site.css" rel="stylesheet" type="text/css" />
+    <link href="/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
+    
+  </head>
+
+  <body class="deprecations deprecations_instance-initializers deprecations_instance-initializers_index">
+
+
+    <!--[if lt IE 9]>
+      <script type="text/javascript" src="/javascripts/common-old-ie.js"></script>
+    <![endif]-->
+    <!--[if gte IE 9]><!-->
+      <script type="text/javascript" src="/javascripts/common-modern.js"></script>
+    <!--<![endif]-->
+
+    <div id="header">
+      <div id="wrapper">
+        <a id="logo" href="/">&nbsp;</a>
+        <ul id="nav">
+          <li><a href="/about">about</a></li>
+          <li><a href="http://guides.emberjs.com">guides</a></li>
+          <li><a href="/api">api</a></li>
+          <li><a href="/community">community</a></li>
+          <li><a href="/blog">blog</a></li>
+          <li><a href="/builds">builds</a></li>
+          <li id="search">
+            <form>
+              <input type="text" id="st-search-input" class="st-search-input" />
+            </form>
+            <div id="st-results-container"></div>
+          </li>
+        </ul>
+
+        <div id="github">
+          <a href="https://github.com/emberjs/ember.js"><i class="icon-fork"></i>Fork Us!</a>
+        </div>
+      </div>
+    </div>
+
+    
+
+    <div id="content-wrapper">
+      <div id="content" >
+        <h2 class='anchorable-toc' id='toc_deprecate-access-to-instance-initializers'>Deprecate Access to Instance Initializers</h2>
+<p>When we initially designed Ember, we only had the use case of apps that
+run in the browser in mind. In that world, you would load your app and
+then it would run until the user closed the tab or navigated away.</p>
+
+<p>For testing, we quickly realized that we would need some way to &quot;reset&quot;
+the application between each test without reloading the page and
+starting from scratch. To that end, we isolated all of the state in an
+application into an object called the container that could be thrown
+away after each test had completed.</p>
+
+<p>We wanted a shared way for both apps and add-ons to initialize
+applications when they booted and loaded. In particular, it was
+important for people to get access to that container to make objects
+available to the app at runtime. To do so, we introduced the initializer
+API.</p>
+
+<p>For example, Ember Data uses this API to ensure that all of your
+controllers and routes have access to the store object.</p>
+
+<p>As we have been working on the FastBoot effort to allow Ember apps to
+run on the server, we realized that the assumption that there would only
+be one instance of the app running at once no longer held.</p>
+
+<p>In particular, we realized that &quot;app boot&quot; was actually two distinct
+phases:</p>
+
+<ol>
+<li>Loading all of your application code and registering objects with the
+application (such as the store in the Ember Data example)</li>
+<li>Instantiating objects when the app starts running</li>
+</ol>
+
+<p>When the application boots up for the first time, we need to run Step 1
+above, but it would be wasteful to run it for every request going to
+your FastBoot server.</p>
+
+<p>We also realized that a huge number of real-world initializers were
+simply registering classes and injections, while a smaller fraction of
+initializers are doing work that truly needs to be done per run.</p>
+
+<p>By separating out these two kinds of work, we could improve the
+performance of cases where a single application was used multiple times,
+each with a fresh set of state.</p>
+
+<p>This applies to FastBoot, of course, but it also applies to integration
+tests. Today, integration tests spend time executing code in
+initializers that don&#39;t change between test runs, simply because of the
+possibility that the initializer may also set up instances.</p>
+
+<p>Thankfully, the <code>initializer</code> infrastructure already clearly marks the
+boot-up phase of your application (both in your own code and in
+add-ons), so we only need to make a small tweak to <code>initializer</code>s for
+FastBoot to work.</p>
+
+<p>This change makes the difference between initializers that set up code
+and initializers that set up instances explicit.</p>
+
+<p>The old <code>App.initializer</code> API now receives a <code>registry</code>, which can be
+freely used to set up code using the <code>register</code> API and the various
+<code>inject</code> APIs.</p>
+
+<p>A new <code>App.instanceInitializer</code> API receives an <code>ApplicationInstance</code>
+object. When migrating code, the most important property on the
+<code>ApplicationInstance</code> is <code>container</code>, which you can use to get new
+instances and set state on them.</p>
+
+<p>Migrating code to the new structure is fairly mechanical. Change code
+that looks like:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre>App.initializer({
+  <span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">clock</span><span class="delimiter">&quot;</span></span>,
+
+  <span class="function">initialize</span>: <span class="keyword">function</span>(container) {
+    container.register(<span class="string"><span class="delimiter">&quot;</span><span class="content">clock:main</span><span class="delimiter">&quot;</span></span>, Clock);
+    <span class="keyword">var</span> clock = container.lookup(<span class="string"><span class="delimiter">&quot;</span><span class="content">clock:main</span><span class="delimiter">&quot;</span></span>);
+    clock.setStartTime(Date.now());
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>To:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+</pre></td>
+  <td class="code"><pre>App.initializer({
+  <span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">clock</span><span class="delimiter">&quot;</span></span>,
+
+  <span class="function">initialize</span>: <span class="keyword">function</span>(registry) {
+    registry.register(<span class="string"><span class="delimiter">&quot;</span><span class="content">clock:main</span><span class="delimiter">&quot;</span></span>, Clock);
+  }
+});
+
+App.instanceInitializer({
+  <span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">clock</span><span class="delimiter">&quot;</span></span>,
+
+  <span class="function">initialize</span>: <span class="keyword">function</span>(instance) {
+    <span class="keyword">var</span> clock = instance.container.lookup(<span class="string"><span class="delimiter">&quot;</span><span class="content">clock:main</span><span class="delimiter">&quot;</span></span>);
+    clock.setStartTime(Date.now());
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Some things to remember:</p>
+
+<ol>
+<li>All <code>instanceInitializer</code>s run after <code>initializer</code>s and do not share a
+namespace. You can use the same name in both, and don&#39;t have to use
+<code>before</code> or <code>after</code> to make sure that instance initializers run
+second.</li>
+<li>The deprecated <code>registry.lookup</code> works by maintaining a 1:1 mapping
+between Application and a default <code>ApplicationInstance</code>. This is
+fundamentally incompatible with FastBoot, and you will need to clear
+this deprecation warning before you will be able to use any of the
+FastBoot features.</li>
+</ol>
+
+<p>While FastBoot and the improved testing performance have not yet landed,
+these changes allow us to continue work on those APIs after Ember 2.0.
+It also future-proofs Ember for more situations where a single
+<code>Application</code> has multiple runs over its lifetime.</p>
+
+      </div>
+    </div>
+
+    <div id="footer">
+      <div id="footer-wrapper">
+        <div class="info">
+          Copyright 2015 <a href="http://tilde.io">Tilde Inc.</a><br>
+          <a href="/team">Core Team</a> | <a href="/sponsors">Sponsors</a><br>
+            <a href="/security">Security</a> | <a href="/legal">Legal</a><br>
+          <a href="/guidelines">Community Guidelines</a>
+        </div>
+        <div class="statement">Ember.js is free, open source and always will be.</div>
+        <div class="links">
+          <a class="twitter" href="http://twitter.com/emberjs">
+            <i class="icon-twitter"></i><span>Twitter</span>
+          </a>
+          <a class="github" href="https://github.com/emberjs/ember.js">
+            <i class="icon-github"></i><span>GitHub</span>
+          </a>
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">
+            <i class="icon-gplus"></i><span>Google+</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+      _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+      _gaq.push(['_setAccount', 'UA-27675533-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </body>
+</html>
