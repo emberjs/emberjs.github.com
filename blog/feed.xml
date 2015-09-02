@@ -5,10 +5,124 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2015-08-15T20:00:00-04:00</updated>
+  <updated>2015-09-01T20:00:00-04:00</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>Ember Data v2.0 Released and v2.1 Beta Released</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2015/09/02/ember-data-2-0-released.html"/>
+    <id>http://emberjs.com/blog/2015/09/02/ember-data-2-0-released.html</id>
+    <published>2015-09-01T20:00:00-04:00</published>
+    <updated>2015-09-01T20:00:00-04:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;We are excited to announce the release of Ember Data 2.0, the
+second stable release since 1.13 that includes significant improvements,
+cleanup, and cruft removal.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://emberjs.com/blog/2015/06/16/ember-project-at-2-0.html"&gt;As previously discussed&lt;/a&gt;, Ember Data releases occur in
+lockstep with Ember, to help developers...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;We are excited to announce the release of Ember Data 2.0, the
+second stable release since 1.13 that includes significant improvements,
+cleanup, and cruft removal.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://emberjs.com/blog/2015/06/16/ember-project-at-2-0.html"&gt;As previously discussed&lt;/a&gt;, Ember Data releases occur in
+lockstep with Ember, to help developers better reason about
+compatibility between these libraries. Ember Data 2.0 is designed to be
+used in tandem with Ember 2.0, and like Ember 2.0, we have used the
+occasion of a new major version number to remove deprecated features and
+clean up the code.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Ember Data 2.0 is about removing deprecated
+functionality, not adding new features&lt;/strong&gt;. If you&amp;#39;ve already started
+using Ember Data 1.13 and cleared the deprecations, you should find
+upgrading to Ember Data 2.0 to be very straightforward.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_json-api'&gt;JSON API&lt;/h3&gt;
+&lt;p&gt;In the &lt;a href="http://emberjs.com/blog/2013/05/03/ember-data-progress-update.html"&gt;Ember Data 1.13 blog post&lt;/a&gt;, we described how we
+had overhauled Ember Data&amp;#39;s internals to use JSON API from top to
+bottom.&lt;/p&gt;
+
+&lt;p&gt;Using JSON API dramatically simplified internal code and APIs, but I
+want to emphasize that &lt;strong&gt;moving to JSON API internally does not affect
+your applications, and you are in no way required to use JSON API
+yourself to upgrade to newer versions of Ember Data&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;The adapters that determine how your application talks to the backend
+server remain unchanged, but this change should make the lives of
+adapter authors much simpler going forward.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_unsaved-deleted-records'&gt;Unsaved Deleted Records&lt;/h3&gt;
+&lt;p&gt;There is one significant breaking change in the move from 1.13 to
+2.0. The short version of this change is &lt;strong&gt;locally deleted (unsaved)
+records are no longer removed from RecordArrays and hasMany
+arrays. Ember Data now removes the deleted record only after the
+delete has been confirmed by the backend. There is also a
+&lt;a href="https://github.com/ember-data/ember-data-live-filter-by"&gt;new addon&lt;/a&gt;
+to make it easier to implement the old behavior.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;In Ember Data 1.13, once a record was marked as deleted, it was removed from
+all of the &lt;code&gt;RecordArrays&lt;/code&gt; and &lt;code&gt;hasMany&lt;/code&gt; arrays it belonged to. This made it
+difficult to create UIs where users could &amp;quot;un-delete&amp;quot; records.&lt;/p&gt;
+
+&lt;p&gt;For example, imagine you are building a document viewer app using Ember Data.
+You show the user a list of documents they have access to. When the user
+deletes a document, you want it to remain in the list, but with a different
+visual treatment to indicate that it has been deleted locally (i.e., not saved back to the server).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="/images/blog/2015-08-03-ember-data-2-0-released/deleted-document.png" alt="Example UI with deleted document"&gt;&lt;/p&gt;
+
+&lt;p&gt;Building this UI was difficult because the record would be removed from the
+list as soon as you called &lt;code&gt;deleteRecord()&lt;/code&gt; on the model.&lt;/p&gt;
+
+&lt;p&gt;In Ember Data 2.0, this will be a lot easier because records are no longer
+removed from hasMany relationships or RecordArrays until the delete has been
+acknowledged by the adapter. Note that Although deleted records will be visible
+in hasMany relationships, they will not be serialized when saving these
+relationships back to the server.&lt;/p&gt;
+
+&lt;p&gt;To make the transition easier, the Ember Data team (with help from
+&lt;a href="https://github.com/pangratz"&gt;Clemens Müller&lt;/a&gt;) has released an addon called
+&lt;a href="https://github.com/ember-data/ember-data-live-filter-by"&gt;Ember Data Live filterBy&lt;/a&gt;. This
+allows the &lt;code&gt;filterBy&lt;/code&gt; method on &lt;code&gt;RecordArray&lt;/code&gt;s and &lt;code&gt;hasMany&lt;/code&gt;
+relationships to return a live filtered subset of the original
+array. This can be used to filter out deleted but unsaved records to
+preserve the old behavior, where records are removed from collections
+as soon as they are deleted. This addon work with Ember Data 1.13 and Ember Data 2.0.&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;App.PostController = Ember.Controller.extend({
+  &lt;span class="function"&gt;allPosts&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;() {
+    &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="local-variable"&gt;this&lt;/span&gt;.store.peekAll(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;post&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+  }.property()
+  &lt;span class="function"&gt;allUndeletedPosts&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;() {
+    &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="local-variable"&gt;this&lt;/span&gt;.store.peekAll(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;post&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).filterBy(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;isDeleted&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="predefined-constant"&gt;false&lt;/span&gt;, { &lt;span class="key"&gt;live&lt;/span&gt;: &lt;span class="predefined-constant"&gt;true&lt;/span&gt; });
+  }.property()
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;h1 class='anchorable-toc' id='toc_ember-data-2-1-beta'&gt;Ember Data 2.1 Beta&lt;/h1&gt;
+&lt;p&gt;Ember Data data 2.1 will be the first release following Ember&amp;#39;s 6 week
+release cycle. Rather then rush new features into the beta before they
+are ready, Ember Data 2.1 will not contain any new features or
+deprecations. Instead the Ember Data team is going to spend this cycle
+fixing issues, updating documentation and planning features for future
+2.x releases.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_changelogs'&gt;CHANGELOGS&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/data/blob/v2.0.0/CHANGELOG.md"&gt;Ember Data 2.0.0 CHANGELOG&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/data/blob/v2.1.0-beta.1/CHANGELOG.md"&gt;Ember Data 2.1.0-beta.1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
   <entry>
     <title>Ember.js 2.1 Beta Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/08/16/ember-2-1-beta-released.html"/>
@@ -1762,7 +1876,7 @@ also recomputes whenever the &lt;code&gt;isAnonymized&lt;/code&gt; state on that
 
 &lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Ember.Helper.extend({
   &lt;span class="comment"&gt;// This service name is only an example&lt;/span&gt;
-  &lt;span class="key"&gt;nameBuilder&lt;/span&gt;: Ember.service.inject(),
+  &lt;span class="key"&gt;nameBuilder&lt;/span&gt;: Ember.inject.service(),
   compute(params, hash) {
     &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="local-variable"&gt;this&lt;/span&gt;.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;nameBuilder&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).build(params, hash.title);
   },
@@ -2020,35 +2134,6 @@ by nesting a component inside the item, and by using helpers.&lt;/li&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v1.13.0/CHANGELOG.md"&gt;Ember.js 1.13.0 CHANGELOG&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://github.com/emberjs/ember.js/blob/v2.0.0-beta.1/CHANGELOG.md"&gt;Ember.js 2.0.0-beta.1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Ember Data v1.0.0-beta.19.1 Released</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2015/06/09/ember-data-1-0-beta-19-1-released.html"/>
-    <id>http://emberjs.com/blog/2015/06/09/ember-data-1-0-beta-19-1-released.html</id>
-    <published>2015-06-08T20:00:00-04:00</published>
-    <updated>2015-06-08T20:00:00-04:00</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Ember Data 19.1 contains fixes for a few regressions. Thanks to everyone
-who reported issues. Thanks to @bmac and @wecc for fixing!&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Fix a regression where a &lt;code&gt;DS.Model&lt;/code&gt;'s &lt;code&gt;InternalModel&lt;/code&gt; would not be set
-on init - @bmac &lt;a href="https://github.com/emberjs/data/pull/3262"&gt;Pull Request&lt;/a&gt;
-&lt;/li&gt;
-&lt;li&gt;Pass store to inverseFor...&lt;/li&gt;
-&lt;/ul&gt;</summary>
-    <content type="html">&lt;p&gt;Ember Data 19.1 contains fixes for a few regressions. Thanks to everyone
-who reported issues. Thanks to @bmac and @wecc for fixing!&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Fix a regression where a &lt;code&gt;DS.Model&lt;/code&gt;&amp;#39;s &lt;code&gt;InternalModel&lt;/code&gt; would not be set
-on init - @bmac &lt;a href="https://github.com/emberjs/data/pull/3262"&gt;Pull Request&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Pass store to inverseFor in removeEmbeddedForeignKey #3270 - @wecc
-&lt;a href="https://github.com/emberjs/data/pull/3270"&gt;Pull Request&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </content>
   </entry>

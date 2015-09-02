@@ -3,14 +3,14 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Ember.js - Core Team Meeting Minutes - 2014/01/27</title>
-		<meta property="st:title" content="Ember.js: Core Team Meeting Minutes - 2014/01/27" />
-		<meta property="og:title" content="Ember.js: Core Team Meeting Minutes - 2014/01/27" />
+    <title>Ember.js - Ember Data v2.0 Released and v2.1 Beta Released</title>
+		<meta property="st:title" content="Ember.js: Ember Data v2.0 Released and v2.1 Beta Released" />
+		<meta property="og:title" content="Ember.js: Ember Data v2.0 Released and v2.1 Beta Released" />
 		<meta property="og:description" content="Ember.js helps developers be more productive out of the box. Designed with developer ergonomics in mind, its friendly APIs help you get your job done—fast." />
 		<meta property="og:image" content="http://emberjs.com/images/tomster-sm.png" />
 		<meta name="twitter:card" content="summary" />
 		<meta name="twitter:site" content="@emberjs" />
-		<meta name="twitter:title" content="Core Team Meeting Minutes - 2014/01/27"/>
+		<meta name="twitter:title" content="Ember Data v2.0 Released and v2.1 Beta Released"/>
 		<meta name="twitter:image" content="http://emberjs.com/images/tomster-twitter-card.png" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
@@ -19,7 +19,7 @@
     
   </head>
 
-  <body class="blog blog_2014 blog_2014_02 blog_2014_02_08 blog_2014_02_08_core-team-meeting-minutes-2014-01-27">
+  <body class="blog blog_2015 blog_2015_09 blog_2015_09_02 blog_2015_09_02_ember-data-2-0-released">
 
 
     <!--[if lt IE 9]>
@@ -102,70 +102,107 @@
         </div>
       <div id="content" class="has-sidebar">
           <article class="blog-post">
-    <h1>Core Team Meeting Minutes - 2014/01/27</h1>
-      <h3 class="blog-post-author">Posted By: Trek Glowacki &ndash; <time>Feb 08, 2014</time></h3>
+    <h1>Ember Data v2.0 Released and v2.1 Beta Released</h1>
+      <h3 class="blog-post-author">Posted By: Tom Dale and the Ember Data Team &ndash; <time>Sep 02, 2015</time></h3>
 
     <hr>
 
-    <p>Although most of our collaboration takes place on Github, IRC 
-(<code>#emberjs</code> on freenode.net), and our <a href="http://discuss.emberjs.com/">Discourse site</a>
-the <a href="/team">Ember.js Core Team</a> meets privately every 
-Friday at 2pm EST/11am PST through Google Hangout for a weekly 
-discussion of all things Ember.</p>
+    <p>We are excited to announce the release of Ember Data 2.0, the
+second stable release since 1.13 that includes significant improvements,
+cleanup, and cruft removal.</p>
 
-<p>If you have a topic you&#39;d like to see covered, contact your favorite
-core team member and let them know!</p>
+<p><a href="http://emberjs.com/blog/2015/06/16/ember-project-at-2-0.html">As previously discussed</a>, Ember Data releases occur in
+lockstep with Ember, to help developers better reason about
+compatibility between these libraries. Ember Data 2.0 is designed to be
+used in tandem with Ember 2.0, and like Ember 2.0, we have used the
+occasion of a new major version number to remove deprecated features and
+clean up the code.</p>
 
-<p>This week&#39;s core team meeting was rescheduled from Friday, January 24 to Monday, January 27
-due to the Google outage that affected Google Hangouts.</p>
-<h4 class='anchorable-toc' id='toc_attendees'>Attendees</h4>
-<p>@ebryn, @krisselden, @machty, @stefanpenner, @tomdale, @trek, @wagenet, @wycats</p>
-<h3 class='anchorable-toc' id='toc_topics'>Topics</h3><h4 class='anchorable-toc' id='toc_issues-discussion'>Issues Discussion:</h4>
-<p>The core team discussed the following Github Issues</p>
+<p><strong>Ember Data 2.0 is about removing deprecated
+functionality, not adding new features</strong>. If you&#39;ve already started
+using Ember Data 1.13 and cleared the deprecations, you should find
+upgrading to Ember Data 2.0 to be very straightforward.</p>
+<h3 class='anchorable-toc' id='toc_json-api'>JSON API</h3>
+<p>In the <a href="http://emberjs.com/blog/2013/05/03/ember-data-progress-update.html">Ember Data 1.13 blog post</a>, we described how we
+had overhauled Ember Data&#39;s internals to use JSON API from top to
+bottom.</p>
 
+<p>Using JSON API dramatically simplified internal code and APIs, but I
+want to emphasize that <strong>moving to JSON API internally does not affect
+your applications, and you are in no way required to use JSON API
+yourself to upgrade to newer versions of Ember Data</strong>.</p>
+
+<p>The adapters that determine how your application talks to the backend
+server remain unchanged, but this change should make the lives of
+adapter authors much simpler going forward.</p>
+<h3 class='anchorable-toc' id='toc_unsaved-deleted-records'>Unsaved Deleted Records</h3>
+<p>There is one significant breaking change in the move from 1.13 to
+2.0. The short version of this change is <strong>locally deleted (unsaved)
+records are no longer removed from RecordArrays and hasMany
+arrays. Ember Data now removes the deleted record only after the
+delete has been confirmed by the backend. There is also a
+<a href="https://github.com/ember-data/ember-data-live-filter-by">new addon</a>
+to make it easier to implement the old behavior.</strong></p>
+
+<p>In Ember Data 1.13, once a record was marked as deleted, it was removed from
+all of the <code>RecordArrays</code> and <code>hasMany</code> arrays it belonged to. This made it
+difficult to create UIs where users could &quot;un-delete&quot; records.</p>
+
+<p>For example, imagine you are building a document viewer app using Ember Data.
+You show the user a list of documents they have access to. When the user
+deletes a document, you want it to remain in the list, but with a different
+visual treatment to indicate that it has been deleted locally (i.e., not saved back to the server).</p>
+
+<p><img src="/images/blog/2015-08-03-ember-data-2-0-released/deleted-document.png" alt="Example UI with deleted document"></p>
+
+<p>Building this UI was difficult because the record would be removed from the
+list as soon as you called <code>deleteRecord()</code> on the model.</p>
+
+<p>In Ember Data 2.0, this will be a lot easier because records are no longer
+removed from hasMany relationships or RecordArrays until the delete has been
+acknowledged by the adapter. Note that Although deleted records will be visible
+in hasMany relationships, they will not be serialized when saving these
+relationships back to the server.</p>
+
+<p>To make the transition easier, the Ember Data team (with help from
+<a href="https://github.com/pangratz">Clemens Müller</a>) has released an addon called
+<a href="https://github.com/ember-data/ember-data-live-filter-by">Ember Data Live filterBy</a>. This
+allows the <code>filterBy</code> method on <code>RecordArray</code>s and <code>hasMany</code>
+relationships to return a live filtered subset of the original
+array. This can be used to filter out deleted but unsaved records to
+preserve the old behavior, where records are removed from collections
+as soon as they are deleted. This addon work with Ember Data 1.13 and Ember Data 2.0.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre>App.PostController = Ember.Controller.extend({
+  <span class="function">allPosts</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="local-variable">this</span>.store.peekAll(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>);
+  }.property()
+  <span class="function">allUndeletedPosts</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="local-variable">this</span>.store.peekAll(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>).filterBy(<span class="string"><span class="delimiter">'</span><span class="content">isDeleted</span><span class="delimiter">'</span></span>, <span class="predefined-constant">false</span>, { <span class="key">live</span>: <span class="predefined-constant">true</span> });
+  }.property()
+});
+</pre></td>
+</tr></table>
+</div></div><h1 class='anchorable-toc' id='toc_ember-data-2-1-beta'>Ember Data 2.1 Beta</h1>
+<p>Ember Data data 2.1 will be the first release following Ember&#39;s 6 week
+release cycle. Rather then rush new features into the beta before they
+are ready, Ember Data 2.1 will not contain any new features or
+deprecations. Instead the Ember Data team is going to spend this cycle
+fixing issues, updating documentation and planning features for future
+2.x releases.</p>
+<h2 class='anchorable-toc' id='toc_changelogs'>CHANGELOGS</h2>
 <ul>
-<li><p><code>ember-routing-auto-location</code> <a href="https://github.com/emberjs/ember.js/pull/3725">#3725</a>.</p>
-
-<p>resolution:</p>
-
-<ul>
-<li>assign @stefanpenner</li>
-<li>should be good for the next beta.</li>
-<li>needs someone to audit + try for real</li>
-<li>is it ok if we have /#/foo and /foo  in the wild? How does this affect SEO</li>
-<li>document that backend support is needed and that your app will not have 
-canonical URLs (i.e. every URL will have two versions in the wild: <code>/#/foo</code> and <code>/foo</code>)</li>
-</ul></li>
-<li><p>Bound Action Lookup <a href="https://github.com/emberjs/ember.js/pull/3936">#3936</a></p>
-
-<p>We added default fall back to allow a static string action name if a property isn&#39;t found,
-but it is possible that this will break things if you have a property AND an action named
-the same thing. This could be enabled similar to the <code>ember-routing-drop-deprecated-action-style</code>
-feature which will need to have a <code>null</code> value in <code>features.json</code> (which will allow folks to 
-opt-in via <code>EmberENV</code>) until 2.0 if we are concerned with the SemVer implications.</p>
-
-<p>resolution: Ensure docs are updated so unquoted style is not used before shipping.</p></li>
-<li><p><code>ember-views-bindable-attributes</code> <a href="https://github.com/emberjs/ember.js/pull/4170">#4170</a></p>
-
-<p>We like the idea generally but there are doubts having a a separate API, we should explore pushing it into a single API. Differences between this and <code>attributeBindings</code> are too subtle, we should not fragment</p>
-
-<p>This has been converted to a Mixin that is only used for <code>Ember.TextField</code> and <code>Ember.TextArea</code> currently. It allows for us to use all HTML5 attributes, but only actually setup observers/bindings for the ones that are present at the first render. This has a significant developer happiness impact, and we hope that we can get comfortable with it enough to enable in 1.5 beta series.</p>
-
-<p>resolution: @ebryn will talk to Robert</p></li>
-<li><p>Replace <code>module</code> with <em>something</em> else. <a href="https://github.com/emberjs/ember.js/pull/3838">#3838</a></p>
-
-<p>This is due to an issue under Node (since <code>module</code> is a reserved word). It ultimately doesn&#39;t matter what we decide on, but if we want the test suite to run under Node (for <code>ember-runtime</code> and <code>ember-metal</code> specifically, but also possibly <code>ember-data</code>) we need to use something that isn&#39;t a keyword.</p>
-
-<p>resolution: QUnit.module, but check for prior art. (@stefanpenner)</p></li>
-<li><p>Update Backburner (and Docs). <a href="https://github.com/emberjs/ember.js/pull/4120">#4120</a></p>
-
-<p>Contains potentially breaking change to <code>throttle</code> to default to running immediately (from <a href="https://github.com/ebryn/backburner.js/pull/55">ebryn/backburner.js#55</a> ).</p>
-
-<p>resolution: it was a bug, breaking it is fine.</p></li>
-<li><p><a href="https://github.com/emberjs/ember.js/issues/3256">https://github.com/emberjs/ember.js/issues/3256</a></p>
-
-<p>resolution: bindingPaths to globals should be canned, so we won&#39;t support additional features built on
-on this behavior.</p></li>
+<li><a href="https://github.com/emberjs/data/blob/v2.0.0/CHANGELOG.md">Ember Data 2.0.0 CHANGELOG</a></li>
+<li><a href="https://github.com/emberjs/data/blob/v2.1.0-beta.1/CHANGELOG.md">Ember Data 2.1.0-beta.1 CHANGELOG</a></li>
 </ul>
 
 
