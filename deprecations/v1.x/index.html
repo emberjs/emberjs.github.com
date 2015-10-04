@@ -1748,7 +1748,61 @@ component.</p>
 
 <p>We replaced <code>tagName=&quot;ul&quot;</code> part by just surrounding the <code>{{each}}</code> block with
 <code>&lt;ul&gt;</code> tags.</p>
-
+<h4 class='anchorable-toc' id='toc_handlebars-htmlbars-helpers'>Handlebars / HTMLBars helpers</h4>
+<p>All the various ways to create helpers on the Handlebars and HTMLBars namespace
+have been deprecated in favor of the
+<a href="http://emberjs.com/api/classes/Ember.Helper.html"><code>Ember.Helper</code></a> class and it&#39;s
+<a href="http://emberjs.com/api/classes/Ember.Helper.html#method_helper"><code>Ember.Helper.helper</code></a>
+function. The <code>makeViewHelper</code> method has been deprecated in favor of just using
+an <code>Ember.Component</code>.</p>
+<h5 class='anchorable-toc' id='toc_code-makeviewhelper-code'><code>makeViewHelper</code></h5>
+<p>If you use <code>viewHelper</code> you should refactor the view class and template into
+a component with the same name as the view helper you registered.</p>
+<h5 class='anchorable-toc' id='toc_code-makeboundhelper-code-code-registerboundhelper-code-code-helper-code-code-registerhelper-code'><code>makeBoundHelper</code>, <code>registerBoundHelper</code>, <code>helper</code>, <code>registerHelper</code></h5>
+<p>If you have for example:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/helpers/foo-bar.js</span>
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.HTMLBars.makeBoundHelper(<span class="keyword">function</span>(firstArg, secondArg, options) {
+  let { hash } = options;
+  <span class="comment">// helper code</span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>or</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>Ember.Handlebars.registerHelper(<span class="string"><span class="delimiter">'</span><span class="content">foo-bar</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(firstArg, secondArg, options) {
+  let { hash } = options;
+  <span class="comment">// helper code</span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>you can replace those with:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/helpers/foo-bar.js</span>
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Helper.helper(<span class="keyword">function</span>([firstArg, secondArg], hash) {
+  <span class="comment">// helper code</span>
+});
+</pre></td>
+</tr></table>
+</div></div>
 
       </div>
     </div>
