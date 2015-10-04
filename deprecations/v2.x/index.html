@@ -142,7 +142,30 @@ example as above):</p>
 }
 </pre></td>
 </tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_ember-debug-function-options'>Ember debug function options</h4>
+</div></div><h4 class='anchorable-toc' id='toc_ember-application-registry-ember-applicationinstance-registry'>Ember.Application#registry / Ember.ApplicationInstance#registry</h4>
+<p>When the container and registry were split, the registry was added to <code>Ember.Application</code> instances (provided to
+initializers as the first argument in 2.1) and <code>Ember.ApplicationInstance</code> instances (provided to instance initializers
+as the first argument). Unfortunately, this was done without making it clear that the <code>.registry</code> property on
+<code>Ember.Application</code> instances was private. This lead quite a few addons and applications to directly use the registry.</p>
+
+<p>During the 2.1 cycle a new feature (<code>ember-registry-container-reform</code>) was enabled to provide more
+public API&#39;s to access the <code>registry</code> functionality (without exposing all of the private internals).</p>
+
+<p>The following list can be used to migrate from <code>app.registry.*</code> usage to the new public API&#39;s:</p>
+
+<ul>
+<li><code>app.registry.resolve</code> -&gt; <code>app.resolveRegistration</code></li>
+<li><code>app.registry.register</code> -&gt; <code>app.register</code></li>
+<li><code>app.registry.unregister</code> -&gt; <code>app.unregister</code></li>
+<li><code>app.registry.has</code> -&gt; <code>app.hasRegistration</code></li>
+<li><code>app.registry.option</code> -&gt; <code>app.registerOption</code></li>
+<li><code>app.registry.options</code> -&gt; <code>app.registerOptions</code></li>
+<li><code>app.registry.getOptions</code> -&gt; <code>app.registeredOptions</code></li>
+<li><code>app.registry.optionsForType</code> -&gt; <code>app.registerOptionsForType</code></li>
+<li><code>app.registry.getOptionsForType</code> -&gt; <code>app.registeredOptionsForType</code></li>
+<li><code>app.registry.injection</code> -&gt; <code>app.inject</code></li>
+</ul>
+<h4 class='anchorable-toc' id='toc_ember-debug-function-options'>Ember debug function options</h4>
 <p>Starting in Ember 2.1 various debug functions now require a third argument (commonly called <code>options</code>).</p>
 
 <p><code>id</code> is required by all methods listed below, and the deprecation related methods also require an <code>until</code> property.</p>
