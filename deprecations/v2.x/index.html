@@ -183,7 +183,49 @@ to indicate the future version when the deprecated behavior will no longer exist
 <p>The goal of these changes is to allow tools like
 <a href="https://github.com/mixonic/ember-cli-deprecation-workflow">ember-cli-deprecation-workflow</a> to make managing
 these deprecations and warnings much easier (by matching on the <code>id</code> instead of the full deprecation/warn message).</p>
+<h4 class='anchorable-toc' id='toc_ember-component-defaultlayout'>Ember.Component#defaultLayout</h4>
+<p>Specifying a <code>defaultLayout</code> to a component is deprecated in favor of specifying <code>layout</code> directly. <code>defaultLayout</code> was
+often used in order to allow inheriting components to fallback to their parents <code>defaultLayout</code> if a custom <code>layout</code> was
+not provided. Due to the way a components layout is looked up naturally, this is true when using <code>layout</code> properties in
+both locations. Changing the <code>layout</code> detection process allows initial render speed (with many components) to be
+improved pretty significantly.</p>
 
+<p>Before:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre><span class="comment">// Ember &lt; 2.1</span>
+<span class="reserved">import</span> layout from <span class="string"><span class="delimiter">'</span><span class="content">../templates/some-thing-lol</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+  <span class="key">defaultLayout</span>: layout
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>After:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre><span class="comment">// Ember 2.1 and later</span>
+<span class="reserved">import</span> layout from <span class="string"><span class="delimiter">'</span><span class="content">../templates/some-thing-lol</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+  <span class="key">layout</span>: layout
+});
+</pre></td>
+</tr></table>
+</div></div>
 
       </div>
     </div>
