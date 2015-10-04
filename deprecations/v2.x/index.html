@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Ember.js - Deprecations for v2.x</title>
+		<meta property="st:title" content="Ember.js: Deprecations for v2.x" />
+		<meta property="og:title" content="Ember.js: Deprecations for v2.x" />
+		<meta property="og:description" content="Ember.js helps developers be more productive out of the box. Designed with developer ergonomics in mind, its friendly APIs help you get your job done—fast." />
+		<meta property="og:image" content="http://emberjs.com/images/tomster-sm.png" />
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:site" content="@emberjs" />
+		<meta name="twitter:title" content="Deprecations for v2.x"/>
+		<meta name="twitter:image" content="http://emberjs.com/images/tomster-twitter-card.png" />
+    <link rel="shortcut icon" href="/images/favicon.png" />
+    <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
+    <link href="/stylesheets/site.css" rel="stylesheet" type="text/css" />
+    <link href="/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
+    
+  </head>
+
+  <body class="deprecations deprecations_v2">
+
+
+    <!--[if lt IE 9]>
+      <script type="text/javascript" src="/javascripts/common-old-ie.js"></script>
+    <![endif]-->
+    <!--[if gte IE 9]><!-->
+      <script type="text/javascript" src="/javascripts/common-modern.js"></script>
+    <!--<![endif]-->
+
+    <div id="header">
+      <div id="wrapper">
+        <a id="logo" href="/">&nbsp;</a>
+        <ul id="nav">
+          <li><a href="/about">about</a></li>
+          <li><a href="http://guides.emberjs.com">guides</a></li>
+          <li><a href="/api">api</a></li>
+          <li><a href="/community">community</a></li>
+          <li><a href="/blog">blog</a></li>
+          <li><a href="/builds">builds</a></li>
+          <li id="search">
+            <form>
+              <input type="text" id="st-search-input" class="st-search-input" />
+            </form>
+            <div id="st-results-container"></div>
+          </li>
+        </ul>
+
+        <div id="github">
+          <a href="https://github.com/emberjs/ember.js"><i class="icon-fork"></i>Fork Us!</a>
+        </div>
+      </div>
+    </div>
+
+    
+
+    <div id="content-wrapper">
+        <div id="sidebar">
+              <ol id='toc-list'>
+    </ol>
+
+          <div id="back-to-top"><a id="back-top-top" href="#">&#11014; Back to Top</a></div>
+        </div>
+      <div id="content" class="has-sidebar">
+        
+  <h2 class='anchorable-toc' id='toc_deprecations-added-in-ember-2-x'>Deprecations Added in Ember 2.x</h2>
+<p>What follows is a list of deprecations introduced to Ember.js during the 2.x
+cycle.</p>
+
+<p>For more information on deprecations in Ember, see the <a href="/deprecations">main deprecations page</a>.</p>
+<h3 class='anchorable-toc' id='toc_deprecations-added-in-2-1'>Deprecations Added in 2.1</h3><h4 class='anchorable-toc' id='toc_initializer-arity'>Initializer Arity</h4>
+<p>In prior versions of Ember initializers have taken two arguments (generally labeled as
+<code>container</code> and <code>application</code>). Starting with Ember 2.1 providing two arguments to an
+<code>initializer</code> will trigger a deprecation.</p>
+
+<p>The following initializer for Ember 2.0 will trigger a deprecation:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">function</span> <span class="function">initialize</span>(container, application) {
+  application.inject(<span class="string"><span class="delimiter">'</span><span class="content">route</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">service:session</span><span class="delimiter">'</span></span>);
+}
+
+<span class="reserved">export</span> <span class="keyword">default</span> {
+  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">inject-session</span><span class="delimiter">'</span></span>,
+  <span class="key">initialize</span>: initialize
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>To clear the deprecation, remove the first argument (<code>container</code> in the above example):</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">function</span> <span class="function">initialize</span>(application) {
+  application.inject(<span class="string"><span class="delimiter">'</span><span class="content">route</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">service:session</span><span class="delimiter">'</span></span>);
+}
+
+<span class="reserved">export</span> <span class="keyword">default</span> {
+  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">inject-session</span><span class="delimiter">'</span></span>,
+  <span class="key">initialize</span>: initialize
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>In some cases an addon might need to support both versions of Ember with the same initializer,
+one way to do this without triggering a deprecation would be the following (using the same
+example as above):</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">function</span> <span class="function">initialize</span>() {
+  let application = <span class="local-variable">arguments</span>[<span class="integer">1</span>] || <span class="local-variable">arguments</span>[<span class="integer">0</span>];
+  application.inject(<span class="string"><span class="delimiter">'</span><span class="content">route</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">service:session</span><span class="delimiter">'</span></span>);
+}
+
+<span class="reserved">export</span> <span class="keyword">default</span> {
+  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">inject-session</span><span class="delimiter">'</span></span>,
+  <span class="key">initialize</span>: initialize
+}
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_ember-debug-function-options'>Ember debug function options</h4>
+<p>Starting in Ember 2.1 various debug functions now require a third argument (commonly called <code>options</code>).</p>
+
+<p><code>id</code> is required by all methods listed below, and the deprecation related methods also require an <code>until</code> property.</p>
+
+<ul>
+<li><code>Ember.deprecate</code></li>
+<li><code>Ember.deprecateFunc</code></li>
+<li><code>Ember.computed.deprecatingAlias</code></li>
+<li><code>Ember.warn</code></li>
+</ul>
+
+<p>The <code>id</code> property is intended to allow runtime debug handlers to uniquely identify the source, and the <code>until</code> property is used
+to indicate the future version when the deprecated behavior will no longer exist.</p>
+
+<p>The goal of these changes is to allow tools like
+<a href="https://github.com/mixonic/ember-cli-deprecation-workflow">ember-cli-deprecation-workflow</a> to make managing
+these deprecations and warnings much easier (by matching on the <code>id</code> instead of the full deprecation/warn message).</p>
+
+
+      </div>
+    </div>
+
+    <div id="footer">
+      <div id="footer-wrapper">
+        <div class="info">
+          Copyright 2015 <a href="http://tilde.io">Tilde Inc.</a><br>
+          <a href="/team">Core Team</a> | <a href="/sponsors">Sponsors</a><br>
+            <a href="/security">Security</a> | <a href="/legal">Legal</a> | <a href="/logos">Logos</a><br>
+            <a href="/guidelines">Community Guidelines</a>
+        </div>
+        <div class="statement">Ember.js is free, open source and always will be.</div>
+        <div class="links">
+          <a class="twitter" href="http://twitter.com/emberjs">
+            <i class="icon-twitter"></i><span>Twitter</span>
+          </a>
+          <a class="github" href="https://github.com/emberjs/ember.js">
+            <i class="icon-github"></i><span>GitHub</span>
+          </a>
+          <a class="googleplus" href="https://plus.google.com/communities/106387049790387471205">
+            <i class="icon-gplus"></i><span>Google+</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+        <script type="text/javascript" src="/javascripts/deprecations.js"></script>
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+      _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+      _gaq.push(['_setAccount', 'UA-27675533-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </body>
+</html>
