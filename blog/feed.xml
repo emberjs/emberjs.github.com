@@ -210,8 +210,8 @@ though &lt;code&gt;id&lt;/code&gt; and &lt;code&gt;until&lt;/code&gt; data is no
 shipping this API and the polyfill addon, and to &lt;a href="https://twitter.com/mixonic"&gt;@mixonic&lt;/a&gt;
 for the RFC.&lt;/p&gt;
 
-&lt;p&gt;For more details on changes landing in 2.0, review the
-&lt;a href="https://github.com/emberjs/ember.js/blob/v2.0.0/CHANGELOG.md"&gt;Ember.js 2.0.0 CHANGELOG&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For more details on changes landing in 2.1, review the
+&lt;a href="https://github.com/emberjs/ember.js/blob/v2.1.0/CHANGELOG.md"&gt;Ember.js 2.1.0 CHANGELOG&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 class='anchorable-toc' id='toc_ember-js-2-2-beta'&gt;Ember.js 2.2 beta&lt;/h2&gt;
 &lt;p&gt;No new features are slated for Ember 2.2. During the canary cycle leading to this beta, the core team and community have been primarily focused on performance improvements or feature work still behind a feature flag.&lt;/p&gt;
 
@@ -1114,9 +1114,9 @@ while fetching new data in the background:&lt;/p&gt;
 &lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;While this is a great default data retrieval strategy, there are certain cases
-where you want to ensure you have  the freshest data (the old &lt;code&gt;store.fetch&lt;/code&gt; behavior) or you do not want a background update to happen (the old &lt;code&gt;store.find(type, id)&lt;/code&gt; behavior). &lt;/p&gt;
+where you want to ensure you have the freshest data (the old &lt;code&gt;store.fetch&lt;/code&gt; behavior).&lt;/p&gt;
 
-&lt;p&gt;Because of that, &lt;code&gt;findRecord&lt;/code&gt; and &lt;code&gt;findAll&lt;/code&gt; accept &lt;code&gt;reload: true&lt;/code&gt; and &lt;code&gt;backgroundReload: false&lt;/code&gt; as options in order to modify their default behavior.&lt;/p&gt;
+&lt;p&gt;Because of that, &lt;code&gt;findRecord&lt;/code&gt; and &lt;code&gt;findAll&lt;/code&gt; accept &lt;code&gt;reload: true&lt;/code&gt; an option in order to modify their default behavior.&lt;/p&gt;
 
 &lt;p&gt;If, for example you want to charge user for a purchase, and want to make sure you
 get their latest account balance, you can pass a &lt;code&gt;reload: true&lt;/code&gt; option that will
@@ -1134,32 +1134,15 @@ ensure we get the freshest data before continuing:&lt;/p&gt;
 &lt;/pre&gt;&lt;/td&gt;
 &lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;For example if you are showing the user a settings modal and want to opt out from
-background updates in order to keep the UI stable you can pass &lt;code&gt;backgroundReload: false&lt;/code&gt; as a flag:&lt;/p&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;//visiting /users/1/open-modal&lt;/span&gt;
-&lt;span class="function"&gt;model&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;() {
-  &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="local-variable"&gt;this&lt;/span&gt;.store.findRecord(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;user&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="integer"&gt;1&lt;/span&gt;, { &lt;span class="key"&gt;backgroundReload&lt;/span&gt;: &lt;span class="predefined-constant"&gt;false&lt;/span&gt; });
-}
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;All of these behaviors are also shared by &lt;code&gt;findAll&lt;/code&gt;:&lt;/p&gt;
 &lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
   &lt;td class="line-numbers"&gt;&lt;pre&gt;1
 2
 3
-4
 &lt;/pre&gt;&lt;/td&gt;
   &lt;td class="code"&gt;&lt;pre&gt;store.findAll(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;user&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);  &lt;span class="comment"&gt;//goes to the server the first time&lt;/span&gt;
 store.findAll(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;user&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);  &lt;span class="comment"&gt;//after that returns from cache, but updates in background&lt;/span&gt;
 store.findAll(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;user&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, { &lt;span class="key"&gt;reload&lt;/span&gt;: &lt;span class="predefined-constant"&gt;true&lt;/span&gt; });  &lt;span class="comment"&gt;//enforces getting fresh data&lt;/span&gt;
-store.findAll(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;user&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, { &lt;span class="key"&gt;backgroundReload&lt;/span&gt;: &lt;span class="predefined-constant"&gt;false&lt;/span&gt; });  &lt;span class="comment"&gt;//opts out of background updating&lt;/span&gt;
 &lt;/pre&gt;&lt;/td&gt;
 &lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;&lt;/div&gt;&lt;h4 class='anchorable-toc' id='toc_code-fetchbyid-code-and-code-fetchall-code-replaced-by-code-findrecord-code-and-code-findall-code'&gt;&lt;code&gt;fetchById&lt;/code&gt; and &lt;code&gt;fetchAll&lt;/code&gt; Replaced by &lt;code&gt;findRecord&lt;/code&gt; and &lt;code&gt;findAll&lt;/code&gt;&lt;/h4&gt;

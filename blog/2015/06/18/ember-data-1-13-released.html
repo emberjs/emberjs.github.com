@@ -343,9 +343,9 @@ while fetching new data in the background:</p>
 </tr></table>
 </div></div>
 <p>While this is a great default data retrieval strategy, there are certain cases
-where you want to ensure you have  the freshest data (the old <code>store.fetch</code> behavior) or you do not want a background update to happen (the old <code>store.find(type, id)</code> behavior). </p>
+where you want to ensure you have the freshest data (the old <code>store.fetch</code> behavior).</p>
 
-<p>Because of that, <code>findRecord</code> and <code>findAll</code> accept <code>reload: true</code> and <code>backgroundReload: false</code> as options in order to modify their default behavior.</p>
+<p>Because of that, <code>findRecord</code> and <code>findAll</code> accept <code>reload: true</code> an option in order to modify their default behavior.</p>
 
 <p>If, for example you want to charge user for a purchase, and want to make sure you
 get their latest account balance, you can pass a <code>reload: true</code> option that will
@@ -363,32 +363,15 @@ ensure we get the freshest data before continuing:</p>
 </pre></td>
 </tr></table>
 </div></div>
-<p>For example if you are showing the user a settings modal and want to opt out from
-background updates in order to keep the UI stable you can pass <code>backgroundReload: false</code> as a flag:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-</pre></td>
-  <td class="code"><pre><span class="comment">//visiting /users/1/open-modal</span>
-<span class="function">model</span>: <span class="keyword">function</span>() {
-  <span class="keyword">return</span> <span class="local-variable">this</span>.store.findRecord(<span class="string"><span class="delimiter">'</span><span class="content">user</span><span class="delimiter">'</span></span>, <span class="integer">1</span>, { <span class="key">backgroundReload</span>: <span class="predefined-constant">false</span> });
-}
-</pre></td>
-</tr></table>
-</div></div>
 <p>All of these behaviors are also shared by <code>findAll</code>:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
-4
 </pre></td>
   <td class="code"><pre>store.findAll(<span class="string"><span class="delimiter">'</span><span class="content">user</span><span class="delimiter">'</span></span>);  <span class="comment">//goes to the server the first time</span>
 store.findAll(<span class="string"><span class="delimiter">'</span><span class="content">user</span><span class="delimiter">'</span></span>);  <span class="comment">//after that returns from cache, but updates in background</span>
 store.findAll(<span class="string"><span class="delimiter">'</span><span class="content">user</span><span class="delimiter">'</span></span>, { <span class="key">reload</span>: <span class="predefined-constant">true</span> });  <span class="comment">//enforces getting fresh data</span>
-store.findAll(<span class="string"><span class="delimiter">'</span><span class="content">user</span><span class="delimiter">'</span></span>, { <span class="key">backgroundReload</span>: <span class="predefined-constant">false</span> });  <span class="comment">//opts out of background updating</span>
 </pre></td>
 </tr></table>
 </div></div><h4 class='anchorable-toc' id='toc_code-fetchbyid-code-and-code-fetchall-code-replaced-by-code-findrecord-code-and-code-findall-code'><code>fetchById</code> and <code>fetchAll</code> Replaced by <code>findRecord</code> and <code>findAll</code></h4>
