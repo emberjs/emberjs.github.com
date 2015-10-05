@@ -69,7 +69,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v2.0.1" target="_blank"> Tag: v2.0.1</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v2.1.0" target="_blank"> Tag: v2.1.0</a></li>
 
 
           <li class="level-1 selected">
@@ -213,6 +213,11 @@
           </li>
         
           <li class="level-3 ">
+                        <a href="/api/classes/ContainerProxyMixin.html">ContainerProxyMixin</a>
+
+          </li>
+        
+          <li class="level-3 ">
                         <a href="/api/classes/Descriptor.html">Descriptor</a>
 
           </li>
@@ -224,6 +229,11 @@
         
           <li class="level-3 ">
                         <a href="/api/classes/Ember.Application.html">Ember.Application</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/api/classes/Ember.ApplicationInstance.html">Ember.ApplicationInstance</a>
 
           </li>
         
@@ -314,6 +324,11 @@
         
           <li class="level-3 ">
                         <a href="/api/classes/Ember.DataAdapter.html">Ember.DataAdapter</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/api/classes/Ember.Debug.html">Ember.Debug</a>
 
           </li>
         
@@ -608,6 +623,11 @@
           </li>
         
           <li class="level-3 ">
+                        <a href="/api/classes/RegistryProxyMixin.html">RegistryProxyMixin</a>
+
+          </li>
+        
+          <li class="level-3 ">
                         <a href="/api/classes/RoutingService.html">RoutingService</a>
 
           </li>
@@ -632,167 +652,32 @@
   <p>Parent: <a href="/api/modules/ember.html">ember</a></p>
 
 
-<p><p>An instance of <code>Ember.Application</code> is the starting point for every Ember
-application. It helps to instantiate, initialize and coordinate the many
-objects that make up your app.</p>
+<p><p>The <code>ApplicationInstance</code> encapsulates all of the stateful aspects of a
+running <code>Application</code>.</p>
 
-<p>Each Ember app has one and only one <code>Ember.Application</code> object. In fact, the
-very first thing you should do in your application is create the instance:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre>window.App = Ember.Application.create();
-</pre></td>
-</tr></table>
-</div></div>
-<p>Typically, the application object is the only global variable. All other
-classes in your app should be properties on the <code>Ember.Application</code> instance,
-which highlights its first role: a global namespace.</p>
+<p>At a high-level, we break application boot into two distinct phases:</p>
 
-<p>For example, if you define a view class, it might look like this:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre>App.MyView = Ember.View.extend();
-</pre></td>
-</tr></table>
-</div></div>
-<p>By default, calling <code>Ember.Application.create()</code> will automatically initialize
-your application by calling the <code>Ember.Application.initialize()</code> method. If
-you need to delay initialization, you can call your app&#39;s <code>deferReadiness()</code>
-method. When you are ready for your app to be initialized, call its
-<code>advanceReadiness()</code> method.</p>
+<ul>
+<li>Definition time, where all of the classes, templates, and other
+dependencies are loaded (typically in the browser).</li>
+<li>Run time, where we begin executing the application once everything
+has loaded.</li>
+</ul>
 
-<p>You can define a <code>ready</code> method on the <code>Ember.Application</code> instance, which
-will be run by Ember when the application is initialized.</p>
+<p>Definition time can be expensive and only needs to happen once since it is
+an idempotent operation. For example, between test runs and FastBoot
+requests, the application stays the same. It is only the state that we want
+to reset.</p>
 
-<p>Because <code>Ember.Application</code> inherits from <code>Ember.Namespace</code>, any classes
-you create will have useful string representations when calling <code>toString()</code>.
-See the <code>Ember.Namespace</code> documentation for more information.</p>
-
-<p>While you can think of your <code>Ember.Application</code> as a container that holds the
-other classes in your application, there are several other responsibilities
-going on under-the-hood that you may want to understand.</p>
-<h3 class='anchorable-toc' id='toc_event-delegation'>Event Delegation</h3>
-<p>Ember uses a technique called <em>event delegation</em>. This allows the framework
-to set up a global, shared event listener instead of requiring each view to
-do it manually. For example, instead of each view registering its own
-<code>mousedown</code> listener on its associated element, Ember sets up a <code>mousedown</code>
-listener on the <code>body</code>.</p>
-
-<p>If a <code>mousedown</code> event occurs, Ember will look at the target of the event and
-start walking up the DOM node tree, finding corresponding views and invoking
-their <code>mouseDown</code> method as it goes.</p>
-
-<p><code>Ember.Application</code> has a number of default events that it listens for, as
-well as a mapping from lowercase events to camel-cased view method names. For
-example, the <code>keypress</code> event causes the <code>keyPress</code> method on the view to be
-called, the <code>dblclick</code> event causes <code>doubleClick</code> to be called, and so on.</p>
-
-<p>If there is a bubbling browser event that Ember does not listen for by
-default, you can specify custom events and their corresponding view method
-names by setting the application&#39;s <code>customEvents</code> property:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-</pre></td>
-  <td class="code"><pre><span class="keyword">var</span> App = Ember.Application.create({
-  <span class="key">customEvents</span>: {
-    <span class="comment">// add support for the paste event</span>
-    <span class="key">paste</span>: <span class="string"><span class="delimiter">'</span><span class="content">paste</span><span class="delimiter">'</span></span>
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>By default, the application sets up these event listeners on the document
-body. However, in cases where you are embedding an Ember application inside
-an existing page, you may want it to set up the listeners on an element
-inside the body.</p>
-
-<p>For example, if only events inside a DOM element with the ID of <code>ember-app</code>
-should be delegated, set your application&#39;s <code>rootElement</code> property:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre><span class="keyword">var</span> App = Ember.Application.create({
-  <span class="key">rootElement</span>: <span class="string"><span class="delimiter">'</span><span class="content">#ember-app</span><span class="delimiter">'</span></span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>The <code>rootElement</code> can be either a DOM element or a jQuery-compatible selector
-string. Note that <em>views appended to the DOM outside the root element will
-not receive events.</em> If you specify a custom root element, make sure you only
-append views inside it!</p>
-
-<p>To learn more about the advantages of event delegation and the Ember view
-layer, and a list of the event listeners that are setup by default, visit the
-<a href="http://emberjs.com/guides/understanding-ember/the-view-layer/#toc_event-delegation">Ember View Layer guide</a>.</p>
-<h3 class='anchorable-toc' id='toc_initializers'>Initializers</h3>
-<p>Libraries on top of Ember can add initializers, like so:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>Ember.Application.initializer({
-  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">api-adapter</span><span class="delimiter">'</span></span>,
-
-  <span class="function">initialize</span>: <span class="keyword">function</span>(container, application) {
-    application.register(<span class="string"><span class="delimiter">'</span><span class="content">api-adapter:main</span><span class="delimiter">'</span></span>, ApiAdapter);
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Initializers provide an opportunity to access the container, which
-organizes the different components of an Ember application. Additionally
-they provide a chance to access the instantiated application. Beyond
-being used for libraries, initializers are also a great way to organize
-dependency injection or setup in your own application.</p>
-<h3 class='anchorable-toc' id='toc_routing'>Routing</h3>
-<p>In addition to creating your application&#39;s router, <code>Ember.Application</code> is
-also responsible for telling the router when to start routing. Transitions
-between routes can be logged with the <code>LOG_TRANSITIONS</code> flag, and more
-detailed intra-transition logging can be logged with
-the <code>LOG_TRANSITIONS_INTERNAL</code> flag:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-</pre></td>
-  <td class="code"><pre><span class="keyword">var</span> App = Ember.Application.create({
-  <span class="key">LOG_TRANSITIONS</span>: <span class="predefined-constant">true</span>, <span class="comment">// basic logging of successful transitions</span>
-  <span class="key">LOG_TRANSITIONS_INTERNAL</span>: <span class="predefined-constant">true</span> <span class="comment">// detailed logging of all routing steps</span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>By default, the router will begin trying to translate the current URL into
-application state once the browser emits the <code>DOMContentReady</code> event. If you
-need to defer routing, you can call the application&#39;s <code>deferReadiness()</code>
-method. Once routing can begin, call the <code>advanceReadiness()</code> method.</p>
-
-<p>If there is any setup required before routing begins, you can implement a
-<code>ready()</code> method on your app that will be invoked immediately before routing
-begins.</p>
+<p>That state is what the <code>ApplicationInstance</code> manages: it is responsible for
+creating the container that contains all application state, and disposing of
+it once the particular test run or FastBoot request has finished.</p>
 </p>
 
 
   <h2>Classes and Namespaces</h2>
   <ul>
+    <li class="public"><a href="/api/classes/Ember.ApplicationInstance.html">Ember.ApplicationInstance</a></li>
     <li class="public"><a href="/api/classes/Ember.Application.html">Ember.Application</a></li>
     <li class="public"><a href="/api/classes/Ember.DefaultResolver.html">Ember.DefaultResolver</a></li>
   </ul>

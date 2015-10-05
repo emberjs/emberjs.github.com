@@ -69,7 +69,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v2.0.1" target="_blank"> Tag: v2.0.1</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v2.1.0" target="_blank"> Tag: v2.1.0</a></li>
 
 
           <li class="level-1 ">
@@ -213,6 +213,11 @@
           </li>
         
           <li class="level-3 ">
+                        <a href="/api/classes/ContainerProxyMixin.html">ContainerProxyMixin</a>
+
+          </li>
+        
+          <li class="level-3 ">
                         <a href="/api/classes/Descriptor.html">Descriptor</a>
 
           </li>
@@ -224,6 +229,11 @@
         
           <li class="level-3 ">
                         <a href="/api/classes/Ember.Application.html">Ember.Application</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/api/classes/Ember.ApplicationInstance.html">Ember.ApplicationInstance</a>
 
           </li>
         
@@ -314,6 +324,11 @@
         
           <li class="level-3 ">
                         <a href="/api/classes/Ember.DataAdapter.html">Ember.DataAdapter</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/api/classes/Ember.Debug.html">Ember.Debug</a>
 
           </li>
         
@@ -608,6 +623,11 @@
           </li>
         
           <li class="level-3 ">
+                        <a href="/api/classes/RegistryProxyMixin.html">RegistryProxyMixin</a>
+
+          </li>
+        
+          <li class="level-3 ">
                         <a href="/api/classes/RoutingService.html">RoutingService</a>
 
           </li>
@@ -627,7 +647,7 @@
         
   <h1 class="api-header">
   Ember.ComputedProperty Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-metal/lib/computed.js#L35">packages/ember-metal/lib/computed.js:35</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-metal/lib/computed.js#L33">packages/ember-metal/lib/computed.js:33</a>
 </h1>
 
 <hr>
@@ -639,25 +659,24 @@
 <div class="class-info">
 
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-metal/lib/computed.js#L35">packages/ember-metal/lib/computed.js:35</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-metal/lib/computed.js#L33">packages/ember-metal/lib/computed.js:33</a></p>
 
     <p>Module: <a href="/api/modules/ember-metal.html">ember-metal</a></p>
 </div>
 
   <div class="description">
-    <p>A computed property transforms an object&#39;s function into a property.</p>
+    <p>A computed property transforms an object literal with object&#39;s accessor function(s) into a property.</p>
 
 <p>By default the function backing the computed property will only be called
 once and the result will be cached. You can specify various properties
 that your computed property depends on. This will force the cached
 result to be recomputed if the dependencies are modified.</p>
 
-<p>In the following example we declare a computed property (by calling
-<code>.property()</code> on the fullName function) and setup the property
-dependencies (depending on firstName and lastName). The fullName function
+<p>In the following example we declare a computed property - <code>fullName</code> - by calling
+<code>.Ember.computed()</code> with property dependencies (<code>firstName</code> and <code>lastName</code>) as leading arguments and getter accessor function. The <code>fullName</code> getter function
 will be called once (regardless of how many times it is accessed) as long
-as its dependencies have not changed. Once firstName or lastName are updated
-any future calls (or anything bound) to fullName will incorporate the new
+as its dependencies have not changed. Once <code>firstName</code> or <code>lastName</code> are updated
+any future calls (or anything bound) to <code>fullName</code> will incorporate the new
 values.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -680,20 +699,20 @@ values.</p>
 18
 19
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> Person = Ember.Object.extend({
+  <td class="code"><pre>let Person = Ember.Object.extend({
   <span class="comment">// these will be supplied by `create`</span>
   <span class="key">firstName</span>: <span class="predefined-constant">null</span>,
   <span class="key">lastName</span>: <span class="predefined-constant">null</span>,
 
-  <span class="function">fullName</span>: <span class="keyword">function</span>() {
-    <span class="keyword">var</span> firstName = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>);
-    <span class="keyword">var</span> lastName = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
+  <span class="key">fullName</span>: Ember.computed(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+    let firstName = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>),
+        lastName  = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
 
-   <span class="keyword">return</span> firstName + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + lastName;
-  }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
+    <span class="keyword">return</span> firstName + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + lastName;
+  })
 });
 
-<span class="keyword">var</span> tom = Person.create({
+let tom = Person.create({
   <span class="key">firstName</span>: <span class="string"><span class="delimiter">'</span><span class="content">Tom</span><span class="delimiter">'</span></span>,
   <span class="key">lastName</span>: <span class="string"><span class="delimiter">'</span><span class="content">Dale</span><span class="delimiter">'</span></span>
 });
@@ -702,10 +721,9 @@ tom.get(<span class="string"><span class="delimiter">'</span><span class="conten
 </pre></td>
 </tr></table>
 </div></div>
-<p>You can also define what Ember should do when setting a computed property.
-If you try to set a computed property, it will be invoked with the key and
-value you want to set it to. You can also accept the previous value as the
-third parameter.</p>
+<p>You can also define what Ember should do when setting a computed property by providing additional function (<code>set</code>) in hash argument.
+If you try to set a computed property, it will try to invoke setter accessor function with the key and
+value you want to set it to as arguments.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -735,35 +753,31 @@ third parameter.</p>
 26
 27
 28
-29
-<strong>30</strong>
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> Person = Ember.Object.extend({
+  <td class="code"><pre>let Person = Ember.Object.extend({
   <span class="comment">// these will be supplied by `create`</span>
   <span class="key">firstName</span>: <span class="predefined-constant">null</span>,
   <span class="key">lastName</span>: <span class="predefined-constant">null</span>,
 
-  <span class="function">fullName</span>: <span class="keyword">function</span>(key, value, oldValue) {
-    <span class="comment">// getter</span>
-    <span class="keyword">if</span> (<span class="local-variable">arguments</span>.length === <span class="integer">1</span>) {
-      <span class="keyword">var</span> firstName = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>);
-      <span class="keyword">var</span> lastName = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
+  <span class="key">fullName</span>: Ember.computed(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, {
+    get(key) {
+      let firstName = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>),
+          lastName  = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
 
       <span class="keyword">return</span> firstName + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + lastName;
+    },
+    set(key, value) {
+      let [firstName, lastName] = value.split(<span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span>);
 
-    <span class="comment">// setter</span>
-    } <span class="keyword">else</span> {
-      <span class="keyword">var</span> name = value.split(<span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span>);
-
-      <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, name[<span class="integer">0</span>]);
-      <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, name[<span class="integer">1</span>]);
+      <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, firstName);
+      <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, lastName);
 
       <span class="keyword">return</span> value;
     }
-  }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
+  })
 });
 
-<span class="keyword">var</span> person = Person.create();
+let person = Person.create();
 
 person.set(<span class="string"><span class="delimiter">'</span><span class="content">fullName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Peter Wagenet</span><span class="delimiter">'</span></span>);
 person.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>); <span class="comment">// 'Peter'</span>
@@ -771,6 +785,52 @@ person.get(<span class="string"><span class="delimiter">'</span><span class="con
 </pre></td>
 </tr></table>
 </div></div>
+<p>You can overwrite computed property with normal property (no longer computed), that won&#39;t change if dependencies change, if you set computed property and it won&#39;t have setter accessor function defined.</p>
+
+<p>You can also mark computed property as <code>.readOnly()</code> and block all attempts to set it.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+</pre></td>
+  <td class="code"><pre>let Person = Ember.Object.extend({
+  <span class="comment">// these will be supplied by `create`</span>
+  <span class="key">firstName</span>: <span class="predefined-constant">null</span>,
+  <span class="key">lastName</span>: <span class="predefined-constant">null</span>,
+
+  <span class="key">fullName</span>: Ember.computed(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, {
+    get(key) {
+      let firstName = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>);
+      let lastName  = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
+
+      <span class="keyword">return</span> firstName + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + lastName;
+    }
+  }).readOnly()
+});
+
+let person = Person.create();
+person.set(<span class="string"><span class="delimiter">'</span><span class="content">fullName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Peter Wagenet</span><span class="delimiter">'</span></span>); <span class="comment">// Uncaught Error: Cannot set read-only property &quot;fullName&quot; on object: &lt;(...):emberXXX&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Additional resources:
+- <a href="https://github.com/emberjs/rfcs/blob/master/text/0011-improved-cp-syntax.md">New CP syntax RFC</a>
+- <a href="http://emberjs.com/blog/2015/05/13/ember-1-12-released.html#toc_new-computed-syntax">New computed syntax explained in &quot;Ember 1.12 released&quot; </a></p>
+
   </div>
 
 
@@ -862,7 +922,7 @@ person.get(<span class="string"><span class="delimiter">'</span><span class="con
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-metal/lib/computed.js#L296">packages/ember-metal/lib/computed.js:296</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-metal/lib/computed.js#L329">packages/ember-metal/lib/computed.js:329</a>
 
   </div>
 
@@ -887,15 +947,15 @@ Otherwise, call the function passing the property name as an argument.</p>
 13
 14
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> Person = Ember.Object.extend({
-  <span class="function">fullName</span>: <span class="keyword">function</span>(keyName) {
+  <td class="code"><pre>let Person = Ember.Object.extend({
+  <span class="key">fullName</span>: Ember.computed(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>(keyName) {
     <span class="comment">// the keyName parameter is 'fullName' in this case.</span>
     <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
-  }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
+  })
 });
 
 
-<span class="keyword">var</span> tom = Person.create({
+let tom = Person.create({
   <span class="key">firstName</span>: <span class="string"><span class="delimiter">'</span><span class="content">Tom</span><span class="delimiter">'</span></span>,
   <span class="key">lastName</span>: <span class="string"><span class="delimiter">'</span><span class="content">Dale</span><span class="delimiter">'</span></span>
 });
@@ -949,7 +1009,7 @@ tom.get(<span class="string"><span class="delimiter">'</span><span class="conten
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-metal/lib/computed.js#L240">packages/ember-metal/lib/computed.js:240</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-metal/lib/computed.js#L273">packages/ember-metal/lib/computed.js:273</a>
 
   </div>
 
@@ -967,10 +1027,10 @@ available for introspection.</p>
 3
 4
 </pre></td>
-  <td class="code"><pre>person: function() {
-  var personId = this.get('personId');
+  <td class="code"><pre>person: Ember.computed(function() {
+  let personId = this.get('personId');
   return App.Person.create({ id: personId });
-}.property().meta({ type: App.Person })
+}).meta({ type: App.Person })
 </pre></td>
 </tr></table>
 </div></div>
@@ -1018,7 +1078,7 @@ via the <code>metaForProperty()</code> function.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-metal/lib/computed.js#L191">packages/ember-metal/lib/computed.js:191</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-metal/lib/computed.js#L224">packages/ember-metal/lib/computed.js:224</a>
 
   </div>
 
@@ -1043,8 +1103,8 @@ arguments containing key paths that this computed property depends on.</p>
 14
 15
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> President = Ember.Object.extend({
-  <span class="key">fullName</span>: computed(<span class="keyword">function</span>() {
+  <td class="code"><pre>let President = Ember.Object.extend({
+  <span class="key">fullName</span>: Ember.computed(<span class="keyword">function</span>() {
     <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
 
     <span class="comment">// Tell Ember that this computed property depends on firstName</span>
@@ -1052,7 +1112,7 @@ arguments containing key paths that this computed property depends on.</p>
   }).property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
 });
 
-<span class="keyword">var</span> president = President.create({
+let president = President.create({
   <span class="key">firstName</span>: <span class="string"><span class="delimiter">'</span><span class="content">Barack</span><span class="delimiter">'</span></span>,
   <span class="key">lastName</span>: <span class="string"><span class="delimiter">'</span><span class="content">Obama</span><span class="delimiter">'</span></span>
 });
@@ -1104,7 +1164,7 @@ president.get(<span class="string"><span class="delimiter">'</span><span class="
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-metal/lib/computed.js#L164">packages/ember-metal/lib/computed.js:164</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-metal/lib/computed.js#L197">packages/ember-metal/lib/computed.js:197</a>
 
   </div>
 
@@ -1123,13 +1183,13 @@ mode the computed property will throw an error when set.</p>
 8
 9
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> Person = Ember.Object.extend({
-  <span class="function">guid</span>: <span class="keyword">function</span>() {
+  <td class="code"><pre>let Person = Ember.Object.extend({
+  <span class="key">guid</span>: Ember.computed(<span class="keyword">function</span>() {
     <span class="keyword">return</span> <span class="string"><span class="delimiter">'</span><span class="content">guid-guid-guid</span><span class="delimiter">'</span></span>;
-  }.property().readOnly()
+  }).readOnly()
 });
 
-<span class="keyword">var</span> person = Person.create();
+let person = Person.create();
 
 person.set(<span class="string"><span class="delimiter">'</span><span class="content">guid</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">new-guid</span><span class="delimiter">'</span></span>); <span class="comment">// will throw an exception</span>
 </pre></td>
@@ -1155,7 +1215,7 @@ person.set(<span class="string"><span class="delimiter">'</span><span class="con
 <div id="method_set" class="method public item-entry">
   <h3 data-id="method_set" class="name anchorable-toc"><code>set</code></h3>
   <span class="args">
-    (keyName, newValue, oldValue)
+    (keyName, newValue)
   </span>
 
   <span class="type">Object</span>
@@ -1170,7 +1230,7 @@ person.set(<span class="string"><span class="delimiter">'</span><span class="con
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-metal/lib/computed.js#L357">packages/ember-metal/lib/computed.js:357</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-metal/lib/computed.js#L387">packages/ember-metal/lib/computed.js:387</a>
 
   </div>
 
@@ -1182,7 +1242,7 @@ setting would be to define the property on the current object, and set
 the value of the property to the value being set.</p>
 
 <p>Generally speaking if you intend for your computed property to be set
-your backing function should accept either two or three arguments.</p>
+you should pass <code>set(key, value)</code> function in hash as argument to <code>Ember.computed()</code> along with <code>get(key)</code> function.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -1215,32 +1275,32 @@ your backing function should accept either two or three arguments.</p>
 29
 <strong>30</strong>
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> Person = Ember.Object.extend({
+  <td class="code"><pre>let Person = Ember.Object.extend({
   <span class="comment">// these will be supplied by `create`</span>
   <span class="key">firstName</span>: <span class="predefined-constant">null</span>,
   <span class="key">lastName</span>: <span class="predefined-constant">null</span>,
 
-  <span class="function">fullName</span>: <span class="keyword">function</span>(key, value, oldValue) {
+  <span class="key">fullName</span>: Ember.computed(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, {
     <span class="comment">// getter</span>
-    <span class="keyword">if</span> (<span class="local-variable">arguments</span>.length === <span class="integer">1</span>) {
-      <span class="keyword">var</span> firstName = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>);
-      <span class="keyword">var</span> lastName = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
+    get() {
+      let firstName = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>);
+      let lastName = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>);
 
       <span class="keyword">return</span> firstName + <span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span> + lastName;
-
+    },
     <span class="comment">// setter</span>
-    } <span class="keyword">else</span> {
-      <span class="keyword">var</span> name = value.split(<span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span>);
+    set(key, value) {
+      let [firstName, lastName] = value.split(<span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span>);
 
-      <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, name[<span class="integer">0</span>]);
-      <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, name[<span class="integer">1</span>]);
+      <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, firstName);
+      <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>, lastName);
 
       <span class="keyword">return</span> value;
     }
-  }.property(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">lastName</span><span class="delimiter">'</span></span>)
+  })
 });
 
-<span class="keyword">var</span> person = Person.create();
+let person = Person.create();
 
 person.set(<span class="string"><span class="delimiter">'</span><span class="content">fullName</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Peter Wagenet</span><span class="delimiter">'</span></span>);
 person.get(<span class="string"><span class="delimiter">'</span><span class="content">firstName</span><span class="delimiter">'</span></span>); <span class="comment">// 'Peter'</span>
@@ -1266,11 +1326,6 @@ person.get(<span class="string"><span class="delimiter">'</span><span class="con
           <dt><strong>newValue</strong> <span class="type">Object</span></dt>
           <dd>
             The new value being assigned.
-
-          </dd>
-          <dt><strong>oldValue</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
-          <dd>
-            The old value being replaced.
 
           </dd>
       </dl>
@@ -1301,7 +1356,7 @@ person.get(<span class="string"><span class="delimiter">'</span><span class="con
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-metal/lib/computed.js#L136">packages/ember-metal/lib/computed.js:136</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-metal/lib/computed.js#L169">packages/ember-metal/lib/computed.js:169</a>
 
   </div>
 
@@ -1322,10 +1377,10 @@ invalidation and notification when cached value is invalidated.</p>
 4
 5
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> outsideService = Ember.Object.extend({
-  <span class="function">value</span>: <span class="keyword">function</span>() {
+  <td class="code"><pre>let outsideService = Ember.Object.extend({
+  <span class="key">value</span>: Ember.computed(<span class="keyword">function</span>() {
     <span class="keyword">return</span> OutsideService.getValue();
-  }.property().<span class="reserved">volatile</span>()
+  }).<span class="reserved">volatile</span>()
 }).create();
 </pre></td>
 </tr></table>

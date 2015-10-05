@@ -5,10 +5,220 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2015-09-01T20:00:00-04:00</updated>
+  <updated>2015-10-03T20:00:00-04:00</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>Ember.js 2.1 and 2.2 Beta Released</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2015/10/04/ember-2-1-released.html"/>
+    <id>http://emberjs.com/blog/2015/10/04/ember-2-1-released.html</id>
+    <published>2015-10-03T20:00:00-04:00</published>
+    <updated>2015-10-03T20:00:00-04:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Ember.js 2.1, a minor version release of Ember with additive features only, is released today. This release represents the work of over 82 direct contributors, and over 850 commits.&lt;/p&gt;
+
+&lt;p&gt;Ember.js 2.2 beta, the branch of Ember that will be released as stable...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;Ember.js 2.1, a minor version release of Ember with additive features only, is released today. This release represents the work of over 82 direct contributors, and over 850 commits.&lt;/p&gt;
+
+&lt;p&gt;Ember.js 2.2 beta, the branch of Ember that will be released as stable in roughly six weeks, is also being released today.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_new-features-in-ember-js-2-1'&gt;New Features in Ember.js 2.1&lt;/h2&gt;
+&lt;p&gt;Changes to the Ember&amp;#39;s API in 2.1 are backwards compatible. A summary of the new features in today&amp;#39;s release follows.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_code-get-code-helper'&gt;&lt;code&gt;{{get}}&lt;/code&gt; Helper&lt;/h4&gt;
+&lt;p&gt;The &lt;code&gt;{{get}}&lt;/code&gt; helper allows dynamic property lookup on objects in templates.
+For example, these two usages are equivalent:&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;user.name&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;get&lt;/span&gt; &lt;span class="attribute-name"&gt;user&lt;/span&gt; &lt;span class="error"&gt;&amp;quot;&lt;/span&gt;&lt;span class="attribute-name"&gt;name&lt;/span&gt;&lt;span class="error"&gt;&amp;quot;&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;A property with a value of a string can be passed as the second argument,
+making both the object and the property being read dynamic. For example:&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;get&lt;/span&gt; &lt;span class="attribute-name"&gt;user&lt;/span&gt; &lt;span class="attribute-name"&gt;somePropertyName&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;For documentation on &lt;code&gt;get&lt;/code&gt;, reference the &lt;a href="http://emberjs.com/api/classes/Ember.Templates.helpers.html#method_get"&gt;API documentation&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Big thanks to &lt;a href="https://twitter.com/jmurphyau"&gt;@jmurphyau&lt;/a&gt; for the
+implementation of this feature, and for his excellent
+&lt;a href="https://github.com/jmurphyau/ember-get-helper"&gt;ember-get-helper&lt;/a&gt; addon that
+demonstrated how useful this helper would be. Using his
+&lt;a href="https://github.com/jmurphyau/ember-truth-helpers"&gt;ember-truth-helpers&lt;/a&gt; addon
+in 1.13 codebases is highly recommended.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_code-each-in-code-helper'&gt;&lt;code&gt;{{each-in}}&lt;/code&gt; Helper&lt;/h4&gt;
+&lt;p&gt;The &lt;code&gt;{{each-in}}&lt;/code&gt; helper iterates keys and values of an object. It is similar
+conceptually to the &lt;code&gt;for (key in object) {&lt;/code&gt; syntax of JavaScript. For example,
+this code would display a list of all property names and values on the &lt;code&gt;user&lt;/code&gt;
+object:&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;ul&amp;gt;&lt;/span&gt;
+&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{#&lt;/span&gt;&lt;span class="attribute-name"&gt;each-in&lt;/span&gt; &lt;span class="attribute-name"&gt;user&lt;/span&gt; &lt;span class="attribute-name"&gt;as&lt;/span&gt; &lt;span class="error"&gt;|&lt;/span&gt;&lt;span class="attribute-name"&gt;key&lt;/span&gt; &lt;span class="attribute-name"&gt;value&lt;/span&gt;&lt;span class="error"&gt;|&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+  &lt;span class="tag"&gt;&amp;lt;li&amp;gt;&lt;/span&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;key&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;: &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;value&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
+&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{/&lt;/span&gt;&lt;span class="attribute-name"&gt;each-in&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+&lt;span class="tag"&gt;&amp;lt;/ul&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;When using &lt;code&gt;{{each-in}}&lt;/code&gt;, the iterated list of keys will be unbound. If a new
+property is set on &lt;code&gt;user&lt;/code&gt; with &lt;code&gt;user.newProp = &amp;#39;newVal&amp;#39;;&lt;/code&gt;, the new property
+will not appear.&lt;/p&gt;
+
+&lt;p&gt;For documentation on the &lt;code&gt;{{each-in}}&lt;/code&gt; helper, see the &lt;a href="http://emberjs.com/api/classes/Ember.Templates.helpers.html#method_each-in"&gt;API documentation&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Thanks to &lt;a href="https://twitter.com/tomdale"&gt;@tomdale&lt;/a&gt; for the
+implementation of this feature, and thanks to
+&lt;a href="https://twitter.com/miguelcamba"&gt;@miguelcamba&lt;/a&gt; for his followup PRs.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_registry-and-container-reform'&gt;Registry and Container Reform&lt;/h4&gt;
+&lt;p&gt;The Ember.js registry and container are some of the most extensively used
+private APIs in the framework. They
+provided one of the only ways to lookup arbitrary objects from Ember&amp;#39;s
+dependency container.&lt;/p&gt;
+
+&lt;p&gt;We are committed to stabilizing this part of the framework and
+offering public APIs. This first step creates a normalized way to interact
+with &lt;code&gt;register&lt;/code&gt; and &lt;code&gt;lookup&lt;/code&gt; that we expect to last through the 2.x cycle
+and beyond.&lt;/p&gt;
+
+&lt;p&gt;In 2.1, &lt;code&gt;Ember.Application&lt;/code&gt; instances are passed as the first argument to &lt;code&gt;initializer&lt;/code&gt;
+hooks. &lt;code&gt;initializer&lt;/code&gt; hooks are where dependencies between object types
+can be configured, and factories can be registered. Several public APIs will
+exist on &lt;code&gt;Ember.Application&lt;/code&gt; instances, some of them new:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;register&lt;/code&gt; - register a factory&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;inject&lt;/code&gt; - inject a factory into another factory, or all factories of a type&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;unregister&lt;/code&gt; - remove a factory from registration&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;resolveRegistration&lt;/code&gt; - fetch a registered factory&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hasRegistration&lt;/code&gt; - check for a registered factory&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;registerOption&lt;/code&gt;, &lt;code&gt;registeredOption&lt;/code&gt;, &lt;code&gt;registerOptions&lt;/code&gt;, &lt;code&gt;registeredOptions&lt;/code&gt;,
+&lt;code&gt;registerOptionsForType&lt;/code&gt;, &lt;code&gt;registeredOptionsForType&lt;/code&gt; which manage options
+for a factory (is it a singleton, can it be instantiated).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code&gt;Ember.ApplicationInstance&lt;/code&gt; instances are passed as the first argument to
+&lt;code&gt;instanceInitializer&lt;/code&gt; hooks in 2.1. &lt;code&gt;instanceInitializer&lt;/code&gt; hooks are where
+factories can be fetched out of the configured and booted application.
+One relevant public APIs exists on &lt;code&gt;Ember.ApplicationInstance&lt;/code&gt;s:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;lookup&lt;/code&gt; - fetch an instance of a factory (with dependencies)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You can find updates to the guides regarding initializers in the revamped &lt;a href="http://guides.emberjs.com/v2.1.0/applications/applications-and-instances/"&gt;Application Concerns&lt;/a&gt; section. The
+API documentation is similarly updated at the &lt;a href="http://emberjs.com/api/modules/ember-application.html"&gt;ember-application namespace&lt;/a&gt;, &lt;a href="http://emberjs.com/api/classes/Ember.Application.html"&gt;Ember.Application&lt;/a&gt; class, and &lt;a href="http://emberjs.com/api/classes/Ember.ApplicationInstance.html"&gt;Ember.ApplicationInstance&lt;/a&gt; class.&lt;/p&gt;
+
+&lt;p&gt;This feature also introduces two minor deprecations:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Expecting two arguments for an initializer hook is deprecated&lt;/li&gt;
+&lt;li&gt;Calling &lt;code&gt;appInstance.container.lookup&lt;/code&gt; on the first argument to an instance
+initializer is deprecated in favor of &lt;code&gt;appInstance.lookup&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Deprecations flag where we expect to change an API in the future. It is not
+recommended that you use deprecated functionality, but you can also safely
+silence a deprecation message and continue to use that functionality until
+its removal date.&lt;/p&gt;
+
+&lt;p&gt;A huge thanks to the tireless &lt;a href="https://twitter.com/dgeb"&gt;@dgeb&lt;/a&gt; for his work on the
+RFC, implementation, and documentation for these changes. They represent a significant
+improvement in Ember&amp;#39;s dependency injection system.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_deprecate-and-warn-handlers'&gt;Deprecate and Warn Handlers&lt;/h4&gt;
+&lt;p&gt;In the run up to Ember 2.0, it became clear that the tooling for management of
+deprecations was poor. One of the reasons for this was the lack of a public,
+documented API for deciding how a deprecations and warnings should be handled.
+2.1 introduces a proper API for our tooling to build upon.&lt;/p&gt;
+
+&lt;p&gt;The default behavior of a deprecation or warning is to log to the console. To change
+this behavior, register a handler and write custom logic. For example this
+handler would throw an exception for any deprecation messages with the word
+&lt;code&gt;should&lt;/code&gt; in them:&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;Ember.Debug.registerDeprecationHandler((message, options, next) =&amp;gt; {
+  &lt;span class="keyword"&gt;if&lt;/span&gt; (message.indexOf(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;should&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;) !== -&lt;span class="integer"&gt;1&lt;/span&gt;) {
+    &lt;span class="keyword"&gt;throw&lt;/span&gt; &lt;span class="keyword"&gt;new&lt;/span&gt; Error(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Deprecation message with should: &lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;+message);
+  } &lt;span class="keyword"&gt;else&lt;/span&gt; {
+    &lt;span class="comment"&gt;// defer to whatever handler was registered before this one&lt;/span&gt;
+    next(message, options);
+  }
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;In this example, all warnings are silenced:&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// next is not called, so no warnings get the default behavior&lt;/span&gt;
+Ember.Debug.registerWarnHandler(() =&amp;gt; {});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Handlers are provided with the following data through arguments:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;message&lt;/code&gt; is the text logged by default&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;options&lt;/code&gt; is an object containing at minimum the property &lt;code&gt;id&lt;/code&gt; in the format &lt;code&gt;package-name.specific-deprecation&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;next&lt;/code&gt; is a caller for the previously registered handler. Often, this is the
+default handler.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Deprecation handlers will also be provided:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;options.until&lt;/code&gt; is the version of Ember this feature and deprecation will be
+removed in&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;As of Ember 2.0, &lt;code&gt;deprecate&lt;/code&gt; and &lt;code&gt;warn&lt;/code&gt; calls must provide an &lt;code&gt;id&lt;/code&gt; option,
+and &lt;code&gt;deprecate&lt;/code&gt; calls must additionally provide an &lt;code&gt;until&lt;/code&gt; option.
+Addons not providing this data during
+2.x will trigger a deprecation warning.&lt;/p&gt;
+
+&lt;p&gt;For more information see the &lt;a href="http://emberjs.com/api/classes/Ember.Debug.html"&gt;Ember.Debug&lt;/a&gt;
+API documentsion. This API can be used with previous versions of Ember via the
+&lt;a href="https://github.com/rwjblue/ember-debug-handlers-polyfill"&gt;ember-debug-handlers-polyfill&lt;/a&gt;,
+though &lt;code&gt;id&lt;/code&gt; and &lt;code&gt;until&lt;/code&gt; data is not provided until Ember 2.0.&lt;/p&gt;
+
+&lt;p&gt;Thanks to &lt;a href="https://twitter.com/rwjblue"&gt;@rwjblue&lt;/a&gt; for
+shipping this API and the polyfill addon, and to &lt;a href="https://twitter.com/mixonic"&gt;@mixonic&lt;/a&gt;
+for the RFC.&lt;/p&gt;
+
+&lt;p&gt;For more details on changes landing in 2.0, review the
+&lt;a href="https://github.com/emberjs/ember.js/blob/v2.0.0/CHANGELOG.md"&gt;Ember.js 2.0.0 CHANGELOG&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_ember-js-2-2-beta'&gt;Ember.js 2.2 beta&lt;/h2&gt;
+&lt;p&gt;No new features are slated for Ember 2.2. During the canary cycle leading to this beta, the core team and community have been primarily focused on performance improvements or feature work still behind a feature flag.&lt;/p&gt;
+
+&lt;p&gt;For more details on changes landing in 2.2, review the
+&lt;a href="https://github.com/emberjs/ember.js/blob/v2.2.0-beta.1/CHANGELOG.md"&gt;Ember.js 2.2.0-beta.1 CHANGELOG&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>Ember Guides Status Update</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/09/02/ember-guides-status-update.html"/>
@@ -1532,92 +1742,6 @@ store.findRecord(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/
 &lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;&lt;/div&gt;&lt;h2 class='anchorable-toc' id='toc_changelog'&gt;Changelog&lt;/h2&gt;
 &lt;p&gt;&lt;a href="https://github.com/emberjs/data/blob/3bce36295a6e9f1bbe4824505046d22dc04d056d/CHANGELOG.md#release-113-june-16-2015"&gt;Ember Data 1.13&lt;/a&gt;&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>The Ember 2.x Project</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2015/06/16/ember-project-at-2-0.html"/>
-    <id>http://emberjs.com/blog/2015/06/16/ember-project-at-2-0.html</id>
-    <published>2015-06-15T20:00:00-04:00</published>
-    <updated>2015-06-15T20:00:00-04:00</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;For the past several years, when we've talked about "Ember releases", we were always talking about releases of the Ember codebase itself.&lt;/p&gt;
-
-&lt;p&gt;In practice, that has meant that in order to put together the full, recommended Ember stack, you needed to figure...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;For the past several years, when we&amp;#39;ve talked about &amp;quot;Ember releases&amp;quot;, we were always talking about releases of the Ember codebase itself.&lt;/p&gt;
-
-&lt;p&gt;In practice, that has meant that in order to put together the full, recommended Ember stack, you needed to figure out not just what Ember version to use, but what versions of our other libraries and tools worked with it.&lt;/p&gt;
-
-&lt;p&gt;Starting with Ember 2.0, we will coordinate every release of Ember with releases of the main ecosystem tools maintained by the core team:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Ember CLI&lt;/li&gt;
-&lt;li&gt;Ember.js&lt;/li&gt;
-&lt;li&gt;Ember Data&lt;/li&gt;
-&lt;li&gt;Liquid Fire&lt;/li&gt;
-&lt;li&gt;List View&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;All of these tools will share a version number with Ember itself.&lt;/strong&gt; &lt;/p&gt;
-
-&lt;p&gt;Upgrading to Ember 2.3 means that you&amp;#39;ll get a new version of the Ember tools and a new version of Ember. You&amp;#39;ll also get new versions of Liquid Fire, List View and Ember Data designed to work with (and tested against) Ember 2.3.&lt;/p&gt;
-
-&lt;p&gt;These projects will also ship betas alongside Ember itself, meaning that when Ember 2.3-beta.1 is released, there will be versions of Ember Data, Liquid Fire and List View released at the same time that are tested against the new beta.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;We are in the process of aligning the versions now; you should start to see releases of Ember Data and Liquid Fire numbered &amp;quot;2.0 beta&amp;quot; in the next few days.&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;At a high level, the goal of these releases is for &amp;quot;upgrading to Ember 2.3&amp;quot; to mean upgrading Ember CLI to that version, and getting all of the improvements across all of the projects at once, without having to figure out how to separately upgrade each piece.&lt;/p&gt;
-
-&lt;p&gt;We expect that Semver and a shared community experience of upgrading at once will make this upgrade relatively painless, and will continue to work on improvements to the process that eliminates sources of pain due to upgrades. (See the &lt;a href="https://github.com/emberjs/rfcs/blob/two-dot-x-improvements/active/0000-improved-release-cycle.md"&gt;Release Cycle Improvements&lt;/a&gt; RFC for more on improvements we already have planned for the 2.x cycle.)&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_frequently-asked-questions'&gt;Frequently Asked Questions&lt;/h3&gt;
-&lt;p&gt;While I tried to answer the most common questions I&amp;#39;ve heard from people, I&amp;#39;m sure I missed some.&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;What does this mean for right now?&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;We have shipped Ember 2.0 beta, and are in the process of shipping &amp;quot;2.0 beta&amp;quot; versions of the remaining projects.&lt;/p&gt;
-
-&lt;p&gt;In practice, this means shipping a final version of the projects that will be compatible with Ember 1.13, and buttoning up any final changes that need to be made before they join Ember&amp;#39;s semantic versioning pace.&lt;/p&gt;
-
-&lt;p&gt;There will be a separate blog post in the next few days describing precisely how this will affect Ember Data, but the short version is the same. There will be a final version of Ember Data that will be compatible with the versions that have been shipping all year, and then we will ship Ember Data 2.0 beta, aligned with Ember itself.&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;Doesn&amp;#39;t this mean that Ember is becoming a huge monolithic project that is now tightly coupled with all of these other projects?&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;No. The reason to share a version number is almost entirely about convenience and a less fragmented ecosystem. While it is technically true that Liquid Fire 2.4 will work fine with Ember 2.6, this means that applications will practically be on a smorgasboard of versions of the core libraries, making it harder to write tutorials and answer questions, even once it is clear what version of Ember a user is using.&lt;/p&gt;
-
-&lt;p&gt;What this means it that if a user is using Ember 2.4, and asks a question about animations or Ember Data, it is possible to answer the question without asking a half-dozen other questions to learn basic things about the user&amp;#39;s environment.&lt;/p&gt;
-
-&lt;p&gt;Similarly, if you are looking at a tutorial that was built for Ember 2.4, you know that it will not be targeting a different version of the other core libraries, with the caveats that would bring.&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;But doesn&amp;#39;t this mean that upgrading Ember is a huge &amp;quot;big bang
-upgrade&amp;quot; that will take an even longer amount of time to perform now that it&amp;#39;s coupled with Ember CLI, Ember Data, and Liquid Fire?&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;While in principle upgrading Ember.js without one of the other libraries might seem like it would take less time, we don&amp;#39;t think this is true in practice.&lt;/p&gt;
-
-&lt;p&gt;By aligning the release cycles and versions of the most common libraries, it is possible for upgrade guides to cover all of the instructions that you will need in one place, and you will be sharing an upgrade experience with the rest of the ecosystem.&lt;/p&gt;
-
-&lt;p&gt;When you ask a question in IRC, on GitHub Issues or on Stack Overflow about upgrading to Ember 2.4, the known caveats for the entire upgrade process will be well-known and well-trod.&lt;/p&gt;
-
-&lt;p&gt;This is not the case if you are trying to upgrade to Ember 2.5 while remaining on Ember CLI 2.2 with List View 2.3 and Liquid Fire 2.1. It &lt;strong&gt;might&lt;/strong&gt; work out, but the number of people sharing the same combination will be very low, and the people maintaining the libraries might not even have considered that precise combination.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;In practice, the fact that all of these libraries share the same SemVer requirements should make upgrading across all five components more straight forward than trying to cobble together a multi-version stack yourself.&lt;/strong&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;I don&amp;#39;t agree with anything you said here and just want to pick and choose the versions of the libraries I want to use.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Go for it! The people maintaining each of these libraries want older versions of the libraries to work with newer versions of Ember, because it makes their jobs easier.&lt;/p&gt;
-
-&lt;p&gt;If you are deeply committed to upgrading a piece at a time, even though it will mean you will need to work out the details on your own, feel free to attempt it, and report bugs if you encounter any problems.&lt;/p&gt;
-
-&lt;p&gt;(There is one minor caveat. As of Ember 2.0, Liquid Fire and Ember Data make minor use of private Ember APIs. We intend to replace those APIs with public APIs within the first few releases.)&lt;/p&gt;
 </content>
   </entry>
 </feed>

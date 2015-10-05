@@ -69,7 +69,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v2.0.1" target="_blank"> Tag: v2.0.1</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v2.1.0" target="_blank"> Tag: v2.1.0</a></li>
 
 
           <li class="level-1 ">
@@ -213,6 +213,11 @@
           </li>
         
           <li class="level-3 ">
+                        <a href="/api/classes/ContainerProxyMixin.html">ContainerProxyMixin</a>
+
+          </li>
+        
+          <li class="level-3 ">
                         <a href="/api/classes/Descriptor.html">Descriptor</a>
 
           </li>
@@ -224,6 +229,11 @@
         
           <li class="level-3 sub-selected">
                         <a href="/api/classes/Ember.Application.html">Ember.Application</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/api/classes/Ember.ApplicationInstance.html">Ember.ApplicationInstance</a>
 
           </li>
         
@@ -314,6 +324,11 @@
         
           <li class="level-3 ">
                         <a href="/api/classes/Ember.DataAdapter.html">Ember.DataAdapter</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/api/classes/Ember.Debug.html">Ember.Debug</a>
 
           </li>
         
@@ -608,6 +623,11 @@
           </li>
         
           <li class="level-3 ">
+                        <a href="/api/classes/RegistryProxyMixin.html">RegistryProxyMixin</a>
+
+          </li>
+        
+          <li class="level-3 ">
                         <a href="/api/classes/RoutingService.html">RoutingService</a>
 
           </li>
@@ -627,7 +647,7 @@
         
   <h1 class="api-header">
   Ember.Application Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L55">packages/ember-application/lib/system/application.js:55</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-application/lib/system/application.js#L57">packages/ember-application/lib/system/application.js:57</a>
 </h1>
 
 <hr>
@@ -639,8 +659,9 @@
 <div class="class-info">
     <p>Extends: <a href="/api/classes/Ember.Namespace.html">Ember.Namespace</a></p>
 
+      <p>Uses: <a href="/api/classes/RegistryProxyMixin.html">RegistryProxyMixin</a></p>
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L55">packages/ember-application/lib/system/application.js:55</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-application/lib/system/application.js#L57">packages/ember-application/lib/system/application.js:57</a></p>
 
     <p>Module: <a href="/api/modules/ember-application.html">ember-application</a></p>
 </div>
@@ -723,6 +744,28 @@ names by setting the application&#39;s <code>customEvents</code> property:</p>
 </pre></td>
 </tr></table>
 </div></div>
+<p>To prevent Ember from setting up a listener for a default event,
+specify the event name with a <code>null</code> value in the <code>customEvents</code>
+property:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> App = Ember.Application.create({
+  <span class="key">customEvents</span>: {
+    <span class="comment">// prevent listeners for mouseenter/mouseleave events</span>
+    <span class="key">mouseenter</span>: <span class="predefined-constant">null</span>,
+    <span class="key">mouseleave</span>: <span class="predefined-constant">null</span>
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
 <p>By default, the application sets up these event listeners on the document
 body. However, in cases where you are embedding an Ember application inside
 an existing page, you may want it to set up the listeners on an element
@@ -763,14 +806,14 @@ layer, and a list of the event listeners that are setup by default, visit the
   <td class="code"><pre>Ember.Application.initializer({
   <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">api-adapter</span><span class="delimiter">'</span></span>,
 
-  <span class="function">initialize</span>: <span class="keyword">function</span>(container, application) {
+  <span class="function">initialize</span>: <span class="keyword">function</span>(application) {
     application.register(<span class="string"><span class="delimiter">'</span><span class="content">api-adapter:main</span><span class="delimiter">'</span></span>, ApiAdapter);
   }
 });
 </pre></td>
 </tr></table>
 </div></div>
-<p>Initializers provide an opportunity to access the container, which
+<p>Initializers provide an opportunity to access the internal registry, which
 organizes the different components of an Ember application. Additionally
 they provide a chance to access the instantiated application. Beyond
 being used for libraries, initializers are also a great way to organize
@@ -903,15 +946,21 @@ begins.</p>
               <a href="#method_hasObserverFor">hasObserverFor</a>
             </li>
             <li class="method public inherited">
+              <a href="#method_hasRegistration">hasRegistration</a>
+            </li>
+            <li class="method public inherited">
               <a href="#method_incrementProperty">incrementProperty</a>
             </li>
             <li class="method public inherited">
               <a href="#method_init">init</a>
             </li>
+            <li class="method private deprecated">
+              <a href="#method_initialize">initialize</a>
+            </li>
             <li class="method public">
               <a href="#method_initializer">initializer</a>
             </li>
-            <li class="method public">
+            <li class="method public inherited">
               <a href="#method_inject">inject</a>
             </li>
             <li class="method public">
@@ -929,8 +978,26 @@ begins.</p>
             <li class="method private inherited">
               <a href="#method_propertyWillChange">propertyWillChange</a>
             </li>
-            <li class="method public">
+            <li class="method public inherited">
               <a href="#method_register">register</a>
+            </li>
+            <li class="method public inherited">
+              <a href="#method_registerOption">registerOption</a>
+            </li>
+            <li class="method public inherited">
+              <a href="#method_registerOptions">registerOptions</a>
+            </li>
+            <li class="method public inherited">
+              <a href="#method_registerOptionsForType">registerOptionsForType</a>
+            </li>
+            <li class="method public inherited">
+              <a href="#method_registeredOption">registeredOption</a>
+            </li>
+            <li class="method public inherited">
+              <a href="#method_registeredOptions">registeredOptions</a>
+            </li>
+            <li class="method public inherited">
+              <a href="#method_registeredOptionsForType">registeredOptionsForType</a>
             </li>
             <li class="method public inherited">
               <a href="#method_removeObserver">removeObserver</a>
@@ -943,6 +1010,9 @@ begins.</p>
             </li>
             <li class="method public">
               <a href="#method_reset">reset</a>
+            </li>
+            <li class="method public inherited">
+              <a href="#method_resolveRegistration">resolveRegistration</a>
             </li>
             <li class="method private">
               <a href="#method_resolverFor">resolverFor</a>
@@ -961,6 +1031,9 @@ begins.</p>
             </li>
             <li class="method public inherited">
               <a href="#method_toggleProperty">toggleProperty</a>
+            </li>
+            <li class="method public inherited">
+              <a href="#method_unregister">unregister</a>
             </li>
             <li class="method private">
               <a href="#method_visit">visit</a>
@@ -981,9 +1054,6 @@ begins.</p>
               <a href="#property_concatenatedProperties">concatenatedProperties</a>
             </li>
             <li class="property public">
-              <a href="#property_container">container</a>
-            </li>
-            <li class="property public">
               <a href="#property_customEvents">customEvents</a>
             </li>
             <li class="property public">
@@ -995,8 +1065,8 @@ begins.</p>
             <li class="property public inherited">
               <a href="#property_isDestroying">isDestroying</a>
             </li>
-            <li class="property private">
-              <a href="#property_registry">registry</a>
+            <li class="property public inherited">
+              <a href="#property_mergedProperties">mergedProperties</a>
             </li>
             <li class="property public">
               <a href="#property_resolver">resolver</a>
@@ -1050,7 +1120,7 @@ begins.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method__lazyInjections">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/system/core_object.js#L829">packages/ember-runtime/lib/system/core_object.js:829</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/system/core_object.js#L900">packages/ember-runtime/lib/system/core_object.js:900</a>
 
   </div>
 
@@ -1091,7 +1161,7 @@ properties will lookup on the container lazily.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method__onLookup">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/system/core_object.js#L820">packages/ember-runtime/lib/system/core_object.js:820</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/system/core_object.js#L891">packages/ember-runtime/lib/system/core_object.js:891</a>
 
   </div>
 
@@ -1124,7 +1194,7 @@ properties will lookup on the container lazily.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method__scheduledDestroy">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/system/core_object.js#L389">packages/ember-runtime/lib/system/core_object.js:389</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/system/core_object.js#L460">packages/ember-runtime/lib/system/core_object.js:460</a>
 
   </div>
 
@@ -1161,7 +1231,7 @@ scheduled for execution by the <code>destroy</code> method.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_addObserver">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/mixins/observable.js#L331">packages/ember-runtime/lib/mixins/observable.js:331</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/observable.js#L332">packages/ember-runtime/lib/mixins/observable.js:332</a>
 
   </div>
 
@@ -1255,7 +1325,7 @@ any of these values, to write an observer that has no parameters at all.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L409">packages/ember-application/lib/system/application.js:409</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-application/lib/system/application.js#L439">packages/ember-application/lib/system/application.js:439</a>
 
   </div>
 
@@ -1291,7 +1361,7 @@ or the application will never become ready and routing will not begin.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_beginPropertyChanges">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/mixins/observable.js#L229">packages/ember-runtime/lib/mixins/observable.js:229</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/observable.js#L230">packages/ember-runtime/lib/mixins/observable.js:230</a>
 
   </div>
 
@@ -1339,7 +1409,7 @@ deferring.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L322">packages/ember-application/lib/system/application.js:322</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-application/lib/system/application.js#L354">packages/ember-application/lib/system/application.js:354</a>
 
   </div>
 
@@ -1385,7 +1455,7 @@ deferring.</p>
         Inherited from
         <a href="/api/classes/Ember.Application.html#method_buildRegistry">Ember.Application</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L1022">packages/ember-application/lib/system/application.js:1022</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-application/lib/system/application.js#L957">packages/ember-application/lib/system/application.js:957</a>
 
   </div>
 
@@ -1458,7 +1528,7 @@ properties</li>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_cacheFor">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/mixins/observable.js#L488">packages/ember-runtime/lib/mixins/observable.js:488</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/observable.js#L489">packages/ember-runtime/lib/mixins/observable.js:489</a>
 
   </div>
 
@@ -1516,7 +1586,7 @@ generated lazily.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_create">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/system/core_object.js#L577">packages/ember-runtime/lib/system/core_object.js:577</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/system/core_object.js#L648">packages/ember-runtime/lib/system/core_object.js:648</a>
 
   </div>
 
@@ -1609,7 +1679,7 @@ properties when using <code>extend</code>.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_decrementProperty">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/mixins/observable.js#L451">packages/ember-runtime/lib/mixins/observable.js:451</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/observable.js#L452">packages/ember-runtime/lib/mixins/observable.js:452</a>
 
   </div>
 
@@ -1672,7 +1742,7 @@ orc.decrementProperty(<span class="string"><span class="delimiter">'</span><span
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L377">packages/ember-application/lib/system/application.js:377</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-application/lib/system/application.js#L407">packages/ember-application/lib/system/application.js:407</a>
 
   </div>
 
@@ -1736,7 +1806,7 @@ to use the router for this purpose.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_destroy">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/system/core_object.js#L358">packages/ember-runtime/lib/system/core_object.js:358</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/system/core_object.js#L429">packages/ember-runtime/lib/system/core_object.js:429</a>
 
   </div>
 
@@ -1782,7 +1852,7 @@ happen immediately.  It will set an isDestroying flag immediately.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L706">packages/ember-application/lib/system/application.js:706</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-application/lib/system/application.js#L646">packages/ember-application/lib/system/application.js:646</a>
 
   </div>
 
@@ -1810,7 +1880,7 @@ happen immediately.  It will set an isDestroying flag immediately.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L544">packages/ember-application/lib/system/application.js:544</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-application/lib/system/application.js#L471">packages/ember-application/lib/system/application.js:471</a>
 
   </div>
 
@@ -1851,7 +1921,7 @@ to defer readiness until the auth token has been retrieved.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_eachComputedProperty">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/system/core_object.js#L791">packages/ember-runtime/lib/system/core_object.js:791</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/system/core_object.js#L862">packages/ember-runtime/lib/system/core_object.js:862</a>
 
   </div>
 
@@ -1902,7 +1972,7 @@ and any associated metadata (see <code>metaForProperty</code>) to the callback.<
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_endPropertyChanges">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/mixins/observable.js#L249">packages/ember-runtime/lib/mixins/observable.js:249</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/observable.js#L250">packages/ember-runtime/lib/mixins/observable.js:250</a>
 
   </div>
 
@@ -1953,7 +2023,7 @@ deliver the deferred change notifications and end deferring.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_extend">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/system/core_object.js#L473">packages/ember-runtime/lib/system/core_object.js:473</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/system/core_object.js#L544">packages/ember-runtime/lib/system/core_object.js:544</a>
 
   </div>
 
@@ -2128,7 +2198,7 @@ App.BroadwayStar = App.Person.extend(App.SingingMixin, {
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_get">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/mixins/observable.js#L98">packages/ember-runtime/lib/mixins/observable.js:98</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/observable.js#L99">packages/ember-runtime/lib/mixins/observable.js:99</a>
 
   </div>
 
@@ -2214,7 +2284,7 @@ not defined upfront.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_getProperties">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/mixins/observable.js#L141">packages/ember-runtime/lib/mixins/observable.js:141</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/observable.js#L142">packages/ember-runtime/lib/mixins/observable.js:142</a>
 
   </div>
 
@@ -2288,7 +2358,7 @@ with a list of strings or an array:</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_getWithDefault">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/mixins/observable.js#L413">packages/ember-runtime/lib/mixins/observable.js:413</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/observable.js#L414">packages/ember-runtime/lib/mixins/observable.js:414</a>
 
   </div>
 
@@ -2355,7 +2425,7 @@ property returns <code>undefined</code>.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_hasObserverFor">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/mixins/observable.js#L398">packages/ember-runtime/lib/mixins/observable.js:398</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/observable.js#L399">packages/ember-runtime/lib/mixins/observable.js:399</a>
 
   </div>
 
@@ -2394,6 +2464,61 @@ on the object.</p>
 </div>
 
         
+<div id="method_hasRegistration" class="method public inherited item-entry">
+  <h3 data-id="method_hasRegistration" class="name anchorable-toc"><code>hasRegistration</code></h3>
+  <span class="args">
+    (fullName)
+  </span>
+
+  <span class="type">Boolean</span>
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/RegistryProxyMixin.html#method_hasRegistration">RegistryProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/registry_proxy.js#L110">packages/ember-runtime/lib/mixins/registry_proxy.js:110</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Check if a factory is registered.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>fullName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Boolean</span>
+        <dd> </dd>
+      </dl>
+    </div>
+</div>
+
+        
 <div id="method_incrementProperty" class="method public inherited item-entry">
   <h3 data-id="method_incrementProperty" class="name anchorable-toc"><code>incrementProperty</code></h3>
   <span class="args">
@@ -2413,7 +2538,7 @@ on the object.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_incrementProperty">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/mixins/observable.js#L431">packages/ember-runtime/lib/mixins/observable.js:431</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/observable.js#L432">packages/ember-runtime/lib/mixins/observable.js:432</a>
 
   </div>
 
@@ -2477,7 +2602,7 @@ team.incrementProperty(<span class="string"><span class="delimiter">'</span><spa
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_init">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/system/core_object.js#L230">packages/ember-runtime/lib/system/core_object.js:230</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/system/core_object.js#L229">packages/ember-runtime/lib/system/core_object.js:229</a>
 
   </div>
 
@@ -2530,6 +2655,42 @@ application.</p>
 </div>
 
         
+<div id="method_initialize" class="method private deprecated item-entry">
+  <h3 data-id="method_initialize" class="name anchorable-toc"><code>initialize</code></h3>
+
+
+
+  <span class="flag deprecated" >deprecated</span>
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-application/lib/system/application.js#L457">packages/ember-application/lib/system/application.js:457</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Calling initialize manually is not supported.</p>
+
+<p>Please see Ember.Application#advanceReadiness and
+Ember.Application#deferReadiness.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+
+</div>
+
+        
 <div id="method_initializer" class="method public item-entry">
   <h3 data-id="method_initializer" class="name anchorable-toc"><code>initializer</code></h3>
   <span class="args">
@@ -2547,7 +2708,7 @@ application.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L823">packages/ember-application/lib/system/application.js:823</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-application/lib/system/application.js#L837">packages/ember-application/lib/system/application.js:837</a>
 
   </div>
 
@@ -2581,7 +2742,7 @@ same name will result in an error.</li>
   <td class="code"><pre>Ember.Application.initializer({
   <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">namedInitializer</span><span class="delimiter">'</span></span>,
 
-  <span class="function">initialize</span>: <span class="keyword">function</span>(container, application) {
+  <span class="function">initialize</span>: <span class="keyword">function</span>(application) {
     Ember.debug(<span class="string"><span class="delimiter">'</span><span class="content">Running namedInitializer!</span><span class="delimiter">'</span></span>);
   }
 });
@@ -2609,7 +2770,7 @@ or an array of strings, referencing the <code>name</code> of other initializers.
   <td class="code"><pre>Ember.Application.initializer({
   <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">first</span><span class="delimiter">'</span></span>,
 
-  <span class="function">initialize</span>: <span class="keyword">function</span>(container, application) {
+  <span class="function">initialize</span>: <span class="keyword">function</span>(application) {
     Ember.debug(<span class="string"><span class="delimiter">'</span><span class="content">First initializer!</span><span class="delimiter">'</span></span>);
   }
 });
@@ -2637,7 +2798,7 @@ after the initializer named <code>first</code>:</p>
   <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">second</span><span class="delimiter">'</span></span>,
   <span class="key">after</span>: <span class="string"><span class="delimiter">'</span><span class="content">first</span><span class="delimiter">'</span></span>,
 
-  <span class="function">initialize</span>: <span class="keyword">function</span>(container, application) {
+  <span class="function">initialize</span>: <span class="keyword">function</span>(application) {
     Ember.debug(<span class="string"><span class="delimiter">'</span><span class="content">Second initializer!</span><span class="delimiter">'</span></span>);
   }
 });
@@ -2667,7 +2828,7 @@ that it should run before the initializer named <code>first</code>:</p>
   <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">pre</span><span class="delimiter">'</span></span>,
   <span class="key">before</span>: <span class="string"><span class="delimiter">'</span><span class="content">first</span><span class="delimiter">'</span></span>,
 
-  <span class="function">initialize</span>: <span class="keyword">function</span>(container, application) {
+  <span class="function">initialize</span>: <span class="keyword">function</span>(application) {
     Ember.debug(<span class="string"><span class="delimiter">'</span><span class="content">Pre initializer!</span><span class="delimiter">'</span></span>);
   }
 });
@@ -2699,7 +2860,7 @@ both the <code>first</code> and the <code>second</code> initializers:</p>
   <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>,
   <span class="key">after</span>: [<span class="string"><span class="delimiter">'</span><span class="content">first</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">second</span><span class="delimiter">'</span></span>],
 
-  <span class="function">initialize</span>: <span class="keyword">function</span>(container, application) {
+  <span class="function">initialize</span>: <span class="keyword">function</span>(application) {
     Ember.debug(<span class="string"><span class="delimiter">'</span><span class="content">Post initializer!</span><span class="delimiter">'</span></span>);
   }
 });
@@ -2712,36 +2873,10 @@ both the <code>first</code> and the <code>second</code> initializers:</p>
 </tr></table>
 </div></div>
 <ul>
-<li><code>initialize</code> is a callback function that receives two arguments, <code>container</code>
-and <code>application</code> on which you can operate.</li>
+<li><code>initialize</code> is a callback function that receives one argument,
+<code>application</code>, on which you can operate.</li>
 </ul>
 
-<p>Example of using <code>container</code> to preload data into the store:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-</pre></td>
-  <td class="code"><pre>Ember.Application.initializer({
-  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">preload-data</span><span class="delimiter">'</span></span>,
-  <span class="key">after</span>: <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>,   <span class="comment">// ember-data must be loaded before we can access store</span>
-
-  <span class="function">initialize</span>: <span class="keyword">function</span>(container, application) {
-    <span class="keyword">var</span> store = container.lookup(<span class="string"><span class="delimiter">'</span><span class="content">store:main</span><span class="delimiter">'</span></span>);
-
-    store.pushPayload(preloadedData);
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
 <p>Example of using <code>application</code> to register an adapter:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -2755,7 +2890,7 @@ and <code>application</code> on which you can operate.</li>
   <td class="code"><pre>Ember.Application.initializer({
   <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">api-adapter</span><span class="delimiter">'</span></span>,
 
-  <span class="function">initialize</span>: <span class="keyword">function</span>(container, application) {
+  <span class="function">initialize</span>: <span class="keyword">function</span>(application) {
     application.register(<span class="string"><span class="delimiter">'</span><span class="content">api-adapter:main</span><span class="delimiter">'</span></span>, ApiAdapter);
   }
 });
@@ -2783,7 +2918,7 @@ and <code>application</code> on which you can operate.</li>
 </div>
 
         
-<div id="method_inject" class="method public item-entry">
+<div id="method_inject" class="method public inherited item-entry">
   <h3 data-id="method_inject" class="name anchorable-toc"><code>inject</code></h3>
   <span class="args">
     (factoryNameOrType, property, injectionName)
@@ -2799,8 +2934,9 @@ and <code>application</code> on which you can operate.</li>
 
 
   <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L490">packages/ember-application/lib/system/application.js:490</a>
+          Inherited from
+          <a href="/api/classes/RegistryProxyMixin.html#method_inject">RegistryProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/registry_proxy.js#L203">packages/ember-runtime/lib/mixins/registry_proxy.js:203</a>
 
   </div>
 
@@ -2917,18 +3053,18 @@ to <code>true</code>.</p>
         Inherited from
         <a href="/api/classes/Ember.Application.html#method_instanceInitializer">Ember.Application</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L956">packages/ember-application/lib/system/application.js:956</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-application/lib/system/application.js#L730">packages/ember-application/lib/system/application.js:730</a>
 
   </div>
 
 
     <div class="description">
-      <p>InstanceInitializers run after all initializers have run. Because
-instanceInitializers run after the app is fully set up. We have access
+      <p>Instance initializers run after all initializers have run. Because
+instance initializers run after the app is fully set up. We have access
 to the store, container, and other items. However, these initializers run
 after code has loaded and are not allowed to defer readiness.</p>
 
-<p>InstanceInitializer receives an object which has the following attributes:
+<p>Instance initializer receives an object which has the following attributes:
 <code>name</code>, <code>before</code>, <code>after</code>, <code>initialize</code>. The only required attribute is
 <code>initialize</code>, all others are optional.</p>
 
@@ -3008,7 +3144,7 @@ and after.</p></li>
     <span class="comment">// Unescape the text, then parse the resulting JSON into a real object</span>
     userConfig = JSON.parse(unescape(userConfigEncoded));
     <span class="comment">// Lookup the store</span>
-    store = application.container.lookup(<span class="string"><span class="delimiter">'</span><span class="content">service:store</span><span class="delimiter">'</span></span>);
+    store = application.lookup(<span class="string"><span class="delimiter">'</span><span class="content">service:store</span><span class="delimiter">'</span></span>);
     <span class="comment">// Push the encoded JSON into the store</span>
     store.pushPayload(userConfig);
   }
@@ -3056,7 +3192,7 @@ and after.</p></li>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_metaForProperty">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/system/core_object.js#L734">packages/ember-runtime/lib/system/core_object.js:734</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/system/core_object.js#L805">packages/ember-runtime/lib/system/core_object.js:805</a>
 
   </div>
 
@@ -3132,7 +3268,7 @@ property from your class like this:</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_notifyPropertyChange">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/mixins/observable.js#L316">packages/ember-runtime/lib/mixins/observable.js:316</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/observable.js#L317">packages/ember-runtime/lib/mixins/observable.js:317</a>
 
   </div>
 
@@ -3188,7 +3324,7 @@ succession.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_propertyDidChange">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/mixins/observable.js#L292">packages/ember-runtime/lib/mixins/observable.js:292</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/observable.js#L293">packages/ember-runtime/lib/mixins/observable.js:293</a>
 
   </div>
 
@@ -3254,7 +3390,7 @@ like.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_propertyWillChange">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/mixins/observable.js#L268">packages/ember-runtime/lib/mixins/observable.js:268</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/observable.js#L269">packages/ember-runtime/lib/mixins/observable.js:269</a>
 
   </div>
 
@@ -3301,7 +3437,7 @@ like.</p>
 </div>
 
         
-<div id="method_register" class="method public item-entry">
+<div id="method_register" class="method public inherited item-entry">
   <h3 data-id="method_register" class="name anchorable-toc"><code>register</code></h3>
   <span class="args">
     (fullName, factory, options)
@@ -3317,15 +3453,16 @@ like.</p>
 
 
   <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L427">packages/ember-application/lib/system/application.js:427</a>
+          Inherited from
+          <a href="/api/classes/RegistryProxyMixin.html#method_register">RegistryProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/registry_proxy.js#L29">packages/ember-runtime/lib/mixins/registry_proxy.js:29</a>
 
   </div>
 
 
     <div class="description">
       <p>Registers a factory that can be used for dependency injection (with
-<code>App.inject</code>) or for service lookup. Each factory is registered with
+<code>inject</code>) or for service lookup. Each factory is registered with
 a full name including two parts: <code>type:name</code>.</p>
 
 <p>A simple example:</p>
@@ -3435,6 +3572,377 @@ App.register(<span class="string"><span class="delimiter">'</span><span class="c
 </div>
 
         
+<div id="method_registerOption" class="method public inherited item-entry">
+  <h3 data-id="method_registerOption" class="name anchorable-toc"><code>registerOption</code></h3>
+  <span class="args">
+    (fullName, optionName, options)
+  </span>
+
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/RegistryProxyMixin.html#method_registerOption">RegistryProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/registry_proxy.js#L120">packages/ember-runtime/lib/mixins/registry_proxy.js:120</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Register an option for a particular factory.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>fullName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>optionName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>options</strong> <span class="type">Object</span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+</div>
+
+        
+<div id="method_registerOptions" class="method public inherited item-entry">
+  <h3 data-id="method_registerOptions" class="name anchorable-toc"><code>registerOptions</code></h3>
+  <span class="args">
+    (fullName, options)
+  </span>
+
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/RegistryProxyMixin.html#method_registerOptions">RegistryProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/registry_proxy.js#L142">packages/ember-runtime/lib/mixins/registry_proxy.js:142</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Register options for a particular factory.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>fullName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>options</strong> <span class="type">Object</span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+</div>
+
+        
+<div id="method_registerOptionsForType" class="method public inherited item-entry">
+  <h3 data-id="method_registerOptionsForType" class="name anchorable-toc"><code>registerOptionsForType</code></h3>
+  <span class="args">
+    (type, options)
+  </span>
+
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/RegistryProxyMixin.html#method_registerOptionsForType">RegistryProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/registry_proxy.js#L162">packages/ember-runtime/lib/mixins/registry_proxy.js:162</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Allow registering options for all factories of a type.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> App = Ember.Application.create();
+<span class="keyword">var</span> appInstance = App.buildInstance();
+
+<span class="comment">// if all of type `connection` must not be singletons</span>
+appInstance.optionsForType(<span class="string"><span class="delimiter">'</span><span class="content">connection</span><span class="delimiter">'</span></span>, { <span class="key">singleton</span>: <span class="predefined-constant">false</span> });
+
+appInstance.register(<span class="string"><span class="delimiter">'</span><span class="content">connection:twitter</span><span class="delimiter">'</span></span>, TwitterConnection);
+appInstance.register(<span class="string"><span class="delimiter">'</span><span class="content">connection:facebook</span><span class="delimiter">'</span></span>, FacebookConnection);
+
+<span class="keyword">var</span> twitter = appInstance.lookup(<span class="string"><span class="delimiter">'</span><span class="content">connection:twitter</span><span class="delimiter">'</span></span>);
+<span class="keyword">var</span> twitter2 = appInstance.lookup(<span class="string"><span class="delimiter">'</span><span class="content">connection:twitter</span><span class="delimiter">'</span></span>);
+
+twitter === twitter2; <span class="comment">// =&gt; false</span>
+
+<span class="keyword">var</span> facebook = appInstance.lookup(<span class="string"><span class="delimiter">'</span><span class="content">connection:facebook</span><span class="delimiter">'</span></span>);
+<span class="keyword">var</span> facebook2 = appInstance.lookup(<span class="string"><span class="delimiter">'</span><span class="content">connection:facebook</span><span class="delimiter">'</span></span>);
+
+facebook === facebook2; <span class="comment">// =&gt; false</span>
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>type</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>options</strong> <span class="type">Object</span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+</div>
+
+        
+<div id="method_registeredOption" class="method public inherited item-entry">
+  <h3 data-id="method_registeredOption" class="name anchorable-toc"><code>registeredOption</code></h3>
+  <span class="args">
+    (fullName, optionName)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/RegistryProxyMixin.html#method_registeredOption">RegistryProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/registry_proxy.js#L131">packages/ember-runtime/lib/mixins/registry_proxy.js:131</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Return a specific registered option for a particular factory.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>fullName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>optionName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Object</span>
+        <dd> options</dd>
+      </dl>
+    </div>
+</div>
+
+        
+<div id="method_registeredOptions" class="method public inherited item-entry">
+  <h3 data-id="method_registeredOptions" class="name anchorable-toc"><code>registeredOptions</code></h3>
+  <span class="args">
+    (fullName)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/RegistryProxyMixin.html#method_registeredOptions">RegistryProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/registry_proxy.js#L152">packages/ember-runtime/lib/mixins/registry_proxy.js:152</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Return registered options for a particular factory.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>fullName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Object</span>
+        <dd> options</dd>
+      </dl>
+    </div>
+</div>
+
+        
+<div id="method_registeredOptionsForType" class="method public inherited item-entry">
+  <h3 data-id="method_registeredOptionsForType" class="name anchorable-toc"><code>registeredOptionsForType</code></h3>
+  <span class="args">
+    (type)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/RegistryProxyMixin.html#method_registeredOptionsForType">RegistryProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/registry_proxy.js#L193">packages/ember-runtime/lib/mixins/registry_proxy.js:193</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Return the registered options for all factories of a type.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>type</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Object</span>
+        <dd> options</dd>
+      </dl>
+    </div>
+</div>
+
+        
 <div id="method_removeObserver" class="method public inherited item-entry">
   <h3 data-id="method_removeObserver" class="name anchorable-toc"><code>removeObserver</code></h3>
   <span class="args">
@@ -3453,7 +3961,7 @@ App.register(<span class="string"><span class="delimiter">'</span><span class="c
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_removeObserver">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/mixins/observable.js#L383">packages/ember-runtime/lib/mixins/observable.js:383</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/observable.js#L384">packages/ember-runtime/lib/mixins/observable.js:384</a>
 
   </div>
 
@@ -3509,7 +4017,7 @@ target will no longer receive notifications.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_reopen">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/system/core_object.js#L623">packages/ember-runtime/lib/system/core_object.js:623</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/system/core_object.js#L694">packages/ember-runtime/lib/system/core_object.js:694</a>
 
   </div>
 
@@ -3584,7 +4092,7 @@ see <code>reopenClass</code></p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_reopenClass">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/system/core_object.js#L659">packages/ember-runtime/lib/system/core_object.js:659</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/system/core_object.js#L730">packages/ember-runtime/lib/system/core_object.js:730</a>
 
   </div>
 
@@ -3702,7 +4210,7 @@ see <code>reopen</code></p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L577">packages/ember-application/lib/system/application.js:577</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-application/lib/system/application.js#L504">packages/ember-application/lib/system/application.js:504</a>
 
   </div>
 
@@ -3830,6 +4338,61 @@ test(<span class="string"><span class="delimiter">'</span><span class="content">
 </div>
 
         
+<div id="method_resolveRegistration" class="method public inherited item-entry">
+  <h3 data-id="method_resolveRegistration" class="name anchorable-toc"><code>resolveRegistration</code></h3>
+  <span class="args">
+    (fullName)
+  </span>
+
+  <span class="type"><a href="/api/classes/Function.html">Function</a></span>
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/RegistryProxyMixin.html#method_resolveRegistration">RegistryProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/registry_proxy.js#L19">packages/ember-runtime/lib/mixins/registry_proxy.js:19</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Given a fullName return the corresponding factory.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>fullName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/Function.html">Function</a></span>
+        <dd> fullName's factory</dd>
+      </dl>
+    </div>
+</div>
+
+        
 <div id="method_resolverFor" class="method private item-entry">
   <h3 data-id="method_resolverFor" class="name anchorable-toc"><code>resolverFor</code></h3>
   <span class="args">
@@ -3848,7 +4411,7 @@ test(<span class="string"><span class="delimiter">'</span><span class="content">
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L1121">packages/ember-application/lib/system/application.js:1121</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-application/lib/system/application.js#L1058">packages/ember-application/lib/system/application.js:1058</a>
 
   </div>
 
@@ -3908,7 +4471,7 @@ that could be overridden by the normal naming convention.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L671">packages/ember-application/lib/system/application.js:671</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-application/lib/system/application.js#L598">packages/ember-application/lib/system/application.js:598</a>
 
   </div>
 
@@ -3941,7 +4504,7 @@ that could be overridden by the normal naming convention.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_set">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/mixins/observable.js#L166">packages/ember-runtime/lib/mixins/observable.js:166</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/observable.js#L167">packages/ember-runtime/lib/mixins/observable.js:167</a>
 
   </div>
 
@@ -4026,7 +4589,7 @@ coalesced manner.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_setProperties">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/mixins/observable.js#L211">packages/ember-runtime/lib/mixins/observable.js:211</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/observable.js#L212">packages/ember-runtime/lib/mixins/observable.js:212</a>
 
   </div>
 
@@ -4086,7 +4649,7 @@ observers will be buffered.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_toString">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/system/core_object.js#L408">packages/ember-runtime/lib/system/core_object.js:408</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/system/core_object.js#L479">packages/ember-runtime/lib/system/core_object.js:479</a>
 
   </div>
 
@@ -4176,7 +4739,7 @@ teacher.toString(); <span class="comment">//=&gt; &quot;&lt;App.Teacher:ember102
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_toggleProperty">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/mixins/observable.js#L471">packages/ember-runtime/lib/mixins/observable.js:471</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/observable.js#L472">packages/ember-runtime/lib/mixins/observable.js:472</a>
 
   </div>
 
@@ -4219,6 +4782,73 @@ current value.</p>
 </div>
 
         
+<div id="method_unregister" class="method public inherited item-entry">
+  <h3 data-id="method_unregister" class="name anchorable-toc"><code>unregister</code></h3>
+  <span class="args">
+    (fullName)
+  </span>
+
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/RegistryProxyMixin.html#method_unregister">RegistryProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/mixins/registry_proxy.js#L90">packages/ember-runtime/lib/mixins/registry_proxy.js:90</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Unregister a factory.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> App = Ember.Application.create();
+<span class="keyword">var</span> User = Ember.Object.extend();
+App.register(<span class="string"><span class="delimiter">'</span><span class="content">model:user</span><span class="delimiter">'</span></span>, User);
+
+App.resolveRegistration(<span class="string"><span class="delimiter">'</span><span class="content">model:user</span><span class="delimiter">'</span></span>).create() <span class="keyword">instanceof</span> User <span class="comment">//=&gt; true</span>
+
+App.unregister(<span class="string"><span class="delimiter">'</span><span class="content">model:user</span><span class="delimiter">'</span></span>)
+App.resolveRegistration(<span class="string"><span class="delimiter">'</span><span class="content">model:user</span><span class="delimiter">'</span></span>) === <span class="predefined-constant">undefined</span> <span class="comment">//=&gt; true</span>
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>fullName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+</div>
+
+        
 <div id="method_visit" class="method private item-entry">
   <h3 data-id="method_visit" class="name anchorable-toc"><code>visit</code></h3>
 
@@ -4233,7 +4863,7 @@ current value.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L784">packages/ember-application/lib/system/application.js:784</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-application/lib/system/application.js#L798">packages/ember-application/lib/system/application.js:798</a>
 
   </div>
 
@@ -4281,7 +4911,7 @@ once rendering is complete. That promise is resolved with the instance.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L353">packages/ember-application/lib/system/application.js:353</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-application/lib/system/application.js#L383">packages/ember-application/lib/system/application.js:383</a>
 
   </div>
 
@@ -4324,7 +4954,7 @@ loading.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_willDestroy">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/system/core_object.js#L381">packages/ember-runtime/lib/system/core_object.js:381</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/system/core_object.js#L452">packages/ember-runtime/lib/system/core_object.js:452</a>
 
   </div>
 
@@ -4379,7 +5009,7 @@ loading.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L262">packages/ember-application/lib/system/application.js:262</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-application/lib/system/application.js#L294">packages/ember-application/lib/system/application.js:294</a>
 
   </div>
 
@@ -4418,7 +5048,7 @@ process.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_concatenatedProperties">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/system/core_object.js#L265">packages/ember-runtime/lib/system/core_object.js:265</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/system/core_object.js#L267">packages/ember-runtime/lib/system/core_object.js:267</a>
 
   </div>
 
@@ -4523,40 +5153,6 @@ mislead your users to think they can override the property in a subclass).</p>
 </div>
 
         
-<div id="property_container" class="property public item-entry">
-  <h3 data-id="property_container" class="name anchorable-toc"><code>container</code></h3>
-
-
-  <span class="type">Ember.Container</span>
-
-
-  <span class="flag public">public</span>
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application-instance.js#L38">packages/ember-application/lib/system/application-instance.js:38</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>The application instance&#39;s container. The container stores all of the
-instance-specific state for this application run.</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-
-</div>
-
-        
 <div id="property_customEvents" class="property public item-entry">
   <h3 data-id="property_customEvents" class="name anchorable-toc"><code>customEvents</code></h3>
 
@@ -4571,10 +5167,8 @@ instance-specific state for this application run.</p>
 
 
   <div class="meta">
-        Inherited from
-        <a href="/api/classes/Ember.Application.html#method_customEvents">Ember.Application</a>
-          but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L233">packages/ember-application/lib/system/application.js:233</a>
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-application/lib/system/application.js#L250">packages/ember-application/lib/system/application.js:250</a>
 
   </div>
 
@@ -4590,7 +5184,11 @@ instances.</p>
 <p>If you would like additional bubbling events to be delegated to your
 views, set your <code>Ember.Application</code>&#39;s <code>customEvents</code> property
 to a hash containing the DOM event name as the key and the
-corresponding view method name as the value. For example:</p>
+corresponding view method name as the value. Setting an event to
+a value of <code>null</code> will prevent a default event listener from being
+added for that event.</p>
+
+<p>To add new events to be listened to:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -4603,6 +5201,26 @@ corresponding view method name as the value. For example:</p>
   <span class="key">customEvents</span>: {
     <span class="comment">// add support for the paste event</span>
     <span class="key">paste</span>: <span class="string"><span class="delimiter">'</span><span class="content">paste</span><span class="delimiter">'</span></span>
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>To prevent default events from being listened to:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> App = Ember.Application.create({
+  <span class="key">customEvents</span>: {
+    <span class="comment">// remove support for mouseenter / mouseleave events</span>
+    <span class="key">mouseenter</span>: <span class="predefined-constant">null</span>,
+    <span class="key">mouseleave</span>: <span class="predefined-constant">null</span>
   }
 });
 </pre></td>
@@ -4634,7 +5252,7 @@ corresponding view method name as the value. For example:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L216">packages/ember-application/lib/system/application.js:216</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-application/lib/system/application.js#L233">packages/ember-application/lib/system/application.js:233</a>
 
   </div>
 
@@ -4675,7 +5293,7 @@ application&#39;s <code>rootElement</code> property.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_isDestroyed">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/system/core_object.js#L334">packages/ember-runtime/lib/system/core_object.js:334</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/system/core_object.js#L405">packages/ember-runtime/lib/system/core_object.js:405</a>
 
   </div>
 
@@ -4712,7 +5330,7 @@ removed by the effect of calling the <code>destroy()</code> method.</p>
   <div class="meta">
           Inherited from
           <a href="/api/classes/Ember.Namespace.html#method_isDestroying">Ember.Namespace</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-runtime/lib/system/core_object.js#L346">packages/ember-runtime/lib/system/core_object.js:346</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/system/core_object.js#L417">packages/ember-runtime/lib/system/core_object.js:417</a>
 
   </div>
 
@@ -4734,35 +5352,130 @@ the <code>isDestroyed</code> flag is set.</p>
 </div>
 
         
-<div id="property_registry" class="property private item-entry">
-  <h3 data-id="property_registry" class="name anchorable-toc"><code>registry</code></h3>
+<div id="property_mergedProperties" class="property public inherited item-entry">
+  <h3 data-id="property_mergedProperties" class="name anchorable-toc"><code>mergedProperties</code></h3>
 
 
-  <span class="type">Ember.Registry</span>
+  <span class="type">Array</span>
 
 
-  <span class="flag private">private</span>
+  <span class="flag public">public</span>
 
 
 
 
 
   <div class="meta">
-        Inherited from
-        <a href="/api/classes/Ember.Application.html#method_registry">Ember.Application</a>
-          but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application-instance.js#L56">packages/ember-application/lib/system/application-instance.js:56</a>
+          Inherited from
+          <a href="/api/classes/Ember.Namespace.html#method_mergedProperties">Ember.Namespace</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-runtime/lib/system/core_object.js#L336">packages/ember-runtime/lib/system/core_object.js:336</a>
 
   </div>
 
 
     <div class="description">
-      <p>The registry for this application instance. It should use the
-<code>applicationRegistry</code> as a fallback.</p>
+      <p>Defines the properties that will be merged from the superclass
+(instead of overridden).</p>
+
+<p>By default, when you extend an Ember class a property defined in
+the subclass overrides a property with the same name that is defined
+in the superclass. However, there are some cases where it is preferable
+to build up a property&#39;s value by merging the superclass property value
+with the subclass property&#39;s value. An example of this in use within Ember
+is the <code>queryParams</code> property of routes.</p>
+
+<p>Here is some sample code showing the difference between a merged
+property and a normal one:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+22
+23
+24
+25
+26
+27
+28
+29
+<strong>30</strong>
+31
+32
+33
+34
+35
+36
+</pre></td>
+  <td class="code"><pre>App.BarRoute = Ember.Route.extend({
+  <span class="key">someNonMergedProperty</span>: {
+    <span class="key">nonMerged</span>: <span class="string"><span class="delimiter">'</span><span class="content">superclass value of nonMerged</span><span class="delimiter">'</span></span>
+  },
+  <span class="key">queryParams</span>: {
+    <span class="key">page</span>: {<span class="key">replace</span>: <span class="predefined-constant">false</span>},
+    <span class="key">limit</span>: {<span class="key">replace</span>: <span class="predefined-constant">true</span>}
+  }
+});
+
+App.FooBarRoute = App.BarRoute.extend({
+  <span class="key">someNonMergedProperty</span>: {
+    <span class="key">completelyNonMerged</span>: <span class="string"><span class="delimiter">'</span><span class="content">subclass value of nonMerged</span><span class="delimiter">'</span></span>
+  },
+  <span class="key">queryParams</span>: {
+    <span class="key">limit</span>: {<span class="key">replace</span>: <span class="predefined-constant">false</span>}
+  }
+});
+
+<span class="keyword">var</span> fooBarRoute = App.FooBarRoute.create();
+
+fooBarRoute.get(<span class="string"><span class="delimiter">'</span><span class="content">someNonMergedProperty</span><span class="delimiter">'</span></span>);
+<span class="comment">// =&gt; { completelyNonMerged: 'subclass value of nonMerged' }</span>
+<span class="comment">//</span>
+<span class="comment">// Note the entire object, including the nonMerged property of</span>
+<span class="comment">// the superclass object, has been replaced</span>
+
+fooBarRoute.get(<span class="string"><span class="delimiter">'</span><span class="content">queryParams</span><span class="delimiter">'</span></span>);
+<span class="comment">// =&gt; {</span>
+<span class="comment">//   page: {replace: false},</span>
+<span class="comment">//   limit: {replace: false}</span>
+<span class="comment">// }</span>
+<span class="comment">//</span>
+<span class="comment">// Note the page remains from the superclass, and the</span>
+<span class="comment">// `limit` property's value of `false` has been merged from</span>
+<span class="comment">// the subclass.</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>This behavior is not available during object <code>create</code> calls. It is only
+available at <code>extend</code> time.</p>
+
+<p>This feature is available for you to use throughout the Ember object model,
+although typical app developers are likely to use it infrequently. Since
+it changes expectations about behavior of properties, you should properly
+document its usage in each individual merged property (to not
+mislead your users to think they can override the property in a subclass).</p>
 
     </div>
 
   <p>
+      <strong>Default:</strong> <code>null</code>
   </p>
 
 
@@ -4786,7 +5499,7 @@ the <code>isDestroyed</code> flag is set.</p>
         Inherited from
         <a href="/api/classes/Ember.Application.html#method_resolver">Ember.Application</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L749">packages/ember-application/lib/system/application.js:749</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-application/lib/system/application.js#L690">packages/ember-application/lib/system/application.js:690</a>
 
   </div>
 
@@ -4818,10 +5531,8 @@ the <code>isDestroyed</code> flag is set.</p>
 
 
   <div class="meta">
-        Inherited from
-        <a href="/api/classes/Ember.Application.html#method_rootElement">Ember.Application</a>
-          but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L200">packages/ember-application/lib/system/application.js:200</a>
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-application/lib/system/application.js#L217">packages/ember-application/lib/system/application.js:217</a>
 
   </div>
 
@@ -4882,7 +5593,7 @@ view in your application should be a child of the element you specify here.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.0.1/packages/ember-application/lib/system/application.js#L730">packages/ember-application/lib/system/application.js:730</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.1.0/packages/ember-application/lib/system/application.js#L671">packages/ember-application/lib/system/application.js:671</a>
 
   </div>
 
