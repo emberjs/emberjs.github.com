@@ -1297,7 +1297,45 @@ the future.</p>
 </tr></table>
 </div></div>
 <p>You can <a href="http://emberjs.jsbin.com/qegikoliri/1/edit?html,js,output">view and manipulate this example on jsbin</a></p>
-<h4 class='anchorable-toc' id='toc_ember-reducecomputed-ember-arraycomputed'>Ember.ReduceComputed / Ember.ArrayComputed</h4>
+<h4 class='anchorable-toc' id='toc_set-code-positionalparams-code-as-a-static-property-on-the-class'>Set <code>positionalParams</code> as a static property on the class</h4>
+<p>Setting <code>positionalParams</code> within <code>.extend</code> is deprecated. It has to be set as a static property on the class itself (<code>.reopenClass</code>).</p>
+
+<p>Plaease change this:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+  <span class="key">positionalParams</span>: [ <span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span> ]
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>to this:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+
+<span class="keyword">var</span> Thing = Ember.Component.extend();
+Thing.reopenClass({
+  <span class="key">positionalParams</span>: [ <span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span> ]
+});
+
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_ember-reducecomputed-ember-arraycomputed'>Ember.ReduceComputed / Ember.ArrayComputed</h4>
 <p>This two little monsters served us well for a long time. They provided semantics that allowed to
 perform in-place modifications of an existing array instead of replacing the entire array like the
 regular <code>map/reduce</code> methods in javascript do, which was necessary to avoid expensive repaintings when
@@ -1338,7 +1376,35 @@ fooObserver(obj); <span class="comment">// Optionally call the observer immediat
 </div></div>
 <p>The related function <code>Ember.addBeforeObserver</code>, <code>Ember.removeBeforeObserver</code> and <code>Ember.beforeObserversFor</code>
 are deprecated too.</p>
-<h4 class='anchorable-toc' id='toc_arraycontroller'>ArrayController</h4>
+<h4 class='anchorable-toc' id='toc_ember-immediateobserver'>Ember.immediateObserver</h4>
+<p><code>Ember.immediateObserver</code> is deprecated in favor of <code>Ember.observer</code>. Please change all instances of <code>Ember.immediateObserver</code> from:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>Ember.Object.extend({
+  <span class="key">valueObserver</span>: Ember.immediateObserver(<span class="string"><span class="delimiter">'</span><span class="content">value</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+  })
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>to</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>Ember.Object.extend({
+  <span class="key">valueObserver</span>: Ember.observer(<span class="string"><span class="delimiter">'</span><span class="content">value</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+  })
+});
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_arraycontroller'>ArrayController</h4>
 <p>Just like <code>Ember.ObjectController</code>, <code>Ember.ArrayController</code> will be removed in
 Ember 2.0 for the same reasons mentioned in <a href="http://emberjs.com/deprecations/v1.x/#toc_objectcontroller">1.11&#39;s ObjectController
 deprecation</a>.</p>

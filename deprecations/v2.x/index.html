@@ -303,6 +303,92 @@ this removes a pretty common term (<code>currentState</code> might be used for m
 
 <p>Please keep in mind that <code>.currentState</code> / <code>._currentState</code> is still private and should not be used/relied upon
 outside of Ember internals.</p>
+<h3 class='anchorable-toc' id='toc_deprecations-added-in-2-2'>Deprecations Added in 2.2</h3><h4 class='anchorable-toc' id='toc_function-as-test-in-ember-deprecate-ember-warn-ember-assert'>Function as test in Ember.deprecate, Ember.warn, Ember.assert</h4><h5 class='anchorable-toc' id='toc_deprecated-behavior'>Deprecated behavior</h5>
+<p>Calling <code>Ember.deprecate</code>, <code>Ember.warn</code> or <code>Ember.assert</code> with a function as test argument is deprecated.</p>
+
+<p>You can no longer pass arguments of type <code>function</code> to these methods. Following calls will trigger deprecations:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+</pre></td>
+  <td class="code"><pre>const message = <span class="string"><span class="delimiter">'</span><span class="content">Test message.</span><span class="delimiter">'</span></span>;
+const options = { <span class="key">id</span>: <span class="string"><span class="delimiter">'</span><span class="content">test</span><span class="delimiter">'</span></span>, <span class="key">until</span>: <span class="string"><span class="delimiter">'</span><span class="content">3.0.0</span><span class="delimiter">'</span></span> };
+
+<span class="comment">// passing function</span>
+Ember.deprecate(message, <span class="keyword">function</span>() {
+  <span class="keyword">return</span> <span class="predefined-constant">true</span>;
+}, options);
+
+const myConstructor = {}.constructor;
+
+<span class="comment">// passing constructor (also a function)</span>
+Ember.warn(message, myConstructor, options);
+
+<span class="comment">// passing function with double arrow syntax</span>
+Ember.assert(message, () =&gt; <span class="predefined-constant">true</span>, options);
+</pre></td>
+</tr></table>
+</div></div>
+<p><a href="http://ember-twiddle.com/34d36b9121e017d2388f">Demo.</a></p>
+<h5 class='anchorable-toc' id='toc_refactoring'>Refactoring</h5>
+<p>You have 3 options to refactor second argument from <code>function</code> to <code>boolean</code>:</p>
+
+<ol>
+<li>Use <a href="https://en.wikipedia.org/wiki/Immediately-invoked_function_expression">IIFE</a>.</li>
+<li>Use <code>!!Constructor</code> for constructors.</li>
+<li>Pass <code>boolean</code> directly instead of wrapping it in function.</li>
+</ol>
+
+<p>Example:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+</pre></td>
+  <td class="code"><pre><span class="comment">// ... message, options ommited for brevity</span>
+
+<span class="comment">// passing IIFE (1)</span>
+Ember.deprecate(message, (<span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="predefined-constant">true</span>;
+})(), options);
+
+const myConstructor = {}.constructor;
+
+<span class="comment">// passing !!constructor (2)</span>
+Ember.warn(message, !!myConstructor, options);
+
+<span class="comment">// passing boolean directly (3)</span>
+Ember.assert(message, <span class="predefined-constant">true</span>, options);
+</pre></td>
+</tr></table>
+</div></div>
+<p><a href="http://ember-twiddle.com/ed90d0c7812914f09a3f">Demo.</a></p>
+
+<p>In a future version functions will be treated as truthy values instead of being executed.</p>
 
 
       </div>
