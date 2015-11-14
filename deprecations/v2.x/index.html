@@ -389,7 +389,103 @@ Ember.assert(message, <span class="predefined-constant">true</span>, options);
 <p><a href="http://ember-twiddle.com/ed90d0c7812914f09a3f">Demo.</a></p>
 
 <p>In a future version functions will be treated as truthy values instead of being executed.</p>
+<h3 class='anchorable-toc' id='toc_deprecations-added-in-2-3'>Deprecations added in 2.3</h3><h4 class='anchorable-toc' id='toc_injected-container-access'>Injected container access</h4>
+<p><code>this.container</code> has been private API since at least Ember 1.0.0. Unfortunately, there was not a public API available
+to use as an alternative.  In the Ember 2.1 cycle a number of public API&#39;s were added to instance initializers
+that allowed access to the container and registry (see <a href="http://emberjs.com/api/classes/ContainerProxyMixin.html">here</a>
+and <a href="http://emberjs.com/api/classes/RegistryProxyMixin.html">here</a> for details of the public API&#39;s), but this new public
+API surface was not added to individual instances that were using <code>this.container</code> directly.</p>
 
+<p>Ember 2.3 now provides a public API for usage from within any instances that were instantiated from the container.</p>
+
+<p>Before:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre><span class="comment">// Ember &lt; 2.3</span>
+<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Helper.extend({
+  init() {
+    <span class="local-variable">this</span>._super(...<span class="local-variable">arguments</span>);
+
+    <span class="local-variable">this</span>.customThing = <span class="local-variable">this</span>.container.lookup(<span class="string"><span class="delimiter">'</span><span class="content">custom:thing</span><span class="delimiter">'</span></span>);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>After:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre><span class="comment">// Ember 2.3 and later</span>
+<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+
+const { getOwner } = Ember;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Helper.extend({
+  init() {
+    <span class="local-variable">this</span>._super(...<span class="local-variable">arguments</span>);
+
+    <span class="local-variable">this</span>.customThing = getOwner(<span class="local-variable">this</span>).lookup(<span class="string"><span class="delimiter">'</span><span class="content">custom:thing</span><span class="delimiter">'</span></span>);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>This refactor is relatively straight forward for applications, but still leaves a few gaps for addons that want to function
+without deprecation on all versions while still using the newer paradigms. <a href="https://github.com/rwjblue/ember-getowner-polyfill">ember-gethandler-polyfill</a>
+was created for this exact reason.</p>
+
+<p>Using the above before example, the following demonstrates how to use the polyfill:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+</pre></td>
+  <td class="code"><pre><span class="comment">// Ember 2.3 and later</span>
+<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+<span class="reserved">import</span> getOwner from <span class="string"><span class="delimiter">'</span><span class="content">ember-getowner-polyfill</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Helper.extend({
+  init() {
+    <span class="local-variable">this</span>._super(...<span class="local-variable">arguments</span>);
+
+    <span class="local-variable">this</span>.customThing = getOwner(<span class="local-variable">this</span>).lookup(<span class="string"><span class="delimiter">'</span><span class="content">custom:thing</span><span class="delimiter">'</span></span>);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
 
       </div>
     </div>
