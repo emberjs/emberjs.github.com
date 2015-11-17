@@ -5,10 +5,293 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2015-10-04T20:00:00-04:00</updated>
+  <updated>2015-11-15T19:00:00-05:00</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>Ember.js 2.2 and 2.3 Beta Released</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2015/11/16/ember-2-2-released.html"/>
+    <id>http://emberjs.com/blog/2015/11/16/ember-2-2-released.html</id>
+    <published>2015-11-15T19:00:00-05:00</published>
+    <updated>2015-11-15T19:00:00-05:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Ember.js 2.2, a minor version release of Ember with additive features only, is
+released today. This release represents the work of over 60 contributors.&lt;/p&gt;
+
+&lt;p&gt;Ember.js 2.3 beta, the branch of Ember that will be released as stable in
+roughly six weeks, is...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;Ember.js 2.2, a minor version release of Ember with additive features only, is
+released today. This release represents the work of over 60 contributors.&lt;/p&gt;
+
+&lt;p&gt;Ember.js 2.3 beta, the branch of Ember that will be released as stable in
+roughly six weeks, is also being released today.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_changes-in-ember-js-2-2'&gt;Changes in Ember.js 2.2&lt;/h3&gt;
+&lt;p&gt;Ember.js releases occur every six weeks, regardless of how significant the
+changes are. 2.2 introduces no new features, but does include performance
+improvements and bug fixes.&lt;/p&gt;
+
+&lt;p&gt;Notable improvements include a performance fix for Ember&amp;#39;s &lt;code&gt;_super&lt;/code&gt;
+implementation under minification, and the skipping of &lt;code&gt;view&lt;/code&gt; and &lt;code&gt;controller&lt;/code&gt;
+template locals logic when operating without the view and controller legacy
+addons.&lt;/p&gt;
+
+&lt;p&gt;For more details on changes landing in 2.2, review the
+&lt;a href="https://github.com/emberjs/ember.js/blob/v2.2.0/CHANGELOG.md"&gt;Ember.js 2.2.0 CHANGELOG&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_ember-js-2-3-beta'&gt;Ember.js 2.3 beta&lt;/h3&gt;
+&lt;p&gt;Ember.js 2.3 beta is released today, and in six weeks it will become the
+new stable version of Ember. This beta cycle introduces several new features
+and a notable deprecation.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_code-visit-code-api'&gt;&lt;code&gt;visit&lt;/code&gt; API&lt;/h4&gt;
+&lt;p&gt;&lt;a href="https://github.com/tildeio/ember-cli-fastboot"&gt;Ember FastBoot&lt;/a&gt; and new testing
+APIs motivated the addition of a &lt;code&gt;visit&lt;/code&gt; method for &lt;code&gt;Ember.Application&lt;/code&gt; and
+&lt;code&gt;Ember.ApplicationInstance&lt;/code&gt; objects. Called on &lt;code&gt;Ember.Application&lt;/code&gt; this
+method accepts several configuration options.&lt;/p&gt;
+
+&lt;p&gt;For example, you might use this API to manually boot an Ember application
+and then instruct it to visit a URL:&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+13
+14
+15
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;import&lt;/span&gt; MyApp from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;my-app&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="predefined"&gt;$&lt;/span&gt;(&lt;span class="keyword"&gt;function&lt;/span&gt;() {
+  let App = MyApp.create({ &lt;span class="key"&gt;autoboot&lt;/span&gt;: &lt;span class="predefined-constant"&gt;false&lt;/span&gt; });
+  let options = {
+    &lt;span class="comment"&gt;// Prevent this application from updating the URL in the address bar&lt;/span&gt;
+    &lt;span class="key"&gt;location&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;none&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;,
+    &lt;span class="comment"&gt;// Override the default `rootElement` to render into a specific `div`&lt;/span&gt;
+    &lt;span class="comment"&gt;// on the page&lt;/span&gt;
+    &lt;span class="key"&gt;rootElement&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;#demo&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;
+  };
+  App.visit(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;/demo&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, options).then((&lt;span class="comment"&gt;/* appInstance */&lt;/span&gt;) =&amp;gt; {
+    &lt;span class="predefined"&gt;$&lt;/span&gt;(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;#loading&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).fadeOut(); &lt;span class="comment"&gt;// Or any other logic after rendering&lt;/span&gt;
+  });
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Importantly, the addition of this API means &lt;strong&gt;FastBoot
+is now usable with Ember.js beta&lt;/strong&gt;. FastBoot itself remains experimental,
+however this is the first time you can use it with a stock build of Ember.js.
+The &lt;a href="https://github.com/tildeio/ember-cli-fastboot"&gt;README.md for ember-cli-fastboot&lt;/a&gt;
+is the best place to start if you want to try FastBoot.&lt;/p&gt;
+
+&lt;p&gt;You can read more about the &lt;code&gt;visit&lt;/code&gt; API and its use cases in the &lt;a href="https://github.com/emberjs/ember.js/blob/0810d913f9d358e5d37d25a1efd2295ebaebc6e2/packages/ember-application/lib/system/application.js#L985-L1181"&gt;unpublished
+&lt;code&gt;visit&lt;/code&gt; API documentation&lt;/a&gt;.
+Reviewing the main implementation PR at &lt;a href="https://github.com/emberjs/ember.js/pull/12394"&gt;emberjs/emberjs #12394&lt;/a&gt; and the integration into FastBoot at
+&lt;a href="https://github.com/tildeio/ember-cli-fastboot/pull/71"&gt;tildeio/ember-cli-fastboot #71&lt;/a&gt;
+may also be helpful.&lt;/p&gt;
+
+&lt;p&gt;Many thanks to &lt;a href="https://twitter.com/tomdale"&gt;@tomdale&lt;/a&gt; and
+&lt;a href="https://twitter.com/chancancode"&gt;@chancancode&lt;/a&gt; for their work implementing
+this API and for their continued work on FastBoot.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_hash-helper'&gt;Hash Helper&lt;/h4&gt;
+&lt;p&gt;The &lt;code&gt;(hash&lt;/code&gt; helper creates an object from arguments passed to it during
+invocation, and then returns that object. For example this usage would create an object with
+the property &lt;code&gt;name&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{#&lt;/span&gt;&lt;span class="attribute-name"&gt;with&lt;/span&gt; &lt;span class="error"&gt;(&lt;/span&gt;&lt;span class="attribute-name"&gt;hash&lt;/span&gt; &lt;span class="attribute-name"&gt;name&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Bob&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;&lt;span class="error"&gt;)&lt;/span&gt; &lt;span class="attribute-name"&gt;as&lt;/span&gt; &lt;span class="error"&gt;|&lt;/span&gt;&lt;span class="attribute-name"&gt;person&lt;/span&gt;&lt;span class="error"&gt;|&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+  Hello, my name is &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;person.name&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{/&lt;/span&gt;&lt;span class="attribute-name"&gt;with&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;This helper is introduced to make the new contextual components feature
+more convenient, and it will often be used with the &lt;code&gt;{{yield&lt;/code&gt; helper. For
+example:&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;{{! app/templates/components/nice-person.hbs }}&lt;/span&gt;
+&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;yield&lt;/span&gt; &lt;span class="error"&gt;(&lt;/span&gt;&lt;span class="attribute-name"&gt;hash&lt;/span&gt; &lt;span class="attribute-name"&gt;name&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Bob&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;&lt;span class="error"&gt;)&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;{{! app/templates/index.hbs }}&lt;/span&gt;
+&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{#&lt;/span&gt;&lt;span class="attribute-name"&gt;nice-person&lt;/span&gt; &lt;span class="attribute-name"&gt;as&lt;/span&gt; &lt;span class="error"&gt;|&lt;/span&gt;&lt;span class="attribute-name"&gt;person&lt;/span&gt;&lt;span class="error"&gt;|&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+  Hello, my name is &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;person.name&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{/&lt;/span&gt;&lt;span class="attribute-name"&gt;nice-person&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;See the &lt;a href="https://github.com/emberjs/ember.js/blob/04ec1c639e3ac7aa93ec24bf7fcf35e18c62fed6/packages/ember-htmlbars/lib/helpers/hash.js#L6-L31"&gt;unpublished documentation&lt;/a&gt; for
+for details on this helper, and read the contextual components section below
+for further context.&lt;/p&gt;
+
+&lt;p&gt;Thanks to &lt;a href="https://twitter.com/serabe"&gt;@Serabe&lt;/a&gt; for his implementation of this
+feature and to &lt;a href="https://twitter.com/MiguelCamba"&gt;@MiguelCamba&lt;/a&gt; for his fantastic
+&lt;a href="https://github.com/cibernox/ember-hash-helper-polyfill"&gt;ember-hash-helper-polyfill&lt;/a&gt;
+addon. Using the polyfill you can start using &lt;code&gt;(hash&lt;/code&gt; with Ember.js 1.13 or
+later.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_contextual-components'&gt;Contextual Components&lt;/h4&gt;
+&lt;p&gt;The new contextual components feature allows for multiple components to
+privately share data, but be invoked in a flexible manner. For example,
+this &lt;code&gt;{{alert-box}}&lt;/code&gt; component yields a contextual component composed
+of the &lt;code&gt;alert-box-button&lt;/code&gt; component and the attribute &lt;code&gt;onclick&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;{{! app/templates/components/alert-box.hbs }}&lt;/span&gt;
+&lt;span class="tag"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="attribute-name"&gt;class&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;alert-box&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;yield&lt;/span&gt; &lt;span class="error"&gt;(&lt;/span&gt;&lt;span class="attribute-name"&gt;hash&lt;/span&gt;
+    &lt;span class="attribute-name"&gt;close-button&lt;/span&gt;=&lt;span class="error"&gt;(&lt;/span&gt;&lt;span class="attribute-value"&gt;component&lt;/span&gt; &lt;span class="error"&gt;'&lt;/span&gt;&lt;span class="attribute-name"&gt;alert-box-button&lt;/span&gt;&lt;span class="error"&gt;'&lt;/span&gt; &lt;span class="attribute-name"&gt;onclick&lt;/span&gt;=&lt;span class="error"&gt;(&lt;/span&gt;&lt;span class="attribute-value"&gt;action&lt;/span&gt; &lt;span class="error"&gt;'&lt;/span&gt;&lt;span class="attribute-name"&gt;close&lt;/span&gt;&lt;span class="error"&gt;'&lt;/span&gt;&lt;span class="error"&gt;)&lt;/span&gt;&lt;span class="error"&gt;)&lt;/span&gt;
+  &lt;span class="error"&gt;)&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+&lt;span class="tag"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;{{! app/templates/index.hbs }}&lt;/span&gt;
+&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;alert-box&lt;/span&gt; &lt;span class="attribute-name"&gt;as&lt;/span&gt; &lt;span class="error"&gt;|&lt;/span&gt;&lt;span class="attribute-name"&gt;box&lt;/span&gt;&lt;span class="error"&gt;|&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+  Danger, Will Robinson!
+  &lt;span class="tag"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="attribute-name"&gt;style&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="key"&gt;float&lt;/span&gt;:&lt;span class="value"&gt;right&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{#&lt;/span&gt;&lt;span class="attribute-name"&gt;box.close-button&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+      It's just a plain old meteorite.
+    &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{/&lt;/span&gt;&lt;span class="attribute-name"&gt;box.close-button&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+  &lt;span class="tag"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{/&lt;/span&gt;&lt;span class="attribute-name"&gt;alert-box&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Contextual components are created using the nested form of the
+&lt;code&gt;component&lt;/code&gt; helper, and may be passed attrs and positional params. Contextual
+components must be invoked with a &lt;code&gt;.&lt;/code&gt; in their path, unless they are being
+passed to the invoking &lt;code&gt;{{component&lt;/code&gt; helper.&lt;/p&gt;
+
+&lt;p&gt;This new feature is a powerful tool for addon authors, allowing them to
+yield components without having arguments to those components become de-facto
+public API. In addition, when the local lookup feature of Ember&amp;#39;s pods
+architecture arrives the combination of these features will permit
+completely private components to be yielded.&lt;/p&gt;
+
+&lt;p&gt;For more information about contextual components see the &lt;a href="https://github.com/emberjs/ember.js/blob/04ec1c639e3ac7aa93ec24bf7fcf35e18c62fed6/packages/ember-htmlbars/lib/keywords/component.js#L52-L73"&gt;unpublished
+documentation&lt;/a&gt;. Further details about the API design decisions can be found in
+&lt;a href="https://github.com/emberjs/rfcs/blob/master/text/0064-contextual-component-lookup.md"&gt;RFC #64&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Thanks again to &lt;a href="https://twitter.com/serabe"&gt;@Serabe&lt;/a&gt; for his implementation
+of this feature as well as &lt;a href="https://twitter.com/mixonic"&gt;@mixonic&lt;/a&gt; and
+&lt;a href="https://twitter.com/_mmun"&gt;@_mmun&lt;/a&gt; for their efforts on the RFC and design.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_introducing-owners-and-deprecating-containers'&gt;Introducing Owners and Deprecating Containers&lt;/h4&gt;
+&lt;p&gt;Ember&amp;#39;s container API is one of the more commonly used private APIs still
+exposed. In Ember.js 2.1, a major refactor of application
+boot removed access to the container from initializers and instance initializers,
+creating public API alternatives.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;In Ember 2.3, accessing the &lt;code&gt;container&lt;/code&gt; property on a framework-generated
+object will be deprecated in favor of a public owner API.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;For example, this component will dynamically lookup an audio service based
+on the &lt;code&gt;audioType&lt;/code&gt; of its model:&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+13
+14
+15
+16
+17
+18
+19
+&lt;strong&gt;20&lt;/strong&gt;
+21
+22
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;import&lt;/span&gt; Ember from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+const {
+  Component,
+  computed,
+  getOwner
+} = Ember;
+
+&lt;span class="comment"&gt;// Usage:&lt;/span&gt;
+&lt;span class="comment"&gt;//&lt;/span&gt;
+&lt;span class="comment"&gt;//   {{play-audio model=audioModel}}&lt;/span&gt;
+&lt;span class="comment"&gt;//&lt;/span&gt;
+&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Component.extend({
+  &lt;span class="key"&gt;audioService&lt;/span&gt;: computed(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;model.audioType&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="keyword"&gt;function&lt;/span&gt;() {
+    let owner = getOwner(&lt;span class="local-variable"&gt;this&lt;/span&gt;);
+    let serviceName = &lt;span class="local-variable"&gt;this&lt;/span&gt;.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;model.audioType&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+    &lt;span class="keyword"&gt;return&lt;/span&gt; owner.lookup(&lt;span class="error"&gt;`&lt;/span&gt;service:audio-&lt;span class="predefined"&gt;$&lt;/span&gt;{serviceName}&lt;span class="error"&gt;`&lt;/span&gt;);
+  }),
+  click() {
+    let player = &lt;span class="local-variable"&gt;this&lt;/span&gt;.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;audioService&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+    player.play(&lt;span class="local-variable"&gt;this&lt;/span&gt;.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;model.file&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;));
+  }
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;The return value of &lt;code&gt;getOwner&lt;/code&gt; will be an &lt;a href="http://emberjs.com/api/classes/Ember.ApplicationInstance.html"&gt;&lt;code&gt;Ember.ApplicationInstance&lt;/code&gt;&lt;/a&gt;
+for objects generated by the framework.&lt;/p&gt;
+
+&lt;p&gt;For more information about migrating code from using &lt;code&gt;container&lt;/code&gt; to &lt;code&gt;getOwner&lt;/code&gt;,
+see the &lt;a href="http://emberjs.com/deprecations/v2.x/#toc_injected-container-access"&gt;deprecation guide&lt;/a&gt;.
+Further details about the API design decisions can be found in
+&lt;a href="https://github.com/emberjs/ember.js/pull/11874"&gt;emberjs/emberjs #11874&lt;/a&gt;
+and &lt;a href="https://github.com/emberjs/ember.js/issues/12555"&gt;emberjs/emberjs #12555&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Many thanks to &lt;a href="https://twitter.com/dgeb"&gt;@dgeb&lt;/a&gt; for his tireless efforts
+implementing this feature, and for his time buildling consensus around
+improvements to the Ember dependency injection API. Additionally credit is
+due to &lt;a href="https://twitter.com/rwjblue"&gt;@rwjblue&lt;/a&gt; for his upgrade PRs to
+&lt;a href="https://github.com/emberjs/data/pull/3912"&gt;Ember Data&lt;/a&gt;, &lt;a href="https://github.com/ef4/liquid-fire/pull/388"&gt;Liquid-Fire&lt;/a&gt;, and &lt;a href="https://github.com/jamesarosen/ember-i18n/pull/336"&gt;Ember-i18n&lt;/a&gt;.
+These provide a good example of how to upgrade any addon or app codebase.&lt;/p&gt;
+
+&lt;p&gt;For more details on changes landing in 2.3, review the
+&lt;a href="https://github.com/emberjs/ember.js/blob/v2.3.0-beta.1/CHANGELOG.md"&gt;Ember.js 2.3.0-beta.1 CHANGELOG&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>Ember Data 2.1 and 2.2 Beta Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/10/05/ember-data-2-1-released.html"/>
@@ -638,261 +921,6 @@ his patience building consensus around changes to Ember&amp;#39;s internals.&lt;
 
 &lt;p&gt;For more details on changes landing in 2.1, review the
 &lt;a href="https://github.com/emberjs/ember.js/blob/v2.1.0-beta.1/CHANGELOG.md"&gt;Ember.js 2.1.0-beta.1 CHANGELOG&lt;/a&gt;.&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Ember.js 2.0 Released</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2015/08/13/ember-2-0-released.html"/>
-    <id>http://emberjs.com/blog/2015/08/13/ember-2-0-released.html</id>
-    <published>2015-08-12T20:00:00-04:00</published>
-    <updated>2015-08-12T20:00:00-04:00</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Ember 2.0 is not a traditional major release. After thirteen point releases in
-almost two years, we're taking a turn to focus entirely on sweeping out
-built-up cruft as a foundation for continued progress.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Ember 2.0 only removes features that were...&lt;/strong&gt;&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Ember 2.0 is not a traditional major release. After thirteen point releases in
-almost two years, we&amp;#39;re taking a turn to focus entirely on sweeping out
-built-up cruft as a foundation for continued progress.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Ember 2.0 only removes features that were deprecated as of Ember 1.13, so
-apps that run on Ember 1.13 without any deprecation warnings should run
-without issues on Ember 2.0.&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;New applications should begin using Ember 2.0 today. Apps requiring Ember-Data
-should use Ember-Data 2.0.0-beta.1 (2.0 release coming shortly!).&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_new-features-in-ember-js-2-0'&gt;New Features in Ember.js 2.0&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;&lt;em&gt;&amp;lt;This space intentionally left blank!&amp;gt;&lt;/em&gt;&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Major releases of most libraries try to do two things. They introduce new APIs,
-and remove deprecated ones. Our release focuses on doing one thing well:
-&lt;strong&gt;Instead of introducing new features, the goal of Ember 2.0 is to remove
-accumulated cruft.&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Since Ember 1.0, adherence to semantic versioning has helped us grow an amazing
-community. Ember powers extremely ambitious applications, and most of those
-applications have been able to move forward over 13+ releases as new features
-arrived.&lt;/p&gt;
-
-&lt;p&gt;We are committed to giving every Ember codebase a path into 2.x. To ensure
-this, we&amp;#39;ve flagged everything removed in 2.0 with a deprecation in the 1.x
-series. &lt;strong&gt;If your app runs on Ember 1.13 without raising deprecations, it
-should run on 2.0.&lt;/strong&gt; There are no new features to adapt to or adopt.&lt;/p&gt;
-
-&lt;p&gt;In the first few releases in Ember 2.x, we plan to land a variety of exciting
-features. We are all the more excited that thousands of existing apps will be
-ready to use them immediately. More about this below.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_removed-apis'&gt;Removed APIs&lt;/h4&gt;
-&lt;p&gt;Internally, we&amp;#39;ve taken to calling Ember 2.0 a &amp;quot;garbage collection&amp;quot; release.
-Two years is a lot of framework development, and there are many things dropped
-in today&amp;#39;s release.&lt;/p&gt;
-
-&lt;p&gt;Developers migrating forward will find these resources helpful:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The &lt;a href="http://emberjs.com/deprecations/v1.x/"&gt;1.x Deprecation Guide&lt;/a&gt; contains
-a summary and migration path for many deprecations since Ember 1.7.
-Additionally, this guide is linked to from deprecation messages in your
-browser&amp;#39;s console.&lt;/li&gt;
-&lt;li&gt;The &lt;a href="https://github.com/emberjs/ember-inspector#ember-inspector-"&gt;Ember Inspector&lt;/a&gt;
-is an essential tool for debugging Ember apps, and provides some tooling for
-managing deprecations.&lt;/li&gt;
-&lt;li&gt;Core team members &lt;a href="https://twitter.com/rwjblue"&gt;Robert Jackson&lt;/a&gt; and
-&lt;a href="https://twitter.com/mixonic"&gt;Matthew Beale&lt;/a&gt; published the
-&lt;a href="https://github.com/mixonic/ember-cli-deprecation-workflow"&gt;ember-cli-deprecation-workflow&lt;/a&gt;
-addon in July. This tool helps to manage upgrades to your codebase through
-deprecation messages. Watch Robert present on upgrade workflows in this
-&lt;a href="https://www.youtube.com/watch?v=ltzN4v-ymo4&amp;amp;feature=youtu.be&amp;amp;t=1h25m55s"&gt;NYC meetup video&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;The &lt;a href="https://github.com/rwjblue/ember-debug-handlers-polyfill"&gt;ember-debug-handlers-polyfill&lt;/a&gt;
-addon provides a future-safe API for writing your own upgrade tooling.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Some of the major API removals follow.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Views&lt;/strong&gt; have been removed in Ember 2.0. Components, which provide better
-isolation and scoping semantics, fulfill the use-cases views were introduced
-for.&lt;/p&gt;
-
-&lt;p&gt;We recognize that existing apps will not complete their migration away from
-views for several months, so we have published the
-&lt;a href="https://github.com/emberjs/ember-legacy-views"&gt;ember-legacy-views&lt;/a&gt;
-compatibility addon, that will allow you to spread out the transition over more
-releases. We are committed to maintain support for this addon until at least
-Ember 2.6.&lt;/p&gt;
-
-&lt;p&gt;If you are building a new application, the use-case for views have completely
-been subsumed by Components. Existing apps should refactor away from the
-&lt;code&gt;{{view}}&lt;/code&gt; helper and &lt;code&gt;Ember.View&lt;/code&gt;s in favor of Components.&lt;/p&gt;
-
-&lt;p&gt;However, existing applications that make use of top-level Views do not need to
-immediately refactor those views to components. The future Routable Components
-will provide a softer transition path for this use-case and we commit to
-support the compatibility addon until the community has had a chance to
-transition to Routable Components.&lt;/p&gt;
-
-&lt;p&gt;Similarly, the use-cases for &lt;strong&gt;Controllers&lt;/strong&gt; have largely been eliminated.&lt;/p&gt;
-
-&lt;p&gt;As with views, we have published the
-&lt;a href="https://github.com/emberjs/ember-legacy-controllers"&gt;ember-legacy-controllers&lt;/a&gt;
-compatibility addon that you can use to spread out the transition. This addon
-will also be maintained until at least Ember 2.6.&lt;/p&gt;
-
-&lt;p&gt;If you are building a new application, you should almost never need controllers
-except to manage query parameters and communicate with the route (ala
-&lt;code&gt;transitionTo&lt;/code&gt;). For these cases, Ember 2.0 retains support for top-level
-controllers with no addon required. While we plan to completely replace these
-use-cases during the 2.x series, everything that works without the
-compatibility addon will continue to work until 3.0.&lt;/p&gt;
-
-&lt;p&gt;Existing applications should refactor away from using the &lt;code&gt;{{controller}}&lt;/code&gt;
-property, use of proxying controllers (&lt;code&gt;ArrayController&lt;/code&gt; and
-&lt;code&gt;ObjectController&lt;/code&gt;), &lt;code&gt;itemController&lt;/code&gt;, etc.&lt;/p&gt;
-
-&lt;p&gt;However, existing applications that make use of top-level Controllers do not
-need to immediately eliminate those controllers. As with top-level views, the
-future Routable Components will provide a softer transition for this use-case
-and we commit to support the compatibility addon until the community has had a
-chance to transition to Routable Components.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;ReduceComputed and ArrayComputed&lt;/strong&gt; have been made obsolete by the Glimmer
-rendering engine introduced in Ember 1.13. These APIs allowed array operations
-to be performed without creating new arrays. Glimmer&amp;#39;s value diffing makes this
-unnecessary. Computed property macros that operate on arrays are still present,
-but they are simply not backed by &lt;code&gt;ReduceComputed&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Context shifting in templates&lt;/strong&gt; (&lt;code&gt;{{#each}}&lt;/code&gt; and &lt;code&gt;{{#with}}&lt;/code&gt; without block
-params) is removed in Ember 2.0. For any template, there is now only one this
-and it cannot be changed for part of that template by any helper. This makes
-templates easier to reason about, and unlocks opportunities for performance
-improvements.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;IE8 support&lt;/strong&gt; has been dropped for Ember 2.0. For the 2.x series, IE9+ will
-be supported.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Legacy Handlebars helpers&lt;/strong&gt; are removed in favor of the &lt;code&gt;Ember.Helper&lt;/code&gt; API.
-This API does not provide a mechanism for helpers to take a block, but does
-introduce support for nested helpers which can be used in concert with built-in
-helpers (like &lt;code&gt;{{#if}}&lt;/code&gt; and &lt;code&gt;{{#each}}&lt;/code&gt;) to achieve the same ends.&lt;/p&gt;
-
-&lt;p&gt;Please see the &lt;a href="https://github.com/emberjs/ember.js/releases/tag/v2.0.0"&gt;CHANGELOG.md&lt;/a&gt;
-for an authoritative list of cleanups.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_the-road-ahead'&gt;The Road Ahead&lt;/h4&gt;
-&lt;p&gt;Over the last few releases of Ember 1.x, we added a large number of new
-features. These additions, including a whole new rendering engine, were
-introduced while maintaining backwards compatibility. Unsurprisingly,
-maintaining support for the semantics of two rendering engines (among other
-things) introduced a large amount of cruft. Continuing to provide backwards
-compatible legacy APIs has a non-trivial impact on the performance of Ember
-applications, and on the project’s momentum.&lt;/p&gt;
-
-&lt;p&gt;Ember 2.0 allowed us to purge much of that built-up cruft. That was no small
-task; removing code, documenting deprecations, and building new workflows for
-managing these changes would not have happened without lots of hands. It was an
-incredible effort, and we&amp;#39;d like to thank the community for making it happen.&lt;/p&gt;
-
-&lt;p&gt;With the garbage collection sweep out of our way, we can continue to expand on
-the foundation solidified in Ember’s 1.x series.&lt;/p&gt;
-&lt;h5 class='anchorable-toc' id='toc_improved-release-cadence'&gt;Improved Release Cadence&lt;/h5&gt;
-&lt;p&gt;Since Ember 1.0, we have followed &lt;a href="http://semver.org/"&gt;Semantic Versioning&lt;/a&gt;,
-working very hard to maintain public API compatibility while adding new
-features. In the lead-up to breaking changes in Ember 2.0, we made a number of
-mistakes that caused our users to experience a great deal of churn.&lt;/p&gt;
-
-&lt;p&gt;While we successfully followed our existing policies regarding deprecation
-before removal, and ensured that each deprecated feature had a viable
-replacement, we did not do a good job of distinguishing between different kinds
-of deprecations. Additionally, many deprecations landed very late and all at
-once. These factors combined made the entire process feel overwhelming.&lt;/p&gt;
-
-&lt;p&gt;The feeling of &amp;quot;churn&amp;quot; is contrary to all our release process goals. In
-addition to the continued maintenance of a six-week release cycle, we have a
-number of tweaks to the process planned for 2.x. These are intended to help us
-avoid a similar problem late in the 2.x cycle.&lt;/p&gt;
-
-&lt;p&gt;Some examples of improvements are:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;LTS (Long-Term Support) Releases&lt;/strong&gt; (&lt;a href="https://github.com/emberjs/rfcs/pull/56"&gt;RFC #56&lt;/a&gt;),
-which can give users who want to upgrade less often than every six week a
-sanctioned way to do so.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Mandatory docs&lt;/strong&gt;. No new features will be added to the Ember 2.0 release
-channel without accompanying documentation.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;More informative deprecations&lt;/strong&gt;. All deprecations will include which
-release their behavior will be removed in, as well as a link to transition
-instructions.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Improved deprecation tooling&lt;/strong&gt;. More informative deprecations allow us to
-make the Ember inspector&amp;#39;s deprecation pane smarter, and more useful for
-incrementally working through deprecations. In particular, we can avoid
-nagging you (by default) about removals that will not happen until far in the
-future. For more information see
-&lt;a href="https://github.com/emberjs/rfcs/pull/65"&gt;RFC #65&lt;/a&gt; and the included comments.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Svelte Builds&lt;/strong&gt;, which allow you to ask Ember CLI not to include deprecated
-features you are no longer using. This will reduce pressure on future major
-releases.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 class='anchorable-toc' id='toc_ember-2-x-themes'&gt;Ember 2.x Themes&lt;/h4&gt;
-&lt;p&gt;In addition to a better release process, you can look forward to several
-high-level areas of improvement throughout the 2.x series.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Alignment with JavaScript&lt;/strong&gt;. Throughout 2.x, we will continue our efforts to
-align Ember with ES6 and future versions of JavaScript. As the JavaScript
-decorator proposal stabilizes, and as transpilers improve their
-implementations, we plan to adapt computed properties and other APIs to that
-syntax.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;JavaScript Modules&lt;/strong&gt;. We will also continue to evolve further towards a
-modules development style and away from a globals style. Among other things,
-this will allow us to more aggressively automate the removal of dead code
-paths.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Stabilization and Integration&lt;/strong&gt;. The Ember ecosystem will continue to
-stabilize and integrate tightly. Ember-Data and Ember CLI will be versioned in
-lockstep with Ember itself. Putting these projects on the &amp;quot;release train&amp;quot; with
-Ember will mean they adhere to the same backwards compatible and incremental
-change policies as Ember did through 1.x.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Ember Data&lt;/strong&gt;. With the release of Ember 2.0, Ember Data is now a stable part
-of Ember&amp;#39;s releases. It will adhere to Semantic Versioning policies like Ember
-itself, and every release of Ember will include a compatible release of Ember
-Data. Along those lines, Ember Data will not make any breaking changes until
-3.0.&lt;/p&gt;
-&lt;h5 class='anchorable-toc' id='toc_new-features-in-the-pipeline'&gt;New Features in the Pipeline&lt;/h5&gt;
-&lt;p&gt;Many of our other plans have already been proposed via the RFC process and
-discussions on GitHub, but here&amp;#39;s a recap.&lt;/p&gt;
-
-&lt;p&gt;We are actively working on the implementation of these features, and expect
-them to land gradually over several releases.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Angle-Bracket Components and One-Way Data Flow&lt;/strong&gt;. Ember 2.x will transition
-to angle-bracket components. For example &lt;code&gt;&amp;lt;my-button&amp;gt;&lt;/code&gt; instead of
-&lt;code&gt;{{my-button}}&lt;/code&gt;. These will operate with one-way binding as part of a larger
-transition to a &amp;quot;data down, actions up&amp;quot;, or &amp;quot;DDAU&amp;quot;, style of programming that
-you will read about as features land. We expect these components to land in
-2.2 and be refined over the next few releases. See
-&lt;a href="https://github.com/emberjs/rfcs/pull/60"&gt;RFC #60&lt;/a&gt; and
-&lt;a href="https://github.com/emberjs/ember.js/pull/12011"&gt;PR #12011&lt;/a&gt; for more details
-about our progress.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Pods&lt;/strong&gt;. We are also actively working on finalizing the pods directory layout
-for applications, which makes it easier to group related parts of your
-application together. This change will be completely opt-in, and existing
-layouts will continue to work.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Routable Components&lt;/strong&gt;. After angle-bracket components and the pods layout
-land, we will be able to transition the last few use-cases for controllers to
-the much-anticipated Routable Components.
-&lt;a href="https://github.com/emberjs/rfcs/pull/38"&gt;RFC #38&lt;/a&gt; and
-&lt;a href="https://github.com/emberjs/ember.js/pull/11939"&gt;PR #11939&lt;/a&gt; track our progress
-so far.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;FastBoot&lt;/strong&gt;, Ember&amp;#39;s alpha release server-side pre-rendering library, will
-continue to improve and stabilize over the 2.x lifecycle. Find it on GitHub as
-&lt;a href="https://github.com/tildeio/ember-cli-fastboot"&gt;ember-cli-fastboot&lt;/a&gt;.&lt;/p&gt;
 </content>
   </entry>
 </feed>
