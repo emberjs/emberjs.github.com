@@ -5,10 +5,351 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2015-11-16T19:00:00-05:00</updated>
+  <updated>2016-01-11T19:00:00-05:00</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>Ember Data 2.3 and 2.4 Beta Released</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2016/01/12/ember-data-2-3-released.html"/>
+    <id>http://emberjs.com/blog/2016/01/12/ember-data-2-3-released.html</id>
+    <published>2016-01-11T19:00:00-05:00</published>
+    <updated>2016-01-11T19:00:00-05:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Ember Data 2.3, a minor version release of Ember Data, is released today. This release represents the work of over 32 direct contributors, and over 196 commits.&lt;/p&gt;
+
+&lt;p&gt;Ember Data 2.4 beta.1, the branch of Ember Data that will be released as stable in roughly...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;Ember Data 2.3, a minor version release of Ember Data, is released today. This release represents the work of over 32 direct contributors, and over 196 commits.&lt;/p&gt;
+
+&lt;p&gt;Ember Data 2.4 beta.1, the branch of Ember Data that will be released as stable in roughly six weeks, is also being released today.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_changes-in-ember-data-2-3'&gt;Changes in Ember Data 2.3&lt;/h3&gt;
+&lt;p&gt;Ember Data 2.3 is now a full Ember CLI addon. Previous versions of
+Ember Data required users to include both the &lt;em&gt;ember-data&lt;/em&gt; package in
+their project&amp;#39;s &lt;code&gt;package.json&lt;/code&gt; file and the &lt;em&gt;ember-data&lt;/em&gt; package in
+their project&amp;#39;s &lt;code&gt;bower.json&lt;/code&gt; file. This resulted in confusion because
+updating &lt;em&gt;ember-data&lt;/em&gt; in &lt;code&gt;package.json&lt;/code&gt; would not update &lt;em&gt;ember-data&lt;/em&gt;
+in &lt;code&gt;bower.json&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;To upgrade Ember Data to version 2.3 in your Ember CLI projects please
+do the following:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;remove the &lt;code&gt;ember-data&lt;/code&gt; package from your &lt;code&gt;bower.json&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;update &lt;code&gt;ember-cli-shims&lt;/code&gt; package to version &lt;code&gt;ember-cli/ember-cli-shims#0.1.0&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight diff "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;   ...
+   &amp;quot;dependencies&amp;quot;: {
+     &amp;quot;handlebars&amp;quot;: &amp;quot;2.0.0&amp;quot;,
+     &amp;quot;ember&amp;quot;: &amp;quot;~2.2.0&amp;quot;,
+&lt;span class="line delete"&gt;&lt;span class="delete"&gt;-&lt;/span&gt;    &amp;quot;ember-cli-shims&amp;quot;: &amp;quot;ember-cli/ember-cli-shims#0.&lt;span class="eyecatcher"&gt;0.6&lt;/span&gt;&amp;quot;,&lt;/span&gt;
+&lt;span class="line insert"&gt;&lt;span class="insert"&gt;+&lt;/span&gt;    &amp;quot;ember-cli-shims&amp;quot;: &amp;quot;ember-cli/ember-cli-shims#0.&lt;span class="eyecatcher"&gt;1.0&lt;/span&gt;&amp;quot;,&lt;/span&gt;
+     &amp;quot;ember-cli-test-loader&amp;quot;: &amp;quot;ember-cli-test-loader#0.1.3&amp;quot;,
+&lt;span class="line delete"&gt;&lt;span class="delete"&gt;-&lt;/span&gt;    &amp;quot;ember-data&amp;quot;: &amp;quot;~1.13.12&amp;quot;,&lt;/span&gt;
+     &amp;quot;ember-load-initializers&amp;quot;: &amp;quot;ember-cli/ember-load-initializers#0.1.5&amp;quot;,
+     ...
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Then in your &lt;code&gt;package.json&lt;/code&gt; update &lt;code&gt;ember-data&lt;/code&gt; to &lt;code&gt;^2.3.0&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight diff "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;   ...
+   &amp;quot;devDependencies&amp;quot;: {
+     ...
+     &amp;quot;ember-cli-sri&amp;quot;: &amp;quot;^2.0.0&amp;quot;,
+     &amp;quot;ember-cli-uglify&amp;quot;: &amp;quot;^1.2.0&amp;quot;,
+&lt;span class="line delete"&gt;&lt;span class="delete"&gt;-&lt;/span&gt;    &amp;quot;ember-data&amp;quot;: &amp;quot;^2.&lt;span class="eyecatcher"&gt;2.1&lt;/span&gt;&amp;quot;,&lt;/span&gt;
+&lt;span class="line insert"&gt;&lt;span class="insert"&gt;+&lt;/span&gt;    &amp;quot;ember-data&amp;quot;: &amp;quot;^2.&lt;span class="eyecatcher"&gt;3.0&lt;/span&gt;&amp;quot;,&lt;/span&gt;
+     &amp;quot;ember-disable-proxy-controllers&amp;quot;: &amp;quot;^1.0.1&amp;quot;,
+     ...
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Thanks to &lt;a href="https://github.com/fivetanley"&gt;@fivetanley&lt;/a&gt;, for his heroic
+efforts in converting Ember Data&amp;#39;s build to Ember CLI&amp;#39;s addon
+infrastructure.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_importing-modules'&gt;Importing Modules&lt;/h3&gt;
+&lt;p&gt;The Ember Data addon allows users to import modules directly into
+their application instead of accessing modules top level &lt;code&gt;DS&lt;/code&gt; namespace.&lt;/p&gt;
+
+&lt;p&gt;The following module paths are considered to be public API and will be supported until at least Ember Data 3.0:&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+13
+14
+15
+16
+17
+18
+19
+&lt;strong&gt;20&lt;/strong&gt;
+21
+22
+23
+24
+25
+26
+27
+28
+29
+&lt;strong&gt;30&lt;/strong&gt;
+31
+32
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// DS.Model&lt;/span&gt;
+&lt;span class="reserved"&gt;import&lt;/span&gt; Model from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data/model&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="comment"&gt;// DS.RESTSerializer&lt;/span&gt;
+&lt;span class="reserved"&gt;import&lt;/span&gt; RESTSerializer from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data/serializers/rest&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="comment"&gt;// DS.JSONSerializer&lt;/span&gt;
+&lt;span class="reserved"&gt;import&lt;/span&gt; JSONSerializer from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data/serializers/json&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="comment"&gt;// DS.JSONAPISerializer&lt;/span&gt;
+&lt;span class="reserved"&gt;import&lt;/span&gt; JSONAPISerializer from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data/serializers/json-api&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="comment"&gt;// DS.JSONAPIAdapter&lt;/span&gt;
+&lt;span class="reserved"&gt;import&lt;/span&gt; JSONAPIAdapter from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data/adapters/json-api&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="comment"&gt;// DS.RESTAdapter&lt;/span&gt;
+&lt;span class="reserved"&gt;import&lt;/span&gt; RESTAdapter from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data/adapters/rest&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="comment"&gt;// DS.Adapter&lt;/span&gt;
+&lt;span class="reserved"&gt;import&lt;/span&gt; Adapter from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data/adapter&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="comment"&gt;// DS.Store&lt;/span&gt;
+&lt;span class="reserved"&gt;import&lt;/span&gt; Store from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data/store&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="comment"&gt;// DS.Transform&lt;/span&gt;
+&lt;span class="reserved"&gt;import&lt;/span&gt; Transform from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data/transform&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="comment"&gt;// DS.attr&lt;/span&gt;
+&lt;span class="reserved"&gt;import&lt;/span&gt; attr from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data/attr&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="comment"&gt;// DS.hasMany or DS.belongsTo&lt;/span&gt;
+&lt;span class="reserved"&gt;import&lt;/span&gt; { hasMany, belongsTo } from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data/relationships&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Modules that are not considered to be public API have been placed under the &lt;code&gt;ember-data/-private&lt;/code&gt; path. Please do not import these modules into your app or test code as they may be changed or removed &lt;em&gt;without warning&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Thanks to &lt;a href="https://github.com/rwjblue"&gt;@rwjblue&lt;/a&gt; for implementing this
+module API.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_notable-bug-fixes'&gt;Notable Bug Fixes&lt;/h4&gt;&lt;h5 class='anchorable-toc' id='toc_a-href-https-github-com-emberjs-data-pull-4025-pr-4025-use-keyforrelationship-for-belongsto-and-hasmany-a'&gt;&lt;a href="https://github.com/emberjs/data/pull/4025/"&gt;PR #4025 Use keyForRelationship for belongsTo and hasMany&lt;/a&gt;&lt;/h5&gt;
+&lt;p&gt;The &lt;code&gt;EmbeddedRecordsMixin&lt;/code&gt; now uses &lt;a href="http://emberjs.com/api/data/classes/DS.RESTSerializer.html#method_keyForRelationship"&gt;keyForRelationship&lt;/a&gt; to generate the serialized key for embedded relationships. Thanks to &lt;a href="https://github.com/GCorbel"&gt;@GCorbel&lt;/a&gt; for this fix.&lt;/p&gt;
+&lt;h5 class='anchorable-toc' id='toc_a-href-https-github-com-emberjs-data-pull-3866-pr-3866-allow-store-push-to-accept-data-null-a'&gt;&lt;a href="https://github.com/emberjs/data/pull/3866"&gt;PR #3866 Allow store.push to accept { data: null }&lt;/a&gt;&lt;/h5&gt;
+&lt;p&gt;The JSONAPISerializer now correctly accepts &lt;code&gt;{&amp;quot;data&amp;quot;: null}&lt;/code&gt; as a valid response instead of throwing an unhelpful error message. Thanks to &lt;a href="https://github.com/mitchlloyd"&gt;@mitchlloyd&lt;/a&gt; for the &lt;a href="https://github.com/emberjs/data/issues/3790"&gt;bug report&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;See the &lt;a href="https://github.com/emberjs/data/blob/v2.3.0/CHANGELOG.md"&gt;Ember Data 2.3.0 CHANGELOG&lt;/a&gt; for a full list of all changes.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_ember-data-2-4-beta'&gt;Ember Data 2.4 beta&lt;/h3&gt;
+&lt;p&gt;Ember Data 2.4 beta is released today, and in six weeks it will become the
+new stable version of Ember Data. This beta cycle introduces a single new feature.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_friendly-errors'&gt;Friendly Errors&lt;/h4&gt;
+&lt;p&gt;&lt;a href="https://github.com/nikz"&gt;@nikz&lt;/a&gt; has implemented
+&lt;a href="https://github.com/emberjs/rfcs/pull/101"&gt;RFC 101&lt;/a&gt; which provides
+more context for &lt;code&gt;RESTAdapter&lt;/code&gt; and &lt;code&gt;JSONAPIAdapter&lt;/code&gt; errors in Ember
+Data. Be sure to check out the
+&lt;a href="https://github.com/emberjs/data/pull/3930"&gt;pull request&lt;/a&gt; for more
+details.&lt;/p&gt;
+
+&lt;p&gt;For more details on changes in 2.4, review the
+&lt;a href="https://github.com/emberjs/data/blob/v2.4.0-beta.1/CHANGELOG.md"&gt;Ember Data 2.4.0-beta.1 CHANGELOG&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_upcoming-features'&gt;Upcoming Features&lt;/h3&gt;
+&lt;p&gt;Two new features recently landed on the Ember Data canary branch. They
+each address add some long requested features to Ember Data. However,
+before they can be enabled in a beta branch the Ember Data team would
+like the community to try them out and provide feedback on their
+implementations. These two feature flagged features are only available
+on the master branch (sometimes called &amp;quot;canary&amp;quot;) of Ember Data. To
+test them out please update the version of Ember Data in package.json
+to &lt;code&gt;emberjs/data#master&lt;/code&gt; and add the feature to the &lt;code&gt;EmberENV&lt;/code&gt;&amp;#39;s
+&lt;code&gt;FEATURES&lt;/code&gt; object in &lt;code&gt;config/environment.js&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;td colspan="2"&gt;config/environment.js&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; ENV = {
+  &lt;span class="key"&gt;EmberENV&lt;/span&gt;: {
+    &lt;span class="key"&gt;FEATURES&lt;/span&gt;: {
+      &lt;span class="key"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ds-find-include&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;: &lt;span class="predefined-constant"&gt;true&lt;/span&gt;,
+      &lt;span class="key"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ds-references&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;: &lt;span class="predefined-constant"&gt;true&lt;/span&gt;
+    }
+  }
+};
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;For more information you can check out Ember&amp;#39;s
+&lt;a href="https://guides.emberjs.com/v2.2.0/configuring-ember/feature-flags/"&gt;feature flags guide&lt;/a&gt;.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_code-ds-finder-include-code'&gt;&lt;code&gt;ds-finder-include&lt;/code&gt;&lt;/h4&gt;
+&lt;p&gt;The &lt;code&gt;ds-finder-include&lt;/code&gt; feature allows an &lt;code&gt;include&lt;/code&gt; query parameter to
+be specified with using &lt;code&gt;store.findRecord()&lt;/code&gt; and &lt;code&gt;store.findAll()&lt;/code&gt; as
+described in &lt;a href="https://github.com/emberjs/rfcs/pull/99"&gt;RFC 99&lt;/a&gt;. This
+should make it easier to specify when backends should return
+sideloaded relationships. Thanks to
+&lt;a href="https://github.com/HeroicEric"&gt;@HeroicEric&lt;/a&gt; for implementing this
+feature.&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// GET /articles/1?include=comments&lt;/span&gt;
+
+&lt;span class="keyword"&gt;var&lt;/span&gt; article = &lt;span class="local-variable"&gt;this&lt;/span&gt;.store.findRecord(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;article&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="integer"&gt;1&lt;/span&gt;, { &lt;span class="key"&gt;include&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; });
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// GET /articles?include=comments&lt;/span&gt;
+
+&lt;span class="keyword"&gt;var&lt;/span&gt; article = &lt;span class="local-variable"&gt;this&lt;/span&gt;.store.findAll(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;article&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, { &lt;span class="key"&gt;include&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; });
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;h4 class='anchorable-toc' id='toc_code-ds-references-code'&gt;&lt;code&gt;ds-references&lt;/code&gt;&lt;/h4&gt;
+&lt;p&gt;The &lt;code&gt;ds-references&lt;/code&gt; feature implements the references API as described
+in &lt;a href="https://github.com/emberjs/rfcs/pull/57"&gt;RFC 57&lt;/a&gt;. References is a
+low level API to perform meta-operations on records, has-many
+relationships and belongs-to relationships:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;get the current local data synchronously without triggering a fetch or producing a promise&lt;/li&gt;
+&lt;li&gt;notify the store that a fetch for a given record has begun, and provide a promise for its result&lt;/li&gt;
+&lt;li&gt;similarly, notify a record that a fetch for a given relationship has begun, and provide a promise for its result&lt;/li&gt;
+&lt;li&gt;retrieve server-provided metadata about a record or relationship&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Consider the following &lt;code&gt;post&lt;/code&gt; model:&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// app/models/post.js&lt;/span&gt;
+&lt;span class="reserved"&gt;import&lt;/span&gt; Model from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data/model&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+&lt;span class="reserved"&gt;import&lt;/span&gt; { belongsTo, hasMany } from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data/relationships&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Model.extend({
+  &lt;span class="key"&gt;comments&lt;/span&gt;: hasMany(),
+  &lt;span class="key"&gt;author&lt;/span&gt;: belongsTo()
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;The references API now allows the possibility to interact with the relationships:&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+13
+14
+15
+16
+17
+18
+19
+&lt;strong&gt;20&lt;/strong&gt;
+21
+22
+23
+24
+25
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; post = store.peekRecord(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;post&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="integer"&gt;1&lt;/span&gt;);
+
+&lt;span class="comment"&gt;// check if the author is already loaded, without triggering a request&lt;/span&gt;
+&lt;span class="keyword"&gt;if&lt;/span&gt; (post.belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;author&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).value() !== &lt;span class="predefined-constant"&gt;null&lt;/span&gt;) {
+  console.log(post.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;author.name&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;));
+} &lt;span class="keyword"&gt;else&lt;/span&gt; {
+  &lt;span class="comment"&gt;// load the author&lt;/span&gt;
+  post.belongtTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;author&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).load();
+}
+
+&lt;span class="comment"&gt;// reload the author&lt;/span&gt;
+post.belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;author&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).reload();
+
+&lt;span class="comment"&gt;// check if there are comments, without triggering a request&lt;/span&gt;
+&lt;span class="keyword"&gt;if&lt;/span&gt; (post.hasMany(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).value() !== &lt;span class="predefined-constant"&gt;null&lt;/span&gt;) {
+  &lt;span class="keyword"&gt;var&lt;/span&gt; ids = post.hasMany(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).ids();
+
+  &lt;span class="keyword"&gt;var&lt;/span&gt; meta = post.hasMany(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).meta();
+  console.log(&lt;span class="error"&gt;`&lt;/span&gt;&lt;span class="predefined"&gt;$&lt;/span&gt;{ids.length} comments out of &lt;span class="predefined"&gt;$&lt;/span&gt;{meta.total}&lt;span class="error"&gt;`&lt;/span&gt;);
+} &lt;span class="keyword"&gt;else&lt;/span&gt; {
+  post.hasMany(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).load();
+}
+
+&lt;span class="comment"&gt;// reload comments&lt;/span&gt;
+post.hasMany(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).reload();
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Thanks to &lt;a href="https://github.com/pangratz"&gt; @pangratz&lt;/a&gt; for implementing
+this feature.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>Ember Data 2.2 and 2.3 Beta Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2015/11/17/ember-data-2-2-released.html"/>
@@ -35,9 +376,9 @@ this release contains bugfixes and documentation improvements for
 Ember Data.&lt;/p&gt;
 
 &lt;p&gt;See the &lt;a href="https://github.com/emberjs/data/blob/v2.2.0/CHANGELOG.md"&gt;Ember Data 2.2.0 CHANGELOG&lt;/a&gt; for a full list of all changes.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_ember-js-2-3-beta'&gt;Ember.js 2.3 beta&lt;/h3&gt;
-&lt;p&gt;Ember.js 2.3 beta is released today, and in six weeks it will become the
-new stable version of Ember.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_ember-data-2-3-beta'&gt;Ember Data 2.3 beta&lt;/h3&gt;
+&lt;p&gt;Ember Data 2.3 beta is released today, and in six weeks it will become the
+new stable version of Ember Data.&lt;/p&gt;
 &lt;h4 class='anchorable-toc' id='toc_ember-cli-addon'&gt;Ember CLI Addon&lt;/h4&gt;
 &lt;p&gt;Previously the primary way of consuming Ember Data was using the bower
 package. The existing Ember Data addon for Ember CLI added Ember Data
@@ -632,120 +973,6 @@ for the RFC.&lt;/p&gt;
 &lt;p&gt;Like all of Ember.js and its sister projects, the Guides are maintained by an all-volunteer team. Please take a moment to thank them online, buy them a beer at your local meetup, and best yet, chip in and help out yourself!&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Thanks to Yehuda Katz and Leah Silber for reviewing the draft of this post.&lt;/em&gt;&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Ember Data v2.0 Released and v2.1 Beta Released</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2015/09/02/ember-data-2-0-released.html"/>
-    <id>http://emberjs.com/blog/2015/09/02/ember-data-2-0-released.html</id>
-    <published>2015-09-01T20:00:00-04:00</published>
-    <updated>2015-09-01T20:00:00-04:00</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;We are excited to announce the release of Ember Data 2.0, the
-second stable release since 1.13 that includes significant improvements,
-cleanup, and cruft removal.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href="http://emberjs.com/blog/2015/06/16/ember-project-at-2-0.html"&gt;As previously discussed&lt;/a&gt;, Ember Data releases occur in
-lockstep with Ember, to help developers...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;We are excited to announce the release of Ember Data 2.0, the
-second stable release since 1.13 that includes significant improvements,
-cleanup, and cruft removal.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href="http://emberjs.com/blog/2015/06/16/ember-project-at-2-0.html"&gt;As previously discussed&lt;/a&gt;, Ember Data releases occur in
-lockstep with Ember, to help developers better reason about
-compatibility between these libraries. Ember Data 2.0 is designed to be
-used in tandem with Ember 2.0, and like Ember 2.0, we have used the
-occasion of a new major version number to remove deprecated features and
-clean up the code.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Ember Data 2.0 is about removing deprecated
-functionality, not adding new features&lt;/strong&gt;. If you&amp;#39;ve already started
-using Ember Data 1.13 and cleared the deprecations, you should find
-upgrading to Ember Data 2.0 to be very straightforward.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_json-api'&gt;JSON API&lt;/h3&gt;
-&lt;p&gt;In the &lt;a href="http://emberjs.com/blog/2015/06/18/ember-data-1-13-released.html"&gt;Ember Data 1.13 blog post&lt;/a&gt;, we described how we
-had overhauled Ember Data&amp;#39;s internals to use JSON API from top to
-bottom.&lt;/p&gt;
-
-&lt;p&gt;Using JSON API dramatically simplified internal code and APIs, but I
-want to emphasize that &lt;strong&gt;moving to JSON API internally does not affect
-your applications, and you are in no way required to use JSON API
-yourself to upgrade to newer versions of Ember Data&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;p&gt;The adapters that determine how your application talks to the backend
-server remain unchanged, but this change should make the lives of
-adapter authors much simpler going forward.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_unsaved-deleted-records'&gt;Unsaved Deleted Records&lt;/h3&gt;
-&lt;p&gt;There is one significant breaking change in the move from 1.13 to
-2.0. The short version of this change is &lt;strong&gt;locally deleted (unsaved)
-records are no longer removed from RecordArrays and hasMany
-arrays. Ember Data now removes the deleted record only after the
-delete has been confirmed by the backend. There is also a
-&lt;a href="https://github.com/ember-data/ember-data-live-filter-by"&gt;new addon&lt;/a&gt;
-to make it easier to implement the old behavior.&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;In Ember Data 1.13, once a record was marked as deleted, it was removed from
-all of the &lt;code&gt;RecordArrays&lt;/code&gt; and &lt;code&gt;hasMany&lt;/code&gt; arrays it belonged to. This made it
-difficult to create UIs where users could &amp;quot;un-delete&amp;quot; records.&lt;/p&gt;
-
-&lt;p&gt;For example, imagine you are building a document viewer app using Ember Data.
-You show the user a list of documents they have access to. When the user
-deletes a document, you want it to remain in the list, but with a different
-visual treatment to indicate that it has been deleted locally (i.e., not saved back to the server).&lt;/p&gt;
-
-&lt;p&gt;&lt;img src="/images/blog/2015-08-03-ember-data-2-0-released/deleted-document.png" alt="Example UI with deleted document"&gt;&lt;/p&gt;
-
-&lt;p&gt;Building this UI was difficult because the record would be removed from the
-list as soon as you called &lt;code&gt;deleteRecord()&lt;/code&gt; on the model.&lt;/p&gt;
-
-&lt;p&gt;In Ember Data 2.0, this will be a lot easier because records are no longer
-removed from hasMany relationships or RecordArrays until the delete has been
-acknowledged by the adapter. Note that Although deleted records will be visible
-in hasMany relationships, they will not be serialized when saving these
-relationships back to the server.&lt;/p&gt;
-
-&lt;p&gt;To make the transition easier, the Ember Data team (with help from
-&lt;a href="https://github.com/pangratz"&gt;Clemens Müller&lt;/a&gt;) has released an addon called
-&lt;a href="https://github.com/ember-data/ember-data-live-filter-by"&gt;Ember Data Live filterBy&lt;/a&gt;. This
-allows the &lt;code&gt;filterBy&lt;/code&gt; method on &lt;code&gt;RecordArray&lt;/code&gt;s and &lt;code&gt;hasMany&lt;/code&gt;
-relationships to return a live filtered subset of the original
-array. This can be used to filter out deleted but unsaved records to
-preserve the old behavior, where records are removed from collections
-as soon as they are deleted. This addon work with Ember Data 1.13 and Ember Data 2.0.&lt;/p&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-8
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;App.PostController = Ember.Controller.extend({
-  &lt;span class="function"&gt;allPosts&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;() {
-    &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="local-variable"&gt;this&lt;/span&gt;.store.peekAll(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;post&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
-  }.property()
-  &lt;span class="function"&gt;allUndeletedPosts&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt;() {
-    &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="local-variable"&gt;this&lt;/span&gt;.store.peekAll(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;post&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).filterBy(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;isDeleted&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="predefined-constant"&gt;false&lt;/span&gt;, { &lt;span class="key"&gt;live&lt;/span&gt;: &lt;span class="predefined-constant"&gt;true&lt;/span&gt; });
-  }.property()
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;h1 class='anchorable-toc' id='toc_ember-data-2-1-beta'&gt;Ember Data 2.1 Beta&lt;/h1&gt;
-&lt;p&gt;Ember Data data 2.1 will be the first release following Ember&amp;#39;s 6 week
-release cycle. Rather then rush new features into the beta before they
-are ready, Ember Data 2.1 will not contain any new features or
-deprecations. Instead the Ember Data team is going to spend this cycle
-fixing issues, updating documentation and planning features for future
-2.x releases.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_changelogs'&gt;CHANGELOGS&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/emberjs/data/blob/v2.0.0/CHANGELOG.md"&gt;Ember Data 2.0.0 CHANGELOG&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/emberjs/data/blob/v2.1.0-beta.1/CHANGELOG.md"&gt;Ember Data 2.1.0-beta.1 CHANGELOG&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
 </content>
   </entry>
 </feed>

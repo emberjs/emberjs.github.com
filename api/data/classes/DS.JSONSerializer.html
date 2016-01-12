@@ -69,7 +69,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v2.2.1" target="_blank"> Tag: v2.2.1</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v2.3.0" target="_blank"> Tag: v2.3.0</a></li>
 
 
           <li class="level-1 ">
@@ -148,22 +148,17 @@
           </li>
         
           <li class="level-3 ">
-                        <a href="/api/data/classes/DS.ContainerProxy.html">DS.ContainerProxy</a>
-
-          </li>
-        
-          <li class="level-3 ">
                         <a href="/api/data/classes/DS.DateTransform.html">DS.DateTransform</a>
 
           </li>
         
           <li class="level-3 ">
-                        <a href="/api/data/classes/DS.DebugAdapter.html">DS.DebugAdapter</a>
+                        <a href="/api/data/classes/DS.EmbeddedRecordsMixin.html">DS.EmbeddedRecordsMixin</a>
 
           </li>
         
           <li class="level-3 ">
-                        <a href="/api/data/classes/DS.EmbeddedRecordsMixin.html">DS.EmbeddedRecordsMixin</a>
+                        <a href="/api/data/classes/DS.Ember.HTMLBars.helpers.html">DS.Ember.HTMLBars.helpers</a>
 
           </li>
         
@@ -174,11 +169,6 @@
         
           <li class="level-3 ">
                         <a href="/api/data/classes/DS.FilteredRecordArray.html">DS.FilteredRecordArray</a>
-
-          </li>
-        
-          <li class="level-3 ">
-                        <a href="/api/data/classes/DS.InternalModel.html">DS.InternalModel</a>
 
           </li>
         
@@ -278,6 +268,11 @@
           </li>
         
           <li class="level-3 ">
+                        <a href="/api/data/classes/DS.String.html">DS.String</a>
+
+          </li>
+        
+          <li class="level-3 ">
                         <a href="/api/data/classes/DS.StringTransform.html">DS.StringTransform</a>
 
           </li>
@@ -292,6 +287,16 @@
 
           </li>
         
+          <li class="level-3 ">
+                        <a href="/api/data/classes/Ember.HTMLBars.helpers.html">Ember.HTMLBars.helpers</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/api/data/classes/Ember.Inflector.html">Ember.Inflector</a>
+
+          </li>
+        
           </ol>
         
           </li>
@@ -302,7 +307,7 @@
         
   <h1 class="api-header">
   DS.JSONSerializer Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L16">packages/ember-data/lib/serializers/json-serializer.js:16</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L18">/Users/bmac/code/ember-data/addon/serializers/json.js:18</a>
 </h1>
 
 <hr>
@@ -315,7 +320,7 @@
     <p>Extends: <a href="/api/data/classes/DS.Serializer.html">DS.Serializer</a></p>
 
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L16">packages/ember-data/lib/serializers/json-serializer.js:16</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L18">/Users/bmac/code/ember-data/addon/serializers/json.js:18</a></p>
 
     <p>Module: <a href="/api/data/modules/ember-data.html">ember-data</a></p>
 </div>
@@ -328,24 +333,36 @@ records when they are transferred in and out of an external source.
 This process involves normalizing property names, transforming
 attribute values and serializing relationships.</p>
 
-<p>By default Ember Data recommends using the JSONApiSerializer.</p>
+<p>By default, Ember Data uses and recommends the <code>JSONAPISerializer</code>.</p>
 
 <p><code>JSONSerializer</code> is useful for simpler or legacy backends that may
 not support the <a href="http://jsonapi.org/">http://jsonapi.org/</a> spec.</p>
 
-<p><code>JSONSerializer</code> normalizes a JSON payload that looks like:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p>For example, given the following <code>User</code> model and JSON payload:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/models/user.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
+6
+7
+8
 </pre></td>
-  <td class="code"><pre>  App.User = DS.Model.extend({
-    <span class="key">name</span>: DS.attr(),
-    <span class="key">friends</span>: DS.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">user</span><span class="delimiter">'</span></span>),
-    <span class="key">house</span>: DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">location</span><span class="delimiter">'</span></span>),
-  });
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.Model.extend({
+  <span class="key">friends</span>: DS.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">user</span><span class="delimiter">'</span></span>),
+  <span class="key">house</span>: DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">location</span><span class="delimiter">'</span></span>),
+
+  <span class="key">name</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>)
+});
 </pre></td>
 </tr></table>
 </div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -358,43 +375,44 @@ not support the <a href="http://jsonapi.org/">http://jsonapi.org/</a> spec.</p>
 7
 8
 </pre></td>
-  <td class="code"><pre>  {
-    <span class="key">id</span>: <span class="integer">1</span>,
-    <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Sebastian</span><span class="delimiter">'</span></span>,
-    <span class="key">friends</span>: [<span class="integer">3</span>, <span class="integer">4</span>],
-    <span class="key">links</span>: {
-      <span class="key">house</span>: <span class="string"><span class="delimiter">'</span><span class="content">/houses/lefkada</span><span class="delimiter">'</span></span>
-    }
+  <td class="code"><pre>{
+  <span class="key">id</span>: <span class="integer">1</span>,
+  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Sebastian</span><span class="delimiter">'</span></span>,
+  <span class="key">friends</span>: [<span class="integer">3</span>, <span class="integer">4</span>],
+  <span class="key">links</span>: {
+    <span class="key">house</span>: <span class="string"><span class="delimiter">'</span><span class="content">/houses/lefkada</span><span class="delimiter">'</span></span>
   }
+}
 </pre></td>
 </tr></table>
 </div></div>
-<p>to JSONApi format that the Ember Data store expects.</p>
+<p><code>JSONSerializer</code> will normalize the JSON payload to the JSON API format that the
+Ember Data store expects.</p>
 
-<p>You can customize how JSONSerializer processes it&#39;s payload by passing options in
-the attrs hash or by subclassing the JSONSerializer and overriding hooks:</p>
+<p>You can customize how JSONSerializer processes its payload by passing options in
+the <code>attrs</code> hash or by subclassing the <code>JSONSerializer</code> and overriding hooks:</p>
 
 <ul>
-<li>To customize how a single record is normalized, use the <code>normalize</code> hook</li>
-<li>To customize how JSONSerializer normalizes the whole server response, use the
-normalizeResponse hook</li>
-<li>To customize how JSONSerializer normalizes a specific response from the server,
-use one of the many specific normalizeResponse hooks</li>
-<li>To customize how JSONSerializer normalizes your id, attributes or relationships,
-use the extractId, extractAttributes and extractRelationships hooks.</li>
+<li>To customize how a single record is normalized, use the <code>normalize</code> hook.</li>
+<li>To customize how <code>JSONSerializer</code> normalizes the whole server response, use the
+<code>normalizeResponse</code> hook.</li>
+<li>To customize how <code>JSONSerializer</code> normalizes a specific response from the server,
+use one of the many specific <code>normalizeResponse</code> hooks.</li>
+<li>To customize how <code>JSONSerializer</code> normalizes your id, attributes or relationships,
+use the <code>extractId</code>, <code>extractAttributes</code> and <code>extractRelationships</code> hooks.</li>
 </ul>
 
-<p>JSONSerializer normalization process follows these steps:</p>
+<p>The <code>JSONSerializer</code> normalization process follows these steps:</p>
 
 <ul>
-<li><code>normalizeResponse</code> - entry method to the Serializer</li>
-<li><code>normalizeCreateRecordResponse</code> - a normalizeResponse for a specific operation is called</li>
+<li><code>normalizeResponse</code> - entry method to the serializer.</li>
+<li><code>normalizeCreateRecordResponse</code> - a <code>normalizeResponse</code> for a specific operation is called.</li>
 <li><code>normalizeSingleResponse</code>|<code>normalizeArrayResponse</code> - for methods like <code>createRecord</code> we expect
-a single record back, while for methods like <code>findAll</code> we expect multiple methods back</li>
-<li><code>normalize</code> - normalizeArray iterates and calls normalize for each of it&#39;s records while normalizeSingle
-calls it once. This is the method you most likely want to subclass</li>
-<li><code>extractId</code> | <code>extractAttributes</code> | <code>extractRelationships</code> - normalize delegates to these methods to
-turn the record payload into the JSONApi format</li>
+a single record back, while for methods like <code>findAll</code> we expect multiple methods back.</li>
+<li><code>normalize</code> - <code>normalizeArray</code> iterates and calls <code>normalize</code> for each of its records while <code>normalizeSingle</code>
+calls it once. This is the method you most likely want to subclass.</li>
+<li><code>extractId</code> | <code>extractAttributes</code> | <code>extractRelationships</code> - <code>normalize</code> delegates to these methods to
+turn the record payload into the JSON API format.</li>
 </ul>
 
   </div>
@@ -510,9 +528,6 @@ turn the record payload into the JSONApi format</li>
             <li class="method ">
               <a href="#method_normalizeFindRecordResponse">normalizeFindRecordResponse</a>
             </li>
-            <li class="method private">
-              <a href="#method_normalizeId">normalizeId</a>
-            </li>
             <li class="method ">
               <a href="#method_normalizeQueryRecordResponse">normalizeQueryRecordResponse</a>
             </li>
@@ -612,7 +627,7 @@ turn the record payload into the JSONApi format</li>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L783">packages/ember-data/lib/serializers/json-serializer.js:783</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L786">/Users/bmac/code/ember-data/addon/serializers/json.js:786</a>
 
   </div>
 
@@ -667,7 +682,7 @@ can be serialized</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L752">packages/ember-data/lib/serializers/json-serializer.js:752</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L755">/Users/bmac/code/ember-data/addon/serializers/json.js:755</a>
 
   </div>
 
@@ -722,7 +737,7 @@ passed to the serializer.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L798">packages/ember-data/lib/serializers/json-serializer.js:798</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L801">/Users/bmac/code/ember-data/addon/serializers/json.js:801</a>
 
   </div>
 
@@ -778,7 +793,7 @@ attribute/relationship will be serialized</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L420">packages/ember-data/lib/serializers/json-serializer.js:420</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L426">/Users/bmac/code/ember-data/addon/serializers/json.js:426</a>
 
   </div>
 
@@ -853,7 +868,7 @@ attribute/relationship will be serialized</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L814">packages/ember-data/lib/serializers/json-serializer.js:814</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L817">/Users/bmac/code/ember-data/addon/serializers/json.js:817</a>
 
   </div>
 
@@ -917,7 +932,7 @@ attribute/relationship will be serialized</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L168">packages/ember-data/lib/serializers/json-serializer.js:168</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L174">/Users/bmac/code/ember-data/addon/serializers/json.js:174</a>
 
   </div>
 
@@ -979,7 +994,7 @@ serializer&#39;s <code>normalize</code> method.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L533">packages/ember-data/lib/serializers/json-serializer.js:533</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L543">/Users/bmac/code/ember-data/addon/serializers/json.js:543</a>
 
   </div>
 
@@ -1039,7 +1054,7 @@ serializer&#39;s <code>normalize</code> method.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L1252">packages/ember-data/lib/serializers/json-serializer.js:1252</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L1256">/Users/bmac/code/ember-data/addon/serializers/json.js:1256</a>
 
   </div>
 
@@ -1144,7 +1159,7 @@ property of the payload object.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L519">packages/ember-data/lib/serializers/json-serializer.js:519</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L529">/Users/bmac/code/ember-data/addon/serializers/json.js:529</a>
 
   </div>
 
@@ -1201,7 +1216,7 @@ property of the payload object.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L1219">packages/ember-data/lib/serializers/json-serializer.js:1219</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L1223">/Users/bmac/code/ember-data/addon/serializers/json.js:1223</a>
 
   </div>
 
@@ -1291,7 +1306,7 @@ be located on the <code>meta</code> property of the payload object.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L588">packages/ember-data/lib/serializers/json-serializer.js:588</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L598">/Users/bmac/code/ember-data/addon/serializers/json.js:598</a>
 
   </div>
 
@@ -1364,7 +1379,7 @@ polymorphic relationship which should be extracted:
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L557">packages/ember-data/lib/serializers/json-serializer.js:557</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L567">/Users/bmac/code/ember-data/addon/serializers/json.js:567</a>
 
   </div>
 
@@ -1424,7 +1439,7 @@ polymorphic relationship which should be extracted:
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L611">packages/ember-data/lib/serializers/json-serializer.js:611</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L621">/Users/bmac/code/ember-data/addon/serializers/json.js:621</a>
 
   </div>
 
@@ -1484,7 +1499,7 @@ polymorphic relationship which should be extracted:
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L1307">packages/ember-data/lib/serializers/json-serializer.js:1307</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L1311">/Users/bmac/code/ember-data/addon/serializers/json.js:1311</a>
 
   </div>
 
@@ -1569,7 +1584,7 @@ attribute name in your model to a key in your JSON.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L1359">packages/ember-data/lib/serializers/json-serializer.js:1359</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L1363">/Users/bmac/code/ember-data/addon/serializers/json.js:1363</a>
 
   </div>
 
@@ -1628,7 +1643,7 @@ properties.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L1332">packages/ember-data/lib/serializers/json-serializer.js:1332</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L1336">/Users/bmac/code/ember-data/addon/serializers/json.js:1336</a>
 
   </div>
 
@@ -1719,7 +1734,7 @@ serializing and deserializing relationship properties. By default
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L661">packages/ember-data/lib/serializers/json-serializer.js:661</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L677">/Users/bmac/code/ember-data/addon/serializers/json.js:677</a>
 
   </div>
 
@@ -1770,7 +1785,7 @@ serializing and deserializing relationship properties. By default
         Inherited from
         <a href="/api/data/classes/DS.Serializer.html#method_normalize">DS.Serializer</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L463">packages/ember-data/lib/serializers/json-serializer.js:463</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L473">/Users/bmac/code/ember-data/addon/serializers/json.js:473</a>
 
   </div>
 
@@ -1879,7 +1894,7 @@ or other general-purpose normalizations.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L407">packages/ember-data/lib/serializers/json-serializer.js:407</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L413">/Users/bmac/code/ember-data/addon/serializers/json.js:413</a>
 
   </div>
 
@@ -1945,7 +1960,7 @@ or other general-purpose normalizations.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L671">packages/ember-data/lib/serializers/json-serializer.js:671</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L687">/Users/bmac/code/ember-data/addon/serializers/json.js:687</a>
 
   </div>
 
@@ -1976,7 +1991,7 @@ or other general-purpose normalizations.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L342">packages/ember-data/lib/serializers/json-serializer.js:342</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L348">/Users/bmac/code/ember-data/addon/serializers/json.js:348</a>
 
   </div>
 
@@ -2045,7 +2060,7 @@ or other general-purpose normalizations.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L355">packages/ember-data/lib/serializers/json-serializer.js:355</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L361">/Users/bmac/code/ember-data/addon/serializers/json.js:361</a>
 
   </div>
 
@@ -2114,7 +2129,7 @@ or other general-purpose normalizations.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L277">packages/ember-data/lib/serializers/json-serializer.js:277</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L283">/Users/bmac/code/ember-data/addon/serializers/json.js:283</a>
 
   </div>
 
@@ -2183,7 +2198,7 @@ or other general-purpose normalizations.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L290">packages/ember-data/lib/serializers/json-serializer.js:290</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L296">/Users/bmac/code/ember-data/addon/serializers/json.js:296</a>
 
   </div>
 
@@ -2252,7 +2267,7 @@ or other general-purpose normalizations.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L303">packages/ember-data/lib/serializers/json-serializer.js:303</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L309">/Users/bmac/code/ember-data/addon/serializers/json.js:309</a>
 
   </div>
 
@@ -2321,7 +2336,7 @@ or other general-purpose normalizations.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L316">packages/ember-data/lib/serializers/json-serializer.js:316</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L322">/Users/bmac/code/ember-data/addon/serializers/json.js:322</a>
 
   </div>
 
@@ -2390,7 +2405,7 @@ or other general-purpose normalizations.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L251">packages/ember-data/lib/serializers/json-serializer.js:251</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L257">/Users/bmac/code/ember-data/addon/serializers/json.js:257</a>
 
   </div>
 
@@ -2442,34 +2457,6 @@ or other general-purpose normalizations.</p>
 </div>
 
         
-<div id="method_normalizeId" class="method private item-entry">
-  <h3 data-id="method_normalizeId" class="name anchorable-toc"><code>normalizeId</code></h3>
-
-
-
-
-  <span class="flag private">private</span>
-
-
-
-
-
-  <div class="meta">
-            Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L739">packages/ember-data/lib/serializers/json-serializer.js:739</a>
-
-  </div>
-
-
-
-  <p>
-  </p>
-
-
-
-</div>
-
-        
 <div id="method_normalizeQueryRecordResponse" class="method  item-entry">
   <h3 data-id="method_normalizeQueryRecordResponse" class="name anchorable-toc"><code>normalizeQueryRecordResponse</code></h3>
   <span class="args">
@@ -2487,7 +2474,7 @@ or other general-purpose normalizations.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L264">packages/ember-data/lib/serializers/json-serializer.js:264</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L270">/Users/bmac/code/ember-data/addon/serializers/json.js:270</a>
 
   </div>
 
@@ -2556,7 +2543,7 @@ or other general-purpose normalizations.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L329">packages/ember-data/lib/serializers/json-serializer.js:329</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L335">/Users/bmac/code/ember-data/addon/serializers/json.js:335</a>
 
   </div>
 
@@ -2622,7 +2609,7 @@ or other general-purpose normalizations.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L690">packages/ember-data/lib/serializers/json-serializer.js:690</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L706">/Users/bmac/code/ember-data/addon/serializers/json.js:706</a>
 
   </div>
 
@@ -2655,7 +2642,7 @@ or other general-purpose normalizations.</p>
         Inherited from
         <a href="/api/data/classes/DS.Serializer.html#method_normalizeResponse">DS.Serializer</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L192">packages/ember-data/lib/serializers/json-serializer.js:192</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L198">/Users/bmac/code/ember-data/addon/serializers/json.js:198</a>
 
   </div>
 
@@ -2760,7 +2747,7 @@ pre-processed data.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L381">packages/ember-data/lib/serializers/json-serializer.js:381</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L387">/Users/bmac/code/ember-data/addon/serializers/json.js:387</a>
 
   </div>
 
@@ -2829,7 +2816,7 @@ pre-processed data.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L394">packages/ember-data/lib/serializers/json-serializer.js:394</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L400">/Users/bmac/code/ember-data/addon/serializers/json.js:400</a>
 
   </div>
 
@@ -2898,7 +2885,7 @@ pre-processed data.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L368">packages/ember-data/lib/serializers/json-serializer.js:368</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L374">/Users/bmac/code/ember-data/addon/serializers/json.js:374</a>
 
   </div>
 
@@ -2964,7 +2951,7 @@ pre-processed data.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L709">packages/ember-data/lib/serializers/json-serializer.js:709</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L725">/Users/bmac/code/ember-data/addon/serializers/json.js:725</a>
 
   </div>
 
@@ -2997,7 +2984,7 @@ pre-processed data.</p>
         Inherited from
         <a href="/api/data/classes/DS.Serializer.html#method_serialize">DS.Serializer</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L834">packages/ember-data/lib/serializers/json-serializer.js:834</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L837">/Users/bmac/code/ember-data/addon/serializers/json.js:837</a>
 
   </div>
 
@@ -3297,7 +3284,7 @@ JSON.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L1041">packages/ember-data/lib/serializers/json-serializer.js:1041</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L1045">/Users/bmac/code/ember-data/addon/serializers/json.js:1045</a>
 
   </div>
 
@@ -3388,7 +3375,7 @@ write:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L1088">packages/ember-data/lib/serializers/json-serializer.js:1088</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L1092">/Users/bmac/code/ember-data/addon/serializers/json.js:1092</a>
 
   </div>
 
@@ -3482,7 +3469,7 @@ properties are serialized.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L1141">packages/ember-data/lib/serializers/json-serializer.js:1141</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L1145">/Users/bmac/code/ember-data/addon/serializers/json.js:1145</a>
 
   </div>
 
@@ -3574,7 +3561,7 @@ properties are serialized.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L1011">packages/ember-data/lib/serializers/json-serializer.js:1011</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L1014">/Users/bmac/code/ember-data/addon/serializers/json.js:1014</a>
 
   </div>
 
@@ -3584,7 +3571,8 @@ properties are serialized.</p>
 JSON hash to be sent to the server. By default the JSON Serializer does not namespace
 the payload and just sends the raw serialized JSON object.
 If your server expects namespaced keys, you should consider using the RESTSerializer.
-Otherwise you can override this method to customize how the record is added to the hash.</p>
+Otherwise you can override this method to customize how the record is added to the hash.
+The hash property should be modified by reference.</p>
 
 <p>For example, your server may expect underscored root objects.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
@@ -3666,7 +3654,7 @@ Otherwise you can override this method to customize how the record is added to t
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L1186">packages/ember-data/lib/serializers/json-serializer.js:1186</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L1190">/Users/bmac/code/ember-data/addon/serializers/json.js:1190</a>
 
   </div>
 
@@ -3768,7 +3756,7 @@ serialized. Objects are considered to be polymorphic if
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L1374">packages/ember-data/lib/serializers/json-serializer.js:1374</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L1378">/Users/bmac/code/ember-data/addon/serializers/json.js:1378</a>
 
   </div>
 
@@ -3841,7 +3829,7 @@ serialized. Objects are considered to be polymorphic if
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L104">packages/ember-data/lib/serializers/json-serializer.js:104</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L110">/Users/bmac/code/ember-data/addon/serializers/json.js:110</a>
 
   </div>
 
@@ -3908,7 +3896,7 @@ the response payload.</p>
 </tr></table>
 </div></div>
 <p>You can also remove attributes by setting the <code>serialize</code> key to
-false in your mapping object.</p>
+<code>false</code> in your mapping object.</p>
 
 <p>Example</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
@@ -3931,7 +3919,7 @@ false in your mapping object.</p>
 
 <span class="reserved">export</span> <span class="keyword">default</span> DS.JSONSerializer.extend({
   <span class="key">attrs</span>: {
-    <span class="key">admin</span>: {<span class="key">serialize</span>: <span class="predefined-constant">false</span>},
+    <span class="key">admin</span>: { <span class="key">serialize</span>: <span class="predefined-constant">false</span> },
     <span class="key">occupation</span>: { <span class="key">key</span>: <span class="string"><span class="delimiter">'</span><span class="content">career</span><span class="delimiter">'</span></span> }
   }
 });
@@ -3980,17 +3968,17 @@ false in your mapping object.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/serializers/json-serializer.js#L80">packages/ember-data/lib/serializers/json-serializer.js:80</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/serializers/json.js#L86">/Users/bmac/code/ember-data/addon/serializers/json.js:86</a>
 
   </div>
 
 
     <div class="description">
-      <p>The primaryKey is used when serializing and deserializing
+      <p>The <code>primaryKey</code> is used when serializing and deserializing
 data. Ember Data always uses the <code>id</code> property to store the id of
 the record. The external source may not always follow this
 convention. In these cases it is useful to override the
-primaryKey property to match the primaryKey of your external
+<code>primaryKey</code> property to match the <code>primaryKey</code> of your external
 store.</p>
 
 <p>Example</p>
@@ -4042,7 +4030,7 @@ store.</p>
   <div class="meta">
           Inherited from
           <a href="/api/data/classes/DS.Serializer.html#method_store">DS.Serializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.2.1/packages/ember-data/lib/system/serializer.js#L27">packages/ember-data/lib/system/serializer.js:27</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0//Users/bmac/code/ember-data/addon/-private/system/serializer.js#L27">/Users/bmac/code/ember-data/addon/-private/system/serializer.js:27</a>
 
   </div>
 
@@ -4072,7 +4060,7 @@ response.</p>
     <div id="footer">
       <div id="footer-wrapper">
         <div class="info">
-          Copyright 2015 <a href="http://tilde.io">Tilde Inc.</a><br>
+          Copyright 2016 <a href="http://tilde.io">Tilde Inc.</a><br>
           <a href="/team">Core Team</a> | <a href="/sponsors">Sponsors</a><br>
             <a href="/security">Security</a> | <a href="/legal">Legal</a> | <a href="/logos">Logos</a><br>
             <a href="/guidelines">Community Guidelines</a>

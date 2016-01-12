@@ -1005,6 +1005,10 @@ many ways their behavior is emergent, and generally is poorly designed.</p>
 nearly always be replaced by proper use of data passing and block params. See
 the guide on <a href="http://emberjs.com/deprecations/v1.x#toc_differences-in-yielded-blocks">differences in yielded blocks</a>
 for a complete example of using block params over the <code>{{view}}</code> keyword.</p>
+<h5 class='anchorable-toc' id='toc_code-view-code-and-code-viewclass-code-arguments-to-code-outlet-code'><code>view</code> and <code>viewClass</code> arguments to <code>{{outlet}}</code></h5>
+<p>Since the View API is deprecated starting in 1.13, providing the <code>view</code> or <code>viewClass</code> argument to the <code>{{outlet}}</code>
+helper is likewise deprecated in favor of migrating to component-based approaches, as explained earlier in this
+section.</p>
 <h4 class='anchorable-toc' id='toc_ember-linkview'>Ember.LinkView</h4>
 <p>As a consequence of the deprecation of <code>Ember.View</code>, many internal views have
 been ported to component. <code>Ember.LinkView</code>, the class that backs the
@@ -1336,7 +1340,7 @@ Thing.reopenClass({
 </pre></td>
 </tr></table>
 </div></div><h4 class='anchorable-toc' id='toc_ember-reducecomputed-ember-arraycomputed'>Ember.ReduceComputed / Ember.ArrayComputed</h4>
-<p>This two little monsters served us well for a long time. They provided semantics that allowed to
+<p>These two little monsters served us well for a long time. They provided semantics that allowed to
 perform in-place modifications of an existing array instead of replacing the entire array like the
 regular <code>map/reduce</code> methods in javascript do, which was necessary to avoid expensive repaintings when
 rendering lists with the <code>{{each}}</code> helper.</p>
@@ -1347,7 +1351,69 @@ over the native counterparts.</p>
 
 <p>They will be extracted as an ember addon in case you need to keep using them, but the recomendation now is to
 just use the native array methods or those in libraries like Underscore/Lodash.</p>
-<h4 class='anchorable-toc' id='toc_beforeobserver'>beforeObserver</h4>
+<h4 class='anchorable-toc' id='toc_ember-reducecomputedproperty-ember-arraycomputedproperty'>Ember.ReduceComputedProperty / Ember.ArrayComputedProperty</h4>
+<p>In addition to <code>Ember.ReduceComputed</code> and <code>Ember.ArrayComputed</code> you were able to add a property function call, making use of
+the ReduceComputedProperty and ArrayComputedProperty classes.
+This usage is also deprecated.
+For an example, consider a counter component that displays a total sum of values in an array.
+Using <code>Ember.ReduceComputedProperty</code> would show the following:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre>totalCount: Ember.reduceComputed({
+  initialValue = <span class="integer">0</span>;
+  addedItem(totalValue, newValue) {
+    <span class="keyword">return</span> totalValue + newValue;
+  },
+  removedItem(totalValue, newValue) {
+    <span class="keyword">return</span> totalValue - newValue;
+  }
+}).property(<span class="string"><span class="delimiter">'</span><span class="content">values</span><span class="delimiter">'</span></span>)
+</pre></td>
+</tr></table>
+</div></div>
+<p>Now that these APIs are deprecated, use the native JavaScript reduce along with the <a href="http://emberjs.com/api/classes/Ember.computed.html">Ember.computed family of functions</a>:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>totalCount: Ember.computed(<span class="string"><span class="delimiter">'</span><span class="content">values.[]</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+  <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">values</span><span class="delimiter">'</span></span>).reduce((previousValue, currentValue) =&gt; {
+    <span class="keyword">return</span> previousValue + currentValue;
+  })
+})
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_modifying-a-property-within-code-didinsertelement-code'>Modifying a Property within <code>didInsertElement</code></h4>
+<p>Because of changes in the way Ember renders components in 1.13, setting properties within an overridden <code>didInsertElement</code> method
+will result in a deprecation warning.</p>
+
+<p>In many cases you can move your logic later in the component lifecycle by implementing the <code>didRender</code> hook, on of
+<a href="http://emberjs.com/blog/2015/06/12/ember-1-13-0-released.html#toc_component-lifecycle-hooks">the new hooks introduced in 1.13</a>.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>  didRender() {
+    <span class="local-variable">this</span>._super(...<span class="local-variable">arguments</span>);
+    <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">myValue</span><span class="delimiter">'</span></span>, value);
+  }
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_beforeobserver'>beforeObserver</h4>
 <p>Before observers are deprecated due to the negative performance implications they have for Ember internals and applications.</p>
 
 <p>Typically they were used to have access to the old value of a property when it&#39;s about to change, but you can get same functionality in an even more efficient way with just a few lines of code:</p>
@@ -1374,7 +1440,7 @@ fooObserver(obj); <span class="comment">// Optionally call the observer immediat
 </pre></td>
 </tr></table>
 </div></div>
-<p>The related function <code>Ember.addBeforeObserver</code>, <code>Ember.removeBeforeObserver</code> and <code>Ember.beforeObserversFor</code>
+<p>The related functions <code>Ember.addBeforeObserver</code>, <code>Ember.removeBeforeObserver</code>, <code>Ember.beforeObserversFor</code>, and <code>Function#beforeObserver</code>
 are deprecated too.</p>
 <h4 class='anchorable-toc' id='toc_ember-immediateobserver'>Ember.immediateObserver</h4>
 <p><code>Ember.immediateObserver</code> is deprecated in favor of <code>Ember.observer</code>. Please change all instances of <code>Ember.immediateObserver</code> from:</p>
@@ -1443,6 +1509,37 @@ by the framework, it will <strong>not</strong> throw a deprecation message even 
 proxying behavior is being used.</p>
 
 <p>Added in <a href="https://github.com/emberjs/ember.js/pull/11476">PR #11476</a>.</p>
+<h4 class='anchorable-toc' id='toc_renderbuffer'>RenderBuffer</h4>
+<p>With the change to the rendering process in Glimmer, the RenderBuffer is no longer used by Ember
+and will be removed. The class was originally private, and any reference to it should be removed.</p>
+<h4 class='anchorable-toc' id='toc_using-code-guid-code-and-code-item-code-as-key-in-code-each-code'>Using <code>@guid</code> and <code>@item</code> as key in <code>{{each}}</code></h4>
+<p>As of 1.13.2 you should not use <code>key=&#39;@guid&#39;</code> or <code>key=&#39;@item&#39;</code> in the <code>{{each}}</code> helper. It is
+<a href="http://guides.emberjs.com/v1.13.0/templates/displaying-a-list-of-items/#toc_specifying-keys">documented in 1.13</a>
+that you can use these special values to uniquely identify each array entry so that the view code could
+more efficiently re-render the display of the list.</p>
+
+<p>This process was simplified as part of a <a href="https://github.com/emberjs/ember.js/pull/11461">bugfix</a>,
+where the key now implicitly defaults to <code>@identity</code>, which will pick either a guid or an item identifier based on type
+of each array entry. Therefore, providing the key attribute is no longer required for re-render optimizations.</p>
+
+<p>Applications should replace instances of:
+<code>hbs
+{{#each people key=&#39;@guid&#39; as |person|}}
+...
+{{/each}}
+</code>
+and
+<code>hbs
+{{#each people key=&#39;@item&#39; as |person|}}
+...
+{{/each}}
+</code>
+with
+<code>hbs
+{{#each people as |person|}}
+...
+{{/each}}
+</code></p>
 <h4 class='anchorable-toc' id='toc_controller-needs'>Controller.needs</h4>
 <p><code>needs</code> for controllers will be removed in Ember 2.0. You can migrate away from this using <code>Ember.inject.controller</code></p>
 
@@ -1624,6 +1721,107 @@ Object.freeze(c);
 c.swapNames();  <span class="comment">// EXCEPTION</span>
 </pre></td>
 </tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_ember-enumerableutils'>Ember.EnumerableUtils</h4>
+<p><code>EnumerableUtils</code> has been deprecated in favor of native implementations. You can consult the
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">JavaScript Array documentation</a>
+to find suitable replacements for <code>EnumerableUtils</code> functionality.
+If the native JavaScript array object does not provide a suitable equivalent for your needs, you might also want to checkout
+third party utility libraries like <a href="https://lodash.com/">lodash</a>, or <a href="underscorejs.org/">underscore</a>.</p>
+<h4 class='anchorable-toc' id='toc_copyable-frozencopy'>Copyable.frozenCopy</h4>
+<p>Just as the <code>Freezable</code> mixin is deprecated in favor of functionality in
+core JavaScript, the <code>frozenCopy</code> method of the Copyable mixin is also
+deprecated in favor of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze"><code>Object.freeze()</code></a>.</p>
+
+<p>Replace the following code:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre>const Obj = Ember.Object.extend(Freezable, Copyable, {
+  copy() {
+    <span class="keyword">return</span> Obj.create();
+  }
+});
+
+const frozenCopy = Obj.create().frozenCopy();
+frozenCopy.isFrozen(); <span class="comment">// =&gt; true</span>
+frozenCopy.set(<span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">baz</span><span class="delimiter">'</span></span>); <span class="comment">// =&gt; throws TypeError</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>with:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>const a = Ember.Object.create();
+Object.isFrozen(a); <span class="comment">// =&gt; false</span>
+Object.freeze(a);
+Object.isFrozen(a); <span class="comment">// =&gt; true</span>
+a.set(<span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">baz</span><span class="delimiter">'</span></span>); <span class="comment">// =&gt; throws TypeError</span>
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_using-code-code-for-namespace-in-the-code-render-code-helper'>Using <code>/</code> for namespace in the <code>{{render}}</code> helper</h4>
+<p>When using the render helper, its possible to specify a context within a nested directory structure.  Prior to 1.13, it
+was acceptable to separate nested directories using slashes <code>/</code>, but this is now deprecated, as Ember has
+settled on using dot notation for namespacing.</p>
+
+<p>For example, a developer might have a controller at <code>app/controllers/blog/posts.js</code> and is using the render helper to
+render that controller context within another template.</p>
+
+<p>Instead of using <code>{{render &#39;blog/posts&#39;}}</code>, use <code>{{render &#39;blog.posts&#39;}}</code>.  That will render the template associated with
+<code>app/controllers/blog/posts.js</code> in your directory structure.</p>
+<h4 class='anchorable-toc' id='toc_non-standard-ways-of-calling-code-ember-set-code-and-code-ember-get-code'>Non-Standard Ways of Calling <code>Ember.set</code> and <code>Ember.get</code></h4>
+<p>Ember is deprecating calls to <code>get</code> and <code>set</code> made in non-standard ways.  Below are examples
+of the calls that are now deprecated:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+</pre></td>
+  <td class="code"><pre><span class="comment">// referencing properties with globals</span>
+Ember.set(<span class="predefined-constant">null</span>, <span class="string"><span class="delimiter">'</span><span class="content">App.foo</span><span class="delimiter">'</span></span>, bar);
+Ember.set(<span class="string"><span class="delimiter">'</span><span class="content">App.foo</span><span class="delimiter">'</span></span>, bar);
+Ember.get(<span class="predefined-constant">null</span>, <span class="string"><span class="delimiter">'</span><span class="content">App.foo</span><span class="delimiter">'</span></span>);
+Ember.get(<span class="string"><span class="delimiter">'</span><span class="content">App.foo</span><span class="delimiter">'</span></span>);
+
+<span class="comment">// referencing properties with 'this'</span>
+Ember.set(obj, <span class="string"><span class="delimiter">'</span><span class="content">this.foo</span><span class="delimiter">'</span></span>, bar);
+Ember.get(obj, <span class="string"><span class="delimiter">'</span><span class="content">this.foo</span><span class="delimiter">'</span></span>);
+
+<span class="comment">// providing a null context</span>
+Ember.set(<span class="predefined-constant">null</span>, <span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>, bar);
+Ember.get(<span class="predefined-constant">null</span>, <span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>);
+
+<span class="comment">// providing a non-string property</span>
+Ember.set(obj, <span class="integer">42</span>, bar);
+Ember.get(obj, <span class="integer">42</span>);
+</pre></td>
+</tr></table>
 </div></div><h4 class='anchorable-toc' id='toc_reversed-ember-observer-arguments'>Reversed Ember.observer Arguments</h4>
 <p>A little known feature of the observer function allowed for the arguments to be
 listed in the opposite order, with function first:</p>
@@ -1735,6 +1933,15 @@ export default Ember.Component.extend({
 <p>Ember 1.13 deprecated <code>bind-attr</code> in favor of the new syntax.</p>
 
 <p>To aid in the migration, you can use the <a href="https://github.com/emberjs/legacy-bind-attr">legacy-bind-attr plugin</a> to restore this behavior in Ember 2.0 and silence the deprecation warning.</p>
+<h4 class='anchorable-toc' id='toc_using-code-this-get-template-code'>Using <code>this.get(&#39;template&#39;)</code></h4>
+<p>Prior to 1.13, developers had to check for the existance of the internal <code>template</code> property to determine the existance of a yielded block.
+This is being deprecated in favor of using the new <a href="http://emberjs.com/api/classes/Ember.Component.html#property_hasBlock"><code>hasBlock</code></a>
+property within your templates.</p>
+<h5 class='anchorable-toc' id='toc_determining-if-a-block-has-been-provided-from-javascript'>Determining if a block has been provided from JavaScript</h5>
+<p>Currently the <code>hasBlock</code> property is not made available from the JavaScript component object,
+so there is no clean alternative for checking whether a block has been passed.
+See the <a href="https://github.com/emberjs/rfcs/pull/102">JavaScript <code>hasBlock</code> RFC</a> for discussion on making this information
+available in the future, as well as possible workarounds.</p>
 <h4 class='anchorable-toc' id='toc_ember-computed-any'>Ember.computed.any</h4>
 <p><code>Ember.computed.any</code> is deprecated in favor of <code>Ember.computed.or</code>. This change is required because the computed value is the first value ( like || ) rather than a boolean value ( like Array.prototype.any ). For example:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
@@ -1814,7 +2021,47 @@ component.</p>
 
 <p>We replaced <code>tagName=&quot;ul&quot;</code> part by just surrounding the <code>{{each}}</code> block with
 <code>&lt;ul&gt;</code> tags.</p>
-<h4 class='anchorable-toc' id='toc_handlebars-htmlbars-helpers'>Handlebars / HTMLBars helpers</h4>
+<h4 class='anchorable-toc' id='toc_using-the-code-with-code-helper-with-the-code-controller-code-option'>Using the <code>{{with}}</code> Helper with the <code>controller</code> option</h4>
+<p>Another option deprecated due to the de-emphasis of controllers is the controller
+option used with the <code>{{with}}</code> helper.  In prior versions it was possible to
+specify a controller when using <code>{{with}}</code>, which would use an instance of the
+specified controller as the context within the block.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>{{<span class="error">#</span><span class="keyword">with</span> item.posts controller=<span class="string"><span class="delimiter">&quot;</span><span class="content">myposts</span><span class="delimiter">&quot;</span></span>}}
+  {{!- numPosts fetched from the controller instance <span class="string"><span class="delimiter">&quot;</span><span class="content">myposts</span><span class="delimiter">&quot;</span></span> }}
+  There are {{numPosts}} posts.
+{{<span class="keyword">with</span>}
+</pre></td>
+</tr></table>
+</div></div>
+<p>Similar to the
+<a href="http://emberjs.com/deprecations/v1.x#toc_view-and-controller-options-on-the-code-each-code-helper">deprecated <code>{{each}}</code> helper controller options</a>
+, this approach triggers less performant compatibility code and is deprecated in
+favor of using local properties or components.</p>
+<h5 class='anchorable-toc' id='toc_using-local-properties'>Using local properties</h5><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>{{<span class="error">#</span><span class="keyword">with</span> item.posts as |myPosts|}}
+  There are {{myPosts.length}} posts.
+{{<span class="keyword">with</span>}}
+</pre></td>
+</tr></table>
+</div></div><h5 class='anchorable-toc' id='toc_using-a-component'>Using a component</h5><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre>{{! prints the number of posts (<span class="keyword">if</span> available) }}
+{{post-status posts=item.posts}}
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_handlebars-htmlbars-helpers'>Handlebars / HTMLBars helpers</h4>
 <p>All the various ways to create helpers on the Handlebars and HTMLBars namespace
 have been deprecated in favor of the
 <a href="http://emberjs.com/api/classes/Ember.Helper.html"><code>Ember.Helper</code></a> class and it&#39;s
@@ -1868,7 +2115,58 @@ a component with the same name as the view helper you registered.</p>
 });
 </pre></td>
 </tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_using-code-trackedarray-code-or-code-subarray-code'>Using <code>TrackedArray</code> or <code>SubArray</code></h4>
+<p><code>TrackedArray</code> and <code>SubArray</code> were internal classes used as implementation
+details of <code>ArrayComputed</code>.  <code>ArrayComputed</code> is deprecated to be removed
+in version 2.0.0.  As a result, these 2 private classes will be removed as
+well.</p>
+<h4 class='anchorable-toc' id='toc_using-code-each-code-as-a-leaf-node-in-a-dependent-key'>Using <code>@each</code> as a leaf node in a dependent key</h4>
+<p>Using <code>@each</code> at the end of a computed key is deprecated and will not work in
+Ember 2.0</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>invalid: Ember.computed(<span class="string"><span class="delimiter">'</span><span class="content">myObject.@each</span><span class="delimiter">'</span></span>, <span class="keyword">function</span> () {
+  <span class="comment">//no longer valid for monitoring changes to arrays</span>
+});
+</pre></td>
+</tr></table>
 </div></div>
+<p>When defining dependent keys for computed properties, ember 2.0+ will treat
+<code>@each</code> and <code>[]</code> differently.</p>
+
+<p><code>@each</code> will monitor specific properties within an array of objects.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>eachProp: Ember.computed(<span class="string"><span class="delimiter">'</span><span class="content">myObj.posts.@each.title</span><span class="delimiter">'</span></span>, <span class="keyword">function</span> () {
+  <span class="comment">//fired whenever one of the blog post titles is changed.</span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p><code>[]</code> will monitor mutations to the array.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>arrProp: Ember.computed(<span class="string"><span class="delimiter">'</span><span class="content">myObj.posts.[]</span><span class="delimiter">'</span></span>, <span class="keyword">function</span> () {
+  <span class="comment">//fired whenever a blog post is added or removed</span>
+});
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_overriding-code-render-code-when-extending-a-component-or-view'>Overriding <code>render</code> When Extending a Component or View.</h4>
+<p>The <code>render</code> method on components and views should not be overridden and will
+go away in Ember 2.x.  Modifications to Ember rendering should be made by
+overriding Ember&#39;s new
+<a href="http://emberjs.com/blog/2015/06/12/ember-1-13-0-released.html#toc_component-lifecycle-hooks">component lifecycle hooks</a>
+, introduced in version 1.13.</p>
+
 
       </div>
     </div>
@@ -1876,7 +2174,7 @@ a component with the same name as the view helper you registered.</p>
     <div id="footer">
       <div id="footer-wrapper">
         <div class="info">
-          Copyright 2015 <a href="http://tilde.io">Tilde Inc.</a><br>
+          Copyright 2016 <a href="http://tilde.io">Tilde Inc.</a><br>
           <a href="/team">Core Team</a> | <a href="/sponsors">Sponsors</a><br>
             <a href="/security">Security</a> | <a href="/legal">Legal</a> | <a href="/logos">Logos</a><br>
             <a href="/guidelines">Community Guidelines</a>
