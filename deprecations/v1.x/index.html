@@ -1509,6 +1509,52 @@ by the framework, it will <strong>not</strong> throw a deprecation message even 
 proxying behavior is being used.</p>
 
 <p>Added in <a href="https://github.com/emberjs/ember.js/pull/11476">PR #11476</a>.</p>
+<h4 class='anchorable-toc' id='toc_sortablemixin'>SortableMixin</h4>
+<p>Along with <code>Ember.ArrayController</code>, <code>Ember.SortableMixin</code> will be removed in Ember 2.0.</p>
+
+<p>You can migrate away from using <code>Ember.SortableMixin</code> by using <code>Ember.computed.sort</code>. Using this example:</p>
+<div class="highlight text "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>const SongsController = Ember.ArrayController.extend(Ember.SortableMixin, {
+  model: null,
+  sortProperties: ['trackNumber'],
+  sortAscending: false
+});
+
+let songsController = SongsController.create({ songs: songList });
+</pre></td>
+</tr></table>
+</div></div>
+<p>You can transition to using <code>Ember.computed.sort</code> like this:</p>
+<div class="highlight text "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>const SongsController = Ember.Controller.extend({
+  model: null,
+  sortedSongs: Ember.computed.sort('model', 'songSorting'),
+  songSorting: ['trackNumber:desc']
+});
+
+let songsController = SongsController.create({ songs: songList });
+</pre></td>
+</tr></table>
+</div></div>
+<p>You can <a href="http://emberjs.com/api/classes/Ember.computed.html#method_sort">read more about <code>Ember.computed.sort</code> in the Ember API documentation</a></p>
+
+<p>Legacy support of <code>Ember.SortableMixin</code> will be provided via the <a href="https://github.com/emberjs/ember-legacy-controllers">ember-legacy-controllers</a> addon.</p>
 <h4 class='anchorable-toc' id='toc_renderbuffer'>RenderBuffer</h4>
 <p>With the change to the rendering process in Glimmer, the RenderBuffer is no longer used by Ember
 and will be removed. The class was originally private, and any reference to it should be removed.</p>

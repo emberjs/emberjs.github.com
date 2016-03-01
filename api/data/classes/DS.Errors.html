@@ -69,7 +69,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v2.3.0" target="_blank"> Tag: v2.3.0</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v2.4.0" target="_blank"> Tag: v2.4.0</a></li>
 
 
           <li class="level-1 ">
@@ -307,7 +307,7 @@
         
   <h1 class="api-header">
   DS.Errors Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v2.3.0/addon/-private/system/model/errors.js#L14">addon/-private/system/model/errors.js:14</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v2.4.0/addon/-private/system/model/errors.js#L15">addon/-private/system/model/errors.js:15</a>
 </h1>
 
 <hr>
@@ -322,7 +322,7 @@
       <p>Uses: Ember.Enumerable</p>
       <p>Uses: Ember.Evented</p>
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0/addon/-private/system/model/errors.js#L14">addon/-private/system/model/errors.js:14</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.4.0/addon/-private/system/model/errors.js#L15">addon/-private/system/model/errors.js:15</a></p>
 
     <p>Module: <a href="/api/data/modules/ember-data.html">ember-data</a></p>
 </div>
@@ -374,8 +374,8 @@ user.save();
 </pre></td>
 </tr></table>
 </div></div>
-<p>Your backend data store might return a response that looks like
-this. This response will be used to populate the error object.</p>
+<p>Your backend data store might return a response with status code 422 (Unprocessable Entity)
+and that looks like this. This response will be used to populate the error object.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -469,6 +469,50 @@ object to get an array of all the error strings.</p>
 </pre></td>
 </tr></table>
 </div></div>
+<p>The JSON API spec also allows for object level errors to be placed
+in an object with pointer <code>data</code>.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">errors</span><span class="delimiter">&quot;</span></span>: [
+    {
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">detail</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Some generic non property error message</span><span class="delimiter">&quot;</span></span>,
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">source</span><span class="delimiter">&quot;</span></span>: {
+        <span class="key"><span class="delimiter">&quot;</span><span class="content">pointer</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">data</span><span class="delimiter">&quot;</span></span>
+      }
+    }
+  ]
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>You can access these errors by using the <code>base</code> property on the errors
+object.</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">model.errors.base</span> <span class="attribute-name">as</span> <span class="error">|</span><span class="attribute-name">error</span><span class="error">|</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">error</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">error.message</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
+</pre></td>
+</tr></table>
+</div></div>
   </div>
 
 
@@ -502,12 +546,24 @@ object to get an array of all the error strings.</p>
         <p><h2>Methods</h2></p>
         <ul class="index-list">
             <li class="method private">
+              <a href="#method__add">_add</a>
+            </li>
+            <li class="method private">
+              <a href="#method__clear">_clear</a>
+            </li>
+            <li class="method private">
               <a href="#method__findOrCreateMessages">_findOrCreateMessages</a>
             </li>
-            <li class="method ">
+            <li class="method private">
+              <a href="#method__registerHandlers">_registerHandlers</a>
+            </li>
+            <li class="method private">
+              <a href="#method__remove">_remove</a>
+            </li>
+            <li class="method deprecated">
               <a href="#method_add">add</a>
             </li>
-            <li class="method ">
+            <li class="method deprecated">
               <a href="#method_clear">clear</a>
             </li>
             <li class="method ">
@@ -516,10 +572,10 @@ object to get an array of all the error strings.</p>
             <li class="method ">
               <a href="#method_has">has</a>
             </li>
-            <li class="method ">
+            <li class="method deprecated">
               <a href="#method_registerHandlers">registerHandlers</a>
             </li>
-            <li class="method ">
+            <li class="method deprecated">
               <a href="#method_remove">remove</a>
             </li>
             <li class="method private">
@@ -567,6 +623,71 @@ object to get an array of all the error strings.</p>
 </div>
 
         
+<div id="method__add" class="method private item-entry">
+  <h3 data-id="method__add" class="name anchorable-toc"><code>_add</code></h3>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.4.0/addon/-private/system/model/errors.js#L283">addon/-private/system/model/errors.js:283</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Adds error messages to a given attribute without sending event.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+
+</div>
+
+        
+<div id="method__clear" class="method private item-entry">
+  <h3 data-id="method__clear" class="name anchorable-toc"><code>_clear</code></h3>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.4.0/addon/-private/system/model/errors.js#L421">addon/-private/system/model/errors.js:421</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Removes all error messages.
+to the record.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+
+</div>
+
+        
 <div id="method__findOrCreateMessages" class="method private item-entry">
   <h3 data-id="method__findOrCreateMessages" class="name anchorable-toc"><code>_findOrCreateMessages</code></h3>
 
@@ -581,7 +702,7 @@ object to get an array of all the error strings.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0/addon/-private/system/model/errors.js#L234">addon/-private/system/model/errors.js:234</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.4.0/addon/-private/system/model/errors.js#L297">addon/-private/system/model/errors.js:297</a>
 
   </div>
 
@@ -595,7 +716,71 @@ object to get an array of all the error strings.</p>
 </div>
 
         
-<div id="method_add" class="method  item-entry">
+<div id="method__registerHandlers" class="method private item-entry">
+  <h3 data-id="method__registerHandlers" class="name anchorable-toc"><code>_registerHandlers</code></h3>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.4.0/addon/-private/system/model/errors.js#L153">addon/-private/system/model/errors.js:153</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Register with target handler</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+
+</div>
+
+        
+<div id="method__remove" class="method private item-entry">
+  <h3 data-id="method__remove" class="name anchorable-toc"><code>_remove</code></h3>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.4.0/addon/-private/system/model/errors.js#L371">addon/-private/system/model/errors.js:371</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Removes all error messages from the given attribute without sending event.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+
+</div>
+
+        
+<div id="method_add" class="method deprecated item-entry">
   <h3 data-id="method_add" class="name anchorable-toc"><code>add</code></h3>
   <span class="args">
     (attribute, messages)
@@ -603,6 +788,7 @@ object to get an array of all the error strings.</p>
 
 
 
+  <span class="flag deprecated" >deprecated</span>
 
 
 
@@ -611,7 +797,7 @@ object to get an array of all the error strings.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0/addon/-private/system/model/errors.js#L204">addon/-private/system/model/errors.js:204</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.4.0/addon/-private/system/model/errors.js#L251">addon/-private/system/model/errors.js:251</a>
 
   </div>
 
@@ -658,11 +844,12 @@ object to get an array of all the error strings.</p>
 </div>
 
         
-<div id="method_clear" class="method  item-entry">
+<div id="method_clear" class="method deprecated item-entry">
   <h3 data-id="method_clear" class="name anchorable-toc"><code>clear</code></h3>
 
 
 
+  <span class="flag deprecated" >deprecated</span>
 
 
 
@@ -671,7 +858,7 @@ object to get an array of all the error strings.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0/addon/-private/system/model/errors.js#L297">addon/-private/system/model/errors.js:297</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.4.0/addon/-private/system/model/errors.js#L387">addon/-private/system/model/errors.js:387</a>
 
   </div>
 
@@ -739,7 +926,7 @@ to the record.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0/addon/-private/system/model/errors.js#L131">addon/-private/system/model/errors.js:131</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.4.0/addon/-private/system/model/errors.js#L178">addon/-private/system/model/errors.js:178</a>
 
   </div>
 
@@ -812,7 +999,7 @@ user.save().<span class="keyword">catch</span>(<span class="keyword">function</s
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0/addon/-private/system/model/errors.js#L338">addon/-private/system/model/errors.js:338</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.4.0/addon/-private/system/model/errors.js#L447">addon/-private/system/model/errors.js:447</a>
 
   </div>
 
@@ -882,7 +1069,7 @@ user.save().<span class="keyword">catch</span>(<span class="keyword">function</s
 </div>
 
         
-<div id="method_registerHandlers" class="method  item-entry">
+<div id="method_registerHandlers" class="method deprecated item-entry">
   <h3 data-id="method_registerHandlers" class="name anchorable-toc"><code>registerHandlers</code></h3>
   <span class="args">
     (target, becameInvalid, becameValid)
@@ -890,6 +1077,7 @@ user.save().<span class="keyword">catch</span>(<span class="keyword">function</s
 
 
 
+  <span class="flag deprecated" >deprecated</span>
 
 
 
@@ -898,7 +1086,7 @@ user.save().<span class="keyword">catch</span>(<span class="keyword">function</s
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0/addon/-private/system/model/errors.js#L105">addon/-private/system/model/errors.js:105</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.4.0/addon/-private/system/model/errors.js#L133">addon/-private/system/model/errors.js:133</a>
 
   </div>
 
@@ -937,7 +1125,7 @@ user.save().<span class="keyword">catch</span>(<span class="keyword">function</s
 </div>
 
         
-<div id="method_remove" class="method  item-entry">
+<div id="method_remove" class="method deprecated item-entry">
   <h3 data-id="method_remove" class="name anchorable-toc"><code>remove</code></h3>
   <span class="args">
     (attribute)
@@ -945,6 +1133,7 @@ user.save().<span class="keyword">catch</span>(<span class="keyword">function</s
 
 
 
+  <span class="flag deprecated" >deprecated</span>
 
 
 
@@ -953,7 +1142,7 @@ user.save().<span class="keyword">catch</span>(<span class="keyword">function</s
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0/addon/-private/system/model/errors.js#L249">addon/-private/system/model/errors.js:249</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.4.0/addon/-private/system/model/errors.js#L322">addon/-private/system/model/errors.js:322</a>
 
   </div>
 
@@ -1057,7 +1246,7 @@ user.save().<span class="keyword">catch</span>(<span class="keyword">function</s
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0/addon/-private/system/model/errors.js#L179">addon/-private/system/model/errors.js:179</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.4.0/addon/-private/system/model/errors.js#L226">addon/-private/system/model/errors.js:226</a>
 
   </div>
 
@@ -1108,7 +1297,7 @@ user.save().<span class="keyword">catch</span>(<span class="keyword">function</s
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0/addon/-private/system/model/errors.js#L170">addon/-private/system/model/errors.js:170</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.4.0/addon/-private/system/model/errors.js#L217">addon/-private/system/model/errors.js:217</a>
 
   </div>
 
@@ -1137,7 +1326,7 @@ user.save().<span class="keyword">catch</span>(<span class="keyword">function</s
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0/addon/-private/system/model/errors.js#L118">addon/-private/system/model/errors.js:118</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.4.0/addon/-private/system/model/errors.js#L165">addon/-private/system/model/errors.js:165</a>
 
   </div>
 
@@ -1165,7 +1354,7 @@ user.save().<span class="keyword">catch</span>(<span class="keyword">function</s
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0/addon/-private/system/model/errors.js#L197">addon/-private/system/model/errors.js:197</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.4.0/addon/-private/system/model/errors.js#L244">addon/-private/system/model/errors.js:244</a>
 
   </div>
 
@@ -1193,7 +1382,7 @@ user.save().<span class="keyword">catch</span>(<span class="keyword">function</s
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0/addon/-private/system/model/errors.js#L189">addon/-private/system/model/errors.js:189</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.4.0/addon/-private/system/model/errors.js#L236">addon/-private/system/model/errors.js:236</a>
 
   </div>
 
@@ -1225,7 +1414,7 @@ user.save().<span class="keyword">catch</span>(<span class="keyword">function</s
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.3.0/addon/-private/system/model/errors.js#L153">addon/-private/system/model/errors.js:153</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.4.0/addon/-private/system/model/errors.js#L200">addon/-private/system/model/errors.js:200</a>
 
   </div>
 
