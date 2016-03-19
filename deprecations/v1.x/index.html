@@ -51,7 +51,7 @@
 
       <div class="survey-reminder-wrapper">
     <div class="survey-reminder-container">
-      Only <strong>4 days left</strong> to
+      Only <strong>3 days left</strong> to
 <a href="/ember-community-survey-2016">        submit your community survey&nbsp;response</a>!
     </div>
   </div>
@@ -498,11 +498,14 @@ making the content a <code>SafeString</code>. For example:</p>
 </pre></td>
   <td class="code"><pre>  myStyle: Ember.computed(<span class="string"><span class="delimiter">'</span><span class="content">color</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
     <span class="keyword">var</span> color = escapeCSS(<span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">color</span><span class="delimiter">'</span></span>));
-    <span class="keyword">return</span> <span class="keyword">new</span> Ember.Handlebars.SafeString(<span class="string"><span class="delimiter">&quot;</span><span class="content">color: </span><span class="delimiter">&quot;</span></span> + color);
+    <span class="keyword">return</span> Ember.String.htmlSafe(<span class="string"><span class="delimiter">&quot;</span><span class="content">color: </span><span class="delimiter">&quot;</span></span> + color);
   })
 </pre></td>
 </tr></table>
 </div></div>
+<p>Make sure you don&#39;t put quotes around the sanitized string, <code>myStyle</code>, when you
+bound it in the template. This would prevent Ember from seeing it as safe.</p>
+
 <p>You can learn more about <code>SafeString</code>s and writing code that prevents XSS
 attacks by reading the <a href="http://emberjs.com/guides/templates/writing-helpers/">Writing
 Helpers</a> guide.</p>
