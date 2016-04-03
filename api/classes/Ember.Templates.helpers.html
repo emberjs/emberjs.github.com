@@ -66,7 +66,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v2.4.0" target="_blank"> Tag: v2.4.0</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v2.4.4" target="_blank"> Tag: v2.4.4</a></li>
 
 
           <li class="level-1 ">
@@ -814,7 +814,7 @@
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-routing-htmlbars/lib/keywords/action.js#L9">packages/ember-routing-htmlbars/lib/keywords/action.js:9</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-routing-htmlbars/lib/keywords/action.js#L9">packages/ember-routing-htmlbars/lib/keywords/action.js:9</a>
 
   </div>
 
@@ -1012,7 +1012,8 @@ forwarding that interaction to the template&#39;s context (controller or compone
 bubble to routes when the controller does not implement the specified action.
 Once an action hits a route, it will bubble through the route hierarchy.</p>
 <h3 class='anchorable-toc' id='toc_event-propagation'>Event Propagation</h3>
-<p><code>{{action</code> helpers called in element space can control event bubbling.</p>
+<p><code>{{action}}</code> helpers called in element space can control event bubbling. Note
+that the closure style actions cannot.</p>
 
 <p>Events triggered through the action helper will automatically have
 <code>.preventDefault()</code> called on them. You do not need to do so in your event
@@ -1036,6 +1037,43 @@ example) you can supply the <code>preventDefault=false</code> option to the <cod
   <td class="line-numbers"><pre>1
 </pre></td>
   <td class="code"><pre><span class="tag">&lt;button</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">'</span><span class="attribute-name">edit</span><span class="error">'</span> <span class="attribute-name">post</span> <span class="attribute-name">bubbles</span>=<span class="attribute-value">false</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>Edit<span class="tag">&lt;/button&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>To disable bubbling with closure style actions you must create your own
+wrapper helper that makes use of <code>event.stopPropagation()</code>:</p>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">onclick</span>=<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">disable-bubbling</span> <span class="error">(</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">sayHello</span><span class="error">&quot;</span><span class="error">)</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>Hello<span class="tag">&lt;/div&gt;</span>
+</pre></td>
+</tr></table>
+</div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/helpers/disable-bubbling.js</span>
+<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">function</span> <span class="function">disableBubbling</span>([action]) {
+  <span class="keyword">return</span> <span class="keyword">function</span>(event) {
+    event.stopPropagation();
+
+    <span class="keyword">return</span> action(event);
+  };
+}
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Helper.helper(disableBubbling);
 </pre></td>
 </tr></table>
 </div></div>
@@ -1143,7 +1181,7 @@ to an object, accessible in the current context:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-htmlbars/lib/keywords/collection.js#L11">packages/ember-htmlbars/lib/keywords/collection.js:11</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-htmlbars/lib/keywords/collection.js#L11">packages/ember-htmlbars/lib/keywords/collection.js:11</a>
 
   </div>
 
@@ -1343,7 +1381,7 @@ item (note the camelcasing):</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-htmlbars/lib/keywords/component.js#L12">packages/ember-htmlbars/lib/keywords/component.js:12</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-htmlbars/lib/keywords/component.js#L12">packages/ember-htmlbars/lib/keywords/component.js:12</a>
 
       <br/>Available since 1.11.0
   </div>
@@ -1461,7 +1499,7 @@ is &quot;Username&quot;.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-htmlbars/lib/helpers/-concat.js#L6">packages/ember-htmlbars/lib/helpers/-concat.js:6</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-htmlbars/lib/helpers/-concat.js#L6">packages/ember-htmlbars/lib/helpers/-concat.js:6</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -1506,7 +1544,7 @@ is &quot;Username&quot;.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-htmlbars/lib/keywords/debugger.js#L10">packages/ember-htmlbars/lib/keywords/debugger.js:10</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-htmlbars/lib/keywords/debugger.js#L10">packages/ember-htmlbars/lib/keywords/debugger.js:10</a>
 
   </div>
 
@@ -1585,7 +1623,7 @@ you expect:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-htmlbars/lib/helpers/each.js#L9">packages/ember-htmlbars/lib/helpers/each.js:9</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-htmlbars/lib/helpers/each.js#L9">packages/ember-htmlbars/lib/helpers/each.js:9</a>
 
   </div>
 
@@ -1711,7 +1749,7 @@ if the collection is empty.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-htmlbars/lib/helpers/each-in.js#L8">packages/ember-htmlbars/lib/helpers/each-in.js:8</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-htmlbars/lib/helpers/each-in.js#L8">packages/ember-htmlbars/lib/helpers/each-in.js:8</a>
 
       <br/>Available since 2.1.0
   </div>
@@ -1779,7 +1817,7 @@ object in a list:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-htmlbars/lib/keywords/get.js#L105">packages/ember-htmlbars/lib/keywords/get.js:105</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-htmlbars/lib/keywords/get.js#L105">packages/ember-htmlbars/lib/keywords/get.js:105</a>
 
       <br/>Available since 2.1.0
   </div>
@@ -1864,7 +1902,7 @@ that fact via a two-way mutable binding.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-htmlbars/lib/helpers/hash.js#L6">packages/ember-htmlbars/lib/helpers/hash.js:6</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-htmlbars/lib/helpers/hash.js#L6">packages/ember-htmlbars/lib/helpers/hash.js:6</a>
 
   </div>
 
@@ -1938,7 +1976,7 @@ just yield a hash:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-htmlbars/lib/helpers/if_unless.js#L9">packages/ember-htmlbars/lib/helpers/if_unless.js:9</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-htmlbars/lib/helpers/if_unless.js#L9">packages/ember-htmlbars/lib/helpers/if_unless.js:9</a>
 
   </div>
 
@@ -1970,7 +2008,7 @@ the <code>else</code> helper.</p>
 5
 6
 </pre></td>
-  <td class="code"><pre><span class="comment">{{!Is it raining outside?}}</span>
+  <td class="code"><pre><span class="comment">{{! is it raining outside?}}</span>
 <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">isRaining</span><span class="inline-delimiter">}}</span></span>
   Yes, grab an umbrella!
 <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">else</span><span class="inline-delimiter">}}</span></span>
@@ -2046,7 +2084,7 @@ displayed</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-htmlbars/lib/keywords/input.js#L8">packages/ember-htmlbars/lib/keywords/input.js:8</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-htmlbars/lib/keywords/input.js#L8">packages/ember-htmlbars/lib/keywords/input.js:8</a>
 
   </div>
 
@@ -2239,7 +2277,7 @@ if you wanted to add a css class to all checkboxes in your application:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-routing-views/lib/components/link-to.js#L6">packages/ember-routing-views/lib/components/link-to.js:6</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-routing-views/lib/components/link-to.js#L6">packages/ember-routing-views/lib/components/link-to.js:6</a>
 
   </div>
 
@@ -2696,7 +2734,7 @@ this manner:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-htmlbars/lib/helpers/loc.js#L8">packages/ember-htmlbars/lib/helpers/loc.js:8</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-htmlbars/lib/helpers/loc.js#L8">packages/ember-htmlbars/lib/helpers/loc.js:8</a>
 
   </div>
 
@@ -2777,7 +2815,7 @@ set up localized string references.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-htmlbars/lib/helpers/log.js#L8">packages/ember-htmlbars/lib/helpers/log.js:8</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-htmlbars/lib/helpers/log.js#L8">packages/ember-htmlbars/lib/helpers/log.js:8</a>
 
   </div>
 
@@ -2830,7 +2868,7 @@ context. <code>log</code> also accepts primitive types such as strings or number
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-htmlbars/lib/keywords/mut.js#L47">packages/ember-htmlbars/lib/keywords/mut.js:47</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-htmlbars/lib/keywords/mut.js#L47">packages/ember-htmlbars/lib/keywords/mut.js:47</a>
 
   </div>
 
@@ -2909,7 +2947,7 @@ additional information on using <code>{{mut}}</code>.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-htmlbars/lib/keywords/outlet.js#L14">packages/ember-htmlbars/lib/keywords/outlet.js:14</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-htmlbars/lib/keywords/outlet.js#L14">packages/ember-htmlbars/lib/keywords/outlet.js:14</a>
 
   </div>
 
@@ -3027,7 +3065,7 @@ information on how your <code>route</code> interacts with the <code>{{outlet}}</
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-htmlbars/lib/keywords/partial.js#L9">packages/ember-htmlbars/lib/keywords/partial.js:9</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-htmlbars/lib/keywords/partial.js#L9">packages/ember-htmlbars/lib/keywords/partial.js:9</a>
 
   </div>
 
@@ -3108,7 +3146,7 @@ name.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-routing-htmlbars/lib/helpers/query-params.js#L9">packages/ember-routing-htmlbars/lib/helpers/query-params.js:9</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-routing-htmlbars/lib/helpers/query-params.js#L9">packages/ember-routing-htmlbars/lib/helpers/query-params.js:9</a>
 
   </div>
 
@@ -3171,7 +3209,7 @@ It will supply url query parameters to the target route.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-routing-htmlbars/lib/keywords/render.js#L16">packages/ember-routing-htmlbars/lib/keywords/render.js:16</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-routing-htmlbars/lib/keywords/render.js#L16">packages/ember-routing-htmlbars/lib/keywords/render.js:16</a>
 
   </div>
 
@@ -3317,7 +3355,7 @@ with the same name.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-htmlbars/lib/keywords/textarea.js#L6">packages/ember-htmlbars/lib/keywords/textarea.js:6</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-htmlbars/lib/keywords/textarea.js#L6">packages/ember-htmlbars/lib/keywords/textarea.js:6</a>
 
   </div>
 
@@ -3601,7 +3639,7 @@ legacy 1.x view semantics (like <code>controller</code> being present).</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-htmlbars/lib/keywords/unbound.js#L10">packages/ember-htmlbars/lib/keywords/unbound.js:10</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-htmlbars/lib/keywords/unbound.js#L10">packages/ember-htmlbars/lib/keywords/unbound.js:10</a>
 
   </div>
 
@@ -3660,7 +3698,7 @@ unbound value.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-htmlbars/lib/helpers/if_unless.js#L69">packages/ember-htmlbars/lib/helpers/if_unless.js:69</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-htmlbars/lib/helpers/if_unless.js#L69">packages/ember-htmlbars/lib/helpers/if_unless.js:69</a>
 
   </div>
 
@@ -3695,7 +3733,7 @@ helper can also be used with <code>unless</code>.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-htmlbars/lib/keywords/view.js#L10">packages/ember-htmlbars/lib/keywords/view.js:10</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-htmlbars/lib/keywords/view.js#L10">packages/ember-htmlbars/lib/keywords/view.js:10</a>
 
   </div>
 
@@ -3978,7 +4016,7 @@ aView.get(<span class="string"><span class="delimiter">'</span><span class="cont
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.0/packages/ember-htmlbars/lib/helpers/with.js#L8">packages/ember-htmlbars/lib/helpers/with.js:8</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.4.4/packages/ember-htmlbars/lib/helpers/with.js#L8">packages/ember-htmlbars/lib/helpers/with.js:8</a>
 
   </div>
 
