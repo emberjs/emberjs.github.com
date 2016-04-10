@@ -482,7 +482,7 @@ was created for this exact reason.</p>
 });
 </pre></td>
 </tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_use-ember-string-htmlsafe-over-ember-handlebars-safestring'>Use Ember.String.htmlSafe over Ember.Handlebars.SafeString</h4>
+</div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-2-6'>Deprecations Added in 2.6</h3><h4 class='anchorable-toc' id='toc_use-ember-string-htmlsafe-over-ember-handlebars-safestring'>Use Ember.String.htmlSafe over Ember.Handlebars.SafeString</h4>
 <p>Before:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -493,10 +493,8 @@ was created for this exact reason.</p>
 6
 7
 8
-9
 </pre></td>
-  <td class="code"><pre><span class="comment">// Ember &lt; 2.3</span>
-<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
 const { computed } = Ember;
 
 <span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
@@ -516,10 +514,8 @@ const { computed } = Ember;
 5
 6
 7
-8
 </pre></td>
-  <td class="code"><pre><span class="comment">// Ember 2.3 and later</span>
-<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
 const { computed } = Ember;
 <span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
   <span class="key">myString</span>: computed(<span class="keyword">function</span>(){
@@ -572,6 +568,73 @@ available after calling <code>this._super(...arguments)</code></p>
     <span class="local-variable">this</span>._super(...<span class="local-variable">arguments</span>);
     <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">handle</span><span class="delimiter">'</span></span>); <span class="comment">// @tomdale</span>
   }
+});
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_model-param-in-code-render-code-helper'>Model param in <code>{{render</code> helper</h4>
+<p>Using the model param in the <code>{{render</code> helper is deprecated in favor of using
+components. Please refactor to a component and invoke thusly:</p>
+
+<p>For example, if you had:</p>
+<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>{{render 'foo-bar' someModel}}
+</pre></td>
+</tr></table>
+</div></div><div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre>{{! app/templates/foo-bar.hbs }}
+&lt;p&gt;{{someProp}} template stuff here&lt;/p&gt;
+</pre></td>
+</tr></table>
+</div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/controllers/foo-bar.js</span>
+<span class="reserved">export</span> <span class="keyword">default</span> Controller.extend({
+  <span class="key">someProp</span>: Ember.computed(<span class="string"><span class="delimiter">'</span><span class="content">model.yolo</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">model.yolo</span><span class="delimiter">'</span></span>);
+  })
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Would be refactored to:</p>
+<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>{{foo-bar model=someModel}}
+</pre></td>
+</tr></table>
+</div></div><div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre>{{! app/templates/components/foo-bar.hbs }}
+&lt;p&gt;{{someProp}} template stuff here&lt;/p&gt;
+</pre></td>
+</tr></table>
+</div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/components/foo-bar.js</span>
+<span class="reserved">export</span> <span class="keyword">default</span> Component.extend({
+  <span class="key">someProp</span>: Ember.computed(<span class="string"><span class="delimiter">'</span><span class="content">model.yolo</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">model.yolo</span><span class="delimiter">'</span></span>);
+  })
 });
 </pre></td>
 </tr></table>
