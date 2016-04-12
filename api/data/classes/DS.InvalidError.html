@@ -66,7 +66,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v2.4.0" target="_blank"> Tag: v2.4.0</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v2.5.0" target="_blank"> Tag: v2.5.0</a></li>
 
 
           <li class="level-1 ">
@@ -304,7 +304,7 @@
         
   <h1 class="api-header">
   DS.InvalidError Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v2.4.0/addon/-private/system/model/errors/invalid.js#L4">addon/-private/system/model/errors/invalid.js:4</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v2.5.0/addon/-private/adapters/errors.js#L28">addon/-private/adapters/errors.js:28</a>
 </h1>
 
 <hr>
@@ -316,7 +316,7 @@
 <div class="class-info">
 
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.4.0/addon/-private/system/model/errors/invalid.js#L4">addon/-private/system/model/errors/invalid.js:4</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.5.0/addon/-private/adapters/errors.js#L28">addon/-private/adapters/errors.js:28</a></p>
 
     <p>Module: <a href="/api/data/modules/ember-data.html">ember-data</a></p>
 </div>
@@ -332,8 +332,9 @@ transition to the <code>invalid</code> state and the errors will be set to the
 
 <p>For Ember Data to correctly map errors to their corresponding
 properties on the model, Ember Data expects each error to be
-namespaced under a key that matches the property name. For example
-if you had a Post model that looked like this.</p>
+a valid json-api error object with a <code>source/pointer</code> that matches
+the property name. For example if you had a Post model that
+looked like this.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
   <thead>
     <tr>
@@ -379,6 +380,12 @@ rejects with a <code>DS.InvalidError</code> object that looks like this:</p>
 <strong>10</strong>
 11
 12
+13
+14
+15
+16
+17
+18
 </pre></td>
   <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
 <span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
@@ -386,10 +393,16 @@ rejects with a <code>DS.InvalidError</code> object that looks like this:</p>
 <span class="reserved">export</span> <span class="keyword">default</span> DS.RESTAdapter.extend({
   <span class="function">updateRecord</span>: <span class="keyword">function</span>() {
     <span class="comment">// Fictional adapter that always rejects</span>
-    <span class="keyword">return</span> Ember.RSVP.reject(<span class="keyword">new</span> DS.InvalidError({
-      <span class="key">title</span>: [<span class="string"><span class="delimiter">'</span><span class="content">Must be unique</span><span class="delimiter">'</span></span>],
-      <span class="key">content</span>: [<span class="string"><span class="delimiter">'</span><span class="content">Must not be blank</span><span class="delimiter">'</span></span>],
-    }));
+    <span class="keyword">return</span> Ember.RSVP.reject(<span class="keyword">new</span> DS.InvalidError([
+      {
+        <span class="key">detail</span>: <span class="string"><span class="delimiter">'</span><span class="content">Must be unique</span><span class="delimiter">'</span></span>,
+        <span class="key">source</span>: { <span class="key">pointer</span>: <span class="string"><span class="delimiter">'</span><span class="content">/data/attributes/title</span><span class="delimiter">'</span></span> }
+      },
+      {
+        <span class="key">detail</span>: <span class="string"><span class="delimiter">'</span><span class="content">Must not be blank</span><span class="delimiter">'</span></span>,
+        <span class="key">source</span>: { <span class="key">pointer</span>: <span class="string"><span class="delimiter">'</span><span class="content">/data/attributes/content</span><span class="delimiter">'</span></span>}
+      }
+    ]));
   }
 });
 </pre></td>
@@ -401,56 +414,6 @@ serializer&#39;s <code>extractErrors</code> method before the errors get added t
 the the model. As a result, it is safe for the <code>InvalidError</code> to
 wrap the error payload unaltered.</p>
 
-<p>Example</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
-  <thead>
-    <tr>
-      <td colspan="2">app/adapters/application.js</td>
-    </tr>
-  </thead>
-<tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
-14
-15
-16
-17
-18
-19
-</pre></td>
-  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
-<span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
-
-<span class="reserved">export</span> <span class="keyword">default</span> DS.RESTAdapter.extend({
-  <span class="function">ajaxError</span>: <span class="keyword">function</span>(jqXHR) {
-    <span class="keyword">var</span> error = <span class="local-variable">this</span>._super(jqXHR);
-
-    <span class="comment">// 422 is used by this fictional server to signal a validation error</span>
-    <span class="keyword">if</span> (jqXHR &amp;&amp; jqXHR.status === <span class="integer">422</span>) {
-      <span class="keyword">var</span> jsonErrors = Ember.<span class="predefined">$</span>.parseJSON(jqXHR.responseText);
-      <span class="keyword">return</span> <span class="keyword">new</span> DS.InvalidError(jsonErrors);
-    } <span class="keyword">else</span> {
-      <span class="comment">// The ajax request failed however it is not a result of this</span>
-      <span class="comment">// record being in an invalid state so we do not return a</span>
-      <span class="comment">// `InvalidError` object.</span>
-      <span class="keyword">return</span> error;
-    }
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
   </div>
 
 
