@@ -65,23 +65,36 @@
 
 &lt;p&gt;The primary migration effort is that you should expect to adjust any relative paths which appear in your templates, are inserted via &lt;code&gt;{{content-for}}&lt;/code&gt;, or directly present in &lt;code&gt;index.html&lt;/code&gt;. Because you will be serving &lt;code&gt;index.html&lt;/code&gt; from the server for any arbitrary route in your application you must modify these to be either a fully-qualified path or a root-relative URL.&lt;/p&gt;
 
-&lt;p&gt;As an example, given this configuration where you have configured a different &lt;code&gt;rootURL&lt;/code&gt; and &lt;code&gt;baseURL&lt;/code&gt;:
-&lt;code&gt;javascript
-{
-  rootURL: &amp;#39;/path/to/application/&amp;#39;,
-  baseURL: &amp;#39;/assets/go/here/&amp;#39;
+&lt;p&gt;As an example, given this configuration where you have configured a different &lt;code&gt;rootURL&lt;/code&gt; and &lt;code&gt;baseURL&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;{
+  &lt;span class="key"&gt;rootURL&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;/path/to/application/&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;,
+  &lt;span class="key"&gt;baseURL&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;/assets/go/here/&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;
 }
-&lt;/code&gt;&lt;/p&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;You would remove the &lt;code&gt;baseURL&lt;/code&gt; option and modify your templates like so:&lt;/p&gt;
+&lt;div class="highlight hbs "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;{{!-- Old: --}}
+&amp;lt;img src=&amp;quot;images/logo.png&amp;quot; /&amp;gt;
 
-&lt;p&gt;You would remove the &lt;code&gt;baseURL&lt;/code&gt; option and modify your templates like so:
-```hbs
-{{!-- Old: --}}
-&lt;img src="images/logo.png" /&gt;&lt;/p&gt;
-
-&lt;p&gt;{{!-- New: --}}
-&lt;img src="/assets/go/here/images/logo.png" /&gt;
-```&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_how-to-use-a-cdn'&gt;How To Use a CDN&lt;/h4&gt;
+{{!-- New: --}}
+&amp;lt;img src=&amp;quot;/assets/go/here/images/logo.png&amp;quot; /&amp;gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;h4 class='anchorable-toc' id='toc_how-to-use-a-cdn'&gt;How To Use a CDN&lt;/h4&gt;
 &lt;p&gt;One of the most common use cases for &lt;code&gt;baseURL&lt;/code&gt; was pointing to assets on a CDN. After this change to remove &lt;code&gt;baseURL&lt;/code&gt; you should use the &lt;code&gt;prepend&lt;/code&gt; option for &lt;a href="https://github.com/rickharrison/broccoli-asset-rev"&gt;&lt;code&gt;broccoli-asset-rev&lt;/code&gt;&lt;/a&gt; which is included with Ember CLI apps by default. For example, in &lt;code&gt;ember-cli-build.js&lt;/code&gt;:&lt;/p&gt;
 &lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
   &lt;td class="line-numbers"&gt;&lt;pre&gt;1
@@ -100,13 +113,18 @@
 &lt;/pre&gt;&lt;/td&gt;
 &lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Note that the &lt;code&gt;prepend&lt;/code&gt; option only applies when doing &lt;em&gt;production&lt;/em&gt; builds via something like &lt;code&gt;ember build --prod&lt;/code&gt;. Given the above example, and this input:
-&lt;code&gt;javascript
-{
-  rootURL: &amp;#39;/path/to/application/&amp;#39;
+&lt;p&gt;Note that the &lt;code&gt;prepend&lt;/code&gt; option only applies when doing &lt;em&gt;production&lt;/em&gt; builds via something like &lt;code&gt;ember build --prod&lt;/code&gt;. Given the above example, and this input:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;{
+  &lt;span class="key"&gt;rootURL&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;/path/to/application/&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;
 }
-&lt;/code&gt;&lt;/p&gt;
-&lt;div class="highlight html "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div class="highlight html "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
   &lt;td class="line-numbers"&gt;&lt;pre&gt;1
 2
 3
@@ -117,12 +135,16 @@
 &lt;/pre&gt;&lt;/td&gt;
 &lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;The output for asset paths in &lt;code&gt;index.html&lt;/code&gt; would look something like:
-&lt;code&gt;html
-&amp;lt;link rel=&amp;quot;stylesheet&amp;quot; href=&amp;quot;https://cdn.example.com/assets/vendor-e37004361bf9cda2ab3379d96c9eba4b.css&amp;quot;&amp;gt;
-&amp;lt;link rel=&amp;quot;stylesheet&amp;quot; href=&amp;quot;https://cdn.example.com/assets/app-name-dc477601773d4043b0c461b2a0ae8aef.css&amp;quot;&amp;gt;
-&lt;/code&gt;&lt;/p&gt;
-
+&lt;p&gt;The output for asset paths in &lt;code&gt;index.html&lt;/code&gt; would look something like:&lt;/p&gt;
+&lt;div class="highlight html "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;link&lt;/span&gt; &lt;span class="attribute-name"&gt;rel&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;stylesheet&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;href&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;https://cdn.example.com/assets/vendor-e37004361bf9cda2ab3379d96c9eba4b.css&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="tag"&gt;&amp;lt;link&lt;/span&gt; &lt;span class="attribute-name"&gt;rel&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;stylesheet&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;href&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;https://cdn.example.com/assets/app-name-dc477601773d4043b0c461b2a0ae8aef.css&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;Note: the &lt;code&gt;rootURL&lt;/code&gt; is &lt;em&gt;not&lt;/em&gt; present. This is intentional as &lt;code&gt;rootURL&lt;/code&gt; exists only to provide information to Ember&amp;#39;s Router about where the application is served from.&lt;/p&gt;
 &lt;h4 class='anchorable-toc' id='toc_css-fonts-and-other-static-assets'&gt;CSS, Fonts, and Other Static Assets&lt;/h4&gt;
 &lt;p&gt;Depending upon how these were included into an application, their paths may need to be adjusted. Assets like these are often handled outside the Ember CLI build pipeline, but do check to make sure that everything is works as expected.&lt;/p&gt;

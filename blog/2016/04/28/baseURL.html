@@ -150,23 +150,36 @@
 
 <p>The primary migration effort is that you should expect to adjust any relative paths which appear in your templates, are inserted via <code>{{content-for}}</code>, or directly present in <code>index.html</code>. Because you will be serving <code>index.html</code> from the server for any arbitrary route in your application you must modify these to be either a fully-qualified path or a root-relative URL.</p>
 
-<p>As an example, given this configuration where you have configured a different <code>rootURL</code> and <code>baseURL</code>:
-<code>javascript
-{
-  rootURL: &#39;/path/to/application/&#39;,
-  baseURL: &#39;/assets/go/here/&#39;
+<p>As an example, given this configuration where you have configured a different <code>rootURL</code> and <code>baseURL</code>:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key">rootURL</span>: <span class="string"><span class="delimiter">'</span><span class="content">/path/to/application/</span><span class="delimiter">'</span></span>,
+  <span class="key">baseURL</span>: <span class="string"><span class="delimiter">'</span><span class="content">/assets/go/here/</span><span class="delimiter">'</span></span>
 }
-</code></p>
+</pre></td>
+</tr></table>
+</div></div>
+<p>You would remove the <code>baseURL</code> option and modify your templates like so:</p>
+<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>{{!-- Old: --}}
+&lt;img src=&quot;images/logo.png&quot; /&gt;
 
-<p>You would remove the <code>baseURL</code> option and modify your templates like so:
-```hbs
-{{!-- Old: --}}
-<img src="images/logo.png" /></p>
-
-<p>{{!-- New: --}}
-<img src="/assets/go/here/images/logo.png" />
-```</p>
-<h4 class='anchorable-toc' id='toc_how-to-use-a-cdn'>How To Use a CDN</h4>
+{{!-- New: --}}
+&lt;img src=&quot;/assets/go/here/images/logo.png&quot; /&gt;
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_how-to-use-a-cdn'>How To Use a CDN</h4>
 <p>One of the most common use cases for <code>baseURL</code> was pointing to assets on a CDN. After this change to remove <code>baseURL</code> you should use the <code>prepend</code> option for <a href="https://github.com/rickharrison/broccoli-asset-rev"><code>broccoli-asset-rev</code></a> which is included with Ember CLI apps by default. For example, in <code>ember-cli-build.js</code>:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -185,13 +198,18 @@
 </pre></td>
 </tr></table>
 </div></div>
-<p>Note that the <code>prepend</code> option only applies when doing <em>production</em> builds via something like <code>ember build --prod</code>. Given the above example, and this input:
-<code>javascript
-{
-  rootURL: &#39;/path/to/application/&#39;
+<p>Note that the <code>prepend</code> option only applies when doing <em>production</em> builds via something like <code>ember build --prod</code>. Given the above example, and this input:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key">rootURL</span>: <span class="string"><span class="delimiter">'</span><span class="content">/path/to/application/</span><span class="delimiter">'</span></span>
 }
-</code></p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</pre></td>
+</tr></table>
+</div></div><div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -202,12 +220,16 @@
 </pre></td>
 </tr></table>
 </div></div>
-<p>The output for asset paths in <code>index.html</code> would look something like:
-<code>html
-&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.example.com/assets/vendor-e37004361bf9cda2ab3379d96c9eba4b.css&quot;&gt;
-&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.example.com/assets/app-name-dc477601773d4043b0c461b2a0ae8aef.css&quot;&gt;
-</code></p>
-
+<p>The output for asset paths in <code>index.html</code> would look something like:</p>
+<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;link</span> <span class="attribute-name">rel</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">stylesheet</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">https://cdn.example.com/assets/vendor-e37004361bf9cda2ab3379d96c9eba4b.css</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attribute-name">rel</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">stylesheet</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">https://cdn.example.com/assets/app-name-dc477601773d4043b0c461b2a0ae8aef.css</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+</pre></td>
+</tr></table>
+</div></div>
 <p>Note: the <code>rootURL</code> is <em>not</em> present. This is intentional as <code>rootURL</code> exists only to provide information to Ember&#39;s Router about where the application is served from.</p>
 <h4 class='anchorable-toc' id='toc_css-fonts-and-other-static-assets'>CSS, Fonts, and Other Static Assets</h4>
 <p>Depending upon how these were included into an application, their paths may need to be adjusted. Assets like these are often handled outside the Ember CLI build pipeline, but do check to make sure that everything is works as expected.</p>
