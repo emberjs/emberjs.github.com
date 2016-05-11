@@ -681,6 +681,83 @@ for information on migration.</p>
 <h3 class='anchorable-toc' id='toc_deprecations-added-in-2-7'>Deprecations Added in 2.7</h3><h4 class='anchorable-toc' id='toc_ember-backburner'>Ember.Backburner</h4><h5 class='anchorable-toc' id='toc_until-2-8-0'>until: 2.8.0</h5><h5 class='anchorable-toc' id='toc_id-ember-metal-ember-backburner'>id: ember-metal.ember-backburner</h5>
 <p><code>Ember.Backburner</code> was private throughout the Ember 2.x series and will be
 removed <em>after</em> 2.8.</p>
+<h4 class='anchorable-toc' id='toc_ember-binding'>Ember.Binding</h4><h5 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h5><h5 class='anchorable-toc' id='toc_id-ember-metal-binding'>id: ember-metal.binding</h5>
+<p><code>Ember.Binding</code> has not been needed for some time and is deprecated in favor of
+computed properties and services (depending on what you were binding to). It is
+recommended that you take the following actions:</p>
+
+<ol>
+<li>Refactor global bindings to services</li>
+<li>Refactor <code>oneWay</code> bindings to <code>readOnly</code> computed properties</li>
+<li>Refactor all other bindings to <code>alias</code> computed properties</li>
+</ol>
+
+<p>The <a href="https://guides.emberjs.com/v2.5.0/applications/services/">guide on services</a> is a good place
+to start for creating and consuming services to replace your global bindings.
+In general though, you will replace your global with a service and consume it
+like this:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+  <span class="comment">// will load the service in file /app/services/cool-service.js</span>
+  <span class="key">coolService</span>: Ember.inject.service()
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>This would replace a binding that may have looked like this:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+  <span class="key">boringObjectBinding</span>: <span class="string"><span class="delimiter">'</span><span class="content">MyApp.boringObject</span><span class="delimiter">'</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Refactoring local bindings to computed properties can be achieved with
+less work:</p>
+
+<p>If you had this:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+  <span class="key">thingContainer</span>: <span class="error">…</span>,
+  <span class="key">thingOneBinding</span>: Ember.Binding.oneWay(<span class="string"><span class="delimiter">'</span><span class="content">thingContainer.thingOne</span><span class="delimiter">'</span></span>),
+  <span class="key">thingTwoBinding</span>: <span class="string"><span class="delimiter">'</span><span class="content">thingContainer.thingTwo</span><span class="delimiter">'</span></span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>You could change it to this:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+  <span class="key">thingContainer</span>: <span class="error">…</span>,
+  <span class="key">thingOne</span>: Ember.computed.readOnly(<span class="string"><span class="delimiter">'</span><span class="content">thingContainer.thingOne</span><span class="delimiter">'</span></span>),
+  <span class="key">thingTwo</span>: Ember.computed.alias(<span class="string"><span class="delimiter">'</span><span class="content">thingContainer.thingTwo</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>See the <a href="https://guides.emberjs.com/v2.5.0/object-model/computed-properties/">guide on computed properties</a> for
+further reading.</p>
 <h3 class='anchorable-toc' id='toc_deprecations-added-in-pending-features'>Deprecations Added in Pending Features</h3><h4 class='anchorable-toc' id='toc_route-serialize'>Route#serialize</h4><h5 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h5><h5 class='anchorable-toc' id='toc_id-ember-routing-serialize-function'>id: ember-routing.serialize-function</h5>
 <p>The <code>Route#serialize</code> function was deprecated in favor of passing a <code>serialize</code> function into the route&#39;s definition in the router map. For more detailed information see the <a href="https://github.com/emberjs/rfcs/blob/master/text/0120-route-serializers.md">Route Serializers RFC</a>.</p>
 
