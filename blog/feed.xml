@@ -5,10 +5,189 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2016-06-08T00:00:00+00:00</updated>
+  <updated>2016-06-09T00:00:00+00:00</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>Ember Data 2.6 and 2.7 Beta Released</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2016/06/09/ember-data-2-6-released.html"/>
+    <id>http://emberjs.com/blog/2016/06/09/ember-data-2-6-released.html</id>
+    <published>2016-06-09T00:00:00+00:00</published>
+    <updated>2016-06-09T00:00:00+00:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Ember Data 2.6, a minor version release of Ember Data, is
+released. This release represents the work of over 22 direct
+contributors, and over 85 commits.&lt;/p&gt;
+
+&lt;p&gt;Ember Data 2.7 beta.1, the branch of Ember Data that will be released
+as stable in roughly six...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;Ember Data 2.6, a minor version release of Ember Data, is
+released. This release represents the work of over 22 direct
+contributors, and over 85 commits.&lt;/p&gt;
+
+&lt;p&gt;Ember Data 2.7 beta.1, the branch of Ember Data that will be released
+as stable in roughly six weeks, is also being released.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_changes-in-ember-data-2-6'&gt;Changes in Ember Data 2.6&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;ds-serialize-ids-and-types&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Enables a new &lt;code&gt;ids-and-type&lt;/code&gt; strategy (in addition to the already existing &lt;code&gt;ids&lt;/code&gt; and &lt;code&gt;records&lt;/code&gt;) for
+serializing has many relationships using the &lt;code&gt;DS.EmbeddedRecordsMixin&lt;/code&gt; that  will include both
+&lt;code&gt;id&lt;/code&gt; and &lt;code&gt;type&lt;/code&gt; of each model as an object.&lt;/p&gt;
+
+&lt;p&gt;For instance, if a user has many pets, which is a polymorphic relationship, the generated payload would be:&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;{
+  &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;user&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: {
+    &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;id&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;1&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;
+    &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;name&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;Bertin Osborne&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;,
+    &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;pets&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: [
+      { &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;id&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;1&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;, &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;type&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;Cat&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; },
+      { &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;id&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;2&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;, &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;type&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;Parrot&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;}
+    ]
+  }
+}
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;This is particularly useful for polymorphic relationships not backed
+  by &lt;a href="https://en.wikipedia.org/wiki/Single_Table_Inheritance"&gt;STI&lt;/a&gt;
+  when just including the id of the records is not enough.&lt;/p&gt;
+
+&lt;p&gt;Thanks to &lt;a href="https://github.com/cibernox"&gt;@cibernox&lt;/a&gt; for
+implementing this feature.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_upcoming-features-in-ember-data-2-7-beta-1'&gt;Upcoming Features in Ember Data 2.7.beta-1&lt;/h3&gt;&lt;h4 class='anchorable-toc' id='toc_code-ds-boolean-transform-allow-null-code-a-href-https-github-com-emberjs-data-pull-4022-4022-a'&gt;&lt;code&gt;ds-boolean-transform-allow-null&lt;/code&gt; &lt;a href="https://github.com/emberjs/data/pull/4022"&gt;#4022&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Allow &lt;code&gt;null&lt;/code&gt;/&lt;code&gt;undefined&lt;/code&gt; values for boolean attributes via &lt;code&gt;attr(&amp;#39;boolean&amp;#39;, { allowNull: true })&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// app/models/user.js&lt;/span&gt;
+&lt;span class="reserved"&gt;import&lt;/span&gt; Model from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data/model&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+&lt;span class="reserved"&gt;import&lt;/span&gt; attr from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data/attr&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Model.extend({
+  &lt;span class="key"&gt;email&lt;/span&gt;: attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;string&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
+  &lt;span class="key"&gt;username&lt;/span&gt;: attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;string&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
+  &lt;span class="key"&gt;wantsWeeklyEmail&lt;/span&gt;: attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;boolean&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, { &lt;span class="key"&gt;allowNull&lt;/span&gt;: &lt;span class="predefined-constant"&gt;true&lt;/span&gt; })
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;h4 class='anchorable-toc' id='toc_code-ds-improved-ajax-code-a-href-https-github-com-emberjs-data-pull-3099-3099-a'&gt;&lt;code&gt;ds-improved-ajax&lt;/code&gt; &lt;a href="https://github.com/emberjs/data/pull/3099"&gt;#3099&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Though &lt;code&gt;ajax()&lt;/code&gt; (and &lt;code&gt;ajaxOptions()&lt;/code&gt;) of &lt;code&gt;DS.RESTAdapter&lt;/code&gt; are marked as
+private, they have been overwritten in many applications, since there is
+currently no other way to customize the request.&lt;/p&gt;
+
+&lt;p&gt;This feature adds new public methods to &lt;code&gt;DS.RESTAdapter&lt;/code&gt;, which allow to
+customize the properties of a request:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;methodForRequest&lt;/code&gt; to get the HTTP verb&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;urlForRequest&lt;/code&gt; to get the URL&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;headersForRequest&lt;/code&gt; to get the headers&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;dataForRequest&lt;/code&gt; to get the data (query params or request body)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The &lt;code&gt;params&lt;/code&gt; hash passed to those methods has all the properties with
+which the corresponding &lt;code&gt;find&lt;/code&gt;, &lt;code&gt;createRecord&lt;/code&gt;, &lt;code&gt;findQuery&lt;/code&gt;, ...  calls
+have been invoked: &lt;code&gt;store&lt;/code&gt;, &lt;code&gt;type&lt;/code&gt;, &lt;code&gt;snapshot&lt;/code&gt;(s), &lt;code&gt;id&lt;/code&gt;(s) and &lt;code&gt;query&lt;/code&gt;. The
+&lt;code&gt;requestType&lt;/code&gt; property indicates which method is requested; the possible
+values are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;createRecord&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;updateRecord&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;deleteRecord&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;query&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;queryRecord&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;findRecord&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;findAll&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;findMany&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;findHasMany&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;findBelongsTo&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Performing the actual AJAX request is handled by the &lt;code&gt;makeRequest&lt;/code&gt;
+method, which is similar to the existing &lt;code&gt;ajax&lt;/code&gt; method: it makes the
+request using &lt;code&gt;jQuery.ajax&lt;/code&gt; and attaches success and failure handlers.&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Say your API handles creation of resources via PUT, this can now be
+customized as follows:&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// adapters/application.js&lt;/span&gt;
+&lt;span class="reserved"&gt;import&lt;/span&gt; DS from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; DS.RESTAdapter.extend({
+  methodForRequest(params) {
+    &lt;span class="keyword"&gt;if&lt;/span&gt; (params.requestType === &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;createRecord&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;) {
+      &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;PUT&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;;
+    }
+
+    &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="local-variable"&gt;this&lt;/span&gt;._super(...&lt;span class="local-variable"&gt;arguments&lt;/span&gt;);
+  }
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Thanks to &lt;a href="https://github.com/pangratz"&gt;@pangratz&lt;/a&gt; for
+implementing this feature.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_code-ds-links-in-record-array-code-a-href-https-github-com-emberjs-data-pull-4263-4263-a'&gt;&lt;code&gt;ds-links-in-record-array&lt;/code&gt; &lt;a href="https://github.com/emberjs/data/pull/4263"&gt;#4263&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;This feature exposes a &lt;code&gt;links&lt;/code&gt; object on a &lt;code&gt;RecordArray&lt;/code&gt;. This can be used to load additional links when  present in the response JSON-API document.&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;store.query(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;post&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, { &lt;span class="key"&gt;isRecent&lt;/span&gt;: &lt;span class="predefined-constant"&gt;true&lt;/span&gt; }).then((posts) =&amp;gt; {
+  posts.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;links.next&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Thanks to &lt;a href="https://github.com/danmcclain"&gt;@danmcclain&lt;/a&gt; for
+implementing this feature.&lt;/p&gt;
+
+&lt;p&gt;For more details on changes in the 2.7 beta, please review the
+&lt;a href="https://github.com/emberjs/data/blob/v2.7.0-beta.1/CHANGELOG.md"&gt;Ember Data 2.7.0-beta.1 CHANGELOG&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>Ember.js 2.6 and 2.7 Beta Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2016/06/08/ember-2-6-and-2-7-beta-released.html"/>
@@ -801,128 +980,6 @@ serializing has many relationships using the &lt;code&gt;DS.EmbeddedRecordsMixin
 &lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;If you discover any problems with this change please &lt;a href="https://github.com/ember-cli/ember-cli/issues/new"&gt;file an issue&lt;/a&gt;, we&amp;#39;ll be paying especially close attention to this topic.&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Ember.js 2.4-LTS, 2.5, and 2.6 Beta Released</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2016/04/11/ember-2-5-released.html"/>
-    <id>http://emberjs.com/blog/2016/04/11/ember-2-5-released.html</id>
-    <published>2016-04-11T00:00:00+00:00</published>
-    <updated>2016-04-11T00:00:00+00:00</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Ember 2.4-LTS, the first Ember Long-Term Support release, lands today as Ember
-2.4.5. Future versions of 2.4 will be considered part of the LTS channel.
-The LTS channel comes with a commitment
-that low-risk critical bugfixes and security patches will...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Ember 2.4-LTS, the first Ember Long-Term Support release, lands today as Ember
-2.4.5. Future versions of 2.4 will be considered part of the LTS channel.
-The LTS channel comes with a commitment
-that low-risk critical bugfixes and security patches will be backported to
-these versions. Additionally, any change to commonly used private APIs must be deprecated
-in at least one LTS release before removal, making LTS releases a slower
-moving target for addons to support.&lt;/p&gt;
-
-&lt;p&gt;2.4-LTS will receive critical bugfixes for the next 6 release cycles (until
-roughly November 2016) and security patches for the next 10 release cycles
-(until roughly April 2017). For more information about how the LTS process works,
-see the blog post &lt;a href="http://emberjs.com/blog/2016/02/25/announcing-embers-first-lts.html"&gt;Announcing Ember&amp;#39;s First LTS Release&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Ember 2.5, a minor version release of Ember with backwards compatible
-changes, is also released today.&lt;/p&gt;
-
-&lt;p&gt;Ember 2.6 beta, the branch of Ember that will be released as stable in
-roughly six weeks, is released today.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_notable-deprecations-in-ember-2-4-lts'&gt;Notable deprecations in Ember 2.4-LTS&lt;/h3&gt;
-&lt;p&gt;Ember 2.4-LTS deprecates two private APIs. Support for these private APIs will
-be removed in Ember 2.6.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The &lt;a href="https://github.com/emberjs/ember-legacy-views"&gt;ember-legacy-views&lt;/a&gt; and &lt;a href="https://github.com/emberjs/ember-legacy-controllers"&gt;ember-legacy-controllers&lt;/a&gt;
-addons, which rely upon private API, will be supported on Ember 2.4-LTS with a deprecation notice. Although Ember 2.5 will also
-support these addons, 2.4-LTS will be a supported platform for much longer than
-2.5. Ember 2.6 and 2.8-LTS, when they are released, will not support these addons.&lt;/li&gt;
-&lt;li&gt;Use of the &lt;code&gt;{{#render}}&lt;/code&gt; helper in block form is deprecated. Block form usage was an
-un-documented and un-intended feature, and will be removed in Ember 2.6. In general,
-uses of &lt;code&gt;{{render}}&lt;/code&gt; should be replaced with components.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 class='anchorable-toc' id='toc_changes-in-ember-2-5'&gt;Changes in Ember 2.5&lt;/h3&gt;
-&lt;p&gt;Ember 2.5 introduces several minor public API additions.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_code-ember-assign-code'&gt;&lt;code&gt;Ember.assign&lt;/code&gt;&lt;/h4&gt;
-&lt;p&gt;&lt;code&gt;Ember.assign&lt;/code&gt; is a polyfill for the ES2015 &lt;code&gt;Object.assign&lt;/code&gt; feature. &lt;code&gt;assign&lt;/code&gt;
-copies the values of all enumerable own properties from one or more source
-objects to a target object. For example:&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;let a = {&lt;span class="key"&gt;first&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;John&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;};
-let b = {&lt;span class="key"&gt;last&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Lennon&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;};
-let c = {&lt;span class="key"&gt;band&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;The Beatles&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;};
-
-Ember.assign(a, b, c);
-
-&lt;span class="comment"&gt;// a === {first: 'John', last: 'Lennon', band: 'The Beatles'}&lt;/span&gt;
-&lt;span class="comment"&gt;// b === {last: 'Lennon'}&lt;/span&gt;
-&lt;span class="comment"&gt;// c === {band: 'The Beatles'}&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;For more specifics on &lt;code&gt;assign&lt;/code&gt;, see the &lt;a href="http://emberjs.com/api/#method_assign"&gt;Ember API documentation&lt;/a&gt;
-and &lt;a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign"&gt;MDN documentation&lt;/a&gt;.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_local-lookup-compatibility'&gt;Local Lookup Compatibility&lt;/h4&gt;
-&lt;p&gt;As part of the new directory layout effort currently organized around the
-&lt;a href="https://github.com/emberjs/rfcs/pull/124"&gt;Module Normalization RFC&lt;/a&gt;,
-we intend to introduce a feature called
-&amp;quot;local lookup&amp;quot;. This feature will allow for the creation of components or helpers available
-only in a single template, instead of being globally scoped as they must be
-today. &lt;code&gt;lookup&lt;/code&gt; and &lt;code&gt;resolve&lt;/code&gt; in Ember 2.5 will accept an optional &lt;code&gt;source&lt;/code&gt; property
-on their &lt;code&gt;options&lt;/code&gt; argument. This API change will allow local
-lookup to be implemented outside of Ember via the
-&lt;a href="https://github.com/ember-cli/ember-resolver"&gt;ember-cli/ember-resolver&lt;/a&gt; library.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_native-event-test-helpers'&gt;Native Event Test Helpers&lt;/h4&gt;
-&lt;p&gt;Ember&amp;#39;s acceptance test helpers, such as &lt;code&gt;click()&lt;/code&gt;, have previously used
-jQuery event triggers. In 2.5 this behavior has been altered to trigger
-native events via &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/dispatchEvent"&gt;&lt;code&gt;dispatchEvent&lt;/code&gt;&lt;/a&gt;.
-This change is expected to be completely backwards compatible and was
-uncontroversial during the six week beta cycle. It allows the triggering of
-non-jQuery event listeners in acceptance tests.&lt;/p&gt;
-
-&lt;p&gt;For more details on changes landing in Ember 2.5, review the
-&lt;a href="https://github.com/emberjs/ember.js/blob/v2.5.0/CHANGELOG.md"&gt;Ember.js 2.5.0 CHANGELOG&lt;/a&gt;.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_ember-js-2-6-beta'&gt;Ember.js 2.6 beta&lt;/h3&gt;
-&lt;p&gt;No new features are added in Ember core in 2.6. In
-general the core team and
-community have remained active around other highly visible parts of
-the Ember stack (Ember Data, FastBoot, Glimmer, etc).&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_notable-deprecations'&gt;Notable Deprecations&lt;/h4&gt;
-&lt;p&gt;The following deprecations are scheduled for release with Ember 2.6 and will be
-removed in Ember 3.0:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Ember.String.htmlSafe(aString)&lt;/code&gt; is the preferred API for marking a string
-XSS safe for the rendering layer. Use of &lt;code&gt;Ember.Handlebars.SafeString&lt;/code&gt; as
-a constructor for safe strings is deprecated, and will be removed.
-See the &lt;a href="http://emberjs.com/deprecations/v2.x/#toc_use-ember-string-htmlsafe-over-ember-handlebars-safestring"&gt;deprecation guide&lt;/a&gt; for more details.&lt;/li&gt;
-&lt;li&gt;The &lt;code&gt;didInitAttrs&lt;/code&gt; hook for component lifecycles is deprecated in favor of
-simply using &lt;code&gt;init&lt;/code&gt;. &lt;code&gt;didInitAttrs&lt;/code&gt; had confusing timing
-issues, and &lt;code&gt;init&lt;/code&gt; fulfills the same role. See the &lt;a href="http://emberjs.com/deprecations/v2.x/#toc_ember-component-didinitattrs"&gt;deprecation guide&lt;/a&gt; for more details.&lt;/li&gt;
-&lt;li&gt;Passing a &lt;code&gt;model&lt;/code&gt; argument to &lt;code&gt;{{render}}&lt;/code&gt; is deprecated in favor of using
-a component for the same cases. For example &lt;code&gt;{{render &amp;#39;chat&amp;#39; roomModel}}&lt;/code&gt;
-can be refactored into a &lt;code&gt;chat-room&lt;/code&gt; component.
-See the &lt;a href="http://emberjs.com/deprecations/v2.x/#toc_model-param-in-code-render-code-helper"&gt;deprecation guide&lt;/a&gt; for more details.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;For more details on changes landing in 2.6 beta, review the
-&lt;a href="https://github.com/emberjs/ember.js/blob/v2.6.0-beta.1/CHANGELOG.md"&gt;Ember.js 2.6.0-beta.1 CHANGELOG&lt;/a&gt;.&lt;/p&gt;
 </content>
   </entry>
 </feed>
