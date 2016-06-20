@@ -795,7 +795,7 @@ further reading.</p>
 </pre></td>
 </tr></table>
 </div></div><h4 class='anchorable-toc' id='toc_use-ember-string-htmlsafe-over-ember-handlebars-safestring'>Use Ember.String.htmlSafe over Ember.Handlebars.SafeString</h4><h5 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h5><h5 class='anchorable-toc' id='toc_id-ember-htmlbars-ember-handlebars-safestring'>id: ember-htmlbars.ember-handlebars-safestring</h5>
-<p>Before:</p>
+<p>Creating safe strings. Before:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -826,9 +826,11 @@ const { computed } = Ember;
 5
 6
 7
+8
 </pre></td>
   <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
 const { computed } = Ember;
+
 <span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
   <span class="key">myString</span>: computed(<span class="keyword">function</span>(){
     <span class="keyword">return</span> Ember.String.htmlSafe(someString);
@@ -837,6 +839,70 @@ const { computed } = Ember;
 </pre></td>
 </tr></table>
 </div></div>
+<p>Detecting safe strings. Before:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+  <span class="key">actions</span>: {
+    save() {
+      let myString = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">myString</span><span class="delimiter">'</span></span>);
+      <span class="keyword">if</span> (myString <span class="keyword">instanceof</span> Ember.Handlebars.SafeString) {
+        <span class="comment">// ...</span>
+      }
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>After:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+  <span class="key">actions</span>: {
+    save() {
+      let myString = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">myString</span><span class="delimiter">'</span></span>);
+      <span class="keyword">if</span> (Ember.String.isHtmlSafe(myString)) {
+        <span class="comment">// ...</span>
+      }
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>If you&#39;re an addon maintainer, there is a polyfill for safe string detection (<a href="https://github.com/workmanw/ember-string-ishtmlsafe-polyfill">ember-string-ishtmlsafe-polyfill</a>)
+that will help maintain backwards compatibility. Additionally, it&#39;s worth noting that <code>Ember.String.htmlSafe</code>
+is supported back to pre-1.0, so there should be no concerns of backwards compatibility there.</p>
+
 
       </div>
     </div>
