@@ -902,6 +902,103 @@ const { computed } = Ember;
 <p>If you&#39;re an addon maintainer, there is a polyfill for safe string detection (<a href="https://github.com/workmanw/ember-string-ishtmlsafe-polyfill">ember-string-ishtmlsafe-polyfill</a>)
 that will help maintain backwards compatibility. Additionally, it&#39;s worth noting that <code>Ember.String.htmlSafe</code>
 is supported back to pre-1.0, so there should be no concerns of backwards compatibility there.</p>
+<h4 class='anchorable-toc' id='toc_enumerable-contains'>Enumerable#contains</h4><h5 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h5><h5 class='anchorable-toc' id='toc_id-ember-runtime-enumerable-contains'>id: ember-runtime.enumerable-contains</h5>
+<p>The <code>Enumerable#contains</code> and <code>Array#contains</code> methods were deprecated in favor of <code>Enumerable#includes</code> and <code>Array#includes</code> 
+to stay in line with ES standards. See <a href="https://github.com/emberjs/rfcs/blob/master/text/0136-contains-to-includes.md">RFC</a> for details.</p>
+
+<p><code>contains</code> and <code>includes</code> have similar behaviors. A notable exception is how <code>NaN</code> values are handled.
+<code>contains</code> uses <a href="https://tc39.github.io/ecma262/2016/#sec-strict-equality-comparison">Strict equality comparison algorithm</a>
+for testing inclusion while <code>includes</code> uses <a href="https://tc39.github.io/ecma262/2016/#sec-samevaluezero">SameValueZero algorithm</a>.</p>
+
+<p>Before:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> arr = [<span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">c</span><span class="delimiter">'</span></span>, <span class="predefined-constant">NaN</span>, <span class="predefined-constant">undefined</span>, <span class="predefined-constant">null</span>];
+arr.contains(<span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span>);        <span class="comment">// true</span>
+arr.contains(<span class="string"><span class="delimiter">'</span><span class="content">d</span><span class="delimiter">'</span></span>);        <span class="comment">// false</span>
+arr.contains(<span class="predefined-constant">NaN</span>);        <span class="comment">// false</span>
+arr.contains(<span class="predefined-constant">null</span>);       <span class="comment">// false</span>
+arr.contains(<span class="predefined-constant">undefined</span>);  <span class="comment">// false</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>After:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> arr = [<span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">c</span><span class="delimiter">'</span></span>, <span class="predefined-constant">NaN</span>, <span class="predefined-constant">undefined</span>, <span class="predefined-constant">null</span>];
+arr.includes(<span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span>);        <span class="comment">// true</span>
+arr.includes(<span class="string"><span class="delimiter">'</span><span class="content">d</span><span class="delimiter">'</span></span>);        <span class="comment">// false</span>
+arr.includes(<span class="predefined-constant">NaN</span>);        <span class="comment">// true</span>
+arr.contains(<span class="predefined-constant">null</span>);       <span class="comment">// true</span>
+arr.contains(<span class="predefined-constant">undefined</span>);  <span class="comment">// true</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p><code>includes</code> also allows a second optional parameter <code>startAt</code> to specify the index at which to begin searching:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> arr = [<span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">c</span><span class="delimiter">'</span></span>, <span class="predefined-constant">NaN</span>];
+arr.includes(<span class="string"><span class="delimiter">'</span><span class="content">c</span><span class="delimiter">'</span></span>, <span class="integer">2</span>);   <span class="comment">// true</span>
+arr.includes(<span class="string"><span class="delimiter">'</span><span class="content">c</span><span class="delimiter">'</span></span>, -<span class="integer">2</span>);  <span class="comment">// true</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Note that the second <code>startAt</code> parameter is only available for <code>Ember.Array</code> because <code>Ember.Enumerable</code> does not rely on index-ordered access.</p>
+
+<p><code>Enumerable#without</code> and <code>MutableEnumerable#addObject</code> use now internally <code>includes</code> instead of <code>contains</code>. This leads to some minor breaking changes:</p>
+
+<p>Before:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> arr = [<span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span>];
+
+arr.addObject(<span class="predefined-constant">NaN</span>);       <span class="comment">// ['a', 'b', NaN] </span>
+arr.addObject(<span class="predefined-constant">NaN</span>);       <span class="comment">// ['a', 'b', NaN, NaN] </span>
+arr.without(<span class="predefined-constant">NaN</span>);         <span class="comment">// ['a', 'b', NaN, NaN] </span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>After:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> arr = [<span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span>];
+
+<span class="keyword">var</span> arr = [<span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span>];
+
+arr.addObject(<span class="predefined-constant">NaN</span>);       <span class="comment">// ['a', 'b', NaN] </span>
+arr.addObject(<span class="predefined-constant">NaN</span>);       <span class="comment">// ['a', 'b', NaN] </span>
+arr.without(<span class="predefined-constant">NaN</span>);         <span class="comment">// ['a', 'b'] </span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Added in <a href="https://github.com/emberjs/ember.js/pull/13553">PR #13553</a>.</p>
 
 
       </div>
