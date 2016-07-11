@@ -509,49 +509,7 @@ anything inside the block are incorrect) that prevent continued support.</p>
 {{/render}}
 </pre></td>
 </tr></table>
-</div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-2-6'>Deprecations Added in 2.6</h3><h4 class='anchorable-toc' id='toc_use-ember-string-htmlsafe-over-ember-handlebars-safestring'>Use Ember.String.htmlSafe over Ember.Handlebars.SafeString</h4><h5 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h5><h5 class='anchorable-toc' id='toc_id-ember-htmlbars-ember-handlebars-safestring'>id: ember-htmlbars.ember-handlebars-safestring</h5>
-<p>Before:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-</pre></td>
-  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
-const { computed } = Ember;
-
-<span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
-  <span class="key">myString</span>: computed(<span class="keyword">function</span>(){
-    <span class="keyword">return</span> <span class="keyword">new</span> Ember.Handlebars.SafeString(someString);
-  });
-})
-</pre></td>
-</tr></table>
-</div></div>
-<p>After:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
-const { computed } = Ember;
-<span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
-  <span class="key">myString</span>: computed(<span class="keyword">function</span>(){
-    <span class="keyword">return</span> Ember.String.htmlSafe(someString);
-  });
-)};
-</pre></td>
-</tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_ember-component-didinitattrs'>Ember.Component#didInitAttrs</h4><h5 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h5><h5 class='anchorable-toc' id='toc_id-ember-views-did-init-attrs'>id: ember-views.did-init-attrs</h5>
+</div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-2-6'>Deprecations Added in 2.6</h3><h4 class='anchorable-toc' id='toc_ember-component-didinitattrs'>Ember.Component#didInitAttrs</h4><h5 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h5><h5 class='anchorable-toc' id='toc_id-ember-views-did-init-attrs'>id: ember-views.did-init-attrs</h5>
 <p>Using <code>didInitAttrs</code> is deprecated in favour of using <code>init</code>. When <code>init</code> is called the attrs sent in with the component will be
 available after calling <code>this._super(...arguments)</code></p>
 
@@ -836,7 +794,212 @@ further reading.</p>
 });
 </pre></td>
 </tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_use-ember-string-htmlsafe-over-ember-handlebars-safestring'>Use Ember.String.htmlSafe over Ember.Handlebars.SafeString</h4><h5 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h5><h5 class='anchorable-toc' id='toc_id-ember-htmlbars-ember-handlebars-safestring'>id: ember-htmlbars.ember-handlebars-safestring</h5>
+<p>Creating safe strings. Before:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+const { computed } = Ember;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+  <span class="key">myString</span>: computed(<span class="keyword">function</span>(){
+    <span class="keyword">return</span> <span class="keyword">new</span> Ember.Handlebars.SafeString(someString);
+  });
+})
+</pre></td>
+</tr></table>
 </div></div>
+<p>After:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+const { computed } = Ember;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+  <span class="key">myString</span>: computed(<span class="keyword">function</span>(){
+    <span class="keyword">return</span> Ember.String.htmlSafe(someString);
+  });
+)};
+</pre></td>
+</tr></table>
+</div></div>
+<p>Detecting safe strings. Before:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+  <span class="key">actions</span>: {
+    save() {
+      let myString = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">myString</span><span class="delimiter">'</span></span>);
+      <span class="keyword">if</span> (myString <span class="keyword">instanceof</span> Ember.Handlebars.SafeString) {
+        <span class="comment">// ...</span>
+      }
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>After:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+  <span class="key">actions</span>: {
+    save() {
+      let myString = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">myString</span><span class="delimiter">'</span></span>);
+      <span class="keyword">if</span> (Ember.String.isHtmlSafe(myString)) {
+        <span class="comment">// ...</span>
+      }
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>If you&#39;re an addon maintainer, there is a polyfill for safe string detection (<a href="https://github.com/workmanw/ember-string-ishtmlsafe-polyfill">ember-string-ishtmlsafe-polyfill</a>)
+that will help maintain backwards compatibility. Additionally, it&#39;s worth noting that <code>Ember.String.htmlSafe</code>
+is supported back to pre-1.0, so there should be no concerns of backwards compatibility there.</p>
+<h4 class='anchorable-toc' id='toc_enumerable-contains'>Enumerable#contains</h4><h5 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h5><h5 class='anchorable-toc' id='toc_id-ember-runtime-enumerable-contains'>id: ember-runtime.enumerable-contains</h5>
+<p>The <code>Enumerable#contains</code> and <code>Array#contains</code> methods were deprecated in favor of <code>Enumerable#includes</code> and <code>Array#includes</code> 
+to stay in line with ES standards. See <a href="https://github.com/emberjs/rfcs/blob/master/text/0136-contains-to-includes.md">RFC</a> for details.</p>
+
+<p><code>contains</code> and <code>includes</code> have similar behaviors. A notable exception is how <code>NaN</code> values are handled.
+<code>contains</code> uses <a href="https://tc39.github.io/ecma262/2016/#sec-strict-equality-comparison">Strict equality comparison algorithm</a>
+for testing inclusion while <code>includes</code> uses <a href="https://tc39.github.io/ecma262/2016/#sec-samevaluezero">SameValueZero algorithm</a>.</p>
+
+<p>Before:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> arr = [<span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">c</span><span class="delimiter">'</span></span>, <span class="predefined-constant">NaN</span>, <span class="predefined-constant">undefined</span>, <span class="predefined-constant">null</span>];
+arr.contains(<span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span>);        <span class="comment">// true</span>
+arr.contains(<span class="string"><span class="delimiter">'</span><span class="content">d</span><span class="delimiter">'</span></span>);        <span class="comment">// false</span>
+arr.contains(<span class="predefined-constant">NaN</span>);        <span class="comment">// false</span>
+arr.contains(<span class="predefined-constant">null</span>);       <span class="comment">// false</span>
+arr.contains(<span class="predefined-constant">undefined</span>);  <span class="comment">// false</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>After:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> arr = [<span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">c</span><span class="delimiter">'</span></span>, <span class="predefined-constant">NaN</span>, <span class="predefined-constant">undefined</span>, <span class="predefined-constant">null</span>];
+arr.includes(<span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span>);        <span class="comment">// true</span>
+arr.includes(<span class="string"><span class="delimiter">'</span><span class="content">d</span><span class="delimiter">'</span></span>);        <span class="comment">// false</span>
+arr.includes(<span class="predefined-constant">NaN</span>);        <span class="comment">// true</span>
+arr.contains(<span class="predefined-constant">null</span>);       <span class="comment">// true</span>
+arr.contains(<span class="predefined-constant">undefined</span>);  <span class="comment">// true</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p><code>includes</code> also allows a second optional parameter <code>startAt</code> to specify the index at which to begin searching:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> arr = [<span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">c</span><span class="delimiter">'</span></span>, <span class="predefined-constant">NaN</span>];
+arr.includes(<span class="string"><span class="delimiter">'</span><span class="content">c</span><span class="delimiter">'</span></span>, <span class="integer">2</span>);   <span class="comment">// true</span>
+arr.includes(<span class="string"><span class="delimiter">'</span><span class="content">c</span><span class="delimiter">'</span></span>, -<span class="integer">2</span>);  <span class="comment">// true</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Note that the second <code>startAt</code> parameter is only available for <code>Ember.Array</code> because <code>Ember.Enumerable</code> does not rely on index-ordered access.</p>
+
+<p><code>Enumerable#without</code> and <code>MutableEnumerable#addObject</code> use now internally <code>includes</code> instead of <code>contains</code>. This leads to some minor breaking changes:</p>
+
+<p>Before:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> arr = [<span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span>];
+
+arr.addObject(<span class="predefined-constant">NaN</span>);       <span class="comment">// ['a', 'b', NaN] </span>
+arr.addObject(<span class="predefined-constant">NaN</span>);       <span class="comment">// ['a', 'b', NaN, NaN] </span>
+arr.without(<span class="predefined-constant">NaN</span>);         <span class="comment">// ['a', 'b', NaN, NaN] </span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>After:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> arr = [<span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span>];
+
+<span class="keyword">var</span> arr = [<span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span>];
+
+arr.addObject(<span class="predefined-constant">NaN</span>);       <span class="comment">// ['a', 'b', NaN] </span>
+arr.addObject(<span class="predefined-constant">NaN</span>);       <span class="comment">// ['a', 'b', NaN] </span>
+arr.without(<span class="predefined-constant">NaN</span>);         <span class="comment">// ['a', 'b'] </span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Added in <a href="https://github.com/emberjs/ember.js/pull/13553">PR #13553</a>.</p>
+
 
       </div>
     </div>
