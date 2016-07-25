@@ -65,7 +65,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v2.6.1" target="_blank"> Tag: v2.6.1</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v2.7.0" target="_blank"> Tag: v2.7.0</a></li>
 
 
           <li class="level-1 ">
@@ -105,16 +105,6 @@
         
           <li class="level-3 ">
                         <a href="/api/modules/ember-routing.html">ember-routing</a>
-
-          </li>
-        
-          <li class="level-3 ">
-                        <a href="/api/modules/ember-routing-htmlbars.html">ember-routing-htmlbars</a>
-
-          </li>
-        
-          <li class="level-3 ">
-                        <a href="/api/modules/ember-routing-views.html">ember-routing-views</a>
 
           </li>
         
@@ -399,11 +389,6 @@
           </li>
         
           <li class="level-3 ">
-                        <a href="/api/classes/Ember.Logger.html">Ember.Logger</a>
-
-          </li>
-        
-          <li class="level-3 ">
                         <a href="/api/classes/Ember.Map.html">Ember.Map</a>
 
           </li>
@@ -494,11 +479,6 @@
           </li>
         
           <li class="level-3 ">
-                        <a href="/api/classes/Ember.TemplateRenderingSupport.html">Ember.TemplateRenderingSupport</a>
-
-          </li>
-        
-          <li class="level-3 ">
                         <a href="/api/classes/Ember.Templates.helpers.html">Ember.Templates.helpers</a>
 
           </li>
@@ -510,6 +490,11 @@
         
           <li class="level-3 ">
                         <a href="/api/classes/Ember.Test.Adapter.html">Ember.Test.Adapter</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/api/classes/Ember.Test.Ember.Test.html">Ember.Test.Ember.Test</a>
 
           </li>
         
@@ -623,7 +608,7 @@
         
   <h1 class="api-header">
   Ember.Helper Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/ember.js/tree/v2.6.1/packages/ember-htmlbars/lib/helper.js#L8">packages/ember-htmlbars/lib/helper.js:8</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/ember.js/tree/v2.7.0/packages/ember-htmlbars/lib/helper.js#L8">packages/ember-htmlbars/lib/helper.js:8</a>
 </h1>
 
 <hr>
@@ -635,7 +620,7 @@
 <div class="class-info">
 
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.6.1/packages/ember-htmlbars/lib/helper.js#L8">packages/ember-htmlbars/lib/helper.js:8</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.7.0/packages/ember-htmlbars/lib/helper.js#L8">packages/ember-htmlbars/lib/helper.js:8</a></p>
 
     <p>Module: <a href="/api/modules/ember-templates.html">ember-templates</a></p>
 </div>
@@ -769,7 +754,7 @@ injected dependencies.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.6.1/packages/ember-htmlbars/lib/helper.js#L79">packages/ember-htmlbars/lib/helper.js:79</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.7.0/packages/ember-htmlbars/lib/helper.js#L79">packages/ember-htmlbars/lib/helper.js:79</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -822,7 +807,7 @@ injected dependencies.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.6.1/packages/ember-htmlbars/lib/helper.js#L94">packages/ember-htmlbars/lib/helper.js:94</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.7.0/packages/ember-htmlbars/lib/helper.js#L94">packages/ember-htmlbars/lib/helper.js:94</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -830,7 +815,7 @@ injected dependencies.</p>
 
     <div class="description">
       <p>In many cases, the ceremony of a full <code>Ember.Helper</code> class is not required.
-The <code>helper</code> method create pure-function helpers without instances. For
+The <code>helper</code> method creates pure-function helpers without instances. For
 example:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -839,13 +824,23 @@ example:</p>
 4
 5
 6
+7
+8
+9
+<strong>10</strong>
+11
 </pre></td>
   <td class="code"><pre><span class="comment">// app/helpers/format-currency.js</span>
-<span class="reserved">export</span> <span class="keyword">default</span> Ember.Helper.helper(<span class="keyword">function</span>(params, hash) {
-  let cents = params[<span class="integer">0</span>];
+<span class="reserved">export</span> <span class="keyword">function</span> <span class="function">formatCurrency</span>([cents], hash) {
   let currency = hash.currency;
   <span class="keyword">return</span> <span class="error">`</span><span class="predefined">$</span>{currency}<span class="predefined">$</span>{cents * <span class="float">0.01</span>}<span class="error">`</span>;
 });
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Helper.helper(formatCurrency);
+
+<span class="comment">// tests/myhelper.js</span>
+<span class="reserved">import</span> { formatCurrency } from ....<span class="regexp"><span class="delimiter">/</span><span class="content">helpers</span><span class="delimiter">/</span><span class="modifier">m</span></span>yhelper
+<span class="comment">// add some tests</span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -884,7 +879,7 @@ example:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.6.1/packages/ember-htmlbars/lib/helper.js#L51">packages/ember-htmlbars/lib/helper.js:51</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.7.0/packages/ember-htmlbars/lib/helper.js#L51">packages/ember-htmlbars/lib/helper.js:51</a>
 
       <br/>Available since 1.13.0
   </div>
