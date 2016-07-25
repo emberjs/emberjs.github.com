@@ -715,85 +715,7 @@ less work:</p>
 </div></div>
 <p>See the <a href="https://guides.emberjs.com/v2.5.0/object-model/computed-properties/">guide on computed properties</a> for
 further reading.</p>
-<h3 class='anchorable-toc' id='toc_deprecations-added-in-pending-features'>Deprecations Added in Pending Features</h3><h4 class='anchorable-toc' id='toc_route-serialize'>Route#serialize</h4><h5 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h5><h5 class='anchorable-toc' id='toc_id-ember-routing-serialize-function'>id: ember-routing.serialize-function</h5>
-<p>The <code>Route#serialize</code> function was deprecated in favor of passing a <code>serialize</code> function into the route&#39;s definition in the router map. For more detailed information see the <a href="https://github.com/emberjs/rfcs/blob/master/text/0120-route-serializers.md">Route Serializers RFC</a>.</p>
-
-<p>As an example, given a route like:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
-14
-15
-</pre></td>
-  <td class="code"><pre><span class="comment">// app/routes/post.js</span>
-<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
-<span class="reserved">export</span> <span class="keyword">default</span> Ember.Route.extend({
-  <span class="comment">// ...</span>
-  serialize(model) {
-    <span class="keyword">return</span> { <span class="key">post_id</span>: model.id };
-  }
-});
-
-<span class="comment">// app/router.js</span>
-<span class="reserved">export</span> <span class="keyword">default</span> Router.map(<span class="keyword">function</span>() {
-  <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, {
-    <span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">/post/:post_id</span><span class="delimiter">'</span></span>
-  });
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>You would refactor it like so:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
-14
-15
-16
-17
-</pre></td>
-  <td class="code"><pre><span class="comment">// app/routes/post.js</span>
-<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
-<span class="reserved">export</span> <span class="keyword">default</span> Ember.Route.extend({
-  <span class="comment">// ...</span>
-});
-
-<span class="comment">// app/router.js</span>
-<span class="keyword">function</span> <span class="function">serializePostRoute</span>(model) {
-  <span class="keyword">return</span> { <span class="key">post_id</span>: model.id };
-}
-
-<span class="reserved">export</span> <span class="keyword">default</span> Router.map(<span class="keyword">function</span>() {
-  <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, {
-    <span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">/post/:post_id</span><span class="delimiter">'</span></span>,
-    <span class="key">serialize</span>: serializePostRoute
-  });
-});
-</pre></td>
-</tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_use-ember-string-htmlsafe-over-ember-handlebars-safestring'>Use Ember.String.htmlSafe over Ember.Handlebars.SafeString</h4><h5 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h5><h5 class='anchorable-toc' id='toc_id-ember-htmlbars-ember-handlebars-safestring'>id: ember-htmlbars.ember-handlebars-safestring</h5>
+<h3 class='anchorable-toc' id='toc_deprecations-added-in-2-8'>Deprecations Added in 2.8</h3><h4 class='anchorable-toc' id='toc_use-ember-string-htmlsafe-over-ember-handlebars-safestring'>Use Ember.String.htmlSafe over Ember.Handlebars.SafeString</h4><h5 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h5><h5 class='anchorable-toc' id='toc_id-ember-htmlbars-ember-handlebars-safestring'>id: ember-htmlbars.ember-handlebars-safestring</h5>
 <p>Creating safe strings. Before:</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -901,8 +823,86 @@ const { computed } = Ember;
 <p>If you&#39;re an addon maintainer, there is a polyfill for safe string detection (<a href="https://github.com/workmanw/ember-string-ishtmlsafe-polyfill">ember-string-ishtmlsafe-polyfill</a>)
 that will help maintain backwards compatibility. Additionally, it&#39;s worth noting that <code>Ember.String.htmlSafe</code>
 is supported back to pre-1.0, so there should be no concerns of backwards compatibility there.</p>
-<h4 class='anchorable-toc' id='toc_enumerable-contains'>Enumerable#contains</h4><h5 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h5><h5 class='anchorable-toc' id='toc_id-ember-runtime-enumerable-contains'>id: ember-runtime.enumerable-contains</h5>
-<p>The <code>Enumerable#contains</code> and <code>Array#contains</code> methods were deprecated in favor of <code>Enumerable#includes</code> and <code>Array#includes</code> 
+<h3 class='anchorable-toc' id='toc_deprecations-added-in-pending-features'>Deprecations Added in Pending Features</h3><h4 class='anchorable-toc' id='toc_route-serialize'>Route#serialize</h4><h5 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h5><h5 class='anchorable-toc' id='toc_id-ember-routing-serialize-function'>id: ember-routing.serialize-function</h5>
+<p>The <code>Route#serialize</code> function was deprecated in favor of passing a <code>serialize</code> function into the route&#39;s definition in the router map. For more detailed information see the <a href="https://github.com/emberjs/rfcs/blob/master/text/0120-route-serializers.md">Route Serializers RFC</a>.</p>
+
+<p>As an example, given a route like:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/routes/post.js</span>
+<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Route.extend({
+  <span class="comment">// ...</span>
+  serialize(model) {
+    <span class="keyword">return</span> { <span class="key">post_id</span>: model.id };
+  }
+});
+
+<span class="comment">// app/router.js</span>
+<span class="reserved">export</span> <span class="keyword">default</span> Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, {
+    <span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">/post/:post_id</span><span class="delimiter">'</span></span>
+  });
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>You would refactor it like so:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/routes/post.js</span>
+<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Route.extend({
+  <span class="comment">// ...</span>
+});
+
+<span class="comment">// app/router.js</span>
+<span class="keyword">function</span> <span class="function">serializePostRoute</span>(model) {
+  <span class="keyword">return</span> { <span class="key">post_id</span>: model.id };
+}
+
+<span class="reserved">export</span> <span class="keyword">default</span> Router.map(<span class="keyword">function</span>() {
+  <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, {
+    <span class="key">path</span>: <span class="string"><span class="delimiter">'</span><span class="content">/post/:post_id</span><span class="delimiter">'</span></span>,
+    <span class="key">serialize</span>: serializePostRoute
+  });
+});
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_enumerable-contains'>Enumerable#contains</h4><h5 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h5><h5 class='anchorable-toc' id='toc_id-ember-runtime-enumerable-contains'>id: ember-runtime.enumerable-contains</h5>
+<p>The <code>Enumerable#contains</code> and <code>Array#contains</code> methods were deprecated in favor of <code>Enumerable#includes</code> and <code>Array#includes</code>
 to stay in line with ES standards. See <a href="https://github.com/emberjs/rfcs/blob/master/text/0136-contains-to-includes.md">RFC</a> for details.</p>
 
 <p><code>contains</code> and <code>includes</code> have similar behaviors. A notable exception is how <code>NaN</code> values are handled.
@@ -971,9 +971,9 @@ arr.includes(<span class="string"><span class="delimiter">'</span><span class="c
 </pre></td>
   <td class="code"><pre><span class="keyword">var</span> arr = [<span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span>];
 
-arr.addObject(<span class="predefined-constant">NaN</span>);       <span class="comment">// ['a', 'b', NaN] </span>
-arr.addObject(<span class="predefined-constant">NaN</span>);       <span class="comment">// ['a', 'b', NaN, NaN] </span>
-arr.without(<span class="predefined-constant">NaN</span>);         <span class="comment">// ['a', 'b', NaN, NaN] </span>
+arr.addObject(<span class="predefined-constant">NaN</span>);       <span class="comment">// ['a', 'b', NaN]</span>
+arr.addObject(<span class="predefined-constant">NaN</span>);       <span class="comment">// ['a', 'b', NaN, NaN]</span>
+arr.without(<span class="predefined-constant">NaN</span>);         <span class="comment">// ['a', 'b', NaN, NaN]</span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -991,9 +991,9 @@ arr.without(<span class="predefined-constant">NaN</span>);         <span class="
 
 <span class="keyword">var</span> arr = [<span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span>];
 
-arr.addObject(<span class="predefined-constant">NaN</span>);       <span class="comment">// ['a', 'b', NaN] </span>
-arr.addObject(<span class="predefined-constant">NaN</span>);       <span class="comment">// ['a', 'b', NaN] </span>
-arr.without(<span class="predefined-constant">NaN</span>);         <span class="comment">// ['a', 'b'] </span>
+arr.addObject(<span class="predefined-constant">NaN</span>);       <span class="comment">// ['a', 'b', NaN]</span>
+arr.addObject(<span class="predefined-constant">NaN</span>);       <span class="comment">// ['a', 'b', NaN]</span>
+arr.without(<span class="predefined-constant">NaN</span>);         <span class="comment">// ['a', 'b']</span>
 </pre></td>
 </tr></table>
 </div></div>
