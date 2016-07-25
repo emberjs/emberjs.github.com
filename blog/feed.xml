@@ -5,16 +5,247 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2016-06-09T00:00:00+00:00</updated>
+  <updated>2016-07-24T20:00:00-04:00</updated>
   <author>
     <name>Ember</name>
   </author>
   <entry>
+    <title>Ember Data 2.7 and 2.8 Beta Released</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2016/07/25/ember-data-2-7-released.html"/>
+    <id>http://emberjs.com/blog/2016/07/25/ember-data-2-7-released.html</id>
+    <published>2016-07-24T20:00:00-04:00</published>
+    <updated>2016-07-24T20:00:00-04:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Ember Data 2.7, a minor version release of Ember Data, is
+released. This release represents the work of over 27 direct
+contributors, and over 103 commits.&lt;/p&gt;
+
+&lt;p&gt;Ember Data 2.8 beta.1, the branch of Ember Data that will be released
+as stable in roughly six...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;Ember Data 2.7, a minor version release of Ember Data, is
+released. This release represents the work of over 27 direct
+contributors, and over 103 commits.&lt;/p&gt;
+
+&lt;p&gt;Ember Data 2.8 beta.1, the branch of Ember Data that will be released
+as stable in roughly six weeks, is also being released.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_blueprint-changes'&gt;Blueprint Changes&lt;/h3&gt;
+&lt;p&gt;In Ember Data 2.5 there was a change made to the blueprints to use
+module paths when importing instead of importing the default DS
+namespace. At the time this was thought to be a minor change and did
+not receive much scrutiny. However, in time the Ember Data team has
+discovered that the changes to the import statements in the blueprints
+have made it more confusing for both new and experienced Ember
+developers.&lt;/p&gt;
+
+&lt;p&gt;In Ember Data 2.5 and Ember Data 2.6 the following generator command for building a model:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;ember generate model post content isDraft:boolean comments:has-many user:belongs-to&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;It would generate the following bluerpint:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;td colspan="2"&gt;app/models/post.js&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;import&lt;/span&gt; Model from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data/model&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+&lt;span class="reserved"&gt;import&lt;/span&gt; attr from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data/attr&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+&lt;span class="reserved"&gt;import&lt;/span&gt; { belongsTo, hasMany } from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data/relationships&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Model.extend({
+  &lt;span class="key"&gt;content&lt;/span&gt;: attr(),
+  &lt;span class="key"&gt;isDraft&lt;/span&gt;: attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;boolean&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
+  &lt;span class="key"&gt;comments&lt;/span&gt;: hasMany(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comment&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
+  &lt;span class="key"&gt;user&lt;/span&gt;: belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;user&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Ember Data 2.7 the same command will now generate the following blueprint:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;td colspan="2"&gt;app/models/post.js&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;import&lt;/span&gt; DS from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; DS.Model.extend({
+  &lt;span class="key"&gt;content&lt;/span&gt;: DS.attr(),
+  &lt;span class="key"&gt;isDraft&lt;/span&gt;: DS.attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;boolean&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
+  &lt;span class="key"&gt;comments&lt;/span&gt;: DS.hasMany(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comment&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
+  &lt;span class="key"&gt;user&lt;/span&gt;: DS.belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;user&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;The main difference is the blueprints no longer use the paths to
+import specific modules. We have found that encouraging users to omit
+the paths results in better defaults for both new and experienced
+Ember developers. The simpler &lt;code&gt;import DS from &amp;#39;ember-data&amp;#39;;&lt;/code&gt; statement
+has less room for typos and other errors and is easier to developers
+to remember so they do not need reference documentation whenever they
+want to add a new import.&lt;/p&gt;
+
+&lt;p&gt;This change &lt;em&gt;only&lt;/em&gt; impacts the blueprints that are generated when
+using the
+&lt;a href="https://ember-cli.com/user-guide/#using-ember-cli"&gt;ember-cli generate&lt;/a&gt;
+command. Code that is written to use the path imports will still
+continue to work and be supported until at least Ember Data 3.0.&lt;/p&gt;
+
+&lt;p&gt;The Ember Data team will also be releasing patch releases to Ember
+Data 2.5 and 2.6 to update their blueprint generators to match Ember
+Data 2.7.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_changes-in-ember-data-2-7'&gt;Changes in Ember Data 2.7&lt;/h3&gt;&lt;h4 class='anchorable-toc' id='toc_code-ds-boolean-transform-allow-null-code-a-href-https-github-com-emberjs-data-pull-4022-4022-a'&gt;&lt;code&gt;ds-boolean-transform-allow-null&lt;/code&gt; &lt;a href="https://github.com/emberjs/data/pull/4022"&gt;#4022&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Allow &lt;code&gt;null&lt;/code&gt;/&lt;code&gt;undefined&lt;/code&gt; values for boolean attributes via &lt;code&gt;attr(&amp;#39;boolean&amp;#39;, { allowNull: true })&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// app/models/user.js&lt;/span&gt;
+&lt;span class="reserved"&gt;import&lt;/span&gt; DS from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; DS.Model.extend({
+  &lt;span class="key"&gt;email&lt;/span&gt;: DS.attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;string&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
+  &lt;span class="key"&gt;username&lt;/span&gt;: DS.attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;string&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
+  &lt;span class="key"&gt;wantsWeeklyEmail&lt;/span&gt;: DS.attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;boolean&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, { &lt;span class="key"&gt;allowNull&lt;/span&gt;: &lt;span class="predefined-constant"&gt;true&lt;/span&gt; })
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;h4 class='anchorable-toc' id='toc_code-ds-links-in-record-array-code-a-href-https-github-com-emberjs-data-pull-4263-4263-a'&gt;&lt;code&gt;ds-links-in-record-array&lt;/code&gt; &lt;a href="https://github.com/emberjs/data/pull/4263"&gt;#4263&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;This feature exposes a &lt;code&gt;links&lt;/code&gt; object on a &lt;code&gt;RecordArray&lt;/code&gt;. This can be used to load additional links when  present in the response JSON-API document.&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;store.query(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;post&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, { &lt;span class="key"&gt;isRecent&lt;/span&gt;: &lt;span class="predefined-constant"&gt;true&lt;/span&gt; }).then((posts) =&amp;gt; {
+  posts.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;links.next&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Thanks to &lt;a href="https://github.com/danmcclain"&gt;@danmcclain&lt;/a&gt; for
+implementing this feature.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_upcoming-features-in-ember-data-2-8-beta-1'&gt;Upcoming Features in Ember Data 2.8.beta-1&lt;/h3&gt;&lt;h4 class='anchorable-toc' id='toc_code-ds-improved-ajax-code-a-href-https-github-com-emberjs-data-pull-3099-3099-a'&gt;&lt;code&gt;ds-improved-ajax&lt;/code&gt; &lt;a href="https://github.com/emberjs/data/pull/3099"&gt;#3099&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;The &lt;code&gt;ds-improved-ajax&lt;/code&gt; feature was originally planned to be released
+in Ember Data 2.7. However, feedback from the beta found that many
+people are overriding &lt;code&gt;ajax()&lt;/code&gt; to change the protocol of the adapter
+and the new methods added in made &lt;code&gt;ds-improved-ajax&lt;/code&gt; made this usecase
+harder to achieve. The Ember Data team has decided to delay the
+&lt;code&gt;ds-improved-ajax&lt;/code&gt; feature flag until the Ember Data 2.8 release while
+improving the API for this usecase.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;ds-improved-ajax&lt;/code&gt; feature adds new public methods to
+&lt;code&gt;DS.RESTAdapter&lt;/code&gt;, which allow to customize the properties of a
+request:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;methodForRequest&lt;/code&gt; to get the HTTP verb&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;urlForRequest&lt;/code&gt; to get the URL&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;headersForRequest&lt;/code&gt; to get the headers&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;dataForRequest&lt;/code&gt; to get the data (query params or request body)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The &lt;code&gt;params&lt;/code&gt; hash passed to those methods has all the properties with
+which the corresponding &lt;code&gt;find&lt;/code&gt;, &lt;code&gt;createRecord&lt;/code&gt;, &lt;code&gt;findQuery&lt;/code&gt;, ...  calls
+have been invoked: &lt;code&gt;store&lt;/code&gt;, &lt;code&gt;type&lt;/code&gt;, &lt;code&gt;snapshot&lt;/code&gt;(s), &lt;code&gt;id&lt;/code&gt;(s) and &lt;code&gt;query&lt;/code&gt;. The
+&lt;code&gt;requestType&lt;/code&gt; property indicates which method is requested; the possible
+values are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;createRecord&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;updateRecord&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;deleteRecord&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;query&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;queryRecord&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;findRecord&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;findAll&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;findMany&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;findHasMany&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;findBelongsTo&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Performing the actual AJAX request is handled by the &lt;code&gt;makeRequest&lt;/code&gt;
+method, which is similar to the existing &lt;code&gt;ajax&lt;/code&gt; method: it makes the
+request using &lt;code&gt;jQuery.ajax&lt;/code&gt; and attaches success and failure handlers.&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Say your API handles creation of resources via PUT, this can now be
+customized as follows:&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// adapters/application.js&lt;/span&gt;
+&lt;span class="reserved"&gt;import&lt;/span&gt; DS from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; DS.RESTAdapter.extend({
+  methodForRequest(params) {
+    &lt;span class="keyword"&gt;if&lt;/span&gt; (params.requestType === &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;createRecord&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;) {
+      &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;PUT&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;;
+    }
+
+    &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="local-variable"&gt;this&lt;/span&gt;._super(...&lt;span class="local-variable"&gt;arguments&lt;/span&gt;);
+  }
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Thanks to &lt;a href="https://github.com/pangratz"&gt;@pangratz&lt;/a&gt; for
+implementing this feature.&lt;/p&gt;
+
+&lt;p&gt;For more details on changes in the 2.8 beta, please review the
+&lt;a href="https://github.com/emberjs/data/blob/v2.8.0-beta.1/CHANGELOG.md"&gt;Ember Data 2.8.0-beta.1 CHANGELOG&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
     <title>Ember Data 2.6 and 2.7 Beta Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2016/06/09/ember-data-2-6-released.html"/>
     <id>http://emberjs.com/blog/2016/06/09/ember-data-2-6-released.html</id>
-    <published>2016-06-09T00:00:00+00:00</published>
-    <updated>2016-06-09T00:00:00+00:00</updated>
+    <published>2016-06-08T20:00:00-04:00</published>
+    <updated>2016-06-08T20:00:00-04:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -192,8 +423,8 @@ implementing this feature.&lt;/p&gt;
     <title>Ember.js 2.6 and 2.7 Beta Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2016/06/08/ember-2-6-and-2-7-beta-released.html"/>
     <id>http://emberjs.com/blog/2016/06/08/ember-2-6-and-2-7-beta-released.html</id>
-    <published>2016-06-08T00:00:00+00:00</published>
-    <updated>2016-06-08T00:00:00+00:00</updated>
+    <published>2016-06-07T20:00:00-04:00</published>
+    <updated>2016-06-07T20:00:00-04:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -339,8 +570,8 @@ introducing these changes.&lt;/p&gt;
     <title>Introducing Subteams</title>
     <link rel="alternate" href="http://emberjs.com/blog/2016/05/19/introducing-subteams.html"/>
     <id>http://emberjs.com/blog/2016/05/19/introducing-subteams.html</id>
-    <published>2016-05-19T00:00:00+00:00</published>
-    <updated>2016-05-19T00:00:00+00:00</updated>
+    <published>2016-05-18T20:00:00-04:00</published>
+    <updated>2016-05-18T20:00:00-04:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -502,8 +733,8 @@ from which parts of this post are adapted.&lt;/em&gt;&lt;/p&gt;
     <title>Global Accessibility Awareness Day</title>
     <link rel="alternate" href="http://emberjs.com/blog/2016/05/17/global-accessibility-awareness-day.html"/>
     <id>http://emberjs.com/blog/2016/05/17/global-accessibility-awareness-day.html</id>
-    <published>2016-05-17T00:00:00+00:00</published>
-    <updated>2016-05-17T00:00:00+00:00</updated>
+    <published>2016-05-16T20:00:00-04:00</published>
+    <updated>2016-05-16T20:00:00-04:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -563,8 +794,8 @@ from which parts of this post are adapted.&lt;/em&gt;&lt;/p&gt;
     <title>Ember Data 2.5 and 2.6 Beta Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2016/05/03/ember-data-2-5-released.html"/>
     <id>http://emberjs.com/blog/2016/05/03/ember-data-2-5-released.html</id>
-    <published>2016-05-03T00:00:00+00:00</published>
-    <updated>2016-05-03T00:00:00+00:00</updated>
+    <published>2016-05-02T20:00:00-04:00</published>
+    <updated>2016-05-02T20:00:00-04:00</updated>
     <author>
       <name>Ember</name>
     </author>
@@ -817,169 +1048,6 @@ serializing has many relationships using the &lt;code&gt;DS.EmbeddedRecordsMixin
 
 &lt;p&gt;For more details on changes in the 2.6 beta, please review the
 &lt;a href="https://github.com/emberjs/data/blob/v2.6.0-beta.1/CHANGELOG.md"&gt;Ember Data 2.6.0-beta.1 CHANGELOG&lt;/a&gt;.&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Upcoming deprecation of baseURL in Ember CLI 2.7</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2016/04/28/baseURL.html"/>
-    <id>http://emberjs.com/blog/2016/04/28/baseURL.html</id>
-    <published>2016-04-28T00:00:00+00:00</published>
-    <updated>2016-04-28T00:00:00+00:00</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;The &lt;code&gt;baseURL&lt;/code&gt; configuration option and the accompanying &lt;code&gt;&amp;lt;base&amp;gt;&lt;/code&gt; tag in Ember CLI applications are often and tragically misunderstood. There have been &lt;a href="https://github.com/ember-cli/ember-cli/search?q=baseURL&amp;amp;type=issues"&gt;at least 67 issues&lt;/a&gt; opened for Ember CLI referencing &lt;code&gt;baseURL&lt;/code&gt;, making it one of the most common points...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;The &lt;code&gt;baseURL&lt;/code&gt; configuration option and the accompanying &lt;code&gt;&amp;lt;base&amp;gt;&lt;/code&gt; tag in Ember CLI applications are often and tragically misunderstood. There have been &lt;a href="https://github.com/ember-cli/ember-cli/search?q=baseURL&amp;amp;type=issues"&gt;at least 67 issues&lt;/a&gt; opened for Ember CLI referencing &lt;code&gt;baseURL&lt;/code&gt;, making it one of the most common points of discussion. &lt;strong&gt;&lt;a href="https://github.com/ember-cli/ember-cli/pull/5792"&gt;As a result, in Ember CLI&amp;#39;s canary channel, we have deprecated &lt;code&gt;baseURL&lt;/code&gt; and removed the default &lt;code&gt;&amp;lt;base&amp;gt;&lt;/code&gt; inside of &lt;code&gt;index.html&lt;/code&gt;.&lt;/a&gt;&lt;/strong&gt; The intent is that this change will be released with Ember CLI 2.7 stable in roughly 10 weeks.&lt;/p&gt;
-
-&lt;p&gt;Existing applications are able to continue using &lt;code&gt;baseURL&lt;/code&gt; with a deprecation warning. If you are eager to adopt this change, you should note that the removal of the &lt;code&gt;&amp;lt;base&amp;gt;&lt;/code&gt; tag may impact how your application is deployed, and if so, will likely require some small migration effort, detailed below.&lt;/p&gt;
-
-&lt;p&gt;This is the culmination of a lot of research and work by &lt;a href="https://github.com/Turbo87"&gt;Tobias Bieniek&lt;/a&gt; and we&amp;#39;re incredibly grateful for his efforts.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_what-was-it'&gt;What was it?&lt;/h3&gt;
-&lt;p&gt;&lt;code&gt;baseURL&lt;/code&gt; allowed an Ember application and assets to be deployed to a subdirectory without requiring rewriting of asset URLs, instead allowing them to be included relatively. For example given an HTML file:&lt;/p&gt;
-&lt;div class="highlight html "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
-  &lt;span class="tag"&gt;&amp;lt;base&lt;/span&gt; &lt;span class="attribute-name"&gt;href&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;http://emberapp.example.com/path/to/application/&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
-  &lt;span class="tag"&gt;&amp;lt;link&lt;/span&gt; &lt;span class="attribute-name"&gt;rel&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;stylesheet&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;href&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;assets/style.css&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
-&lt;span class="tag"&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
-&lt;span class="tag"&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
-  &lt;span class="tag"&gt;&amp;lt;img&lt;/span&gt; &lt;span class="attribute-name"&gt;src&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;assets/images/image.png&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
-&lt;span class="tag"&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;The style would be fetched from &lt;code&gt;http://emberapp.example.com/path/to/application/assets/style.css&lt;/code&gt;, and the image from &lt;code&gt;http://emberapp.example.com/path/to/application/assets/images/image.png&lt;/code&gt;. If you are curious, &lt;a href="http://webdesign.tutsplus.com/articles/quick-tip-set-relative-urls-with-the-base-tag--cms-21399"&gt;here is a good read on the base tag&lt;/a&gt;. In short, &lt;code&gt;baseURL&lt;/code&gt; is the configuration property Ember CLI used to identify what value to put in the &lt;code&gt;&amp;lt;base href=&amp;quot;...&amp;quot; /&amp;gt;&lt;/code&gt; tag included in &lt;code&gt;index.html&lt;/code&gt;. This determined where assets for the application should be loaded from, including &lt;code&gt;app.js&lt;/code&gt;, &lt;code&gt;vendor.js&lt;/code&gt;, &lt;code&gt;app.css&lt;/code&gt;, and anything else that isn&amp;#39;t specified with a fully-qualified path.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_why-are-we-deprecating-it'&gt;Why are we deprecating it?&lt;/h3&gt;
-&lt;p&gt;Variations on the &lt;code&gt;baseURL&lt;/code&gt; solution has been Ember CLIs default asset prefixing behavior for &lt;a href="https://github.com/ember-cli/ember-cli/commit/404091401400478ef55088888b8ec383e02a17d6#diff-b785f57fd6a80a44da40bd76e531d8ecR11"&gt;two years&lt;/a&gt;. There are a number of reasons why we&amp;#39;re moving away from this pattern, but a few things really made it unnecessarily complicated.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_api-design-bugs'&gt;API Design Bugs&lt;/h4&gt;
-&lt;p&gt;Since we added this feature two years ago apps can have both &lt;code&gt;baseURL&lt;/code&gt; and &lt;code&gt;rootURL&lt;/code&gt; configuration values. These two names are far too similar and do things which are far too similar. Where &lt;code&gt;baseURL&lt;/code&gt; identified the asset prefix of an application, &lt;code&gt;rootURL&lt;/code&gt; identifies the path at which an Ember application is served so Ember&amp;#39;s router can know which path segments to ignore.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_implicit-behavior'&gt;Implicit Behavior&lt;/h4&gt;
-&lt;p&gt;Not only are there two confusing configuration options, but if only one of &lt;code&gt;baseURL&lt;/code&gt; or &lt;code&gt;rootURL&lt;/code&gt; was set Ember CLI made a best-effort guess at populating the other&amp;#39;s value. This implicit behavior violated the principle of least surprise for many people. An explicit requirement for both values always being set and clearer documentation would have averted &lt;em&gt;some&lt;/em&gt; of the pain but would have added additional things to the learning curve.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_integration-with-other-applications'&gt;Integration With Other Applications&lt;/h4&gt;
-&lt;p&gt;Not every Ember application is full green field development. If you happened to have legacy user-generated HTML, or other data containing relative links, this didn&amp;#39;t play nicely with the &lt;code&gt;&amp;lt;base&amp;gt;&lt;/code&gt; tag. Rewriting this content is an option, but incurs cost and bugs more simply avoided by not including the &lt;code&gt;&amp;lt;base&amp;gt;&lt;/code&gt; tag.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_svg'&gt;SVG&lt;/h4&gt;
-&lt;p&gt;Worst of all, and something that we can&amp;#39;t code or document around, SVG &lt;code&gt;&amp;lt;use&amp;gt;&lt;/code&gt; elements break in an unexpected way when used with a &lt;code&gt;&amp;lt;base&amp;gt;&lt;/code&gt; tag. It turns out that the relatively common pattern of &lt;code&gt;&amp;lt;use xlink:xhref=&amp;quot;#__SVG_ID__&amp;quot;&amp;gt;&amp;lt;/use&amp;gt;&lt;/code&gt; referencing a fragment identifier doesn&amp;#39;t play nicely with the &lt;code&gt;&amp;lt;base&amp;gt;&lt;/code&gt; tag. We like to play nicely with the web ecosystem and this fault is the final straw that resulted in the decision of removing the &lt;code&gt;&amp;lt;base&amp;gt;&lt;/code&gt; tag.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_how-do-i-migrate'&gt;How Do I Migrate?&lt;/h3&gt;
-&lt;p&gt;Existing applications are able to continue using &lt;code&gt;baseURL&lt;/code&gt; with a deprecation warning. For users who do want to migrate, the steps depend primarily on how your application is deployed. It&amp;#39;s our goal is to make it easy for you to achieve the same behaviors you&amp;#39;ve had in the past.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_new-applications'&gt;New Applications&lt;/h4&gt;
-&lt;p&gt;If you&amp;#39;re starting a new application using an Ember CLI canary (or eventually 2.7 stable) everything should work correctly out of the box. We&amp;#39;ve been very careful to make sure that the out of the box experience is as smooth as possible. For the built-in development server all assets will be served at the &lt;code&gt;rootURL&lt;/code&gt;. Relative URLs will continue to work just fine inside of your CSS files and paths to assets included in your templates, &lt;code&gt;index.html&lt;/code&gt;, or inserted via &lt;code&gt;{{content-for}}&lt;/code&gt; should specify a root-relative path.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_upgrading'&gt;Upgrading&lt;/h4&gt;
-&lt;p&gt;If you are upgrading your application to the new version of Ember CLI (canary with this change, or eventually 2.7 stable), you should pay close attention to the configuration changes inside of &lt;a href="https://github.com/ember-cli/ember-cli/pull/5792/files#diff-42e917b9304df0e99048f335019647bc"&gt;the&lt;/a&gt; &lt;a href="https://github.com/ember-cli/ember-cli/pull/5792/files#diff-f4d09ffc13efe496dd246031d423e166"&gt;modified&lt;/a&gt; &lt;a href="https://github.com/ember-cli/ember-cli/pull/5792/files#diff-9588ab8abb99afa6cac30dd0e2b86041"&gt;blueprint&lt;/a&gt; &lt;a href="https://github.com/ember-cli/ember-cli/pull/5792/files#diff-3b0f91e0e9f317eecebfad38da2f9b4c"&gt;files&lt;/a&gt;. We have also inserted deprecation warnings which will hopefully guide you through each of these changes.&lt;/p&gt;
-
-&lt;p&gt;The primary migration effort is that you should expect to adjust any relative paths which appear in your templates, are inserted via &lt;code&gt;{{content-for}}&lt;/code&gt;, or directly present in &lt;code&gt;index.html&lt;/code&gt;. Because you will be serving &lt;code&gt;index.html&lt;/code&gt; from the server for any arbitrary route in your application you must modify these to be either a fully-qualified path or a root-relative URL.&lt;/p&gt;
-
-&lt;p&gt;As an example, given this configuration where you have configured a different &lt;code&gt;rootURL&lt;/code&gt; and &lt;code&gt;baseURL&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;{
-  &lt;span class="key"&gt;rootURL&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;/path/to/application/&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;,
-  &lt;span class="key"&gt;baseURL&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;/assets/go/here/&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;
-}
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;You would remove the &lt;code&gt;baseURL&lt;/code&gt; option and modify your templates like so:&lt;/p&gt;
-&lt;div class="highlight hbs "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;{{!-- Old: --}}
-&amp;lt;img src=&amp;quot;images/logo.png&amp;quot; /&amp;gt;
-
-{{!-- New: --}}
-&amp;lt;img src=&amp;quot;/assets/go/here/images/logo.png&amp;quot; /&amp;gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;h4 class='anchorable-toc' id='toc_how-to-use-a-cdn'&gt;How To Use a CDN&lt;/h4&gt;
-&lt;p&gt;One of the most common use cases for &lt;code&gt;baseURL&lt;/code&gt; was pointing to assets on a CDN. After this change to remove &lt;code&gt;baseURL&lt;/code&gt; you should use the &lt;code&gt;prepend&lt;/code&gt; option for &lt;a href="https://github.com/rickharrison/broccoli-asset-rev"&gt;&lt;code&gt;broccoli-asset-rev&lt;/code&gt;&lt;/a&gt; which is included with Ember CLI apps by default. For example, in &lt;code&gt;ember-cli-build.js&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; app = &lt;span class="keyword"&gt;new&lt;/span&gt; EmberApp(defaults, {
-  &lt;span class="comment"&gt;// Add options here&lt;/span&gt;
-  &lt;span class="key"&gt;fingerprint&lt;/span&gt;: {
-    &lt;span class="key"&gt;prepend&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;https://cdn.example.com/&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;
-  }
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Note that the &lt;code&gt;prepend&lt;/code&gt; option only applies when doing &lt;em&gt;production&lt;/em&gt; builds via something like &lt;code&gt;ember build --prod&lt;/code&gt;. Given the above example, and this input:&lt;/p&gt;
-&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;{
-  &lt;span class="key"&gt;rootURL&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;/path/to/application/&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;
-}
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div class="highlight html "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;&amp;lt;!-- Snipped from the &amp;lt;head&amp;gt; of the new `index.html` blueprint.  --&amp;gt;&lt;/span&gt;
-&lt;span class="tag"&gt;&amp;lt;link&lt;/span&gt; &lt;span class="attribute-name"&gt;rel&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;stylesheet&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;href&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;{{rootURL}}assets/vendor.css&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
-&lt;span class="tag"&gt;&amp;lt;link&lt;/span&gt; &lt;span class="attribute-name"&gt;rel&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;stylesheet&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;href&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;{{rootURL}}assets/app-name.css&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;The output for asset paths in &lt;code&gt;index.html&lt;/code&gt; would look something like:&lt;/p&gt;
-&lt;div class="highlight html "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;link&lt;/span&gt; &lt;span class="attribute-name"&gt;rel&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;stylesheet&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;href&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;https://cdn.example.com/assets/vendor-e37004361bf9cda2ab3379d96c9eba4b.css&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
-&lt;span class="tag"&gt;&amp;lt;link&lt;/span&gt; &lt;span class="attribute-name"&gt;rel&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;stylesheet&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;href&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;https://cdn.example.com/assets/app-name-dc477601773d4043b0c461b2a0ae8aef.css&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Note: the &lt;code&gt;rootURL&lt;/code&gt; is &lt;em&gt;not&lt;/em&gt; present. This is intentional as &lt;code&gt;rootURL&lt;/code&gt; exists only to provide information to Ember&amp;#39;s Router about where the application is served from.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_css-fonts-and-other-static-assets'&gt;CSS, Fonts, and Other Static Assets&lt;/h4&gt;
-&lt;p&gt;Depending upon how these were included into an application, their paths may need to be adjusted. Assets like these are often handled outside the Ember CLI build pipeline, but do check to make sure that everything is works as expected.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_addon-consumption-and-development'&gt;Addon Consumption and Development&lt;/h4&gt;
-&lt;p&gt;It&amp;#39;s possible that you have addons which rely on rewriting asset URLs. If there is any impact, it is most likely going to impact users of &lt;code&gt;ember-cli-deploy&lt;/code&gt;. Please let us know what you discover during this canary/beta process, we&amp;#39;d like to see what each addon is attempting to accomplish and make sure we can support that use case.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_everything-is-broken-help'&gt;Everything is Broken! Help!&lt;/h4&gt;
-&lt;p&gt;If for some reason removing &lt;code&gt;baseURL&lt;/code&gt; and the default &lt;code&gt;&amp;lt;base&amp;gt;&lt;/code&gt; tag causes problems, you can still add a &lt;code&gt;&amp;lt;base&amp;gt;&lt;/code&gt; tag directly to your &lt;code&gt;index.html&lt;/code&gt; file:&lt;/p&gt;
-&lt;div class="highlight html "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;base&lt;/span&gt; &lt;span class="attribute-name"&gt;href&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;/what/your/baseURL/was/&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="tag"&gt;/&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;This can be useful to address relative URLs which are being inserted via templates, &lt;code&gt;index.html&lt;/code&gt;, or &lt;code&gt;{{content-for}}&lt;/code&gt;. For pathing to your built CSS and JS assets use the method described for CDNs.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_how-can-i-try-this'&gt;How Can I Try This?&lt;/h3&gt;
-&lt;p&gt;Using our new release channel setup, you can try this change by upgrading your Ember CLI app to the canary channel:&lt;/p&gt;
-&lt;div class="highlight sh "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;npm install --save-dev ember-cli/ember-cli#canary
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;If you discover any problems with this change please &lt;a href="https://github.com/ember-cli/ember-cli/issues/new"&gt;file an issue&lt;/a&gt;, we&amp;#39;ll be paying especially close attention to this topic.&lt;/p&gt;
 </content>
   </entry>
 </feed>

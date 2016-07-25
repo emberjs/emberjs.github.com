@@ -3,14 +3,14 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Ember.js - Ember Data 2.6 and 2.7 Beta Released</title>
-		<meta property="st:title" content="Ember.js: Ember Data 2.6 and 2.7 Beta Released" />
-		<meta property="og:title" content="Ember.js: Ember Data 2.6 and 2.7 Beta Released" />
+    <title>Ember.js - Ember Data 2.7 and 2.8 Beta Released</title>
+		<meta property="st:title" content="Ember.js: Ember Data 2.7 and 2.8 Beta Released" />
+		<meta property="og:title" content="Ember.js: Ember Data 2.7 and 2.8 Beta Released" />
 		<meta property="og:description" content="Ember.js helps developers be more productive out of the box. Designed with developer ergonomics in mind, its friendly APIs help you get your job done—fast." />
 		<meta property="og:image" content="http://emberjs.com/images/tomster-sm.png" />
 		<meta name="twitter:card" content="summary" />
 		<meta name="twitter:site" content="@emberjs" />
-		<meta name="twitter:title" content="Ember Data 2.6 and 2.7 Beta Released"/>
+		<meta name="twitter:title" content="Ember Data 2.7 and 2.8 Beta Released"/>
 		<meta name="twitter:image" content="http://emberjs.com/images/tomster-twitter-card.png" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" /><![endif]-->
@@ -19,7 +19,7 @@
     
   </head>
 
-  <body class="blog blog_2016 blog_2016_06 blog_2016_06_09 blog_2016_06_09_ember-data-2-6-released not-responsive">
+  <body class="blog blog_2016 blog_2016_07 blog_2016_07_25 blog_2016_07_25_ember-data-2-7-released not-responsive">
 
     <!--[if lt IE 9]>
       <script type="text/javascript" src="/javascripts/common-old-ie.js"></script>
@@ -94,28 +94,38 @@
         </div>
       <div id="content" class="has-sidebar">
           <article class="blog-post">
-    <h1>Ember Data 2.6 and 2.7 Beta Released</h1>
-      <h3 class="blog-post-author">Posted By: Brendan McLoughlin &ndash; <time>Jun 09, 2016</time></h3>
+    <h1>Ember Data 2.7 and 2.8 Beta Released</h1>
+      <h3 class="blog-post-author">Posted By: Brendan McLoughlin &ndash; <time>Jul 25, 2016</time></h3>
 
     <hr>
 
-    <p>Ember Data 2.6, a minor version release of Ember Data, is
-released. This release represents the work of over 22 direct
-contributors, and over 85 commits.</p>
+    <p>Ember Data 2.7, a minor version release of Ember Data, is
+released. This release represents the work of over 27 direct
+contributors, and over 103 commits.</p>
 
-<p>Ember Data 2.7 beta.1, the branch of Ember Data that will be released
+<p>Ember Data 2.8 beta.1, the branch of Ember Data that will be released
 as stable in roughly six weeks, is also being released.</p>
-<h3 class='anchorable-toc' id='toc_changes-in-ember-data-2-6'>Changes in Ember Data 2.6</h3>
-<ul>
-<li><code>ds-serialize-ids-and-types</code></li>
-</ul>
+<h3 class='anchorable-toc' id='toc_blueprint-changes'>Blueprint Changes</h3>
+<p>In Ember Data 2.5 there was a change made to the blueprints to use
+module paths when importing instead of importing the default DS
+namespace. At the time this was thought to be a minor change and did
+not receive much scrutiny. However, in time the Ember Data team has
+discovered that the changes to the import statements in the blueprints
+have made it more confusing for both new and experienced Ember
+developers.</p>
 
-<p>Enables a new <code>ids-and-type</code> strategy (in addition to the already existing <code>ids</code> and <code>records</code>) for
-serializing has many relationships using the <code>DS.EmbeddedRecordsMixin</code> that  will include both
-<code>id</code> and <code>type</code> of each model as an object.</p>
+<p>In Ember Data 2.5 and Ember Data 2.6 the following generator command for building a model:</p>
 
-<p>For instance, if a user has many pets, which is a polymorphic relationship, the generated payload would be:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<p><code>ember generate model post content isDraft:boolean comments:has-many user:belongs-to</code></p>
+
+<p>It would generate the following bluerpint:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/models/post.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -127,26 +137,65 @@ serializing has many relationships using the <code>DS.EmbeddedRecordsMixin</code
 9
 <strong>10</strong>
 </pre></td>
-  <td class="code"><pre>{
-  <span class="key"><span class="delimiter">&quot;</span><span class="content">user</span><span class="delimiter">&quot;</span></span>: {
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>
-    <span class="string"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Bertin Osborne</span><span class="delimiter">&quot;</span></span>,
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">pets</span><span class="delimiter">&quot;</span></span>: [
-      { <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>, <span class="key"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Cat</span><span class="delimiter">&quot;</span></span> },
-      { <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">2</span><span class="delimiter">&quot;</span></span>, <span class="key"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Parrot</span><span class="delimiter">&quot;</span></span>}
-    ]
-  }
-}
+  <td class="code"><pre><span class="reserved">import</span> Model from <span class="string"><span class="delimiter">'</span><span class="content">ember-data/model</span><span class="delimiter">'</span></span>;
+<span class="reserved">import</span> attr from <span class="string"><span class="delimiter">'</span><span class="content">ember-data/attr</span><span class="delimiter">'</span></span>;
+<span class="reserved">import</span> { belongsTo, hasMany } from <span class="string"><span class="delimiter">'</span><span class="content">ember-data/relationships</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Model.extend({
+  <span class="key">content</span>: attr(),
+  <span class="key">isDraft</span>: attr(<span class="string"><span class="delimiter">'</span><span class="content">boolean</span><span class="delimiter">'</span></span>),
+  <span class="key">comments</span>: hasMany(<span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>),
+  <span class="key">user</span>: belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">user</span><span class="delimiter">'</span></span>)
+});
 </pre></td>
 </tr></table>
 </div></div>
-<p>This is particularly useful for polymorphic relationships not backed
-  by <a href="https://en.wikipedia.org/wiki/Single_Table_Inheritance">STI</a>
-  when just including the id of the records is not enough.</p>
+<p>Ember Data 2.7 the same command will now generate the following blueprint:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/models/post.js</td>
+    </tr>
+  </thead>
+<tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
 
-<p>Thanks to <a href="https://github.com/cibernox">@cibernox</a> for
-implementing this feature.</p>
-<h3 class='anchorable-toc' id='toc_upcoming-features-in-ember-data-2-7-beta-1'>Upcoming Features in Ember Data 2.7.beta-1</h3><h4 class='anchorable-toc' id='toc_code-ds-boolean-transform-allow-null-code-a-href-https-github-com-emberjs-data-pull-4022-4022-a'><code>ds-boolean-transform-allow-null</code> <a href="https://github.com/emberjs/data/pull/4022">#4022</a></h4>
+<span class="reserved">export</span> <span class="keyword">default</span> DS.Model.extend({
+  <span class="key">content</span>: DS.attr(),
+  <span class="key">isDraft</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">boolean</span><span class="delimiter">'</span></span>),
+  <span class="key">comments</span>: DS.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>),
+  <span class="key">user</span>: DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">user</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>The main difference is the blueprints no longer use the paths to
+import specific modules. We have found that encouraging users to omit
+the paths results in better defaults for both new and experienced
+Ember developers. The simpler <code>import DS from &#39;ember-data&#39;;</code> statement
+has less room for typos and other errors and is easier to developers
+to remember so they do not need reference documentation whenever they
+want to add a new import.</p>
+
+<p>This change <em>only</em> impacts the blueprints that are generated when
+using the
+<a href="https://ember-cli.com/user-guide/#using-ember-cli">ember-cli generate</a>
+command. Code that is written to use the path imports will still
+continue to work and be supported until at least Ember Data 3.0.</p>
+
+<p>The Ember Data team will also be releasing patch releases to Ember
+Data 2.5 and 2.6 to update their blueprint generators to match Ember
+Data 2.7.</p>
+<h3 class='anchorable-toc' id='toc_changes-in-ember-data-2-7'>Changes in Ember Data 2.7</h3><h4 class='anchorable-toc' id='toc_code-ds-boolean-transform-allow-null-code-a-href-https-github-com-emberjs-data-pull-4022-4022-a'><code>ds-boolean-transform-allow-null</code> <a href="https://github.com/emberjs/data/pull/4022">#4022</a></h4>
 <p>Allow <code>null</code>/<code>undefined</code> values for boolean attributes via <code>attr(&#39;boolean&#39;, { allowNull: true })</code></p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -157,26 +206,44 @@ implementing this feature.</p>
 6
 7
 8
-9
 </pre></td>
   <td class="code"><pre><span class="comment">// app/models/user.js</span>
-<span class="reserved">import</span> Model from <span class="string"><span class="delimiter">'</span><span class="content">ember-data/model</span><span class="delimiter">'</span></span>;
-<span class="reserved">import</span> attr from <span class="string"><span class="delimiter">'</span><span class="content">ember-data/attr</span><span class="delimiter">'</span></span>;
+<span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
 
-<span class="reserved">export</span> <span class="keyword">default</span> Model.extend({
-  <span class="key">email</span>: attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
-  <span class="key">username</span>: attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
-  <span class="key">wantsWeeklyEmail</span>: attr(<span class="string"><span class="delimiter">'</span><span class="content">boolean</span><span class="delimiter">'</span></span>, { <span class="key">allowNull</span>: <span class="predefined-constant">true</span> })
+<span class="reserved">export</span> <span class="keyword">default</span> DS.Model.extend({
+  <span class="key">email</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">username</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">wantsWeeklyEmail</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">boolean</span><span class="delimiter">'</span></span>, { <span class="key">allowNull</span>: <span class="predefined-constant">true</span> })
 });
 </pre></td>
 </tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_code-ds-improved-ajax-code-a-href-https-github-com-emberjs-data-pull-3099-3099-a'><code>ds-improved-ajax</code> <a href="https://github.com/emberjs/data/pull/3099">#3099</a></h4>
-<p>Though <code>ajax()</code> (and <code>ajaxOptions()</code>) of <code>DS.RESTAdapter</code> are marked as
-private, they have been overwritten in many applications, since there is
-currently no other way to customize the request.</p>
+</div></div><h4 class='anchorable-toc' id='toc_code-ds-links-in-record-array-code-a-href-https-github-com-emberjs-data-pull-4263-4263-a'><code>ds-links-in-record-array</code> <a href="https://github.com/emberjs/data/pull/4263">#4263</a></h4>
+<p>This feature exposes a <code>links</code> object on a <code>RecordArray</code>. This can be used to load additional links when  present in the response JSON-API document.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>store.query(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, { <span class="key">isRecent</span>: <span class="predefined-constant">true</span> }).then((posts) =&gt; {
+  posts.get(<span class="string"><span class="delimiter">'</span><span class="content">links.next</span><span class="delimiter">'</span></span>);
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Thanks to <a href="https://github.com/danmcclain">@danmcclain</a> for
+implementing this feature.</p>
+<h3 class='anchorable-toc' id='toc_upcoming-features-in-ember-data-2-8-beta-1'>Upcoming Features in Ember Data 2.8.beta-1</h3><h4 class='anchorable-toc' id='toc_code-ds-improved-ajax-code-a-href-https-github-com-emberjs-data-pull-3099-3099-a'><code>ds-improved-ajax</code> <a href="https://github.com/emberjs/data/pull/3099">#3099</a></h4>
+<p>The <code>ds-improved-ajax</code> feature was originally planned to be released
+in Ember Data 2.7. However, feedback from the beta found that many
+people are overriding <code>ajax()</code> to change the protocol of the adapter
+and the new methods added in made <code>ds-improved-ajax</code> made this usecase
+harder to achieve. The Ember Data team has decided to delay the
+<code>ds-improved-ajax</code> feature flag until the Ember Data 2.8 release while
+improving the API for this usecase.</p>
 
-<p>This feature adds new public methods to <code>DS.RESTAdapter</code>, which allow to
-customize the properties of a request:</p>
+<p>The <code>ds-improved-ajax</code> feature adds new public methods to
+<code>DS.RESTAdapter</code>, which allow to customize the properties of a
+request:</p>
 
 <ul>
 <li><code>methodForRequest</code> to get the HTTP verb</li>
@@ -243,24 +310,9 @@ customized as follows:</p>
 </div></div>
 <p>Thanks to <a href="https://github.com/pangratz">@pangratz</a> for
 implementing this feature.</p>
-<h4 class='anchorable-toc' id='toc_code-ds-links-in-record-array-code-a-href-https-github-com-emberjs-data-pull-4263-4263-a'><code>ds-links-in-record-array</code> <a href="https://github.com/emberjs/data/pull/4263">#4263</a></h4>
-<p>This feature exposes a <code>links</code> object on a <code>RecordArray</code>. This can be used to load additional links when  present in the response JSON-API document.</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre>store.query(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, { <span class="key">isRecent</span>: <span class="predefined-constant">true</span> }).then((posts) =&gt; {
-  posts.get(<span class="string"><span class="delimiter">'</span><span class="content">links.next</span><span class="delimiter">'</span></span>);
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Thanks to <a href="https://github.com/danmcclain">@danmcclain</a> for
-implementing this feature.</p>
 
-<p>For more details on changes in the 2.7 beta, please review the
-<a href="https://github.com/emberjs/data/blob/v2.7.0-beta.1/CHANGELOG.md">Ember Data 2.7.0-beta.1 CHANGELOG</a>.</p>
+<p>For more details on changes in the 2.8 beta, please review the
+<a href="https://github.com/emberjs/data/blob/v2.8.0-beta.1/CHANGELOG.md">Ember Data 2.8.0-beta.1 CHANGELOG</a>.</p>
 
 
     <hr>
