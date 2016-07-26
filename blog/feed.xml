@@ -241,6 +241,248 @@ implementing this feature.&lt;/p&gt;
 </content>
   </entry>
   <entry>
+    <title>Ember.js 2.7 and 2.8 Beta Released</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2016/07/25/ember-2-7-and-2-8-beta-released.html"/>
+    <id>http://emberjs.com/blog/2016/07/25/ember-2-7-and-2-8-beta-released.html</id>
+    <published>2016-07-25T00:00:00+00:00</published>
+    <updated>2016-07-25T00:00:00+00:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Ember.js 2.7, a minor version release of Ember with backwards compatible
+changes, is released today.&lt;/p&gt;
+
+&lt;p&gt;Ember.js 2.8 beta is also being released today. This branch will be released as
+stable in roughly six weeks and will then go on to be the next &lt;a href="/blog/2016/02/25/announcing-embers-first-lts.html"&gt;LTS...&lt;/a&gt;&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;Ember.js 2.7, a minor version release of Ember with backwards compatible
+changes, is released today.&lt;/p&gt;
+
+&lt;p&gt;Ember.js 2.8 beta is also being released today. This branch will be released as
+stable in roughly six weeks and will then go on to be the next &lt;a href="/blog/2016/02/25/announcing-embers-first-lts.html"&gt;LTS release&lt;/a&gt;
+roughly six weeks after that.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_changes-in-ember-js-2-7'&gt;Changes in Ember.js 2.7&lt;/h3&gt;
+&lt;p&gt;Ember 2.7 introduces one new backward compatible API:&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_code-ember-computed-uniqby-code'&gt;&lt;code&gt;Ember.computed.uniqBy&lt;/code&gt;&lt;/h4&gt;
+&lt;p&gt;In general, the core team is hesitant about adding any new computed macros
+or array prototype extensions to the framework. Instead, we encourage developers
+to adopt an addon such as &lt;a href="https://github.com/cibernox/ember-cpm"&gt;ember-cpm&lt;/a&gt;
+if they desire an expanded list of macros.&lt;/p&gt;
+
+&lt;p&gt;However contributor &lt;a href="https://github.com/seanjohnson08"&gt;@seanjohnson08&lt;/a&gt; correctly
+pointed out there is a logical gap in the APIs Ember provides today. Although
+each of &lt;code&gt;find&lt;/code&gt;, &lt;code&gt;map&lt;/code&gt;, &lt;code&gt;filter&lt;/code&gt;, and &lt;code&gt;reject&lt;/code&gt; have a comparable &lt;code&gt;xxxBy&lt;/code&gt; method
+(for example &lt;code&gt;findBy&lt;/code&gt;) no comparable method exists for &lt;code&gt;uniq&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Ember 2.7 adds &lt;code&gt;uniqBy&lt;/code&gt; as an computed property macro. For example:&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+13
+14
+15
+16
+17
+18
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;import&lt;/span&gt; Ember from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Ember.Component.extend({
+  &lt;span class="key"&gt;accidents&lt;/span&gt;: Ember.computed(&lt;span class="keyword"&gt;function&lt;/span&gt;() {
+    &lt;span class="keyword"&gt;return&lt;/span&gt; [{
+      &lt;span class="key"&gt;description&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Flipped over&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;,
+      &lt;span class="key"&gt;car&lt;/span&gt;: { &lt;span class="key"&gt;id&lt;/span&gt;: &lt;span class="integer"&gt;1&lt;/span&gt;, &lt;span class="key"&gt;make&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Saturn&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; }
+    },{
+      &lt;span class="key"&gt;description&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Aliens&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;,
+      &lt;span class="key"&gt;car&lt;/span&gt;: { &lt;span class="key"&gt;id&lt;/span&gt;: &lt;span class="integer"&gt;2&lt;/span&gt;, &lt;span class="key"&gt;make&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Toyota&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; }
+    },{
+      &lt;span class="key"&gt;description&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Road rage&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;,
+      &lt;span class="key"&gt;car&lt;/span&gt;: { &lt;span class="key"&gt;id&lt;/span&gt;: &lt;span class="integer"&gt;1&lt;/span&gt;, &lt;span class="key"&gt;make&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Saturn&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; }
+    }];
+  }),
+  &lt;span class="key"&gt;carsInAccidents&lt;/span&gt;: Ember.computed.mapBy(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;accidents&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;car&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
+  &lt;span class="key"&gt;uniqueCarsInAccidents&lt;/span&gt;: Ember.computed.uniqBy(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;carsInAccidents&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;id&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;uniqBy&lt;/code&gt; is also added as an array method. For example:&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+13
+14
+15
+16
+17
+18
+19
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;import&lt;/span&gt; Ember from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Ember.Component.extend({
+  &lt;span class="key"&gt;accidents&lt;/span&gt;: Ember.computed(&lt;span class="keyword"&gt;function&lt;/span&gt;() {
+    &lt;span class="keyword"&gt;return&lt;/span&gt; [{
+      &lt;span class="key"&gt;description&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Flipped over&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;,
+      &lt;span class="key"&gt;car&lt;/span&gt;: { &lt;span class="key"&gt;id&lt;/span&gt;: &lt;span class="integer"&gt;1&lt;/span&gt;, &lt;span class="key"&gt;make&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Saturn&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; }
+    },{
+      &lt;span class="key"&gt;description&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Aliens&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;,
+      &lt;span class="key"&gt;car&lt;/span&gt;: { &lt;span class="key"&gt;id&lt;/span&gt;: &lt;span class="integer"&gt;2&lt;/span&gt;, &lt;span class="key"&gt;make&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Toyota&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; }
+    },{
+      &lt;span class="key"&gt;description&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Road rage&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;,
+      &lt;span class="key"&gt;car&lt;/span&gt;: { &lt;span class="key"&gt;id&lt;/span&gt;: &lt;span class="integer"&gt;1&lt;/span&gt;, &lt;span class="key"&gt;make&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;Saturn&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; }
+    }];
+  }),
+  &lt;span class="key"&gt;uniqueCarsInAccidents&lt;/span&gt;: Ember.computed(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;accidents.@each.car&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="keyword"&gt;function&lt;/span&gt;() {
+    &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="local-variable"&gt;this&lt;/span&gt;.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;accidents&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).mapBy(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;car&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).uniqBy(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;id&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+  })
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;For more information on these methods, see the &lt;a href="http://emberjs.com/api/classes/Ember.computed.html#method_uniqBy"&gt;API docs for the computed
+macro&lt;/a&gt;, &lt;a href="http://emberjs.com/api/classes/Ember.Array.html#method_uniqBy"&gt;API
+docs for the array
+method&lt;/a&gt;, and [PR&lt;/p&gt;
+&lt;h1 class='anchorable-toc' id='toc_12875-https-github-com-emberjs-ember-js-pull-12875-introducing-these'&gt;12875](https://github.com/emberjs/ember.js/pull/12875) introducing these&lt;/h1&gt;
+&lt;p&gt;changes.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_notable-deprecations'&gt;Notable Deprecations&lt;/h4&gt;
+&lt;p&gt;The following deprecations are scheduled for release with Ember 2.7:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;Ember.Backburner&lt;/code&gt; was private throughout the Ember 2.x series and will be
+removed after Ember 2.8, as mentioned in the
+&lt;a href="http://emberjs.com/deprecations/v2.x/#toc_ember-backburner"&gt;deprecation guide&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;Ember.Binding&lt;/code&gt; has not been needed for some time and is deprecated in favor
+of computed properties and services (depending on what you were binding to).
+It will be removed in Ember 3.0. See the
+&lt;a href="http://emberjs.com/deprecations/v2.x/#toc_ember-binding"&gt;deprecation guide&lt;/a&gt;
+for more details.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For more details on changes landing in 2.7, review the
+&lt;a href="https://github.com/emberjs/ember.js/blob/v2.7.0/CHANGELOG.md"&gt;Ember.js 2.7.0 CHANGELOG&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_ember-js-2-8-beta'&gt;Ember.js 2.8 Beta&lt;/h3&gt;
+&lt;p&gt;Ember 2.8 beta introduces the following new backward compatible APIs:&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_engines'&gt;Engines&lt;/h4&gt;
+&lt;p&gt;As described in the &lt;a href="https://github.com/emberjs/rfcs/pull/10"&gt;RFC&lt;/a&gt;, &amp;quot;engines
+allow multiple logical applications to be composed together into a single
+application from the user&amp;#39;s perspective.&amp;quot;&lt;/p&gt;
+
+&lt;p&gt;The best way to get started with Engines is through the &lt;a href="http://github.com/dgeb/ember-engines"&gt;ember-engines addon&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The addition of this API means &lt;strong&gt;ember-engines is now usable with Ember.js 2.8 beta&lt;/strong&gt;.
+ember-engines itself remains experimental, however this is the first time you can use
+it with a beta build of Ember.js. For more information, check out the excellent 
+&lt;a href="https://github.com/dgeb/ember-engines/blob/master/guides/01-introduction.md"&gt;guides&lt;/a&gt;
+written by &lt;a href="https://github.com/trentmwillis"&gt;@trentmwillis&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Work on engines has proceeded over the past year in both Ember core as well as
+the addon. Ember&amp;#39;s
+architecture has been enhanced to provide the base classes and hooks needed to
+support engines. The addon then makes use of these interfaces to provide a
+smooth experience building and consuming engines.&lt;/p&gt;
+
+&lt;p&gt;Until now, none of the engine-related classes and hooks in Ember have been
+exposed publicly. However, starting with Ember 2.8, the following APIs will be
+made public:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;Ember.Engine&lt;/code&gt; class - The base class for &lt;code&gt;Ember.Application&lt;/code&gt;. Its only public
+interface is related to initializers and instance initializers, which is
+then inherited by applications.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;Ember.EngineInstance&lt;/code&gt; class - The base class for &lt;code&gt;Ember.ApplicationInstance&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;mount&lt;/code&gt; keyword - Allows for the mounting of routeless engines in templates.
+This keyword currently only takes one argument, the name of the engine.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;mount&lt;/code&gt; router DSL - Allows routable engines to be mounted at a location in
+a route map.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;By making these APIs public, ember-engines and other addons will be able to
+access them without a feature-flag in a (soon-to-be) stable release of Ember. By
+accessing only public interfaces in Ember, an addon won&amp;#39;t need to rely on
+private overrides and can provide as stable an experience as possible.&lt;/p&gt;
+
+&lt;p&gt;We predict that engines will grow in popularity once work on lazy loading is
+complete. By delaying the loading of engines until they&amp;#39;re accessed, we can
+decrease the initial payload size and startup time for applications. If you&amp;#39;re
+interested in helping to implement or test lazy loading of engines, please check
+out the thorough &lt;a href="https://github.com/dgeb/ember-engines/issues/154"&gt;attack plan&lt;/a&gt;
+written up by &lt;a href="https://github.com/nathanhammond"&gt;@nathanhammond&lt;/a&gt;.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_code-enumerable-includes-code-and-code-array-includes-code'&gt;&lt;code&gt;Enumerable#includes&lt;/code&gt; and &lt;code&gt;Array#includes&lt;/code&gt;&lt;/h4&gt;
+&lt;p&gt;In an effort to remain inline with ES standards, the methods
+&lt;code&gt;Enumerable#contains&lt;/code&gt; and &lt;code&gt;Array#contains&lt;/code&gt; have been deprecated in favor of the
+new methods &lt;code&gt;Enumerable#includes&lt;/code&gt; and &lt;code&gt;Array#includes&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Thanks to &lt;a href="https://github.com/alexspeller"&gt;@alexspeller&lt;/a&gt; for the &lt;a href="https://github.com/emberjs/rfcs/blob/master/text/0136-contains-to-includes.md"&gt;RFC&lt;/a&gt;
+that proposed this change.&lt;/p&gt;
+
+&lt;p&gt;Thanks as well to &lt;a href="https://github.com/bmeurant"&gt;@bmeurant&lt;/a&gt; for the
+&lt;a href="https://github.com/emberjs/ember.js/pull/13553"&gt;PR&lt;/a&gt; that implemented the change.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_code-ember-string-ishtmlsafe-code'&gt;&lt;code&gt;Ember.String.isHTMLSafe&lt;/code&gt;&lt;/h4&gt;
+&lt;p&gt;The new method &lt;code&gt;Ember.String.isHTMLSafe&lt;/code&gt; detects if a string was decorated using
+&lt;code&gt;Ember.String.htmlSafe&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;For example:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; plainString = &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;plain string&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;,
+    safeString = Ember.String.htmlSafe(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;&amp;lt;div&amp;gt;someValue&amp;lt;/div&amp;gt;&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+
+Ember.String.isHTMLSafe(plainString); &lt;span class="comment"&gt;// false&lt;/span&gt;
+Ember.String.isHTMLSafe(safeString);  &lt;span class="comment"&gt;// true&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Thanks to &lt;a href="https://github.com/workmanw"&gt;@workmanw&lt;/a&gt; for the
+&lt;a href="https://github.com/emberjs/rfcs/pull/139"&gt;RFC&lt;/a&gt; that proposed this new API, as
+well as the &lt;a href="https://github.com/emberjs/ember.js/pull/13666"&gt;PR&lt;/a&gt; that
+implemented it.&lt;/p&gt;
+
+&lt;p&gt;On a related note, please create safe strings with &lt;code&gt;Ember.String.htmlSafe&lt;/code&gt;
+instead of the deprecated &lt;code&gt;Ember.Handlebars.SafeString&lt;/code&gt;. See the &lt;a href="http://emberjs.com/deprecations/v2.x/#toc_use-ember-string-htmlsafe-over-ember-handlebars-safestring"&gt;deprecation
+guide&lt;/a&gt;
+for details.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_code-ember-test-checkwaiters-code'&gt;&lt;code&gt;Ember.Test.checkWaiters&lt;/code&gt;&lt;/h4&gt;
+&lt;p&gt;The new method &lt;code&gt;Ember.Test.checkWaiters&lt;/code&gt; provides a simple mechanism for test
+tooling to determine whether all async test waiters have settled. This replaces
+the intimate API &lt;code&gt;Ember.Test.waiters&lt;/code&gt;, which has been deprecated and will be
+removed in Ember 2.8 final.&lt;/p&gt;
+
+&lt;p&gt;Thanks to &lt;a href="https://github.com/rwjblue"&gt;@rwjblue&lt;/a&gt; and
+&lt;a href="https://github.com/krisselden"&gt;@krisselden&lt;/a&gt; for implementing this method.&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;For more details on changes landing in 2.8 beta, review the
+&lt;a href="https://github.com/emberjs/ember.js/blob/v2.8.0-beta.1/CHANGELOG.md"&gt;Ember.js 2.8.0-beta.1 CHANGELOG&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
     <title>Ember Data 2.6 and 2.7 Beta Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2016/06/09/ember-data-2-6-released.html"/>
     <id>http://emberjs.com/blog/2016/06/09/ember-data-2-6-released.html</id>
@@ -788,266 +1030,6 @@ from which parts of this post are adapted.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;We&amp;#39;re glad to be a part of this community and we&amp;#39;re looking forward to working with you!&lt;/p&gt;
 
 &lt;p&gt;- The Ember A11y Community Team&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Ember Data 2.5 and 2.6 Beta Released</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2016/05/03/ember-data-2-5-released.html"/>
-    <id>http://emberjs.com/blog/2016/05/03/ember-data-2-5-released.html</id>
-    <published>2016-05-03T00:00:00+00:00</published>
-    <updated>2016-05-03T00:00:00+00:00</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Ember Data 2.5, a minor version release of Ember Data, is released. This release represents the work of over 31 direct contributors, and over 137 commits.&lt;/p&gt;
-
-&lt;p&gt;Ember Data 2.6 beta.1, the branch of Ember Data that will be released as stable in roughly six...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Ember Data 2.5, a minor version release of Ember Data, is released. This release represents the work of over 31 direct contributors, and over 137 commits.&lt;/p&gt;
-
-&lt;p&gt;Ember Data 2.6 beta.1, the branch of Ember Data that will be released as stable in roughly six weeks, is also being released.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_changes-in-ember-data-2-5'&gt;Changes in Ember Data 2.5&lt;/h3&gt;&lt;h4 class='anchorable-toc' id='toc_code-ds-finder-include-code'&gt;&lt;code&gt;ds-finder-include&lt;/code&gt;&lt;/h4&gt;
-&lt;p&gt;The &lt;code&gt;ds-finder-include&lt;/code&gt; feature allows an &lt;code&gt;include&lt;/code&gt; query parameter to
-be specified using &lt;code&gt;store.findRecord()&lt;/code&gt; and &lt;code&gt;store.findAll()&lt;/code&gt; as
-described in &lt;a href="https://github.com/emberjs/rfcs/pull/99"&gt;RFC 99&lt;/a&gt;. The
-&lt;code&gt;include&lt;/code&gt; parameter tells JSON-API servers which relationships to
-sideload in a response, but it can also be used by custom adapters to
-signal which relationships the backend can sideload to improve
-performance.&lt;/p&gt;
-
-&lt;p&gt;Thanks to &lt;a href="https://github.com/HeroicEric"&gt;@HeroicEric&lt;/a&gt; for
-implementing this feature.&lt;/p&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// GET /articles/1?include=comments&lt;/span&gt;
-
-&lt;span class="keyword"&gt;var&lt;/span&gt; article = &lt;span class="local-variable"&gt;this&lt;/span&gt;.store.findRecord(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;article&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="integer"&gt;1&lt;/span&gt;, { &lt;span class="key"&gt;include&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; });
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// GET /articles?include=comments&lt;/span&gt;
-
-&lt;span class="keyword"&gt;var&lt;/span&gt; article = &lt;span class="local-variable"&gt;this&lt;/span&gt;.store.findAll(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;article&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, { &lt;span class="key"&gt;include&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt; });
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;h4 class='anchorable-toc' id='toc_code-ds-references-code'&gt;&lt;code&gt;ds-references&lt;/code&gt;&lt;/h4&gt;
-&lt;p&gt;The &lt;code&gt;ds-references&lt;/code&gt; feature implements the references API as described
-in &lt;a href="https://github.com/emberjs/rfcs/pull/57"&gt;RFC 57&lt;/a&gt;. References is a
-low level API to perform meta-operations on records, has-many
-relationships and belongs-to relationships:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;get the current local data synchronously without triggering a fetch or producing a promise&lt;/li&gt;
-&lt;li&gt;notify the store that a fetch for a given record has begun, and provide a promise for its result&lt;/li&gt;
-&lt;li&gt;similarly, notify a record that a fetch for a given relationship has begun, and provide a promise for its result&lt;/li&gt;
-&lt;li&gt;retrieve server-provided metadata about a record or relationship&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Consider the following &lt;code&gt;post&lt;/code&gt; model:&lt;/p&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-8
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;// app/models/post.js&lt;/span&gt;
-&lt;span class="reserved"&gt;import&lt;/span&gt; Model from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data/model&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
-&lt;span class="reserved"&gt;import&lt;/span&gt; { belongsTo, hasMany } from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data/relationships&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
-
-&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Model.extend({
-  &lt;span class="key"&gt;comments&lt;/span&gt;: hasMany(),
-  &lt;span class="key"&gt;author&lt;/span&gt;: belongsTo()
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;The references API now allows the possibility to interact with the relationships:&lt;/p&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-&lt;strong&gt;10&lt;/strong&gt;
-11
-12
-13
-14
-15
-16
-17
-18
-19
-&lt;strong&gt;20&lt;/strong&gt;
-21
-22
-23
-24
-25
-26
-27
-28
-29
-&lt;strong&gt;30&lt;/strong&gt;
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="keyword"&gt;var&lt;/span&gt; post = store.peekRecord(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;post&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="integer"&gt;1&lt;/span&gt;);
-
-&lt;span class="comment"&gt;// check if the author is already loaded, without triggering a request&lt;/span&gt;
-&lt;span class="keyword"&gt;if&lt;/span&gt; (post.belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;author&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).value() !== &lt;span class="predefined-constant"&gt;null&lt;/span&gt;) {
-  console.log(post.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;author.name&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;));
-} &lt;span class="keyword"&gt;else&lt;/span&gt; {
-  &lt;span class="comment"&gt;// get the id of the author without triggering a request&lt;/span&gt;
-  &lt;span class="keyword"&gt;var&lt;/span&gt; authorId = post.belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;author&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;).id();
-
-  &lt;span class="comment"&gt;// load the author&lt;/span&gt;
-  post.belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;author&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).load();
-  console.log(&lt;span class="error"&gt;`&lt;/span&gt;Loading author &lt;span class="keyword"&gt;with&lt;/span&gt; id &lt;span class="predefined"&gt;$&lt;/span&gt;{authorId}&lt;span class="error"&gt;`&lt;/span&gt;);
-}
-
-&lt;span class="comment"&gt;// reload the author&lt;/span&gt;
-post.belongsTo(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;author&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).reload();
-
-&lt;span class="comment"&gt;// get all ids without triggering a request&lt;/span&gt;
-&lt;span class="keyword"&gt;var&lt;/span&gt; commentIds = post.hasMany(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).ids();
-
-&lt;span class="comment"&gt;// check if there are comments, without triggering a request&lt;/span&gt;
-&lt;span class="keyword"&gt;if&lt;/span&gt; (post.hasMany(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).value() !== &lt;span class="predefined-constant"&gt;null&lt;/span&gt;) {
-  &lt;span class="keyword"&gt;var&lt;/span&gt; meta = post.hasMany(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).meta();
-  console.log(&lt;span class="error"&gt;`&lt;/span&gt;&lt;span class="predefined"&gt;$&lt;/span&gt;{commentIds.length} comments out of &lt;span class="predefined"&gt;$&lt;/span&gt;{meta.total}&lt;span class="error"&gt;`&lt;/span&gt;);
-} &lt;span class="keyword"&gt;else&lt;/span&gt; {
-  post.hasMany(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).load();
-}
-
-&lt;span class="comment"&gt;// reload comments&lt;/span&gt;
-post.hasMany(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;comments&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;).reload();
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Thanks to &lt;a href="https://github.com/pangratz"&gt;@pangratz&lt;/a&gt; for implementing
-this feature.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_code-ds-transform-pass-options-code'&gt;&lt;code&gt;ds-transform-pass-options&lt;/code&gt;&lt;/h4&gt;
-&lt;p&gt;The &lt;code&gt;ds-transform-pass-options&lt;/code&gt; feature allows for smarter transforms
-by passing the options object from &lt;code&gt;DS.attr([type], [options])&lt;/code&gt; into
-the transform.&lt;/p&gt;
-&lt;h5 class='anchorable-toc' id='toc_example'&gt;Example&lt;/h5&gt;&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;td colspan="2"&gt;app/models/post.js&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; DS.Model.extend({
-  &lt;span class="key"&gt;title&lt;/span&gt;: DS.attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;string&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
-  &lt;span class="key"&gt;markdown&lt;/span&gt;: DS.attr(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;markdown&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, {
-    &lt;span class="key"&gt;markdown&lt;/span&gt;: {
-      &lt;span class="key"&gt;gfm&lt;/span&gt;: &lt;span class="predefined-constant"&gt;false&lt;/span&gt;,
-      &lt;span class="key"&gt;sanitize&lt;/span&gt;: &lt;span class="predefined-constant"&gt;true&lt;/span&gt;
-    }
-  })
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;td colspan="2"&gt;app/transforms/markdown.js&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-&lt;strong&gt;10&lt;/strong&gt;
-11
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; DS.Transform.extend({
-  &lt;span class="function"&gt;serialize&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt; (deserialized, attributeMeta) {
-    &lt;span class="keyword"&gt;return&lt;/span&gt; deserialized.raw;
-  },
-
-  &lt;span class="function"&gt;deserialize&lt;/span&gt;: &lt;span class="keyword"&gt;function&lt;/span&gt; (serialized, attributeMeta) {
-    &lt;span class="keyword"&gt;var&lt;/span&gt; options = attributeMeta.options.markdown || {};
-
-    &lt;span class="keyword"&gt;return&lt;/span&gt; marked(serialized, options);
-  }
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Thanks to &lt;a href="https://github.com/pangratz"&gt;@pangratz&lt;/a&gt; for implementing
-this feature and &lt;a href="https://github.com/knownasilya"&gt;@knownasilya&lt;/a&gt; for
-proposing the &lt;a href="https://github.com/emberjs/rfcs/pull/1"&gt;RFC&lt;/a&gt;.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_upcoming-features-in-ember-data-2-6-beta-1'&gt;Upcoming Features in Ember Data 2.6.beta-1&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;ds-serialize-ids-and-types&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Enables a new &lt;code&gt;ids-and-type&lt;/code&gt; strategy (in addition to the already existing &lt;code&gt;ids&lt;/code&gt; and &lt;code&gt;records&lt;/code&gt;) for
-serializing has many relationships using the &lt;code&gt;DS.EmbeddedRecordsMixin&lt;/code&gt; that  will include both
-&lt;code&gt;id&lt;/code&gt; and &lt;code&gt;type&lt;/code&gt; of each model as an object.&lt;/p&gt;
-
-&lt;p&gt;For instance, if a user has many pets, which is a polymorphic relationship, the generated payload would be:&lt;/p&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-&lt;strong&gt;10&lt;/strong&gt;
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;{
-  &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;user&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: {
-    &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;id&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;1&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;
-    &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;name&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;Bertin Osborne&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;,
-    &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;pets&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: [
-      { &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;id&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;1&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;, &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;type&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;Cat&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; },
-      { &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;id&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;2&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;, &lt;span class="key"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;type&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;Parrot&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;}
-    ]
-  }
-}
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;This is particularly useful for polymorphic relationships not backed
-  by &lt;a href="https://en.wikipedia.org/wiki/Single_Table_Inheritance"&gt;STI&lt;/a&gt;
-  when just including the id of the records is not enough.&lt;/p&gt;
-
-&lt;p&gt;For more details on changes in the 2.6 beta, please review the
-&lt;a href="https://github.com/emberjs/data/blob/v2.6.0-beta.1/CHANGELOG.md"&gt;Ember Data 2.6.0-beta.1 CHANGELOG&lt;/a&gt;.&lt;/p&gt;
 </content>
   </entry>
 </feed>
