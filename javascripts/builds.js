@@ -60153,10 +60153,6 @@ Ember.TEMPLATES["_files_table"] = Ember.HTMLBars.template((function() {
           var el2 = dom.createElement("td");
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode(" ");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createComment("");
-          dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
           var el2 = dom.createTextNode("\n    ");
           dom.appendChild(el1, el2);
@@ -60166,23 +60162,20 @@ Ember.TEMPLATES["_files_table"] = Ember.HTMLBars.template((function() {
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element3 = dom.childAt(fragment, [1]);
-          var element4 = dom.childAt(element3, [1, 0]);
-          var element5 = dom.childAt(element3, [5]);
-          var morphs = new Array(5);
-          morphs[0] = dom.createAttrMorph(element4, 'href');
-          morphs[1] = dom.createMorphAt(element4,0,0);
-          morphs[2] = dom.createMorphAt(dom.childAt(element3, [3]),0,0);
-          morphs[3] = dom.createMorphAt(element5,0,0);
-          morphs[4] = dom.createMorphAt(element5,2,2);
+          var element2 = dom.childAt(fragment, [1]);
+          var element3 = dom.childAt(element2, [1, 0]);
+          var morphs = new Array(4);
+          morphs[0] = dom.createAttrMorph(element3, 'href');
+          morphs[1] = dom.createMorphAt(element3,0,0);
+          morphs[2] = dom.createMorphAt(dom.childAt(element2, [3]),0,0);
+          morphs[3] = dom.createMorphAt(dom.childAt(element2, [5]),0,0);
           return morphs;
         },
         statements: [
           ["attribute","href",["get","url",["loc",[null,[4,20],[4,23]]]]],
           ["inline","tag-url-path",[["get","url",["loc",[null,[4,41],[4,44]]]]],[],["loc",[null,[4,26],[4,46]]]],
           ["inline","format-date-time",[["get","project.date",["loc",[null,[5,29],[5,41]]]]],[],["loc",[null,[5,10],[5,43]]]],
-          ["inline","copy-clipboard",[],["label","Link","text",["subexpr","@mut",[["get","url",["loc",[null,[6,45],[6,48]]]]],[],[]]],["loc",[null,[6,10],[6,50]]]],
-          ["inline","copy-clipboard",[],["label","Script Tag","text",["subexpr","script-tag",[["get","url",["loc",[null,[6,104],[6,107]]]]],[],["loc",[null,[6,92],[6,108]]]]],["loc",[null,[6,51],[6,110]]]]
+          ["inline","copy-clipboard",[],["label","Link","text",["subexpr","@mut",[["get","url",["loc",[null,[6,45],[6,48]]]]],[],[]]],["loc",[null,[6,10],[6,50]]]]
         ],
         locals: ["url"],
         templates: []
@@ -60278,10 +60271,6 @@ Ember.TEMPLATES["_files_table"] = Ember.HTMLBars.template((function() {
         var el2 = dom.createElement("td");
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode(" ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createComment("");
-        dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n  ");
         dom.appendChild(el1, el2);
@@ -60293,21 +60282,18 @@ Ember.TEMPLATES["_files_table"] = Ember.HTMLBars.template((function() {
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
         var element0 = dom.childAt(fragment, [1]);
         var element1 = dom.childAt(element0, [1, 0]);
-        var element2 = dom.childAt(element0, [5]);
-        var morphs = new Array(5);
+        var morphs = new Array(4);
         morphs[0] = dom.createAttrMorph(element1, 'href');
         morphs[1] = dom.createMorphAt(element1,0,0);
         morphs[2] = dom.createMorphAt(dom.childAt(element0, [3]),0,0);
-        morphs[3] = dom.createMorphAt(element2,0,0);
-        morphs[4] = dom.createMorphAt(element2,2,2);
+        morphs[3] = dom.createMorphAt(dom.childAt(element0, [5]),0,0);
         return morphs;
       },
       statements: [
         ["attribute","href",["get","file.url",["loc",[null,[12,18],[12,26]]]]],
         ["content","file.name",["loc",[null,[12,29],[12,42]]]],
         ["inline","format-date-time",[["get","file.lastModified",["loc",[null,[13,27],[13,44]]]]],[],["loc",[null,[13,8],[13,46]]]],
-        ["inline","copy-clipboard",[],["label","Link","text",["subexpr","@mut",[["get","file.url",["loc",[null,[14,43],[14,51]]]]],[],[]]],["loc",[null,[14,8],[14,53]]]],
-        ["inline","copy-clipboard",[],["label","Script Tag","text",["subexpr","@mut",[["get","file.scriptTag",["loc",[null,[14,95],[14,109]]]]],[],[]]],["loc",[null,[14,54],[14,111]]]]
+        ["inline","copy-clipboard",[],["label","Link","text",["subexpr","@mut",[["get","file.url",["loc",[null,[14,43],[14,51]]]]],[],[]]],["loc",[null,[14,8],[14,53]]]]
       ],
       locals: ["file"],
       templates: []
