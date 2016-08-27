@@ -151,10 +151,16 @@
 2
 3
 4
+5
+6
+7
 </pre></td>
-  <td class="code"><pre>{
+  <td class="code"><pre> <span class="comment">// Snipped from /config/environment.js</span>
+<span class="keyword">var</span> ENV = {
+  <span class="comment">/* ... */</span>
   <span class="key">rootURL</span>: <span class="string"><span class="delimiter">'</span><span class="content">/path/to/application/</span><span class="delimiter">'</span></span>,
   <span class="key">baseURL</span>: <span class="string"><span class="delimiter">'</span><span class="content">/assets/go/here/</span><span class="delimiter">'</span></span>
+  <span class="comment">/* ... */</span>
 }
 </pre></td>
 </tr></table>
@@ -198,9 +204,15 @@
   <td class="line-numbers"><pre>1
 2
 3
+4
+5
+6
 </pre></td>
-  <td class="code"><pre>{
+  <td class="code"><pre><span class="comment">// Snipped from /config/environment.js</span>
+<span class="keyword">var</span> ENV = {
+  <span class="comment">/* ... */</span>
   <span class="key">rootURL</span>: <span class="string"><span class="delimiter">'</span><span class="content">/path/to/application/</span><span class="delimiter">'</span></span>
+  <span class="comment">/* ... */</span>
 }
 </pre></td>
 </tr></table>
@@ -220,12 +232,66 @@
   <td class="line-numbers"><pre>1
 2
 </pre></td>
-  <td class="code"><pre><span class="tag">&lt;link</span> <span class="attribute-name">rel</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">stylesheet</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">https://cdn.example.com/assets/vendor-e37004361bf9cda2ab3379d96c9eba4b.css</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-<span class="tag">&lt;link</span> <span class="attribute-name">rel</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">stylesheet</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">https://cdn.example.com/assets/app-name-dc477601773d4043b0c461b2a0ae8aef.css</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <td class="code"><pre><span class="tag">&lt;link</span> <span class="attribute-name">rel</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">stylesheet</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">https://cdn.example.com/path/to/application/assets/vendor-e37004361bf9cda2ab3379d96c9eba4b.css</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attribute-name">rel</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">stylesheet</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">https://cdn.example.com/path/to/application/assets/app-name-dc477601773d4043b0c461b2a0ae8aef.css</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
 </pre></td>
 </tr></table>
 </div></div>
-<p>Note: the <code>rootURL</code> is <em>not</em> present. This is intentional as <code>rootURL</code> exists only to provide information to Ember&#39;s Router about where the application is served from.</p>
+<p>Note that <code>rootURL</code> <em>is present</em> as part of the path for the CDN-hosted assets inside of <code>index.html</code>. <code>rootURL</code> is an Ember CLI concept primarily concerned with supporting the behavior of <code>ember server</code>.</p>
+<h4 class='anchorable-toc' id='toc_configuring-the-router'>Configuring the Router</h4>
+<p>We also use the setting for <code>rootURL</code> at runtime in the application&#39;s router:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="comment">// Snipped from /app/router.js</span>
+<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+<span class="reserved">import</span> config from <span class="string"><span class="delimiter">'</span><span class="content">./config/environment</span><span class="delimiter">'</span></span>;
+
+const Router = Ember.Router.extend({
+  <span class="key">rootURL</span>: config.rootURL
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>In most cases this does exactly what you want it to do. However, if you wish to mount the application at a different place than the Ember CLI <code>rootURL</code> specifies for its <code>ember serve</code> location, you may add an additional property in your config, <code>routerRootURL</code>, to specify the path that your application will live at runtime.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="comment">// Snipped from /config/environment.js</span>
+<span class="keyword">var</span> ENV = {
+  <span class="comment">/* ... */</span>
+  <span class="key">rootURL</span>: <span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>,
+  <span class="key">routerRootURL</span>: <span class="string"><span class="delimiter">'</span><span class="content">/path/to/application/</span><span class="delimiter">'</span></span>
+  <span class="comment">/* ... */</span>
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>You would then reference that inside of your application&#39;s router like so:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>const Router = Ember.Router.extend({
+  <span class="key">rootURL</span>: config.routerRootURL
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>This provides a method to remove the  <code>&#39;/path/to/application/&#39;</code> prefix from assets inside of <code>index.html</code> which will be served from a CDN.</p>
 <h4 class='anchorable-toc' id='toc_css-fonts-and-other-static-assets'>CSS, Fonts, and Other Static Assets</h4>
 <p>Depending upon how these were included into an application, their paths may need to be adjusted. Assets like these are often handled outside the Ember CLI build pipeline, but do check to make sure that everything is works as expected.</p>
 <h4 class='anchorable-toc' id='toc_addon-consumption-and-development'>Addon Consumption and Development</h4>
