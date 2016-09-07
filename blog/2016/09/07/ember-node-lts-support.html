@@ -3,14 +3,14 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Ember.js - Core Team Meeting Minutes - 2014/08/01</title>
-		<meta property="st:title" content="Ember.js: Core Team Meeting Minutes - 2014/08/01" />
-		<meta property="og:title" content="Ember.js: Core Team Meeting Minutes - 2014/08/01" />
+    <title>Ember.js - Ember Node.js LTS Support</title>
+		<meta property="st:title" content="Ember.js: Ember Node.js LTS Support" />
+		<meta property="og:title" content="Ember.js: Ember Node.js LTS Support" />
 		<meta property="og:description" content="Ember.js helps developers be more productive out of the box. Designed with developer ergonomics in mind, its friendly APIs help you get your job done—fast." />
 		<meta property="og:image" content="http://emberjs.com/images/tomster-sm.png" />
 		<meta name="twitter:card" content="summary" />
 		<meta name="twitter:site" content="@emberjs" />
-		<meta name="twitter:title" content="Core Team Meeting Minutes - 2014/08/01"/>
+		<meta name="twitter:title" content="Ember Node.js LTS Support"/>
 		<meta name="twitter:image" content="http://emberjs.com/images/tomster-twitter-card.png" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" /><![endif]-->
@@ -19,7 +19,7 @@
     
   </head>
 
-  <body class="blog blog_2014 blog_2014_09 blog_2014_09_13 blog_2014_09_13_core-team-meeting-minutes-2014-08-01 not-responsive">
+  <body class="blog blog_2016 blog_2016_09 blog_2016_09_07 blog_2016_09_07_ember-node-lts-support not-responsive">
 
     <!--[if lt IE 9]>
       <script type="text/javascript" src="/javascripts/common-old-ie.js"></script>
@@ -94,76 +94,43 @@
         </div>
       <div id="content" class="has-sidebar">
           <article class="blog-post">
-    <h1>Core Team Meeting Minutes - 2014/08/01</h1>
-      <h3 class="blog-post-author">Posted By: Trek Glowacki &ndash; <time>Sep 13, 2014</time></h3>
+    <h1>Ember Node.js LTS Support</h1>
+      <h3 class="blog-post-author">Posted By: Nathan Hammond &ndash; <time>Sep 07, 2016</time></h3>
 
     <hr>
 
-    <p>Although most of our collaboration takes place on Github, IRC
-(<code>#emberjs</code> on freenode.net), and our <a href="http://discuss.emberjs.com/">Discourse site</a>
-the <a href="/team">Ember.js Core Team</a> meets privately every
-Friday at 2pm EST/11am PST through Google Hangout for a weekly
-discussion of all things Ember.</p>
+    <p>Ember is committed to being a good steward of our collective codebases as part of the <a href="https://nodejs.org/en/">Node.js</a> <a href="https://www.npmjs.com/">ecosystem</a>. In that spirit we will be following the <a href="https://github.com/nodejs/LTS#lts-schedule">Node.js Long Term Support Schedule</a> to provide clear guarantees of which versions of Node.js we support and how long we will support them. We will test against the same set of releases which the Node.js Long-term Support Working Group says they support: any &quot;Current&quot;, &quot;Active LTS&quot;, or &quot;Maintenance&quot; releases.</p>
+<h3 class='anchorable-toc' id='toc_what-does-support-mean'>What does support mean?</h3>
+<p>All Ember projects can be expected to work in any of the supported Node.js versions and will support every documented feature. We will not maintain separate branches or classes of support for different Node.js support classifications. For example, Ember CLI can be expected to work just the same running on a &quot;Maintenance&quot; Node.js version as it does on a &quot;Current&quot; Node.js version. Not all of our projects presently align to this pattern but we will, over time, coalesce to this state.</p>
 
-<p>If you have a topic you&#39;d like to see covered, contact your favorite
-core team member and let them know!</p>
-<h4 class='anchorable-toc' id='toc_attendees'>Attendees</h4>
-<!--   [@ebryn](https://twitter.com/ebryn),
-  [@krisselden](https://twitter.com/krisselden),
-  [@machty](https://twitter.com/machty),
-  [@mixonic](https://twitter.com/mixonic)
-  [@_mmun](https://twitter.com/_mmun),
-  [@rwjblue](https://twitter.com/rwjblue),
-  [@trek](https://twitter.com/trek),
-  [@stefanpenner](https://twitter.com/stefanpenner),
-  [@wagenet](https://twitter.com/wagenet),
-  [@tomdale](https://twitter.com/tomdale),
-  [@wifelette](https://twitter.com/wifelette),
-  [@wycats](https://twitter.com/wycats) -->
+<p>Meeting this commitment does not come without cost and tough decisions. However, as maintainers of foundational libraries, we believe that it is in our best interest to validate the legitimacy of the Node.js LTS plans, help position Node.js as a reliable and dependable tool for all enterprises, and contribute toward improving the reputation of the ecosystem.</p>
+<h3 class='anchorable-toc' id='toc_how-we-drop-support'>How We Drop Support</h3>
+<p>To make it easier for us to deliver on our support promise we have adopted a policy that the <code>HEAD</code> of our <code>master</code> branches will be compatible with all versions of Node.js currently receiving support. For any Ember project on the day we drop support for a Node.js version the following things will happen:</p>
 
-<p><a href="https://twitter.com/krisselden">@krisselden</a>,
-<a href="https://twitter.com/mixonic">@mixonic</a>
-<a href="https://twitter.com/_mmun">@_mmun</a>,
-<a href="https://twitter.com/trek">@trek</a>,
-<a href="https://twitter.com/stefanpenner">@stefanpenner</a>,
-<a href="https://twitter.com/wagenet">@wagenet</a>,
-<a href="https://twitter.com/tomdale">@tomdale</a>,
-<a href="https://twitter.com/wycats">@wycats</a></p>
-<h3 class='anchorable-toc' id='toc_revamp-the-getting-started-guide'>Revamp the Getting Started Guide</h3>
-<p>We&#39;re starting work to revamp
-our <a href="http://emberjs.com/guides/getting-started/">Getting Started Guide</a>.
-TodoMVC is just too small of an app to demonstrate enough topics. We were
-holding off in hopes that there would be further progress on the <a href="https://github.com/tastejs/TasteApp">successor
-to TodoMVC</a> but this project has stalled.</p>
+<ul>
+<li>We will update the <code>engines</code> key inside of <code>package.json</code> to specify the versions supported by the project.</li>
+<li>We will update the testing targets to remove the newly-unsupported Node.js version from the list.</li>
+<li>We will begin accepting code without testing it against the newly-unsupported version of Node.js.</li>
+</ul>
 
-<p>We&#39;re investigating building a Github Issues viewer. Our goals are to better
-highlight areas where Ember really shines compared to other frameworks: Deeply
-nested view and data hierarchies, url-driven applications, intuitive
-query paramater behaviors.</p>
-<h3 class='anchorable-toc' id='toc_deprecating-global-view-lookup-from-templates'>Deprecating global view lookup from templates</h3>
-<p>As we move towards a world where ES6 syntax and modules
-become viable we continue to deprecate some &quot;old style&quot;
-globals lookup. The following uses will all trigger
-deprecation warnings:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>{{view <span class="string"><span class="delimiter">&quot;</span><span class="content">App.SomeThing</span><span class="delimiter">&quot;</span></span>}}
-{{view Oh.ThisToo}}
-{{<span class="error">#</span>collection itemViewClass=<span class="string"><span class="delimiter">&quot;</span><span class="content">Some.Wow</span><span class="delimiter">&quot;</span></span>}}
-{{<span class="error">#</span>collection itemViewClass=Not.Yet}}
-{{<span class="error">#</span>each itemView=<span class="string"><span class="delimiter">&quot;</span><span class="content">Ugh.Why</span><span class="delimiter">&quot;</span></span>}}
-{{<span class="error">#</span>each itemView=Something.Something}}
-{{view Ember.Select value=whut}}
-</pre></td>
-</tr></table>
-</div></div>
+<p>For projects with an unspecified release model we will release one last version of the project prior to those steps. The version number change will reflect <a href="http://semver.org/">SemVer</a> with respect to the APIs of the project and not take into consideration removal of Node.js version support. This means that the release may show up as a &quot;patch&quot; version release. For example, if we&#39;re dropping support for Node.js 0.10 and have a project at version 1.3.3 we can drop Node.js 0.10 support when we release version 1.3.4.</p>
+
+<p>For Ember CLI, which follows a six week release train model, we will continue to patch the currently released version and maintain compatibility. Those patches will not break compatibility with the Node.js versions that Ember CLI supported when it was released. The next six week release of Ember CLI will drop support for the newly-unsupported Node.js version. For example, if we release Ember CLI 2.8.0 on September 6, drop support for Node.js 0.10 on October 1, and discover a bug on October 5 necessitating a 2.8.1 patch release that release will support Node.js 0.10 even though we have officially dropped support. The first version which will not support Node.js 0.10 will be Ember CLI 2.9.0 scheduled to be released on October 17.</p>
+<h3 class='anchorable-toc' id='toc_node-js-0-10-node-js-0-12'>Node.js 0.10 &amp; Node.js 0.12</h3>
+<p>Over the next four months Node.js will remove the 0.10 and 0.12 versions from &quot;Maintenance.&quot; We in the Ember community will follow suit. This means that on October 1, 2016 we will drop support for Node.js 0.10 and on January 1, 2017 we will drop support for Node.js 0.12.</p>
+
+<p>Both of these versions are very long in the tooth and have had a good run but we&#39;re not sad to see them go. We&#39;re looking forward to getting to use <a href="http://kangax.github.io/compat-table/es6/#node012">language features we&#39;ve had for years in other environments</a>.</p>
+<h3 class='anchorable-toc' id='toc_recommended-version'>Recommended Version</h3>
+<p>We recommend that you use the most-recent &quot;Active LTS&quot; version of Node.js. At present that is <a href="https://nodejs.org/en/download/">Node.js v4.5.0</a>. This is not to say that you may not use other versions, but by rule the current &quot;Active LTS&quot; will receive the most attention during our testing cycles and be most broadly used within the community.</p>
+<h3 class='anchorable-toc' id='toc_future-plans'>Future Plans</h3>
+<p>We recognize that we don&#39;t have the privilege of unilaterally setting this as the default for the entire Node.js ecosystem. It is our hope that with leadership from our community we can encourage more of the Node.js ecosystem to commit to following the schedule laid out by the Node.js LTS Working Group.</p>
+
+<p>We don&#39;t presently rely upon transpilation to support older versions of the Node.js runtime from a codebase using current JavaScript features. This may change in time but we don&#39;t yet believe the story for tooling and debugging of transpiled JavaScript for Node.js has reached the inflection point where the benefits outweigh the costs.</p>
+
+<p>Further, if we find ourselves maintaining our own forks or depending upon legacy versions of much of the JavaScript ecosystem, we reserve the option to change our approach in the future. As always we will be paying close attention to the community&#39;s needs and will give at least a six month notice of any change to this stated support policy.</p>
+
+<p><em>Special thanks to <a href="https://github.com/ErisDS">Hannah Wolfe</a> for helping direct us to this approach.</em></p>
+
 
     <hr>
 
