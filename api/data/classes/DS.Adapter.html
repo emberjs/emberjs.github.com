@@ -65,7 +65,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v2.7.0" target="_blank"> Tag: v2.7.0</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v2.8.1" target="_blank"> Tag: v2.8.1</a></li>
 
 
           <li class="level-1 ">
@@ -90,6 +90,11 @@
           
           <li class="level-3 ">
                         <a href="/api/data/classes/DS.html">DS</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/api/data/classes/Ember.Date.html">Ember.Date</a>
 
           </li>
         
@@ -323,7 +328,7 @@
         
   <h1 class="api-header">
   DS.Adapter Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v2.7.0/addon/adapter.js#L8">addon/adapter.js:8</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v2.8.1/addon/adapter.js#L8">addon/adapter.js:8</a>
 </h1>
 
 <hr>
@@ -336,7 +341,7 @@
     <p>Extends: Ember.Object</p>
 
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.7.0/addon/adapter.js#L8">addon/adapter.js:8</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.8.1/addon/adapter.js#L8">addon/adapter.js:8</a></p>
 
     <p>Module: <a href="/api/data/modules/ember-data.html">ember-data</a></p>
 </div>
@@ -544,7 +549,7 @@ included REST adapter.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.7.0/addon/adapter.js#L287">addon/adapter.js:287</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.8.1/addon/adapter.js#L282">addon/adapter.js:282</a>
 
   </div>
 
@@ -584,31 +589,29 @@ new records.</p>
 19
 <strong>20</strong>
 21
-22
 </pre></td>
   <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
 
 <span class="reserved">export</span> <span class="keyword">default</span> DS.Adapter.extend({
   <span class="function">createRecord</span>: <span class="keyword">function</span>(store, type, snapshot) {
     <span class="keyword">var</span> data = <span class="local-variable">this</span>.serialize(snapshot, { <span class="key">includeId</span>: <span class="predefined-constant">true</span> });
-    <span class="keyword">var</span> url = type;
 
     <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
       Ember.<span class="predefined">$</span>.ajax({
         <span class="key">type</span>: <span class="string"><span class="delimiter">'</span><span class="content">POST</span><span class="delimiter">'</span></span>,
-        <span class="key">url</span>: url,
-        <span class="key">dataType</span>: <span class="string"><span class="delimiter">'</span><span class="content">json</span><span class="delimiter">'</span></span>,
-        <span class="key">data</span>: data
-      }).then(<span class="keyword">function</span>(data) {
-        Ember.run(<span class="predefined-constant">null</span>, resolve, data);
-      }, <span class="keyword">function</span>(jqXHR) {
-        jqXHR.then = <span class="predefined-constant">null</span>; <span class="comment">// tame jQuery's ill mannered promises</span>
-        Ember.run(<span class="predefined-constant">null</span>, reject, jqXHR);
+        <span class="key">url</span>: <span class="error">`</span><span class="regexp"><span class="delimiter">/</span><span class="content">${type.modelName}`,
+        dataType: 'json',
+        data: data
+      }).then(function(data) {
+        Ember.run(null, resolve, data);
+      }, function(jqXHR) {
+        jqXHR.then = null; </span><span class="delimiter">/</span></span>/ tame jQuery<span class="string"><span class="delimiter">'</span><span class="content">s ill mannered promises
+        Ember.run(null, reject, jqXHR);
       });
     });
   }
 });
-</pre></td>
+</span></span></pre></td>
 </tr></table>
 </div></div>
     </div>
@@ -666,7 +669,7 @@ new records.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.7.0/addon/adapter.js#L378">addon/adapter.js:378</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.8.1/addon/adapter.js#L371">addon/adapter.js:371</a>
 
   </div>
 
@@ -707,7 +710,6 @@ a record.</p>
 <strong>20</strong>
 21
 22
-23
 </pre></td>
   <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
 
@@ -715,12 +717,11 @@ a record.</p>
   <span class="function">deleteRecord</span>: <span class="keyword">function</span>(store, type, snapshot) {
     <span class="keyword">var</span> data = <span class="local-variable">this</span>.serialize(snapshot, { <span class="key">includeId</span>: <span class="predefined-constant">true</span> });
     <span class="keyword">var</span> id = snapshot.id;
-    <span class="keyword">var</span> url = [type, id].join(<span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>);
 
     <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
       Ember.<span class="predefined">$</span>.ajax({
         <span class="key">type</span>: <span class="string"><span class="delimiter">'</span><span class="content">DELETE</span><span class="delimiter">'</span></span>,
-        <span class="key">url</span>: url,
+        <span class="key">url</span>: <span class="error">`</span><span class="regexp"><span class="delimiter">/</span><span class="content">${type.modelName}</span><span class="delimiter">/</span></span><span class="predefined">$</span>{id}<span class="error">`</span>,
         <span class="key">dataType</span>: <span class="string"><span class="delimiter">'</span><span class="content">json</span><span class="delimiter">'</span></span>,
         <span class="key">data</span>: data
       }).then(<span class="keyword">function</span>(data) {
@@ -790,7 +791,7 @@ a record.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.7.0/addon/adapter.js#L125">addon/adapter.js:125</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.8.1/addon/adapter.js#L123">addon/adapter.js:123</a>
 
   </div>
 
@@ -820,26 +821,22 @@ a record.</p>
 12
 13
 14
-15
-16
 </pre></td>
   <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
 
 <span class="reserved">export</span> <span class="keyword">default</span> DS.Adapter.extend({
   <span class="function">findAll</span>: <span class="keyword">function</span>(store, type, sinceToken) {
-    <span class="keyword">var</span> url = type;
     <span class="keyword">var</span> query = { <span class="key">since</span>: sinceToken };
     <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
-      Ember.<span class="predefined">$</span>.getJSON(url, query).then(<span class="keyword">function</span>(data) {
-        Ember.run(<span class="predefined-constant">null</span>, resolve, data);
-      }, <span class="keyword">function</span>(jqXHR) {
-        jqXHR.then = <span class="predefined-constant">null</span>; <span class="comment">// tame jQuery's ill mannered promises</span>
-        Ember.run(<span class="predefined-constant">null</span>, reject, jqXHR);
+      Ember.<span class="predefined">$</span>.getJSON(<span class="error">`</span><span class="regexp"><span class="delimiter">/</span><span class="content">${type.modelName}`, query).then(function(data) {
+        resolve(data);
+      }, function(jqXHR) {
+        reject(jqXHR);
       });
     });
   }
 });
-</pre></td>
+</span></span></pre></td>
 </tr></table>
 </div></div>
     </div>
@@ -902,14 +899,64 @@ a record.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.7.0/addon/adapter.js#L431">addon/adapter.js:431</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.8.1/addon/adapter.js#L423">addon/adapter.js:423</a>
 
   </div>
 
 
     <div class="description">
-      <p>Find multiple records at once if coalesceFindRequests is true.</p>
+      <p>The store will call <code>findMany</code> instead of multiple <code>findRecord</code>
+requests to find multiple records at once if coalesceFindRequests
+is true.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/adapters/application.js</td>
+    </tr>
+  </thead>
+<tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
 
+<span class="reserved">export</span> <span class="keyword">default</span> DS.Adapter.extend({
+  findMany(store, type, ids, snapshots) {
+    <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
+      Ember.<span class="predefined">$</span>.ajax({
+        <span class="key">type</span>: <span class="string"><span class="delimiter">'</span><span class="content">GET</span><span class="delimiter">'</span></span>,
+        <span class="key">url</span>: <span class="error">`</span><span class="regexp"><span class="delimiter">/</span><span class="content">${type.modelName}</span><span class="delimiter">/</span></span><span class="error">`</span>,
+        <span class="key">dataType</span>: <span class="string"><span class="delimiter">'</span><span class="content">json</span><span class="delimiter">'</span></span>,
+        <span class="key">data</span>: { <span class="key">filter</span>: { <span class="key">id</span>: ids.join(<span class="string"><span class="delimiter">'</span><span class="content">,</span><span class="delimiter">'</span></span>) } }
+      }).then(<span class="keyword">function</span>(data) {
+        Ember.run(<span class="predefined-constant">null</span>, resolve, data);
+      }, <span class="keyword">function</span>(jqXHR) {
+        jqXHR.then = <span class="predefined-constant">null</span>; <span class="comment">// tame jQuery's ill mannered promises</span>
+        Ember.run(<span class="predefined-constant">null</span>, reject, jqXHR);
+      });
+    });
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
     </div>
 
   <p>
@@ -970,7 +1017,7 @@ a record.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.7.0/addon/adapter.js#L88">addon/adapter.js:88</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.8.1/addon/adapter.js#L88">addon/adapter.js:88</a>
 
   </div>
 
@@ -1004,21 +1051,17 @@ normalized by the serializer.</p>
 12
 13
 14
-15
-16
 </pre></td>
   <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
 
 <span class="reserved">export</span> <span class="keyword">default</span> DS.Adapter.extend({
   <span class="function">findRecord</span>: <span class="keyword">function</span>(store, type, id, snapshot) {
-    <span class="keyword">var</span> url = [type.modelName, id].join(<span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>);
 
     <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
-      Ember.<span class="predefined">$</span>.getJSON(url).then(<span class="keyword">function</span>(data) {
-        Ember.run(<span class="predefined-constant">null</span>, resolve, data);
+      Ember.<span class="predefined">$</span>.getJSON(<span class="error">`</span><span class="regexp"><span class="delimiter">/</span><span class="content">${type.modelName}</span><span class="delimiter">/</span></span><span class="predefined">$</span>{id}<span class="error">`</span>).then(<span class="keyword">function</span>(data) {
+        resolve(data);
       }, <span class="keyword">function</span>(jqXHR) {
-        jqXHR.then = <span class="predefined-constant">null</span>; <span class="comment">// tame jQuery's ill mannered promises</span>
-        Ember.run(<span class="predefined-constant">null</span>, reject, jqXHR);
+        reject(jqXHR);
       });
     });
   }
@@ -1086,7 +1129,7 @@ normalized by the serializer.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.7.0/addon/adapter.js#L230">addon/adapter.js:230</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.8.1/addon/adapter.js#L221">addon/adapter.js:221</a>
 
   </div>
 
@@ -1109,11 +1152,19 @@ the first parameter and the newly created record as the second parameter:</p>
 2
 3
 4
+5
+6
+7
+8
 </pre></td>
-  <td class="code"><pre><span class="function">generateIdForRecord</span>: <span class="keyword">function</span>(store, inputProperties) {
-  <span class="keyword">var</span> uuid = App.generateUUIDWithStatisticallyLowOddsOfCollision();
-  <span class="keyword">return</span> uuid;
-}
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+<span class="reserved">import</span> { v4 } from <span class="string"><span class="delimiter">'</span><span class="content">uuid</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.Adapter.extend({
+  <span class="function">generateIdForRecord</span>: <span class="keyword">function</span>(store, inputProperties) {
+    <span class="keyword">return</span> v4();
+  }
+});
 </pre></td>
 </tr></table>
 </div></div>
@@ -1173,7 +1224,7 @@ the first parameter and the newly created record as the second parameter:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.7.0/addon/adapter.js#L443">addon/adapter.js:443</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.8.1/addon/adapter.js#L459">addon/adapter.js:459</a>
 
   </div>
 
@@ -1238,7 +1289,7 @@ want to group records by their parent.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.7.0/addon/adapter.js#L158">addon/adapter.js:158</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.8.1/addon/adapter.js#L154">addon/adapter.js:154</a>
 
   </div>
 
@@ -1267,25 +1318,21 @@ want to group records by their parent.</p>
 11
 12
 13
-14
-15
 </pre></td>
   <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
 
 <span class="reserved">export</span> <span class="keyword">default</span> DS.Adapter.extend({
   <span class="function">query</span>: <span class="keyword">function</span>(store, type, query) {
-    <span class="keyword">var</span> url = type;
     <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
-      Ember.<span class="predefined">$</span>.getJSON(url, query).then(<span class="keyword">function</span>(data) {
-        Ember.run(<span class="predefined-constant">null</span>, resolve, data);
-      }, <span class="keyword">function</span>(jqXHR) {
-        jqXHR.then = <span class="predefined-constant">null</span>; <span class="comment">// tame jQuery's ill mannered promises</span>
-        Ember.run(<span class="predefined-constant">null</span>, reject, jqXHR);
+      Ember.<span class="predefined">$</span>.getJSON(<span class="error">`</span><span class="regexp"><span class="delimiter">/</span><span class="content">${type.modelName}`, query).then(function(data) {
+        resolve(data);
+      }, function(jqXHR) {
+        reject(jqXHR);
       });
     });
   }
 });
-</pre></td>
+</span></span></pre></td>
 </tr></table>
 </div></div>
     </div>
@@ -1348,7 +1395,7 @@ want to group records by their parent.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.7.0/addon/adapter.js#L190">addon/adapter.js:190</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.8.1/addon/adapter.js#L184">addon/adapter.js:184</a>
 
   </div>
 
@@ -1385,28 +1432,22 @@ to push the record into the store.</p>
 12
 13
 14
-15
-16
-17
 </pre></td>
   <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
 <span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
 
 <span class="reserved">export</span> <span class="keyword">default</span> DS.Adapter.extend(DS.BuildURLMixin, {
   <span class="function">queryRecord</span>: <span class="keyword">function</span>(store, type, query) {
-    <span class="keyword">var</span> urlForQueryRecord = <span class="local-variable">this</span>.buildURL(type.modelName, <span class="predefined-constant">null</span>, <span class="predefined-constant">null</span>, <span class="string"><span class="delimiter">'</span><span class="content">queryRecord</span><span class="delimiter">'</span></span>, query);
-
     <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
-      Ember.<span class="predefined">$</span>.getJSON(urlForQueryRecord, query).then(<span class="keyword">function</span>(data) {
-        Ember.run(<span class="predefined-constant">null</span>, resolve, data);
-      }, <span class="keyword">function</span>(jqXHR) {
-        jqXHR.then = <span class="predefined-constant">null</span>; <span class="comment">// tame jQuery's ill mannered promises</span>
-        Ember.run(<span class="predefined-constant">null</span>, reject, jqXHR);
+      Ember.<span class="predefined">$</span>.getJSON(<span class="error">`</span><span class="regexp"><span class="delimiter">/</span><span class="content">${type.modelName}`, query).then(function(data) {
+        resolve(data);
+      }, function(jqXHR) {
+        reject(jqXHR);
       });
     });
   }
 });
-</pre></td>
+</span></span></pre></td>
 </tr></table>
 </div></div>
     </div>
@@ -1464,7 +1505,7 @@ to push the record into the store.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.7.0/addon/adapter.js#L260">addon/adapter.js:260</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.8.1/addon/adapter.js#L255">addon/adapter.js:255</a>
 
   </div>
 
@@ -1496,9 +1537,9 @@ to push the record into the store.</p>
 <span class="reserved">export</span> <span class="keyword">default</span> DS.Adapter.extend({
   <span class="function">createRecord</span>: <span class="keyword">function</span>(store, type, snapshot) {
     <span class="keyword">var</span> data = <span class="local-variable">this</span>.serialize(snapshot, { <span class="key">includeId</span>: <span class="predefined-constant">true</span> });
-    <span class="keyword">var</span> url = type;
+    <span class="keyword">var</span> url = <span class="error">`</span><span class="regexp"><span class="delimiter">/</span><span class="content">${type.modelName}`;
 
-    <span class="comment">// ...</span>
+    </span><span class="delimiter">/</span></span>/ ...
   }
 });
 </pre></td>
@@ -1554,7 +1595,7 @@ to push the record into the store.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.7.0/addon/adapter.js#L593">addon/adapter.js:593</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.8.1/addon/adapter.js#L609">addon/adapter.js:609</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -1648,7 +1689,7 @@ should always be triggered.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.7.0/addon/adapter.js#L554">addon/adapter.js:554</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.8.1/addon/adapter.js#L570">addon/adapter.js:570</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -1742,7 +1783,7 @@ in the background.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.7.0/addon/adapter.js#L506">addon/adapter.js:506</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.8.1/addon/adapter.js#L522">addon/adapter.js:522</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -1849,7 +1890,7 @@ otherwise it returns <code>false</code>.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.7.0/addon/adapter.js#L463">addon/adapter.js:463</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.8.1/addon/adapter.js#L479">addon/adapter.js:479</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -1947,7 +1988,7 @@ interactions while waiting on data update.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.7.0/addon/adapter.js#L328">addon/adapter.js:328</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.8.1/addon/adapter.js#L322">addon/adapter.js:322</a>
 
   </div>
 
@@ -1996,7 +2037,6 @@ applied on the backend.</p>
 <strong>20</strong>
 21
 22
-23
 </pre></td>
   <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
 
@@ -2004,12 +2044,11 @@ applied on the backend.</p>
   <span class="function">updateRecord</span>: <span class="keyword">function</span>(store, type, snapshot) {
     <span class="keyword">var</span> data = <span class="local-variable">this</span>.serialize(snapshot, { <span class="key">includeId</span>: <span class="predefined-constant">true</span> });
     <span class="keyword">var</span> id = snapshot.id;
-    <span class="keyword">var</span> url = [type, id].join(<span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>);
 
     <span class="keyword">return</span> <span class="keyword">new</span> Ember.RSVP.Promise(<span class="keyword">function</span>(resolve, reject) {
       Ember.<span class="predefined">$</span>.ajax({
         <span class="key">type</span>: <span class="string"><span class="delimiter">'</span><span class="content">PUT</span><span class="delimiter">'</span></span>,
-        <span class="key">url</span>: url,
+        <span class="key">url</span>: <span class="error">`</span><span class="regexp"><span class="delimiter">/</span><span class="content">${type.modelName}</span><span class="delimiter">/</span></span><span class="predefined">$</span>{id}<span class="error">`</span>,
         <span class="key">dataType</span>: <span class="string"><span class="delimiter">'</span><span class="content">json</span><span class="delimiter">'</span></span>,
         <span class="key">data</span>: data
       }).then(<span class="keyword">function</span>(data) {
@@ -2098,7 +2137,7 @@ applied on the backend.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.7.0/addon/adapter.js#L420">addon/adapter.js:420</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.8.1/addon/adapter.js#L412">addon/adapter.js:412</a>
 
   </div>
 
@@ -2133,7 +2172,7 @@ coalesceFindRequests to false.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.7.0/addon/adapter.js#L66">addon/adapter.js:66</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.8.1/addon/adapter.js#L66">addon/adapter.js:66</a>
 
   </div>
 

@@ -65,7 +65,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v2.7.0" target="_blank"> Tag: v2.7.0</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v2.8.2" target="_blank"> Tag: v2.8.2</a></li>
 
 
           <li class="level-1 ">
@@ -90,6 +90,11 @@
         
           <li class="level-3 ">
                         <a href="/api/modules/ember-extension-support.html">ember-extension-support</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/api/modules/ember-glimmer.html">ember-glimmer</a>
 
           </li>
         
@@ -195,6 +200,11 @@
           
           <li class="level-3 ">
                         <a href="/api/classes/Backburner.html">Backburner</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/api/classes/Container.html">Container</a>
 
           </li>
         
@@ -324,6 +334,16 @@
           </li>
         
           <li class="level-3 ">
+                        <a href="/api/classes/Ember.Engine.html">Ember.Engine</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/api/classes/Ember.EngineInstance.html">Ember.EngineInstance</a>
+
+          </li>
+        
+          <li class="level-3 ">
                         <a href="/api/classes/Ember.Enumerable.html">Ember.Enumerable</a>
 
           </li>
@@ -375,11 +395,6 @@
         
           <li class="level-3 ">
                         <a href="/api/classes/Ember.InstrumentationSupport.html">Ember.InstrumentationSupport</a>
-
-          </li>
-        
-          <li class="level-3 ">
-                        <a href="/api/classes/Ember.LegacyViewSupport.html">Ember.LegacyViewSupport</a>
 
           </li>
         
@@ -494,11 +509,6 @@
           </li>
         
           <li class="level-3 ">
-                        <a href="/api/classes/Ember.Test.Ember.Test.html">Ember.Test.Ember.Test</a>
-
-          </li>
-        
-          <li class="level-3 ">
                         <a href="/api/classes/Ember.Test.QUnitAdapter.html">Ember.Test.QUnitAdapter</a>
 
           </li>
@@ -579,6 +589,11 @@
           </li>
         
           <li class="level-3 ">
+                        <a href="/api/classes/Registry.html">Registry</a>
+
+          </li>
+        
+          <li class="level-3 ">
                         <a href="/api/classes/RegistryProxyMixin.html">RegistryProxyMixin</a>
 
           </li>
@@ -608,7 +623,7 @@
         
   <h1 class="api-header">
   Ember.PromiseProxyMixin Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/ember.js/tree/v2.7.0/packages/ember-runtime/lib/mixins/promise_proxy.js#L34">packages/ember-runtime/lib/mixins/promise_proxy.js:34</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/promise_proxy.js#L34">packages/ember-runtime/lib/mixins/promise_proxy.js:34</a>
 </h1>
 
 <hr>
@@ -620,7 +635,7 @@
 <div class="class-info">
 
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.7.0/packages/ember-runtime/lib/mixins/promise_proxy.js#L34">packages/ember-runtime/lib/mixins/promise_proxy.js:34</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/promise_proxy.js#L34">packages/ember-runtime/lib/mixins/promise_proxy.js:34</a></p>
 
     <p>Module: <a href="/api/modules/ember-runtime.html">ember-runtime</a></p>
 </div>
@@ -640,10 +655,10 @@
 <strong>10</strong>
 11
 </pre></td>
-  <td class="code"><pre><span class="keyword">var</span> ObjectPromiseProxy = Ember.ObjectProxy.extend(Ember.PromiseProxyMixin);
+  <td class="code"><pre>let ObjectPromiseProxy = Ember.ObjectProxy.extend(Ember.PromiseProxyMixin);
 
-<span class="keyword">var</span> proxy = ObjectPromiseProxy.create({
-  <span class="key">promise</span>: <span class="predefined">$</span>.getJSON(<span class="string"><span class="delimiter">'</span><span class="content">/some/remote/data.json</span><span class="delimiter">'</span></span>)
+let proxy = ObjectPromiseProxy.create({
+  <span class="key">promise</span>: Ember.RSVP.cast(<span class="predefined">$</span>.getJSON(<span class="string"><span class="delimiter">'</span><span class="content">/some/remote/data.json</span><span class="delimiter">'</span></span>))
 });
 
 proxy.then(<span class="keyword">function</span>(json){
@@ -670,7 +685,10 @@ proxy.get(<span class="string"><span class="delimiter">'</span><span class="cont
 </tr></table>
 </div></div>
 <p>When the $.getJSON completes, and the promise is fulfilled
-with json, the life cycle attributes will update accordingly.</p>
+with json, the life cycle attributes will update accordingly.
+Note that $.getJSON doesn&#39;t return an ECMA specified promise,
+it is useful to wrap this with an <code>RSVP.cast</code> so that it behaves
+as a spec compliant promise.</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
@@ -813,7 +831,7 @@ proxy.get(<span class="string"><span class="delimiter">'</span><span class="cont
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.7.0/packages/ember-runtime/lib/mixins/promise_proxy.js#L174">packages/ember-runtime/lib/mixins/promise_proxy.js:174</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/promise_proxy.js#L177">packages/ember-runtime/lib/mixins/promise_proxy.js:177</a>
 
       <br/>Available since 1.3.0
   </div>
@@ -870,7 +888,7 @@ proxy.get(<span class="string"><span class="delimiter">'</span><span class="cont
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.7.0/packages/ember-runtime/lib/mixins/promise_proxy.js#L187">packages/ember-runtime/lib/mixins/promise_proxy.js:187</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/promise_proxy.js#L190">packages/ember-runtime/lib/mixins/promise_proxy.js:190</a>
 
       <br/>Available since 1.3.0
   </div>
@@ -927,7 +945,7 @@ proxy.get(<span class="string"><span class="delimiter">'</span><span class="cont
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.7.0/packages/ember-runtime/lib/mixins/promise_proxy.js#L162">packages/ember-runtime/lib/mixins/promise_proxy.js:162</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/promise_proxy.js#L165">packages/ember-runtime/lib/mixins/promise_proxy.js:165</a>
 
   </div>
 
@@ -1001,7 +1019,7 @@ proxy.get(<span class="string"><span class="delimiter">'</span><span class="cont
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.7.0/packages/ember-runtime/lib/mixins/promise_proxy.js#L127">packages/ember-runtime/lib/mixins/promise_proxy.js:127</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/promise_proxy.js#L130">packages/ember-runtime/lib/mixins/promise_proxy.js:130</a>
 
   </div>
 
@@ -1034,7 +1052,7 @@ proxy.get(<span class="string"><span class="delimiter">'</span><span class="cont
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.7.0/packages/ember-runtime/lib/mixins/promise_proxy.js#L100">packages/ember-runtime/lib/mixins/promise_proxy.js:100</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/promise_proxy.js#L103">packages/ember-runtime/lib/mixins/promise_proxy.js:103</a>
 
   </div>
 
@@ -1067,7 +1085,7 @@ proxy.get(<span class="string"><span class="delimiter">'</span><span class="cont
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.7.0/packages/ember-runtime/lib/mixins/promise_proxy.js#L118">packages/ember-runtime/lib/mixins/promise_proxy.js:118</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/promise_proxy.js#L121">packages/ember-runtime/lib/mixins/promise_proxy.js:121</a>
 
   </div>
 
@@ -1100,7 +1118,7 @@ proxy.get(<span class="string"><span class="delimiter">'</span><span class="cont
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.7.0/packages/ember-runtime/lib/mixins/promise_proxy.js#L109">packages/ember-runtime/lib/mixins/promise_proxy.js:109</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/promise_proxy.js#L112">packages/ember-runtime/lib/mixins/promise_proxy.js:112</a>
 
   </div>
 
@@ -1133,7 +1151,7 @@ proxy.get(<span class="string"><span class="delimiter">'</span><span class="cont
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.7.0/packages/ember-runtime/lib/mixins/promise_proxy.js#L136">packages/ember-runtime/lib/mixins/promise_proxy.js:136</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/promise_proxy.js#L139">packages/ember-runtime/lib/mixins/promise_proxy.js:139</a>
 
   </div>
 
@@ -1180,7 +1198,7 @@ changed once created.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.7.0/packages/ember-runtime/lib/mixins/promise_proxy.js#L90">packages/ember-runtime/lib/mixins/promise_proxy.js:90</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/promise_proxy.js#L93">packages/ember-runtime/lib/mixins/promise_proxy.js:93</a>
 
   </div>
 

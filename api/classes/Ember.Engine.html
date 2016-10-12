@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Ember.js - Ember.View</title>
-		<meta property="st:title" content="Ember.js: Ember.View" />
-		<meta property="og:title" content="Ember.js: Ember.View" />
+    <title>Ember.js - Ember.Engine</title>
+		<meta property="st:title" content="Ember.js: Ember.Engine" />
+		<meta property="og:title" content="Ember.js: Ember.Engine" />
 		<meta property="og:description" content="Ember.js helps developers be more productive out of the box. Designed with developer ergonomics in mind, its friendly APIs help you get your job done—fast." />
 		<meta property="og:image" content="http://emberjs.com/images/tomster-sm.png" />
 		<meta name="twitter:card" content="summary" />
 		<meta name="twitter:site" content="@emberjs" />
-		<meta name="twitter:title" content="Ember.View"/>
+		<meta name="twitter:title" content="Ember.Engine"/>
 		<meta name="twitter:image" content="http://emberjs.com/images/tomster-twitter-card.png" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" /><![endif]-->
@@ -333,7 +333,7 @@
 
           </li>
         
-          <li class="level-3 ">
+          <li class="level-3 sub-selected">
                         <a href="/api/classes/Ember.Engine.html">Ember.Engine</a>
 
           </li>
@@ -528,7 +528,7 @@
 
           </li>
         
-          <li class="level-3 sub-selected">
+          <li class="level-3 ">
                         <a href="/api/classes/Ember.View.html">Ember.View</a>
 
           </li>
@@ -622,686 +622,36 @@
       <div id="content" class="has-sidebar">
         
   <h1 class="api-header">
-  Ember.View Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-views/lib/views/view.js#L17">packages/ember-views/lib/views/view.js:17</a>
+  Ember.Engine Class
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-application/lib/system/engine.js#L37">packages/ember-application/lib/system/engine.js:37</a>
 </h1>
 
 <hr>
 
-<p>DEPRECATED</p>
+
 
 <p>PUBLIC</p>
 
 <div class="class-info">
-    <p>Extends: <a href="/api/classes/Ember.CoreView.html">Ember.CoreView</a></p>
+    <p>Extends: <a href="/api/classes/Ember.Namespace.html">Ember.Namespace</a></p>
 
-      <p>Uses: Ember.ViewSupport</p>
-      <p>Uses: Ember.ViewChildViewsSupport</p>
-      <p>Uses: <a href="/api/classes/Ember.ClassNamesSupport.html">Ember.ClassNamesSupport</a></p>
-      <p>Uses: Ember.AttributeBindingsSupport</p>
-      <p>Uses: <a href="/api/classes/Ember.InstrumentationSupport.html">Ember.InstrumentationSupport</a></p>
-      <p>Uses: <a href="/api/classes/Ember.VisibilitySupport.html">Ember.VisibilitySupport</a></p>
-      <p>Uses: <a href="/api/classes/Ember.AriaRoleSupport.html">Ember.AriaRoleSupport</a></p>
+      <p>Uses: RegistryProxy</p>
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-views/lib/views/view.js#L17">packages/ember-views/lib/views/view.js:17</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-application/lib/system/engine.js#L37">packages/ember-application/lib/system/engine.js:37</a></p>
 
-    <p>Module: <a href="/api/modules/ember-views.html">ember-views</a></p>
+    <p>Module: <a href="/api/modules/ember-application.html">ember-application</a></p>
 </div>
 
   <div class="description">
-    <p><code>Ember.View</code> is the class in Ember responsible for encapsulating templates of
-HTML content, combining templates with data to render as sections of a page&#39;s
-DOM, and registering and responding to user-initiated events.</p>
-<h2 class='anchorable-toc' id='toc_html-tag'>HTML Tag</h2>
-<p>The default HTML tag name used for a view&#39;s DOM representation is <code>div</code>. This
-can be customized by setting the <code>tagName</code> property. The following view
-class:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre>ParagraphView = Ember.View.extend({
-  <span class="key">tagName</span>: <span class="string"><span class="delimiter">'</span><span class="content">em</span><span class="delimiter">'</span></span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Would result in instances with the following HTML:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;em</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/em&gt;</span>
-</pre></td>
-</tr></table>
-</div></div><h2 class='anchorable-toc' id='toc_html-code-class-code-attribute'>HTML <code>class</code> Attribute</h2>
-<p>The HTML <code>class</code> attribute of a view&#39;s tag can be set by providing a
-<code>classNames</code> property that is set to an array of strings:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre>MyView = Ember.View.extend({
-  <span class="key">classNames</span>: [<span class="string"><span class="delimiter">'</span><span class="content">my-class</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">my-other-class</span><span class="delimiter">'</span></span>]
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Will result in view instances with an HTML representation of:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view my-class my-other-class</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/div&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p><code>class</code> attribute values can also be set by providing a <code>classNameBindings</code>
-property set to an array of properties names for the view. The return value
-of these properties will be added as part of the value for the view&#39;s <code>class</code>
-attribute. These properties can be computed properties:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-</pre></td>
-  <td class="code"><pre>MyView = Ember.View.extend({
-  <span class="key">classNameBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">propertyA</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">propertyB</span><span class="delimiter">'</span></span>],
-  <span class="key">propertyA</span>: <span class="string"><span class="delimiter">'</span><span class="content">from-a</span><span class="delimiter">'</span></span>,
-  <span class="key">propertyB</span>: Ember.computed(<span class="keyword">function</span>() {
-    <span class="keyword">if</span> (someLogic) { <span class="keyword">return</span> <span class="string"><span class="delimiter">'</span><span class="content">from-b</span><span class="delimiter">'</span></span>; }
-  })
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Will result in view instances with an HTML representation of:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view from-a from-b</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/div&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>If the value of a class name binding returns a boolean the property name
-itself will be used as the class name if the property is true. The class name
-will not be added if the value is <code>false</code> or <code>undefined</code>.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-</pre></td>
-  <td class="code"><pre>MyView = Ember.View.extend({
-  <span class="key">classNameBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">hovered</span><span class="delimiter">'</span></span>],
-  <span class="key">hovered</span>: <span class="predefined-constant">true</span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Will result in view instances with an HTML representation of:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view hovered</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/div&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>When using boolean class name bindings you can supply a string value other
-than the property name for use as the <code>class</code> HTML attribute by appending the
-preferred value after a &quot;:&quot; character when defining the binding:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-</pre></td>
-  <td class="code"><pre>MyView = Ember.View.extend({
-  <span class="key">classNameBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">awesome:so-very-cool</span><span class="delimiter">'</span></span>],
-  <span class="key">awesome</span>: <span class="predefined-constant">true</span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Will result in view instances with an HTML representation of:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view so-very-cool</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/div&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>Boolean value class name bindings whose property names are in a
-camelCase-style format will be converted to a dasherized format:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-</pre></td>
-  <td class="code"><pre>MyView = Ember.View.extend({
-  <span class="key">classNameBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">isUrgent</span><span class="delimiter">'</span></span>],
-  <span class="key">isUrgent</span>: <span class="predefined-constant">true</span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Will result in view instances with an HTML representation of:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view is-urgent</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/div&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>Class name bindings can also refer to object values that are found by
-traversing a path relative to the view itself:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-</pre></td>
-  <td class="code"><pre>MyView = Ember.View.extend({
-  <span class="key">classNameBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">messages.empty</span><span class="delimiter">'</span></span>]
-  messages: Ember.Object.create({
-    <span class="key">empty</span>: <span class="predefined-constant">true</span>
-  })
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Will result in view instances with an HTML representation of:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view empty</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/div&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>If you want to add a class name for a property which evaluates to true and
-and a different class name if it evaluates to false, you can pass a binding
-like this:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre><span class="comment">// Applies 'enabled' class when isEnabled is true and 'disabled' when isEnabled is false</span>
-Ember.View.extend({
-  <span class="key">classNameBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">isEnabled:enabled:disabled</span><span class="delimiter">'</span></span>]
-  isEnabled: <span class="predefined-constant">true</span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Will result in view instances with an HTML representation of:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view enabled</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/div&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>When isEnabled is <code>false</code>, the resulting HTML representation looks like
-this:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view disabled</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/div&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>This syntax offers the convenience to add a class if a property is <code>false</code>:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre><span class="comment">// Applies no class when isEnabled is true and class 'disabled' when isEnabled is false</span>
-Ember.View.extend({
-  <span class="key">classNameBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">isEnabled::disabled</span><span class="delimiter">'</span></span>]
-  isEnabled: <span class="predefined-constant">true</span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Will result in view instances with an HTML representation of:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/div&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>When the <code>isEnabled</code> property on the view is set to <code>false</code>, it will result
-in view instances with an HTML representation of:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view disabled</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/div&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>Updates to the value of a class name binding will result in automatic
-update of the  HTML <code>class</code> attribute in the view&#39;s rendered HTML
-representation. If the value becomes <code>false</code> or <code>undefined</code> the class name
-will be removed.</p>
+    <p>The <code>Engine</code> class contains core functionality for both applications and
+engines.</p>
 
-<p>Both <code>classNames</code> and <code>classNameBindings</code> are concatenated properties. See
-<a href="/api/classes/Ember.Object.html">Ember.Object</a> documentation for more
-information about concatenated properties.</p>
-<h2 class='anchorable-toc' id='toc_html-attributes'>HTML Attributes</h2>
-<p>The HTML attribute section of a view&#39;s tag can be set by providing an
-<code>attributeBindings</code> property set to an array of property names on the view.
-The return value of these properties will be used as the value of the view&#39;s
-HTML associated attribute:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre>AnchorView = Ember.View.extend({
-  <span class="key">tagName</span>: <span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>,
-  <span class="key">attributeBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">href</span><span class="delimiter">'</span></span>],
-  <span class="key">href</span>: <span class="string"><span class="delimiter">'</span><span class="content">http://google.com</span><span class="delimiter">'</span></span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Will result in view instances with an HTML representation of:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;a</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://google.com</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/a&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>One property can be mapped on to another by placing a &quot;:&quot; between
-the source property and the destination property:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre>AnchorView = Ember.View.extend({
-  <span class="key">tagName</span>: <span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span>,
-  <span class="key">attributeBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">url:href</span><span class="delimiter">'</span></span>],
-  <span class="key">url</span>: <span class="string"><span class="delimiter">'</span><span class="content">http://google.com</span><span class="delimiter">'</span></span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Will result in view instances with an HTML representation of:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;a</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://google.com</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/a&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>Namespaced attributes (e.g. <code>xlink:href</code>) are supported, but have to be
-mapped, since <code>:</code> is not a valid character for properties in Javascript:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre>UseView = Ember.View.extend({
-  <span class="key">tagName</span>: <span class="string"><span class="delimiter">'</span><span class="content">use</span><span class="delimiter">'</span></span>,
-  <span class="key">attributeBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">xlinkHref:xlink:href</span><span class="delimiter">'</span></span>],
-  <span class="key">xlinkHref</span>: <span class="string"><span class="delimiter">'</span><span class="content">#triangle</span><span class="delimiter">'</span></span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Will result in view instances with an HTML representation of:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;use</span> <span class="attribute-name">xlink:href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">#triangle</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/use&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>If the return value of an <code>attributeBindings</code> monitored property is a boolean
-the attribute will be present or absent depending on the value:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre>MyTextInput = Ember.View.extend({
-  <span class="key">tagName</span>: <span class="string"><span class="delimiter">'</span><span class="content">input</span><span class="delimiter">'</span></span>,
-  <span class="key">attributeBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">disabled</span><span class="delimiter">'</span></span>],
-  <span class="key">disabled</span>: <span class="predefined-constant">false</span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Will result in a view instance with an HTML representation of:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;input</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p><code>attributeBindings</code> can refer to computed properties:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-</pre></td>
-  <td class="code"><pre>MyTextInput = Ember.View.extend({
-  <span class="key">tagName</span>: <span class="string"><span class="delimiter">'</span><span class="content">input</span><span class="delimiter">'</span></span>,
-  <span class="key">attributeBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">disabled</span><span class="delimiter">'</span></span>],
-  <span class="key">disabled</span>: Ember.computed(<span class="keyword">function</span>() {
-    <span class="keyword">if</span> (someLogic) {
-      <span class="keyword">return</span> <span class="predefined-constant">true</span>;
-    } <span class="keyword">else</span> {
-      <span class="keyword">return</span> <span class="predefined-constant">false</span>;
-    }
-  })
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>To prevent setting an attribute altogether, use <code>null</code> or <code>undefined</code> as the
-return value of the <code>attributeBindings</code> monitored property:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre>MyTextInput = Ember.View.extend({
-  <span class="key">tagName</span>: <span class="string"><span class="delimiter">'</span><span class="content">form</span><span class="delimiter">'</span></span>,
-  <span class="key">attributeBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">novalidate</span><span class="delimiter">'</span></span>],
-  <span class="key">novalidate</span>: <span class="predefined-constant">null</span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Updates to the property of an attribute binding will result in automatic
-update of the  HTML attribute in the view&#39;s rendered HTML representation.</p>
+<p>Each engine manages a registry that&#39;s used for dependency injection and
+exposed through <code>RegistryProxy</code>.</p>
 
-<p><code>attributeBindings</code> is a concatenated property. See <a href="/api/classes/Ember.Object.html">Ember.Object</a>
-documentation for more information about concatenated properties.</p>
-<h2 class='anchorable-toc' id='toc_layouts'>Layouts</h2>
-<p>Views can have a secondary template that wraps their main template. Like
-primary templates, layouts can be any function that  accepts an optional
-context parameter and returns a string of HTML that will be inserted inside
-view&#39;s tag. Views whose HTML element is self closing (e.g. <code>&lt;input /&gt;</code>)
-cannot have a layout and this property will be ignored.</p>
+<p>Engines also manage initializers and instance initializers.</p>
 
-<p>Most typically in Ember a layout will be a compiled template.</p>
-
-<p>A view&#39;s layout can be set directly with the <code>layout</code> property or reference
-an existing template by name with the <code>layoutName</code> property.</p>
-
-<p>A template used as a layout must contain a single use of the
-<code>{{yield}}</code> helper. The HTML contents of a view&#39;s rendered <code>template</code> will be
-inserted at this location:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-</pre></td>
-  <td class="code"><pre>AViewWithLayout = Ember.View.extend({
-  <span class="key">layout</span>: Ember.HTMLBars.compile(<span class="string"><span class="delimiter">&quot;</span><span class="content">&lt;div class='my-decorative-class'&gt;{{yield}}&lt;/div&gt;</span><span class="delimiter">&quot;</span></span>),
-  <span class="key">template</span>: Ember.HTMLBars.compile(<span class="string"><span class="delimiter">&quot;</span><span class="content">I got wrapped</span><span class="delimiter">&quot;</span></span>)
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Will result in view instances with an HTML representation of:</p>
-<div class="highlight html "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ember-view</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-  <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">my-decorative-class</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    I got wrapped
-  <span class="tag">&lt;/div&gt;</span>
-<span class="tag">&lt;/div&gt;</span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>See <a href="/api/classes/Ember.Templates.helpers.html#method_yield">Ember.Templates.helpers.yield</a>
-for more information.</p>
-<h2 class='anchorable-toc' id='toc_responding-to-browser-events'>Responding to Browser Events</h2>
-<p>Views can respond to user-initiated events in one of three ways: method
-implementation, through an event manager, and through <code>{{action}}</code> helper use
-in their template or layout.</p>
-<h3 class='anchorable-toc' id='toc_method-implementation'>Method Implementation</h3>
-<p>Views can respond to user-initiated events by implementing a method that
-matches the event name. A <code>jQuery.Event</code> object will be passed as the
-argument to this method.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-</pre></td>
-  <td class="code"><pre>AView = Ember.View.extend({
-  <span class="function">click</span>: <span class="keyword">function</span>(event) {
-    <span class="comment">// will be called when an instance's</span>
-    <span class="comment">// rendered element is clicked</span>
-  }
-});
-</pre></td>
-</tr></table>
-</div></div><h3 class='anchorable-toc' id='toc_event-managers'>Event Managers</h3>
-<p>Views can define an object as their <code>eventManager</code> property. This object can
-then implement methods that match the desired event names. Matching events
-that occur on the view&#39;s rendered HTML or the rendered HTML of any of its DOM
-descendants will trigger this method. A <code>jQuery.Event</code> object will be passed
-as the first argument to the method and an  <code>Ember.View</code> object as the
-second. The <code>Ember.View</code> will be the view whose rendered HTML was interacted
-with. This may be the view with the <code>eventManager</code> property or one of its
-descendant views.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-</pre></td>
-  <td class="code"><pre>AView = Ember.View.extend({
-  <span class="key">eventManager</span>: Ember.Object.create({
-    <span class="function">doubleClick</span>: <span class="keyword">function</span>(event, view) {
-      <span class="comment">// will be called when an instance's</span>
-      <span class="comment">// rendered element or any rendering</span>
-      <span class="comment">// of this view's descendant</span>
-      <span class="comment">// elements is clicked</span>
-    }
-  })
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>An event defined for an event manager takes precedence over events of the
-same name handled through methods on the view.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-</pre></td>
-  <td class="code"><pre>AView = Ember.View.extend({
-  <span class="function">mouseEnter</span>: <span class="keyword">function</span>(event) {
-    <span class="comment">// will never trigger.</span>
-  },
-  <span class="key">eventManager</span>: Ember.Object.create({
-    <span class="function">mouseEnter</span>: <span class="keyword">function</span>(event, view) {
-      <span class="comment">// takes precedence over AView#mouseEnter</span>
-    }
-  })
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>Similarly a view&#39;s event manager will take precedence for events of any views
-rendered as a descendant. A method name that matches an event name will not
-be called if the view instance was rendered inside the HTML representation of
-a view that has an <code>eventManager</code> property defined that handles events of the
-name. Events not handled by the event manager will still trigger method calls
-on the descendant.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
-14
-15
-16
-17
-18
-19
-<strong>20</strong>
-21
-22
-23
-</pre></td>
-  <td class="code"><pre><span class="keyword">var</span> App = Ember.Application.create();
-App.OuterView = Ember.View.extend({
-  <span class="key">template</span>: Ember.HTMLBars.compile(<span class="string"><span class="delimiter">&quot;</span><span class="content">outer {{#view 'inner'}}inner{{/view}} outer</span><span class="delimiter">&quot;</span></span>),
-  <span class="key">eventManager</span>: Ember.Object.create({
-    <span class="function">mouseEnter</span>: <span class="keyword">function</span>(event, view) {
-      <span class="comment">// view might be instance of either</span>
-      <span class="comment">// OuterView or InnerView depending on</span>
-      <span class="comment">// where on the page the user interaction occurred</span>
-    }
-  })
-});
-
-App.InnerView = Ember.View.extend({
-  <span class="function">click</span>: <span class="keyword">function</span>(event) {
-    <span class="comment">// will be called if rendered inside</span>
-    <span class="comment">// an OuterView because OuterView's</span>
-    <span class="comment">// eventManager doesn't handle click events</span>
-  },
-  <span class="function">mouseEnter</span>: <span class="keyword">function</span>(event) {
-    <span class="comment">// will never be called if rendered inside</span>
-    <span class="comment">// an OuterView.</span>
-  }
-});
-</pre></td>
-</tr></table>
-</div></div><h3 class='anchorable-toc' id='toc_code-action-code-helper'><code>{{action}}</code> Helper</h3>
-<p>See <a href="/api/classes/Ember.Templates.helpers.html#method_action">Ember.Templates.helpers.action</a>.</p>
-<h3 class='anchorable-toc' id='toc_event-names'>Event Names</h3>
-<p>All of the event handling approaches described above respond to the same set
-of events. The names of the built-in events are listed below. (The hash of
-built-in events exists in <code>Ember.EventDispatcher</code>.) Additional, custom events
-can be registered by using <code>Ember.Application.customEvents</code>.</p>
-
-<p>Touch events:</p>
-
-<ul>
-<li><code>touchStart</code></li>
-<li><code>touchMove</code></li>
-<li><code>touchEnd</code></li>
-<li><code>touchCancel</code></li>
-</ul>
-
-<p>Keyboard events</p>
-
-<ul>
-<li><code>keyDown</code></li>
-<li><code>keyUp</code></li>
-<li><code>keyPress</code></li>
-</ul>
-
-<p>Mouse events</p>
-
-<ul>
-<li><code>mouseDown</code></li>
-<li><code>mouseUp</code></li>
-<li><code>contextMenu</code></li>
-<li><code>click</code></li>
-<li><code>doubleClick</code></li>
-<li><code>mouseMove</code></li>
-<li><code>focusIn</code></li>
-<li><code>focusOut</code></li>
-<li><code>mouseEnter</code></li>
-<li><code>mouseLeave</code></li>
-</ul>
-
-<p>Form events:</p>
-
-<ul>
-<li><code>submit</code></li>
-<li><code>change</code></li>
-<li><code>focusIn</code></li>
-<li><code>focusOut</code></li>
-<li><code>input</code></li>
-</ul>
-
-<p>HTML5 drag and drop events:</p>
-
-<ul>
-<li><code>dragStart</code></li>
-<li><code>drag</code></li>
-<li><code>dragEnter</code></li>
-<li><code>dragLeave</code></li>
-<li><code>dragOver</code></li>
-<li><code>dragEnd</code></li>
-<li><code>drop</code></li>
-</ul>
+<p>Engines can spawn <code>EngineInstance</code> instances via <code>buildInstance()</code>.</p>
 
   </div>
 
@@ -1336,9 +686,6 @@ can be registered by using <code>Ember.Application.customEvents</code>.</p>
         <p><h2>Methods</h2></p>
         <ul class="index-list">
             <li class="method private inherited">
-              <a href="#method__isVisibleDidChange">_isVisibleDidChange</a>
-            </li>
-            <li class="method private inherited">
               <a href="#method__lazyInjections">_lazyInjections</a>
             </li>
             <li class="method private inherited">
@@ -1352,6 +699,12 @@ can be registered by using <code>Ember.Application.customEvents</code>.</p>
             </li>
             <li class="method private inherited">
               <a href="#method_beginPropertyChanges">beginPropertyChanges</a>
+            </li>
+            <li class="method private">
+              <a href="#method_buildInstance">buildInstance</a>
+            </li>
+            <li class="method private">
+              <a href="#method_buildRegistry">buildRegistry</a>
             </li>
             <li class="method public inherited">
               <a href="#method_cacheFor">cacheFor</a>
@@ -1371,6 +724,9 @@ can be registered by using <code>Ember.Application.customEvents</code>.</p>
             <li class="method private inherited">
               <a href="#method_endPropertyChanges">endPropertyChanges</a>
             </li>
+            <li class="method private">
+              <a href="#method_ensureInitializers">ensureInitializers</a>
+            </li>
             <li class="method public inherited">
               <a href="#method_extend">extend</a>
             </li>
@@ -1380,20 +736,8 @@ can be registered by using <code>Ember.Application.customEvents</code>.</p>
             <li class="method public inherited">
               <a href="#method_getProperties">getProperties</a>
             </li>
-            <li class="method private inherited">
-              <a href="#method_getViewBoundingClientRect">getViewBoundingClientRect</a>
-            </li>
-            <li class="method private inherited">
-              <a href="#method_getViewClientRects">getViewClientRects</a>
-            </li>
-            <li class="method private inherited">
-              <a href="#method_getViewRange">getViewRange</a>
-            </li>
             <li class="method public inherited">
               <a href="#method_getWithDefault">getWithDefault</a>
-            </li>
-            <li class="method public inherited">
-              <a href="#method_has">has</a>
             </li>
             <li class="method private inherited">
               <a href="#method_hasObserverFor">hasObserverFor</a>
@@ -1404,29 +748,23 @@ can be registered by using <code>Ember.Application.customEvents</code>.</p>
             <li class="method public inherited">
               <a href="#method_init">init</a>
             </li>
+            <li class="method public">
+              <a href="#method_initializer">initializer</a>
+            </li>
+            <li class="method public">
+              <a href="#method_instanceInitializer">instanceInitializer</a>
+            </li>
             <li class="method private inherited">
               <a href="#method_metaForProperty">metaForProperty</a>
             </li>
             <li class="method public inherited">
               <a href="#method_notifyPropertyChange">notifyPropertyChange</a>
             </li>
-            <li class="method public inherited">
-              <a href="#method_off">off</a>
-            </li>
-            <li class="method public inherited">
-              <a href="#method_on">on</a>
-            </li>
-            <li class="method public inherited">
-              <a href="#method_one">one</a>
-            </li>
             <li class="method private inherited">
               <a href="#method_propertyDidChange">propertyDidChange</a>
             </li>
             <li class="method private inherited">
               <a href="#method_propertyWillChange">propertyWillChange</a>
-            </li>
-            <li class="method private inherited">
-              <a href="#method_removeChild">removeChild</a>
             </li>
             <li class="method public inherited">
               <a href="#method_removeObserver">removeObserver</a>
@@ -1437,11 +775,14 @@ can be registered by using <code>Ember.Application.customEvents</code>.</p>
             <li class="method public inherited">
               <a href="#method_reopenClass">reopenClass</a>
             </li>
-            <li class="method public inherited">
-              <a href="#method_send">send</a>
+            <li class="method private">
+              <a href="#method_resolverFor">resolverFor</a>
             </li>
-            <li class="method public inherited">
-              <a href="#method_sendAction">sendAction</a>
+            <li class="method private">
+              <a href="#method_runInitializers">runInitializers</a>
+            </li>
+            <li class="method private">
+              <a href="#method_runInstanceInitializers">runInstanceInitializers</a>
             </li>
             <li class="method public inherited">
               <a href="#method_set">set</a>
@@ -1455,35 +796,17 @@ can be registered by using <code>Ember.Application.customEvents</code>.</p>
             <li class="method public inherited">
               <a href="#method_toggleProperty">toggleProperty</a>
             </li>
-            <li class="method private inherited">
-              <a href="#method_trigger">trigger</a>
-            </li>
             <li class="method public inherited">
               <a href="#method_willDestroy">willDestroy</a>
             </li>
         </ul>
         <p><h2>Properties</h2></p>
         <ul class="index-list">
-            <li class="property public inherited">
-              <a href="#property_actions">actions</a>
-            </li>
-            <li class="property public inherited">
-              <a href="#property_ariaRole">ariaRole</a>
-            </li>
-            <li class="property private inherited">
-              <a href="#property_childViews">childViews</a>
-            </li>
-            <li class="property public inherited">
-              <a href="#property_classNameBindings">classNameBindings</a>
-            </li>
-            <li class="property public inherited">
-              <a href="#property_classNames">classNames</a>
+            <li class="property private">
+              <a href="#property__initializersRan">_initializersRan</a>
             </li>
             <li class="property public inherited">
               <a href="#property_concatenatedProperties">concatenatedProperties</a>
-            </li>
-            <li class="property public inherited">
-              <a href="#property_instrumentDisplay">instrumentDisplay</a>
             </li>
             <li class="property public inherited">
               <a href="#property_isDestroyed">isDestroyed</a>
@@ -1492,13 +815,10 @@ can be registered by using <code>Ember.Application.customEvents</code>.</p>
               <a href="#property_isDestroying">isDestroying</a>
             </li>
             <li class="property public inherited">
-              <a href="#property_isVisible">isVisible</a>
-            </li>
-            <li class="property public inherited">
               <a href="#property_mergedProperties">mergedProperties</a>
             </li>
-            <li class="property private inherited">
-              <a href="#property_parentView">parentView</a>
+            <li class="property public">
+              <a href="#property_resolver">resolver</a>
             </li>
         </ul>
     </div>
@@ -1524,40 +844,6 @@ can be registered by using <code>Ember.Application.customEvents</code>.</p>
 </div>
 
         
-<div id="method__isVisibleDidChange" class="method private inherited item-entry">
-  <h3 data-id="method__isVisibleDidChange" class="name anchorable-toc"><code>_isVisibleDidChange</code></h3>
-
-
-
-
-  <span class="flag private">private</span>
-
-
-
-
-
-  <div class="meta">
-          Inherited from
-          <a href="/api/classes/Ember.VisibilitySupport.html#method__isVisibleDidChange">Ember.VisibilitySupport</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-views/lib/mixins/visibility_support.js#L33">packages/ember-views/lib/mixins/visibility_support.js:33</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>When the view&#39;s <code>isVisible</code> property changes, toggle the visibility
-element of the actual DOM element.</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-
-</div>
-
-        
 <div id="method__lazyInjections" class="method private inherited item-entry">
   <h3 data-id="method__lazyInjections" class="name anchorable-toc"><code>_lazyInjections</code></h3>
 
@@ -1573,7 +859,7 @@ element of the actual DOM element.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method__lazyInjections">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method__lazyInjections">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/system/core_object.js#L890">packages/ember-runtime/lib/system/core_object.js:890</a>
 
   </div>
@@ -1614,7 +900,7 @@ properties will lookup on the container lazily.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method__onLookup">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method__onLookup">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/system/core_object.js#L881">packages/ember-runtime/lib/system/core_object.js:881</a>
 
   </div>
@@ -1647,7 +933,7 @@ properties will lookup on the container lazily.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method__scheduledDestroy">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method__scheduledDestroy">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/system/core_object.js#L448">packages/ember-runtime/lib/system/core_object.js:448</a>
 
   </div>
@@ -1684,7 +970,7 @@ scheduled for execution by the <code>destroy</code> method.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_addObserver">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_addObserver">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/observable.js#L333">packages/ember-runtime/lib/mixins/observable.js:333</a>
 
   </div>
@@ -1780,7 +1066,7 @@ any of these values, to write an observer that has no parameters at all.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_beginPropertyChanges">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_beginPropertyChanges">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/observable.js#L231">packages/ember-runtime/lib/mixins/observable.js:231</a>
 
   </div>
@@ -1814,6 +1100,121 @@ deferring.</p>
 </div>
 
         
+<div id="method_buildInstance" class="method private item-entry">
+  <h3 data-id="method_buildInstance" class="name anchorable-toc"><code>buildInstance</code></h3>
+
+  <span class="type"><a href="/api/classes/Ember.EngineInstance.html">Ember.EngineInstance</a></span>
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-application/lib/system/engine.js#L87">packages/ember-application/lib/system/engine.js:87</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Create an EngineInstance for this engine.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/Ember.EngineInstance.html">Ember.EngineInstance</a></span>
+        <dd> the engine instance</dd>
+      </dl>
+    </div>
+</div>
+
+        
+<div id="method_buildRegistry" class="method private item-entry">
+  <h3 data-id="method_buildRegistry" class="name anchorable-toc"><code>buildRegistry</code></h3>
+  <span class="args">
+    (namespace)
+  </span>
+
+  <span class="type">Ember.Registry</span>
+
+
+
+  <span class="flag private">private</span>
+
+
+  <span class="flag static">static</span>
+
+
+
+  <div class="meta">
+        Inherited from
+        <a href="/api/classes/Ember.Engine.html#method_buildRegistry">Ember.Engine</a>
+          but overwritten in
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-application/lib/system/engine.js#L370">packages/ember-application/lib/system/engine.js:370</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>This creates a registry with the default Ember naming conventions.</p>
+
+<p>It also configures the registry:</p>
+
+<ul>
+<li>registered views are created every time they are looked up (they are
+not singletons)</li>
+<li>registered templates are not factories; the registered value is
+returned directly.</li>
+<li>the router receives the application as its <code>namespace</code> property</li>
+<li>all controllers receive the router as their <code>target</code> and <code>controllers</code>
+properties</li>
+<li>all controllers receive the application as their <code>namespace</code> property</li>
+<li>the application view receives the application controller as its
+<code>controller</code> property</li>
+<li>the application view receives the application template as its
+<code>defaultTemplate</code> property</li>
+</ul>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>namespace</strong> <span class="type"><a href="/api/classes/Ember.Application.html">Ember.Application</a></span></dt>
+          <dd>
+            the application for which to
+  build the registry
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Ember.Registry</span>
+        <dd> the built registry</dd>
+      </dl>
+    </div>
+</div>
+
+        
 <div id="method_cacheFor" class="method public inherited item-entry">
   <h3 data-id="method_cacheFor" class="name anchorable-toc"><code>cacheFor</code></h3>
   <span class="args">
@@ -1832,7 +1233,7 @@ deferring.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_cacheFor">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_cacheFor">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/observable.js#L490">packages/ember-runtime/lib/mixins/observable.js:490</a>
 
   </div>
@@ -1890,7 +1291,7 @@ generated lazily.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_create">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_create">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/system/core_object.js#L635">packages/ember-runtime/lib/system/core_object.js:635</a>
 
   </div>
@@ -1983,7 +1384,7 @@ properties when using <code>extend</code>.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_decrementProperty">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_decrementProperty">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/observable.js#L453">packages/ember-runtime/lib/mixins/observable.js:453</a>
 
   </div>
@@ -2048,7 +1449,7 @@ orc.decrementProperty(<span class="string"><span class="delimiter">'</span><span
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_destroy">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_destroy">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/system/core_object.js#L417">packages/ember-runtime/lib/system/core_object.js:417</a>
 
   </div>
@@ -2099,7 +1500,7 @@ happen immediately.  It will set an isDestroying flag immediately.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_eachComputedProperty">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_eachComputedProperty">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/system/core_object.js#L853">packages/ember-runtime/lib/system/core_object.js:853</a>
 
   </div>
@@ -2150,7 +1551,7 @@ and any associated metadata (see <code>metaForProperty</code>) to the callback.<
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_endPropertyChanges">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_endPropertyChanges">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/observable.js#L251">packages/ember-runtime/lib/mixins/observable.js:251</a>
 
   </div>
@@ -2183,6 +1584,38 @@ deliver the deferred change notifications and end deferring.</p>
 </div>
 
         
+<div id="method_ensureInitializers" class="method private item-entry">
+  <h3 data-id="method_ensureInitializers" class="name anchorable-toc"><code>ensureInitializers</code></h3>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-application/lib/system/engine.js#L74">packages/ember-application/lib/system/engine.js:74</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Ensure that initializers are run once, and only once, per engine.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+
+</div>
+
+        
 <div id="method_extend" class="method public inherited item-entry">
   <h3 data-id="method_extend" class="name anchorable-toc"><code>extend</code></h3>
   <span class="args">
@@ -2201,7 +1634,7 @@ deliver the deferred change notifications and end deferring.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_extend">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_extend">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/system/core_object.js#L527">packages/ember-runtime/lib/system/core_object.js:527</a>
 
   </div>
@@ -2380,7 +1813,7 @@ App.BroadwayStar = App.Person.extend(App.SingingMixin, {
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_get">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_get">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/observable.js#L100">packages/ember-runtime/lib/mixins/observable.js:100</a>
 
   </div>
@@ -2466,7 +1899,7 @@ not defined upfront.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_getProperties">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_getProperties">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/observable.js#L143">packages/ember-runtime/lib/mixins/observable.js:143</a>
 
   </div>
@@ -2522,151 +1955,6 @@ with a list of strings or an array:</p>
 </div>
 
         
-<div id="method_getViewBoundingClientRect" class="method private inherited item-entry">
-  <h3 data-id="method_getViewBoundingClientRect" class="name anchorable-toc"><code>getViewBoundingClientRect</code></h3>
-  <span class="args">
-    (view)
-  </span>
-
-
-
-
-  <span class="flag private">private</span>
-
-
-
-
-
-  <div class="meta">
-          Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_getViewBoundingClientRect">Ember.CoreView</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-views/lib/system/utils.js#L47">packages/ember-views/lib/system/utils.js:47</a>
-
-  </div>
-
-
-    <div class="description">
-      <p><code>getViewBoundingClientRect</code> provides information about the position of the
-bounding border box edges of a view relative to the viewport.</p>
-
-<p>It is only intended to be used by development tools like the Ember Inpsector
-and may not work on older browsers.</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>view</strong> <span class="type"><a href="/api/classes/Ember.View.html">Ember.View</a></span></dt>
-          <dd>
-            
-
-          </dd>
-      </dl>
-    </div>
-
-</div>
-
-        
-<div id="method_getViewClientRects" class="method private inherited item-entry">
-  <h3 data-id="method_getViewClientRects" class="name anchorable-toc"><code>getViewClientRects</code></h3>
-  <span class="args">
-    (view)
-  </span>
-
-
-
-
-  <span class="flag private">private</span>
-
-
-
-
-
-  <div class="meta">
-          Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_getViewClientRects">Ember.CoreView</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-views/lib/system/utils.js#L31">packages/ember-views/lib/system/utils.js:31</a>
-
-  </div>
-
-
-    <div class="description">
-      <p><code>getViewClientRects</code> provides information about the position of the border
-box edges of a view relative to the viewport.</p>
-
-<p>It is only intended to be used by development tools like the Ember Inspector
-and may not work on older browsers.</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>view</strong> <span class="type"><a href="/api/classes/Ember.View.html">Ember.View</a></span></dt>
-          <dd>
-            
-
-          </dd>
-      </dl>
-    </div>
-
-</div>
-
-        
-<div id="method_getViewRange" class="method private inherited item-entry">
-  <h3 data-id="method_getViewRange" class="name anchorable-toc"><code>getViewRange</code></h3>
-  <span class="args">
-    (view)
-  </span>
-
-
-
-
-  <span class="flag private">private</span>
-
-
-
-
-
-  <div class="meta">
-          Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_getViewRange">Ember.CoreView</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-views/lib/system/utils.js#L19">packages/ember-views/lib/system/utils.js:19</a>
-
-  </div>
-
-
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>view</strong> <span class="type"><a href="/api/classes/Ember.View.html">Ember.View</a></span></dt>
-          <dd>
-            
-
-          </dd>
-      </dl>
-    </div>
-
-</div>
-
-        
 <div id="method_getWithDefault" class="method public inherited item-entry">
   <h3 data-id="method_getWithDefault" class="name anchorable-toc"><code>getWithDefault</code></h3>
   <span class="args">
@@ -2685,7 +1973,7 @@ and may not work on older browsers.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_getWithDefault">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_getWithDefault">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/observable.js#L415">packages/ember-runtime/lib/mixins/observable.js:415</a>
 
   </div>
@@ -2734,61 +2022,6 @@ property returns <code>undefined</code>.</p>
 </div>
 
         
-<div id="method_has" class="method public inherited item-entry">
-  <h3 data-id="method_has" class="name anchorable-toc"><code>has</code></h3>
-  <span class="args">
-    (name)
-  </span>
-
-  <span class="type">Boolean</span>
-
-
-
-  <span class="flag public">public</span>
-
-
-
-
-
-  <div class="meta">
-          Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_has">Ember.CoreView</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/evented.js#L142">packages/ember-runtime/lib/mixins/evented.js:142</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>Checks to see if object has any subscriptions for named event.</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
-          <dd>
-            The name of the event
-
-          </dd>
-      </dl>
-    </div>
-
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type">Boolean</span>
-        <dd> does the object have a subscription for event</dd>
-      </dl>
-    </div>
-</div>
-
-        
 <div id="method_hasObserverFor" class="method private inherited item-entry">
   <h3 data-id="method_hasObserverFor" class="name anchorable-toc"><code>hasObserverFor</code></h3>
   <span class="args">
@@ -2807,7 +2040,7 @@ property returns <code>undefined</code>.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_hasObserverFor">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_hasObserverFor">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/observable.js#L400">packages/ember-runtime/lib/mixins/observable.js:400</a>
 
   </div>
@@ -2865,7 +2098,7 @@ on the object.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_incrementProperty">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_incrementProperty">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/observable.js#L433">packages/ember-runtime/lib/mixins/observable.js:433</a>
 
   </div>
@@ -2929,7 +2162,7 @@ team.incrementProperty(<span class="string"><span class="delimiter">'</span><spa
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_init">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_init">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/system/core_object.js#L217">packages/ember-runtime/lib/system/core_object.js:217</a>
 
   </div>
@@ -2983,6 +2216,374 @@ application.</p>
 </div>
 
         
+<div id="method_initializer" class="method public item-entry">
+  <h3 data-id="method_initializer" class="name anchorable-toc"><code>initializer</code></h3>
+  <span class="args">
+    (initializer)
+  </span>
+
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+        Inherited from
+        <a href="/api/classes/Ember.Engine.html#method_initializer">Ember.Engine</a>
+          but overwritten in
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-application/lib/system/engine.js#L185">packages/ember-application/lib/system/engine.js:185</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>The goal of initializers should be to register dependencies and injections.
+This phase runs once. Because these initializers may load code, they are
+allowed to defer application readiness and advance it. If you need to access
+the container or store you should use an InstanceInitializer that will be run
+after all initializers and therefore after all code is loaded and the app is
+ready.</p>
+
+<p>Initializer receives an object which has the following attributes:
+<code>name</code>, <code>before</code>, <code>after</code>, <code>initialize</code>. The only required attribute is
+<code>initialize</code>, all others are optional.</p>
+
+<ul>
+<li><code>name</code> allows you to specify under which name the initializer is registered.
+This must be a unique name, as trying to register two initializers with the
+same name will result in an error.</li>
+</ul>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>Ember.Application.initializer({
+  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">namedInitializer</span><span class="delimiter">'</span></span>,
+
+  <span class="function">initialize</span>: <span class="keyword">function</span>(application) {
+    Ember.debug(<span class="string"><span class="delimiter">'</span><span class="content">Running namedInitializer!</span><span class="delimiter">'</span></span>);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<ul>
+<li><code>before</code> and <code>after</code> are used to ensure that this initializer is ran prior
+or after the one identified by the value. This value can be a single string
+or an array of strings, referencing the <code>name</code> of other initializers.</li>
+</ul>
+
+<p>An example of ordering initializers, we create an initializer named <code>first</code>:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre>Ember.Application.initializer({
+  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">first</span><span class="delimiter">'</span></span>,
+
+  <span class="function">initialize</span>: <span class="keyword">function</span>(application) {
+    Ember.debug(<span class="string"><span class="delimiter">'</span><span class="content">First initializer!</span><span class="delimiter">'</span></span>);
+  }
+});
+
+<span class="comment">// DEBUG: First initializer!</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>We add another initializer named <code>second</code>, specifying that it should run
+after the initializer named <code>first</code>:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+</pre></td>
+  <td class="code"><pre>Ember.Application.initializer({
+  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">second</span><span class="delimiter">'</span></span>,
+  <span class="key">after</span>: <span class="string"><span class="delimiter">'</span><span class="content">first</span><span class="delimiter">'</span></span>,
+
+  <span class="function">initialize</span>: <span class="keyword">function</span>(application) {
+    Ember.debug(<span class="string"><span class="delimiter">'</span><span class="content">Second initializer!</span><span class="delimiter">'</span></span>);
+  }
+});
+
+<span class="comment">// DEBUG: First initializer!</span>
+<span class="comment">// DEBUG: Second initializer!</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Afterwards we add a further initializer named <code>pre</code>, this time specifying
+that it should run before the initializer named <code>first</code>:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre>Ember.Application.initializer({
+  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">pre</span><span class="delimiter">'</span></span>,
+  <span class="key">before</span>: <span class="string"><span class="delimiter">'</span><span class="content">first</span><span class="delimiter">'</span></span>,
+
+  <span class="function">initialize</span>: <span class="keyword">function</span>(application) {
+    Ember.debug(<span class="string"><span class="delimiter">'</span><span class="content">Pre initializer!</span><span class="delimiter">'</span></span>);
+  }
+});
+
+<span class="comment">// DEBUG: Pre initializer!</span>
+<span class="comment">// DEBUG: First initializer!</span>
+<span class="comment">// DEBUG: Second initializer!</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>Finally we add an initializer named <code>post</code>, specifying it should run after
+both the <code>first</code> and the <code>second</code> initializers:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+</pre></td>
+  <td class="code"><pre>Ember.Application.initializer({
+  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>,
+  <span class="key">after</span>: [<span class="string"><span class="delimiter">'</span><span class="content">first</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">second</span><span class="delimiter">'</span></span>],
+
+  <span class="function">initialize</span>: <span class="keyword">function</span>(application) {
+    Ember.debug(<span class="string"><span class="delimiter">'</span><span class="content">Post initializer!</span><span class="delimiter">'</span></span>);
+  }
+});
+
+<span class="comment">// DEBUG: Pre initializer!</span>
+<span class="comment">// DEBUG: First initializer!</span>
+<span class="comment">// DEBUG: Second initializer!</span>
+<span class="comment">// DEBUG: Post initializer!</span>
+</pre></td>
+</tr></table>
+</div></div>
+<ul>
+<li><code>initialize</code> is a callback function that receives one argument,
+<code>application</code>, on which you can operate.</li>
+</ul>
+
+<p>Example of using <code>application</code> to register an adapter:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>Ember.Application.initializer({
+  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">api-adapter</span><span class="delimiter">'</span></span>,
+
+  <span class="function">initialize</span>: <span class="keyword">function</span>(application) {
+    application.register(<span class="string"><span class="delimiter">'</span><span class="content">api-adapter:main</span><span class="delimiter">'</span></span>, ApiAdapter);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>initializer</strong> <span class="type">Object</span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+</div>
+
+        
+<div id="method_instanceInitializer" class="method public item-entry">
+  <h3 data-id="method_instanceInitializer" class="name anchorable-toc"><code>instanceInitializer</code></h3>
+  <span class="args">
+    (instanceInitializer)
+  </span>
+
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+        Inherited from
+        <a href="/api/classes/Ember.Engine.html#method_instanceInitializer">Ember.Engine</a>
+          but overwritten in
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-application/lib/system/engine.js#L305">packages/ember-application/lib/system/engine.js:305</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Instance initializers run after all initializers have run. Because
+instance initializers run after the app is fully set up. We have access
+to the store, container, and other items. However, these initializers run
+after code has loaded and are not allowed to defer readiness.</p>
+
+<p>Instance initializer receives an object which has the following attributes:
+<code>name</code>, <code>before</code>, <code>after</code>, <code>initialize</code>. The only required attribute is
+<code>initialize</code>, all others are optional.</p>
+
+<ul>
+<li><code>name</code> allows you to specify under which name the instanceInitializer is
+registered. This must be a unique name, as trying to register two
+instanceInitializer with the same name will result in an error.</li>
+</ul>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>Ember.Application.instanceInitializer({
+  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">namedinstanceInitializer</span><span class="delimiter">'</span></span>,
+
+  <span class="function">initialize</span>: <span class="keyword">function</span>(application) {
+    Ember.debug(<span class="string"><span class="delimiter">'</span><span class="content">Running namedInitializer!</span><span class="delimiter">'</span></span>);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<ul>
+<li><p><code>before</code> and <code>after</code> are used to ensure that this initializer is ran prior
+or after the one identified by the value. This value can be a single string
+or an array of strings, referencing the <code>name</code> of other initializers.</p></li>
+<li><p>See Ember.Application.initializer for discussion on the usage of before
+and after.</p></li>
+</ul>
+
+<p>Example instanceInitializer to preload data into the store.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+22
+23
+</pre></td>
+  <td class="code"><pre>Ember.Application.initializer({
+  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">preload-data</span><span class="delimiter">'</span></span>,
+
+  <span class="function">initialize</span>: <span class="keyword">function</span>(application) {
+    <span class="keyword">var</span> userConfig, userConfigEncoded, store;
+    <span class="comment">// We have a HTML escaped JSON representation of the user's basic</span>
+    <span class="comment">// configuration generated server side and stored in the DOM of the main</span>
+    <span class="comment">// index.html file. This allows the app to have access to a set of data</span>
+    <span class="comment">// without making any additional remote calls. Good for basic data that is</span>
+    <span class="comment">// needed for immediate rendering of the page. Keep in mind, this data,</span>
+    <span class="comment">// like all local models and data can be manipulated by the user, so it</span>
+    <span class="comment">// should not be relied upon for security or authorization.</span>
+    <span class="comment">//</span>
+    <span class="comment">// Grab the encoded data from the meta tag</span>
+    userConfigEncoded = Ember.<span class="predefined">$</span>(<span class="string"><span class="delimiter">'</span><span class="content">head meta[name=app-user-config]</span><span class="delimiter">'</span></span>).attr(<span class="string"><span class="delimiter">'</span><span class="content">content</span><span class="delimiter">'</span></span>);
+    <span class="comment">// Unescape the text, then parse the resulting JSON into a real object</span>
+    userConfig = JSON.parse(unescape(userConfigEncoded));
+    <span class="comment">// Lookup the store</span>
+    store = application.lookup(<span class="string"><span class="delimiter">'</span><span class="content">service:store</span><span class="delimiter">'</span></span>);
+    <span class="comment">// Push the encoded JSON into the store</span>
+    store.pushPayload(userConfig);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>instanceInitializer</strong> <span class="type"></span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+</div>
+
+        
 <div id="method_metaForProperty" class="method private inherited item-entry">
   <h3 data-id="method_metaForProperty" class="name anchorable-toc"><code>metaForProperty</code></h3>
   <span class="args">
@@ -3001,7 +2602,7 @@ application.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_metaForProperty">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_metaForProperty">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/system/core_object.js#L792">packages/ember-runtime/lib/system/core_object.js:792</a>
 
   </div>
@@ -3077,7 +2678,7 @@ property from your class like this:</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_notifyPropertyChange">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_notifyPropertyChange">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/observable.js#L318">packages/ember-runtime/lib/mixins/observable.js:318</a>
 
   </div>
@@ -3115,222 +2716,6 @@ succession.</p>
 </div>
 
         
-<div id="method_off" class="method public inherited item-entry">
-  <h3 data-id="method_off" class="name anchorable-toc"><code>off</code></h3>
-  <span class="args">
-    (name, target, method)
-  </span>
-
-  <span class="type"></span>
-
-
-
-  <span class="flag public">public</span>
-
-
-
-
-
-  <div class="meta">
-          Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_off">Ember.CoreView</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/evented.js#L127">packages/ember-runtime/lib/mixins/evented.js:127</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>Cancels subscription for given name, target, and method.</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
-          <dd>
-            The name of the event
-
-          </dd>
-          <dt><strong>target</strong> <span class="type">Object</span></dt>
-          <dd>
-            The target of the subscription
-
-          </dd>
-          <dt><strong>method</strong> <span class="type"><a href="/api/classes/Function.html">Function</a></span></dt>
-          <dd>
-            The function of the subscription
-
-          </dd>
-      </dl>
-    </div>
-
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type"></span>
-        <dd> this</dd>
-      </dl>
-    </div>
-</div>
-
-        
-<div id="method_on" class="method public inherited item-entry">
-  <h3 data-id="method_on" class="name anchorable-toc"><code>on</code></h3>
-  <span class="args">
-    (name, target, method)
-  </span>
-
-  <span class="type"></span>
-
-
-
-  <span class="flag public">public</span>
-
-
-
-
-
-  <div class="meta">
-          Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_on">Ember.CoreView</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/evented.js#L52">packages/ember-runtime/lib/mixins/evented.js:52</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>Subscribes to a named event with given function.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre>person.on(<span class="string"><span class="delimiter">'</span><span class="content">didLoad</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
-  <span class="comment">// fired once the person has loaded</span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>An optional target can be passed in as the 2nd argument that will
-be set as the &quot;this&quot; for the callback. This is a good way to give your
-function access to the object triggering the event. When the target
-parameter is used the callback becomes the third argument.</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
-          <dd>
-            The name of the event
-
-          </dd>
-          <dt><strong>target</strong> <span class="type">[Object]</span></dt>
-          <dd>
-            The "this" binding for the callback
-
-          </dd>
-          <dt><strong>method</strong> <span class="type"><a href="/api/classes/Function.html">Function</a></span></dt>
-          <dd>
-            The callback to execute
-
-          </dd>
-      </dl>
-    </div>
-
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type"></span>
-        <dd> this</dd>
-      </dl>
-    </div>
-</div>
-
-        
-<div id="method_one" class="method public inherited item-entry">
-  <h3 data-id="method_one" class="name anchorable-toc"><code>one</code></h3>
-  <span class="args">
-    (name, target, method)
-  </span>
-
-  <span class="type"></span>
-
-
-
-  <span class="flag public">public</span>
-
-
-
-
-
-  <div class="meta">
-          Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_one">Ember.CoreView</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/evented.js#L78">packages/ember-runtime/lib/mixins/evented.js:78</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>Subscribes a function to a named event and then cancels the subscription
-after the first time the event is triggered. It is good to use <code>one</code> when
-you only care about the first time an event has taken place.</p>
-
-<p>This function takes an optional 2nd argument that will become the &quot;this&quot;
-value for the callback. If this argument is passed then the 3rd argument
-becomes the function.</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
-          <dd>
-            The name of the event
-
-          </dd>
-          <dt><strong>target</strong> <span class="type">[Object]</span></dt>
-          <dd>
-            The "this" binding for the callback
-
-          </dd>
-          <dt><strong>method</strong> <span class="type"><a href="/api/classes/Function.html">Function</a></span></dt>
-          <dd>
-            The callback to execute
-
-          </dd>
-      </dl>
-    </div>
-
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type"></span>
-        <dd> this</dd>
-      </dl>
-    </div>
-</div>
-
-        
 <div id="method_propertyDidChange" class="method private inherited item-entry">
   <h3 data-id="method_propertyDidChange" class="name anchorable-toc"><code>propertyDidChange</code></h3>
   <span class="args">
@@ -3349,7 +2734,7 @@ becomes the function.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_propertyDidChange">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_propertyDidChange">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/observable.js#L294">packages/ember-runtime/lib/mixins/observable.js:294</a>
 
   </div>
@@ -3415,7 +2800,7 @@ like.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_propertyWillChange">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_propertyWillChange">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/observable.js#L270">packages/ember-runtime/lib/mixins/observable.js:270</a>
 
   </div>
@@ -3463,61 +2848,6 @@ like.</p>
 </div>
 
         
-<div id="method_removeChild" class="method private inherited item-entry">
-  <h3 data-id="method_removeChild" class="name anchorable-toc"><code>removeChild</code></h3>
-  <span class="args">
-    (view)
-  </span>
-
-  <span class="type"><a href="/api/classes/Ember.View.html">Ember.View</a></span>
-
-
-
-  <span class="flag private">private</span>
-
-
-
-
-
-  <div class="meta">
-          Inherited from
-          <a href="/api/classes/Ember.ClassNamesSupport.html#method_removeChild">Ember.ClassNamesSupport</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-views/lib/mixins/child_views_support.js#L33">packages/ember-views/lib/mixins/child_views_support.js:33</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>Removes the child view from the parent view.</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>view</strong> <span class="type"><a href="/api/classes/Ember.View.html">Ember.View</a></span></dt>
-          <dd>
-            
-
-          </dd>
-      </dl>
-    </div>
-
-    <div class="return">
-      <h3>Returns:</h3>
-      <dl>
-        <dt><span class="type"><a href="/api/classes/Ember.View.html">Ember.View</a></span>
-        <dd> receiver</dd>
-      </dl>
-    </div>
-</div>
-
-        
 <div id="method_removeObserver" class="method public inherited item-entry">
   <h3 data-id="method_removeObserver" class="name anchorable-toc"><code>removeObserver</code></h3>
   <span class="args">
@@ -3535,7 +2865,7 @@ like.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_removeObserver">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_removeObserver">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/observable.js#L385">packages/ember-runtime/lib/mixins/observable.js:385</a>
 
   </div>
@@ -3591,7 +2921,7 @@ target will no longer receive notifications.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_reopen">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_reopen">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/system/core_object.js#L681">packages/ember-runtime/lib/system/core_object.js:681</a>
 
   </div>
@@ -3666,7 +2996,7 @@ see <code>reopenClass</code></p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_reopenClass">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_reopenClass">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/system/core_object.js#L717">packages/ember-runtime/lib/system/core_object.js:717</a>
 
   </div>
@@ -3771,65 +3101,42 @@ see <code>reopen</code></p>
 </div>
 
         
-<div id="method_send" class="method public inherited item-entry">
-  <h3 data-id="method_send" class="name anchorable-toc"><code>send</code></h3>
+<div id="method_resolverFor" class="method private item-entry">
+  <h3 data-id="method_resolverFor" class="name anchorable-toc"><code>resolverFor</code></h3>
   <span class="args">
-    (actionName, context)
+    (namespace)
   </span>
 
+  <span class="type">*</span>
 
 
 
-  <span class="flag public">public</span>
+  <span class="flag private">private</span>
 
 
 
 
 
   <div class="meta">
-          Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_send">Ember.CoreView</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/action_handler.js#L145">packages/ember-runtime/lib/mixins/action_handler.js:145</a>
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-application/lib/system/engine.js#L436">packages/ember-application/lib/system/engine.js:436</a>
 
   </div>
 
 
     <div class="description">
-      <p>Triggers a named action on the <code>ActionHandler</code>. Any parameters
-supplied after the <code>actionName</code> string will be passed as arguments
-to the action target function.</p>
+      <p>This function defines the default lookup rules for container lookups:</p>
 
-<p>If the <code>ActionHandler</code> has its <code>target</code> property set, actions may
-bubble to the <code>target</code>. Bubbling happens when an <code>actionName</code> can
-not be found in the <code>ActionHandler</code>&#39;s <code>actions</code> hash or if the
-action target function returns <code>true</code>.</p>
+<ul>
+<li>templates are looked up on <code>Ember.TEMPLATES</code></li>
+<li>other names are looked up on the application after classifying the name.
+For example, <code>controller:post</code> looks up <code>App.PostController</code> by default.</li>
+<li>if the default lookup fails, look for registered classes on the container</li>
+</ul>
 
-<p>Example</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-</pre></td>
-  <td class="code"><pre>App.WelcomeRoute = Ember.Route.extend({
-  <span class="key">actions</span>: {
-    playTheme() {
-       <span class="local-variable">this</span>.send(<span class="string"><span class="delimiter">'</span><span class="content">playMusic</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">theme.mp3</span><span class="delimiter">'</span></span>);
-    },
-    playMusic(track) {
-      <span class="comment">// ...</span>
-    }
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
+<p>This allows the application to register default injections in the container
+that could be overridden by the normal naming convention.</p>
+
     </div>
 
   <p>
@@ -3840,189 +3147,77 @@ action target function returns <code>true</code>.</p>
       <h3>Parameters:</h3>
 
       <dl>
-          <dt><strong>actionName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dt><strong>namespace</strong> <span class="type"><a href="/api/classes/Ember.Namespace.html">Ember.Namespace</a></span></dt>
           <dd>
-            The action to trigger
-
-          </dd>
-          <dt><strong>context</strong> <span class="type">*</span></dt>
-          <dd>
-            a context to send with the action
+            the namespace to look for classes
 
           </dd>
       </dl>
     </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">*</span>
+        <dd> the resolved value for a given lookup</dd>
+      </dl>
+    </div>
+</div>
+
+        
+<div id="method_runInitializers" class="method private item-entry">
+  <h3 data-id="method_runInitializers" class="name anchorable-toc"><code>runInitializers</code></h3>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-application/lib/system/engine.js#L131">packages/ember-application/lib/system/engine.js:131</a>
+
+  </div>
+
+
+
+  <p>
+  </p>
+
+
 
 </div>
 
         
-<div id="method_sendAction" class="method public inherited item-entry">
-  <h3 data-id="method_sendAction" class="name anchorable-toc"><code>sendAction</code></h3>
-  <span class="args">
-    (action, params)
-  </span>
+<div id="method_runInstanceInitializers" class="method private item-entry">
+  <h3 data-id="method_runInstanceInitializers" class="name anchorable-toc"><code>runInstanceInitializers</code></h3>
 
 
 
 
-  <span class="flag public">public</span>
+  <span class="flag private">private</span>
 
 
 
 
 
   <div class="meta">
-          Inherited from
-          <a href="/api/classes/Ember.AriaRoleSupport.html#method_sendAction">Ember.AriaRoleSupport</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-views/lib/mixins/action_support.js#L23">packages/ember-views/lib/mixins/action_support.js:23</a>
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-application/lib/system/engine.js#L154">packages/ember-application/lib/system/engine.js:154</a>
 
+      <br/>Available since 1.12.0
   </div>
 
 
-    <div class="description">
-      <p>Calls an action passed to a component.</p>
-
-<p>For example a component for playing or pausing music may translate click events
-into action notifications of &quot;play&quot; or &quot;stop&quot; depending on some internal state
-of the component:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-</pre></td>
-  <td class="code"><pre><span class="comment">// app/components/play-button.js</span>
-<span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
-  click() {
-    <span class="keyword">if</span> (<span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">isPlaying</span><span class="delimiter">'</span></span>)) {
-      <span class="local-variable">this</span>.sendAction(<span class="string"><span class="delimiter">'</span><span class="content">play</span><span class="delimiter">'</span></span>);
-    } <span class="keyword">else</span> {
-      <span class="local-variable">this</span>.sendAction(<span class="string"><span class="delimiter">'</span><span class="content">stop</span><span class="delimiter">'</span></span>);
-    }
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>The actions &quot;play&quot; and &quot;stop&quot; must be passed to this <code>play-button</code> component:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-</pre></td>
-  <td class="code"><pre><span class="comment">{{! app/templates/application.hbs }}</span>
-<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">play-button</span> <span class="attribute-name">play</span>=<span class="error">(</span><span class="attribute-value">action</span> <span class="error">&quot;</span><span class="attribute-name">musicStarted</span><span class="error">&quot;</span><span class="error">)</span> <span class="attribute-name">stop</span>=<span class="error">(</span><span class="attribute-value">action</span> <span class="error">&quot;</span><span class="attribute-name">musicStopped</span><span class="error">&quot;</span><span class="error">)</span><span class="inline-delimiter">}}</span></span>
-</pre></td>
-</tr></table>
-</div></div>
-<p>When the component receives a browser <code>click</code> event it translate this
-interaction into application-specific semantics (&quot;play&quot; or &quot;stop&quot;) and
-calls the specified action.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
-</pre></td>
-  <td class="code"><pre><span class="comment">// app/controller/application.js</span>
-<span class="reserved">export</span> <span class="keyword">default</span> Ember.Controller.extend({
-  <span class="key">actions</span>: {
-    musicStarted() {
-      <span class="comment">// called when the play button is clicked</span>
-      <span class="comment">// and the music started playing</span>
-    },
-    musicStopped() {
-      <span class="comment">// called when the play button is clicked</span>
-      <span class="comment">// and the music stopped playing</span>
-    }
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>If no action is passed to <code>sendAction</code> a default name of &quot;action&quot;
-is assumed.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-</pre></td>
-  <td class="code"><pre><span class="comment">// app/components/next-button.js</span>
-<span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
-  click() {
-    <span class="local-variable">this</span>.sendAction();
-  }
-});
-</pre></td>
-</tr></table>
-</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-</pre></td>
-  <td class="code"><pre><span class="comment">{{! app/templates/application.hbs }}</span>
-<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">next-button</span> <span class="attribute-name">action</span>=<span class="error">(</span><span class="attribute-value">action</span> <span class="error">&quot;</span><span class="attribute-name">playNextSongInAlbum</span><span class="error">&quot;</span><span class="error">)</span><span class="inline-delimiter">}}</span></span>
-</pre></td>
-</tr></table>
-</div></div><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-</pre></td>
-  <td class="code"><pre><span class="comment">// app/controllers/application.js</span>
-App.ApplicationController = Ember.Controller.extend({
-  <span class="key">actions</span>: {
-    playNextSongInAlbum() {
-      ...
-    }
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
-    </div>
 
   <p>
   </p>
 
 
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>action</strong> <span class="type">[<a href="/api/classes/String.html">String</a>]</span></dt>
-          <dd>
-            the action to call
-
-          </dd>
-          <dt><strong>params</strong> <span class="type">[*]</span></dt>
-          <dd>
-            arguments for the action
-
-          </dd>
-      </dl>
-    </div>
 
 </div>
 
@@ -4045,7 +3240,7 @@ App.ApplicationController = Ember.Controller.extend({
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_set">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_set">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/observable.js#L168">packages/ember-runtime/lib/mixins/observable.js:168</a>
 
   </div>
@@ -4130,7 +3325,7 @@ coalesced manner.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_setProperties">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_setProperties">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/observable.js#L213">packages/ember-runtime/lib/mixins/observable.js:213</a>
 
   </div>
@@ -4190,7 +3385,7 @@ observers will be buffered.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_toString">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_toString">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/system/core_object.js#L467">packages/ember-runtime/lib/system/core_object.js:467</a>
 
   </div>
@@ -4280,7 +3475,7 @@ teacher.toString(); <span class="comment">//=&gt; &quot;&lt;App.Teacher:ember102
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_toggleProperty">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_toggleProperty">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/observable.js#L473">packages/ember-runtime/lib/mixins/observable.js:473</a>
 
   </div>
@@ -4324,55 +3519,6 @@ current value.</p>
 </div>
 
         
-<div id="method_trigger" class="method private inherited item-entry">
-  <h3 data-id="method_trigger" class="name anchorable-toc"><code>trigger</code></h3>
-  <span class="args">
-    (name)
-  </span>
-
-
-
-
-  <span class="flag private">private</span>
-
-
-
-
-
-  <div class="meta">
-        Inherited from
-        <a href="/api/classes/Ember.Evented.html#method_trigger">Ember.Evented</a>
-          but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-views/lib/views/core_view.js#L81">packages/ember-views/lib/views/core_view.js:81</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>Override the default event firing from <code>Ember.Evented</code> to
-also call methods with the given name.</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-    <div class="params">
-      <h3>Parameters:</h3>
-
-      <dl>
-          <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
-          <dd>
-            
-
-          </dd>
-      </dl>
-    </div>
-
-</div>
-
-        
 <div id="method_willDestroy" class="method public inherited item-entry">
   <h3 data-id="method_willDestroy" class="name anchorable-toc"><code>willDestroy</code></h3>
 
@@ -4387,7 +3533,7 @@ also call methods with the given name.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_willDestroy">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_willDestroy">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/system/core_object.js#L440">packages/ember-runtime/lib/system/core_object.js:440</a>
 
   </div>
@@ -4428,274 +3574,10 @@ also call methods with the given name.</p>
 </div>
 
         
-<div id="property_actions" class="property public inherited item-entry">
-  <h3 data-id="property_actions" class="name anchorable-toc"><code>actions</code></h3>
+<div id="property__initializersRan" class="property private item-entry">
+  <h3 data-id="property__initializersRan" class="name anchorable-toc"><code>_initializersRan</code></h3>
 
 
-  <span class="type">Object</span>
-
-
-  <span class="flag public">public</span>
-
-
-
-
-
-  <div class="meta">
-          Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_actions">Ember.CoreView</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/action_handler.js#L24">packages/ember-runtime/lib/mixins/action_handler.js:24</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>The collection of functions, keyed by name, available on this
-<code>ActionHandler</code> as action targets.</p>
-
-<p>These functions will be invoked when a matching <code>{{action}}</code> is triggered
-from within a template and the application&#39;s current route is this route.</p>
-
-<p>Actions can also be invoked from other parts of your application
-via <code>ActionHandler#send</code>.</p>
-
-<p>The <code>actions</code> hash will inherit action handlers from
-the <code>actions</code> hash defined on extended parent classes
-or mixins rather than just replace the entire hash, e.g.:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
-14
-15
-16
-17
-18
-19
-<strong>20</strong>
-21
-</pre></td>
-  <td class="code"><pre>App.CanDisplayBanner = Ember.Mixin.create({
-  <span class="key">actions</span>: {
-    displayBanner(msg) {
-      <span class="comment">// ...</span>
-    }
-  }
-});
-
-App.WelcomeRoute = Ember.Route.extend(App.CanDisplayBanner, {
-  <span class="key">actions</span>: {
-    playMusic() {
-      <span class="comment">// ...</span>
-    }
-  }
-});
-
-<span class="comment">// `WelcomeRoute`, when active, will be able to respond</span>
-<span class="comment">// to both actions, since the actions hash is merged rather</span>
-<span class="comment">// then replaced when extending mixins / parent classes.</span>
-<span class="local-variable">this</span>.send(<span class="string"><span class="delimiter">'</span><span class="content">displayBanner</span><span class="delimiter">'</span></span>);
-<span class="local-variable">this</span>.send(<span class="string"><span class="delimiter">'</span><span class="content">playMusic</span><span class="delimiter">'</span></span>);
-</pre></td>
-</tr></table>
-</div></div>
-<p>Within a Controller, Route, View or Component&#39;s action handler,
-the value of the <code>this</code> context is the Controller, Route, View or
-Component object:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-</pre></td>
-  <td class="code"><pre>App.SongRoute = Ember.Route.extend({
-  <span class="key">actions</span>: {
-    myAction() {
-      <span class="local-variable">this</span>.controllerFor(<span class="string"><span class="delimiter">&quot;</span><span class="content">song</span><span class="delimiter">&quot;</span></span>);
-      <span class="local-variable">this</span>.transitionTo(<span class="string"><span class="delimiter">&quot;</span><span class="content">other.route</span><span class="delimiter">&quot;</span></span>);
-      ...
-    }
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>It is also possible to call <code>this._super(...arguments)</code> from within an
-action handler if it overrides a handler defined on a parent
-class or mixin:</p>
-
-<p>Take for example the following routes:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
-14
-15
-16
-17
-18
-19
-</pre></td>
-  <td class="code"><pre>App.DebugRoute = Ember.Mixin.create({
-  <span class="key">actions</span>: {
-    debugRouteInformation() {
-      console.debug(<span class="string"><span class="delimiter">&quot;</span><span class="content">trololo</span><span class="delimiter">&quot;</span></span>);
-    }
-  }
-});
-
-App.AnnoyingDebugRoute = Ember.Route.extend(App.DebugRoute, {
-  <span class="key">actions</span>: {
-    debugRouteInformation() {
-      <span class="comment">// also call the debugRouteInformation of mixed in App.DebugRoute</span>
-      <span class="local-variable">this</span>._super(...<span class="local-variable">arguments</span>);
-
-      <span class="comment">// show additional annoyance</span>
-      window.alert(...);
-    }
-  }
-});
-</pre></td>
-</tr></table>
-</div></div><h2 class='anchorable-toc' id='toc_bubbling'>Bubbling</h2>
-<p>By default, an action will stop bubbling once a handler defined
-on the <code>actions</code> hash handles it. To continue bubbling the action,
-you must return <code>true</code> from the handler:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-11
-12
-13
-14
-15
-16
-17
-18
-19
-<strong>20</strong>
-21
-22
-23
-24
-</pre></td>
-  <td class="code"><pre>App.Router.map(<span class="keyword">function</span>() {
-  <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">&quot;</span><span class="content">album</span><span class="delimiter">&quot;</span></span>, <span class="keyword">function</span>() {
-    <span class="local-variable">this</span>.route(<span class="string"><span class="delimiter">&quot;</span><span class="content">song</span><span class="delimiter">&quot;</span></span>);
-  });
-});
-
-App.AlbumRoute = Ember.Route.extend({
-  <span class="key">actions</span>: {
-    <span class="function">startPlaying</span>: <span class="keyword">function</span>() {
-    }
-  }
-});
-
-App.AlbumSongRoute = Ember.Route.extend({
-  <span class="key">actions</span>: {
-    startPlaying() {
-      <span class="comment">// ...</span>
-
-      <span class="keyword">if</span> (actionShouldAlsoBeTriggeredOnParentRoute) {
-        <span class="keyword">return</span> <span class="predefined-constant">true</span>;
-      }
-    }
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
-    </div>
-
-  <p>
-      <strong>Default:</strong> <code>null</code>
-  </p>
-
-
-
-</div>
-
-        
-<div id="property_ariaRole" class="property public inherited item-entry">
-  <h3 data-id="property_ariaRole" class="name anchorable-toc"><code>ariaRole</code></h3>
-
-
-  <span class="type"><a href="/api/classes/String.html">String</a></span>
-
-
-  <span class="flag public">public</span>
-
-
-
-
-
-  <div class="meta">
-          Inherited from
-          <a href="/api/classes/Ember.AriaRoleSupport.html#method_ariaRole">Ember.AriaRoleSupport</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-views/lib/mixins/aria_role_support.js#L14">packages/ember-views/lib/mixins/aria_role_support.js:14</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>The WAI-ARIA role of the control represented by this view. For example, a
-button may have a role of type &#39;button&#39;, or a pane may have a role of
-type &#39;alertdialog&#39;. This property is used by assistive software to help
-visually challenged users navigate rich web applications.</p>
-
-<p>The full list of valid WAI-ARIA roles is available at:
-<a href="http://www.w3.org/TR/wai-aria/roles#roles_categorization">http://www.w3.org/TR/wai-aria/roles#roles_categorization</a></p>
-
-    </div>
-
-  <p>
-      <strong>Default:</strong> <code>null</code>
-  </p>
-
-
-
-</div>
-
-        
-<div id="property_childViews" class="property private inherited item-entry">
-  <h3 data-id="property_childViews" class="name anchorable-toc"><code>childViews</code></h3>
-
-
-  <span class="type">Array</span>
 
 
   <span class="flag private">private</span>
@@ -4705,144 +3587,18 @@ visually challenged users navigate rich web applications.</p>
 
 
   <div class="meta">
-          Inherited from
-          <a href="/api/classes/Ember.ClassNamesSupport.html#method_childViews">Ember.ClassNamesSupport</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-views/lib/mixins/child_views_support.js#L12">packages/ember-views/lib/mixins/child_views_support.js:12</a>
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-application/lib/system/engine.js#L66">packages/ember-application/lib/system/engine.js:66</a>
 
   </div>
 
 
     <div class="description">
-      <p>Array of child views. You should never edit this array directly.</p>
+      <p>A private flag indicating whether an engine&#39;s initializers have run yet.</p>
 
     </div>
 
   <p>
-      <strong>Default:</strong> <code>[]</code>
-  </p>
-
-
-
-</div>
-
-        
-<div id="property_classNameBindings" class="property public inherited item-entry">
-  <h3 data-id="property_classNameBindings" class="name anchorable-toc"><code>classNameBindings</code></h3>
-
-
-  <span class="type">Array</span>
-
-
-  <span class="flag public">public</span>
-
-
-
-
-
-  <div class="meta">
-          Inherited from
-          <a href="/api/classes/Ember.ClassNamesSupport.html#method_classNameBindings">Ember.ClassNamesSupport</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-views/lib/mixins/class_names_support.js#L41">packages/ember-views/lib/mixins/class_names_support.js:41</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>A list of properties of the view to apply as class names. If the property
-is a string value, the value of that string will be applied as a class
-name.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre><span class="comment">// Applies the 'high' class to the view element</span>
-Ember.View.extend({
-  <span class="key">classNameBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">priority</span><span class="delimiter">'</span></span>],
-  <span class="key">priority</span>: <span class="string"><span class="delimiter">'</span><span class="content">high</span><span class="delimiter">'</span></span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>If the value of the property is a Boolean, the name of that property is
-added as a dasherized class name.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre><span class="comment">// Applies the 'is-urgent' class to the view element</span>
-Ember.View.extend({
-  <span class="key">classNameBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">isUrgent</span><span class="delimiter">'</span></span>],
-  <span class="key">isUrgent</span>: <span class="predefined-constant">true</span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>If you would prefer to use a custom value instead of the dasherized
-property name, you can pass a binding like this:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-</pre></td>
-  <td class="code"><pre><span class="comment">// Applies the 'urgent' class to the view element</span>
-Ember.View.extend({
-  <span class="key">classNameBindings</span>: [<span class="string"><span class="delimiter">'</span><span class="content">isUrgent:urgent</span><span class="delimiter">'</span></span>],
-  <span class="key">isUrgent</span>: <span class="predefined-constant">true</span>
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>This list of properties is inherited from the view&#39;s superclasses as well.</p>
-
-    </div>
-
-  <p>
-      <strong>Default:</strong> <code>[]</code>
-  </p>
-
-
-
-</div>
-
-        
-<div id="property_classNames" class="property public inherited item-entry">
-  <h3 data-id="property_classNames" class="name anchorable-toc"><code>classNames</code></h3>
-
-
-  <span class="type">Array</span>
-
-
-  <span class="flag public">public</span>
-
-
-
-
-
-  <div class="meta">
-          Inherited from
-          <a href="/api/classes/Ember.ClassNamesSupport.html#method_classNames">Ember.ClassNamesSupport</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-views/lib/mixins/class_names_support.js#L29">packages/ember-views/lib/mixins/class_names_support.js:29</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>Standard CSS class names to apply to the view&#39;s outer element. This
-property automatically inherits any class names defined by the view&#39;s
-superclasses as well.</p>
-
-    </div>
-
-  <p>
-      <strong>Default:</strong> <code>['ember-view']</code>
   </p>
 
 
@@ -4865,7 +3621,7 @@ superclasses as well.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_concatenatedProperties">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_concatenatedProperties">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/system/core_object.js#L255">packages/ember-runtime/lib/system/core_object.js:255</a>
 
   </div>
@@ -4971,40 +3727,6 @@ mislead your users to think they can override the property in a subclass).</p>
 </div>
 
         
-<div id="property_instrumentDisplay" class="property public inherited item-entry">
-  <h3 data-id="property_instrumentDisplay" class="name anchorable-toc"><code>instrumentDisplay</code></h3>
-
-
-  <span class="type"><a href="/api/classes/String.html">String</a></span>
-
-
-  <span class="flag public">public</span>
-
-
-
-
-
-  <div class="meta">
-          Inherited from
-          <a href="/api/classes/Ember.InstrumentationSupport.html#method_instrumentDisplay">Ember.InstrumentationSupport</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-views/lib/mixins/instrumentation_support.js#L14">packages/ember-views/lib/mixins/instrumentation_support.js:14</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>Used to identify this view during debugging</p>
-
-    </div>
-
-  <p>
-  </p>
-
-
-
-</div>
-
-        
 <div id="property_isDestroyed" class="property public inherited item-entry">
   <h3 data-id="property_isDestroyed" class="name anchorable-toc"><code>isDestroyed</code></h3>
 
@@ -5019,7 +3741,7 @@ mislead your users to think they can override the property in a subclass).</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_isDestroyed">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_isDestroyed">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/system/core_object.js#L393">packages/ember-runtime/lib/system/core_object.js:393</a>
 
   </div>
@@ -5056,7 +3778,7 @@ removed by the effect of calling the <code>destroy()</code> method.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_isDestroying">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_isDestroying">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/system/core_object.js#L405">packages/ember-runtime/lib/system/core_object.js:405</a>
 
   </div>
@@ -5079,41 +3801,6 @@ the <code>isDestroyed</code> flag is set.</p>
 </div>
 
         
-<div id="property_isVisible" class="property public inherited item-entry">
-  <h3 data-id="property_isVisible" class="name anchorable-toc"><code>isVisible</code></h3>
-
-
-  <span class="type">Boolean</span>
-
-
-  <span class="flag public">public</span>
-
-
-
-
-
-  <div class="meta">
-          Inherited from
-          <a href="/api/classes/Ember.VisibilitySupport.html#method_isVisible">Ember.VisibilitySupport</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-views/lib/mixins/visibility_support.js#L20">packages/ember-views/lib/mixins/visibility_support.js:20</a>
-
-  </div>
-
-
-    <div class="description">
-      <p>If <code>false</code>, the view will appear hidden in DOM.</p>
-
-    </div>
-
-  <p>
-      <strong>Default:</strong> <code>null</code>
-  </p>
-
-
-
-</div>
-
-        
 <div id="property_mergedProperties" class="property public inherited item-entry">
   <h3 data-id="property_mergedProperties" class="name anchorable-toc"><code>mergedProperties</code></h3>
 
@@ -5129,7 +3816,7 @@ the <code>isDestroyed</code> flag is set.</p>
 
   <div class="meta">
           Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_mergedProperties">Ember.CoreView</a>
+          <a href="/api/classes/Ember.Namespace.html#method_mergedProperties">Ember.Namespace</a>
       <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/system/core_object.js#L324">packages/ember-runtime/lib/system/core_object.js:324</a>
 
   </div>
@@ -5245,35 +3932,33 @@ mislead your users to think they can override the property in a subclass).</p>
 </div>
 
         
-<div id="property_parentView" class="property private inherited item-entry">
-  <h3 data-id="property_parentView" class="name anchorable-toc"><code>parentView</code></h3>
+<div id="property_resolver" class="property public item-entry">
+  <h3 data-id="property_resolver" class="name anchorable-toc"><code>resolver</code></h3>
 
 
-  <span class="type"><a href="/api/classes/Ember.View.html">Ember.View</a></span>
 
 
-  <span class="flag private">private</span>
+  <span class="flag public">public</span>
 
 
 
 
 
   <div class="meta">
-          Inherited from
-          <a href="/api/classes/Ember.CoreView.html#method_parentView">Ember.CoreView</a>
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-views/lib/views/core_view.js#L62">packages/ember-views/lib/views/core_view.js:62</a>
+        Inherited from
+        <a href="/api/classes/Ember.Engine.html#method_resolver">Ember.Engine</a>
+          but overwritten in
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-application/lib/system/engine.js#L427">packages/ember-application/lib/system/engine.js:427</a>
 
   </div>
 
 
     <div class="description">
-      <p>If the view is currently inserted into the DOM of a parent view, this
-property will point to the parent of the view.</p>
+      <p>Set this to provide an alternate class to <code>Ember.DefaultResolver</code></p>
 
     </div>
 
   <p>
-      <strong>Default:</strong> <code>null</code>
   </p>
 
 

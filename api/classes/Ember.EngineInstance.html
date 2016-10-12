@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Ember.js - Ember.Namespace</title>
-		<meta property="st:title" content="Ember.js: Ember.Namespace" />
-		<meta property="og:title" content="Ember.js: Ember.Namespace" />
+    <title>Ember.js - Ember.EngineInstance</title>
+		<meta property="st:title" content="Ember.js: Ember.EngineInstance" />
+		<meta property="og:title" content="Ember.js: Ember.EngineInstance" />
 		<meta property="og:description" content="Ember.js helps developers be more productive out of the box. Designed with developer ergonomics in mind, its friendly APIs help you get your job done—fast." />
 		<meta property="og:image" content="http://emberjs.com/images/tomster-sm.png" />
 		<meta name="twitter:card" content="summary" />
 		<meta name="twitter:site" content="@emberjs" />
-		<meta name="twitter:title" content="Ember.Namespace"/>
+		<meta name="twitter:title" content="Ember.EngineInstance"/>
 		<meta name="twitter:image" content="http://emberjs.com/images/tomster-twitter-card.png" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" /><![endif]-->
@@ -338,7 +338,7 @@
 
           </li>
         
-          <li class="level-3 ">
+          <li class="level-3 sub-selected">
                         <a href="/api/classes/Ember.EngineInstance.html">Ember.EngineInstance</a>
 
           </li>
@@ -428,7 +428,7 @@
 
           </li>
         
-          <li class="level-3 sub-selected">
+          <li class="level-3 ">
                         <a href="/api/classes/Ember.Namespace.html">Ember.Namespace</a>
 
           </li>
@@ -622,8 +622,8 @@
       <div id="content" class="has-sidebar">
         
   <h1 class="api-header">
-  Ember.Namespace Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/system/namespace.js#L30">packages/ember-runtime/lib/system/namespace.js:30</a>
+  Ember.EngineInstance Class
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-application/lib/system/engine-instance.js#L18">packages/ember-application/lib/system/engine-instance.js:18</a>
 </h1>
 
 <hr>
@@ -635,27 +635,18 @@
 <div class="class-info">
     <p>Extends: <a href="/api/classes/Ember.Object.html">Ember.Object</a></p>
 
+      <p>Uses: <a href="/api/classes/RegistryProxyMixin.html">RegistryProxyMixin</a></p>
+      <p>Uses: <a href="/api/classes/ContainerProxyMixin.html">ContainerProxyMixin</a></p>
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/system/namespace.js#L30">packages/ember-runtime/lib/system/namespace.js:30</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-application/lib/system/engine-instance.js#L18">packages/ember-application/lib/system/engine-instance.js:18</a></p>
 
-    <p>Module: <a href="/api/modules/ember-runtime.html">ember-runtime</a></p>
+    <p>Module: <a href="/api/modules/ember-application.html">ember-application</a></p>
 </div>
 
   <div class="description">
-    <p>A Namespace is an object usually used to contain other objects or methods
-such as an application or framework. Create a namespace anytime you want
-to define one of these new containers.</p>
-<h1 class='anchorable-toc' id='toc_example-usage'>Example Usage</h1><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre>MyFramework = Ember.Namespace.create({
-  <span class="key">VERSION</span>: <span class="string"><span class="delimiter">'</span><span class="content">1.0.0</span><span class="delimiter">'</span></span>
-});
-</pre></td>
-</tr></table>
-</div></div>
+    <p>The <code>EngineInstance</code> encapsulates all of the stateful aspects of a
+running <code>Engine</code>.</p>
+
   </div>
 
 
@@ -692,7 +683,13 @@ to define one of these new containers.</p>
               <a href="#method__lazyInjections">_lazyInjections</a>
             </li>
             <li class="method private inherited">
+              <a href="#method__lookupFactory">_lookupFactory</a>
+            </li>
+            <li class="method private inherited">
               <a href="#method__onLookup">_onLookup</a>
+            </li>
+            <li class="method private inherited">
+              <a href="#method__resolveLocalLookupName">_resolveLocalLookupName</a>
             </li>
             <li class="method private inherited">
               <a href="#method__scheduledDestroy">_scheduledDestroy</a>
@@ -703,8 +700,17 @@ to define one of these new containers.</p>
             <li class="method private inherited">
               <a href="#method_beginPropertyChanges">beginPropertyChanges</a>
             </li>
+            <li class="method private">
+              <a href="#method_boot">boot</a>
+            </li>
+            <li class="method private">
+              <a href="#method_buildChildEngineInstance">buildChildEngineInstance</a>
+            </li>
             <li class="method public inherited">
               <a href="#method_cacheFor">cacheFor</a>
+            </li>
+            <li class="method private">
+              <a href="#method_cloneParentDependencies">cloneParentDependencies</a>
             </li>
             <li class="method public inherited">
               <a href="#method_create">create</a>
@@ -737,10 +743,19 @@ to define one of these new containers.</p>
               <a href="#method_hasObserverFor">hasObserverFor</a>
             </li>
             <li class="method public inherited">
+              <a href="#method_hasRegistration">hasRegistration</a>
+            </li>
+            <li class="method public inherited">
               <a href="#method_incrementProperty">incrementProperty</a>
             </li>
             <li class="method public inherited">
               <a href="#method_init">init</a>
+            </li>
+            <li class="method public inherited">
+              <a href="#method_inject">inject</a>
+            </li>
+            <li class="method public inherited">
+              <a href="#method_lookup">lookup</a>
             </li>
             <li class="method private inherited">
               <a href="#method_metaForProperty">metaForProperty</a>
@@ -748,11 +763,35 @@ to define one of these new containers.</p>
             <li class="method public inherited">
               <a href="#method_notifyPropertyChange">notifyPropertyChange</a>
             </li>
+            <li class="method public inherited">
+              <a href="#method_ownerInjection">ownerInjection</a>
+            </li>
             <li class="method private inherited">
               <a href="#method_propertyDidChange">propertyDidChange</a>
             </li>
             <li class="method private inherited">
               <a href="#method_propertyWillChange">propertyWillChange</a>
+            </li>
+            <li class="method public inherited">
+              <a href="#method_register">register</a>
+            </li>
+            <li class="method public inherited">
+              <a href="#method_registerOption">registerOption</a>
+            </li>
+            <li class="method public inherited">
+              <a href="#method_registerOptions">registerOptions</a>
+            </li>
+            <li class="method public inherited">
+              <a href="#method_registerOptionsForType">registerOptionsForType</a>
+            </li>
+            <li class="method public inherited">
+              <a href="#method_registeredOption">registeredOption</a>
+            </li>
+            <li class="method public inherited">
+              <a href="#method_registeredOptions">registeredOptions</a>
+            </li>
+            <li class="method public inherited">
+              <a href="#method_registeredOptionsForType">registeredOptionsForType</a>
             </li>
             <li class="method public inherited">
               <a href="#method_removeObserver">removeObserver</a>
@@ -764,10 +803,16 @@ to define one of these new containers.</p>
               <a href="#method_reopenClass">reopenClass</a>
             </li>
             <li class="method public inherited">
+              <a href="#method_resolveRegistration">resolveRegistration</a>
+            </li>
+            <li class="method public inherited">
               <a href="#method_set">set</a>
             </li>
             <li class="method public inherited">
               <a href="#method_setProperties">setProperties</a>
+            </li>
+            <li class="method private">
+              <a href="#method_setupRegistry">setupRegistry</a>
             </li>
             <li class="method public inherited">
               <a href="#method_toString">toString</a>
@@ -775,14 +820,23 @@ to define one of these new containers.</p>
             <li class="method public inherited">
               <a href="#method_toggleProperty">toggleProperty</a>
             </li>
+            <li class="method public">
+              <a href="#method_unregister">unregister</a>
+            </li>
             <li class="method public inherited">
               <a href="#method_willDestroy">willDestroy</a>
             </li>
         </ul>
         <p><h2>Properties</h2></p>
         <ul class="index-list">
+            <li class="property private inherited">
+              <a href="#property___container__">__container__</a>
+            </li>
             <li class="property public inherited">
               <a href="#property_concatenatedProperties">concatenatedProperties</a>
+            </li>
+            <li class="property private">
+              <a href="#property_engine">engine</a>
             </li>
             <li class="property public inherited">
               <a href="#property_isDestroyed">isDestroyed</a>
@@ -859,6 +913,61 @@ properties will lookup on the container lazily.</p>
 </div>
 
         
+<div id="method__lookupFactory" class="method private inherited item-entry">
+  <h3 data-id="method__lookupFactory" class="name anchorable-toc"><code>_lookupFactory</code></h3>
+  <span class="args">
+    (fullName)
+  </span>
+
+  <span class="type">Any</span>
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/ContainerProxyMixin.html#method__lookupFactory">ContainerProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/container_proxy.js#L97">packages/ember-runtime/lib/mixins/container_proxy.js:97</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Given a fullName return the corresponding factory.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>fullName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Any</span>
+        <dd> </dd>
+      </dl>
+    </div>
+</div>
+
+        
 <div id="method__onLookup" class="method private inherited item-entry">
   <h3 data-id="method__onLookup" class="name anchorable-toc"><code>_onLookup</code></h3>
 
@@ -889,6 +998,66 @@ properties will lookup on the container lazily.</p>
 
 
 
+</div>
+
+        
+<div id="method__resolveLocalLookupName" class="method private inherited item-entry">
+  <h3 data-id="method__resolveLocalLookupName" class="name anchorable-toc"><code>_resolveLocalLookupName</code></h3>
+  <span class="args">
+    (fullName, source)
+  </span>
+
+  <span class="type"><a href="/api/classes/String.html">String</a></span>
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/ContainerProxyMixin.html#method__resolveLocalLookupName">ContainerProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/container_proxy.js#L109">packages/ember-runtime/lib/mixins/container_proxy.js:109</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Given a name and a source path, resolve the fullName</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>fullName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>source</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/String.html">String</a></span>
+        <dd> </dd>
+      </dl>
+    </div>
 </div>
 
         
@@ -1073,6 +1242,127 @@ deferring.</p>
 </div>
 
         
+<div id="method_boot" class="method private item-entry">
+  <h3 data-id="method_boot" class="name anchorable-toc"><code>boot</code></h3>
+  <span class="args">
+    (options)
+  </span>
+
+  <span class="type">Promise<Ember.EngineInstance,Error></span>
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-application/lib/system/engine-instance.js#L61">packages/ember-application/lib/system/engine-instance.js:61</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Initialize the <code>Ember.EngineInstance</code> and return a promise that resolves
+with the instance itself when the boot process is complete.</p>
+
+<p>The primary task here is to run any registered instance initializers.</p>
+
+<p>See the documentation on <code>BootOptions</code> for the options it takes.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>options</strong> <span class="type">Object</span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Promise<Ember.EngineInstance,Error></span>
+        <dd> </dd>
+      </dl>
+    </div>
+</div>
+
+        
+<div id="method_buildChildEngineInstance" class="method private item-entry">
+  <h3 data-id="method_buildChildEngineInstance" class="name anchorable-toc"><code>buildChildEngineInstance</code></h3>
+  <span class="args">
+    (name, options)
+  </span>
+
+  <span class="type">Ember.EngineInstance,Error</span>
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-application/lib/system/engine-instance.js#L168">packages/ember-application/lib/system/engine-instance.js:168</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Build a new <code>Ember.EngineInstance</code> that&#39;s a child of this instance.</p>
+
+<p>Engines must be registered by name with their parent engine
+(or application).</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>name</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            the registered name of the engine.
+
+          </dd>
+          <dt><strong>options</strong> <span class="type">Object</span></dt>
+          <dd>
+            options provided to the engine instance.
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Ember.EngineInstance,Error</span>
+        <dd> </dd>
+      </dl>
+    </div>
+</div>
+
+        
 <div id="method_cacheFor" class="method public inherited item-entry">
   <h3 data-id="method_cacheFor" class="name anchorable-toc"><code>cacheFor</code></h3>
   <span class="args">
@@ -1128,6 +1418,38 @@ generated lazily.</p>
         <dd> The cached value of the computed property, if any</dd>
       </dl>
     </div>
+</div>
+
+        
+<div id="method_cloneParentDependencies" class="method private item-entry">
+  <h3 data-id="method_cloneParentDependencies" class="name anchorable-toc"><code>cloneParentDependencies</code></h3>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-application/lib/system/engine-instance.js#L194">packages/ember-application/lib/system/engine-instance.js:194</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Clone dependencies shared between an engine instance and its parent.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+
 </div>
 
         
@@ -1906,6 +2228,61 @@ on the object.</p>
 </div>
 
         
+<div id="method_hasRegistration" class="method public inherited item-entry">
+  <h3 data-id="method_hasRegistration" class="name anchorable-toc"><code>hasRegistration</code></h3>
+  <span class="args">
+    (fullName)
+  </span>
+
+  <span class="type">Boolean</span>
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/RegistryProxyMixin.html#method_hasRegistration">RegistryProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/registry_proxy.js#L110">packages/ember-runtime/lib/mixins/registry_proxy.js:110</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Check if a factory is registered.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>fullName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Boolean</span>
+        <dd> </dd>
+      </dl>
+    </div>
+</div>
+
+        
 <div id="method_incrementProperty" class="method public inherited item-entry">
   <h3 data-id="method_incrementProperty" class="name anchorable-toc"><code>incrementProperty</code></h3>
   <span class="args">
@@ -2042,6 +2419,242 @@ application.</p>
 </div>
 
         
+<div id="method_inject" class="method public inherited item-entry">
+  <h3 data-id="method_inject" class="name anchorable-toc"><code>inject</code></h3>
+  <span class="args">
+    (factoryNameOrType, property, injectionName)
+  </span>
+
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/RegistryProxyMixin.html#method_inject">RegistryProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/registry_proxy.js#L203">packages/ember-runtime/lib/mixins/registry_proxy.js:203</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Define a dependency injection onto a specific factory or all factories
+of a type.</p>
+
+<p>When Ember instantiates a controller, view, or other framework component
+it can attach a dependency to that component. This is often used to
+provide services to a set of framework components.</p>
+
+<p>An example of providing a session object to all controllers:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+</pre></td>
+  <td class="code"><pre>let App = Ember.Application.create();
+let Session = Ember.Object.extend({ <span class="key">isAuthenticated</span>: <span class="predefined-constant">false</span> });
+
+<span class="comment">// A factory must be registered before it can be injected</span>
+App.register(<span class="string"><span class="delimiter">'</span><span class="content">session:main</span><span class="delimiter">'</span></span>, Session);
+
+<span class="comment">// Inject 'session:main' onto all factories of the type 'controller'</span>
+<span class="comment">// with the name 'session'</span>
+App.inject(<span class="string"><span class="delimiter">'</span><span class="content">controller</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">session</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">session:main</span><span class="delimiter">'</span></span>);
+
+App.IndexController = Ember.Controller.extend({
+  <span class="key">isLoggedIn</span>: Ember.computed.alias(<span class="string"><span class="delimiter">'</span><span class="content">session.isAuthenticated</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Injections can also be performed on specific factories.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>App.inject(&lt;full_name or type&gt;, &lt;property name&gt;, &lt;full_name&gt;)
+App.inject(<span class="string"><span class="delimiter">'</span><span class="content">route</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">source</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">source:main</span><span class="delimiter">'</span></span>)
+App.inject(<span class="string"><span class="delimiter">'</span><span class="content">route:application</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">email</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">model:email</span><span class="delimiter">'</span></span>)
+</pre></td>
+</tr></table>
+</div></div>
+<p>It is important to note that injections can only be performed on
+classes that are instantiated by Ember itself. Instantiating a class
+directly (via <code>create</code> or <code>new</code>) bypasses the dependency injection
+system.</p>
+
+<p><strong>Note:</strong> Ember-Data instantiates its models in a unique manner, and consequently
+injections onto models (or all models) will not work as expected. Injections
+on models can be enabled by setting <code>EmberENV.MODEL_FACTORY_INJECTIONS</code>
+to <code>true</code>.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>factoryNameOrType</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>property</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>injectionName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+</div>
+
+        
+<div id="method_lookup" class="method public inherited item-entry">
+  <h3 data-id="method_lookup" class="name anchorable-toc"><code>lookup</code></h3>
+  <span class="args">
+    (fullName, options)
+  </span>
+
+  <span class="type">Any</span>
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/ContainerProxyMixin.html#method_lookup">ContainerProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/container_proxy.js#L49">packages/ember-runtime/lib/mixins/container_proxy.js:49</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Given a fullName return a corresponding instance.</p>
+
+<p>The default behaviour is for lookup to return a singleton instance.
+The singleton is scoped to the container, allowing multiple containers
+to all have their own locally scoped singletons.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+</pre></td>
+  <td class="code"><pre>let registry = <span class="keyword">new</span> Registry();
+let container = registry.container();
+
+registry.register(<span class="string"><span class="delimiter">'</span><span class="content">api:twitter</span><span class="delimiter">'</span></span>, Twitter);
+
+let twitter = container.lookup(<span class="string"><span class="delimiter">'</span><span class="content">api:twitter</span><span class="delimiter">'</span></span>);
+
+twitter <span class="keyword">instanceof</span> Twitter; <span class="comment">// =&gt; true</span>
+
+<span class="comment">// by default the container will return singletons</span>
+let twitter2 = container.lookup(<span class="string"><span class="delimiter">'</span><span class="content">api:twitter</span><span class="delimiter">'</span></span>);
+twitter2 <span class="keyword">instanceof</span> Twitter; <span class="comment">// =&gt; true</span>
+
+twitter === twitter2; <span class="comment">//=&gt; true</span>
+</pre></td>
+</tr></table>
+</div></div>
+<p>If singletons are not wanted an optional flag can be provided at lookup.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre>let registry = <span class="keyword">new</span> Registry();
+let container = registry.container();
+
+registry.register(<span class="string"><span class="delimiter">'</span><span class="content">api:twitter</span><span class="delimiter">'</span></span>, Twitter);
+
+let twitter = container.lookup(<span class="string"><span class="delimiter">'</span><span class="content">api:twitter</span><span class="delimiter">'</span></span>, { <span class="key">singleton</span>: <span class="predefined-constant">false</span> });
+let twitter2 = container.lookup(<span class="string"><span class="delimiter">'</span><span class="content">api:twitter</span><span class="delimiter">'</span></span>, { <span class="key">singleton</span>: <span class="predefined-constant">false</span> });
+
+twitter === twitter2; <span class="comment">//=&gt; false</span>
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>fullName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>options</strong> <span class="type">Object</span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Any</span>
+        <dd> </dd>
+      </dl>
+    </div>
+</div>
+
+        
 <div id="method_metaForProperty" class="method private inherited item-entry">
   <h3 data-id="method_metaForProperty" class="name anchorable-toc"><code>metaForProperty</code></h3>
   <span class="args">
@@ -2168,6 +2781,66 @@ succession.</p>
       <h3>Returns:</h3>
       <dl>
         <dt><span class="type"><a href="/api/classes/Ember.Observable.html">Ember.Observable</a></span>
+        <dd> </dd>
+      </dl>
+    </div>
+</div>
+
+        
+<div id="method_ownerInjection" class="method public inherited item-entry">
+  <h3 data-id="method_ownerInjection" class="name anchorable-toc"><code>ownerInjection</code></h3>
+
+  <span class="type">Object</span>
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/ContainerProxyMixin.html#method_ownerInjection">ContainerProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/container_proxy.js#L26">packages/ember-runtime/lib/mixins/container_proxy.js:26</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Returns an object that can be used to provide an owner to a
+manually created instance.</p>
+
+<p>Example:</p>
+<div class="highlight text "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+</pre></td>
+  <td class="code"><pre>let owner = Ember.getOwner(this);
+
+User.create(
+  owner.ownerInjection(),
+  { username: 'rwjblue' }
+)
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+
+  <p>
+  </p>
+
+
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Object</span>
         <dd> </dd>
       </dl>
     </div>
@@ -2301,6 +2974,512 @@ like.</p>
       <dl>
         <dt><span class="type"><a href="/api/classes/Ember.Observable.html">Ember.Observable</a></span>
         <dd> </dd>
+      </dl>
+    </div>
+</div>
+
+        
+<div id="method_register" class="method public inherited item-entry">
+  <h3 data-id="method_register" class="name anchorable-toc"><code>register</code></h3>
+  <span class="args">
+    (fullName, factory, options)
+  </span>
+
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/RegistryProxyMixin.html#method_register">RegistryProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/registry_proxy.js#L29">packages/ember-runtime/lib/mixins/registry_proxy.js:29</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Registers a factory that can be used for dependency injection (with
+<code>inject</code>) or for service lookup. Each factory is registered with
+a full name including two parts: <code>type:name</code>.</p>
+
+<p>A simple example:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>let App = Ember.Application.create();
+
+App.Orange = Ember.Object.extend();
+App.register(<span class="string"><span class="delimiter">'</span><span class="content">fruit:favorite</span><span class="delimiter">'</span></span>, App.Orange);
+</pre></td>
+</tr></table>
+</div></div>
+<p>Ember will resolve factories from the <code>App</code> namespace automatically.
+For example <code>App.CarsController</code> will be discovered and returned if
+an application requests <code>controller:cars</code>.</p>
+
+<p>An example of registering a controller with a non-standard name:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre>let App = Ember.Application.create();
+let Session = Ember.Controller.extend();
+
+App.register(<span class="string"><span class="delimiter">'</span><span class="content">controller:session</span><span class="delimiter">'</span></span>, Session);
+
+<span class="comment">// The Session controller can now be treated like a normal controller,</span>
+<span class="comment">// despite its non-standard name.</span>
+App.ApplicationController = Ember.Controller.extend({
+  <span class="key">needs</span>: [<span class="string"><span class="delimiter">'</span><span class="content">session</span><span class="delimiter">'</span></span>]
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Registered factories are <strong>instantiated</strong> by having <code>create</code>
+called on them. Additionally they are <strong>singletons</strong>, each time
+they are looked up they return the same instance.</p>
+
+<p>Some examples modifying that default behavior:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+</pre></td>
+  <td class="code"><pre>let App = Ember.Application.create();
+
+App.Person = Ember.Object.extend();
+App.Orange = Ember.Object.extend();
+App.Email = Ember.Object.extend();
+App.session = Ember.Object.create();
+
+App.register(<span class="string"><span class="delimiter">'</span><span class="content">model:user</span><span class="delimiter">'</span></span>, App.Person, { <span class="key">singleton</span>: <span class="predefined-constant">false</span> });
+App.register(<span class="string"><span class="delimiter">'</span><span class="content">fruit:favorite</span><span class="delimiter">'</span></span>, App.Orange);
+App.register(<span class="string"><span class="delimiter">'</span><span class="content">communication:main</span><span class="delimiter">'</span></span>, App.Email, { <span class="key">singleton</span>: <span class="predefined-constant">false</span> });
+App.register(<span class="string"><span class="delimiter">'</span><span class="content">session</span><span class="delimiter">'</span></span>, App.session, { <span class="key">instantiate</span>: <span class="predefined-constant">false</span> });
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>fullName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            type:name (e.g., 'model:user')
+
+          </dd>
+          <dt><strong>factory</strong> <span class="type"><a href="/api/classes/Function.html">Function</a></span></dt>
+          <dd>
+            (e.g., App.Person)
+
+          </dd>
+          <dt><strong>options</strong> <span class="type">Object</span></dt>
+          <dd>
+            (optional) disable instantiation or singleton usage
+
+          </dd>
+      </dl>
+    </div>
+
+</div>
+
+        
+<div id="method_registerOption" class="method public inherited item-entry">
+  <h3 data-id="method_registerOption" class="name anchorable-toc"><code>registerOption</code></h3>
+  <span class="args">
+    (fullName, optionName, options)
+  </span>
+
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/RegistryProxyMixin.html#method_registerOption">RegistryProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/registry_proxy.js#L120">packages/ember-runtime/lib/mixins/registry_proxy.js:120</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Register an option for a particular factory.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>fullName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>optionName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>options</strong> <span class="type">Object</span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+</div>
+
+        
+<div id="method_registerOptions" class="method public inherited item-entry">
+  <h3 data-id="method_registerOptions" class="name anchorable-toc"><code>registerOptions</code></h3>
+  <span class="args">
+    (fullName, options)
+  </span>
+
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/RegistryProxyMixin.html#method_registerOptions">RegistryProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/registry_proxy.js#L142">packages/ember-runtime/lib/mixins/registry_proxy.js:142</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Register options for a particular factory.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>fullName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>options</strong> <span class="type">Object</span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+</div>
+
+        
+<div id="method_registerOptionsForType" class="method public inherited item-entry">
+  <h3 data-id="method_registerOptionsForType" class="name anchorable-toc"><code>registerOptionsForType</code></h3>
+  <span class="args">
+    (type, options)
+  </span>
+
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/RegistryProxyMixin.html#method_registerOptionsForType">RegistryProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/registry_proxy.js#L162">packages/ember-runtime/lib/mixins/registry_proxy.js:162</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Allow registering options for all factories of a type.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+</pre></td>
+  <td class="code"><pre>let App = Ember.Application.create();
+let appInstance = App.buildInstance();
+
+<span class="comment">// if all of type `connection` must not be singletons</span>
+appInstance.optionsForType(<span class="string"><span class="delimiter">'</span><span class="content">connection</span><span class="delimiter">'</span></span>, { <span class="key">singleton</span>: <span class="predefined-constant">false</span> });
+
+appInstance.register(<span class="string"><span class="delimiter">'</span><span class="content">connection:twitter</span><span class="delimiter">'</span></span>, TwitterConnection);
+appInstance.register(<span class="string"><span class="delimiter">'</span><span class="content">connection:facebook</span><span class="delimiter">'</span></span>, FacebookConnection);
+
+let twitter = appInstance.lookup(<span class="string"><span class="delimiter">'</span><span class="content">connection:twitter</span><span class="delimiter">'</span></span>);
+let twitter2 = appInstance.lookup(<span class="string"><span class="delimiter">'</span><span class="content">connection:twitter</span><span class="delimiter">'</span></span>);
+
+twitter === twitter2; <span class="comment">// =&gt; false</span>
+
+let facebook = appInstance.lookup(<span class="string"><span class="delimiter">'</span><span class="content">connection:facebook</span><span class="delimiter">'</span></span>);
+let facebook2 = appInstance.lookup(<span class="string"><span class="delimiter">'</span><span class="content">connection:facebook</span><span class="delimiter">'</span></span>);
+
+facebook === facebook2; <span class="comment">// =&gt; false</span>
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>type</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>options</strong> <span class="type">Object</span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+</div>
+
+        
+<div id="method_registeredOption" class="method public inherited item-entry">
+  <h3 data-id="method_registeredOption" class="name anchorable-toc"><code>registeredOption</code></h3>
+  <span class="args">
+    (fullName, optionName)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/RegistryProxyMixin.html#method_registeredOption">RegistryProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/registry_proxy.js#L131">packages/ember-runtime/lib/mixins/registry_proxy.js:131</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Return a specific registered option for a particular factory.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>fullName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>optionName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Object</span>
+        <dd> options</dd>
+      </dl>
+    </div>
+</div>
+
+        
+<div id="method_registeredOptions" class="method public inherited item-entry">
+  <h3 data-id="method_registeredOptions" class="name anchorable-toc"><code>registeredOptions</code></h3>
+  <span class="args">
+    (fullName)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/RegistryProxyMixin.html#method_registeredOptions">RegistryProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/registry_proxy.js#L152">packages/ember-runtime/lib/mixins/registry_proxy.js:152</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Return registered options for a particular factory.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>fullName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Object</span>
+        <dd> options</dd>
+      </dl>
+    </div>
+</div>
+
+        
+<div id="method_registeredOptionsForType" class="method public inherited item-entry">
+  <h3 data-id="method_registeredOptionsForType" class="name anchorable-toc"><code>registeredOptionsForType</code></h3>
+  <span class="args">
+    (type)
+  </span>
+
+  <span class="type">Object</span>
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/RegistryProxyMixin.html#method_registeredOptionsForType">RegistryProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/registry_proxy.js#L193">packages/ember-runtime/lib/mixins/registry_proxy.js:193</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Return the registered options for all factories of a type.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>type</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Object</span>
+        <dd> options</dd>
       </dl>
     </div>
 </div>
@@ -2559,6 +3738,61 @@ see <code>reopen</code></p>
 </div>
 
         
+<div id="method_resolveRegistration" class="method public inherited item-entry">
+  <h3 data-id="method_resolveRegistration" class="name anchorable-toc"><code>resolveRegistration</code></h3>
+  <span class="args">
+    (fullName)
+  </span>
+
+  <span class="type"><a href="/api/classes/Function.html">Function</a></span>
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/RegistryProxyMixin.html#method_resolveRegistration">RegistryProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/registry_proxy.js#L19">packages/ember-runtime/lib/mixins/registry_proxy.js:19</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Given a fullName return the corresponding factory.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>fullName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type"><a href="/api/classes/Function.html">Function</a></span>
+        <dd> fullName's factory</dd>
+      </dl>
+    </div>
+</div>
+
+        
 <div id="method_set" class="method public inherited item-entry">
   <h3 data-id="method_set" class="name anchorable-toc"><code>set</code></h3>
   <span class="args">
@@ -2704,6 +3938,53 @@ observers will be buffered.</p>
         <dd> The passed in hash</dd>
       </dl>
     </div>
+</div>
+
+        
+<div id="method_setupRegistry" class="method private item-entry">
+  <h3 data-id="method_setupRegistry" class="name anchorable-toc"><code>setupRegistry</code></h3>
+  <span class="args">
+    (registry, options)
+  </span>
+
+
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-application/lib/system/engine-instance.js#L143">packages/ember-application/lib/system/engine-instance.js:143</a>
+
+  </div>
+
+
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>registry</strong> <span class="type"><a href="/api/classes/Registry.html">Registry</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>options</strong> <span class="type">BootOptions</span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
 </div>
 
         
@@ -2856,6 +4137,57 @@ current value.</p>
 </div>
 
         
+<div id="method_unregister" class="method public item-entry">
+  <h3 data-id="method_unregister" class="name anchorable-toc"><code>unregister</code></h3>
+  <span class="args">
+    (fullName)
+  </span>
+
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+        Inherited from
+        <a href="/api/classes/RegistryProxyMixin.html#method_unregister">RegistryProxyMixin</a>
+          but overwritten in
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-application/lib/system/engine-instance.js#L118">packages/ember-application/lib/system/engine-instance.js:118</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Unregister a factory.</p>
+
+<p>Overrides <code>RegistryProxy#unregister</code> in order to clear any cached instances
+of the unregistered factory.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>fullName</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+</div>
+
+        
 <div id="method_willDestroy" class="method public inherited item-entry">
   <h3 data-id="method_willDestroy" class="name anchorable-toc"><code>willDestroy</code></h3>
 
@@ -2908,6 +4240,40 @@ current value.</p>
     <input type='checkbox' data-type='deprecated'>
     Deprecated
   </label>
+</div>
+
+        
+<div id="property___container__" class="property private inherited item-entry">
+  <h3 data-id="property___container__" class="name anchorable-toc"><code>__container__</code></h3>
+
+
+  <span class="type">Ember.Container</span>
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/api/classes/ContainerProxyMixin.html#method___container__">ContainerProxyMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-runtime/lib/mixins/container_proxy.js#L18">packages/ember-runtime/lib/mixins/container_proxy.js:18</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>The container stores state.</p>
+
+    </div>
+
+  <p>
+  </p>
+
+
+
 </div>
 
         
@@ -3025,6 +4391,39 @@ mislead your users to think they can override the property in a subclass).</p>
 
   <p>
       <strong>Default:</strong> <code>null</code>
+  </p>
+
+
+
+</div>
+
+        
+<div id="property_engine" class="property private item-entry">
+  <h3 data-id="property_engine" class="name anchorable-toc"><code>engine</code></h3>
+
+
+  <span class="type"><a href="/api/classes/Ember.Engine.html">Ember.Engine</a></span>
+
+
+  <span class="flag private">private</span>
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.8.2/packages/ember-application/lib/system/engine-instance.js#L31">packages/ember-application/lib/system/engine-instance.js:31</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>The base <code>Engine</code> for which this is an instance.</p>
+
+    </div>
+
+  <p>
   </p>
 
 
