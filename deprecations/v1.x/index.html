@@ -1400,7 +1400,7 @@ Using <code>Ember.ReduceComputedProperty</code> would show the following:</p>
 <p>Because of changes in the way Ember renders components in 1.13, setting properties within an overridden <code>didInsertElement</code> method
 will result in a deprecation warning.</p>
 
-<p>In many cases you can move your logic later in the component lifecycle by implementing the <code>didRender</code> hook, on of
+<p>In many cases you can move your logic earlier in the component lifecycle by implementing the <code>didReceiveAttrs</code> hook, one of
 <a href="http://emberjs.com/blog/2015/06/12/ember-1-13-0-released.html#toc_component-lifecycle-hooks">the new hooks introduced in 1.13</a>.</p>
 <div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -1408,13 +1408,58 @@ will result in a deprecation warning.</p>
 3
 4
 </pre></td>
-  <td class="code"><pre>  didRender() {
+  <td class="code"><pre>  didReceiveAttrs() {
     <span class="local-variable">this</span>._super(...<span class="local-variable">arguments</span>);
     <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">myValue</span><span class="delimiter">'</span></span>, value);
   }
 </pre></td>
 </tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_beforeobserver'>beforeObserver</h4>
+</div></div>
+<p>It may even be possible, if your value is constant, to move the change to <code>init</code>, where the value can only be set once.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>  init() {
+    <span class="local-variable">this</span>._super(...<span class="local-variable">arguments</span>);
+    <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">myValue</span><span class="delimiter">'</span></span>, myValue);
+  }
+</pre></td>
+</tr></table>
+</div></div>
+<p>Don&#39;t see a <code>set</code> in your <code>didInsertElement</code>? It may be in <code>didUpdate</code> or <code>didRender</code>. Due to a bug, these report the wrong method name.</p>
+
+<p>Still can&#39;t find it?
+- One of your computed properties may be calling <code>set</code>.
+- An observer is being triggered.
+- One of your child components may be setting one of its attributes and it is being propagated upward to this component.</p>
+
+<p>In rare cases, you may be measuring the DOM rendered and want to set an attribute based on that. In this case, it is ok to cause a second render:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre>  didInsertElement() {
+    <span class="local-variable">this</span>._super(...<span class="local-variable">arguments</span>);
+    run.schedule(<span class="string"><span class="delimiter">'</span><span class="content">afterRender</span><span class="delimiter">'</span></span>, <span class="local-variable">this</span>, <span class="local-variable">this</span>.measureAndSet);
+  },
+
+  measureAndSet() {
+    <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">height</span><span class="delimiter">'</span></span>, <span class="local-variable">this</span>.element.children.length * <span class="integer">30</span>);
+  }
+</pre></td>
+</tr></table>
+</div></div>
+<p>However, doing so is relatively slow and should be done as a last resort.</p>
+<h4 class='anchorable-toc' id='toc_beforeobserver'>beforeObserver</h4>
 <p>Before observers are deprecated due to the negative performance implications they have for Ember internals and applications.</p>
 
 <p>Typically they were used to have access to the old value of a property when it&#39;s about to change, but you can get same functionality in an even more efficient way with just a few lines of code:</p>
