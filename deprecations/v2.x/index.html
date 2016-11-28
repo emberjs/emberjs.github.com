@@ -1022,6 +1022,149 @@ Please refactor to use <code>appendTo</code>:</p>
 </tr></table>
 </div></div>
 <p>Note that both APIs are private, so no public API is been deprecated here.</p>
+<h4 class='anchorable-toc' id='toc_code-render-code-helper'><code>{{render</code> helper</h4><h5 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h5><h5 class='anchorable-toc' id='toc_id-ember-template-compiler-deprecate-render'>id: ember-template-compiler.deprecate-render</h5>
+<p>Using the <code>{{render</code> helper is deprecated in favor of using components.
+Please refactor uses of this helper to components:</p>
+
+<p>For example, if you had:</p>
+<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>{{render 'my-sidebar'}}
+</pre></td>
+</tr></table>
+</div></div><div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre>{{! app/templates/my-sidebar.hbs }}
+&lt;p&gt;template stuff here&lt;/p&gt;
+</pre></td>
+</tr></table>
+</div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/controllers/my-sidebar.js</span>
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Controller.extend({
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>You would refactor to a component like so:</p>
+<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>{{my-sidebar}}
+</pre></td>
+</tr></table>
+</div></div><div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre>{{! app/templates/components/my-sidebar.hbs }}
+&lt;p&gt;template stuff here&lt;/p&gt;
+</pre></td>
+</tr></table>
+</div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/components/my-sidebar.js</span>
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Note that the render helper has several unique behaviors that may require further refactoring work during migration to a component.</p>
+
+<ul>
+<li>When using the render helper with no model argument, the controller instance is a singleton. For example the same controller instance is shared between <code>{{render &#39;post&#39;}}</code>, any other helper usage of <code>{{render &#39;post&#39;}}</code>, a route template named post, and dependency injections using <code>Ember.inject.service(&#39;post&#39;)</code>.</li>
+<li>When sendAction is called in a rendered controller, or when <code>{{action</code> is used in a render helper template, the bubbling target for those actions is the router and current active route. With components, those same actions would target only the component instance without bubbling.</li>
+</ul>
+<h4 class='anchorable-toc' id='toc_rendering-into-a-render-helper-that-resolves-to-an-outlet'>Rendering into a {{render}} helper that resolves to an {{outlet}}.</h4><h5 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h5><h5 class='anchorable-toc' id='toc_id-ember-routing-top-level-render-helper'>id: ember-routing.top-level-render-helper</h5>
+<p>Before named outlets were introduced to Ember the render helper was used to declare slots for <code>this.render</code> in routes. This usage is not common in modern, idiomatic applications and is deprecated. In general, the pattern of named outlets or named render helpers is discouraged. Instead use of <a href="https://github.com/ef4/ember-elsewhere">ember-elsewhere</a> or another DOM-redirection library should better serve these use cases.</p>
+
+<p>For example this code uses the render helper as a target for a special sidebar present on the index route. The special sidebar is in a template named <code>index-sidebar</code>:</p>
+<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>{{! app/templates/application.hbs }}
+&lt;div class=&quot;sidebar&quot;&gt;{{render 'sidebar'}}&lt;/div&gt;
+&lt;div class=&quot;main&quot;&gt;{{outlet}}&lt;/div&gt;
+</pre></td>
+</tr></table>
+</div></div><div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+</pre></td>
+  <td class="code"><pre>{{! app/templates/index.hbs }}
+Index Content
+</pre></td>
+</tr></table>
+</div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/routes/index.js</span>
+App.IndexRoute = Ember.Route.extend({
+  renderTemplate() {
+    <span class="local-variable">this</span>._super(...<span class="local-variable">arguments</span>);
+    <span class="local-variable">this</span>.render(<span class="string"><span class="delimiter">'</span><span class="content">index-sidebar</span><span class="delimiter">'</span></span>, { <span class="key">into</span>: <span class="string"><span class="delimiter">'</span><span class="content">sidebar</span><span class="delimiter">'</span></span> });
+  },
+  <span class="key">actions</span>: {
+    willTransition() {
+      <span class="local-variable">this</span>.disconnectOutlet({
+        <span class="key">parentView</span>: <span class="string"><span class="delimiter">'</span><span class="content">application</span><span class="delimiter">'</span></span>,
+        <span class="key">outlet</span>: <span class="string"><span class="delimiter">'</span><span class="content">sidebar</span><span class="delimiter">'</span></span>
+      });
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>It should be refactored to use <a href="https://github.com/ef4/ember-elsewhere">ember-elsewhere</a>. The sidebar content must be implemented as a component, in this case named <code>index-sidebar</code>. The logic previously used in the route file can be removed. The refactored example:</p>
+<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>{{! app/templates/application.hbs }}
+&lt;div class=&quot;sidebar&quot;&gt;{{from-elsewhere name='sidebar'}}&lt;/div&gt;
+&lt;div class=&quot;main&quot;&gt;{{outlet}}&lt;/div&gt;
+</pre></td>
+</tr></table>
+</div></div><div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>{{! app/templates/index.hbs }}
+{{to-elsewhere named='sidebar' send=(component 'index-sidebar')}}
+Index Content
+</pre></td>
+</tr></table>
+</div></div>
+<p>For more informations of how to use <code>ember-elsewhere</code>, please visit the official
+documentation <a href="https://github.com/ef4/ember-elsewhere#ember-elsewhere">here</a>.</p>
 
 
       </div>
