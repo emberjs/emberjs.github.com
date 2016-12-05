@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Ember.js - Deprecations</title>
-		<meta property="st:title" content="Ember.js: Deprecations" />
-		<meta property="og:title" content="Ember.js: Deprecations" />
+    <title>Ember.js - Deprecations for Ember Data v2.x</title>
+		<meta property="st:title" content="Ember.js: Deprecations for Ember Data v2.x" />
+		<meta property="og:title" content="Ember.js: Deprecations for Ember Data v2.x" />
 		<meta property="og:description" content="Ember.js helps developers be more productive out of the box. Designed with developer ergonomics in mind, its friendly APIs help you get your job done—fast." />
 		<meta property="og:image" content="http://emberjs.com/images/tomster-sm.png" />
 		<meta name="twitter:card" content="summary" />
 		<meta name="twitter:site" content="@emberjs" />
-		<meta name="twitter:title" content="Deprecations"/>
+		<meta name="twitter:title" content="Deprecations for Ember Data v2.x"/>
 		<meta name="twitter:image" content="http://emberjs.com/images/tomster-twitter-card.png" />
     <link rel="shortcut icon" href="/images/favicon.png" />
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" /><![endif]-->
@@ -18,7 +18,7 @@
     
   </head>
 
-  <body class="deprecations deprecations_index not-responsive">
+  <body class="deprecations deprecations_ember-data deprecations_ember-data_v2 not-responsive">
 
     <!--[if lt IE 9]>
       <script type="text/javascript" src="/javascripts/common-old-ie.js"></script>
@@ -51,23 +51,47 @@
     
 
     <div id="content-wrapper">
-      <div id="content" >
-        <h2 class='anchorable-toc' id='toc_deprecations'>Deprecations</h2>
-<p>Periodically, various APIs in Ember.js may be deprecated. During a minor
-release, for instance when upgrading from version 1.9 to 1.10, you may see new
-deprecations fire in your codebase. Until a major revision such as 2.0 lands,
-code firing such deprecations is still supported by the Ember community. After
-the next major revision lands, the supporting code may be removed. This style
-of change management is commonly referred to as <a href="http://semver.org/">Semantic Versioning</a>.</p>
-<h3 class='anchorable-toc' id='toc_ember'>Ember</h3>
-<ul>
-<li><a href="/deprecations/v1.x">Version 1.x</a></li>
-<li><a href="/deprecations/v2.x">Version 2.x</a></li>
-</ul>
-<h3 class='anchorable-toc' id='toc_ember-data'>Ember Data</h3>
-<ul>
-<li><a href="/deprecations/ember-data/v2.x">Version 2.x</a></li>
-</ul>
+        <div id="sidebar">
+              <ol id='toc-list'>
+    </ol>
+
+          <div id="back-to-top"><a id="back-top-top" href="#">&#11014; Back to Top</a></div>
+        </div>
+      <div id="content" class="has-sidebar">
+        
+  <h2 class='anchorable-toc' id='toc_deprecations-added-in-ember-data-2-x'>Deprecations Added in Ember Data 2.x</h2><h3 class='anchorable-toc' id='toc_deprecations-added-in-ember-data-2-3'>Deprecations Added in Ember Data 2.3</h3><h4 class='anchorable-toc' id='toc_non-primitive-defaultvalue-for-model-attributes'>Non-primitive defaultValue for Model Attributes</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-defaultvalue-complex-object'>id: ds.defaultValue.complex-object</h6>
+<p>Providing a non-primitive value as a <code>defaultValue</code> has been deprecated because
+the provided value is shared between all instances of the model. Using a
+non-primitive value, such as <code>defaultValue: []</code>, can lead to unexpected bugs when
+that value is mutated.</p>
+
+<p>If you wish to continue using a non-primitive value as the <code>defaultValue</code> for an
+attribute, you should provide a function that returns the value:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.Model.extend({
+  <span class="key">username</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">createdAt</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">date</span><span class="delimiter">'</span></span>, {
+    defaultValue() {
+      <span class="keyword">return</span> <span class="keyword">new</span> Date();
+    }
+  })
+});
+</pre></td>
+</tr></table>
+</div></div>
 
       </div>
     </div>
@@ -107,7 +131,8 @@ of change management is commonly referred to as <a href="http://semver.org/">Sem
 </div>
 
 
-    
+        <script type="text/javascript" src="/javascripts/deprecations.js"></script>
+
     <script type="text/javascript">
       var _gaq = _gaq || [];
       var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
