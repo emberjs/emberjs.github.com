@@ -109,7 +109,81 @@ attribute, you should provide a function that returns the value:</p>
   <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
 </pre></td>
 </tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_ember-date-parse'>Ember.Date.parse</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-ember-date-parse-deprecate'>id: ds.ember.date.parse-deprecate</h6>
+<p><code>Ember.Date.parse</code> was created as a <a href="https://github.com/csnover/js-iso8601">progressive enhancement for ISO
+8601</a> support in browsers that do not
+support it (Safari 5-, IE 8-, Firefox 3.6-).</p>
+
+<p>When <code>Ember.EXTEND_PROTOTYPES === true</code> or <code>Ember.EXTEND_PROTOTYPES.Date ===
+true</code>, Ember Data overrides the native <code>Date.parse</code> with <code>Ember.Date.parse</code>.
+This overriding behavior is now deprecated.</p>
+
+<p>To clear this deprecation you should refactor your application&#39;s code to use
+<code>Date.parse</code> and disable Ember Data&#39;s <code>Date</code> prototype extension.</p>
+
+<p>With Ember &gt;= v2.7.0, disable the prototype extension for <code>Date</code>:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre><span class="comment">// config/environment.js</span>
+
+ENV = {
+  <span class="key">EmberENV</span>: {
+    <span class="key">EXTEND_PROTOTYPES</span>: {
+      <span class="key">Date</span>: <span class="predefined-constant">false</span>
+    }
+  }
+}
+</pre></td>
+</tr></table>
 </div></div>
+<p>With Ember &lt; v2.7.0, values must be provided for all prototype extensions:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre><span class="comment">// config/environment.js</span>
+
+<span class="keyword">var</span> ENV = {
+  <span class="key">EmberENV</span>: {
+    <span class="key">EXTEND_PROTOTYPES</span>: {
+      <span class="key">Array</span>: <span class="predefined-constant">true</span>,
+      <span class="key">Date</span>: <span class="predefined-constant">false</span>,
+      <span class="key">Function</span>: <span class="predefined-constant">true</span>,
+      <span class="key">String</span>: <span class="predefined-constant">true</span>
+    }
+  }
+};
+</pre></td>
+</tr></table>
+</div></div>
+<p>If you&#39;re not sure which prototype extensions your app already has enabled, you
+can check <code>EmberENV.EXTEND_PROTOTYPES</code> in your browser&#39;s JavaScript console
+while your app is running.</p>
+
+<p>Note: The existing behavior of
+<a href="http://emberjs.com/api/data/classes/DS.DateTransform.html"><code>DS.DateTransform</code></a>
+was preserved. It is the direct usage of <code>Ember.Date.parse</code> and overriding of
+<code>Date.parse</code> that has been deprecated.</p>
+
 
       </div>
     </div>
