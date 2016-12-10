@@ -91,6 +91,64 @@ attribute, you should provide a function that returns the value:</p>
 });
 </pre></td>
 </tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-ember-data-2-6'>Deprecations Added in Ember Data 2.6</h3><h4 class='anchorable-toc' id='toc_restserializer-normalizehash'>RESTSerializer.normalizeHash</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-serializer-normalize-hash-deprecated'>id: ds.serializer.normalize-hash-deprecated</h6>
+<p><code>RESTSerializer.normalizeHash</code> has been deprecated in favor of using <code>normalize</code>.</p>
+
+<p>If you had this:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.RESTSerializer.extend({
+  <span class="key">normalizeHash</span>: {
+    <span class="function">_id</span>: <span class="keyword">function</span>(hash) {
+      hash.id = hash._id;
+      <span class="keyword">delete</span> hash._id;
+      <span class="keyword">return</span> hash;
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>You could change it to this:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.RESTSerializer.extend({
+  normalize(model, hash, prop) {
+    <span class="keyword">if</span> (prop === <span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>) {
+      hash.id = hash._id;
+      <span class="keyword">delete</span> hash._id;
+    }
+    <span class="keyword">return</span> <span class="local-variable">this</span>._super(...<span class="local-variable">arguments</span>);
+  }
+});
+</pre></td>
+</tr></table>
 </div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-ember-data-2-7'>Deprecations Added in Ember Data 2.7</h3><h4 class='anchorable-toc' id='toc_global-version-of-ds'>Global version of DS</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ember-data-global-ds'>id: ember-data.global-ds</h6>
 <p>Using the global version of DS is deprecated. Import <code>DS</code> or specific modules from <code>ember-data</code> where needed.</p>
 
