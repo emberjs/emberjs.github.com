@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Ember.js - RSVP.Promise</title>
+		<meta property="st:title" content="Ember.js: RSVP.Promise" />
+		<meta property="og:title" content="Ember.js: RSVP.Promise" />
+		<meta property="og:description" content="Ember.js helps developers be more productive out of the box. Designed with developer ergonomics in mind, its friendly APIs help you get your job done—fast." />
+		<meta property="og:image" content="http://emberjs.com/images/tomster-sm.png" />
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:site" content="@emberjs" />
+		<meta name="twitter:title" content="RSVP.Promise"/>
+		<meta name="twitter:image" content="http://emberjs.com/images/tomster-twitter-card.png" />
+    <link rel="shortcut icon" href="/images/favicon.png" />
+    <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7.css" rel="stylesheet" /><![endif]-->
+    <link href="/stylesheets/site.css" rel="stylesheet" />
+    <link href="/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
+    
+  </head>
+
+  <body class="api api_classes api_classes_RSVP not-responsive">
+
+    <!--[if lt IE 9]>
+      <script type="text/javascript" src="/javascripts/common-old-ie.js"></script>
+    <![endif]-->
+    <!--[if gte IE 9]><!-->
+      <script type="text/javascript" src="/javascripts/common-modern.js"></script>
+    <!--<![endif]-->
+
+    <header class="header">
+  <nav role="navigation" aria-label="main">
+    <ul class="header-nav container">
+      <li class="header-logo">
+        <a href="http://emberjs.com/"><span class="visually-hidden">Ember homepage</span></a>
+      <li><a href="/about">About</a></li>
+      <li><a href="http://guides.emberjs.com">Guides</a></li>
+      <li><a href="/api">API</a></li>
+      <li><a href="/community">Community</a></li>
+      <li><a href="/blog">Blog</a></li>
+      <li><a href="/builds">Builds</a></li>
+      <li class="header-search">
+        <form>
+          <input type="text" id="search-input" class="search-input" placeholder="Search ..."/>
+        </form>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+
+    
+
+    <div id="content-wrapper">
+        <div id="sidebar">
+              <ol id='toc-list'>
+      <li class='level-1'>
+        <a href="#">Projects</a>
+        <ol>
+          <li class='level-3 sub-selected'>
+            <a href="/internal">Ember</a>
+          </li>
+          <li class='level-3 '>
+            <a href="/internal/data">Ember Data</a>
+          </li>
+        </ol>
+      </li>
+
+      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v2.10.0" target="_blank"> Tag: v2.10.0</a></li>
+
+
+          <li class="level-1 ">
+                  <a href='#'>Modules</a>
+
+          <ol class="">
+          
+          <li class="level-3 ">
+                        <a href="/internal/modules/ember.html">ember</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/modules/ember-application.html">ember-application</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/modules/ember-debug.html">ember-debug</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/modules/ember-extension-support.html">ember-extension-support</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/modules/ember-glimmer.html">ember-glimmer</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/modules/ember-htmlbars.html">ember-htmlbars</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/modules/ember-metal.html">ember-metal</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/modules/ember-routing.html">ember-routing</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/modules/ember-runtime.html">ember-runtime</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/modules/ember-testing.html">ember-testing</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/modules/ember-views.html">ember-views</a>
+
+          </li>
+        
+          </ol>
+        
+          </li>
+        
+
+          <li class="level-1 ">
+                  <a href='#'>Namespaces</a>
+
+          <ol class="">
+          
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.html">Ember</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.AutoLocation.html">Ember.AutoLocation</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.FEATURES.html">Ember.FEATURES</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Instrumentation.html">Ember.Instrumentation</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Location.html">Ember.Location</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.String.html">Ember.String</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.computed.html">Ember.computed</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.inject.html">Ember.inject</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.run.html">Ember.run</a>
+
+          </li>
+        
+          </ol>
+        
+          </li>
+        
+
+          <li class="level-1 selected">
+                  <a href='#'>Classes</a>
+
+          <ol class="selected">
+          
+          <li class="level-3 ">
+                        <a href="/internal/classes/Backburner.html">Backburner</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/BucketCache.html">BucketCache</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Container.html">Container</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/ContainerProxyMixin.html">ContainerProxyMixin</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Descriptor.html">Descriptor</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.ActionHandler.html">Ember.ActionHandler</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.ActionSupport.html">Ember.ActionSupport</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Application.html">Ember.Application</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.ApplicationInstance.html">Ember.ApplicationInstance</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.ApplicationInstance.BootOptions.html">Ember.ApplicationInstance.BootOptions</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Array.html">Ember.Array</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.ArrayProxy.html">Ember.ArrayProxy</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Binding.html">Ember.Binding</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Checkbox.html">Ember.Checkbox</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.ClassNamesSupport.html">Ember.ClassNamesSupport</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Comparable.html">Ember.Comparable</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Component.html">Ember.Component</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.ComputedProperty.html">Ember.ComputedProperty</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.ContainerDebugAdapter.html">Ember.ContainerDebugAdapter</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Controller.html">Ember.Controller</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.ControllerMixin.html">Ember.ControllerMixin</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Copyable.html">Ember.Copyable</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.CoreObject.html">Ember.CoreObject</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.CoreView.html">Ember.CoreView</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.DataAdapter.html">Ember.DataAdapter</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Debug.html">Ember.Debug</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.DefaultResolver.html">Ember.DefaultResolver</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.EachProxy.html">Ember.EachProxy</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Engine.html">Ember.Engine</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.EngineInstance.html">Ember.EngineInstance</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Enumerable.html">Ember.Enumerable</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Error.html">Ember.Error</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.EventDispatcher.html">Ember.EventDispatcher</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Evented.html">Ember.Evented</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Freezable.html">Ember.Freezable</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.HTMLBars.html">Ember.HTMLBars</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.HashLocation.html">Ember.HashLocation</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Helper.html">Ember.Helper</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.HistoryLocation.html">Ember.HistoryLocation</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.InjectedProperty.html">Ember.InjectedProperty</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.LinkComponent.html">Ember.LinkComponent</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Map.html">Ember.Map</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.MapWithDefault.html">Ember.MapWithDefault</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Mixin.html">Ember.Mixin</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.MutableArray.html">Ember.MutableArray</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.MutableEnumerable.html">Ember.MutableEnumerable</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Namespace.html">Ember.Namespace</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.NativeArray.html">Ember.NativeArray</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.NoneLocation.html">Ember.NoneLocation</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Object.html">Ember.Object</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.ObjectProxy.html">Ember.ObjectProxy</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Observable.html">Ember.Observable</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.OrderedSet.html">Ember.OrderedSet</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.PromiseProxyMixin.html">Ember.PromiseProxyMixin</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.ProxyMixin.html">Ember.ProxyMixin</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Route.html">Ember.Route</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Router.html">Ember.Router</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Service.html">Ember.Service</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.TargetActionSupport.html">Ember.TargetActionSupport</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Templates.helpers.html">Ember.Templates.helpers</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Test.html">Ember.Test</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Test.Adapter.html">Ember.Test.Adapter</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.Test.QUnitAdapter.html">Ember.Test.QUnitAdapter</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.TextArea.html">Ember.TextArea</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.TextField.html">Ember.TextField</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.TextSupport.html">Ember.TextSupport</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.View.html">Ember.View</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Ember.ViewMixin.html">Ember.ViewMixin</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Function.html">Function</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Libraries.html">Libraries</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/RSVP.html">RSVP</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/RSVP.EventTarget.html">RSVP.EventTarget</a>
+
+          </li>
+        
+          <li class="level-3 sub-selected">
+                        <a href="/internal/classes/RSVP.Promise.html">RSVP.Promise</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Registry.html">Registry</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/RegistryProxyMixin.html">RegistryProxyMixin</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/RoutingService.html">RoutingService</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/String.html">String</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Transition.html">Transition</a>
+
+          </li>
+        
+          </ol>
+        
+          </li>
+        
+          <div id="back-to-top"><a id="back-top-top" href="#">&#11014; Back to Top</a></div>
+        </div>
+      <div id="content" class="has-sidebar">
+        
+  <h1 class="api-header">
+  RSVP.Promise Class
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/ember.js/tree/v2.10.0/bower_components/rsvp/lib/rsvp/promise.js#L30">bower_components/rsvp/lib/rsvp/promise.js:30</a>
+</h1>
+
+<hr>
+
+
+
+
+
+<div class="class-info">
+
+
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.10.0/bower_components/rsvp/lib/rsvp/promise.js#L30">bower_components/rsvp/lib/rsvp/promise.js:30</a></p>
+
+    <p>Module: <a href="/internal/modules/ember.html">ember</a></p>
+</div>
+
+  <div class="description">
+    <p>Promise objects represent the eventual result of an asynchronous operation. The
+primary way of interacting with a promise is through its <code>then</code> method, which
+registers callbacks to receive either a promise’s eventual value or the reason
+why the promise cannot be fulfilled.</p>
+<h2 class='anchorable-toc' id='toc_terminology'>Terminology</h2>
+<ul>
+<li><code>promise</code> is an object or function with a <code>then</code> method whose behavior conforms to this specification.</li>
+<li><code>thenable</code> is an object or function that defines a <code>then</code> method.</li>
+<li><code>value</code> is any legal JavaScript value (including undefined, a thenable, or a promise).</li>
+<li><code>exception</code> is a value that is thrown using the throw statement.</li>
+<li><code>reason</code> is a value that indicates why a promise was rejected.</li>
+<li><code>settled</code> the final resting state of a promise, fulfilled or rejected.</li>
+</ul>
+
+<p>A promise can be in one of three states: pending, fulfilled, or rejected.</p>
+
+<p>Promises that are fulfilled have a fulfillment value and are in the fulfilled
+state.  Promises that are rejected have a rejection reason and are in the
+rejected state.  A fulfillment value is never a thenable.</p>
+
+<p>Promises can also be said to <em>resolve</em> a value.  If this value is also a
+promise, then the original promise&#39;s settled state will match the value&#39;s
+settled state.  So a promise that <em>resolves</em> a promise that rejects will
+itself reject, and a promise that <em>resolves</em> a promise that fulfills will
+itself fulfill.</p>
+<h2 class='anchorable-toc' id='toc_basic-usage'>Basic Usage:</h2><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> promise = <span class="keyword">new</span> Promise(<span class="keyword">function</span>(resolve, reject) {
+  <span class="comment">// on success</span>
+  resolve(value);
+
+  <span class="comment">// on failure</span>
+  reject(reason);
+});
+
+promise.then(<span class="keyword">function</span>(value) {
+  <span class="comment">// on fulfillment</span>
+}, <span class="keyword">function</span>(reason) {
+  <span class="comment">// on rejection</span>
+});
+</pre></td>
+</tr></table>
+</div></div><h2 class='anchorable-toc' id='toc_advanced-usage'>Advanced Usage:</h2>
+<p>Promises shine when abstracting away asynchronous interactions such as
+<code>XMLHttpRequest</code>s.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+22
+23
+24
+25
+26
+27
+</pre></td>
+  <td class="code"><pre><span class="keyword">function</span> <span class="function">getJSON</span>(url) {
+  <span class="keyword">return</span> <span class="keyword">new</span> Promise(<span class="keyword">function</span>(resolve, reject){
+    <span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest();
+
+    xhr.open(<span class="string"><span class="delimiter">'</span><span class="content">GET</span><span class="delimiter">'</span></span>, url);
+    xhr.onreadystatechange = handler;
+    xhr.responseType = <span class="string"><span class="delimiter">'</span><span class="content">json</span><span class="delimiter">'</span></span>;
+    xhr.setRequestHeader(<span class="string"><span class="delimiter">'</span><span class="content">Accept</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">application/json</span><span class="delimiter">'</span></span>);
+    xhr.send();
+
+    <span class="keyword">function</span> <span class="function">handler</span>() {
+      <span class="keyword">if</span> (<span class="local-variable">this</span>.readyState === <span class="local-variable">this</span>.DONE) {
+        <span class="keyword">if</span> (<span class="local-variable">this</span>.status === <span class="integer">200</span>) {
+          resolve(<span class="local-variable">this</span>.response);
+        } <span class="keyword">else</span> {
+          reject(<span class="keyword">new</span> Error(<span class="string"><span class="delimiter">'</span><span class="content">getJSON: `</span><span class="delimiter">'</span></span> + url + <span class="string"><span class="delimiter">'</span><span class="content">` failed with status: [</span><span class="delimiter">'</span></span> + <span class="local-variable">this</span>.status + <span class="string"><span class="delimiter">'</span><span class="content">]</span><span class="delimiter">'</span></span>));
+        }
+      }
+    };
+  });
+}
+
+getJSON(<span class="string"><span class="delimiter">'</span><span class="content">/posts.json</span><span class="delimiter">'</span></span>).then(<span class="keyword">function</span>(json) {
+  <span class="comment">// on fulfillment</span>
+}, <span class="keyword">function</span>(reason) {
+  <span class="comment">// on rejection</span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Unlike callbacks, promises are great composable primitives.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre>Promise.all([
+  getJSON(<span class="string"><span class="delimiter">'</span><span class="content">/posts</span><span class="delimiter">'</span></span>),
+  getJSON(<span class="string"><span class="delimiter">'</span><span class="content">/comments</span><span class="delimiter">'</span></span>)
+]).then(<span class="keyword">function</span>(values){
+  values[<span class="integer">0</span>] <span class="comment">// =&gt; postsJSON</span>
+  values[<span class="integer">1</span>] <span class="comment">// =&gt; commentsJSON</span>
+
+  <span class="keyword">return</span> values;
+});
+</pre></td>
+</tr></table>
+</div></div>
+  </div>
+
+
+  <div class="tabs">
+    <ul>
+      <li><a href="#index">Index</a></li>
+        <li><a href="#methods">Methods</a></li>
+    </ul>
+    <div class="pane" id="index">
+      <div id='api-options'>
+  Show:
+  <label>
+    <input type='checkbox' data-type='inherited' checked>
+    Inherited
+  </label>
+  <label>
+    <input type='checkbox' data-type='protected'>
+    Protected
+  </label>
+  <label>
+    <input type='checkbox' data-type='private'>
+    Private
+  </label>
+  <label>
+    <input type='checkbox' data-type='deprecated'>
+    Deprecated
+  </label>
+</div>
+
+        <p><h2>Methods</h2></p>
+        <ul class="index-list">
+            <li class="method ">
+              <a href="#method_catch">catch</a>
+            </li>
+            <li class="method ">
+              <a href="#method_finally">finally</a>
+            </li>
+            <li class="method ">
+              <a href="#method_then">then</a>
+            </li>
+        </ul>
+    </div>
+    <div class="pane" id="methods">
+      <div id='api-options'>
+  Show:
+  <label>
+    <input type='checkbox' data-type='inherited' checked>
+    Inherited
+  </label>
+  <label>
+    <input type='checkbox' data-type='protected'>
+    Protected
+  </label>
+  <label>
+    <input type='checkbox' data-type='private'>
+    Private
+  </label>
+  <label>
+    <input type='checkbox' data-type='deprecated'>
+    Deprecated
+  </label>
+</div>
+
+        
+<div id="method_catch" class="method  item-entry">
+  <h3 data-id="method_catch" class="name anchorable-toc"><code>catch</code></h3>
+  <span class="args">
+    (onRejection, label)
+  </span>
+
+  <span class="type">Promise</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.10.0/bower_components/rsvp/lib/rsvp/promise.js#L365">bower_components/rsvp/lib/rsvp/promise.js:365</a>
+
+  </div>
+
+
+    <div class="description">
+      <p><code>catch</code> is simply sugar for <code>then(undefined, onRejection)</code> which makes it the same
+as the catch block of a try/catch statement.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+</pre></td>
+  <td class="code"><pre><span class="keyword">function</span> <span class="function">findAuthor</span>(){
+  <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string"><span class="delimiter">'</span><span class="content">couldn</span><span class="delimiter">'</span></span>t find that author<span class="string"><span class="delimiter">'</span><span class="content">);
+}
+
+// synchronous
+try {
+  findAuthor();
+} catch(reason) {
+  // something went wrong
+}
+
+// async with promises
+findAuthor().catch(function(reason){
+  // something went wrong
+});
+</span></span></pre></td>
+</tr></table>
+</div></div>
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>onRejection</strong> <span class="type"><a href="/internal/classes/Function.html">Function</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>label</strong> <span class="type"><a href="/internal/classes/String.html">String</a></span></dt>
+          <dd>
+            optional string for labeling the promise.
+Useful for tooling.
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Promise</span>
+        <dd> </dd>
+      </dl>
+    </div>
+</div>
+
+        
+<div id="method_finally" class="method  item-entry">
+  <h3 data-id="method_finally" class="name anchorable-toc"><code>finally</code></h3>
+  <span class="args">
+    (callback, label)
+  </span>
+
+  <span class="type">Promise</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.10.0/bower_components/rsvp/lib/rsvp/promise.js#L397">bower_components/rsvp/lib/rsvp/promise.js:397</a>
+
+  </div>
+
+
+    <div class="description">
+      <p><code>finally</code> will be invoked regardless of the promise&#39;s fate just as native
+try/catch/finally behaves</p>
+
+<p>Synchronous example:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+</pre></td>
+  <td class="code"><pre>findAuthor() {
+  <span class="keyword">if</span> (Math.random() &gt; <span class="float">0.5</span>) {
+    <span class="keyword">throw</span> <span class="keyword">new</span> Error();
+  }
+  <span class="keyword">return</span> <span class="keyword">new</span> Author();
+}
+
+<span class="keyword">try</span> {
+  <span class="keyword">return</span> findAuthor(); <span class="comment">// succeed or fail</span>
+} <span class="keyword">catch</span>(error) {
+  <span class="keyword">return</span> findOtherAuther();
+} <span class="keyword">finally</span> {
+  <span class="comment">// always runs</span>
+  <span class="comment">// doesn't affect the return value</span>
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>Asynchronous example:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>findAuthor().<span class="keyword">catch</span>(<span class="keyword">function</span>(reason){
+  <span class="keyword">return</span> findOtherAuther();
+}).<span class="keyword">finally</span>(<span class="keyword">function</span>(){
+  <span class="comment">// author was either found, or not</span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>callback</strong> <span class="type"><a href="/internal/classes/Function.html">Function</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>label</strong> <span class="type"><a href="/internal/classes/String.html">String</a></span></dt>
+          <dd>
+            optional string for labeling the promise.
+Useful for tooling.
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Promise</span>
+        <dd> </dd>
+      </dl>
+    </div>
+</div>
+
+        
+<div id="method_then" class="method  item-entry">
+  <h3 data-id="method_then" class="name anchorable-toc"><code>then</code></h3>
+  <span class="args">
+    (onFulfillment, onRejection, label)
+  </span>
+
+  <span class="type">Promise</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.10.0/bower_components/rsvp/lib/rsvp/promise.js#L169">bower_components/rsvp/lib/rsvp/promise.js:169</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>The primary way of interacting with a promise is through its <code>then</code> method,
+which registers callbacks to receive either a promise&#39;s eventual value or the
+reason why the promise cannot be fulfilled.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>findUser().then(<span class="keyword">function</span>(user){
+  <span class="comment">// user is available</span>
+}, <span class="keyword">function</span>(reason){
+  <span class="comment">// user is unavailable, and you are given the reason why</span>
+});
+</pre></td>
+</tr></table>
+</div></div><h2 class='anchorable-toc' id='toc_chaining'>Chaining</h2>
+<p>The return value of <code>then</code> is itself a promise.  This second, &#39;downstream&#39;
+promise is resolved with the return value of the first promise&#39;s fulfillment
+or rejection handler, or rejected if the handler throws an exception.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre></td>
+  <td class="code"><pre>findUser().then(<span class="keyword">function</span> (user) {
+  <span class="keyword">return</span> user.name;
+}, <span class="keyword">function</span> (reason) {
+  <span class="keyword">return</span> <span class="string"><span class="delimiter">'</span><span class="content">default name</span><span class="delimiter">'</span></span>;
+}).then(<span class="keyword">function</span> (userName) {
+  <span class="comment">// If `findUser` fulfilled, `userName` will be the user's name, otherwise it</span>
+  <span class="comment">// will be `'default name'`</span>
+});
+
+findUser().then(<span class="keyword">function</span> (user) {
+  <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string"><span class="delimiter">'</span><span class="content">Found user, but still unhappy</span><span class="delimiter">'</span></span>);
+}, <span class="keyword">function</span> (reason) {
+  <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string"><span class="delimiter">'</span><span class="content">`findUser` rejected and we</span><span class="delimiter">'</span></span>re unhappy<span class="string"><span class="delimiter">'</span><span class="content">);
+}).then(function (value) {
+  // never reached
+}, function (reason) {
+  // if `findUser` fulfilled, `reason` will be </span><span class="delimiter">'</span></span>Found user, but still unhappy<span class="string"><span class="delimiter">'</span><span class="content">.
+  // If `findUser` rejected, `reason` will be </span><span class="delimiter">'</span></span><span class="error">`</span>findUser<span class="error">`</span> rejected and we<span class="string"><span class="delimiter">'</span><span class="content">re unhappy</span><span class="delimiter">'</span></span>.
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>If the downstream promise does not specify a rejection handler, rejection reasons will be propagated further downstream.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre>findUser().then(<span class="keyword">function</span> (user) {
+  <span class="keyword">throw</span> <span class="keyword">new</span> PedagogicalException(<span class="string"><span class="delimiter">'</span><span class="content">Upstream error</span><span class="delimiter">'</span></span>);
+}).then(<span class="keyword">function</span> (value) {
+  <span class="comment">// never reached</span>
+}).then(<span class="keyword">function</span> (value) {
+  <span class="comment">// never reached</span>
+}, <span class="keyword">function</span> (reason) {
+  <span class="comment">// The `PedgagocialException` is propagated all the way down to here</span>
+});
+</pre></td>
+</tr></table>
+</div></div><h2 class='anchorable-toc' id='toc_assimilation'>Assimilation</h2>
+<p>Sometimes the value you want to propagate to a downstream promise can only be
+retrieved asynchronously. This can be achieved by returning a promise in the
+fulfillment or rejection handler. The downstream promise will then be pending
+until the returned promise is settled. This is called <em>assimilation</em>.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>findUser().then(<span class="keyword">function</span> (user) {
+  <span class="keyword">return</span> findCommentsByAuthor(user);
+}).then(<span class="keyword">function</span> (comments) {
+  <span class="comment">// The user's comments are now available</span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>If the assimliated promise rejects, then the downstream promise will also reject.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>findUser().then(<span class="keyword">function</span> (user) {
+  <span class="keyword">return</span> findCommentsByAuthor(user);
+}).then(<span class="keyword">function</span> (comments) {
+  <span class="comment">// If `findCommentsByAuthor` fulfills, we'll have the value here</span>
+}, <span class="keyword">function</span> (reason) {
+  <span class="comment">// If `findCommentsByAuthor` rejects, we'll have the reason here</span>
+});
+</pre></td>
+</tr></table>
+</div></div><h2 class='anchorable-toc' id='toc_simple-example'>Simple Example</h2>
+<p>Synchronous Example</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> result;
+
+<span class="keyword">try</span> {
+  result = findResult();
+  <span class="comment">// success</span>
+} <span class="keyword">catch</span>(reason) {
+  <span class="comment">// failure</span>
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>Errback Example</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>findResult(<span class="keyword">function</span>(result, err){
+  <span class="keyword">if</span> (err) {
+    <span class="comment">// failure</span>
+  } <span class="keyword">else</span> {
+    <span class="comment">// success</span>
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Promise Example;</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>findResult().then(<span class="keyword">function</span>(result){
+  <span class="comment">// success</span>
+}, <span class="keyword">function</span>(reason){
+  <span class="comment">// failure</span>
+});
+</pre></td>
+</tr></table>
+</div></div><h2 class='anchorable-toc' id='toc_advanced-example'>Advanced Example</h2>
+<p>Synchronous Example</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> author, books;
+
+<span class="keyword">try</span> {
+  author = findAuthor();
+  books  = findBooksByAuthor(author);
+  <span class="comment">// success</span>
+} <span class="keyword">catch</span>(reason) {
+  <span class="comment">// failure</span>
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>Errback Example</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+22
+23
+24
+25
+26
+27
+28
+29
+<strong>30</strong>
+31
+32
+</pre></td>
+  <td class="code"><pre>
+<span class="keyword">function</span> <span class="function">foundBooks</span>(books) {
+
+}
+
+<span class="keyword">function</span> <span class="function">failure</span>(reason) {
+
+}
+
+findAuthor(<span class="keyword">function</span>(author, err){
+  <span class="keyword">if</span> (err) {
+    failure(err);
+    <span class="comment">// failure</span>
+  } <span class="keyword">else</span> {
+    <span class="keyword">try</span> {
+      findBoooksByAuthor(author, <span class="keyword">function</span>(books, err) {
+        <span class="keyword">if</span> (err) {
+          failure(err);
+        } <span class="keyword">else</span> {
+          <span class="keyword">try</span> {
+            foundBooks(books);
+          } <span class="keyword">catch</span>(reason) {
+            failure(reason);
+          }
+        }
+      });
+    } <span class="keyword">catch</span>(error) {
+      failure(err);
+    }
+    <span class="comment">// success</span>
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Promise Example;</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>findAuthor().
+  then(findBooksByAuthor).
+  then(<span class="keyword">function</span>(books){
+    <span class="comment">// found books</span>
+}).<span class="keyword">catch</span>(<span class="keyword">function</span>(reason){
+  <span class="comment">// something went wrong</span>
+});
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>onFulfillment</strong> <span class="type"><a href="/internal/classes/Function.html">Function</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>onRejection</strong> <span class="type"><a href="/internal/classes/Function.html">Function</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>label</strong> <span class="type"><a href="/internal/classes/String.html">String</a></span></dt>
+          <dd>
+            optional string for labeling the promise.
+Useful for tooling.
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Promise</span>
+        <dd> </dd>
+      </dl>
+    </div>
+</div>
+
+    </div>
+  </div>
+
+
+      </div>
+    </div>
+
+    <div class="footer">
+  <div class="container">
+    <div class="footer-info">
+      Copyright 2016
+      <a href="http://tilde.io">Tilde Inc.</a>
+      <br>
+      <a href="http://emberjs.com/team">Team</a> |
+      <a href="http://emberjs.com/sponsors">Sponsors</a>
+      <br>
+      <a href="http://emberjs.com/security">Security</a> |
+      <a href="http://emberjs.com/legal">Legal</a> |
+      <a href="http://emberjs.com/logos">Logos</a>
+      <br>
+      <a href="http://emberjs.com/guidelines">Community Guidelines</a>
+    </div>
+
+    <div class="footer-statement">
+      Ember.js is free, open source and always will be.
+    </div>
+
+    <div class="footer-social">
+      <a href="http://twitter.com/emberjs" title="Twitter">
+        <i class="icon-twitter"></i>
+      </a>
+      <a href="https://github.com/emberjs/ember.js" title="GitHub">
+        <i class="icon-github"></i>
+      </a>
+      <a href="https://plus.google.com/communities/106387049790387471205" title="Google+">
+        <i class="icon-gplus"></i>
+      </a>
+    </div>
+  </div>
+</div>
+
+
+        <script type="text/javascript" src="/javascripts/internal_api.js"></script>
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+      _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+      _gaq.push(['_setAccount', 'UA-27675533-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </body>
+</html>
