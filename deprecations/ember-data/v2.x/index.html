@@ -281,7 +281,152 @@ store.findRecord(<span class="string"><span class="delimiter">'</span><span clas
 <p><code>lookupAdapter</code> has been deprecated in favor of using <code>adapterFor</code>.</p>
 <h4 class='anchorable-toc' id='toc_lookupserializer'>lookupSerializer</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-store-lookupserializer'>id: ds.store.lookupSerializer</h6>
 <p><code>lookupSerializer</code> has been deprecated in favor of using <code>serializerFor</code>.</p>
+<h3 class='anchorable-toc' id='toc_deprecations-added-in-pending-features'>Deprecations Added in Pending Features</h3><h4 class='anchorable-toc' id='toc_hasmanyreference-push-array'>HasManyReference.push(array)</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-references-has-many-push-array'>id: ds.references.has-many.push-array</h6>
+<p>Passing an array to a <code>HasManyReference#push</code> has been deprecated. You should
+refactor your code to instead pass a <a href="http://jsonapi.org/format/#document-resource-object-relationships">JSON API Relationship
+Object</a>.</p>
 
+<p>For example, if you previously had something like:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre>let commentsData = [
+  { <span class="key">data</span>: { <span class="key">type</span>: <span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>, <span class="key">id</span>: <span class="integer">1</span> } },
+  { <span class="key">data</span>: { <span class="key">type</span>: <span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>, <span class="key">id</span>: <span class="integer">2</span> } }
+];
+
+let post = <span class="local-variable">this</span>.store.peekRecord(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="integer">123</span>);
+
+post.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>).push(commentsData);
+</pre></td>
+</tr></table>
+</div></div>
+<p>You could remove this deprecation by refactoring your code to:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre>let commentsData = {
+  <span class="key">data</span>: [
+    { <span class="key">type</span>: <span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>, <span class="key">id</span>: <span class="integer">1</span> },
+    { <span class="key">type</span>: <span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>, <span class="key">id</span>: <span class="integer">2</span> }
+  ]
+};
+
+let post = <span class="local-variable">this</span>.store.peekRecord(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="integer">123</span>);
+
+post.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>).push(commentsData);
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_hasmanyreference-push-invalid-data'>HasManyReference.push Invalid Data</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-references-has-many-push-invalid-json-api'>id: ds.references.has-many.push-invalid-json-api</h6>
+<p>In previous versions of Ember Data, <code>HasManyReference#push</code> supported pushing
+data that was almost formatted as a <a href="http://jsonapi.org/format/#document-resource-object-relationships">JSON API Relationship
+Object</a>, but
+wasn&#39;t quite correct. Pushing data that is formatted this way has been
+deprecated. You should refactor your code to instead push a properly formatted
+JSON API Relationship Object.</p>
+
+<p>For example, if you previously had something like:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre>let commentsData = {
+  <span class="key">data</span>: [
+    { <span class="key">data</span>: { <span class="key">type</span>: <span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>, <span class="key">id</span>: <span class="integer">1</span> } },
+    { <span class="key">data</span>: { <span class="key">type</span>: <span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>, <span class="key">id</span>: <span class="integer">2</span> } }
+  ]
+};
+
+let post = <span class="local-variable">this</span>.store.peekRecord(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="integer">123</span>);
+
+post.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>).push(commentsData);
+</pre></td>
+</tr></table>
+</div></div>
+<p>You could remove this deprecation by refactoring your code to:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre>let commentsData = {
+  <span class="key">data</span>: [
+    { <span class="key">type</span>: <span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>, <span class="key">id</span>: <span class="integer">1</span> },
+    { <span class="key">type</span>: <span class="string"><span class="delimiter">'</span><span class="content">comment</span><span class="delimiter">'</span></span>, <span class="key">id</span>: <span class="integer">2</span> }
+  ]
+};
+
+let post = <span class="local-variable">this</span>.store.peekRecord(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="integer">123</span>);
+
+post.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>).push(commentsData);
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_belongstoreference-push-ds-model'>BelongsToReference.push(DS.Model)</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-references-belongs-to-push-record'>id: ds.references.belongs-to.push-record</h6>
+<p>Passing an instance of
+<a href="http://emberjs.com/api/data/classes/DS.Model.html"><code>DS.Model</code></a> to
+<code>BelongsToReference#push</code> has been deprecated. You should instead follow the
+pattern of <code>model.set(&#39;relationship&#39;, value)</code> to update a <code>belongsTo</code>
+relationship with an instance of <code>DS.Model</code>.</p>
+
+<p>For example, if you have something like:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>let post = <span class="local-variable">this</span>.store.peekRecord(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="integer">123</span>);
+let author = <span class="local-variable">this</span>.store.peekRecord(<span class="string"><span class="delimiter">'</span><span class="content">user</span><span class="delimiter">'</span></span>, <span class="integer">456</span>);
+
+post.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">author</span><span class="delimiter">'</span></span>).push(author);
+</pre></td>
+</tr></table>
+</div></div>
+<p>You can remove this deprecation by refactoring your code to:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>let post = <span class="local-variable">this</span>.store.peekRecord(<span class="string"><span class="delimiter">'</span><span class="content">post</span><span class="delimiter">'</span></span>, <span class="integer">123</span>);
+let author = <span class="local-variable">this</span>.store.peekRecord(<span class="string"><span class="delimiter">'</span><span class="content">user</span><span class="delimiter">'</span></span>, <span class="integer">456</span>);
+
+post.set(<span class="string"><span class="delimiter">'</span><span class="content">author</span><span class="delimiter">'</span></span>, author);
+</pre></td>
+</tr></table>
+</div></div>
 
       </div>
     </div>
