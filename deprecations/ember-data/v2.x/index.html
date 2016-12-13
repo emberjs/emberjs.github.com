@@ -362,7 +362,143 @@ while your app is running.</p>
 <p>See <a href="https://guides.emberjs.com/v2.10.0/configuring-ember/disabling-prototype-extensions/#toc_strings">Disabling Prototype
 Extensions</a>
 for more information about how Ember uses prototype extensions.</p>
-<h3 class='anchorable-toc' id='toc_deprecations-added-in-ember-data-2-11'>Deprecations Added in Ember Data 2.11</h3><h4 class='anchorable-toc' id='toc_recordisloaded'>recordIsLoaded</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-store-recordisloaded'>id: ds.store.recordIsLoaded</h6>
+<h4 class='anchorable-toc' id='toc_store-queryrecord-array-response-with-restserializer'>Store.queryRecord Array Response with RESTSerializer</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-serializer-rest-queryrecord-array-response'>id: ds.serializer.rest.queryRecord-array-response</h6>
+<p>When using
+<a href="http://emberjs.com/api/data/classes/DS.RESTSerializer.html"><code>DS.RESTSerializer</code></a>
+with previous versions of Ember Data,
+<a href="http://emberjs.com/api/data/classes/DS.Store.html#method_queryRecord"><code>store.queryRecord</code></a>
+provided support for normalizing payloads containing an array of primary data.
+This behavior has been deprecated because it is basically the same as using
+<a href="http://emberjs.com/api/data/classes/DS.Store.html#method_query"><code>store.query</code></a>
+and returning the first model.</p>
+
+<p>Deprecated payload example with an array as the primary data:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre><span class="comment">// GET /users?username=&quot;GummyBear&quot;</span>
+
+{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">users</span><span class="delimiter">&quot;</span></span>: [{
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">GummyBear</span><span class="delimiter">&quot;</span></span>
+  }]
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>Expected payload example with a single object as the primary data:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre><span class="comment">// GET /users?username=&quot;GummyBear&quot;</span>
+
+{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">user</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">GummyBear</span><span class="delimiter">&quot;</span></span>,
+  }
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>If you need to support an API that responds with an array as the primary data,
+you have a few options. The simplest option is to use
+<a href="http://emberjs.com/api/data/classes/DS.Store.html#method_query"><code>store.query</code></a>
+instead of
+<a href="http://emberjs.com/api/data/classes/DS.Store.html#method_queryRecord"><code>store.queryRecord</code></a>:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="local-variable">this</span>.store.query(<span class="string"><span class="delimiter">'</span><span class="content">user</span><span class="delimiter">'</span></span>, { <span class="key">username</span>: <span class="string"><span class="delimiter">'</span><span class="content">GummyBear</span><span class="delimiter">'</span></span> }).then((users) =&gt; {
+  <span class="keyword">return</span> users.objectAt(<span class="integer">0</span>);
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Another option is to override
+<a href="http://emberjs.com/api/data/classes/DS.RESTSerializer.html#method_normalizeQueryRecordResponse"><code>normalizeQueryRecordResponse</code></a>
+in your serializer, manipulating the payload so it matches the expected format:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/serializers/user.js</span>
+
+<span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.RESTSerializer.extend({
+  normalizeQueryRecordResponse(store, primaryModelClass, payload) {
+    <span class="keyword">if</span> (payload.users) {
+      payload.user = payload.users[<span class="integer">0</span>];
+      <span class="keyword">delete</span> payload.users;
+    }
+
+    <span class="keyword">return</span> <span class="local-variable">this</span>._super(...<span class="local-variable">arguments</span>);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Another option is to customize the URL of the request made by
+<a href="http://emberjs.com/api/data/classes/DS.Store.html#method_queryRecord"><code>store.queryRecord</code></a>
+so that it makes a request that returns the expected payload with a single
+object as its primary data. This can be done by overriding
+<a href="http://emberjs.com/api/data/classes/DS.RESTAdapter.html#method_urlForQueryRecord"><code>urlForQueryRecord</code></a>
+in your adapter:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/adapters/user.js</span>
+
+<span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.RESTAdapter.extend({
+  urlForQueryRecord() {
+    let baseURL = <span class="local-variable">this</span>.buildURL();
+    <span class="keyword">return</span> <span class="error">`</span><span class="predefined">$</span>{baseURL}/user-query<span class="error">`</span>;
+  }
+});
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-ember-data-2-11'>Deprecations Added in Ember Data 2.11</h3><h4 class='anchorable-toc' id='toc_recordisloaded'>recordIsLoaded</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-store-recordisloaded'>id: ds.store.recordIsLoaded</h6>
 <p><code>recordIsLoaded</code> has been deprecated and is an alias for <code>hasRecordForId</code>, which should be used instead.</p>
 
 <p>If you have this:</p>
