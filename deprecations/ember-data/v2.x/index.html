@@ -91,6 +91,121 @@ attribute, you should provide a function that returns the value:</p>
 });
 </pre></td>
 </tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_restserializer-keyforpolymorphictype'>RESTSerializer.keyForPolymorphicType</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-rest-serializer-deprecated-key-for-polymorphic-type'>id: ds.rest-serializer.deprecated-key-for-polymorphic-type</h6>
+<p>Previous versions of the
+<a href="http://emberjs.com/api/data/classes/DS.RESTSerializer.html"><code>RESTSerializer</code></a>
+relied on
+<a href="http://emberjs.com/api/data/classes/DS.RESTSerializer.html#method_keyForAttribute"><code>keyForAttribute</code></a>
+to determine the type key used for serializing polymorphic relationships. This
+behavior has been deprecated in favor of using
+<a href="http://emberjs.com/api/data/classes/DS.RESTSerializer.html#method_keyForPolymorphicType"><code>keyForPolymorphicType</code></a>.
+The benefit of having this additional hook is that you can customize the type
+key separately from the key used for the relationship.</p>
+
+<p>For example, given the following model:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/models/comment.js</span>
+
+<span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.Model.extend({
+  <span class="key">commentable</span>: belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">commentable</span><span class="delimiter">'</span></span>, { <span class="key">polymorphic</span>: <span class="predefined-constant">true</span> }),
+  <span class="key">body</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>When using the <code>RESTSerializer</code>, Ember Data expects a payload that looks similar
+the following:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">comment</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">commentable</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">123</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">commentableType</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">movie</span><span class="delimiter">&quot;</span></span>, <span class="comment">// ${keyForAttribute}Type</span>
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">body</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">I'll be back</span><span class="delimiter">&quot;</span></span>
+  },
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">movie</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">123</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">The Terminator</span><span class="delimiter">&quot;</span></span>
+  }
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>If your API instead responds with a key that doesn&#39;t follow the pattern of
+<code>${keyForAttribute}Type</code>:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">comment</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">commentable</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">123</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">commentKind</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">movie</span><span class="delimiter">&quot;</span></span>, <span class="comment">// custom keyForPolymorphicType needed</span>
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">body</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">I'll be back</span><span class="delimiter">&quot;</span></span>
+  },
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">movie</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">123</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">The Terminator</span><span class="delimiter">&quot;</span></span>
+  }
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>You can now override the <code>keyForPolymorphicType</code> hook in your serializer to
+accommodate:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.RESTSerializer.extend({
+  <span class="function">keyForPolymorphicType</span>: <span class="keyword">function</span>() {
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">'</span><span class="content">commentKind</span><span class="delimiter">'</span></span>;
+  }
+});
+</pre></td>
+</tr></table>
 </div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-ember-data-2-6'>Deprecations Added in Ember Data 2.6</h3><h4 class='anchorable-toc' id='toc_restserializer-normalizehash'>RESTSerializer.normalizeHash</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-serializer-normalize-hash-deprecated'>id: ds.serializer.normalize-hash-deprecated</h6>
 <p><code>RESTSerializer.normalizeHash</code> has been deprecated in favor of using <code>normalize</code>.</p>
 
