@@ -707,7 +707,189 @@ let author = <span class="local-variable">this</span>.store.peekRecord(<span cla
 post.set(<span class="string"><span class="delimiter">'</span><span class="content">author</span><span class="delimiter">'</span></span>, author);
 </pre></td>
 </tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_jsonapiserializer-modelnamefrompayloadkey-for-resource'>JSONAPISerializer.modelNameFromPayloadKey for Resource</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-json-api-serializer-deprecated-model-name-for-resource'>id: ds.json-api-serializer.deprecated-model-name-for-resource</h6><h6 class='anchorable-toc' id='toc_feature-ds-payload-type-hooks'>feature: ds-payload-type-hooks</h6>
+<p>Using <code>JSONAPISerializer.modelNameFromPayloadKey</code> to normalize the type of a
+resource has been deprecated in favor of
+<code>JSONAPISerializer.modelNameFromPayloadType</code>.</p>
+
+<p>In the context of a JSON API payload, it is the value of the <code>type</code> key that
+maps to the name of the corresponding <code>DS.Model</code> class rather than the key that
+the data is nested under.</p>
+
+<p>For example, if your API responds with a namespaced resource type in the payload
+when you fetch a <code>post</code>:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre><span class="comment">// GET /post/1</span>
+
+{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">data</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">api::v1::post</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span>
+  }
+}
+</pre></td>
+</tr></table>
 </div></div>
+<p>Previously, you would want to override <code>modelNameFromPayloadKey</code> to remove the
+namespace:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/serializers/post.js</span>
+
+<span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.JSONAPISerializer.extend({
+  modelNameFromPayloadKey(key) {
+    <span class="keyword">return</span> key.replace(<span class="string"><span class="delimiter">'</span><span class="content">api::v1::</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="delimiter">'</span></span>);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>You can remove this deprecation by refactoring your serializer to instead use
+<code>modelNameFromPayloadType</code>:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/serializers/post.js</span>
+
+<span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.JSONAPISerializer.extend({
+  modelNameFromPayloadType(type) {
+    <span class="keyword">return</span> type.replace(<span class="string"><span class="delimiter">'</span><span class="content">api::v1::</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="delimiter">'</span></span>);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_jsonapiserializer-modelnamefrompayloadkey-for-relationship'>JSONAPISerializer.modelNameFromPayloadKey for Relationship</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-json-api-serializer-deprecated-model-name-for-relationship'>id: ds.json-api-serializer.deprecated-model-name-for-relationship</h6><h6 class='anchorable-toc' id='toc_feature-ds-payload-type-hooks'>feature: ds-payload-type-hooks</h6>
+<p>Using <code>JSONAPISerializer.modelNameFromPayloadKey</code> to normalize the type of a
+relationship has been deprecated in favor of
+<code>JSONAPISerializer.modelNameFromPayloadType</code>.</p>
+
+<p>See <a href="#toc_jsonapiserializer-modelnamefrompayloadkey-for-resource">JSONAPISerializer.modelNameFromPayloadKey for
+Resource</a> for more
+information.</p>
+<h4 class='anchorable-toc' id='toc_jsonapiserializer-payloadkeyfrommodelname-for-resource'>JSONAPISerializer.payloadKeyFromModelName for Resource</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-json-api-serializer-deprecated-payload-type-for-model'>id: ds.json-api-serializer.deprecated-payload-type-for-model</h6><h6 class='anchorable-toc' id='toc_feature-ds-payload-type-hooks'>feature: ds-payload-type-hooks</h6>
+<p>Using <code>JSONAPISerializer.payloadKeyFromModelName</code> to serialize the type of a
+model has been deprecated in favor of
+<a href="http://emberjs.com/api/data/classes/DS.JSONAPISerializer.html#method_payloadTypeFromModelName"><code>JSONAPISerializer.payloadTypeFromModelName</code></a>.</p>
+
+<p>For example, if your API expects a namespaced resource type in the payload that
+is sent when you create a <code>post</code> model:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre><span class="comment">// POST /api/posts/1</span>
+
+{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">data</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="integer">1</span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">api::v1::post</span><span class="delimiter">&quot;</span></span>
+  }
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>Previously, you would want to override <code>payloadKeyFromModelName</code> to add the
+namespace to the <code>modelName</code>:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/serializers/post.js</span>
+
+<span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.JSONAPISerializer.extend({
+  payloadKeyFromModelName(modelName) {
+    <span class="keyword">return</span> <span class="error">`</span>api::v1::<span class="predefined">$</span>{modelName}<span class="error">`</span>;
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>You can remove this deprecation by refactoring your serializer to instead use
+<a href="http://emberjs.com/api/data/classes/DS.JSONAPISerializer.html#method_payloadTypeFromModelName"><code>payloadTypeFromModelName</code></a>:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre><span class="comment">// app/serializers/post.js</span>
+
+<span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.JSONAPISerializer.extend({
+  payloadTypeFromModelName(modelName) {
+    <span class="keyword">return</span> <span class="error">`</span>api::v1::<span class="predefined">$</span>{modelName}<span class="error">`</span>;
+  }
+});
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_jsonapiserializer-payloadkeyfrommodelname-for-belongsto-relationship'>JSONAPISerializer.payloadKeyFromModelName for belongsTo Relationship</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-json-api-serializer-deprecated-payload-type-for-belongs-to'>id: ds.json-api-serializer.deprecated-payload-type-for-belongs-to</h6><h6 class='anchorable-toc' id='toc_feature-ds-payload-type-hooks'>feature: ds-payload-type-hooks</h6>
+<p>Using <code>JSONAPISerializer.payloadKeyFromModelName</code> to serialize the type of a
+<code>belongsTo</code> relationship has been deprecated in favor of
+<a href="http://emberjs.com/api/data/classes/DS.JSONAPISerializer.html#method_payloadTypeFromModelName"><code>JSONAPISerializer.payloadTypeFromModelName</code></a>.</p>
+
+<p>See <a href="#toc_jsonapiserializer-payloadkeyfrommodelname-for-resource">JSONAPISerializer.payloadKeyFromModelName for
+Resource</a> for more
+information.</p>
+<h4 class='anchorable-toc' id='toc_jsonapiserializer-payloadkeyfrommodelname-for-hasmany-relationship'>JSONAPISerializer.payloadKeyFromModelName for hasMany Relationship</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-json-api-serializer-deprecated-payload-type-for-has-many'>id: ds.json-api-serializer.deprecated-payload-type-for-has-many</h6><h6 class='anchorable-toc' id='toc_feature-ds-payload-type-hooks'>feature: ds-payload-type-hooks</h6>
+<p>Using <code>JSONAPISerializer.payloadKeyFromModelName</code> to serialize the type of a
+<code>hasMany</code> relationship has been deprecated in favor of
+<a href="http://emberjs.com/api/data/classes/DS.JSONAPISerializer.html#method_payloadTypeFromModelName"><code>JSONAPISerializer.payloadTypeFromModelName</code></a>.</p>
+
+<p>See <a href="#toc_jsonapiserializer-payloadkeyfrommodelname-for-resource">JSONAPISerializer.payloadKeyFromModelName for
+Resource</a> for more
+information.</p>
+
 
       </div>
     </div>
