@@ -1166,6 +1166,44 @@ Index Content
 </div></div>
 <p>For more informations of how to use <code>ember-elsewhere</code>, please visit the official
 documentation <a href="https://github.com/ef4/ember-elsewhere#ember-elsewhere">here</a>.</p>
+<h3 class='anchorable-toc' id='toc_deprecations-added-in-2-12'>Deprecations Added in 2.12</h3><h4 class='anchorable-toc' id='toc_code-ember-k-code'><code>Ember.K</code></h4><h5 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h5><h5 class='anchorable-toc' id='toc_id-ember-metal-ember-k'>id: ember-metal.ember-k</h5>
+<p>Using <code>Ember.K</code> is deprecated in favor of defining a function inline. See <a href="https://github.com/emberjs/rfcs/blob/master/text/0178-deprecate-ember-k.md">RFC 0178</a>.</p>
+
+<p>You can use the addon <a href="https://github.com/abuiles/ember-watson#remove-usages-of-emberk">ember-watson</a> to automate the removal of <code>Ember.K</code> from your application.</p>
+
+<p>Example object:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>Ember.Object.extend({
+  <span class="key">someFun</span>: Ember.K
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>Command:</p>
+<div class="highlight sh "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>ember watson:remove-ember-k --empty
+</pre></td>
+</tr></table>
+</div></div>
+<p>The result will be:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>Ember.Object.extend({
+  someFun() {}
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>If for some reason your app depends on the ability to chain <code>Ember.K</code> invocations, you can use the flag <code>--return-this</code>. It will replace <code>Ember.K</code> with a function that returns <code>this</code>. </p>
 
 
       </div>
