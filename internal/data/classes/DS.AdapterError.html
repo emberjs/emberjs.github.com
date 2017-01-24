@@ -64,7 +64,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v2.10.0" target="_blank"> Tag: v2.10.0</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v2.11.0" target="_blank"> Tag: v2.11.0</a></li>
 
 
           <li class="level-1 ">
@@ -124,6 +124,11 @@
         
           <li class="level-3 ">
                         <a href="/internal/data/classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/data/classes/DS.BelongsToReference.html">DS.BelongsToReference</a>
 
           </li>
         
@@ -248,6 +253,11 @@
           </li>
         
           <li class="level-3 ">
+                        <a href="/internal/data/classes/DS.RecordReference.html">DS.RecordReference</a>
+
+          </li>
+        
+          <li class="level-3 ">
                         <a href="/internal/data/classes/DS.RootState.html">DS.RootState</a>
 
           </li>
@@ -322,7 +332,7 @@
         
   <h1 class="api-header">
   DS.AdapterError Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/errors.js#L11">addon/adapters/errors.js:11</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/errors.js#L11">addon/adapters/errors.js:11</a>
 </h1>
 
 <hr>
@@ -334,11 +344,129 @@
 <div class="class-info">
 
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/errors.js#L11">addon/adapters/errors.js:11</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/errors.js#L11">addon/adapters/errors.js:11</a></p>
 
     <p>Module: <a href="/internal/data/modules/ember-data.html">ember-data</a></p>
 </div>
 
+  <div class="description">
+    <p>A <code>DS.AdapterError</code> is used by an adapter to signal that an error occurred
+during a request to an external API. It indicates a generic error, and
+subclasses are used to indicate specific error states. The following
+subclasses are provided:</p>
+
+<ul>
+<li><code>DS.InvalidError</code></li>
+<li><code>DS.TimeoutError</code></li>
+<li><code>DS.AbortError</code></li>
+<li><code>DS.UnauthorizedError</code></li>
+<li><code>DS.ForbiddenError</code></li>
+<li><code>DS.NotFoundError</code></li>
+<li><code>DS.ConflictError</code></li>
+<li><code>DS.ServerError</code></li>
+</ul>
+
+<p>To create a custom error to signal a specific error state in communicating
+with an external API, extend the <code>DS.AdapterError</code>. For example if the
+external API exclusively used HTTP <code>503 Service Unavailable</code> to indicate
+it was closed for maintenance:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/adapters/maintenance-error.js</td>
+    </tr>
+  </thead>
+<tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.AdapterError.extend({ <span class="key">message</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Down for maintenance.</span><span class="delimiter">&quot;</span></span> });
+</pre></td>
+</tr></table>
+</div></div>
+<p>This error would then be returned by an adapter&#39;s <code>handleResponse</code> method:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/adapters/application.js</td>
+    </tr>
+  </thead>
+<tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+<span class="reserved">import</span> MaintenanceError from <span class="string"><span class="delimiter">'</span><span class="content">./maintenance-error</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.JSONAPIAdapter.extend({
+  handleResponse(status) {
+    <span class="keyword">if</span> (<span class="integer">503</span> === status) {
+      <span class="keyword">return</span> <span class="keyword">new</span> MaintenanceError();
+    }
+
+    <span class="keyword">return</span> <span class="local-variable">this</span>._super(...<span class="local-variable">arguments</span>);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>And can then be detected in an application and used to send the user to an
+<code>under-maintenance</code> route:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/routes/application.js</td>
+    </tr>
+  </thead>
+<tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+<span class="reserved">import</span> MaintenanceError from <span class="string"><span class="delimiter">'</span><span class="content">../adapters/maintenance-error</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Route.extend({
+  <span class="key">actions</span>: {
+    error(error, transition) {
+      <span class="keyword">if</span> (error <span class="keyword">instanceof</span> MaintenanceError) {
+        <span class="local-variable">this</span>.transitionTo(<span class="string"><span class="delimiter">'</span><span class="content">under-maintenance</span><span class="delimiter">'</span></span>);
+        <span class="keyword">return</span>;
+      }
+
+      <span class="comment">// ...other error handling logic</span>
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+  </div>
 
 
 

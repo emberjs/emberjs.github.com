@@ -64,7 +64,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v2.10.0" target="_blank"> Tag: v2.10.0</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v2.11.0" target="_blank"> Tag: v2.11.0</a></li>
 
 
           <li class="level-1 ">
@@ -124,6 +124,11 @@
         
           <li class="level-3 ">
                         <a href="/internal/data/classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/data/classes/DS.BelongsToReference.html">DS.BelongsToReference</a>
 
           </li>
         
@@ -248,6 +253,11 @@
           </li>
         
           <li class="level-3 ">
+                        <a href="/internal/data/classes/DS.RecordReference.html">DS.RecordReference</a>
+
+          </li>
+        
+          <li class="level-3 ">
                         <a href="/internal/data/classes/DS.RootState.html">DS.RootState</a>
 
           </li>
@@ -322,7 +332,7 @@
         
   <h1 class="api-header">
   DS.Serializer Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializer.js#L7">addon/serializer.js:7</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializer.js#L7">addon/serializer.js:7</a>
 </h1>
 
 <hr>
@@ -335,7 +345,7 @@
     <p>Extends: Ember.Object</p>
 
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializer.js#L7">addon/serializer.js:7</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializer.js#L7">addon/serializer.js:7</a></p>
 
     <p>Module: <a href="/internal/data/modules/ember-data.html">ember-data</a></p>
 </div>
@@ -447,7 +457,7 @@ that you should implement is:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializer.js#L73">addon/serializer.js:73</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializer.js#L129">addon/serializer.js:129</a>
 
   </div>
 
@@ -458,6 +468,32 @@ external data source into the normalized form <code>store.push()</code> expects.
 should override this method, munge the hash and return the normalized
 payload.</p>
 
+<p>Example:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre>Serializer.extend({
+  normalize(modelClass, resourceHash) {
+    <span class="keyword">var</span> data = {
+      <span class="key">id</span>:            resourceHash.id,
+      <span class="key">type</span>:          modelClass.modelName,
+      <span class="key">attributes</span>:    resourceHash
+    };
+    <span class="keyword">return</span> { <span class="key">data</span>: data };
+  }
+})
+</pre></td>
+</tr></table>
+</div></div>
     </div>
 
   <p>
@@ -508,7 +544,7 @@ payload.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializer.js#L40">addon/serializer.js:40</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializer.js#L51">addon/serializer.js:51</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -520,6 +556,40 @@ server to a JSON-API Document.</p>
 
 <p><a href="http://jsonapi.org/format/#document-structure">http://jsonapi.org/format/#document-structure</a></p>
 
+<p>Example:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+</pre></td>
+  <td class="code"><pre>Serializer.extend({
+  normalizeResponse(store, primaryModelClass, payload, id, requestType) {
+    <span class="keyword">if</span> (requestType === <span class="string"><span class="delimiter">'</span><span class="content">findRecord</span><span class="delimiter">'</span></span>) {
+      <span class="keyword">return</span> <span class="local-variable">this</span>.normalize(primaryModelClass, payload);
+    } <span class="keyword">else</span> {
+      <span class="keyword">return</span> payload.reduce(<span class="keyword">function</span>(documentHash, item) {
+        let { data, included } = <span class="local-variable">this</span>.normalize(primaryModelClass, item);
+        documentHash.included.push(...included);
+        documentHash.data.push(data);
+        <span class="keyword">return</span> documentHash;
+      }, { <span class="key">data</span>: [], <span class="key">included</span>: [] })
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
     </div>
 
   <p>
@@ -571,7 +641,7 @@ server to a JSON-API Document.</p>
 <div id="method_serialize" class="method  item-entry">
   <h3 data-id="method_serialize" class="name anchorable-toc"><code>serialize</code></h3>
   <span class="args">
-    (record, options)
+    (snapshot, options)
   </span>
 
   <span class="type">Object</span>
@@ -585,7 +655,7 @@ server to a JSON-API Document.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializer.js#L57">addon/serializer.js:57</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializer.js#L87">addon/serializer.js:87</a>
 
   </div>
 
@@ -601,6 +671,54 @@ the record into the form that your external data source expects.</p>
 in the serialized object it builds.</li>
 </ul>
 
+<p>Example:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+</pre></td>
+  <td class="code"><pre>Serializer.extend({
+  serialize(snapshot, options) {
+    <span class="keyword">var</span> json = {
+      <span class="key">id</span>: snapshot.id
+    };
+
+    snapshot.eachAttribute((key, attribute) =&gt; {
+      json[key] = snapshot.attr(key);
+    });
+
+    snapshot.eachRelationship((key, relationship) =&gt; {
+      <span class="keyword">if</span> (relationship.kind === <span class="string"><span class="delimiter">'</span><span class="content">belongsTo</span><span class="delimiter">'</span></span>) {
+        json[key] = snapshot.belongsTo(key, { <span class="key">id</span>: <span class="predefined-constant">true</span> });
+      } <span class="keyword">else</span> <span class="keyword">if</span> (relationship.kind === <span class="string"><span class="delimiter">'</span><span class="content">hasMany</span><span class="delimiter">'</span></span>) {
+        json[key] = snapshot.hasMany(key, { <span class="key">ids</span>: <span class="predefined-constant">true</span> });
+      }
+    });
+
+    <span class="keyword">return</span> json;
+  },
+});
+</pre></td>
+</tr></table>
+</div></div>
     </div>
 
   <p>
@@ -611,7 +729,7 @@ in the serialized object it builds.</li>
       <h3>Parameters:</h3>
 
       <dl>
-          <dt><strong>record</strong> <span class="type"><a href="/internal/data/classes/DS.Model.html">DS.Model</a></span></dt>
+          <dt><strong>snapshot</strong> <span class="type"><a href="/internal/data/classes/DS.Snapshot.html">DS.Snapshot</a></span></dt>
           <dd>
             
 
@@ -671,17 +789,36 @@ in the serialized object it builds.</li>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializer.js#L29">addon/serializer.js:29</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializer.js#L29">addon/serializer.js:29</a>
 
   </div>
 
 
     <div class="description">
-      <p>The <code>store</code> property is the application&#39;s <code>store</code> that contains all records.
-It&#39;s injected as a service.
-It can be used to push records from a non flat data structure server
-response.</p>
+      <p>The <code>store</code> property is the application&#39;s <code>store</code> that contains
+all records. It can be used to look up serializers for other model
+types that may be nested inside the payload response.</p>
 
+<p>Example:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>Serializer.extend({
+  <span class="function">extractRelationship</span>: <span class="keyword">function</span>(relationshipModelName, relationshipHash) {
+    <span class="keyword">var</span> modelClass = <span class="local-variable">this</span>.store.modelFor(relationshipModelName);
+    <span class="keyword">var</span> relationshipSerializer = <span class="local-variable">this</span>.store.serializerFor(relationshipModelName);
+    <span class="keyword">return</span> relationshipSerializer.normalize(modelClass, relationshipHash);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
     </div>
 
   <p>

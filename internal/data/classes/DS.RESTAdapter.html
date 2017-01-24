@@ -64,7 +64,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v2.10.0" target="_blank"> Tag: v2.10.0</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v2.11.0" target="_blank"> Tag: v2.11.0</a></li>
 
 
           <li class="level-1 ">
@@ -124,6 +124,11 @@
         
           <li class="level-3 ">
                         <a href="/internal/data/classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/data/classes/DS.BelongsToReference.html">DS.BelongsToReference</a>
 
           </li>
         
@@ -248,6 +253,11 @@
           </li>
         
           <li class="level-3 ">
+                        <a href="/internal/data/classes/DS.RecordReference.html">DS.RecordReference</a>
+
+          </li>
+        
+          <li class="level-3 ">
                         <a href="/internal/data/classes/DS.RootState.html">DS.RootState</a>
 
           </li>
@@ -322,7 +332,7 @@
         
   <h1 class="api-header">
   DS.RESTAdapter Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L31">addon/adapters/rest.js:31</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L31">addon/adapters/rest.js:31</a>
 </h1>
 
 <hr>
@@ -336,7 +346,7 @@
 
       <p>Uses: <a href="/internal/data/classes/DS.BuildURLMixin.html">DS.BuildURLMixin</a></p>
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L31">addon/adapters/rest.js:31</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L31">addon/adapters/rest.js:31</a></p>
 
     <p>Module: <a href="/internal/data/modules/ember-data.html">ember-data</a></p>
 </div>
@@ -381,7 +391,7 @@ root property. For example, in response to a <code>GET</code> request for
 7
 </pre></td>
   <td class="code"><pre>{
-  <span class="key"><span class="delimiter">&quot;</span><span class="content">post</span><span class="delimiter">&quot;</span></span>: {
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">posts</span><span class="delimiter">&quot;</span></span>: {
     <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="integer">1</span>,
     <span class="key"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">I'm Running to Reform the W3C's Tag</span><span class="delimiter">&quot;</span></span>,
     <span class="key"><span class="delimiter">&quot;</span><span class="content">author</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Yehuda Katz</span><span class="delimiter">&quot;</span></span>
@@ -472,11 +482,83 @@ the attributes in your Ember.js models.</p>
 8
 </pre></td>
   <td class="code"><pre>{
-  <span class="key"><span class="delimiter">&quot;</span><span class="content">person</span><span class="delimiter">&quot;</span></span>: {
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">people</span><span class="delimiter">&quot;</span></span>: {
     <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="integer">5</span>,
     <span class="key"><span class="delimiter">&quot;</span><span class="content">firstName</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Barack</span><span class="delimiter">&quot;</span></span>,
     <span class="key"><span class="delimiter">&quot;</span><span class="content">lastName</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Obama</span><span class="delimiter">&quot;</span></span>,
     <span class="key"><span class="delimiter">&quot;</span><span class="content">occupation</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">President</span><span class="delimiter">&quot;</span></span>
+  }
+}
+</pre></td>
+</tr></table>
+</div></div><h4 class='anchorable-toc' id='toc_relationships'>Relationships</h4>
+<p>Relationships are usually represented by ids to the record in the
+relationship. The related records can then be sideloaded in the
+response under a key for the type.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">posts</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="integer">5</span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">I'm Running to Reform the W3C's Tag</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">author</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Yehuda Katz</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">comments</span><span class="delimiter">&quot;</span></span>: [<span class="integer">1</span>, <span class="integer">2</span>]
+  },
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">comments</span><span class="delimiter">&quot;</span></span>: [{
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="integer">1</span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">author</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">User 1</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">message</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">First!</span><span class="delimiter">&quot;</span></span>,
+  }, {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="integer">2</span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">author</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">User 2</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">message</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Good Luck!</span><span class="delimiter">&quot;</span></span>,
+  }]
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>If the records in the relationship are not known when the response
+is serialized its also possible to represent the relationship as a
+url using the <code>links</code> key in the response. Ember Data will fetch
+this url to resolve the relationship when it is accessed for the
+first time.</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">posts</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="integer">5</span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">I'm Running to Reform the W3C's Tag</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">author</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Yehuda Katz</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">links</span><span class="delimiter">&quot;</span></span>: {
+      <span class="key"><span class="delimiter">&quot;</span><span class="content">comments</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">/posts/5/comments</span><span class="delimiter">&quot;</span></span>
+    }
   }
 }
 </pre></td>
@@ -796,6 +878,9 @@ be recomputed with every request.</p>
               <a href="#method_urlForCreateRecord">urlForCreateRecord</a>
             </li>
             <li class="method inherited">
+              <a href="#method_urlForDeleteRecord">urlForDeleteRecord</a>
+            </li>
+            <li class="method inherited">
               <a href="#method_urlForFindAll">urlForFindAll</a>
             </li>
             <li class="method inherited">
@@ -884,7 +969,7 @@ be recomputed with every request.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L1031">addon/adapters/rest.js:1031</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L1077">addon/adapters/rest.js:1077</a>
 
   </div>
 
@@ -928,7 +1013,7 @@ be recomputed with every request.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.BuildURLMixin.html#method__buildURL">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/-private/adapters/build-url-mixin.js#L81">addon/-private/adapters/build-url-mixin.js:81</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/-private/adapters/build-url-mixin.js#L81">addon/-private/adapters/build-url-mixin.js:81</a>
 
   </div>
 
@@ -983,7 +1068,7 @@ be recomputed with every request.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L1379">addon/adapters/rest.js:1379</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L1425">addon/adapters/rest.js:1425</a>
 
   </div>
 
@@ -1037,7 +1122,7 @@ be recomputed with every request.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L1326">addon/adapters/rest.js:1326</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L1372">addon/adapters/rest.js:1372</a>
 
   </div>
 
@@ -1092,7 +1177,7 @@ be made.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L1344">addon/adapters/rest.js:1344</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L1390">addon/adapters/rest.js:1390</a>
 
   </div>
 
@@ -1146,7 +1231,7 @@ be made.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L975">addon/adapters/rest.js:975</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L1021">addon/adapters/rest.js:1021</a>
 
   </div>
 
@@ -1226,7 +1311,7 @@ data is the serialized record in the case of a save.</li>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L1040">addon/adapters/rest.js:1040</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L1086">addon/adapters/rest.js:1086</a>
 
   </div>
 
@@ -1286,7 +1371,7 @@ data is the serialized record in the case of a save.</li>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.BuildURLMixin.html#method_buildURL">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/-private/adapters/build-url-mixin.js#L33">addon/-private/adapters/build-url-mixin.js:33</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/-private/adapters/build-url-mixin.js#L33">addon/-private/adapters/build-url-mixin.js:33</a>
 
   </div>
 
@@ -1371,7 +1456,7 @@ will be arrays of ids and snapshots.</p>
         Inherited from
         <a href="/internal/data/classes/DS.Adapter.html#method_createRecord">DS.Adapter</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L700">addon/adapters/rest.js:700</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L746">addon/adapters/rest.js:746</a>
 
   </div>
 
@@ -1442,7 +1527,7 @@ of a record.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L1196">addon/adapters/rest.js:1196</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L1242">addon/adapters/rest.js:1242</a>
 
   </div>
 
@@ -1497,7 +1582,7 @@ of a record.</p>
         Inherited from
         <a href="/internal/data/classes/DS.Adapter.html#method_deleteRecord">DS.Adapter</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L772">addon/adapters/rest.js:772</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L818">addon/adapters/rest.js:818</a>
 
   </div>
 
@@ -1564,7 +1649,7 @@ of a record.</p>
         Inherited from
         <a href="/internal/data/classes/DS.Adapter.html#method_findAll">DS.Adapter</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L439">addon/adapters/rest.js:439</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L484">addon/adapters/rest.js:484</a>
 
   </div>
 
@@ -1636,7 +1721,7 @@ promise for the resulting payload.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L648">addon/adapters/rest.js:648</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L694">addon/adapters/rest.js:694</a>
 
   </div>
 
@@ -1719,7 +1804,7 @@ belongs-to relationship that was originally specified as a URL (inside of
 <div id="method_findHasMany" class="method  item-entry">
   <h3 data-id="method_findHasMany" class="name anchorable-toc"><code>findHasMany</code></h3>
   <span class="args">
-    (store, snapshot, url)
+    (store, snapshot, relationship, url)
   </span>
 
   <span class="type">Promise</span>
@@ -1733,7 +1818,7 @@ belongs-to relationship that was originally specified as a URL (inside of
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L595">addon/adapters/rest.js:595</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L640">addon/adapters/rest.js:640</a>
 
   </div>
 
@@ -1795,6 +1880,11 @@ specified as a URL (inside of <code>links</code>).</p>
             
 
           </dd>
+          <dt><strong>relationship</strong> <span class="type">Object</span></dt>
+          <dd>
+            meta object describing the relationship
+
+          </dd>
           <dt><strong>url</strong> <span class="type">String</span></dt>
           <dd>
             
@@ -1832,7 +1922,7 @@ specified as a URL (inside of <code>links</code>).</p>
         Inherited from
         <a href="/internal/data/classes/DS.Adapter.html#method_findMany">DS.Adapter</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L548">addon/adapters/rest.js:548</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L593">addon/adapters/rest.js:593</a>
 
   </div>
 
@@ -1933,7 +2023,7 @@ promise for the resulting payload.</p>
         Inherited from
         <a href="/internal/data/classes/DS.Adapter.html#method_findRecord">DS.Adapter</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L406">addon/adapters/rest.js:406</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L451">addon/adapters/rest.js:451</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -2009,7 +2099,7 @@ type and ID.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.Adapter.html#method_generateIdForRecord">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapter.js#L221">addon/adapter.js:221</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapter.js#L220">addon/adapter.js:220</a>
 
   </div>
 
@@ -2105,7 +2195,7 @@ the first parameter and the newly created record as the second parameter:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L1126">addon/adapters/rest.js:1126</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L1172">addon/adapters/rest.js:1172</a>
 
   </div>
 
@@ -2176,7 +2266,7 @@ of information for debugging (good luck!)</p>
         Inherited from
         <a href="/internal/data/classes/DS.Adapter.html#method_groupRecordsForFindMany">DS.Adapter</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L822">addon/adapters/rest.js:822</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L868">addon/adapters/rest.js:868</a>
 
   </div>
 
@@ -2248,7 +2338,7 @@ and <code>/posts/2/comments/3</code></p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L886">addon/adapters/rest.js:886</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L932">addon/adapters/rest.js:932</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -2337,7 +2427,7 @@ method.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L1311">addon/adapters/rest.js:1311</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L1357">addon/adapters/rest.js:1357</a>
 
   </div>
 
@@ -2393,7 +2483,7 @@ returned.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L960">addon/adapters/rest.js:960</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L1006">addon/adapters/rest.js:1006</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -2458,7 +2548,7 @@ response is a an invalid error.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L945">addon/adapters/rest.js:945</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L991">addon/adapters/rest.js:991</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -2524,7 +2614,7 @@ response is a success.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L1254">addon/adapters/rest.js:1254</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L1300">addon/adapters/rest.js:1300</a>
 
   </div>
 
@@ -2578,7 +2668,7 @@ response is a success.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L1104">addon/adapters/rest.js:1104</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L1150">addon/adapters/rest.js:1150</a>
 
   </div>
 
@@ -2638,7 +2728,7 @@ response is a success.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L1086">addon/adapters/rest.js:1086</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L1132">addon/adapters/rest.js:1132</a>
 
   </div>
 
@@ -2688,7 +2778,7 @@ response is a success.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.BuildURLMixin.html#method_pathForType">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/-private/adapters/build-url-mixin.js#L410">addon/-private/adapters/build-url-mixin.js:410</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/-private/adapters/build-url-mixin.js#L410">addon/-private/adapters/build-url-mixin.js:410</a>
 
   </div>
 
@@ -2775,7 +2865,7 @@ endpoint of &quot;/line_items/&quot;.</p>
         Inherited from
         <a href="/internal/data/classes/DS.Adapter.html#method_query">DS.Adapter</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L475">addon/adapters/rest.js:475</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L520">addon/adapters/rest.js:520</a>
 
   </div>
 
@@ -2848,7 +2938,7 @@ to the server as parameters.</p>
         Inherited from
         <a href="/internal/data/classes/DS.Adapter.html#method_queryRecord">DS.Adapter</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L511">addon/adapters/rest.js:511</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L556">addon/adapters/rest.js:556</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -2921,7 +3011,7 @@ to the server as parameters.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.Adapter.html#method_serialize">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapter.js#L255">addon/adapter.js:255</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapter.js#L254">addon/adapter.js:254</a>
 
   </div>
 
@@ -3012,7 +3102,7 @@ to the server as parameters.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.Adapter.html#method_shouldBackgroundReloadAll">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapter.js#L619">addon/adapter.js:619</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapter.js#L618">addon/adapter.js:618</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -3107,7 +3197,7 @@ should always be triggered.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.Adapter.html#method_shouldBackgroundReloadRecord">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapter.js#L580">addon/adapter.js:580</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapter.js#L579">addon/adapter.js:579</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -3202,7 +3292,7 @@ in the background.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.Adapter.html#method_shouldReloadAll">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapter.js#L527">addon/adapter.js:527</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapter.js#L526">addon/adapter.js:526</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -3315,7 +3405,7 @@ your use case.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.Adapter.html#method_shouldReloadRecord">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapter.js#L479">addon/adapter.js:479</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapter.js#L478">addon/adapter.js:478</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -3418,7 +3508,7 @@ suit your use case.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L244">addon/adapters/rest.js:244</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L289">addon/adapters/rest.js:289</a>
 
   </div>
 
@@ -3529,7 +3619,7 @@ in the backend.</p>
         Inherited from
         <a href="/internal/data/classes/DS.Adapter.html#method_updateRecord">DS.Adapter</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L735">addon/adapters/rest.js:735</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L781">addon/adapters/rest.js:781</a>
 
   </div>
 
@@ -3600,7 +3690,7 @@ of a record.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.BuildURLMixin.html#method_urlForCreateRecord">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/-private/adapters/build-url-mixin.js#L298">addon/-private/adapters/build-url-mixin.js:298</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/-private/adapters/build-url-mixin.js#L298">addon/-private/adapters/build-url-mixin.js:298</a>
 
   </div>
 
@@ -3668,6 +3758,96 @@ locally using <code>store.createRecord()</code>.</p>
 </div>
 
         
+<div id="method_urlForDeleteRecord" class="method inherited item-entry">
+  <h3 data-id="method_urlForDeleteRecord" class="name anchorable-toc"><code>urlForDeleteRecord</code></h3>
+  <span class="args">
+    (id, modelName, snapshot)
+  </span>
+
+  <span class="type">String</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/internal/data/classes/DS.BuildURLMixin.html#method_urlForDeleteRecord">DS.BuildURLMixin</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/-private/adapters/build-url-mixin.js#L348">addon/-private/adapters/build-url-mixin.js:348</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>Builds a URL for a <code>record.save()</code> call when the record has been deleted locally.</p>
+
+<p>Example:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/adapters/application.js</td>
+    </tr>
+  </thead>
+<tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.RESTAdapter.extend({
+  urlForDeleteRecord(id, modelName, snapshot) {
+    <span class="keyword">return</span> <span class="local-variable">this</span>._super(...<span class="local-variable">arguments</span>) + <span class="string"><span class="delimiter">'</span><span class="content">/destroy</span><span class="delimiter">'</span></span>;
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>id</strong> <span class="type">String</span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>modelName</strong> <span class="type">String</span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>snapshot</strong> <span class="type"><a href="/internal/data/classes/DS.Snapshot.html">DS.Snapshot</a></span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">String</span>
+        <dd> url</dd>
+      </dl>
+    </div>
+</div>
+
+        
 <div id="method_urlForFindAll" class="method inherited item-entry">
   <h3 data-id="method_urlForFindAll" class="name anchorable-toc"><code>urlForFindAll</code></h3>
   <span class="args">
@@ -3686,7 +3866,7 @@ locally using <code>store.createRecord()</code>.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.BuildURLMixin.html#method_urlForFindAll">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/-private/adapters/build-url-mixin.js#L137">addon/-private/adapters/build-url-mixin.js:137</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/-private/adapters/build-url-mixin.js#L137">addon/-private/adapters/build-url-mixin.js:137</a>
 
   </div>
 
@@ -3771,7 +3951,7 @@ locally using <code>store.createRecord()</code>.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.BuildURLMixin.html#method_urlForFindBelongsTo">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/-private/adapters/build-url-mixin.js#L271">addon/-private/adapters/build-url-mixin.js:271</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/-private/adapters/build-url-mixin.js#L271">addon/-private/adapters/build-url-mixin.js:271</a>
 
   </div>
 
@@ -3864,7 +4044,7 @@ is not provided by the server.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.BuildURLMixin.html#method_urlForFindHasMany">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/-private/adapters/build-url-mixin.js#L244">addon/-private/adapters/build-url-mixin.js:244</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/-private/adapters/build-url-mixin.js#L244">addon/-private/adapters/build-url-mixin.js:244</a>
 
   </div>
 
@@ -3957,7 +4137,7 @@ is not provided by the server.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.BuildURLMixin.html#method_urlForFindMany">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/-private/adapters/build-url-mixin.js#L216">addon/-private/adapters/build-url-mixin.js:216</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/-private/adapters/build-url-mixin.js#L216">addon/-private/adapters/build-url-mixin.js:216</a>
 
   </div>
 
@@ -4051,7 +4231,7 @@ property is true.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.BuildURLMixin.html#method_urlForFindRecord">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/-private/adapters/build-url-mixin.js#L110">addon/-private/adapters/build-url-mixin.js:110</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/-private/adapters/build-url-mixin.js#L110">addon/-private/adapters/build-url-mixin.js:110</a>
 
   </div>
 
@@ -4143,7 +4323,7 @@ property is true.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.BuildURLMixin.html#method_urlForQuery">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/-private/adapters/build-url-mixin.js#L161">addon/-private/adapters/build-url-mixin.js:161</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/-private/adapters/build-url-mixin.js#L161">addon/-private/adapters/build-url-mixin.js:161</a>
 
   </div>
 
@@ -4240,7 +4420,7 @@ property is true.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.BuildURLMixin.html#method_urlForQueryRecord">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/-private/adapters/build-url-mixin.js#L191">addon/-private/adapters/build-url-mixin.js:191</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/-private/adapters/build-url-mixin.js#L191">addon/-private/adapters/build-url-mixin.js:191</a>
 
   </div>
 
@@ -4327,7 +4507,7 @@ property is true.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L1274">addon/adapters/rest.js:1274</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L1320">addon/adapters/rest.js:1320</a>
 
   </div>
 
@@ -4381,7 +4561,7 @@ property is true.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.BuildURLMixin.html#method_urlForUpdateRecord">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/-private/adapters/build-url-mixin.js#L323">addon/-private/adapters/build-url-mixin.js:323</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/-private/adapters/build-url-mixin.js#L323">addon/-private/adapters/build-url-mixin.js:323</a>
 
   </div>
 
@@ -4472,7 +4652,7 @@ property is true.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.BuildURLMixin.html#method_urlPrefix">DS.BuildURLMixin</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/-private/adapters/build-url-mixin.js#L373">addon/-private/adapters/build-url-mixin.js:373</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/-private/adapters/build-url-mixin.js#L373">addon/-private/adapters/build-url-mixin.js:373</a>
 
   </div>
 
@@ -4547,7 +4727,7 @@ property is true.</p>
         Inherited from
         <a href="/internal/data/classes/DS.Adapter.html#method_coalesceFindRequests">DS.Adapter</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L300">addon/adapters/rest.js:300</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L345">addon/adapters/rest.js:345</a>
 
   </div>
 
@@ -4636,7 +4816,7 @@ store.findRecord(<span class="string"><span class="delimiter">'</span><span clas
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.Adapter.html#method_defaultSerializer">DS.Adapter</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapter.js#L66">addon/adapter.js:66</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapter.js#L65">addon/adapter.js:65</a>
 
   </div>
 
@@ -4694,7 +4874,7 @@ a model specific serializer (i.e. <code>PostSerializer</code>) or the
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L384">addon/adapters/rest.js:384</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L429">addon/adapters/rest.js:429</a>
 
   </div>
 
@@ -4756,7 +4936,7 @@ customization</a>.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L367">addon/adapters/rest.js:367</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L412">addon/adapters/rest.js:412</a>
 
   </div>
 
@@ -4810,7 +4990,7 @@ customization</a>.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/adapters/rest.js#L349">addon/adapters/rest.js:349</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/adapters/rest.js#L394">addon/adapters/rest.js:394</a>
 
   </div>
 

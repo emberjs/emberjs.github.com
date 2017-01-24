@@ -64,7 +64,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v2.10.0" target="_blank"> Tag: v2.10.0</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v2.11.0" target="_blank"> Tag: v2.11.0</a></li>
 
 
           <li class="level-1 ">
@@ -124,6 +124,11 @@
         
           <li class="level-3 ">
                         <a href="/internal/data/classes/DS.AdapterPopulatedRecordArray.html">DS.AdapterPopulatedRecordArray</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/data/classes/DS.BelongsToReference.html">DS.BelongsToReference</a>
 
           </li>
         
@@ -248,6 +253,11 @@
           </li>
         
           <li class="level-3 ">
+                        <a href="/internal/data/classes/DS.RecordReference.html">DS.RecordReference</a>
+
+          </li>
+        
+          <li class="level-3 ">
                         <a href="/internal/data/classes/DS.RootState.html">DS.RootState</a>
 
           </li>
@@ -322,7 +332,7 @@
         
   <h1 class="api-header">
   DS.JSONAPISerializer Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json-api.js#L14">addon/serializers/json-api.js:14</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json-api.js#L14">addon/serializers/json-api.js:14</a>
 </h1>
 
 <hr>
@@ -335,7 +345,7 @@
     <p>Extends: <a href="/internal/data/classes/DS.JSONSerializer.html">DS.JSONSerializer</a></p>
 
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json-api.js#L14">addon/serializers/json-api.js:14</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json-api.js#L14">addon/serializers/json-api.js:14</a></p>
 
     <p>Module: <a href="/internal/data/modules/ember-data.html">ember-data</a></p>
 </div>
@@ -484,7 +494,66 @@ serializer recommended by Ember Data.</p>
 </tr></table>
 </div></div>
 <p>to the format that the Ember Data store expects.</p>
+<h3 class='anchorable-toc' id='toc_customizing-meta'>Customizing meta</h3>
+<p>Since a JSON API Document can have meta defined in multiple locations you can
+use the specific serializer hooks if you need to customize the meta.</p>
 
+<p>One scenario would be to camelCase the meta keys of your payload. The example
+below shows how this could be done using <code>normalizeArrayResponse</code> and
+<code>extractRelationship</code>.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/serializers/application.js</td>
+    </tr>
+  </thead>
+<tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+</pre></td>
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> JSONAPISerializer.extend({
+
+  normalizeArrayResponse(store, primaryModelClass, payload, id, requestType) {
+    let normalizedDocument = <span class="local-variable">this</span>._super(...<span class="local-variable">arguments</span>);
+
+    <span class="comment">// Customize document meta</span>
+    normalizedDocument.meta = camelCaseKeys(normalizedDocument.meta);
+
+    <span class="keyword">return</span> normalizedDocument;
+  },
+
+  extractRelationship(relationshipHash) {
+    let normalizedRelationship = <span class="local-variable">this</span>._super(...<span class="local-variable">arguments</span>);
+
+    <span class="comment">// Customize relationship meta</span>
+    normalizedRelationship.meta = camelCaseKeys(normalizedRelationship.meta);
+
+    <span class="keyword">return</span> normalizedRelationship;
+  }
+
+});
+</pre></td>
+</tr></table>
+</div></div>
   </div>
 
 
@@ -547,7 +616,7 @@ serializer recommended by Ember Data.</p>
             <li class="method private inherited">
               <a href="#method_applyTransforms">applyTransforms</a>
             </li>
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_extractAttributes">extractAttributes</a>
             </li>
             <li class="method inherited">
@@ -562,10 +631,10 @@ serializer recommended by Ember Data.</p>
             <li class="method inherited">
               <a href="#method_extractPolymorphicRelationship">extractPolymorphicRelationship</a>
             </li>
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_extractRelationship">extractRelationship</a>
             </li>
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_extractRelationships">extractRelationships</a>
             </li>
             <li class="method ">
@@ -583,14 +652,11 @@ serializer recommended by Ember Data.</p>
             <li class="method public">
               <a href="#method_modelNameFromPayloadType">modelNameFromPayloadType</a>
             </li>
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_normalize">normalize</a>
             </li>
             <li class="method inherited">
               <a href="#method_normalizeArrayResponse">normalizeArrayResponse</a>
-            </li>
-            <li class="method private inherited">
-              <a href="#method_normalizeAttributes">normalizeAttributes</a>
             </li>
             <li class="method inherited">
               <a href="#method_normalizeCreateRecordResponse">normalizeCreateRecordResponse</a>
@@ -646,17 +712,20 @@ serializer recommended by Ember Data.</p>
             <li class="method ">
               <a href="#method_pushPayload">pushPayload</a>
             </li>
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_serialize">serialize</a>
             </li>
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_serializeAttribute">serializeAttribute</a>
             </li>
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_serializeBelongsTo">serializeBelongsTo</a>
             </li>
-            <li class="method ">
+            <li class="method inherited">
               <a href="#method_serializeHasMany">serializeHasMany</a>
+            </li>
+            <li class="method public inherited">
+              <a href="#method_serializeId">serializeId</a>
             </li>
             <li class="method inherited">
               <a href="#method_serializeIntoHash">serializeIntoHash</a>
@@ -725,7 +794,7 @@ serializer recommended by Ember Data.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method__canSerialize">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L826">addon/serializers/json.js:826</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L806">addon/serializers/json.js:806</a>
 
   </div>
 
@@ -780,7 +849,7 @@ can be serialized</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json-api.js#L323">addon/serializers/json-api.js:323</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json-api.js#L349">addon/serializers/json-api.js:349</a>
 
   </div>
 
@@ -836,7 +905,7 @@ can be serialized</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method__getMappedKey">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L795">addon/serializers/json.js:795</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L775">addon/serializers/json.js:775</a>
 
   </div>
 
@@ -892,7 +961,7 @@ passed to the serializer.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method__mustSerialize">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L841">addon/serializers/json.js:841</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L821">addon/serializers/json.js:821</a>
 
   </div>
 
@@ -948,7 +1017,7 @@ attribute/relationship will be serialized</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json-api.js#L103">addon/serializers/json-api.js:103</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json-api.js#L136">addon/serializers/json-api.js:136</a>
 
   </div>
 
@@ -998,7 +1067,7 @@ attribute/relationship will be serialized</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json-api.js#L138">addon/serializers/json-api.js:138</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json-api.js#L171">addon/serializers/json-api.js:171</a>
 
   </div>
 
@@ -1048,7 +1117,7 @@ attribute/relationship will be serialized</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json-api.js#L167">addon/serializers/json-api.js:167</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json-api.js#L200">addon/serializers/json-api.js:200</a>
 
   </div>
 
@@ -1100,7 +1169,7 @@ attribute/relationship will be serialized</p>
         Inherited from
         <a href="/internal/data/classes/DS.JSONSerializer.html#method__normalizeResponse">DS.JSONSerializer</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json-api.js#L227">addon/serializers/json-api.js:227</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json-api.js#L260">addon/serializers/json-api.js:260</a>
 
   </div>
 
@@ -1176,7 +1245,7 @@ attribute/relationship will be serialized</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method__shouldSerializeHasMany">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L878">addon/serializers/json.js:878</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L858">addon/serializers/json.js:858</a>
 
   </div>
 
@@ -1241,7 +1310,7 @@ attribute/relationship will be serialized</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_applyTransforms">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L175">addon/serializers/json.js:175</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L175">addon/serializers/json.js:175</a>
 
   </div>
 
@@ -1286,7 +1355,7 @@ serializer&#39;s <code>normalize</code> method.</p>
 </div>
 
         
-<div id="method_extractAttributes" class="method  item-entry">
+<div id="method_extractAttributes" class="method inherited item-entry">
   <h3 data-id="method_extractAttributes" class="name anchorable-toc"><code>extractAttributes</code></h3>
   <span class="args">
     (modelClass, resourceHash)
@@ -1302,14 +1371,19 @@ serializer&#39;s <code>normalize</code> method.</p>
 
 
   <div class="meta">
-        Inherited from
-        <a href="/internal/data/classes/DS.JSONSerializer.html#method_extractAttributes">DS.JSONSerializer</a>
-          but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json-api.js#L253">addon/serializers/json-api.js:253</a>
+          Inherited from
+          <a href="/internal/data/classes/DS.JSONSerializer.html#method_extractAttributes">DS.JSONSerializer</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L564">addon/serializers/json.js:564</a>
 
   </div>
 
 
+    <div class="description">
+      <p>Returns the resource&#39;s attributes formatted as a JSON-API &quot;attributes object&quot;.</p>
+
+<p><a href="http://jsonapi.org/format/#document-resource-object-attributes">http://jsonapi.org/format/#document-resource-object-attributes</a></p>
+
+    </div>
 
   <p>
   </p>
@@ -1319,7 +1393,7 @@ serializer&#39;s <code>normalize</code> method.</p>
       <h3>Parameters:</h3>
 
       <dl>
-          <dt><strong>modelClass</strong> <span class="type"><a href="/internal/data/classes/DS.Model.html">DS.Model</a></span></dt>
+          <dt><strong>modelClass</strong> <span class="type">Object</span></dt>
           <dd>
             
 
@@ -1360,7 +1434,7 @@ serializer&#39;s <code>normalize</code> method.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_extractErrors">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L1322">addon/serializers/json.js:1322</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L1305">addon/serializers/json.js:1305</a>
 
   </div>
 
@@ -1555,7 +1629,7 @@ behavior to deal with a different format of errors:</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_extractId">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L550">addon/serializers/json.js:550</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L550">addon/serializers/json.js:550</a>
 
   </div>
 
@@ -1613,7 +1687,7 @@ behavior to deal with a different format of errors:</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_extractMeta">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L1288">addon/serializers/json.js:1288</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L1271">addon/serializers/json.js:1271</a>
 
   </div>
 
@@ -1706,7 +1780,7 @@ be located on the <code>meta</code> property of the payload object.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_extractPolymorphicRelationship">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L637">addon/serializers/json.js:637</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L637">addon/serializers/json.js:637</a>
 
   </div>
 
@@ -1762,10 +1836,10 @@ polymorphic relationship which should be extracted:
 </div>
 
         
-<div id="method_extractRelationship" class="method  item-entry">
+<div id="method_extractRelationship" class="method inherited item-entry">
   <h3 data-id="method_extractRelationship" class="name anchorable-toc"><code>extractRelationship</code></h3>
   <span class="args">
-    (relationshipHash)
+    (relationshipModelName, relationshipHash)
   </span>
 
   <span class="type">Object</span>
@@ -1778,14 +1852,19 @@ polymorphic relationship which should be extracted:
 
 
   <div class="meta">
-        Inherited from
-        <a href="/internal/data/classes/DS.JSONSerializer.html#method_extractRelationship">DS.JSONSerializer</a>
-          but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json-api.js#L274">addon/serializers/json-api.js:274</a>
+          Inherited from
+          <a href="/internal/data/classes/DS.JSONSerializer.html#method_extractRelationship">DS.JSONSerializer</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L588">addon/serializers/json.js:588</a>
 
   </div>
 
 
+    <div class="description">
+      <p>Returns a relationship formatted as a JSON-API &quot;relationship object&quot;.</p>
+
+<p><a href="http://jsonapi.org/format/#document-resource-object-relationships">http://jsonapi.org/format/#document-resource-object-relationships</a></p>
+
+    </div>
 
   <p>
   </p>
@@ -1795,6 +1874,11 @@ polymorphic relationship which should be extracted:
       <h3>Parameters:</h3>
 
       <dl>
+          <dt><strong>relationshipModelName</strong> <span class="type">Object</span></dt>
+          <dd>
+            
+
+          </dd>
           <dt><strong>relationshipHash</strong> <span class="type">Object</span></dt>
           <dd>
             
@@ -1813,7 +1897,7 @@ polymorphic relationship which should be extracted:
 </div>
 
         
-<div id="method_extractRelationships" class="method  item-entry">
+<div id="method_extractRelationships" class="method inherited item-entry">
   <h3 data-id="method_extractRelationships" class="name anchorable-toc"><code>extractRelationships</code></h3>
   <span class="args">
     (modelClass, resourceHash)
@@ -1829,14 +1913,19 @@ polymorphic relationship which should be extracted:
 
 
   <div class="meta">
-        Inherited from
-        <a href="/internal/data/classes/DS.JSONSerializer.html#method_extractRelationships">DS.JSONSerializer</a>
-          but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json-api.js#L299">addon/serializers/json-api.js:299</a>
+          Inherited from
+          <a href="/internal/data/classes/DS.JSONSerializer.html#method_extractRelationships">DS.JSONSerializer</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L660">addon/serializers/json.js:660</a>
 
   </div>
 
 
+    <div class="description">
+      <p>Returns the resource&#39;s relationships formatted as a JSON-API &quot;relationships object&quot;.</p>
+
+<p><a href="http://jsonapi.org/format/#document-resource-object-relationships">http://jsonapi.org/format/#document-resource-object-relationships</a></p>
+
+    </div>
 
   <p>
   </p>
@@ -1888,7 +1977,7 @@ polymorphic relationship which should be extracted:
         Inherited from
         <a href="/internal/data/classes/DS.JSONSerializer.html#method_keyForAttribute">DS.JSONSerializer</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json-api.js#L397">addon/serializers/json-api.js:397</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json-api.js#L428">addon/serializers/json-api.js:428</a>
 
   </div>
 
@@ -1979,7 +2068,7 @@ attribute keys.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_keyForLink">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L1485">addon/serializers/json.js:1485</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L1468">addon/serializers/json.js:1468</a>
 
   </div>
 
@@ -2040,7 +2129,7 @@ properties.</p>
         Inherited from
         <a href="/internal/data/classes/DS.JSONSerializer.html#method_keyForRelationship">DS.JSONSerializer</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json-api.js#L427">addon/serializers/json-api.js:427</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json-api.js#L458">addon/serializers/json-api.js:458</a>
 
   </div>
 
@@ -2137,11 +2226,19 @@ relationship properties.</p>
         Inherited from
         <a href="/internal/data/classes/DS.JSONSerializer.html#method_modelNameFromPayloadKey">DS.JSONSerializer</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json-api.js#L350">addon/serializers/json-api.js:350</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json-api.js#L376">addon/serializers/json-api.js:376</a>
 
   </div>
 
 
+    <div class="description">
+      <p>Dasherizes and singularizes the model name in the payload to match
+the format Ember Data uses internally for the model name.</p>
+
+<p>For example the key <code>posts</code> would be converted to <code>post</code> and the
+key <code>studentAssesments</code> would be converted to <code>student-assesment</code>.</p>
+
+    </div>
 
   <p>
   </p>
@@ -2189,7 +2286,7 @@ relationship properties.</p>
         Inherited from
         <a href="/internal/data/classes/DS.JSONSerializer.html#method_modelNameFromPayloadType">DS.JSONSerializer</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json-api.js#L630">addon/serializers/json-api.js:630</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json-api.js#L636">addon/serializers/json-api.js:636</a>
 
   </div>
 
@@ -2283,10 +2380,10 @@ how the type of a record should be serialized.</p>
 </div>
 
         
-<div id="method_normalize" class="method  item-entry">
+<div id="method_normalize" class="method inherited item-entry">
   <h3 data-id="method_normalize" class="name anchorable-toc"><code>normalize</code></h3>
   <span class="args">
-    (modelClass, resourceHash)
+    (typeClass, hash)
   </span>
 
   <span class="type">Object</span>
@@ -2300,13 +2397,68 @@ how the type of a record should be serialized.</p>
 
   <div class="meta">
         Inherited from
-        <a href="/internal/data/classes/DS.JSONSerializer.html#method_normalize">DS.JSONSerializer</a>
+        <a href="/internal/data/classes/DS.Serializer.html#method_normalize">DS.Serializer</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json-api.js#L370">addon/serializers/json-api.js:370</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L491">addon/serializers/json.js:491</a>
 
   </div>
 
 
+    <div class="description">
+      <p>Normalizes a part of the JSON payload returned by
+the server. You should override this method, munge the hash
+and call super if you have generic normalization to do.</p>
+
+<p>It takes the type of the record that is being normalized
+(as a DS.Model class), the property where the hash was
+originally found, and the hash to normalize.</p>
+
+<p>You can use this method, for example, to normalize underscored keys to camelized
+or other general-purpose normalizations.</p>
+
+<p>Example</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/serializers/application.js</td>
+    </tr>
+  </thead>
+<tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.JSONSerializer.extend({
+  <span class="function">normalize</span>: <span class="keyword">function</span>(typeClass, hash) {
+    <span class="keyword">var</span> fields = Ember.get(typeClass, <span class="string"><span class="delimiter">'</span><span class="content">fields</span><span class="delimiter">'</span></span>);
+    fields.forEach(<span class="keyword">function</span>(field) {
+      <span class="keyword">var</span> payloadField = Ember.String.underscore(field);
+      <span class="keyword">if</span> (field === payloadField) { <span class="keyword">return</span>; }
+
+      hash[field] = hash[payloadField];
+      <span class="keyword">delete</span> hash[payloadField];
+    });
+    <span class="keyword">return</span> <span class="local-variable">this</span>._super.apply(<span class="local-variable">this</span>, <span class="local-variable">arguments</span>);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
 
   <p>
   </p>
@@ -2316,14 +2468,14 @@ how the type of a record should be serialized.</p>
       <h3>Parameters:</h3>
 
       <dl>
-          <dt><strong>modelClass</strong> <span class="type"><a href="/internal/data/classes/DS.Model.html">DS.Model</a></span></dt>
+          <dt><strong>typeClass</strong> <span class="type"><a href="/internal/data/classes/DS.Model.html">DS.Model</a></span></dt>
           <dd>
             
 
           </dd>
-          <dt><strong>resourceHash</strong> <span class="type">Object</span></dt>
+          <dt><strong>hash</strong> <span class="type">Object</span></dt>
           <dd>
-            the resource hash from the adapter
+            
 
           </dd>
       </dl>
@@ -2333,7 +2485,7 @@ how the type of a record should be serialized.</p>
       <h3>Returns:</h3>
       <dl>
         <dt><span class="type">Object</span>
-        <dd> the normalized resource hash</dd>
+        <dd> </dd>
       </dl>
     </div>
 </div>
@@ -2357,7 +2509,7 @@ how the type of a record should be serialized.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_normalizeArrayResponse">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L430">addon/serializers/json.js:430</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L430">addon/serializers/json.js:430</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -2410,35 +2562,6 @@ how the type of a record should be serialized.</p>
 </div>
 
         
-<div id="method_normalizeAttributes" class="method private inherited item-entry">
-  <h3 data-id="method_normalizeAttributes" class="name anchorable-toc"><code>normalizeAttributes</code></h3>
-
-
-
-
-  <span class="flag private">private</span>
-
-
-
-
-
-  <div class="meta">
-          Inherited from
-          <a href="/internal/data/classes/DS.JSONSerializer.html#method_normalizeAttributes">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L727">addon/serializers/json.js:727</a>
-
-  </div>
-
-
-
-  <p>
-  </p>
-
-
-
-</div>
-
-        
 <div id="method_normalizeCreateRecordResponse" class="method inherited item-entry">
   <h3 data-id="method_normalizeCreateRecordResponse" class="name anchorable-toc"><code>normalizeCreateRecordResponse</code></h3>
   <span class="args">
@@ -2457,7 +2580,7 @@ how the type of a record should be serialized.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_normalizeCreateRecordResponse">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L360">addon/serializers/json.js:360</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L360">addon/serializers/json.js:360</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -2528,7 +2651,7 @@ how the type of a record should be serialized.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_normalizeDeleteRecordResponse">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L374">addon/serializers/json.js:374</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L374">addon/serializers/json.js:374</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -2599,7 +2722,7 @@ how the type of a record should be serialized.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_normalizeFindAllResponse">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L290">addon/serializers/json.js:290</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L290">addon/serializers/json.js:290</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -2670,7 +2793,7 @@ how the type of a record should be serialized.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_normalizeFindBelongsToResponse">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L304">addon/serializers/json.js:304</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L304">addon/serializers/json.js:304</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -2741,7 +2864,7 @@ how the type of a record should be serialized.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_normalizeFindHasManyResponse">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L318">addon/serializers/json.js:318</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L318">addon/serializers/json.js:318</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -2812,7 +2935,7 @@ how the type of a record should be serialized.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_normalizeFindManyResponse">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L332">addon/serializers/json.js:332</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L332">addon/serializers/json.js:332</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -2883,7 +3006,7 @@ how the type of a record should be serialized.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_normalizeFindRecordResponse">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L262">addon/serializers/json.js:262</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L262">addon/serializers/json.js:262</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -2954,7 +3077,7 @@ how the type of a record should be serialized.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_normalizeQueryRecordResponse">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L276">addon/serializers/json.js:276</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L276">addon/serializers/json.js:276</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -3025,7 +3148,7 @@ how the type of a record should be serialized.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_normalizeQueryResponse">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L346">addon/serializers/json.js:346</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L346">addon/serializers/json.js:346</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -3093,7 +3216,7 @@ how the type of a record should be serialized.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_normalizeRelationships">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L746">addon/serializers/json.js:746</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L726">addon/serializers/json.js:726</a>
 
   </div>
 
@@ -3126,7 +3249,7 @@ how the type of a record should be serialized.</p>
         Inherited from
         <a href="/internal/data/classes/DS.Serializer.html#method_normalizeResponse">DS.Serializer</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L202">addon/serializers/json.js:202</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L202">addon/serializers/json.js:202</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -3233,7 +3356,7 @@ pre-processed data.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_normalizeSaveResponse">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L402">addon/serializers/json.js:402</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L402">addon/serializers/json.js:402</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -3304,7 +3427,7 @@ pre-processed data.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_normalizeSingleResponse">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L416">addon/serializers/json.js:416</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L416">addon/serializers/json.js:416</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -3375,7 +3498,7 @@ pre-processed data.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_normalizeUpdateRecordResponse">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L388">addon/serializers/json.js:388</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L388">addon/serializers/json.js:388</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -3443,7 +3566,7 @@ pre-processed data.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_normalizeUsingDeclaredMapping">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L765">addon/serializers/json.js:765</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L745">addon/serializers/json.js:745</a>
 
   </div>
 
@@ -3474,11 +3597,18 @@ pre-processed data.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json-api.js#L360">addon/serializers/json-api.js:360</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json-api.js#L392">addon/serializers/json-api.js:392</a>
 
   </div>
 
 
+    <div class="description">
+      <p>Converts the model name to a pluralized version of the model name.</p>
+
+<p>For example <code>post</code> would be converted to <code>posts</code> and
+<code>student-assesment</code> would be converted to <code>student-assesments</code>.</p>
+
+    </div>
 
   <p>
   </p>
@@ -3524,7 +3654,7 @@ pre-processed data.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json-api.js#L678">addon/serializers/json-api.js:678</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json-api.js#L684">addon/serializers/json-api.js:684</a>
 
   </div>
 
@@ -3633,7 +3763,7 @@ how the model name from should be mapped from the payload.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json-api.js#L213">addon/serializers/json-api.js:213</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json-api.js#L246">addon/serializers/json-api.js:246</a>
 
   </div>
 
@@ -3663,7 +3793,7 @@ how the model name from should be mapped from the payload.</p>
 </div>
 
         
-<div id="method_serialize" class="method  item-entry">
+<div id="method_serialize" class="method inherited item-entry">
   <h3 data-id="method_serialize" class="name anchorable-toc"><code>serialize</code></h3>
   <span class="args">
     (snapshot, options)
@@ -3680,13 +3810,260 @@ how the model name from should be mapped from the payload.</p>
 
   <div class="meta">
         Inherited from
-        <a href="/internal/data/classes/DS.JSONSerializer.html#method_serialize">DS.JSONSerializer</a>
+        <a href="/internal/data/classes/DS.Serializer.html#method_serialize">DS.Serializer</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json-api.js#L457">addon/serializers/json-api.js:457</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L878">addon/serializers/json.js:878</a>
 
   </div>
 
 
+    <div class="description">
+      <p>Called when a record is saved in order to convert the
+record into JSON.</p>
+
+<p>By default, it creates a JSON object with a key for
+each attribute and belongsTo relationship.</p>
+
+<p>For example, consider this model:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/models/comment.js</td>
+    </tr>
+  </thead>
+<tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.Model.extend({
+  <span class="key">title</span>: DS.attr(),
+  <span class="key">body</span>: DS.attr(),
+
+  <span class="key">author</span>: DS.belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">user</span><span class="delimiter">'</span></span>)
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>The default serialization would create a JSON object like:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">title</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is unagi</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">body</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails? Omakase? O_O</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">author</span><span class="delimiter">&quot;</span></span>: <span class="integer">12</span>
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>By default, attributes are passed through as-is, unless
+you specified an attribute type (<code>DS.attr(&#39;date&#39;)</code>). If
+you specify a transform, the JavaScript value will be
+serialized when inserted into the JSON hash.</p>
+
+<p>By default, belongs-to relationships are converted into
+IDs when inserted into the JSON hash.</p>
+<h2 class='anchorable-toc' id='toc_ids'>IDs</h2>
+<p><code>serialize</code> takes an options hash with a single option:
+<code>includeId</code>. If this option is <code>true</code>, <code>serialize</code> will,
+by default include the ID in the JSON object it builds.</p>
+
+<p>The adapter passes in <code>includeId: true</code> when serializing
+a record for <code>createRecord</code>, but not for <code>updateRecord</code>.</p>
+<h2 class='anchorable-toc' id='toc_customization'>Customization</h2>
+<p>Your server may expect a different JSON format than the
+built-in serialization format.</p>
+
+<p>In that case, you can implement <code>serialize</code> yourself and
+return a JSON hash of your choosing.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/serializers/post.js</td>
+    </tr>
+  </thead>
+<tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.JSONSerializer.extend({
+  <span class="function">serialize</span>: <span class="keyword">function</span>(snapshot, options) {
+    <span class="keyword">var</span> json = {
+      <span class="key">POST_TTL</span>: snapshot.attr(<span class="string"><span class="delimiter">'</span><span class="content">title</span><span class="delimiter">'</span></span>),
+      <span class="key">POST_BDY</span>: snapshot.attr(<span class="string"><span class="delimiter">'</span><span class="content">body</span><span class="delimiter">'</span></span>),
+      <span class="key">POST_CMS</span>: snapshot.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>, { <span class="key">ids</span>: <span class="predefined-constant">true</span> })
+    }
+
+    <span class="keyword">if</span> (options.includeId) {
+      json.POST_ID_ = snapshot.id;
+    }
+
+    <span class="keyword">return</span> json;
+  }
+});
+</pre></td>
+</tr></table>
+</div></div><h2 class='anchorable-toc' id='toc_customizing-an-app-wide-serializer'>Customizing an App-Wide Serializer</h2>
+<p>If you want to define a serializer for your entire
+application, you&#39;ll probably want to use <code>eachAttribute</code>
+and <code>eachRelationship</code> on the record.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/serializers/application.js</td>
+    </tr>
+  </thead>
+<tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+14
+15
+16
+17
+18
+19
+<strong>20</strong>
+21
+22
+23
+24
+25
+26
+27
+28
+29
+<strong>30</strong>
+31
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.JSONSerializer.extend({
+  <span class="function">serialize</span>: <span class="keyword">function</span>(snapshot, options) {
+    <span class="keyword">var</span> json = {};
+
+    snapshot.eachAttribute(<span class="keyword">function</span>(name) {
+      json[serverAttributeName(name)] = snapshot.attr(name);
+    })
+
+    snapshot.eachRelationship(<span class="keyword">function</span>(name, relationship) {
+      <span class="keyword">if</span> (relationship.kind === <span class="string"><span class="delimiter">'</span><span class="content">hasMany</span><span class="delimiter">'</span></span>) {
+        json[serverHasManyName(name)] = snapshot.hasMany(name, { <span class="key">ids</span>: <span class="predefined-constant">true</span> });
+      }
+    });
+
+    <span class="keyword">if</span> (options.includeId) {
+      json.ID_ = snapshot.id;
+    }
+
+    <span class="keyword">return</span> json;
+  }
+});
+
+<span class="keyword">function</span> <span class="function">serverAttributeName</span>(attribute) {
+  <span class="keyword">return</span> attribute.underscore().toUpperCase();
+}
+
+<span class="keyword">function</span> <span class="function">serverHasManyName</span>(name) {
+  <span class="keyword">return</span> serverAttributeName(name.singularize()) + <span class="string"><span class="delimiter">&quot;</span><span class="content">_IDS</span><span class="delimiter">&quot;</span></span>;
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>This serializer will generate JSON that looks like this:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">TITLE</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Rails is omakase</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">BODY</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Yep. Omakase.</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">COMMENT_IDS</span><span class="delimiter">&quot;</span></span>: [ <span class="integer">1</span>, <span class="integer">2</span>, <span class="integer">3</span> ]
+}
+</pre></td>
+</tr></table>
+</div></div><h2 class='anchorable-toc' id='toc_tweaking-the-default-json'>Tweaking the Default JSON</h2>
+<p>If you just want to do some small tweaks on the default JSON,
+you can call super first and make the tweaks on the returned
+JSON.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/serializers/post.js</td>
+    </tr>
+  </thead>
+<tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.JSONSerializer.extend({
+  <span class="function">serialize</span>: <span class="keyword">function</span>(snapshot, options) {
+    <span class="keyword">var</span> json = <span class="local-variable">this</span>._super.apply(<span class="local-variable">this</span>, <span class="local-variable">arguments</span>);
+
+    json.subject = json.title;
+    <span class="keyword">delete</span> json.title;
+
+    <span class="keyword">return</span> json;
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
 
   <p>
   </p>
@@ -3719,7 +4096,7 @@ how the model name from should be mapped from the payload.</p>
 </div>
 
         
-<div id="method_serializeAttribute" class="method  item-entry">
+<div id="method_serializeAttribute" class="method inherited item-entry">
   <h3 data-id="method_serializeAttribute" class="name anchorable-toc"><code>serializeAttribute</code></h3>
   <span class="args">
     (snapshot, json, key, attribute)
@@ -3734,14 +4111,48 @@ how the model name from should be mapped from the payload.</p>
 
 
   <div class="meta">
-        Inherited from
-        <a href="/internal/data/classes/DS.JSONSerializer.html#method_serializeAttribute">DS.JSONSerializer</a>
-          but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json-api.js#L487">addon/serializers/json-api.js:487</a>
+          Inherited from
+          <a href="/internal/data/classes/DS.JSONSerializer.html#method_serializeAttribute">DS.JSONSerializer</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L1089">addon/serializers/json.js:1089</a>
 
   </div>
 
 
+    <div class="description">
+      <p><code>serializeAttribute</code> can be used to customize how <code>DS.attr</code>
+properties are serialized</p>
+
+<p>For example if you wanted to ensure all your attributes were always
+serialized as properties on an <code>attributes</code> object you could
+write:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/serializers/application.js</td>
+    </tr>
+  </thead>
+<tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.JSONSerializer.extend({
+  <span class="function">serializeAttribute</span>: <span class="keyword">function</span>(snapshot, json, key, attributes) {
+    json.attributes = json.attributes || {};
+    <span class="local-variable">this</span>._super(snapshot, json.attributes, key, attributes);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
 
   <p>
   </p>
@@ -3777,7 +4188,7 @@ how the model name from should be mapped from the payload.</p>
 </div>
 
         
-<div id="method_serializeBelongsTo" class="method  item-entry">
+<div id="method_serializeBelongsTo" class="method inherited item-entry">
   <h3 data-id="method_serializeBelongsTo" class="name anchorable-toc"><code>serializeBelongsTo</code></h3>
   <span class="args">
     (snapshot, json, relationship)
@@ -3792,14 +4203,56 @@ how the model name from should be mapped from the payload.</p>
 
 
   <div class="meta">
-        Inherited from
-        <a href="/internal/data/classes/DS.JSONSerializer.html#method_serializeBelongsTo">DS.JSONSerializer</a>
-          but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json-api.js#L516">addon/serializers/json-api.js:516</a>
+          Inherited from
+          <a href="/internal/data/classes/DS.JSONSerializer.html#method_serializeBelongsTo">DS.JSONSerializer</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L1136">addon/serializers/json.js:1136</a>
 
   </div>
 
 
+    <div class="description">
+      <p><code>serializeBelongsTo</code> can be used to customize how <code>DS.belongsTo</code>
+properties are serialized.</p>
+
+<p>Example</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/serializers/post.js</td>
+    </tr>
+  </thead>
+<tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+13
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.JSONSerializer.extend({
+  <span class="function">serializeBelongsTo</span>: <span class="keyword">function</span>(snapshot, json, relationship) {
+    <span class="keyword">var</span> key = relationship.key;
+
+    <span class="keyword">var</span> belongsTo = snapshot.belongsTo(key);
+
+    key = <span class="local-variable">this</span>.keyForRelationship ? <span class="local-variable">this</span>.keyForRelationship(key, <span class="string"><span class="delimiter">&quot;</span><span class="content">belongsTo</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">serialize</span><span class="delimiter">&quot;</span></span>) : key;
+
+    json[key] = Ember.isNone(belongsTo) ? belongsTo : belongsTo.record.toJSON();
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
 
   <p>
   </p>
@@ -3830,7 +4283,7 @@ how the model name from should be mapped from the payload.</p>
 </div>
 
         
-<div id="method_serializeHasMany" class="method  item-entry">
+<div id="method_serializeHasMany" class="method inherited item-entry">
   <h3 data-id="method_serializeHasMany" class="name anchorable-toc"><code>serializeHasMany</code></h3>
   <span class="args">
     (snapshot, json, relationship)
@@ -3845,14 +4298,54 @@ how the model name from should be mapped from the payload.</p>
 
 
   <div class="meta">
-        Inherited from
-        <a href="/internal/data/classes/DS.JSONSerializer.html#method_serializeHasMany">DS.JSONSerializer</a>
-          but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json-api.js#L567">addon/serializers/json-api.js:567</a>
+          Inherited from
+          <a href="/internal/data/classes/DS.JSONSerializer.html#method_serializeHasMany">DS.JSONSerializer</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L1189">addon/serializers/json.js:1189</a>
 
   </div>
 
 
+    <div class="description">
+      <p><code>serializeHasMany</code> can be used to customize how <code>DS.hasMany</code>
+properties are serialized.</p>
+
+<p>Example</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/serializers/post.js</td>
+    </tr>
+  </thead>
+<tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+11
+12
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.JSONSerializer.extend({
+  <span class="function">serializeHasMany</span>: <span class="keyword">function</span>(snapshot, json, relationship) {
+    <span class="keyword">var</span> key = relationship.key;
+    <span class="keyword">if</span> (key === <span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>) {
+      <span class="keyword">return</span>;
+    } <span class="keyword">else</span> {
+      <span class="local-variable">this</span>._super.apply(<span class="local-variable">this</span>, <span class="local-variable">arguments</span>);
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
 
   <p>
   </p>
@@ -3873,6 +4366,92 @@ how the model name from should be mapped from the payload.</p>
 
           </dd>
           <dt><strong>relationship</strong> <span class="type">Object</span></dt>
+          <dd>
+            
+
+          </dd>
+      </dl>
+    </div>
+
+</div>
+
+        
+<div id="method_serializeId" class="method public inherited item-entry">
+  <h3 data-id="method_serializeId" class="name anchorable-toc"><code>serializeId</code></h3>
+  <span class="args">
+    (snapshot, json, primaryKey)
+  </span>
+
+
+
+
+  <span class="flag public">public</span>
+
+
+
+
+
+  <div class="meta">
+          Inherited from
+          <a href="/internal/data/classes/DS.JSONSerializer.html#method_serializeId">DS.JSONSerializer</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L1525">addon/serializers/json.js:1525</a>
+
+  </div>
+
+
+    <div class="description">
+      <p>serializeId can be used to customize how id is serialized
+For example, your server may expect integer datatype of id</p>
+
+<p>By default the snapshot&#39;s id (String) is set on the json hash via json[primaryKey] = snapshot.id.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/serializers/application.js</td>
+    </tr>
+  </thead>
+<tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+</pre></td>
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.JSONSerializer.extend({
+serializeId(snapshot, json, primaryKey) {
+    <span class="keyword">var</span> id = snapshot.id;
+    json[primaryKey] = parseInt(id, <span class="integer">10</span>);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+    </div>
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>snapshot</strong> <span class="type"><a href="/internal/data/classes/DS.Snapshot.html">DS.Snapshot</a></span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>json</strong> <span class="type">Object</span></dt>
+          <dd>
+            
+
+          </dd>
+          <dt><strong>primaryKey</strong> <span class="type">String</span></dt>
           <dd>
             
 
@@ -3900,7 +4479,7 @@ how the model name from should be mapped from the payload.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_serializeIntoHash">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L1075">addon/serializers/json.js:1075</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L1058">addon/serializers/json.js:1058</a>
 
   </div>
 
@@ -3994,7 +4573,7 @@ The hash property should be modified by reference.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_serializePolymorphicType">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L1255">addon/serializers/json.js:1255</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L1238">addon/serializers/json.js:1238</a>
 
   </div>
 
@@ -4096,7 +4675,7 @@ serialized. Objects are considered to be polymorphic if
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_shouldSerializeHasMany">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L857">addon/serializers/json.js:857</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L837">addon/serializers/json.js:837</a>
 
   </div>
 
@@ -4161,7 +4740,7 @@ serialized. Objects are considered to be polymorphic if
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_transformFor">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L1500">addon/serializers/json.js:1500</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L1483">addon/serializers/json.js:1483</a>
 
   </div>
 
@@ -4235,7 +4814,7 @@ serialized. Objects are considered to be polymorphic if
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_attrs">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L111">addon/serializers/json.js:111</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L111">addon/serializers/json.js:111</a>
 
   </div>
 
@@ -4375,7 +4954,7 @@ the response payload.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_primaryKey">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializers/json.js#L87">addon/serializers/json.js:87</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializers/json.js#L87">addon/serializers/json.js:87</a>
 
   </div>
 
@@ -4437,17 +5016,36 @@ store.</p>
   <div class="meta">
           Inherited from
           <a href="/internal/data/classes/DS.JSONSerializer.html#method_store">DS.JSONSerializer</a>
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.10.0/addon/serializer.js#L29">addon/serializer.js:29</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.11.0/addon/serializer.js#L29">addon/serializer.js:29</a>
 
   </div>
 
 
     <div class="description">
-      <p>The <code>store</code> property is the application&#39;s <code>store</code> that contains all records.
-It&#39;s injected as a service.
-It can be used to push records from a non flat data structure server
-response.</p>
+      <p>The <code>store</code> property is the application&#39;s <code>store</code> that contains
+all records. It can be used to look up serializers for other model
+types that may be nested inside the payload response.</p>
 
+<p>Example:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>Serializer.extend({
+  <span class="function">extractRelationship</span>: <span class="keyword">function</span>(relationshipModelName, relationshipHash) {
+    <span class="keyword">var</span> modelClass = <span class="local-variable">this</span>.store.modelFor(relationshipModelName);
+    <span class="keyword">var</span> relationshipSerializer = <span class="local-variable">this</span>.store.serializerFor(relationshipModelName);
+    <span class="keyword">return</span> relationshipSerializer.normalize(modelClass, relationshipHash);
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
     </div>
 
   <p>
