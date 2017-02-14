@@ -1162,11 +1162,11 @@ let klass = factory.class;
 klass.hasSpeed('slow'); // true
 </pre></td>
 </tr></table>
-</div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-2-13'>Deprecations Added in 2.13</h3><h4 class='anchorable-toc' id='toc_ember-router-router-renamed-to-ember-router-routermicrolib'>Ember.Router.router renamed to Ember.Router.routerMicrolib</h4><h5 class='anchorable-toc' id='toc_until-2-16-0'>until: 2.16.0</h5><h5 class='anchorable-toc' id='toc_id-ember-router-router'>id: ember-router.router</h5>
-<p>The private <code>router</code> property of the <code>Ember.Router</code> instance (commonly found as this.router in Ember.Route instances or via router:main in the container) 
-has been renamed to <code>routerMicrolib</code> to disambiguate it from <code>router.js</code>, the microlib used within <code>Ember.Router</code>.</p>
+</div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-2-13'>Deprecations Added in 2.13</h3><h4 class='anchorable-toc' id='toc_ember-router-router-renamed-to-ember-router-_routermicrolib'>Ember.Router.router renamed to Ember.Router._routerMicrolib</h4><h5 class='anchorable-toc' id='toc_until-2-16-0'>until: 2.16.0</h5><h5 class='anchorable-toc' id='toc_id-ember-router-router'>id: ember-router.router</h5>
+<p>The private <code>router</code> property of the <code>Ember.Router</code> instance (commonly found as <code>this.router</code> in <code>Ember.Route</code> instances or via router:main in the container) 
+has been renamed to <code>_routerMicrolib</code> to identify it as <code>router.js</code>, the microlib used within <code>Ember.Router</code>.</p>
 
-<p>Addon and application developers that are using the internal <code>router</code> property of <code>Ember.Router</code> should replace those usages with <code>Ember.Router.routerMicrolib</code>.</p>
+<p>Addon and application developers that are using the internal <code>router</code> property of <code>Ember.Router</code> should replace those usages with <code>Ember.Router._routerMicrolib</code>.</p>
 
 <p>This example demonstrates a common use case for <code>.router</code>. </p>
 
@@ -1212,7 +1212,7 @@ has been renamed to <code>routerMicrolib</code> to disambiguate it from <code>ro
   <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> Ember.Service.extend({
   getRouteNameFromUrl (url) {
     const router = getContainer(<span class="local-variable">this</span>).lookup(<span class="string"><span class="delimiter">'</span><span class="content">router:main</span><span class="delimiter">'</span></span>);
-    const routes = router.routerMicrolib.recognizer.recognize(url);
+    const routes = router._routerMicrolib.recognizer.recognize(url);
 
     <span class="keyword">if</span> (routes &amp;&amp; routes.length) {
       <span class="keyword">return</span> routes[routes.length-<span class="integer">1</span>].handler;
