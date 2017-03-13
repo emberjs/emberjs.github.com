@@ -1078,7 +1078,7 @@ Index Content
 <p>For more informations of how to use <code>ember-elsewhere</code>, please visit the official
 documentation <a href="https://github.com/ef4/ember-elsewhere#ember-elsewhere">here</a>.</p>
 <h3 class='anchorable-toc' id='toc_deprecations-added-in-2-12'>Deprecations Added in 2.12</h3><h4 class='anchorable-toc' id='toc_code-ember-k-code'><code>Ember.K</code></h4><h5 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h5><h5 class='anchorable-toc' id='toc_id-ember-metal-ember-k'>id: ember-metal.ember-k</h5>
-<p>Using <code>Ember.K</code> is deprecated in favor of defining a function inline. See <a href="https://github.com/emberjs/rfcs/blob/master/text/0178-deprecate-ember-k.md">RFC 0178</a>.</p>
+<p>Using <code>Ember.K</code> is deprecated in favor of defining a function inline. See <a href="https://github.com/emberjs/rfcs/blob/master/text/0178-deprecate-ember-k.md">RFC #178</a>.</p>
 
 <p>You can use the addon <a href="https://github.com/abuiles/ember-watson#remove-usages-of-emberk">ember-watson</a> to automate the removal of <code>Ember.K</code> from your application.</p>
 
@@ -1171,66 +1171,7 @@ let klass = factory.class;
 klass.hasSpeed('slow'); // true
 </pre></td>
 </tr></table>
-</div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-2-13'>Deprecations Added in 2.13</h3><h4 class='anchorable-toc' id='toc_ember-router-router-renamed-to-ember-router-_routermicrolib'>Ember.Router.router renamed to Ember.Router._routerMicrolib</h4><h5 class='anchorable-toc' id='toc_until-2-16-0'>until: 2.16.0</h5><h5 class='anchorable-toc' id='toc_id-ember-router-router'>id: ember-router.router</h5>
-<p>The private <code>router</code> property of the <code>Ember.Router</code> instance (commonly found as <code>this.router</code> in <code>Ember.Route</code> instances or via router:main in the container) 
-has been renamed to <code>_routerMicrolib</code> to identify it as <code>router.js</code>, the microlib used within <code>Ember.Router</code>.</p>
-
-<p>Addon and application developers that are using the internal <code>router</code> property of <code>Ember.Router</code> should replace those usages with <code>Ember.Router._routerMicrolib</code>.</p>
-
-<p>This example demonstrates a common use case for <code>.router</code>. </p>
-
-<p>Before:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-</pre></td>
-  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> Ember.Service.extend({
-  getRouteNameFromUrl (url) {
-    const router = getContainer(<span class="local-variable">this</span>).lookup(<span class="string"><span class="delimiter">'</span><span class="content">router:main</span><span class="delimiter">'</span></span>);
-    const routes = router.router.recognizer.recognize(url);
-
-    <span class="keyword">if</span> (routes &amp;&amp; routes.length) {
-      <span class="keyword">return</span> routes[routes.length-<span class="integer">1</span>].handler;
-    }
-  }
-});
-</pre></td>
-</tr></table>
-</div></div>
-<p>After:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-<strong>10</strong>
-</pre></td>
-  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> Ember.Service.extend({
-  getRouteNameFromUrl (url) {
-    const router = getContainer(<span class="local-variable">this</span>).lookup(<span class="string"><span class="delimiter">'</span><span class="content">router:main</span><span class="delimiter">'</span></span>);
-    const routes = router._routerMicrolib.recognizer.recognize(url);
-
-    <span class="keyword">if</span> (routes &amp;&amp; routes.length) {
-      <span class="keyword">return</span> routes[routes.length-<span class="integer">1</span>].handler;
-    }
-  }
-});
-</pre></td>
-</tr></table>
-</div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-pending-features'>Deprecations Added in Pending Features</h3><h4 class='anchorable-toc' id='toc_arguments-in-component-lifecycle-hooks'>Arguments in Component Lifecycle Hooks</h4><h5 class='anchorable-toc' id='toc_until-2-13-0'>until: 2.13.0</h5><h5 class='anchorable-toc' id='toc_id-ember-views-lifecycle-hook-arguments'>id: ember-views.lifecycle-hook-arguments</h5>
+</div></div><h4 class='anchorable-toc' id='toc_arguments-in-component-lifecycle-hooks'>Arguments in Component Lifecycle Hooks</h4><h5 class='anchorable-toc' id='toc_until-2-13-0'>until: 2.13.0</h5><h5 class='anchorable-toc' id='toc_id-ember-views-lifecycle-hook-arguments'>id: ember-views.lifecycle-hook-arguments</h5>
 <p>Previously, it was possible for component lifecycle hooks <code>didInitAttrs</code>, <code>didReceiveAttrs</code>, and <code>didUpdateAttrs</code> to receive arguments. However, this functionality was part of private API. Using the arguments is harmful to component performance, so they will trigger a deprecation. Alternative approaches for all three hooks are below:</p>
 <h5 class='anchorable-toc' id='toc_code-didinitattrs-code-arguments'><code>didInitAttrs</code> arguments</h5>
 <p>Since this lifecycle hook is <a href="http://emberjs.com/deprecations/v2.x/#toc_ember-component-didinitattrs">already deprecated</a>, we suggest taking this chance to address two deprecations at the same time.</p>
@@ -1322,7 +1263,66 @@ has been renamed to <code>_routerMicrolib</code> to identify it as <code>router.
 </tr></table>
 </div></div>
 <p>Additionally, <a href="https://github.com/workmanw/ember-diff-attrs">ember-diff-attrs</a> is an addon that spun out of the discussions on the RFC. It provides a dry way to track attribute changes for this lifecycle hook.</p>
+<h3 class='anchorable-toc' id='toc_deprecations-added-in-2-13'>Deprecations Added in 2.13</h3><h4 class='anchorable-toc' id='toc_ember-router-router-renamed-to-ember-router-_routermicrolib'>Ember.Router.router renamed to Ember.Router._routerMicrolib</h4><h5 class='anchorable-toc' id='toc_until-2-16-0'>until: 2.16.0</h5><h5 class='anchorable-toc' id='toc_id-ember-router-router'>id: ember-router.router</h5>
+<p>The private <code>router</code> property of the <code>Ember.Router</code> instance (commonly found as <code>this.router</code> in <code>Ember.Route</code> instances or via router:main in the container)
+has been renamed to <code>_routerMicrolib</code> to identify it as <code>router.js</code>, the microlib used within <code>Ember.Router</code>.</p>
 
+<p>Addon and application developers that are using the internal <code>router</code> property of <code>Ember.Router</code> should replace those usages with <code>Ember.Router._routerMicrolib</code>.</p>
+
+<p>This example demonstrates a common use case for <code>.router</code>.</p>
+
+<p>Before:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> Ember.Service.extend({
+  getRouteNameFromUrl (url) {
+    const router = getContainer(<span class="local-variable">this</span>).lookup(<span class="string"><span class="delimiter">'</span><span class="content">router:main</span><span class="delimiter">'</span></span>);
+    const routes = router.router.recognizer.recognize(url);
+
+    <span class="keyword">if</span> (routes &amp;&amp; routes.length) {
+      <span class="keyword">return</span> routes[routes.length-<span class="integer">1</span>].handler;
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
+<p>After:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
+</pre></td>
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> Ember.Service.extend({
+  getRouteNameFromUrl (url) {
+    const router = getContainer(<span class="local-variable">this</span>).lookup(<span class="string"><span class="delimiter">'</span><span class="content">router:main</span><span class="delimiter">'</span></span>);
+    const routes = router._routerMicrolib.recognizer.recognize(url);
+
+    <span class="keyword">if</span> (routes &amp;&amp; routes.length) {
+      <span class="keyword">return</span> routes[routes.length-<span class="integer">1</span>].handler;
+    }
+  }
+});
+</pre></td>
+</tr></table>
+</div></div>
 
       </div>
     </div>
