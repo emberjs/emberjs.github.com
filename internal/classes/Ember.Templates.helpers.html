@@ -74,7 +74,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v2.11.0" target="_blank"> Tag: v2.11.0</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v2.12.0" target="_blank"> Tag: v2.12.0</a></li>
 
 
           <li class="level-1 ">
@@ -553,6 +553,21 @@
           </li>
         
           <li class="level-3 ">
+                        <a href="/internal/classes/RSVP.html">RSVP</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/RSVP.EventTarget.html">RSVP.EventTarget</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/RSVP.Promise.html">RSVP.Promise</a>
+
+          </li>
+        
+          <li class="level-3 ">
                         <a href="/internal/classes/Registry.html">Registry</a>
 
           </li>
@@ -569,6 +584,11 @@
         
           <li class="level-3 ">
                         <a href="/internal/classes/String.html">String</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/internal/classes/Transition.html">Transition</a>
 
           </li>
         
@@ -737,7 +757,7 @@
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/helpers/action.js#L21">packages/ember-glimmer/lib/helpers/action.js:21</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/helpers/action.js#L21">packages/ember-glimmer/lib/helpers/action.js:21</a>
 
   </div>
 
@@ -813,8 +833,12 @@ passed between components and still execute in the correct context.</p>
 5
 6
 7
+8
+9
 </pre></td>
-  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
   <span class="key">actions</span>: {
     save() {
       <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">model</span><span class="delimiter">'</span></span>).save();
@@ -871,7 +895,13 @@ other actions.</p>
 
 <p>Actions invoked with <code>sendAction</code> have the same currying behavior as demonstrated
 with <code>on-input</code> above. For example:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/components/my-input.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -879,8 +909,12 @@ with <code>on-input</code> above. For example:</p>
 5
 6
 7
+8
+9
 </pre></td>
-  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
   <span class="key">actions</span>: {
     setName(model, name) {
       model.set(<span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>, name);
@@ -895,7 +929,13 @@ with <code>on-input</code> above. For example:</p>
   <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">my-input</span> <span class="attribute-name">submit</span>=<span class="error">(</span><span class="attribute-value">action</span> <span class="error">'</span><span class="attribute-name">setName</span><span class="error">'</span> <span class="attribute-name">model</span><span class="error">)</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
-</div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/components/my-component.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -903,8 +943,10 @@ with <code>on-input</code> above. For example:</p>
 5
 6
 7
+8
 </pre></td>
-  <td class="code"><pre><span class="comment">// app/components/my-component.js</span>
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+
 <span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
   click() {
     <span class="comment">// Note that model is not passed, it was curried in the template</span>
@@ -968,7 +1010,13 @@ wrapper helper that makes use of <code>event.stopPropagation()</code>:</p>
   <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">onclick</span>=<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">disable-bubbling</span> <span class="error">(</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">sayHello</span><span class="error">&quot;</span><span class="error">)</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>Hello<span class="tag">&lt;/div&gt;</span>
 </pre></td>
 </tr></table>
-</div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/helpers/disable-bubbling.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -979,8 +1027,8 @@ wrapper helper that makes use of <code>event.stopPropagation()</code>:</p>
 8
 9
 </pre></td>
-  <td class="code"><pre><span class="comment">// app/helpers/disable-bubbling.js</span>
-<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+
 <span class="reserved">export</span> <span class="keyword">function</span> <span class="function">disableBubbling</span>([action]) {
   <span class="keyword">return</span> <span class="keyword">function</span>(event) {
     event.stopPropagation();
@@ -1043,25 +1091,37 @@ Alternatively, supply &quot;any&quot; to the <code>allowedKeys</code> option to 
 <p>A <code>target</code> option can be provided to the helper to change
 which object will receive the method call. This option must be a path
 to an object, accessible in the current context:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/templates/application.hbs</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
-4
 </pre></td>
-  <td class="code"><pre><span class="comment">{{! app/templates/application.hbs }}</span>
-<span class="tag">&lt;div</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">anActionName</span><span class="error">&quot;</span> <span class="attribute-name">target</span>=<span class="attribute-value">someService</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">action</span> <span class="error">&quot;</span><span class="attribute-name">anActionName</span><span class="error">&quot;</span> <span class="attribute-name">target</span>=<span class="attribute-value">someService</span><span class="inline-delimiter">}}</span></span><span class="tag">&gt;</span>
   click me
 <span class="tag">&lt;/div&gt;</span>
 </pre></td>
 </tr></table>
-</div></div><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/controllers/application.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
+5
 </pre></td>
-  <td class="code"><pre><span class="comment">// app/controllers/application.js</span>
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+
 <span class="reserved">export</span> <span class="keyword">default</span> Ember.Controller.extend({
   <span class="key">someService</span>: Ember.inject.service()
 });
@@ -1092,7 +1152,7 @@ to an object, accessible in the current context:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/helpers/component.js#L20">packages/ember-glimmer/lib/helpers/component.js:20</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/helpers/component.js#L20">packages/ember-glimmer/lib/helpers/component.js:20</a>
 
       <br/>Available since 1.11.0
   </div>
@@ -1272,7 +1332,7 @@ For example, given a <code>person-form</code> component with the following templ
 </pre></td>
 </tr></table>
 </div></div>
-<p>When yielding the component via the <code>hash</code> helper, the component is invocked directly.
+<p>When yielding the component via the <code>hash</code> helper, the component is invoked directly.
 See the following snippet:</p>
 <div class="highlight text "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
@@ -1331,7 +1391,7 @@ For example, below is a <code>full-name</code> component template:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/helpers/concat.js#L9">packages/ember-glimmer/lib/helpers/concat.js:9</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/helpers/concat.js#L9">packages/ember-glimmer/lib/helpers/concat.js:9</a>
 
       <br/>Available since 1.13.0
   </div>
@@ -1378,7 +1438,7 @@ For example, below is a <code>full-name</code> component template:</p>
         Inherited from
         <a href="/internal/classes/Ember.Templates.helpers.html#method_debugger">Ember.Templates.helpers</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/index.js#L118">packages/ember-glimmer/lib/index.js:118</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/index.js#L114">packages/ember-glimmer/lib/index.js:114</a>
 
   </div>
 
@@ -1457,7 +1517,7 @@ you expect:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/helpers/each-in.js#L7">packages/ember-glimmer/lib/helpers/each-in.js:7</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/helpers/each-in.js#L7">packages/ember-glimmer/lib/helpers/each-in.js:7</a>
 
   </div>
 
@@ -1581,7 +1641,7 @@ if the collection is empty.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/helpers/each-in.js#L83">packages/ember-glimmer/lib/helpers/each-in.js:83</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/helpers/each-in.js#L83">packages/ember-glimmer/lib/helpers/each-in.js:83</a>
 
       <br/>Available since 2.1.0
   </div>
@@ -1647,7 +1707,7 @@ object in a list:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/helpers/get.js#L16">packages/ember-glimmer/lib/helpers/get.js:16</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/helpers/get.js#L16">packages/ember-glimmer/lib/helpers/get.js:16</a>
 
       <br/>Available since 2.1.0
   </div>
@@ -1732,8 +1792,9 @@ that fact via a two-way mutable binding.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/helpers/hash.js#L6">packages/ember-glimmer/lib/helpers/hash.js:6</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/helpers/hash.js#L6">packages/ember-glimmer/lib/helpers/hash.js:6</a>
 
+      <br/>Available since 2.3.0
   </div>
 
 
@@ -1808,7 +1869,7 @@ just yield a hash:</p>
         Inherited from
         <a href="/internal/classes/Ember.Templates.helpers.html#method_if">Ember.Templates.helpers</a>
           but overwritten in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/helpers/if-unless.js#L112">packages/ember-glimmer/lib/helpers/if-unless.js:112</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/helpers/if-unless.js#L112">packages/ember-glimmer/lib/helpers/if-unless.js:112</a>
 
   </div>
 
@@ -1860,7 +1921,7 @@ displayed</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/syntax/input.js#L16">packages/ember-glimmer/lib/syntax/input.js:16</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/syntax/input.js#L16">packages/ember-glimmer/lib/syntax/input.js:16</a>
 
   </div>
 
@@ -2048,7 +2109,7 @@ if you wanted to add a css class to all checkboxes in your application:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/components/link-to.js#L6">packages/ember-glimmer/lib/components/link-to.js:6</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/components/link-to.js#L6">packages/ember-glimmer/lib/components/link-to.js:6</a>
 
   </div>
 
@@ -2505,7 +2566,7 @@ this manner:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/helpers/loc.js#L9">packages/ember-glimmer/lib/helpers/loc.js:9</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/helpers/loc.js#L9">packages/ember-glimmer/lib/helpers/loc.js:9</a>
 
   </div>
 
@@ -2586,7 +2647,7 @@ set up localized string references.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/helpers/log.js#L9">packages/ember-glimmer/lib/helpers/log.js:9</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/helpers/log.js#L9">packages/ember-glimmer/lib/helpers/log.js:9</a>
 
   </div>
 
@@ -2636,7 +2697,7 @@ context. <code>log</code> also accepts primitive types such as strings or number
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/syntax/mount.js#L15">packages/ember-glimmer/lib/syntax/mount.js:15</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/syntax/mount.js#L18">packages/ember-glimmer/lib/syntax/mount.js:18</a>
 
   </div>
 
@@ -2686,7 +2747,7 @@ template to be rendered.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/helpers/mut.js#L10">packages/ember-glimmer/lib/helpers/mut.js:10</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/helpers/mut.js#L10">packages/ember-glimmer/lib/helpers/mut.js:10</a>
 
   </div>
 
@@ -2818,7 +2879,7 @@ directly to the <code>action</code>:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/syntax/outlet.js#L33">packages/ember-glimmer/lib/syntax/outlet.js:33</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/syntax/outlet.js#L34">packages/ember-glimmer/lib/syntax/outlet.js:34</a>
 
   </div>
 
@@ -2926,7 +2987,7 @@ Note: Your content <strong>will not render</strong> if there isn&#39;t an <code>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/index.js#L161">packages/ember-glimmer/lib/index.js:161</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/index.js#L157">packages/ember-glimmer/lib/index.js:157</a>
 
   </div>
 
@@ -3007,7 +3068,7 @@ name.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/helpers/query-param.js#L10">packages/ember-glimmer/lib/helpers/query-param.js:10</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/helpers/query-param.js#L10">packages/ember-glimmer/lib/helpers/query-param.js:10</a>
 
   </div>
 
@@ -3069,7 +3130,7 @@ It will supply url query parameters to the target route.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/helpers/readonly.js#L9">packages/ember-glimmer/lib/helpers/readonly.js:9</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/helpers/readonly.js#L9">packages/ember-glimmer/lib/helpers/readonly.js:9</a>
 
   </div>
 
@@ -3301,7 +3362,7 @@ The <code>readonly</code> binding behaves similar to the <code>const</code> keyw
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/syntax/render.js#L51">packages/ember-glimmer/lib/syntax/render.js:51</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/syntax/render.js#L53">packages/ember-glimmer/lib/syntax/render.js:53</a>
 
   </div>
 
@@ -3449,7 +3510,7 @@ with the same name.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/components/text_area.js#L9">packages/ember-glimmer/lib/components/text_area.js:9</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/components/text_area.js#L9">packages/ember-glimmer/lib/components/text_area.js:9</a>
 
   </div>
 
@@ -3656,7 +3717,7 @@ you only need to setup the action name to the event name property.</p>
 <div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">textarea</span> <span class="attribute-name">focus-in</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">alertMessage</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">textarea</span> <span class="attribute-name">focus-out</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">alertMessage</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -3722,7 +3783,7 @@ legacy 1.x view semantics (like <code>controller</code> being present).</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/helpers/unbound.js#L9">packages/ember-glimmer/lib/helpers/unbound.js:9</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/helpers/unbound.js#L9">packages/ember-glimmer/lib/helpers/unbound.js:9</a>
 
   </div>
 
@@ -3781,7 +3842,7 @@ unbound value.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/helpers/if-unless.js#L144">packages/ember-glimmer/lib/helpers/if-unless.js:144</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/helpers/if-unless.js#L144">packages/ember-glimmer/lib/helpers/if-unless.js:144</a>
 
   </div>
 
@@ -3834,7 +3895,7 @@ displayed</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-glimmer/lib/index.js#L83">packages/ember-glimmer/lib/index.js:83</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-glimmer/lib/index.js#L79">packages/ember-glimmer/lib/index.js:79</a>
 
   </div>
 

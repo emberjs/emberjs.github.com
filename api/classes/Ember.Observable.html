@@ -73,7 +73,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v2.11.0" target="_blank"> Tag: v2.11.0</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/ember.js/commits/v2.12.0" target="_blank"> Tag: v2.12.0</a></li>
 
 
           <li class="level-1 ">
@@ -552,6 +552,21 @@
           </li>
         
           <li class="level-3 ">
+                        <a href="/api/classes/RSVP.html">RSVP</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/api/classes/RSVP.EventTarget.html">RSVP.EventTarget</a>
+
+          </li>
+        
+          <li class="level-3 ">
+                        <a href="/api/classes/RSVP.Promise.html">RSVP.Promise</a>
+
+          </li>
+        
+          <li class="level-3 ">
                         <a href="/api/classes/Registry.html">Registry</a>
 
           </li>
@@ -571,6 +586,11 @@
 
           </li>
         
+          <li class="level-3 ">
+                        <a href="/api/classes/Transition.html">Transition</a>
+
+          </li>
+        
           </ol>
         
           </li>
@@ -581,7 +601,7 @@
         
   <h1 class="api-header">
   Ember.Observable Class
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-runtime/lib/mixins/observable.js#L26">packages/ember-runtime/lib/mixins/observable.js:26</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-runtime/lib/mixins/observable.js#L26">packages/ember-runtime/lib/mixins/observable.js:26</a>
 </h1>
 
 <hr>
@@ -593,7 +613,7 @@
 <div class="class-info">
 
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-runtime/lib/mixins/observable.js#L26">packages/ember-runtime/lib/mixins/observable.js:26</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-runtime/lib/mixins/observable.js#L26">packages/ember-runtime/lib/mixins/observable.js:26</a></p>
 
     <p>Module: <a href="/api/modules/ember-runtime.html">ember-runtime</a></p>
 </div>
@@ -789,7 +809,7 @@ because computed properties are not computed until <code>get</code> is called.</
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-runtime/lib/mixins/observable.js#L333">packages/ember-runtime/lib/mixins/observable.js:333</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-runtime/lib/mixins/observable.js#L333">packages/ember-runtime/lib/mixins/observable.js:333</a>
 
   </div>
 
@@ -803,37 +823,39 @@ because computed properties are not computed until <code>get</code> is called.</
 will be notified. Note that the observers are triggered any time the
 value is set, regardless of whether it has actually changed. Your
 observer should be prepared to handle that.</p>
-
-<p>You can also pass an optional context parameter to this method. The
-context will be passed to your observer method whenever it is triggered.
-Note that if you add the same target/method pair on a key multiple times
-with different context parameters, your observer will only be called once
-with the last context you passed.</p>
 <h3 class='anchorable-toc' id='toc_observer-methods'>Observer Methods</h3>
-<p>Observer methods you pass should generally have the following signature if
-you do not pass a <code>context</code> parameter:</p>
+<p>Observer methods have the following signature:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+<strong>10</strong>
 </pre></td>
-  <td class="code"><pre><span class="function">fooDidChange</span>: <span class="keyword">function</span>(sender, key, value, rev) { };
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+  init() {
+    <span class="local-variable">this</span>._super(...<span class="local-variable">arguments</span>);
+    <span class="local-variable">this</span>.addObserver(<span class="string"><span class="delimiter">'</span><span class="content">foo</span><span class="delimiter">'</span></span>, <span class="local-variable">this</span>, <span class="string"><span class="delimiter">'</span><span class="content">fooDidChange</span><span class="delimiter">'</span></span>);
+  },
+
+  fooDidChange(sender, key, value, rev) {
+    <span class="comment">// your code</span>
+  }
+});
 </pre></td>
 </tr></table>
 </div></div>
-<p>The sender is the object that changed. The key is the property that
-changes. The value property is currently reserved and unused. The rev
+<p>The <code>sender</code> is the object that changed. The <code>key</code> is the property that
+changes. The <code>value</code> property is currently reserved and unused. The <code>rev</code>
 is the last property revision of the object when it changed, which you can
 use to detect if the key value has really changed or not.</p>
 
-<p>If you pass a <code>context</code> parameter, the context will be passed before the
-revision like so:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-</pre></td>
-  <td class="code"><pre><span class="function">fooDidChange</span>: <span class="keyword">function</span>(sender, key, value, context, rev) { };
-</pre></td>
-</tr></table>
-</div></div>
-<p>Usually you will not need the value, context or revision parameters at
+<p>Usually you will not need the value or revision parameters at
 the end. In this case, it is common to write observer methods that take
 only a sender and key value as parameters or, if you aren&#39;t interested in
 any of these values, to write an observer that has no parameters at all.</p>
@@ -850,7 +872,7 @@ any of these values, to write an observer that has no parameters at all.</p>
       <dl>
           <dt><strong>key</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
           <dd>
-            The key to observer
+            The key to observe
 
           </dd>
           <dt><strong>target</strong> <span class="type">Object</span></dt>
@@ -860,7 +882,7 @@ any of these values, to write an observer that has no parameters at all.</p>
           </dd>
           <dt><strong>method</strong> <span class="type">String|Function</span></dt>
           <dd>
-            The method to invoke.
+            The method to invoke
 
           </dd>
       </dl>
@@ -884,7 +906,7 @@ any of these values, to write an observer that has no parameters at all.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-runtime/lib/mixins/observable.js#L231">packages/ember-runtime/lib/mixins/observable.js:231</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-runtime/lib/mixins/observable.js#L231">packages/ember-runtime/lib/mixins/observable.js:231</a>
 
   </div>
 
@@ -935,7 +957,7 @@ deferring.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-runtime/lib/mixins/observable.js#L490">packages/ember-runtime/lib/mixins/observable.js:490</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-runtime/lib/mixins/observable.js#L485">packages/ember-runtime/lib/mixins/observable.js:485</a>
 
   </div>
 
@@ -992,7 +1014,7 @@ generated lazily.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-runtime/lib/mixins/observable.js#L453">packages/ember-runtime/lib/mixins/observable.js:453</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-runtime/lib/mixins/observable.js#L448">packages/ember-runtime/lib/mixins/observable.js:448</a>
 
   </div>
 
@@ -1056,7 +1078,7 @@ orc.decrementProperty(<span class="string"><span class="delimiter">'</span><span
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-runtime/lib/mixins/observable.js#L251">packages/ember-runtime/lib/mixins/observable.js:251</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-runtime/lib/mixins/observable.js#L251">packages/ember-runtime/lib/mixins/observable.js:251</a>
 
   </div>
 
@@ -1106,7 +1128,7 @@ deliver the deferred change notifications and end deferring.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-runtime/lib/mixins/observable.js#L96">packages/ember-runtime/lib/mixins/observable.js:96</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-runtime/lib/mixins/observable.js#L96">packages/ember-runtime/lib/mixins/observable.js:96</a>
 
   </div>
 
@@ -1191,7 +1213,7 @@ not defined upfront.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-runtime/lib/mixins/observable.js#L139">packages/ember-runtime/lib/mixins/observable.js:139</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-runtime/lib/mixins/observable.js#L139">packages/ember-runtime/lib/mixins/observable.js:139</a>
 
   </div>
 
@@ -1264,7 +1286,7 @@ with a list of strings or an array:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-runtime/lib/mixins/observable.js#L415">packages/ember-runtime/lib/mixins/observable.js:415</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-runtime/lib/mixins/observable.js#L410">packages/ember-runtime/lib/mixins/observable.js:410</a>
 
   </div>
 
@@ -1330,7 +1352,7 @@ property returns <code>undefined</code>.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-runtime/lib/mixins/observable.js#L400">packages/ember-runtime/lib/mixins/observable.js:400</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-runtime/lib/mixins/observable.js#L395">packages/ember-runtime/lib/mixins/observable.js:395</a>
 
   </div>
 
@@ -1387,7 +1409,7 @@ on the object.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-runtime/lib/mixins/observable.js#L433">packages/ember-runtime/lib/mixins/observable.js:433</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-runtime/lib/mixins/observable.js#L428">packages/ember-runtime/lib/mixins/observable.js:428</a>
 
   </div>
 
@@ -1454,7 +1476,7 @@ team.incrementProperty(<span class="string"><span class="delimiter">'</span><spa
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-runtime/lib/mixins/observable.js#L318">packages/ember-runtime/lib/mixins/observable.js:318</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-runtime/lib/mixins/observable.js#L318">packages/ember-runtime/lib/mixins/observable.js:318</a>
 
   </div>
 
@@ -1509,7 +1531,7 @@ succession.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-runtime/lib/mixins/observable.js#L294">packages/ember-runtime/lib/mixins/observable.js:294</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-runtime/lib/mixins/observable.js#L294">packages/ember-runtime/lib/mixins/observable.js:294</a>
 
   </div>
 
@@ -1574,7 +1596,7 @@ like.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-runtime/lib/mixins/observable.js#L270">packages/ember-runtime/lib/mixins/observable.js:270</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-runtime/lib/mixins/observable.js#L270">packages/ember-runtime/lib/mixins/observable.js:270</a>
 
   </div>
 
@@ -1638,7 +1660,7 @@ like.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-runtime/lib/mixins/observable.js#L385">packages/ember-runtime/lib/mixins/observable.js:385</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-runtime/lib/mixins/observable.js#L380">packages/ember-runtime/lib/mixins/observable.js:380</a>
 
   </div>
 
@@ -1660,7 +1682,7 @@ target will no longer receive notifications.</p>
       <dl>
           <dt><strong>key</strong> <span class="type"><a href="/api/classes/String.html">String</a></span></dt>
           <dd>
-            The key to observer
+            The key to observe
 
           </dd>
           <dt><strong>target</strong> <span class="type">Object</span></dt>
@@ -1670,7 +1692,7 @@ target will no longer receive notifications.</p>
           </dd>
           <dt><strong>method</strong> <span class="type">String|Function</span></dt>
           <dd>
-            The method to invoke.
+            The method to invoke
 
           </dd>
       </dl>
@@ -1697,7 +1719,7 @@ target will no longer receive notifications.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-runtime/lib/mixins/observable.js#L164">packages/ember-runtime/lib/mixins/observable.js:164</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-runtime/lib/mixins/observable.js#L164">packages/ember-runtime/lib/mixins/observable.js:164</a>
 
   </div>
 
@@ -1787,7 +1809,7 @@ coalesced manner.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-runtime/lib/mixins/observable.js#L213">packages/ember-runtime/lib/mixins/observable.js:213</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-runtime/lib/mixins/observable.js#L213">packages/ember-runtime/lib/mixins/observable.js:213</a>
 
   </div>
 
@@ -1849,7 +1871,7 @@ observers will be buffered.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.11.0/packages/ember-runtime/lib/mixins/observable.js#L473">packages/ember-runtime/lib/mixins/observable.js:473</a>
+      <a class="api-file-link" href="https://github.com/emberjs/ember.js/tree/v2.12.0/packages/ember-runtime/lib/mixins/observable.js#L468">packages/ember-runtime/lib/mixins/observable.js:468</a>
 
   </div>
 
