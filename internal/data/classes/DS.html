@@ -75,7 +75,7 @@
         </ol>
       </li>
 
-      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v2.12.0" target="_blank"> Tag: v2.12.0</a></li>
+      <li class='level-1'><a href="https://github.com/emberjs/data/commits/v2.13.0" target="_blank"> Tag: v2.13.0</a></li>
 
 
           <li class="level-1 ">
@@ -344,7 +344,7 @@
           </li>
         
           <li class="level-3 ">
-                        <a href="/internal/data/classes/RecordMap.html">RecordMap</a>
+                        <a href="/internal/data/classes/InternalModelMap.html">InternalModelMap</a>
 
           </li>
         
@@ -358,7 +358,7 @@
         
   <h1 class="api-header">
   DS Namespace
-    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v2.12.0/addon/-private/core.js#L8">addon/-private/core.js:8</a>
+    <a class="edit-page icon-pencil" target="_blank" href="https://github.com/emberjs/data/tree/v2.13.0/addon/-private/core.js#L8">addon/-private/core.js:8</a>
 </h1>
 
 <hr>
@@ -370,7 +370,7 @@
 <div class="class-info">
 
 
-    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.12.0/addon/-private/core.js#L8">addon/-private/core.js:8</a></p>
+    <p>Defined in: <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.13.0/addon/-private/core.js#L8">addon/-private/core.js:8</a></p>
 
     <p>Module: <a href="/internal/data/modules/ember-data.html">ember-data</a></p>
 </div>
@@ -415,6 +415,9 @@
             </li>
             <li class="method ">
               <a href="#method_belongsTo">belongsTo</a>
+            </li>
+            <li class="method ">
+              <a href="#method_diff-array">diff-array</a>
             </li>
             <li class="method public">
               <a href="#method_errorsArrayToHash">errorsArrayToHash</a>
@@ -475,7 +478,7 @@
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.12.0/addon/attr.js#L38">addon/attr.js:38</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.13.0/addon/attr.js#L38">addon/attr.js:38</a>
 
   </div>
 
@@ -542,15 +545,19 @@ a new object for each attribute.</p>
 7
 8
 9
+<strong>10</strong>
+11
 </pre></td>
   <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
 
 <span class="reserved">export</span> <span class="keyword">default</span> DS.Model.extend({
-  <span class="key">username</span>: attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
-  <span class="key">email</span>: attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
-  <span class="key">settings</span>: attr({<span class="function">defaultValue</span>: <span class="keyword">function</span>() {
-    <span class="keyword">return</span> {};
-  }})
+  <span class="key">username</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">email</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">string</span><span class="delimiter">'</span></span>),
+  <span class="key">settings</span>: DS.attr({
+    defaultValue() {
+      <span class="keyword">return</span> {};
+    }
+  })
 });
 </pre></td>
 </tr></table>
@@ -570,8 +577,12 @@ transformation and adapt the corresponding value, based on the config:</p>
 3
 4
 5
+6
+7
 </pre></td>
-  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> DS.Model.extend({
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.Model.extend({
   <span class="key">text</span>: DS.attr(<span class="string"><span class="delimiter">'</span><span class="content">text</span><span class="delimiter">'</span></span>, {
     <span class="key">uppercase</span>: <span class="predefined-constant">true</span>
   })
@@ -598,9 +609,13 @@ transformation and adapt the corresponding value, based on the config:</p>
 11
 12
 13
+14
+15
 </pre></td>
-  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> DS.Transform.extend({
-  <span class="function">serialize</span>: <span class="keyword">function</span>(value, options) {
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+
+<span class="reserved">export</span> <span class="keyword">default</span> DS.Transform.extend({
+  serialize(value, options) {
     <span class="keyword">if</span> (options.uppercase) {
       <span class="keyword">return</span> value.toUpperCase();
     }
@@ -608,7 +623,7 @@ transformation and adapt the corresponding value, based on the config:</p>
     <span class="keyword">return</span> value;
   },
 
-  <span class="function">deserialize</span>: <span class="keyword">function</span>(value) {
+  deserialize(value) {
     <span class="keyword">return</span> value;
   }
 })
@@ -625,7 +640,7 @@ transformation and adapt the corresponding value, based on the config:</p>
       <h3>Parameters:</h3>
 
       <dl>
-          <dt><strong>type</strong> <span class="type">String</span></dt>
+          <dt><strong>type</strong> <span class="type">String|Object</span></dt>
           <dd>
             the attribute type
 
@@ -665,7 +680,7 @@ transformation and adapt the corresponding value, based on the config:</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.12.0/addon/-private/system/relationships/belongs-to.js#L5">addon/-private/system/relationships/belongs-to.js:5</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.13.0/addon/-private/system/relationships/belongs-to.js#L5">addon/-private/system/relationships/belongs-to.js:5</a>
 
   </div>
 
@@ -827,6 +842,64 @@ will infer the type from the key name.</p>
 </div>
 
         
+<div id="method_diff-array" class="method  item-entry">
+  <h3 data-id="method_diff-array" class="name anchorable-toc"><code>diff-array</code></h3>
+  <span class="args">
+    (oldArray, newArray)
+  </span>
+
+  <span class="type">Hash</span>
+
+
+
+
+
+
+
+
+  <div class="meta">
+            Defined in
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.13.0/addon/-private/system/diff-array.js#L1">addon/-private/system/diff-array.js:1</a>
+
+  </div>
+
+
+
+  <p>
+  </p>
+
+
+    <div class="params">
+      <h3>Parameters:</h3>
+
+      <dl>
+          <dt><strong>oldArray</strong> <span class="type">Array</span></dt>
+          <dd>
+            the old array
+
+          </dd>
+          <dt><strong>newArray</strong> <span class="type">Array</span></dt>
+          <dd>
+            the new array
+
+          </dd>
+      </dl>
+    </div>
+
+    <div class="return">
+      <h3>Returns:</h3>
+      <dl>
+        <dt><span class="type">Hash</span>
+        <dd> {
+    firstChangeIndex: <integer>,  // null if no change
+    addedCount: <integer>,        // 0 if no change
+    removedCount: <integer>       // 0 if no change
+  }</dd>
+      </dl>
+    </div>
+</div>
+
+        
 <div id="method_errorsArrayToHash" class="method public item-entry">
   <h3 data-id="method_errorsArrayToHash" class="name anchorable-toc"><code>errorsArrayToHash</code></h3>
   <span class="args">
@@ -845,7 +918,7 @@ will infer the type from the key name.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.12.0/addon/adapters/errors.js#L414">addon/adapters/errors.js:414</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.13.0/addon/adapters/errors.js#L414">addon/adapters/errors.js:414</a>
 
   </div>
 
@@ -887,19 +960,19 @@ const { errorsArrayToHash } = DS;
 
 let errorsArray = [
   {
-    <span class="key">title</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Invalid Attribute</span><span class="delimiter">&quot;</span></span>,
-    <span class="key">detail</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Must be present</span><span class="delimiter">&quot;</span></span>,
-    <span class="key">source</span>: { <span class="key">pointer</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">/data/attributes/name</span><span class="delimiter">&quot;</span></span> }
+    <span class="key">title</span>: <span class="string"><span class="delimiter">'</span><span class="content">Invalid Attribute</span><span class="delimiter">'</span></span>,
+    <span class="key">detail</span>: <span class="string"><span class="delimiter">'</span><span class="content">Must be present</span><span class="delimiter">'</span></span>,
+    <span class="key">source</span>: { <span class="key">pointer</span>: <span class="string"><span class="delimiter">'</span><span class="content">/data/attributes/name</span><span class="delimiter">'</span></span> }
   },
   {
-    <span class="key">title</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Invalid Attribute</span><span class="delimiter">&quot;</span></span>,
-    <span class="key">detail</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Must be present</span><span class="delimiter">&quot;</span></span>,
-    <span class="key">source</span>: { <span class="key">pointer</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">/data/attributes/age</span><span class="delimiter">&quot;</span></span> }
+    <span class="key">title</span>: <span class="string"><span class="delimiter">'</span><span class="content">Invalid Attribute</span><span class="delimiter">'</span></span>,
+    <span class="key">detail</span>: <span class="string"><span class="delimiter">'</span><span class="content">Must be present</span><span class="delimiter">'</span></span>,
+    <span class="key">source</span>: { <span class="key">pointer</span>: <span class="string"><span class="delimiter">'</span><span class="content">/data/attributes/age</span><span class="delimiter">'</span></span> }
   },
   {
-    <span class="key">title</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Invalid Attribute</span><span class="delimiter">&quot;</span></span>,
-    <span class="key">detail</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Must be a number</span><span class="delimiter">&quot;</span></span>,
-    <span class="key">source</span>: { <span class="key">pointer</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">/data/attributes/age</span><span class="delimiter">&quot;</span></span> }
+    <span class="key">title</span>: <span class="string"><span class="delimiter">'</span><span class="content">Invalid Attribute</span><span class="delimiter">'</span></span>,
+    <span class="key">detail</span>: <span class="string"><span class="delimiter">'</span><span class="content">Must be a number</span><span class="delimiter">'</span></span>,
+    <span class="key">source</span>: { <span class="key">pointer</span>: <span class="string"><span class="delimiter">'</span><span class="content">/data/attributes/age</span><span class="delimiter">'</span></span> }
   }
 ];
 
@@ -957,7 +1030,7 @@ let errors = errorsArrayToHash(errorsArray);
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.12.0/addon/adapters/errors.js#L341">addon/adapters/errors.js:341</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.13.0/addon/adapters/errors.js#L341">addon/adapters/errors.js:341</a>
 
   </div>
 
@@ -1004,9 +1077,9 @@ let errors = errorsArrayToHash(errorsArray);
 const { errorsHashToArray } = DS;
 
 let errors = {
-  <span class="key">base</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Invalid attributes on saving this record</span><span class="delimiter">&quot;</span></span>,
-  <span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Must be present</span><span class="delimiter">&quot;</span></span>,
-  <span class="key">age</span>: [<span class="string"><span class="delimiter">&quot;</span><span class="content">Must be present</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Must be a number</span><span class="delimiter">&quot;</span></span>]
+  <span class="key">base</span>: <span class="string"><span class="delimiter">'</span><span class="content">Invalid attributes on saving this record</span><span class="delimiter">'</span></span>,
+  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">Must be present</span><span class="delimiter">'</span></span>,
+  <span class="key">age</span>: [<span class="string"><span class="delimiter">'</span><span class="content">Must be present</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">Must be a number</span><span class="delimiter">'</span></span>]
 };
 
 let errorsArray = errorsHashToArray(errors);
@@ -1080,7 +1153,7 @@ let errorsArray = errorsHashToArray(errors);
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.12.0/addon/-private/system/relationships/has-many.js#L11">addon/-private/system/relationships/has-many.js:11</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.13.0/addon/-private/system/relationships/has-many.js#L12">addon/-private/system/relationships/has-many.js:12</a>
 
   </div>
 
@@ -1214,7 +1287,7 @@ can figure out that changing the <code>comments</code> relationship should updat
 the <code>post</code> relationship on the inverse because post is the only
 relationship to that model.</p>
 
-<p>However, sometimes you may have multiple <code>belongsTo</code>/<code>hasManys</code> for the
+<p>However, sometimes you may have multiple <code>belongsTo</code>/<code>hasMany</code> for the
 same type. You can specify which property on the related model is
 the inverse using <code>DS.hasMany</code>&#39;s <code>inverse</code> option:</p>
 <div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
@@ -1322,7 +1395,7 @@ you&#39;d expect.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.12.0/addon/-private/system/normalize-model-name.js#L6">addon/-private/system/normalize-model-name.js:6</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.13.0/addon/-private/system/normalize-model-name.js#L6">addon/-private/system/normalize-model-name.js:6</a>
 
   </div>
 
@@ -1396,7 +1469,7 @@ internally.</p>
 
   <div class="meta">
             Defined in
-      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.12.0/addon/-private/core.js#L15">addon/-private/core.js:15</a>
+      <a class="api-file-link" href="https://github.com/emberjs/data/tree/v2.13.0/addon/-private/core.js#L15">addon/-private/core.js:15</a>
 
   </div>
 
