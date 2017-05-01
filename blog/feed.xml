@@ -5,10 +5,245 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2017-04-05T00:00:00+00:00</updated>
+  <updated>2017-04-29T00:00:00+00:00</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>Ember 2.13 and 2.14 Beta Released</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2017/04/29/ember-2-13-released.html"/>
+    <id>http://emberjs.com/blog/2017/04/29/ember-2-13-released.html</id>
+    <published>2017-04-29T00:00:00+00:00</published>
+    <updated>2017-04-29T00:00:00+00:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Today the Ember project is releasing version 2.13.0 of Ember.js, Ember Data, and Ember CLI.&lt;/p&gt;
+
+&lt;p&gt;This release kicks off the 2.14 beta cycle for all sub-projects. We encourage our
+community (especially addon authors) to help test these beta builds and report...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;Today the Ember project is releasing version 2.13.0 of Ember.js, Ember Data, and Ember CLI.&lt;/p&gt;
+
+&lt;p&gt;This release kicks off the 2.14 beta cycle for all sub-projects. We encourage our
+community (especially addon authors) to help test these beta builds and report
+any bugs before they are published as a final release in six weeks&amp;#39; time. The
+&lt;a href="https://github.com/ember-cli/ember-try"&gt;ember-try&lt;/a&gt; addon is a great way to
+continuously test your projects against the latest Ember releases.&lt;/p&gt;
+
+&lt;p&gt;You can read more about our general release process here:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://emberjs.com/builds/"&gt;Release Dashboard&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://emberjs.com/blog/2013/09/06/new-ember-release-process.html"&gt;The Ember Release Cycle&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://emberjs.com/blog/2015/06/16/ember-project-at-2-0.html"&gt;The Ember Project&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://emberjs.com/blog/2016/02/25/announcing-embers-first-lts.html"&gt;Ember LTS Releases&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr&gt;
+&lt;h2 class='anchorable-toc' id='toc_ember-js'&gt;Ember.js&lt;/h2&gt;
+&lt;p&gt;Ember.js is the core framework for building ambitious web applications.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_changes-in-ember-js-2-13'&gt;Changes in Ember.js 2.13&lt;/h3&gt;
+&lt;p&gt;Building on the addition of &lt;code&gt;factoryFor&lt;/code&gt; in Ember 2.12, Ember 2.13 changes
+the way dependency injection is implemented in the framework. Until 2.12,
+dependencies were injected onto an instance using &lt;code&gt;extend&lt;/code&gt; to create a subclass.
+This created an excessive number of subclasses during the execution of an
+application. In Ember 2.13 injections are passed to an object via &lt;code&gt;create&lt;/code&gt;
+during instantiation. This results in a notable performance improvement
+that grows in impact with the complexity of an application.&lt;/p&gt;
+
+&lt;p&gt;See &lt;a href="https://github.com/emberjs/rfcs/blob/master/text/0150-factory-for.md"&gt;RFC #150&lt;/a&gt;
+and pull request &lt;a href="https://github.com/emberjs/ember.js/pull/14360"&gt;#14360&lt;/a&gt; for
+more details about this change.&lt;/p&gt;
+
+&lt;p&gt;Additionally, this release contains a further refinement on the &amp;quot;binary VM&amp;quot;
+change landed in 2.12. By using integers for common Glimmer wire-format strings,
+compiled template sizes in 2.13 will see an incremental size reduction.&lt;/p&gt;
+
+&lt;p&gt;In addition to these and other improvements, several changes arising
+from the &lt;a href="https://github.com/emberjs/rfcs"&gt;RFC&lt;/a&gt; process have been implemented:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/rfcs/issues/146"&gt;RFC issue #146&lt;/a&gt; advocated for the
+addition of &lt;code&gt;resumeTest&lt;/code&gt; as a compliment to &lt;code&gt;pauseTest&lt;/code&gt;. This was implemented
+in &lt;a href="https://github.com/emberjs/ember.js/pull/13663"&gt;#13663&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/emberjs/rfcs/blob/master/text/0186-track-unique-history-location-state.md"&gt;RFC #186&lt;/a&gt;
+describes the addition of &lt;code&gt;uuid&lt;/code&gt; as a property on &lt;code&gt;HistoryLocation&lt;/code&gt; adapters
+for the router. This addition makes it possible to track scroll locations
+to a point in browsing history. See pull request &lt;a href="https://github.com/emberjs/ember.js/pull/14011"&gt;#14011&lt;/a&gt;
+for more details.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 class='anchorable-toc' id='toc_deprecations-in-ember-2-13'&gt;Deprecations in Ember 2.13&lt;/h4&gt;
+&lt;p&gt;A bit of cleanup has been done to reduce confusion (during implementation of the &lt;a href="https://github.com/emberjs/rfcs/blob/master/text/0095-router-service.md"&gt;router service&lt;/a&gt;) which resulted in adding a deprecation for accessing the private &lt;code&gt;router&lt;/code&gt; property
+of the router. This property has always been private API, but a number of addons have resorted to
+using it due to lack of public API options (though the router service should address these remaining
+cases). Please review the &lt;a href="https://emberjs.com/deprecations/v2.x/#toc_ember-router-router-renamed-to-ember-router-_routermicrolib"&gt;deprecation guide&lt;/a&gt;
+for more details.&lt;/p&gt;
+
+&lt;p&gt;For more details on the changes in Ember.js 2.13, please review the
+&lt;a href="https://github.com/emberjs/ember.js/releases/tag/v2.13.0"&gt;Ember.js 2.13.0 release page&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_upcoming-changes-in-ember-js-2-14'&gt;Upcoming Changes in Ember.js 2.14&lt;/h3&gt;
+&lt;p&gt;Ember 2.14 is shaping up to be largely a bugfix release, containing a significant amount of internal cleanup.&lt;/p&gt;
+
+&lt;p&gt;For more details on the upcoming changes in Ember.js 2.14, please review the
+&lt;a href="https://github.com/emberjs/ember.js/releases/tag/v2.14.0-beta.1"&gt;Ember.js 2.14.0-beta.1 release page&lt;/a&gt;.&lt;/p&gt;
+
+&lt;hr&gt;
+&lt;h2 class='anchorable-toc' id='toc_ember-data'&gt;Ember Data&lt;/h2&gt;
+&lt;p&gt;Ember Data is the official data persistence library for Ember.js applications.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_changes-in-ember-data-2-13'&gt;Changes in Ember Data 2.13&lt;/h3&gt;
+&lt;p&gt;Ember Data 2.13 represents the work of 20 direct contributors
+and over 120 commits.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;ds-extended-errors&lt;/code&gt; (&lt;a href="https://github.com/emberjs/data/pull/3586"&gt;#3586&lt;/a&gt; &lt;a href="https://github.com/emberjs/data/pull/4287"&gt;#4287&lt;/a&gt;) feature has been enabled for Ember Data 2.13.&lt;/p&gt;
+
+&lt;p&gt;This feature introduces an &lt;code&gt;extend&lt;/code&gt; method on errors which allows
+users to create their own custom errors that extend from
+&lt;code&gt;DS.AdapterError&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;const MyCustomError = DS.AdapterError.extend({ &lt;span class="key"&gt;message&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;My custom error.&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; });
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;The feature also introduces some new errors to the REST adapter which will
+be used to reject the adapter promises based on http status of the API
+response.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;[401] &lt;code&gt;DS.UnauthorizedError&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;[403] &lt;code&gt;DS.ForbiddenError&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;[404] &lt;code&gt;DS.NotFoundError&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;[409] &lt;code&gt;DS.ConflictError&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;[500] &lt;code&gt;DS.ServerError&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Thanks to &lt;a href="https://github.com/tchak"&gt;tchak&lt;/a&gt; and
+&lt;a href="https://github.com/twokul"&gt;twokul&lt;/a&gt; for their work on this feature and
+&lt;a href="https://github.com/lindyhopchris"&gt;lindyhopchris&lt;/a&gt; for his help
+documenting the feature.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_deprecations-in-ember-data-2-13'&gt;Deprecations in Ember Data 2.13&lt;/h4&gt;
+&lt;p&gt;Ember Data 2.13 deprecates the &lt;code&gt;data-adapter&lt;/code&gt;, &lt;code&gt;injectStore&lt;/code&gt;,
+&lt;code&gt;transforms&lt;/code&gt;, and &lt;code&gt;store&lt;/code&gt; Ember application initializers that Ember Data injects
+into apps. The deprecation was proposed via &lt;a href="https://github.com/emberjs/rfcs/blob/master/text/0181-deprecate-ember-data-initializers.md"&gt;an RFC&lt;/a&gt;,
+and the Ember Data team proactively submitted pull-requests for all usages of
+these initializers in open source addons. &lt;/p&gt;
+
+&lt;p&gt;For more details on the changes in Ember Data 2.13, please review the
+&lt;a href="https://github.com/emberjs/data/releases/tag/v2.13.0"&gt;Ember Data 2.13.0 release page&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_upcoming-changes-in-ember-data-2-14'&gt;Upcoming changes in Ember Data 2.14&lt;/h3&gt;
+&lt;p&gt;In 2.14, Ember Data continues its internal refactorings and performance work without
+impacting public APIs. It is shaping up nicely with reduced asset size (~ 3KB savings),
+better warnings and errors around malformed JSONAPI payloads, and simplified internals.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_deprecations-in-ember-data-2-14'&gt;Deprecations in Ember Data 2.14&lt;/h4&gt;
+&lt;p&gt;Ember Data 2.14
+&lt;a href="https://github.com/emberjs/data/pull/4909/files"&gt;deprecates&lt;/a&gt; the
+private method &lt;code&gt;didUpdateAll&lt;/code&gt;. If you are using it in your codebase
+please use the updated methods name &lt;code&gt;_didUpdateAll&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;For more details on the upcoming changes in Ember Data 2.14, please review the
+&lt;a href="https://github.com/emberjs/data/releases/tag/v2.14.0-beta.1"&gt;Ember Data 2.14.0-beta.1 release page&lt;/a&gt;.&lt;/p&gt;
+
+&lt;hr&gt;
+&lt;h2 class='anchorable-toc' id='toc_ember-cli'&gt;Ember CLI&lt;/h2&gt;
+&lt;p&gt;Ember CLI is the command line interface for managing and packaging Ember.js
+applications.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_upgrading-ember-cli'&gt;Upgrading Ember CLI&lt;/h3&gt;
+&lt;p&gt;You may upgrade Ember CLI separately from Ember.js and Ember Data! To upgrade
+your projects using &lt;code&gt;yarn&lt;/code&gt; run:&lt;/p&gt;
+&lt;div class="highlight text "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;yarn upgrade ember-cli
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;To upgrade your projects using &lt;code&gt;npm&lt;/code&gt; run:&lt;/p&gt;
+&lt;div class="highlight text "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;npm install --save-dev ember-cli
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;After running the
+upgrade command run &lt;code&gt;ember init&lt;/code&gt; inside of the project directory to apply the
+blueprint changes. You can preview those changes for &lt;a href="https://github.com/ember-cli/ember-new-output/compare/v2.12.0...v2.13.0"&gt;applications&lt;/a&gt;
+and &lt;a href="https://github.com/ember-cli/ember-addon-output/compare/v2.12.0...v2.13.0"&gt;addons&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_changes-in-ember-cli-2-13'&gt;Changes in Ember CLI 2.13&lt;/h3&gt;&lt;h4 class='anchorable-toc' id='toc_add-support-for-using-code-yarn-code'&gt;Add support for using &lt;code&gt;yarn&lt;/code&gt;&lt;/h4&gt;
+&lt;p&gt;Ember CLI projects have been able to utilize &lt;code&gt;yarn&lt;/code&gt; for dependency management for quite some time, however it was not well supported by
+the default generators. In 2.13, Ember CLI is now &amp;quot;yarn aware&amp;quot;, and will use &lt;code&gt;yarn&lt;/code&gt; for tasks such as &lt;code&gt;ember install&lt;/code&gt; if it detects that
+&lt;code&gt;yarn&lt;/code&gt; is installed and a &lt;code&gt;yarn.lock&lt;/code&gt; exists in the project. You can even instruct &lt;code&gt;ember new&lt;/code&gt; to generate a new project with a &lt;code&gt;yarn.lock&lt;/code&gt;
+for you via &lt;code&gt;ember new foo --yarn&lt;/code&gt;.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_enable-instrumentation-hooks'&gt;Enable Instrumentation Hooks&lt;/h4&gt;
+&lt;p&gt;Ember CLI has had the ability to generate custom instrumentation output for builds for a few years now (introduced on 2015-08-24), but
+this information has not been readily accessible. In 2.13, ember-cli exposes this information to addons that implement the &lt;code&gt;instrumentation&lt;/code&gt;
+hook. This allows addons to access many things that were previously very difficult (e.g. reliable build time reporting).&lt;/p&gt;
+
+&lt;p&gt;Thanks to &lt;a href="https://github.com/hjdivad"&gt;@hjdivad&lt;/a&gt; for proposing and implementing this feature. Please read through &lt;a href="https://github.com/ember-cli/rfcs/blob/master/complete/0091-addon-instrumentation-experimental-hooks.md"&gt;the RFC&lt;/a&gt;
+for more details.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_targets'&gt;Targets&lt;/h4&gt;
+&lt;p&gt;In order to allow addons to understand the desired target platforms of the app that they are operating in, a new file has been added
+to all generated projects: &lt;code&gt;config/targets.js&lt;/code&gt;. This file exposes the supported targets so that tooling such as &lt;a href="https://github.com/postcss/autoprefixer"&gt;autoprefixer&lt;/a&gt; 
+and &lt;a href="https://github.com/babel/babel-preset-env"&gt;babel-preset-env&lt;/a&gt; can properly understand the level of transpilation that is needed.&lt;/p&gt;
+
+&lt;p&gt;Thanks to &lt;a href="https://github.com/cibernox"&gt;@cibernox&lt;/a&gt; for proposing and implementing this feature. &lt;a href="https://github.com/rwjblue"&gt;@rwjblue&lt;/a&gt; 
+recently wrote a blog post reviewing the new feature and how to utilize it: &lt;a href="http://rwjblue.com/2017/04/21/ember-cli-targets/"&gt;Ember CLI Targets&lt;/a&gt;.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_babel-6'&gt;Babel 6&lt;/h4&gt;
+&lt;p&gt;Babel 6 support has been added to Ember CLI internally and is now used by default for newly generated projects (both applications and addons).
+Due to the way that Ember CLI handles transpilation this transition can be done gradually by updating each addon to utilize newer versions of
+[ember-cli-babel]. Updating your application to start using Babel 6 for its own transpilation is as simple as:&lt;/p&gt;
+&lt;div class="highlight sh "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;# if using yarn:
+yarn upgrade ember-cli-babel@6
+
+# if using npm:
+npm install --save-dev ember-cli-babel@6
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;h4 class='anchorable-toc' id='toc_other-notable-changes'&gt;Other Notable Changes&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;bower.json&lt;/code&gt; is no longer included in a newly generated project.&lt;/li&gt;
+&lt;li&gt;Fix command interruption issues on windows.&lt;/li&gt;
+&lt;li&gt;Added &lt;code&gt;filesToRemove&lt;/code&gt; property for custom blueprints.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For more details on the changes in Ember CLI 2.13 and detailed upgrade
+instructions, please review the &lt;a href="https://github.com/ember-cli/ember-cli/releases/tag/v2.13.0"&gt;Ember CLI 2.13.0 release page&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_upcoming-changes-in-ember-cli-2-14'&gt;Upcoming Changes in Ember CLI 2.14&lt;/h3&gt;
+&lt;p&gt;In Ember CLI 2.14, support was added to &lt;code&gt;ember new&lt;/code&gt; to allow a blueprint to be consumed from an NPM package. This enables projects to utilize Ember CLI&amp;#39;s
+ergonomics to generate non-Ember applications. Common examples of this are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Generate a new &lt;a href="https://glimmerjs.com/"&gt;Glimmer.js&lt;/a&gt; application. See &lt;a href="https://github.com/glimmerjs/glimmer-blueprint"&gt;glimmerjs/glimmer-blueprint&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Generate a new &lt;a href="http://ember-cli-deploy.com/"&gt;ember-cli-deploy&lt;/a&gt; plugin. See &lt;a href="https://github.com/ember-cli-deploy/plugin-blueprint"&gt;ember-cli-deploy/plugin-blueprint&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;These can be used as simply as:&lt;/p&gt;
+&lt;div class="highlight text "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;npm install -g ember-cli@2.14.0-beta.1
+ember new ember-cli-deploy-hello -b @ember-cli-deploy/plugin-blueprint
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;For more details on the changes in Ember CLI 2.14.0-beta.1 and detailed upgrade
+instructions, please review the &lt;a href="https://github.com/ember-cli/ember-cli/releases/tag/v2.14.0-beta.1"&gt;Ember CLI 2.14.0-beta.1 release page&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_thank-you'&gt;Thank You!&lt;/h2&gt;
+&lt;p&gt;As a community-driven open-source project with an ambitious scope, each of
+these releases serve as a reminder that the Ember project would not have been
+possible without your continued support. We are extremely grateful to our
+contributors for their efforts.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>EmberConf 2017: State of the Union</title>
     <link rel="alternate" href="http://emberjs.com/blog/2017/04/05/emberconf-2017-state-of-the-union.html"/>
@@ -1430,276 +1665,6 @@ These buckets are used to distribute pre-built versions of Ember.js and related 
 &lt;li&gt;&lt;a href="/security/"&gt;Ember.js Security Policy&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://groups.google.com/forum/#!forum/ember-security"&gt;Ember.js Security Mailing List&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Ember 2.10 and 2.11 Beta Released</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2016/11/30/ember-2-10-released.html"/>
-    <id>http://emberjs.com/blog/2016/11/30/ember-2-10-released.html</id>
-    <published>2016-11-30T00:00:00+00:00</published>
-    <updated>2016-11-30T00:00:00+00:00</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Today, the Ember project is releasing Ember.js, Ember Data and Ember CLI
-version 2.10.0.&lt;/p&gt;
-
-&lt;p&gt;This also kicks off the 2.11 beta cycle for all sub-projects. We encourage our
-community (especially addon authors) to help test these beta builds and report...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Today, the Ember project is releasing Ember.js, Ember Data and Ember CLI
-version 2.10.0.&lt;/p&gt;
-
-&lt;p&gt;This also kicks off the 2.11 beta cycle for all sub-projects. We encourage our
-community (especially addon authors) to help test these beta builds and report
-any bugs before they are published as a final release in six weeks&amp;#39; time. The
-&lt;a href="https://github.com/ember-cli/ember-try"&gt;ember-try&lt;/a&gt; addon is a great way to
-continuously test your projects against the latest Ember releases.&lt;/p&gt;
-
-&lt;p&gt;Starting with this release, we will be publishing a single, unified release
-blog post summarizing all the changes for all three sub-projects in one place.
-You can read more about our general release process here:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="http://emberjs.com/builds/"&gt;Release Dashboard&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://emberjs.com/blog/2013/09/06/new-ember-release-process.html"&gt;The Ember Release Cycle&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://emberjs.com/blog/2015/06/16/ember-project-at-2-0.html"&gt;The Ember Project&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://emberjs.com/blog/2016/02/25/announcing-embers-first-lts.html"&gt;Ember LTS Releases&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr&gt;
-&lt;h2 class='anchorable-toc' id='toc_ember-js'&gt;Ember.js&lt;/h2&gt;
-&lt;p&gt;Ember.js is the core framework for building ambitious web applications.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_changes-in-ember-js-2-10'&gt;Changes in Ember.js 2.10&lt;/h3&gt;
-&lt;p&gt;Ember.js 2.10 is the first release to include &lt;a href="http://emberjs.com/blog/2016/07/29/announcing-the-glimmer-2-alpha.html"&gt;Glimmer 2&lt;/a&gt;,
-a ground-up rewrite of Ember&amp;#39;s rendering engine.&lt;/p&gt;
-
-&lt;p&gt;Despite all the changes that took place under-the-hood, we are committed to
-making this a &lt;strong&gt;drop-in, completely backwards compatible upgrade for virtually
-all Ember.js users&lt;/strong&gt;. Over the past few months, we have been &lt;a href="http://emberjs.com/blog/2016/10/17/ember-2-9-released.html#toc_ember-js-2-10-beta"&gt;hard at work&lt;/a&gt;
-to make this a reality.&lt;/p&gt;
-
-&lt;p&gt;Thanks to everyone in the community who took the time to test their apps and
-addons against the Glimmer 2 alpha and beta builds, this has been one of the
-most rigorously tested releases in the history of the Ember project. We are
-quite confident that upgrade will go smoothly for most apps. However, if you
-encounter any issues, please do report them to the &lt;a href="https://github.com/emberjs/ember.js/issues/"&gt;issue tracker&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;While this release is focused on compatibility and does not expose any new
-capabilities, the new rendering engine has unlocked a lot of &lt;a href="http://emberjs.com/blog/2016/07/29/announcing-the-glimmer-2-alpha.html#toc_a-whole-lot-more-to-come"&gt;new frontiers&lt;/a&gt;
-for us, creating a much better foundation for adding new features as well as
-room for future performance impovements. With the initial integration now out
-of the way, we are quite excited to return our efforts to those areas in
-upcoming releases.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_other-notable-changes'&gt;Other notable changes&lt;/h4&gt;
-&lt;p&gt;In addition to the Glimmer 2 integration, a few other notable changes are also
-included in this release.&lt;/p&gt;
-
-&lt;p&gt;First, &lt;a href="https://github.com/trentmwillis"&gt;Trent Willis&lt;/a&gt;, &lt;a href="https://github.com/nathanhammond"&gt;Nathan Hammond&lt;/a&gt;
-and &lt;a href="https://github.com/alexspeller"&gt;Alex Speller&lt;/a&gt; have contributed a series of
-patches to address some long-standing issues and edge cases in the routing
-layer, particularly in the area of query params.&lt;/p&gt;
-
-&lt;p&gt;Second, thanks to &lt;a href="https://github.com/rwjblue"&gt;Robert Jackson&lt;/a&gt;, we now use
-&lt;a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap"&gt;WeakMap&lt;/a&gt;
-to &lt;a href="https://github.com/emberjs/ember.js/pull/13783"&gt;store object metadata&lt;/a&gt; on
-browsers that supports them. A pleasant side-effect of this internal change is
-that Ember no longer adds an &lt;code&gt;__ember_meta__&lt;/code&gt; property to every object.&lt;/p&gt;
-
-&lt;p&gt;Finally, it has come to our attention that it is quite common for developers to
-accidentally mutate the arguments passed into a helper. This is problematic as
-these objects are often shared or reused, causing subtle issues that are very
-difficult to debug.&lt;/p&gt;
-
-&lt;p&gt;To help track down these kind of issues, these objects are now &lt;a href="https://github.com/emberjs/ember.js/pull/14244"&gt;frozen&lt;/a&gt;
-in the debug build before they are passed into helpers. As a result, you will
-get an error if you attempt to modify these objects directly. It is recommended
-that you clone these objects (e.g. using &lt;code&gt;Object.assign&lt;/code&gt; and &lt;code&gt;Array#slice&lt;/code&gt;)
-before making any modifications to them.&lt;/p&gt;
-
-&lt;p&gt;(It has been brought to our attention that the last change might have an
-&lt;a href="https://github.com/emberjs/ember.js/pull/14649"&gt;unintended consequence&lt;/a&gt;.
-A fix is being worked on by &lt;a href="https://github.com/mixonic"&gt;Matthew Beale&lt;/a&gt;. Please
-refer to the linked issue for a detailed description and suggested workaround.)&lt;/p&gt;
-
-&lt;p&gt;For more details on the changes in Ember.js 2.10, please review the
-&lt;a href="https://github.com/emberjs/ember.js/releases/tag/v2.10.0"&gt;Ember.js 2.10.0 release page&lt;/a&gt;.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_upcoming-changes-in-ember-js-2-11'&gt;Upcoming changes in Ember.js 2.11&lt;/h3&gt;
-&lt;p&gt;Currently, no new features are planned for 2.11. However, there are a few
-notable changes:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Similar to the change to helper arguments, concatenated properties (such as
-&lt;code&gt;classNames&lt;/code&gt; and &lt;code&gt;classNameBindings&lt;/code&gt;) are now &lt;a href="https://github.com/emberjs/ember.js/pull/14389"&gt;frozen&lt;/a&gt;
-in debug builds to help track down unintended mutations.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;The legacy &lt;code&gt;render&lt;/code&gt; helper (i.e. &lt;code&gt;{{render &amp;#39;foo&amp;#39;}}&lt;/code&gt;) has been &lt;a href="https://github.com/emberjs/ember.js/pull/14441"&gt;deprecated&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;The private &lt;code&gt;Component#renderToElement&lt;/code&gt; API has also been &lt;a href="https://github.com/emberjs/ember.js/pull/14482"&gt;deprecated&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;For more details on the upcoming changes in Ember.js 2.11, please review the
-&lt;a href="https://github.com/emberjs/ember.js/releases/tag/v2.11.0-beta.1"&gt;Ember.js 2.11.0-beta.1 release page&lt;/a&gt;.&lt;/p&gt;
-
-&lt;hr&gt;
-&lt;h2 class='anchorable-toc' id='toc_ember-data'&gt;Ember Data&lt;/h2&gt;
-&lt;p&gt;Ember Data is the offical data persistence library for Ember.js applications.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_changes-in-ember-data-2-10'&gt;Changes in Ember Data 2.10&lt;/h3&gt;
-&lt;p&gt;Ember Data 2.10 represents the work of more than 10 direct contributors with
-over 20 commits.&lt;/p&gt;
-
-&lt;p&gt;There have been no user facing changes in Ember Data 2.10. Under the
-hood, &lt;a href="https://github.com/runspired"&gt;Chris Thoburn&lt;/a&gt; has instrumented
-Ember Data with internal tools making it easier to track the
-performance of Ember Data. This instrumentation is stripped from
-production builds and should have no impact on existing
-applications.&lt;/p&gt;
-
-&lt;p&gt;Chris also
-&lt;a href="https://github.com/emberjs/data/pull/4578"&gt;improved the messaging&lt;/a&gt;
-around assertions and warnings when an adapter responds with no &lt;code&gt;id&lt;/code&gt;
-for a record.&lt;/p&gt;
-
-&lt;p&gt;For more details on the changes in Ember Data 2.10, please review the
-&lt;a href="https://github.com/emberjs/data/releases/tag/v2.10.0"&gt;Ember Data 2.10.0 release page&lt;/a&gt;.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_upcoming-changes-in-ember-data-2-11'&gt;Upcoming changes in Ember Data 2.11&lt;/h3&gt;
-&lt;p&gt;Ember Data 2.11 is already shaping up to be a big release with many
-performance and documentation improvements.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_hasmany-computed-property-keys'&gt;HasMany Computed Property Keys&lt;/h4&gt;
-&lt;p&gt;One of the performance improvements included in Ember Data
-2.11 fixes an issue where changes to the records of a
-&lt;code&gt;DS.hasMany()&lt;/code&gt; caused unnecessary work. As a result,
-Ember Data would over-eagerly invalidate computed
-properties that depended on these &lt;code&gt;hasMany&lt;/code&gt; relationships. Due to the
-nature of the fix application code depending on a relationship array
-without watching the contents of that array may need to be updated. For
-example you may need to update computed property keys that depended on
-&lt;code&gt;record.someHasManyRelationshipName&lt;/code&gt; to &lt;code&gt;record.someHasManyRelationshipName.[]&lt;/code&gt;.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_deprecations-in-ember-data-2-11'&gt;Deprecations in Ember Data 2.11&lt;/h4&gt;
-&lt;p&gt;Ember Data now issues deprecation warnings for
-&lt;code&gt;store#serialize()&lt;/code&gt;. Instead, it is recommended that you use
-&lt;code&gt;record.serialize()&lt;/code&gt; in place of
-&lt;code&gt;store.serialize(record)&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;store#lookupAdapter()&lt;/code&gt; and &lt;code&gt;store#lookupSerializer()&lt;/code&gt; have also been
-deprecated starting in Ember 2.11. These methods were never publicly
-documented. In their place we recommend you use &lt;code&gt;store#adapterFor()&lt;/code&gt;
-and &lt;code&gt;store#serializerFor()&lt;/code&gt; respectively.&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;store#recordIsLoaded()&lt;/code&gt; is deprecated in favor of
-&lt;code&gt;store#hasRecordForId()&lt;/code&gt;, as the logic in these two methods has been
-identical since
-&lt;a href="https://github.com/emberjs/data/pull/2875"&gt;March 2015&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;All of the deprecated methods mentioned above will be supported until
-Ember Data 3.0. Until then they will log a deprecation warning to
-encourage use of the recommended replacement APIs.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_move-code-ds-improved-ajax-code-out-of-code-beta-code-channel'&gt;Move &lt;code&gt;ds-improved-ajax&lt;/code&gt; out of &lt;code&gt;beta&lt;/code&gt; channel&lt;/h4&gt;
-&lt;p&gt;The &lt;code&gt;ds-improved-ajax&lt;/code&gt; implemented in
-&lt;a href="https://github.com/emberjs/data/pull/3099"&gt;PR #3099&lt;/a&gt; aims to provide
-public hooks on the &lt;code&gt;rest&lt;/code&gt; adapter for customizing requests. For example
-to specify the HTTP method or
-provide custom HTTP headers per request. This feature has been available
-in beta builds since the 2.8 beta cycle.&lt;/p&gt;
-
-&lt;p&gt;Unfortunately, this feature slipped into the code base without going
-though a proper RFC process. Despite being enabled in the beta channel
-for a while now, we decided that it should be disabled again in favour
-of a feature which has gone though the RFC process and benefited from
-valuable community feedback.&lt;/p&gt;
-
-&lt;p&gt;We are aware that it is quite rare for a feature to be backed out from
-the beta channel but we consider the ability to do so a strength of
-our release process. We would like to thank everyone who took the time
-to test their applications against the beta channel and we would
-highly appreciate your feedback on the proposed replacement to this
-functionality in
-&lt;a href="https://github.com/emberjs/rfcs/pull/171"&gt;RFC #171&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;For more details on the upcoming changes in Ember Data 2.11, please review the
-&lt;a href="https://github.com/emberjs/data/releases/tag/v2.11.0-beta.1"&gt;Ember Data 2.11.0-beta.1 release page&lt;/a&gt;.&lt;/p&gt;
-
-&lt;hr&gt;
-&lt;h2 class='anchorable-toc' id='toc_ember-cli'&gt;Ember CLI&lt;/h2&gt;
-&lt;p&gt;Ember CLI is the command line interface for managing and packaging Ember.js
-applications.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_upgrading-ember-cli'&gt;Upgrading Ember CLI&lt;/h3&gt;
-&lt;p&gt;You may upgrade Ember CLI separately from Ember.js and Ember Data! To upgrade
-your projects using &lt;code&gt;yarn&lt;/code&gt; run &lt;code&gt;yarn upgrade ember-cli&lt;/code&gt;. To upgrade your
-projects using &lt;code&gt;npm&lt;/code&gt; run &lt;code&gt;npm install --save-dev ember-cli&lt;/code&gt;. After running the
-upgrade command run &lt;code&gt;ember init&lt;/code&gt; inside of the project directory to apply the
-blueprint changes. You can view those changes for &lt;a href="https://github.com/ember-cli/ember-new-output/compare/v2.9.1...v2.10.0"&gt;applications here&lt;/a&gt;
-and &lt;a href="https://github.com/ember-cli/ember-addon-output/compare/v2.9.1...v2.10.0"&gt;addons here&lt;/a&gt;.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_changes-in-ember-cli-2-10'&gt;Changes in Ember CLI 2.10&lt;/h3&gt;
-&lt;p&gt;Ember CLI 2.10 no longer supports Node.js 0.10 per the
-&lt;a href="http://emberjs.com/blog/2016/09/07/ember-node-lts-support.html"&gt;Ember Node.js LTS Support policy&lt;/a&gt;.
-Further, it is the last release which will officially support Node.js 0.12
-which will be &lt;a href="https://github.com/nodejs/LTS#lts-schedule"&gt;removed from support at the end of this year&lt;/a&gt;.
-Please make sure you begin your migration to a newer version of Node.js as soon
-as possible.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_sorting-of-code-package-json-code'&gt;Sorting of &lt;code&gt;package.json&lt;/code&gt;&lt;/h4&gt;
-&lt;p&gt;In order to guarantee consistency with &lt;code&gt;npm&lt;/code&gt; and other tools Ember CLI now
-&lt;a href="https://github.com/ember-cli/ember-cli/pull/6272"&gt;sorts &lt;code&gt;package.json&lt;/code&gt; in accordance with the upstream patterns&lt;/a&gt;.
-This may result in changes in execution order of the addons in your application
-which should be non-breaking. If you experience issues you will
-&lt;a href="https://ember-cli.com/extending/#configuring-your-ember-addon-properties"&gt;need to specify &lt;code&gt;before&lt;/code&gt; and/or &lt;code&gt;after&lt;/code&gt; in your addon&lt;/a&gt;.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_concatenation'&gt;Concatenation&lt;/h4&gt;
-&lt;p&gt;Concatenation of assets has been implicit based upon file-system ordering. An
-update to &lt;code&gt;broccoli-concat&lt;/code&gt; which changed the walk order of the file system to
-guarantee consistency and stable concatenation broke the implicit reliance we
-had on that ordering. To ensure that we remain backwards compatible
-&lt;a href="https://github.com/ember-cli/ember-cli/pull/6081"&gt;we have changed our invocation pattern to reproduce the intended behavior&lt;/a&gt;.
-Child modules without specific ordering will now be sorted lexicographically
-inside of your assets.&lt;/p&gt;
-
-&lt;p&gt;We also moved to a &lt;a href="https://github.com/ember-cli/ember-cli/issues/6300"&gt;system-independent line separator&lt;/a&gt;
-to guarantee that builds are reproducible across different operating systems.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_code-npm-code-upgrade'&gt;&lt;code&gt;npm&lt;/code&gt; Upgrade&lt;/h4&gt;
-&lt;p&gt;&lt;a href="https://github.com/dfreeman"&gt;Dan Freeman&lt;/a&gt; has &lt;a href="https://github.com/ember-cli/ember-cli/pull/6306"&gt;updated our bundled &lt;code&gt;npm&lt;/code&gt; dependency&lt;/a&gt;
-to &lt;code&gt;npm@3&lt;/code&gt;. This will change the resulting &lt;code&gt;node_modules&lt;/code&gt; folder layout inside
-of your application when you run &lt;code&gt;ember install&lt;/code&gt;. This will likely only cause
-problems if you tried to guess at the path to a module based upon install
-behavior. If you need to identify the path to a module inside of the &lt;code&gt;node&lt;/code&gt;
-JavaScript world be sure you&amp;#39;re using &lt;code&gt;require.resolve(&amp;#39;module-name&amp;#39;);&lt;/code&gt;.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_testing-addons'&gt;Testing Addons&lt;/h4&gt;
-&lt;p&gt;Ember CLI 2.10 removes Ember.js 1.13 from the default testing matrix in the
-addon blueprint. Given that we now have two LTS releases in the Ember.js 2.x
-series, we no longer feel that supporting Ember.js 1.13 is a reasonable
-default for newly-created addons. You may continue to support Ember.js 1.13 in
-your addons (and in most cases it&amp;#39;s simple to do) by adding it back into the
-testing matrix.&lt;/p&gt;
-
-&lt;p&gt;For more details on the changes in Ember CLI 2.10 and detailed upgrade
-instructions, please review the &lt;a href="https://github.com/ember-cli/ember-cli/releases/tag/v2.10.0"&gt;Ember CLI 2.10.0 release page&lt;/a&gt;.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_upcoming-changes-in-ember-cli-2-11'&gt;Upcoming changes in Ember CLI 2.11&lt;/h3&gt;
-&lt;p&gt;In our continous incremental progress toward making &lt;code&gt;bower&lt;/code&gt; optional inside of
-Ember CLI we have moved to include Ember.js itself via
-&lt;a href="https://www.npmjs.com/package/ember-source"&gt;&lt;code&gt;ember-source&lt;/code&gt;&lt;/a&gt;–provided via &lt;code&gt;npm&lt;/code&gt;.
-In 2.11 we will no longer have any packages provided by &lt;code&gt;bower&lt;/code&gt; in a brand
-new Ember.js application!&lt;/p&gt;
-
-&lt;p&gt;Ember CLI 2.11 will not officially support Node.js 0.12 per the
-&lt;a href="http://emberjs.com/blog/2016/09/07/ember-node-lts-support.html"&gt;Ember Node.js LTS Support policy&lt;/a&gt;.
-Please make sure you begin your migration to a newer version of Node.js as soon
-as possible.&lt;/p&gt;
-
-&lt;p&gt;We have a litany of other smaller improvements in this release:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;We bundle a new and improved version of &lt;code&gt;ember-welcome-page&lt;/code&gt;, the learning
-team&amp;#39;s addon for providing a quick start introduction for users.&lt;/li&gt;
-&lt;li&gt;We &lt;a href="https://github.com/ember-cli/ember-cli/pull/6436"&gt;watch the &lt;code&gt;vendor&lt;/code&gt; folder by default&lt;/a&gt;,
-making rebuilds work for changes in that directory.&lt;/li&gt;
-&lt;li&gt;Stefan Penner made it so we do a better job at &lt;a href="https://github.com/ember-cli/ember-cli/pull/6423"&gt;cleanup upon exit of Ember CLI&lt;/a&gt;
-preventing pollution of the &lt;code&gt;tmp&lt;/code&gt; folder inside of your applications.&lt;/li&gt;
-&lt;li&gt;Robert Jackson dramatically &lt;a href="https://github.com/ember-cli/ember-cli/pull/6453"&gt;reduced the number of merge steps&lt;/a&gt; inside of the build,
-speeding up the build process.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;For more details on the changes in Ember CLI 2.11.0-beta.1 and detailed upgrade
-instructions, please review the &lt;a href="https://github.com/ember-cli/ember-cli/releases/tag/v2.11.0-beta.1"&gt;Ember CLI 2.11.0-beta.1 release page&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_thank-you'&gt;Thank You!&lt;/h2&gt;
-&lt;p&gt;As a community-driven open-source project with an ambitious scope, each of
-these releases serve as a reminder that the Ember project would not have been
-possible without your continued support. We are extremely grateful to our
-contributors for their efforts.&lt;/p&gt;
 </content>
   </entry>
 </feed>
