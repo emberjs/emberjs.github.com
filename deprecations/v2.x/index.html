@@ -1249,15 +1249,17 @@ klass.hasSpeed('slow'); // true
 8
 9
 <strong>10</strong>
+11
 </pre></td>
   <td class="code"><pre>Ember.Component.extend({
   didReceiveAttrs() {
-    let highTemp = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">_highTemp</span><span class="delimiter">'</span></span>);
-    let lowTemp = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">_lowTemp</span><span class="delimiter">'</span></span>);
+    let oldTemp = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">_oldTemp</span><span class="delimiter">'</span></span>);
+    let newTemp = <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">temp</span><span class="delimiter">'</span></span>);
 
-    <span class="keyword">if</span> (highTemp !== lowTemp) {
-      <span class="local-variable">this</span>.thermometer.move({ <span class="key">from</span>: highTemp, <span class="key">to</span>: lowTemp });
+    <span class="keyword">if</span> (oldTemp &amp;&amp; oldTemp !== newTemp) {
+      <span class="local-variable">this</span>.thermometer.move({ <span class="key">from</span>: oldTemp, <span class="key">to</span>: newTemp });
     }
+    <span class="local-variable">this</span>.set(<span class="string"><span class="delimiter">'</span><span class="content">_oldTemp</span><span class="delimiter">'</span></span>, newTemp);
   }
 });
 </pre></td>
