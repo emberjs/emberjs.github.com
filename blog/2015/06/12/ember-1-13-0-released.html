@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="/images/favicon-b8f150dd.png" />
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600" rel="stylesheet">
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7-e008d616.css" rel="stylesheet" /><![endif]-->
-    <link href="/stylesheets/site-ff75604c.css" rel="stylesheet" />
+    <link href="/stylesheets/site-0aa1a2c4.css" rel="stylesheet" />
     <link href="/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
     <link rel="stylesheet" href="https://glimmer-styleguide.global.ssl.fastly.net/glimmer-styleguide/master/app-cf72b59a166beb307683d9d0dae6bb0f.css" />
     
@@ -217,7 +217,13 @@ enables return values, and introduces some powerful new currying capabilities.</
 
 <p>For example, action <code>submit</code> is passed to <code>my-component</code> where it is called upon
 click:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/controllers/index.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -227,10 +233,8 @@ click:</p>
 7
 8
 9
-<strong>10</strong>
 </pre></td>
-  <td class="code"><pre><span class="comment">// app/controllers/index.js</span>
-<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">&quot;</span><span class="content">ember</span><span class="delimiter">&quot;</span></span>;
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">&quot;</span><span class="content">ember</span><span class="delimiter">&quot;</span></span>;
 
 <span class="reserved">export</span> <span class="keyword">default</span> Ember.Controller.extend({
   <span class="key">actions</span>: {
@@ -241,15 +245,25 @@ click:</p>
 });
 </pre></td>
 </tr></table>
-</div></div><div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/templates/index.hbs</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
-2
 </pre></td>
-  <td class="code"><pre>{{! app/templates/index.hbs }}
-{{my-component submit=(action 'setName')}}
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">my-component</span> <span class="attribute-name">submit</span>=<span class="error">(</span><span class="attribute-value">action</span> <span class="error">'</span><span class="attribute-name">setName</span><span class="error">'</span><span class="error">)</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
-</div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/components/my-component.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -257,10 +271,8 @@ click:</p>
 5
 6
 7
-8
 </pre></td>
-  <td class="code"><pre><span class="comment">// app/components/my-component.js</span>
-<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">&quot;</span><span class="content">ember</span><span class="delimiter">&quot;</span></span>;
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">&quot;</span><span class="content">ember</span><span class="delimiter">&quot;</span></span>;
 
 <span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
   click() {
@@ -309,16 +321,20 @@ constraints and features informed by real-world experience.</p>
 <p>Helpers come in two flavors. The first is a function-based API we call a
 shorthand helper. For example, this shorthand helper joins a first and
 last name:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/helpers/full-name.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
-6
 </pre></td>
-  <td class="code"><pre><span class="comment">// app/helpers/full-name.js</span>
-<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">&quot;</span><span class="content">ember</span><span class="delimiter">&quot;</span></span>;
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">&quot;</span><span class="content">ember</span><span class="delimiter">&quot;</span></span>;
 
 <span class="reserved">export</span> <span class="keyword">default</span> Ember.Helper.helper(<span class="keyword">function</span>(params, hash) {
   <span class="keyword">return</span> params.join(<span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span>);
@@ -327,18 +343,18 @@ last name:</p>
 </tr></table>
 </div></div>
 <p>This helper can be used in a variety of contexts:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
 </pre></td>
-  <td class="code"><pre>{{full-name &quot;Daniel&quot; model.lastName}}
-{{my-component name=(full-name model.firstName &quot;Smith&quot;)}}
-{{! The following usage would set the model.name to the new full name
-    when my-component calls the submit action. }}
-{{my-component submit=(action (mut model.name) (full-name model.firstName &quot;Smith&quot;))}}
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">full-name</span> <span class="error">&quot;</span><span class="attribute-name">Daniel</span><span class="error">&quot;</span> <span class="attribute-name">model.lastName</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">my-component</span> <span class="attribute-name">name</span>=<span class="error">(</span><span class="attribute-value">full-name</span> <span class="attribute-name">model.firstName</span> <span class="error">&quot;</span><span class="attribute-name">Smith</span><span class="error">&quot;</span><span class="error">)</span><span class="inline-delimiter">}}</span></span>
+<span class="comment">{{! The following usage would set the model.name to the new full name
+    when my-component calls the submit action. }}</span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">my-component</span> <span class="attribute-name">submit</span>=<span class="error">(</span><span class="attribute-value">action</span> <span class="error">(</span><span class="attribute-name">mut</span> <span class="attribute-name">model.name</span><span class="error">)</span> <span class="error">(</span><span class="attribute-name">full-name</span> <span class="attribute-name">model.firstName</span> <span class="error">&quot;</span><span class="attribute-name">Smith</span><span class="error">&quot;</span><span class="error">)</span><span class="error">)</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -352,7 +368,13 @@ some control over their own invalidation and recomputation. In these cases, a he
 
 <p>For example, this helper computes a name based on a <code>name-builder</code> service. It
 also recomputes whenever the <code>isAnonymized</code> state on that service changes:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/helpers/full-name.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -365,10 +387,8 @@ also recomputes whenever the <code>isAnonymized</code> state on that service cha
 <strong>10</strong>
 11
 12
-13
 </pre></td>
-  <td class="code"><pre><span class="comment">// app/helpers/full-name.js</span>
-<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">&quot;</span><span class="content">ember</span><span class="delimiter">&quot;</span></span>;
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">&quot;</span><span class="content">ember</span><span class="delimiter">&quot;</span></span>;
 
 <span class="reserved">export</span> <span class="keyword">default</span> Ember.Helper.extend({
   <span class="comment">// This service name is only an example</span>
@@ -394,20 +414,24 @@ how a component is called.</p>
 
 <p><code>hasBlock</code> will be true when a component is invoked in block form. For example
 given this component:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/components/show-full-name.hbs</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
-6
 </pre></td>
-  <td class="code"><pre>{{! app/components/show-full-name.hbs }}
-{{#if hasBlock}}
-  {{yield fullName}}
-{{else}}
-  {{fullName}}
-{{/if}}
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">if</span> <span class="attribute-name">hasBlock</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">yield</span> <span class="attribute-name">fullName</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">else</span><span class="inline-delimiter">}}</span></span>
+  <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">fullName</span><span class="inline-delimiter">}}</span></span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">if</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>

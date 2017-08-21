@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="/images/favicon-b8f150dd.png" />
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600" rel="stylesheet">
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7-e008d616.css" rel="stylesheet" /><![endif]-->
-    <link href="/stylesheets/site-ff75604c.css" rel="stylesheet" />
+    <link href="/stylesheets/site-0aa1a2c4.css" rel="stylesheet" />
     <link href="/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
     <link rel="stylesheet" href="https://glimmer-styleguide.global.ssl.fastly.net/glimmer-styleguide/master/app-cf72b59a166beb307683d9d0dae6bb0f.css" />
     
@@ -87,19 +87,21 @@ The benefit of having this additional hook is that you can customize the type
 key separately from the key used for the relationship.</p>
 
 <p>For example, given the following model:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/models/comment.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
 6
-7
-8
 </pre></td>
-  <td class="code"><pre><span class="comment">// app/models/comment.js</span>
-
-<span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
 
 <span class="reserved">export</span> <span class="keyword">default</span> DS.Model.extend({
   <span class="key">commentable</span>: belongsTo(<span class="string"><span class="delimiter">'</span><span class="content">commentable</span><span class="delimiter">'</span></span>, { <span class="key">polymorphic</span>: <span class="predefined-constant">true</span> }),
@@ -286,7 +288,13 @@ longer supported by Ember or Ember data, this behavior has been deprecated.</p>
 extension.</p>
 
 <p>With Ember &gt;= v2.7.0, disable the prototype extension for <code>Date</code>:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">config/environment.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -294,12 +302,8 @@ extension.</p>
 5
 6
 7
-8
-9
 </pre></td>
-  <td class="code"><pre><span class="comment">// config/environment.js</span>
-
-ENV = {
+  <td class="code"><pre>ENV = {
   <span class="key">EmberENV</span>: {
     <span class="key">EXTEND_PROTOTYPES</span>: {
       <span class="key">Date</span>: <span class="predefined-constant">false</span>
@@ -310,7 +314,13 @@ ENV = {
 </tr></table>
 </div></div>
 <p>With Ember &lt; v2.7.0, values must be provided for all prototype extensions:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">config/environment.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -321,12 +331,8 @@ ENV = {
 8
 9
 <strong>10</strong>
-11
-12
 </pre></td>
-  <td class="code"><pre><span class="comment">// config/environment.js</span>
-
-<span class="keyword">var</span> ENV = {
+  <td class="code"><pre><span class="keyword">var</span> ENV = {
   <span class="key">EmberENV</span>: {
     <span class="key">EXTEND_PROTOTYPES</span>: {
       <span class="key">Array</span>: <span class="predefined-constant">true</span>,
@@ -419,7 +425,13 @@ instead of
 <p>Another option is to override
 <a href="http://emberjs.com/api/data/classes/DS.RESTSerializer.html#method_normalizeQueryRecordResponse"><code>normalizeQueryRecordResponse</code></a>
 in your serializer, manipulating the payload so it matches the expected format:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/serializers/user.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -432,12 +444,8 @@ in your serializer, manipulating the payload so it matches the expected format:<
 <strong>10</strong>
 11
 12
-13
-14
 </pre></td>
-  <td class="code"><pre><span class="comment">// app/serializers/user.js</span>
-
-<span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
 
 <span class="reserved">export</span> <span class="keyword">default</span> DS.RESTSerializer.extend({
   normalizeQueryRecordResponse(store, primaryModelClass, payload) {
@@ -458,7 +466,13 @@ so that it makes a request that returns the expected payload with a single
 object as its primary data. This can be done by overriding
 <a href="http://emberjs.com/api/data/classes/DS.RESTAdapter.html#method_urlForQueryRecord"><code>urlForQueryRecord</code></a>
 in your adapter:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/adapters/user.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -467,12 +481,8 @@ in your adapter:</p>
 6
 7
 8
-9
-<strong>10</strong>
 </pre></td>
-  <td class="code"><pre><span class="comment">// app/adapters/user.js</span>
-
-<span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
 
 <span class="reserved">export</span> <span class="keyword">default</span> DS.RESTAdapter.extend({
   urlForQueryRecord() {
@@ -726,7 +736,13 @@ when you fetch a <code>post</code>:</p>
 </div></div>
 <p>Previously, you would want to override <code>modelNameFromPayloadKey</code> to remove the
 namespace:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/serializers/post.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -734,12 +750,8 @@ namespace:</p>
 5
 6
 7
-8
-9
 </pre></td>
-  <td class="code"><pre><span class="comment">// app/serializers/post.js</span>
-
-<span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
 
 <span class="reserved">export</span> <span class="keyword">default</span> DS.JSONAPISerializer.extend({
   modelNameFromPayloadKey(key) {
@@ -751,7 +763,13 @@ namespace:</p>
 </div></div>
 <p>You can remove this deprecation by refactoring your serializer to instead use
 <code>modelNameFromPayloadType</code>:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/serializers/post.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -759,12 +777,8 @@ namespace:</p>
 5
 6
 7
-8
-9
 </pre></td>
-  <td class="code"><pre><span class="comment">// app/serializers/post.js</span>
-
-<span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
 
 <span class="reserved">export</span> <span class="keyword">default</span> DS.JSONAPISerializer.extend({
   modelNameFromPayloadType(type) {
@@ -811,7 +825,13 @@ is sent when you create a <code>post</code> model:</p>
 </div></div>
 <p>Previously, you would want to override <code>payloadKeyFromModelName</code> to add the
 namespace to the <code>modelName</code>:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/serializers/post.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -819,12 +839,8 @@ namespace to the <code>modelName</code>:</p>
 5
 6
 7
-8
-9
 </pre></td>
-  <td class="code"><pre><span class="comment">// app/serializers/post.js</span>
-
-<span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
 
 <span class="reserved">export</span> <span class="keyword">default</span> DS.JSONAPISerializer.extend({
   payloadKeyFromModelName(modelName) {
@@ -836,7 +852,13 @@ namespace to the <code>modelName</code>:</p>
 </div></div>
 <p>You can remove this deprecation by refactoring your serializer to instead use
 <a href="http://emberjs.com/api/data/classes/DS.JSONAPISerializer.html#method_payloadTypeFromModelName"><code>payloadTypeFromModelName</code></a>:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/serializers/post.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -844,12 +866,8 @@ namespace to the <code>modelName</code>:</p>
 5
 6
 7
-8
-9
 </pre></td>
-  <td class="code"><pre><span class="comment">// app/serializers/post.js</span>
-
-<span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
+  <td class="code"><pre><span class="reserved">import</span> DS from <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>;
 
 <span class="reserved">export</span> <span class="keyword">default</span> DS.JSONAPISerializer.extend({
   payloadTypeFromModelName(modelName) {

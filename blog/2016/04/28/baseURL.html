@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="/images/favicon-b8f150dd.png" />
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600" rel="stylesheet">
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7-e008d616.css" rel="stylesheet" /><![endif]-->
-    <link href="/stylesheets/site-ff75604c.css" rel="stylesheet" />
+    <link href="/stylesheets/site-0aa1a2c4.css" rel="stylesheet" />
     <link href="/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
     <link rel="stylesheet" href="https://glimmer-styleguide.global.ssl.fastly.net/glimmer-styleguide/master/app-cf72b59a166beb307683d9d0dae6bb0f.css" />
     
@@ -131,17 +131,21 @@
 <p>The primary migration effort is that you should expect to adjust any relative paths which appear in your templates, are inserted via <code>{{content-for}}</code>, or directly present in <code>index.html</code>. Because you will be serving <code>index.html</code> from the server for any arbitrary route in your application you must modify these to be either a fully-qualified path or a root-relative URL.</p>
 
 <p>As an example, given this configuration where you have configured a different <code>rootURL</code> and <code>baseURL</code>:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">config/environment.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
 6
-7
 </pre></td>
-  <td class="code"><pre> <span class="comment">// Snipped from /config/environment.js</span>
-<span class="keyword">var</span> ENV = {
+  <td class="code"><pre><span class="keyword">var</span> ENV = {
   <span class="comment">/* ... */</span>
   <span class="key">rootURL</span>: <span class="string"><span class="delimiter">'</span><span class="content">/path/to/application/</span><span class="delimiter">'</span></span>,
   <span class="key">baseURL</span>: <span class="string"><span class="delimiter">'</span><span class="content">/assets/go/here/</span><span class="delimiter">'</span></span>
@@ -151,23 +155,29 @@
 </tr></table>
 </div></div>
 <p>You would remove the <code>baseURL</code> option and modify your templates like so:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
 </pre></td>
-  <td class="code"><pre>{{!-- Old: --}}
-&lt;img src=&quot;images/logo.png&quot; /&gt;
+  <td class="code"><pre><span class="comment">{{!-- Old: --}}</span>
+<span class="tag">&lt;img</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">images/logo.png</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
 
-{{!-- New: --}}
-&lt;img src=&quot;/assets/go/here/images/logo.png&quot; /&gt;
+<span class="comment">{{!-- New: --}}</span>
+<span class="tag">&lt;img</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/assets/go/here/images/logo.png</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
 </pre></td>
 </tr></table>
 </div></div><h4 class='anchorable-toc' id='toc_how-to-use-a-cdn'>How To Use a CDN</h4>
 <p>One of the most common use cases for <code>baseURL</code> was pointing to assets on a CDN. After this change to remove <code>baseURL</code> you should use the <code>prepend</code> option for <a href="https://github.com/rickharrison/broccoli-asset-rev"><code>broccoli-asset-rev</code></a> which is included with Ember CLI apps by default. For example, in <code>ember-cli-build.js</code>:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">ember-cli-build.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -185,16 +195,20 @@
 </tr></table>
 </div></div>
 <p>Note that the <code>prepend</code> option only applies when doing <em>production</em> builds via something like <code>ember build --prod</code>. Given the above example, and this input:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">config/environment.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
-6
 </pre></td>
-  <td class="code"><pre><span class="comment">// Snipped from /config/environment.js</span>
-<span class="keyword">var</span> ENV = {
+  <td class="code"><pre><span class="keyword">var</span> ENV = {
   <span class="comment">/* ... */</span>
   <span class="key">rootURL</span>: <span class="string"><span class="delimiter">'</span><span class="content">/path/to/application/</span><span class="delimiter">'</span></span>
   <span class="comment">/* ... */</span>
@@ -225,17 +239,21 @@
 <p>Note that <code>rootURL</code> <em>is present</em> as part of the path for the CDN-hosted assets inside of <code>index.html</code>. <code>rootURL</code> is an Ember CLI concept primarily concerned with supporting the behavior of <code>ember server</code>.</p>
 <h4 class='anchorable-toc' id='toc_configuring-the-router'>Configuring the Router</h4>
 <p>We also use the setting for <code>rootURL</code> at runtime in the application&#39;s router:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/router.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
 6
-7
 </pre></td>
-  <td class="code"><pre><span class="comment">// Snipped from /app/router.js</span>
-<span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
+  <td class="code"><pre><span class="reserved">import</span> Ember from <span class="string"><span class="delimiter">'</span><span class="content">ember</span><span class="delimiter">'</span></span>;
 <span class="reserved">import</span> config from <span class="string"><span class="delimiter">'</span><span class="content">./config/environment</span><span class="delimiter">'</span></span>;
 
 const Router = Ember.Router.extend({
@@ -245,17 +263,21 @@ const Router = Ember.Router.extend({
 </tr></table>
 </div></div>
 <p>In most cases this does exactly what you want it to do. However, if you wish to mount the application at a different place than the Ember CLI <code>rootURL</code> specifies for its <code>ember serve</code> location, you may add an additional property in your config, <code>routerRootURL</code>, to specify the path that your application will live at runtime.</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">config/environment.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
 6
-7
 </pre></td>
-  <td class="code"><pre><span class="comment">// Snipped from /config/environment.js</span>
-<span class="keyword">var</span> ENV = {
+  <td class="code"><pre><span class="keyword">var</span> ENV = {
   <span class="comment">/* ... */</span>
   <span class="key">rootURL</span>: <span class="string"><span class="delimiter">'</span><span class="content">/</span><span class="delimiter">'</span></span>,
   <span class="key">routerRootURL</span>: <span class="string"><span class="delimiter">'</span><span class="content">/path/to/application/</span><span class="delimiter">'</span></span>

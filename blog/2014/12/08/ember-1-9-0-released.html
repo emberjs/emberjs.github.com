@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="/images/favicon-b8f150dd.png" />
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600" rel="stylesheet">
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7-e008d616.css" rel="stylesheet" /><![endif]-->
-    <link href="/stylesheets/site-ff75604c.css" rel="stylesheet" />
+    <link href="/stylesheets/site-0aa1a2c4.css" rel="stylesheet" />
     <link href="/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
     <link rel="stylesheet" href="https://glimmer-styleguide.global.ssl.fastly.net/glimmer-styleguide/master/app-cf72b59a166beb307683d9d0dae6bb0f.css" />
     
@@ -145,16 +145,20 @@ implementation then updated every Handlebars helper to the new API.</p>
 <h4 class='anchorable-toc' id='toc_activate-and-deactivate-events'>Activate and Deactivate Events</h4>
 <p>Ember.js routes have long supported an <code>activate</code> and <code>deactivate</code> hook.
 For example:</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/routes/index.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
-6
 </pre></td>
-  <td class="code"><pre><span class="comment">// app/routes/index.js</span>
-<span class="reserved">export</span> <span class="keyword">default</span> Ember.Route.extend({
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> Ember.Route.extend({
   <span class="function">activate</span>: <span class="keyword">function</span>(){
     collectAnalytics();
   }
@@ -163,16 +167,20 @@ For example:</p>
 </tr></table>
 </div></div>
 <p>Ember.js 1.9 introduces corresponding events for these hooks.</p>
-<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/routes/index.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
-6
 </pre></td>
-  <td class="code"><pre><span class="comment">// app/routes/index.js</span>
-<span class="reserved">export</span> <span class="keyword">default</span> Ember.Route.extend({
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> Ember.Route.extend({
   <span class="function">collectAnalytics</span>: <span class="keyword">function</span>(){
     collectAnalytics();
   }.on(<span class="string"><span class="delimiter">'</span><span class="content">activate</span><span class="delimiter">'</span></span>)
@@ -246,17 +254,19 @@ Ember 2.0 aims to make scoping consistent and predictable. This deprecation
 is a step toward that goal.</p>
 
 <p>Two Ember helpers support context switching. The first is <code>{{each}}</code>:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/templates/people.hbs</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
-5
-6
 </pre></td>
-  <td class="code"><pre><span class="comment">{{! app/templates/people.hbs }}</span>
-
-<span class="comment">{{! this context is the controller }}</span>
+  <td class="code"><pre><span class="comment">{{! this context is the controller }}</span>
 <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">model</span><span class="inline-delimiter">}}</span></span>
   <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">name</span><span class="inline-delimiter">}}</span></span> <span class="comment">{{! this context is each person }}</span>
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
@@ -264,17 +274,19 @@ is a step toward that goal.</p>
 </tr></table>
 </div></div>
 <p>The non-context switching version of this helper is now preferred:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/templates/people.hbs</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
-5
-6
 </pre></td>
-  <td class="code"><pre><span class="comment">{{! app/templates/people.hbs }}</span>
-
-<span class="comment">{{! this context is the controller }}</span>
+  <td class="code"><pre><span class="comment">{{! this context is the controller }}</span>
 <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">person</span> <span class="attribute-name">in</span> <span class="attribute-name">model</span><span class="inline-delimiter">}}</span></span>
   <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">person.name</span><span class="inline-delimiter">}}</span></span> <span class="comment">{{! this context is still the controller }}</span>
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
@@ -282,17 +294,19 @@ is a step toward that goal.</p>
 </tr></table>
 </div></div>
 <p>The second helper is <code>{{with}}</code>:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/templates/person.hbs</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
-5
-6
 </pre></td>
-  <td class="code"><pre><span class="comment">{{! app/templates/person.hbs }}</span>
-
-<span class="comment">{{! this context is the controller }}</span>
+  <td class="code"><pre><span class="comment">{{! this context is the controller }}</span>
 <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">with</span> <span class="attribute-name">model</span><span class="inline-delimiter">}}</span></span>
   <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">name</span><span class="inline-delimiter">}}</span></span> <span class="comment">{{! this context is the person }}</span>
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">with</span><span class="inline-delimiter">}}</span></span>
@@ -300,17 +314,19 @@ is a step toward that goal.</p>
 </tr></table>
 </div></div>
 <p>The non-context switching version of this helper is now preferred:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/templates/person.hbs</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
-5
-6
 </pre></td>
-  <td class="code"><pre><span class="comment">{{! app/templates/person.hbs }}</span>
-
-<span class="comment">{{! this context is the controller }}</span>
+  <td class="code"><pre><span class="comment">{{! this context is the controller }}</span>
 <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">with</span> <span class="attribute-name">model</span> <span class="attribute-name">as</span> <span class="attribute-name">person</span><span class="inline-delimiter">}}</span></span>
   <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">person.name</span><span class="inline-delimiter">}}</span></span> <span class="comment">{{! this context is still the controller }}</span>
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">with</span><span class="inline-delimiter">}}</span></span>
@@ -400,30 +416,38 @@ example:</p>
 <p>Preserving template scope context results in easier to read templates.</p>
 
 <p>Any component in Ember 1.10 can use this feature. For example:</p>
-<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/templates/components/my-unordered-list.hbs</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
-6
 </pre></td>
-  <td class="code"><pre><span class="comment">{{! app/templates/components/my-unordered-list.hbs }}</span>
-<span class="tag">&lt;ul&gt;</span>
+  <td class="code"><pre><span class="tag">&lt;ul&gt;</span>
   <span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">each</span> <span class="attribute-name">items</span> <span class="attribute-name">as</span> <span class="error">|</span><span class="attribute-name">item</span><span class="error">|</span><span class="inline-delimiter">}}</span></span>
     <span class="tag">&lt;li&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">yield</span> <span class="attribute-name">item</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/li&gt;</span>
   <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">each</span><span class="inline-delimiter">}}</span></span>
 <span class="tag">&lt;/ul&gt;</span>
 </pre></td>
 </tr></table>
-</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/templates/index.hbs</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
-4
 </pre></td>
-  <td class="code"><pre><span class="comment">{{! app/templates/index.hbs }}</span>
-<span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">my-unordered-list</span> <span class="attribute-name">items</span>=<span class="attribute-value">cars</span> <span class="attribute-name">as</span> <span class="error">|</span><span class="attribute-name">car</span><span class="error">|</span><span class="inline-delimiter">}}</span></span>
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">my-unordered-list</span> <span class="attribute-name">items</span>=<span class="attribute-value">cars</span> <span class="attribute-name">as</span> <span class="error">|</span><span class="attribute-name">car</span><span class="error">|</span><span class="inline-delimiter">}}</span></span>
   Auto: <span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">car.name</span><span class="inline-delimiter">}}</span></span>
 <span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">my-unordered-list</span><span class="inline-delimiter">}}</span></span>
 </pre></td>

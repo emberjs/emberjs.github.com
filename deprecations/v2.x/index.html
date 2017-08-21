@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="/images/favicon-b8f150dd.png" />
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600" rel="stylesheet">
     <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7-e008d616.css" rel="stylesheet" /><![endif]-->
-    <link href="/stylesheets/site-ff75604c.css" rel="stylesheet" />
+    <link href="/stylesheets/site-0aa1a2c4.css" rel="stylesheet" />
     <link href="/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
     <link rel="stylesheet" href="https://glimmer-styleguide.global.ssl.fastly.net/glimmer-styleguide/master/app-cf72b59a166beb307683d9d0dae6bb0f.css" />
     
@@ -156,7 +156,13 @@ public API&#39;s for accessing the container for looking up instances without ex
 <p>Please refactor from using <code>appInstance.container.lookup</code> to <code>appInstance.lookup</code>.</p>
 
 <p>Before:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/initializers/preload-store.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -167,12 +173,8 @@ public API&#39;s for accessing the container for looking up instances without ex
 8
 9
 <strong>10</strong>
-11
-12
 </pre></td>
-  <td class="code"><pre><span class="comment">// app/initializers/preload-store.js</span>
-
-<span class="reserved">export</span> <span class="keyword">function</span> <span class="function">initialize</span>(appInstance) {
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">function</span> <span class="function">initialize</span>(appInstance) {
   let store = appInstance.container.lookup(<span class="string"><span class="delimiter">'</span><span class="content">service:store</span><span class="delimiter">'</span></span>);
 
   store.pushPayload(<span class="error">`</span>&lt;payload here&gt;<span class="error">`</span>);
@@ -186,7 +188,13 @@ public API&#39;s for accessing the container for looking up instances without ex
 </tr></table>
 </div></div>
 <p>After:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/instance-initializers/preload-store.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -197,12 +205,8 @@ public API&#39;s for accessing the container for looking up instances without ex
 8
 9
 <strong>10</strong>
-11
-12
 </pre></td>
-  <td class="code"><pre><span class="comment">// app/instance-initializers/preload-store.js</span>
-
-<span class="reserved">export</span> <span class="keyword">function</span> <span class="function">initialize</span>(appInstance) {
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">function</span> <span class="function">initialize</span>(appInstance) {
   let store = appInstance.lookup(<span class="string"><span class="delimiter">'</span><span class="content">service:store</span><span class="delimiter">'</span></span>);
 
   store.pushPayload(<span class="error">`</span>&lt;payload here&gt;<span class="error">`</span>);
@@ -452,24 +456,24 @@ not properly engineered, there are a number of caveats (i.e. the <code>controlle
 anything inside the block are incorrect) that prevent continued support.</p>
 
 <p>Support the following forms will be removed after 2.4:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 </pre></td>
-  <td class="code"><pre>{{#render 'foo'}}
-  &lt;p&gt;Stuff Here&lt;/p&gt;
-{{/render}}
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">render</span> <span class="error">'</span><span class="attribute-name">foo</span><span class="error">'</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;p&gt;</span>Stuff Here<span class="tag">&lt;/p&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">render</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
-</div></div><div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 </pre></td>
-  <td class="code"><pre>{{#render 'foo' someModel}}
-  &lt;p&gt;Stuff Here&lt;/p&gt;
-{{/render}}
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{#</span><span class="attribute-name">render</span> <span class="error">'</span><span class="attribute-name">foo</span><span class="error">'</span> <span class="attribute-name">someModel</span><span class="inline-delimiter">}}</span></span>
+  <span class="tag">&lt;p&gt;</span>Stuff Here<span class="tag">&lt;/p&gt;</span>
+<span class="inline"><span class="inline-delimiter">{{/</span><span class="attribute-name">render</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-2-6'>Deprecations Added in 2.6</h3><h4 class='anchorable-toc' id='toc_ember-component-didinitattrs'>Ember.Component#didInitAttrs</h4><h5 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h5><h5 class='anchorable-toc' id='toc_id-ember-views-did-init-attrs'>id: ember-views.did-init-attrs</h5>
@@ -477,10 +481,10 @@ anything inside the block are incorrect) that prevent continued support.</p>
 available after calling <code>this._super(...arguments)</code></p>
 
 <p>Given a htmlbars template like this:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre>{{my-component handle=&quot;@tomdale&quot;}}
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">my-component</span> <span class="attribute-name">handle</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">@tomdale</span><span class="delimiter">&quot;</span></span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
 </div></div>
@@ -524,30 +528,30 @@ available after calling <code>this._super(...arguments)</code></p>
 components. Please refactor to a component and invoke thusly:</p>
 
 <p>For example, if you had:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre>{{render 'foo-bar' someModel}}
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">render</span> <span class="error">'</span><span class="attribute-name">foo-bar</span><span class="error">'</span> <span class="attribute-name">someModel</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
-</div></div><div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-</pre></td>
-  <td class="code"><pre>{{! app/templates/foo-bar.hbs }}
+</div></div>
+<p><code>app/templates/foo-bar.hbs }}
 &lt;p&gt;{{someProp}} template stuff here&lt;/p&gt;
-</pre></td>
-</tr></table>
-</div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</code></p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/controllers/foo-bar.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
-6
 </pre></td>
-  <td class="code"><pre><span class="comment">// app/controllers/foo-bar.js</span>
-<span class="reserved">export</span> <span class="keyword">default</span> Controller.extend({
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> Controller.extend({
   <span class="key">someProp</span>: Ember.computed(<span class="string"><span class="delimiter">'</span><span class="content">model.yolo</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
     <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">model.yolo</span><span class="delimiter">'</span></span>);
   })
@@ -556,30 +560,38 @@ components. Please refactor to a component and invoke thusly:</p>
 </tr></table>
 </div></div>
 <p>Would be refactored to:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre>{{foo-bar model=someModel}}
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">foo-bar</span> <span class="attribute-name">model</span>=<span class="attribute-value">someModel</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
-</div></div><div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/templates/components/foo-bar.hbs</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
-2
 </pre></td>
-  <td class="code"><pre>{{! app/templates/components/foo-bar.hbs }}
-&lt;p&gt;{{someProp}} template stuff here&lt;/p&gt;
+  <td class="code"><pre><span class="tag">&lt;p&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">someProp</span><span class="inline-delimiter">}}</span></span> template stuff here<span class="tag">&lt;/p&gt;</span>
 </pre></td>
 </tr></table>
-</div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/components/foo-bar.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
 4
 5
-6
 </pre></td>
-  <td class="code"><pre><span class="comment">// app/components/foo-bar.js</span>
-<span class="reserved">export</span> <span class="keyword">default</span> Component.extend({
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> Component.extend({
   <span class="key">someProp</span>: Ember.computed(<span class="string"><span class="delimiter">'</span><span class="content">model.yolo</span><span class="delimiter">'</span></span>, <span class="keyword">function</span>() {
     <span class="keyword">return</span> <span class="local-variable">this</span>.get(<span class="string"><span class="delimiter">'</span><span class="content">model.yolo</span><span class="delimiter">'</span></span>);
   })
@@ -915,53 +927,69 @@ component.appendTo(element);
 Please refactor uses of this helper to components:</p>
 
 <p>For example, if you had:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre>{{render 'my-sidebar'}}
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">render</span> <span class="error">'</span><span class="attribute-name">my-sidebar</span><span class="error">'</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
-</div></div><div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/templates/my-sidebar.hbs</td>
+    </tr>
+  </thead>
+<tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;p&gt;</span>template stuff here<span class="tag">&lt;/p&gt;</span>
+</pre></td>
+</tr></table>
+</div></div><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/controllers/my-sidebar.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 </pre></td>
-  <td class="code"><pre>{{! app/templates/my-sidebar.hbs }}
-&lt;p&gt;template stuff here&lt;/p&gt;
-</pre></td>
-</tr></table>
-</div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre><span class="comment">// app/controllers/my-sidebar.js</span>
-<span class="reserved">export</span> <span class="keyword">default</span> Ember.Controller.extend({
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> Ember.Controller.extend({
 });
 </pre></td>
 </tr></table>
 </div></div>
 <p>You would refactor to a component like so:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 </pre></td>
-  <td class="code"><pre>{{my-sidebar}}
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">my-sidebar</span><span class="inline-delimiter">}}</span></span>
 </pre></td>
 </tr></table>
-</div></div><div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/templates/components/my-sidebar.hbs</td>
+    </tr>
+  </thead>
+<tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre><span class="tag">&lt;p&gt;</span>template stuff here<span class="tag">&lt;/p&gt;</span>
+</pre></td>
+</tr></table>
+</div></div><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/components/my-sidebar.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 </pre></td>
-  <td class="code"><pre>{{! app/templates/components/my-sidebar.hbs }}
-&lt;p&gt;template stuff here&lt;/p&gt;
-</pre></td>
-</tr></table>
-</div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre><span class="comment">// app/components/my-sidebar.js</span>
-<span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> Ember.Component.extend({
 });
 </pre></td>
 </tr></table>
@@ -976,25 +1004,39 @@ Please refactor uses of this helper to components:</p>
 <p>Before named outlets were introduced to Ember the render helper was used to declare slots for <code>this.render</code> in routes. This usage is not common in modern, idiomatic applications and is deprecated. In general, the pattern of named outlets or named render helpers is discouraged. Instead use of <a href="https://github.com/ef4/ember-elsewhere">ember-elsewhere</a> or another DOM-redirection library should better serve these use cases.</p>
 
 <p>For example this code uses the render helper as a target for a special sidebar present on the index route. The special sidebar is in a template named <code>index-sidebar</code>:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-</pre></td>
-  <td class="code"><pre>{{! app/templates/application.hbs }}
-&lt;div class=&quot;sidebar&quot;&gt;{{render 'sidebar'}}&lt;/div&gt;
-&lt;div class=&quot;main&quot;&gt;{{outlet}}&lt;/div&gt;
-</pre></td>
-</tr></table>
-</div></div><div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/templates/application.hbs</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 </pre></td>
-  <td class="code"><pre>{{! app/templates/index.hbs }}
-Index Content
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">sidebar</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">render</span> <span class="error">'</span><span class="attribute-name">sidebar</span><span class="error">'</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">main</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/div&gt;</span>
 </pre></td>
 </tr></table>
-</div></div><div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/templates/index.hbs</td>
+    </tr>
+  </thead>
+<tr>
+  <td class="line-numbers"><pre>1
+</pre></td>
+  <td class="code"><pre>Index Content
+</pre></td>
+</tr></table>
+</div></div><div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/routes/index.js</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -1009,10 +1051,8 @@ Index Content
 12
 13
 14
-15
 </pre></td>
-  <td class="code"><pre><span class="comment">// app/routes/index.js</span>
-App.IndexRoute = Ember.Route.extend({
+  <td class="code"><pre>App.IndexRoute = Ember.Route.extend({
   renderTemplate() {
     <span class="local-variable">this</span>._super(...<span class="local-variable">arguments</span>);
     <span class="local-variable">this</span>.render(<span class="string"><span class="delimiter">'</span><span class="content">index-sidebar</span><span class="delimiter">'</span></span>, { <span class="key">into</span>: <span class="string"><span class="delimiter">'</span><span class="content">sidebar</span><span class="delimiter">'</span></span> });
@@ -1030,23 +1070,31 @@ App.IndexRoute = Ember.Route.extend({
 </tr></table>
 </div></div>
 <p>It should be refactored to use <a href="https://github.com/ef4/ember-elsewhere">ember-elsewhere</a>. The sidebar content must be implemented as a component, in this case named <code>index-sidebar</code>. The logic previously used in the route file can be removed. The refactored example:</p>
-<div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/templates/application.hbs</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
-3
 </pre></td>
-  <td class="code"><pre>{{! app/templates/application.hbs }}
-&lt;div class=&quot;sidebar&quot;&gt;{{from-elsewhere name='sidebar'}}&lt;/div&gt;
-&lt;div class=&quot;main&quot;&gt;{{outlet}}&lt;/div&gt;
+  <td class="code"><pre><span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">sidebar</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">from-elsewhere</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">'</span><span class="content">sidebar</span><span class="delimiter">'</span></span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">main</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">outlet</span><span class="inline-delimiter">}}</span></span><span class="tag">&lt;/div&gt;</span>
 </pre></td>
 </tr></table>
-</div></div><div class="highlight hbs "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+</div></div><div class="highlight handlebars "><div class="ribbon"></div><div class="scroller"><table class="CodeRay">
+  <thead>
+    <tr>
+      <td colspan="2">app/templates/index.hbs</td>
+    </tr>
+  </thead>
+<tr>
   <td class="line-numbers"><pre>1
 2
-3
 </pre></td>
-  <td class="code"><pre>{{! app/templates/index.hbs }}
-{{to-elsewhere named='sidebar' send=(component 'index-sidebar')}}
+  <td class="code"><pre><span class="inline"><span class="inline-delimiter">{{</span><span class="attribute-name">to-elsewhere</span> <span class="attribute-name">named</span>=<span class="string"><span class="delimiter">'</span><span class="content">sidebar</span><span class="delimiter">'</span></span> <span class="attribute-name">send</span>=<span class="error">(</span><span class="attribute-value">component</span> <span class="error">'</span><span class="attribute-name">index-sidebar</span><span class="error">'</span><span class="error">)</span><span class="inline-delimiter">}}</span></span>
 Index Content
 </pre></td>
 </tr></table>
@@ -1097,7 +1145,7 @@ documentation <a href="https://github.com/ef4/ember-elsewhere#ember-elsewhere">h
 <p>Addon creators and maintainers can use <a href="https://github.com/rwjblue/ember-factory-for-polyfill">ember-factory-for-polyfill</a> for addons supporting versions 2.3+, or <a href="https://github.com/rwjblue/ember-getowner-polyfill">ember-getowner-polyfill</a> for 1.10+.</p>
 
 <p>Before:</p>
-<div class="highlight text "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -1106,18 +1154,18 @@ documentation <a href="https://github.com/ef4/ember-elsewhere#ember-elsewhere">h
 6
 7
 </pre></td>
-  <td class="code"><pre>export default Component.extend(
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> Component.extend(
   init() {
-    this._super(...arguments);
-    let Factory = getOwner(this)._lookupFactory('logger:main');
-    this.logger = Factory.create({ level: 'low' });
+    <span class="local-variable">this</span>._super(...<span class="local-variable">arguments</span>);
+    let Factory = getOwner(<span class="local-variable">this</span>)._lookupFactory(<span class="string"><span class="delimiter">'</span><span class="content">logger:main</span><span class="delimiter">'</span></span>);
+    <span class="local-variable">this</span>.logger = Factory.create({ <span class="key">level</span>: <span class="string"><span class="delimiter">'</span><span class="content">low</span><span class="delimiter">'</span></span> });
   }
 });
 </pre></td>
 </tr></table>
 </div></div>
 <p>After:</p>
-<div class="highlight text "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
@@ -1126,25 +1174,25 @@ documentation <a href="https://github.com/ef4/ember-elsewhere#ember-elsewhere">h
 6
 7
 </pre></td>
-  <td class="code"><pre>export default Component.extend(
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">default</span> Component.extend(
   init() {
-    this._super(...arguments);
-    let factory = getOwner(this).factoryFor('logger:main');
-    this.logger = factory.create({ level: 'low' });
+    <span class="local-variable">this</span>._super(...<span class="local-variable">arguments</span>);
+    let factory = getOwner(<span class="local-variable">this</span>).factoryFor(<span class="string"><span class="delimiter">'</span><span class="content">logger:main</span><span class="delimiter">'</span></span>);
+    <span class="local-variable">this</span>.logger = factory.create({ <span class="key">level</span>: <span class="string"><span class="delimiter">'</span><span class="content">low</span><span class="delimiter">'</span></span> });
   }
 });
 </pre></td>
 </tr></table>
 </div></div>
 <p>Any methods or properties of the factory can be accessed through the <code>class</code> property when using <code>factoryFor</code>.</p>
-<div class="highlight text "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
   <td class="line-numbers"><pre>1
 2
 3
 </pre></td>
-  <td class="code"><pre>let factory = owner.factoryFor('widget:slow');
-let klass = factory.class;
-klass.hasSpeed('slow'); // true
+  <td class="code"><pre>let factory = owner.factoryFor(<span class="string"><span class="delimiter">'</span><span class="content">widget:slow</span><span class="delimiter">'</span></span>);
+let klass = factory.<span class="reserved">class</span>;
+klass.hasSpeed(<span class="string"><span class="delimiter">'</span><span class="content">slow</span><span class="delimiter">'</span></span>); <span class="comment">// true</span>
 </pre></td>
 </tr></table>
 </div></div><h4 class='anchorable-toc' id='toc_arguments-in-component-lifecycle-hooks'>Arguments in Component Lifecycle Hooks</h4><h5 class='anchorable-toc' id='toc_until-2-13-0'>until: 2.13.0</h5><h5 class='anchorable-toc' id='toc_id-ember-views-lifecycle-hook-arguments'>id: ember-views.lifecycle-hook-arguments</h5>
