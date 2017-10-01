@@ -526,7 +526,7 @@ store.findRecord(<span class="string"><span class="delimiter">'</span><span clas
 <p><code>lookupAdapter</code> has been deprecated in favor of using <code>adapterFor</code>.</p>
 <h4 class='anchorable-toc' id='toc_lookupserializer'>lookupSerializer</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-store-lookupserializer'>id: ds.store.lookupSerializer</h6>
 <p><code>lookupSerializer</code> has been deprecated in favor of using <code>serializerFor</code>.</p>
-<h3 class='anchorable-toc' id='toc_deprecations-added-in-pending-features'>Deprecations Added in Pending Features</h3><h4 class='anchorable-toc' id='toc_store-serialize'>Store.serialize</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-store-serialize'>id: ds.store.serialize</h6><h6 class='anchorable-toc' id='toc_feature-ds-deprecate-store-serialize'>feature: ds-deprecate-store-serialize</h6>
+<h4 class='anchorable-toc' id='toc_store-serialize'>Store.serialize</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-store-serialize'>id: ds.store.serialize</h6>
 <p><code>Store.serialize</code> has been deprecated in favor of
 <a href="http://emberjs.com/api/data/classes/DS.Model.html#method_serialize"><code>Model.serialize</code></a>
 as part of an effort to reduce duplication and API surface area.</p>
@@ -552,12 +552,63 @@ as part of an effort to reduce duplication and API surface area.</p>
 post.serialize();
 </pre></td>
 </tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_jsonserializer-shouldserializehasmany'>JSONSerializer.shouldSerializeHasMany</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-serializer-private-should-serialize-has-many'>id: ds.serializer.private-should-serialize-has-many</h6><h6 class='anchorable-toc' id='toc_feature-ds-check-should-serialize-relationships'>feature: ds-check-should-serialize-relationships</h6>
+</div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-ember-data-2-12'>Deprecations Added in Ember Data 2.12</h3><h4 class='anchorable-toc' id='toc_jsonserializer-shouldserializehasmany'>JSONSerializer.shouldSerializeHasMany</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-serializer-private-should-serialize-has-many'>id: ds.serializer.private-should-serialize-has-many</h6>
 <p>The private method <code>_shouldSerializeHasMany</code> has been promoted to the public
 API. To remove this deprecation, please remove the underscore to use the public
 <a href="http://emberjs.com/api/data/classes/DS.JSONSerializer.html#method_shouldSerializeHasMany"><code>shouldSerializeHasMany</code></a>
 method.</p>
-<h4 class='anchorable-toc' id='toc_hasmanyreference-push-array'>HasManyReference.push(array)</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-references-has-many-push-array'>id: ds.references.has-many.push-array</h6><h6 class='anchorable-toc' id='toc_feature-ds-overhaul-references'>feature: ds-overhaul-references</h6>
+<h3 class='anchorable-toc' id='toc_deprecations-added-in-ember-data-2-13'>Deprecations Added in Ember Data 2.13</h3><h4 class='anchorable-toc' id='toc_unused-initializers'>Unused Initializers</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-deprecated-initializers'>id: ds.deprecated-initializers</h6>
+<p>The Ember Data initializers <code>data-adapter</code>, <code>injectStore</code>, <code>transforms</code>, and <code>store</code> are no longer used, so they are being removed.
+Applications that depend on these for the ordering of their own custom initializers can substitute <code>ember-data</code> instead, without any change in functionality.</p>
+
+<p>Before:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">function</span> <span class="function">initialize</span>(application) {
+  <span class="comment">// ... your code ...</span>
+};
+
+<span class="reserved">export</span> <span class="keyword">default</span> {
+  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">websocketInit</span><span class="delimiter">'</span></span>,
+  <span class="key">after</span>: <span class="string"><span class="delimiter">'</span><span class="content">store</span><span class="delimiter">'</span></span>,
+  <span class="key">initialize</span>: initialize
+};
+</pre></td>
+</tr></table>
+</div></div>
+<p>After:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">function</span> <span class="function">initialize</span>(application) {
+  <span class="comment">// ... your code ...</span>
+};
+
+<span class="reserved">export</span> <span class="keyword">default</span> {
+  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">websocketInit</span><span class="delimiter">'</span></span>,
+  <span class="key">after</span>: <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>,
+  <span class="key">initialize</span>: initialize
+};
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-pending-features'>Deprecations Added in Pending Features</h3><h4 class='anchorable-toc' id='toc_hasmanyreference-push-array'>HasManyReference.push(array)</h4><h6 class='anchorable-toc' id='toc_until-4-0-0'>until: 4.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-references-has-many-push-array'>id: ds.references.has-many.push-array</h6><h6 class='anchorable-toc' id='toc_feature-ds-overhaul-references'>feature: ds-overhaul-references</h6>
 <p>Passing an array to a <code>HasManyReference#push</code> has been deprecated. You should
 refactor your code to instead pass a <a href="http://jsonapi.org/format/#document-resource-object-relationships">JSON API Relationship
 Object</a>.</p>
@@ -609,7 +660,7 @@ let post = <span class="local-variable">this</span>.store.peekRecord(<span class
 post.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>).push(commentsData);
 </pre></td>
 </tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_hasmanyreference-push-invalid-data'>HasManyReference.push Invalid Data</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-references-has-many-push-invalid-json-api'>id: ds.references.has-many.push-invalid-json-api</h6><h6 class='anchorable-toc' id='toc_feature-ds-overhaul-references'>feature: ds-overhaul-references</h6>
+</div></div><h4 class='anchorable-toc' id='toc_hasmanyreference-push-invalid-data'>HasManyReference.push Invalid Data</h4><h6 class='anchorable-toc' id='toc_until-4-0-0'>until: 4.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-references-has-many-push-invalid-json-api'>id: ds.references.has-many.push-invalid-json-api</h6><h6 class='anchorable-toc' id='toc_feature-ds-overhaul-references'>feature: ds-overhaul-references</h6>
 <p>In previous versions of Ember Data, <code>HasManyReference#push</code> supported pushing
 data that was almost formatted as a <a href="http://jsonapi.org/format/#document-resource-object-relationships">JSON API Relationship
 Object</a>, but
@@ -668,7 +719,7 @@ let post = <span class="local-variable">this</span>.store.peekRecord(<span class
 post.hasMany(<span class="string"><span class="delimiter">'</span><span class="content">comments</span><span class="delimiter">'</span></span>).push(commentsData);
 </pre></td>
 </tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_belongstoreference-push-ds-model'>BelongsToReference.push(DS.Model)</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-references-belongs-to-push-record'>id: ds.references.belongs-to.push-record</h6><h6 class='anchorable-toc' id='toc_feature-ds-overhaul-references'>feature: ds-overhaul-references</h6>
+</div></div><h4 class='anchorable-toc' id='toc_belongstoreference-push-ds-model'>BelongsToReference.push(DS.Model)</h4><h6 class='anchorable-toc' id='toc_until-4-0-0'>until: 4.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-references-belongs-to-push-record'>id: ds.references.belongs-to.push-record</h6><h6 class='anchorable-toc' id='toc_feature-ds-overhaul-references'>feature: ds-overhaul-references</h6>
 <p>Passing an instance of
 <a href="http://emberjs.com/api/data/classes/DS.Model.html"><code>DS.Model</code></a> to
 <code>BelongsToReference#push</code> has been deprecated. You should instead follow the
@@ -702,7 +753,7 @@ let author = <span class="local-variable">this</span>.store.peekRecord(<span cla
 post.set(<span class="string"><span class="delimiter">'</span><span class="content">author</span><span class="delimiter">'</span></span>, author);
 </pre></td>
 </tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_jsonapiserializer-modelnamefrompayloadkey-for-resource'>JSONAPISerializer.modelNameFromPayloadKey for Resource</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-json-api-serializer-deprecated-model-name-for-resource'>id: ds.json-api-serializer.deprecated-model-name-for-resource</h6><h6 class='anchorable-toc' id='toc_feature-ds-payload-type-hooks'>feature: ds-payload-type-hooks</h6>
+</div></div><h4 class='anchorable-toc' id='toc_jsonapiserializer-modelnamefrompayloadkey-for-resource'>JSONAPISerializer.modelNameFromPayloadKey for Resource</h4><h6 class='anchorable-toc' id='toc_until-4-0-0'>until: 4.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-json-api-serializer-deprecated-model-name-for-resource'>id: ds.json-api-serializer.deprecated-model-name-for-resource</h6><h6 class='anchorable-toc' id='toc_feature-ds-payload-type-hooks'>feature: ds-payload-type-hooks</h6>
 <p>Using <code>JSONAPISerializer.modelNameFromPayloadKey</code> to normalize the type of a
 resource has been deprecated in favor of
 <code>JSONAPISerializer.modelNameFromPayloadType</code>.</p>
@@ -787,7 +838,7 @@ namespace:</p>
 });
 </pre></td>
 </tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_jsonapiserializer-modelnamefrompayloadkey-for-relationship'>JSONAPISerializer.modelNameFromPayloadKey for Relationship</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-json-api-serializer-deprecated-model-name-for-relationship'>id: ds.json-api-serializer.deprecated-model-name-for-relationship</h6><h6 class='anchorable-toc' id='toc_feature-ds-payload-type-hooks'>feature: ds-payload-type-hooks</h6>
+</div></div><h4 class='anchorable-toc' id='toc_jsonapiserializer-modelnamefrompayloadkey-for-relationship'>JSONAPISerializer.modelNameFromPayloadKey for Relationship</h4><h6 class='anchorable-toc' id='toc_until-4-0-0'>until: 4.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-json-api-serializer-deprecated-model-name-for-relationship'>id: ds.json-api-serializer.deprecated-model-name-for-relationship</h6><h6 class='anchorable-toc' id='toc_feature-ds-payload-type-hooks'>feature: ds-payload-type-hooks</h6>
 <p>Using <code>JSONAPISerializer.modelNameFromPayloadKey</code> to normalize the type of a
 relationship has been deprecated in favor of
 <code>JSONAPISerializer.modelNameFromPayloadType</code>.</p>
@@ -795,7 +846,7 @@ relationship has been deprecated in favor of
 <p>See <a href="#toc_jsonapiserializer-modelnamefrompayloadkey-for-resource">JSONAPISerializer.modelNameFromPayloadKey for
 Resource</a> for more
 information.</p>
-<h4 class='anchorable-toc' id='toc_jsonapiserializer-payloadkeyfrommodelname-for-resource'>JSONAPISerializer.payloadKeyFromModelName for Resource</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-json-api-serializer-deprecated-payload-type-for-model'>id: ds.json-api-serializer.deprecated-payload-type-for-model</h6><h6 class='anchorable-toc' id='toc_feature-ds-payload-type-hooks'>feature: ds-payload-type-hooks</h6>
+<h4 class='anchorable-toc' id='toc_jsonapiserializer-payloadkeyfrommodelname-for-resource'>JSONAPISerializer.payloadKeyFromModelName for Resource</h4><h6 class='anchorable-toc' id='toc_until-4-0-0'>until: 4.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-json-api-serializer-deprecated-payload-type-for-model'>id: ds.json-api-serializer.deprecated-payload-type-for-model</h6><h6 class='anchorable-toc' id='toc_feature-ds-payload-type-hooks'>feature: ds-payload-type-hooks</h6>
 <p>Using <code>JSONAPISerializer.payloadKeyFromModelName</code> to serialize the type of a
 model has been deprecated in favor of
 <a href="http://emberjs.com/api/data/classes/DS.JSONAPISerializer.html#method_payloadTypeFromModelName"><code>JSONAPISerializer.payloadTypeFromModelName</code></a>.</p>
@@ -876,7 +927,7 @@ namespace to the <code>modelName</code>:</p>
 });
 </pre></td>
 </tr></table>
-</div></div><h4 class='anchorable-toc' id='toc_jsonapiserializer-payloadkeyfrommodelname-for-belongsto-relationship'>JSONAPISerializer.payloadKeyFromModelName for belongsTo Relationship</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-json-api-serializer-deprecated-payload-type-for-belongs-to'>id: ds.json-api-serializer.deprecated-payload-type-for-belongs-to</h6><h6 class='anchorable-toc' id='toc_feature-ds-payload-type-hooks'>feature: ds-payload-type-hooks</h6>
+</div></div><h4 class='anchorable-toc' id='toc_jsonapiserializer-payloadkeyfrommodelname-for-belongsto-relationship'>JSONAPISerializer.payloadKeyFromModelName for belongsTo Relationship</h4><h6 class='anchorable-toc' id='toc_until-4-0-0'>until: 4.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-json-api-serializer-deprecated-payload-type-for-belongs-to'>id: ds.json-api-serializer.deprecated-payload-type-for-belongs-to</h6><h6 class='anchorable-toc' id='toc_feature-ds-payload-type-hooks'>feature: ds-payload-type-hooks</h6>
 <p>Using <code>JSONAPISerializer.payloadKeyFromModelName</code> to serialize the type of a
 <code>belongsTo</code> relationship has been deprecated in favor of
 <a href="http://emberjs.com/api/data/classes/DS.JSONAPISerializer.html#method_payloadTypeFromModelName"><code>JSONAPISerializer.payloadTypeFromModelName</code></a>.</p>
@@ -884,7 +935,7 @@ namespace to the <code>modelName</code>:</p>
 <p>See <a href="#toc_jsonapiserializer-payloadkeyfrommodelname-for-resource">JSONAPISerializer.payloadKeyFromModelName for
 Resource</a> for more
 information.</p>
-<h4 class='anchorable-toc' id='toc_jsonapiserializer-payloadkeyfrommodelname-for-hasmany-relationship'>JSONAPISerializer.payloadKeyFromModelName for hasMany Relationship</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-json-api-serializer-deprecated-payload-type-for-has-many'>id: ds.json-api-serializer.deprecated-payload-type-for-has-many</h6><h6 class='anchorable-toc' id='toc_feature-ds-payload-type-hooks'>feature: ds-payload-type-hooks</h6>
+<h4 class='anchorable-toc' id='toc_jsonapiserializer-payloadkeyfrommodelname-for-hasmany-relationship'>JSONAPISerializer.payloadKeyFromModelName for hasMany Relationship</h4><h6 class='anchorable-toc' id='toc_until-4-0-0'>until: 4.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-json-api-serializer-deprecated-payload-type-for-has-many'>id: ds.json-api-serializer.deprecated-payload-type-for-has-many</h6><h6 class='anchorable-toc' id='toc_feature-ds-payload-type-hooks'>feature: ds-payload-type-hooks</h6>
 <p>Using <code>JSONAPISerializer.payloadKeyFromModelName</code> to serialize the type of a
 <code>hasMany</code> relationship has been deprecated in favor of
 <a href="http://emberjs.com/api/data/classes/DS.JSONAPISerializer.html#method_payloadTypeFromModelName"><code>JSONAPISerializer.payloadTypeFromModelName</code></a>.</p>
@@ -892,58 +943,7 @@ information.</p>
 <p>See <a href="#toc_jsonapiserializer-payloadkeyfrommodelname-for-resource">JSONAPISerializer.payloadKeyFromModelName for
 Resource</a> for more
 information.</p>
-<h4 class='anchorable-toc' id='toc_unused-initializers'>Unused Initializers</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-ds-deprecated-initializers'>id: ds.deprecated-initializers</h6>
-<p>The Ember Data initializers <code>data-adapter</code>, <code>injectStore</code>, <code>transforms</code>, and <code>store</code> are no longer used, so they are being removed.
-Applications that depend on these for the ordering of their own custom initializers can substitute <code>ember-data</code> instead, without any change in functionality.</p>
 
-<p>Before:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-</pre></td>
-  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">function</span> <span class="function">initialize</span>(application) {
-  <span class="comment">// ... your code ...</span>
-};
-
-<span class="reserved">export</span> <span class="keyword">default</span> {
-  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">websocketInit</span><span class="delimiter">'</span></span>,
-  <span class="key">after</span>: <span class="string"><span class="delimiter">'</span><span class="content">store</span><span class="delimiter">'</span></span>,
-  <span class="key">initialize</span>: initialize
-};
-</pre></td>
-</tr></table>
-</div></div>
-<p>After:</p>
-<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
-  <td class="line-numbers"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-</pre></td>
-  <td class="code"><pre><span class="reserved">export</span> <span class="keyword">function</span> <span class="function">initialize</span>(application) {
-  <span class="comment">// ... your code ...</span>
-};
-
-<span class="reserved">export</span> <span class="keyword">default</span> {
-  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">websocketInit</span><span class="delimiter">'</span></span>,
-  <span class="key">after</span>: <span class="string"><span class="delimiter">'</span><span class="content">ember-data</span><span class="delimiter">'</span></span>,
-  <span class="key">initialize</span>: initialize
-};
-</pre></td>
-</tr></table>
-</div></div>
 
       </div>
     </div>
