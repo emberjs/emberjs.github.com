@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="theme-color" content="#e46652">
+    <title>Ember.js - Deprecations for Ember CLI v2.x</title>
+    <meta property="st:title" content="Ember.js: Deprecations for Ember CLI v2.x" />
+    <meta property="og:title" content="Ember.js: Deprecations for Ember CLI v2.x" />
+    <meta property="og:description" content="Ember.js helps developers be more productive out of the box. Designed with developer ergonomics in mind, its friendly APIs help you get your job done—fast." />
+    <meta property="og:image" content="http://emberjs.com/images/tomster-sm.png" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@emberjs" />
+    <meta name="twitter:title" content="Deprecations for Ember CLI v2.x"/>
+    <meta name="twitter:image" content="http://emberjs.com/images/tomster-twitter-card.png" />
+    <link rel="shortcut icon" href="/images/favicon-b8f150dd.png" />
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600" rel="stylesheet">
+    <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7-e008d616.css" rel="stylesheet" /><![endif]-->
+    <link href="/stylesheets/site-4f1ef5b3.css" rel="stylesheet" />
+    <link href="/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
+    <link rel="stylesheet" href="https://glimmer-styleguide.global.ssl.fastly.net/glimmer-styleguide/master/app-cf72b59a166beb307683d9d0dae6bb0f.css" />
+    
+  </head>
+
+  <body class="deprecations deprecations_ember-cli deprecations_ember-cli_v2 not-responsive">
+
+    <!--[if lt IE 9]>
+      <script type="text/javascript" src="/javascripts/common-old-ie-f9a6a6d5.js"></script>
+    <![endif]-->
+    <!--[if gte IE 9]><!-->
+      <script type="text/javascript" src="/javascripts/common-modern-8dbdc765.js"></script>
+    <!--<![endif]-->
+
+    <main-navbar></main-navbar>
+
+    
+
+    <div id="content-wrapper">
+        <div id="sidebar">
+              <ol id='toc-list'>
+    </ol>
+
+          <div id="back-to-top"><a id="back-top-top" href="#">&#11014; Back to Top</a></div>
+        </div>
+      <div id="content" class="has-sidebar">
+        
+  <h2 class='anchorable-toc' id='toc_deprecations-added-in-ember-cli-2-x'>Deprecations Added in Ember CLI 2.x</h2><h3 class='anchorable-toc' id='toc_deprecations-present-in-ember-cli-2-0-0'>Deprecations Present in Ember CLI 2.0.0</h3><h4 class='anchorable-toc' id='toc_migrate-from-brocfile-js-to-ember-cli-build-js'>Migrate from Brocfile.js to ember-cli-build.js</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-cli-brocfile'>id: cli.brocfile</h6>
+<p>Early versions of Ember CLI utilized the default build file of Broccoli: <code>Brocfile.js</code>. Over time
+we began realizing that this was not a tenable solution (we could not pass high fidelity objects
+into the build pipeline, and therefore created two instances of all addons, etc), and introduced a
+replacement for <code>Brocfile.js</code>: <code>ember-cli-build.js</code>.  The new structure allows Ember CLI to pass
+information into the function exported by <code>ember-cli-build.js</code> and avoid the issues mentioned above.</p>
+
+<p>The migration from <code>Brocfile.js</code> to <code>ember-cli-build.js</code> is fairly straight forward:</p>
+
+<p>Migrate <code>Brocfile.js</code> from:
+<code>js
+// Brocfile.js
+var EmberApp = require(&#39;ember-cli/lib/broccoli/ember-app&#39;);
+var app = new EmberApp();
+module.exports = app.toTree();
+</code></p>
+
+<p>To <code>ember-cli-build.js</code>:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre><span class="keyword">var</span> EmberApp = require(<span class="string"><span class="delimiter">'</span><span class="content">ember-cli/lib/broccoli/ember-app</span><span class="delimiter">'</span></span>);
+
+module.<span class="function">exports</span> = <span class="keyword">function</span>(defaults) {
+  <span class="keyword">var</span> app = <span class="keyword">new</span> EmberApp(defaults, {
+      <span class="comment">// Any options</span>
+  });
+
+  <span class="keyword">return</span> app.toTree();
+};
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-ember-cli-2-2-0'>Deprecations Added in Ember CLI 2.2.0</h3><h4 class='anchorable-toc' id='toc_deprecate-utility'>Deprecate Utility</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-cli-ui-deprecate'>id: cli.ui.deprecate</h6>
+<p>Using the <code>ember-cli/lib/utlities/deprecate</code> module to issue deprecations has been deprecated
+in favor of using <code>.writeDeprecateLine</code> method on the <code>ui</code> object (which is available on both
+addons and project instances).</p>
+
+<p>Migrate from:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre>const deprecate = require(<span class="string"><span class="delimiter">'</span><span class="content">ember-cli/lib/utilities/deprecate</span><span class="delimiter">'</span></span>);
+
+module.exports = {
+  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">my-addon-name</span><span class="delimiter">'</span></span>,
+
+  someMethod() {
+    deprecate(<span class="string"><span class="delimiter">'</span><span class="content">this thing is deprecated!</span><span class="delimiter">'</span></span>);
+  }
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>To:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>module.exports = {
+  <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">my-addon-name</span><span class="delimiter">'</span></span>,
+
+  someMethod() {
+    <span class="local-variable">this</span>.ui.writeDeprecateLine(<span class="string"><span class="delimiter">'</span><span class="content">this thing is deprecated!</span><span class="delimiter">'</span></span>);
+  }
+}
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-ember-cli-2-7-0'>Deprecations Added in Ember CLI 2.7.0</h3><h4 class='anchorable-toc' id='toc_base-url'>Base URL</h4><h6 class='anchorable-toc' id='toc_until-3-0-0'>until: 3.0.0</h6><h6 class='anchorable-toc' id='toc_id-cli-baseurl'>id: cli.baseURL</h6>
+<p>The usage of <code>baseURL</code> setting in <code>config/environments.js</code> has been deprecated in favor of using
+an explicit <code>rootURL</code>. A detailed explanation of the problem and the migration path can be found in
+<a href="/blog/2016/04/28/baseURL.html">this blog post</a>.</p>
+
+<p>Migration for pre-2.7 applications is:</p>
+
+<ol>
+<li>Update <code>config/environment.js</code> to remove reference to <code>baseURL</code> and update to <code>rootURL</code>.</li>
+<li>Update <code>app/index.html</code> to add <code>{{rootURL}}</code> a the beginning of all assets that are loaded.</li>
+<li>Update the <code>app/router.js</code> to pass <code>rootURL</code> to the subclass of <code>Ember.Router</code> being created.</li>
+</ol>
+
+<p>More detailed descriptions of this migration can be found on the blog: <a href="/blog/2016/04/28/baseURL.html">here</a></p>
+<h3 class='anchorable-toc' id='toc_deprecations-added-in-ember-cli-2-12-0'>Deprecations Added in Ember CLI 2.12.0</h3><h4 class='anchorable-toc' id='toc_clobbering-addon-options'>Clobbering Addon#options</h4>
+<p>Clobbering <code>this.options</code> within an addon has been deprecated. If you would like to use <code>this.options</code>
+for internal options within your addon, you must preserve the intitial options object that is present.</p>
+
+<p>Instead of doing this:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>included() {
+  <span class="local-variable">this</span>.options = { my-addons: { <span class="key">special</span>: { <span class="key">options</span>: <span class="string"><span class="delimiter">'</span><span class="content">here</span><span class="delimiter">'</span></span> } } };
+}
+</pre></td>
+</tr></table>
+</div></div>
+<p>You should do the following:</p>
+<div class="highlight js "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+</pre></td>
+  <td class="code"><pre>included() {
+  <span class="local-variable">this</span>.options = <span class="local-variable">this</span>.options || {};
+  <span class="local-variable">this</span>.options[<span class="string"><span class="delimiter">'</span><span class="content">my-addons</span><span class="delimiter">'</span></span>] = { <span class="key">special</span>: { <span class="key">options</span>: <span class="string"><span class="delimiter">'</span><span class="content">here</span><span class="delimiter">'</span></span> } };
+}
+</pre></td>
+</tr></table>
+</div></div>
+
+      </div>
+    </div>
+
+    <main-footer></main-footer>
+
+        <script type="text/javascript" src="/javascripts/deprecations-1921f6e5.js"></script>
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+      _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+      _gaq.push(['_setAccount', 'UA-27675533-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/custom-elements/1.0.0/custom-elements.min.js"></script>
+    <script src="https://glimmer-styleguide.global.ssl.fastly.net/glimmer-styleguide/master/app-e9fb0ee612345875c7e6f01760c81101.js"></script>
+  </body>
+</html>
