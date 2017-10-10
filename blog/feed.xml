@@ -5,10 +5,802 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2017-10-03T00:00:00+00:00</updated>
+  <updated>2017-10-10T00:00:00+00:00</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>Glimmer.js Progress Report</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2017/10/10/glimmer-progress-report.html"/>
+    <id>http://emberjs.com/blog/2017/10/10/glimmer-progress-report.html</id>
+    <published>2017-10-10T00:00:00+00:00</published>
+    <updated>2017-10-10T00:00:00+00:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;At EmberConf in March of this year, &lt;a href="https://emberjs.com/blog/2017/04/05/emberconf-2017-state-of-the-union.html#toc_introducing-glimmer-js"&gt;we announced Glimmer.js&lt;/a&gt;, a
+library for building modern UI components optimized for the mobile web. I wanted
+to give an update on what we've been working on since then.&lt;/p&gt;
+
+&lt;p&gt;There were two primary motivations for releasing...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;At EmberConf in March of this year, &lt;a href="https://emberjs.com/blog/2017/04/05/emberconf-2017-state-of-the-union.html#toc_introducing-glimmer-js"&gt;we announced Glimmer.js&lt;/a&gt;, a
+library for building modern UI components optimized for the mobile web. I wanted
+to give an update on what we&amp;#39;ve been working on since then.&lt;/p&gt;
+
+&lt;p&gt;There were two primary motivations for releasing Glimmer.js as a standalone project:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;We wanted people who aren&amp;#39;t &amp;quot;all in&amp;quot; on Ember to have a way to incrementally
+adopt part of the framework.&lt;/li&gt;
+&lt;li&gt;We wanted a laboratory where we could freely run experiments on what a
+next-generation component library might look like, without creating churn for
+Ember users.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Because Ember&amp;#39;s rendering layer is built on top of the shared Glimmer VM,
+successful experiments have a clear path to make their way upstream to Ember
+users. And, once stabilized, we&amp;#39;d like Glimmer.js to be the default component
+API for new Ember apps—but it&amp;#39;s still too premature to set any timelines for
+that today.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_unlocking-experimentation'&gt;Unlocking Experimentation&lt;/h2&gt;
+&lt;p&gt;While Ember is known for incorporating the best ideas from across the JavaScript
+ecosystem, it&amp;#39;s important that we contribute back our own innovations, too.
+Refining new ideas takes time and, often, a few false starts. How do we
+reconcile the need to experiment with Ember&amp;#39;s vaunted stability guarantees?&lt;/p&gt;
+
+&lt;p&gt;One of the themes we discussed in our keynote was a new focus on &lt;em&gt;unlocking
+experimentation&lt;/em&gt;, that is, allowing people to easily try out and share unproven
+ideas on top of the stable Ember core.&lt;/p&gt;
+
+&lt;p&gt;Unlocking experimentation doesn&amp;#39;t just allow for &lt;em&gt;more&lt;/em&gt; ideas; it also leads to
+&lt;em&gt;better&lt;/em&gt; ideas, because you can try things without worrying about breaking
+changes. With Glimmer.js, we wanted to eat our own experimental dogfood.&lt;/p&gt;
+
+&lt;p&gt;We&amp;#39;ve wanted to overhaul the component API in Ember for some time now. But
+because components play such a central role, we knew that we &lt;em&gt;had&lt;/em&gt; to have a
+tangible implementation for people to play with before we could credibly ask
+them to comment on an RFC. And we knew that having an implementation would
+almost certainly shake out problems with the design that we would need to
+address.&lt;/p&gt;
+
+&lt;p&gt;Glimmer.js is our way to iterate on a new component API until we have something
+we feel confident submitting to the Ember RFC process.&lt;/p&gt;
+
+&lt;p&gt;We&amp;#39;ve already received incredibly useful feedback from early adopters. In
+addition, fellow core team member Chad Hietala and I have been on a team at
+LinkedIn using Glimmer.js to build a production application.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://david.heinemeierhansson.com/posts/6-why-theres-no-rails-inc"&gt;To quote DHH&lt;/a&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;The best frameworks are in my opinion extracted, not envisioned. And the best
+way to extract is first to actually do.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;If you notice that a lot of the items I describe below are performance-related,
+that is at least partly due to our product&amp;#39;s all-consuming focus on mobile load
+times. We are extremely excited about some of the recent breakthroughs we&amp;#39;ve
+made and have enjoyed proving out some of our more esoteric ideas in a real app.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_what-s-new-in-glimmer'&gt;What&amp;#39;s New in Glimmer&lt;/h2&gt;
+&lt;p&gt;We&amp;#39;ve been really, really busy and I&amp;#39;ve got a ton of updates to share with you. This blog post
+got pretty long, so here&amp;#39;s the short version:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;We&amp;#39;re adopting &lt;code&gt;&amp;lt;Capital /&amp;gt;&lt;/code&gt;-style component syntax.&lt;/li&gt;
+&lt;li&gt;We&amp;#39;re adding support for customizing a component&amp;#39;s DOM attributes with &lt;code&gt;...attributes&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;You&amp;#39;ll be able to teleport your component&amp;#39;s elements anywhere in the DOM with the built-in &lt;code&gt;{{in-element}}&lt;/code&gt; helper.&lt;/li&gt;
+&lt;li&gt;We&amp;#39;ve now got what we think might just be the fastest component library in the running, with:
+
+&lt;ol&gt;
+&lt;li&gt;Compiled binary bytecode&lt;/li&gt;
+&lt;li&gt;Incremental rendering&lt;/li&gt;
+&lt;li&gt;SSR with incremental rehydration
+&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 class='anchorable-toc' id='toc_adopting-code-capital-code-components'&gt;Adopting &lt;code&gt;&amp;lt;Capital /&amp;gt;&lt;/code&gt; Components&lt;/h3&gt;
+&lt;p&gt;One of the most eagerly-awaited features of Glimmer.js is &amp;quot;angle bracket
+components,&amp;quot; or components that you invoke &lt;code&gt;&amp;lt;like-this /&amp;gt;&lt;/code&gt; instead of
+&lt;code&gt;{{like-this}}&lt;/code&gt;. I personally really like this syntax because it visually
+disambiguates components from the dynamic data that flows through them.
+It also unifies the attribute syntax between HTML and components:&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;{{! Ember }}&lt;/span&gt;
+&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;my-button&lt;/span&gt; &lt;span class="attribute-name"&gt;title&lt;/span&gt;=&lt;span class="attribute-value"&gt;title&lt;/span&gt; &lt;span class="attribute-name"&gt;label&lt;/span&gt;=&lt;span class="error"&gt;(&lt;/span&gt;&lt;span class="attribute-value"&gt;t&lt;/span&gt; &lt;span class="error"&gt;&amp;quot;&lt;/span&gt;&lt;span class="attribute-name"&gt;Do&lt;/span&gt; &lt;span class="attribute-name"&gt;Something&lt;/span&gt;&lt;span class="error"&gt;&amp;quot;&lt;/span&gt;&lt;span class="error"&gt;)&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+
+&lt;span class="comment"&gt;{{! HTML }}&lt;/span&gt;
+&lt;span class="tag"&gt;&amp;lt;button&lt;/span&gt; &lt;span class="attribute-name"&gt;title&lt;/span&gt;=&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;title&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-value"&gt;label&lt;/span&gt;&lt;span class="error"&gt;=&lt;/span&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;t&lt;/span&gt; &lt;span class="error"&gt;&amp;quot;&lt;/span&gt;&lt;span class="attribute-name"&gt;Do&lt;/span&gt; &lt;span class="attribute-name"&gt;Something&lt;/span&gt;&lt;span class="error"&gt;&amp;quot;&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
+
+&lt;span class="comment"&gt;{{! Glimmer.js (today) }}&lt;/span&gt;
+&lt;span class="tag"&gt;&amp;lt;my-button&lt;/span&gt; &lt;span class="error"&gt;@&lt;/span&gt;&lt;span class="attribute-name"&gt;title&lt;/span&gt;=&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;title&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt; &lt;span class="error"&gt;@&lt;/span&gt;&lt;span class="attribute-value"&gt;label&lt;/span&gt;&lt;span class="error"&gt;=&lt;/span&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;t&lt;/span&gt; &lt;span class="error"&gt;&amp;quot;&lt;/span&gt;&lt;span class="attribute-name"&gt;Do&lt;/span&gt; &lt;span class="attribute-name"&gt;Something&lt;/span&gt;&lt;span class="error"&gt;&amp;quot;&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt; &lt;span class="tag"&gt;/&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;This syntax is how Glimmer.js works today. However, the more we discussed the
+design and started using it in real projects, the more we believed that this
+exact API was flawed and needed to be rethought.&lt;/p&gt;
+
+&lt;p&gt;First, a short history lesson. When we introduced components in Ember (back
+before Ember 1.0!), we required them to include a dash (&lt;code&gt;-&lt;/code&gt;) in their name. This
+rule came from the then-new &lt;a href="https://www.w3.org/TR/custom-elements/#custom-element-conformance"&gt;Custom Elements spec&lt;/a&gt;, a key part
+of the Web Components API.&lt;/p&gt;
+
+&lt;p&gt;Web Components have the problem of needing to disambiguate between built-in elements
+and custom elements. What happens if I make a component called &lt;code&gt;&amp;lt;vr&amp;gt;&amp;lt;/vr&amp;gt;&lt;/code&gt; and later
+the browser adds a built-in Virtual Reality element with the same name?&lt;/p&gt;
+
+&lt;p&gt;The compromise was that custom elements must have a dash, keeping single-word
+elements reserved for future versions of the HTML standard.&lt;/p&gt;
+
+&lt;p&gt;Of course, Ember components don&amp;#39;t have the same problem, because they use
+&lt;code&gt;{{&lt;/code&gt; and &lt;code&gt;}}&lt;/code&gt; as delimeters instead of &lt;code&gt;&amp;lt;&lt;/code&gt; and &lt;code&gt;&amp;gt;&lt;/code&gt;. Nonetheless, we preemptively adopted
+this constraint because we assumed Web Components were going to take the world
+by storm and at some point we would need to migrate Ember components to Web
+Components.&lt;/p&gt;
+
+&lt;p&gt;As time has passed, though, it&amp;#39;s become increasingly clear that the use cases
+served by Web Components, wonderful as they are, do not have the full set of
+functionality to replace everything that an Ember component (or React component,
+etc.) needs to do.&lt;/p&gt;
+
+&lt;p&gt;Meanwhile, the more components I write, the more grating the naming restriction
+feels. I hate the cognitive overhead of having to invent silly names like
+&lt;code&gt;{{x-button}}&lt;/code&gt; when a single word would be much more descriptive.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, this puts us in a bit of a pickle:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;We want to drop the annoying &lt;code&gt;dasherized-component&lt;/code&gt; requirement.&lt;/li&gt;
+&lt;li&gt;We want to adopt &lt;code&gt;&amp;lt;angle&amp;gt;&lt;/code&gt; brackets syntax for components, but now we have
+the same naming collision hazard as Web Components.&lt;/li&gt;
+&lt;li&gt;People want to use Web Components in their apps, so how do we know if
+&lt;code&gt;&amp;lt;my-button&amp;gt;&lt;/code&gt; means &amp;quot;create a custom element&amp;quot; or &amp;quot;create a Glimmer
+component&amp;quot;?&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The core team has circled around different designs for &lt;em&gt;months&lt;/em&gt;, and this topic
+has dominated both our weekly calls and our in-person meetings.&lt;/p&gt;
+
+&lt;p&gt;At the most recent face-to-face meeting in Austin, we finally reached consensus
+on a proposal that I&amp;#39;m really excited about.&lt;/p&gt;
+
+&lt;p&gt;How do you disambiguate between Glimmer components and HTML elements? Our
+proposal is to borrow the same rule that React uses: &lt;em&gt;components always start
+with a capital letter&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Our above example turns into this:&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="comment"&gt;{{! new Glimmer.js }}&lt;/span&gt;
+&lt;span class="tag"&gt;&amp;lt;Button&lt;/span&gt; &lt;span class="error"&gt;@&lt;/span&gt;&lt;span class="attribute-name"&gt;title&lt;/span&gt;=&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;title&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt; &lt;span class="error"&gt;@&lt;/span&gt;&lt;span class="attribute-value"&gt;label&lt;/span&gt;&lt;span class="error"&gt;=&lt;/span&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;t&lt;/span&gt; &lt;span class="error"&gt;&amp;quot;&lt;/span&gt;&lt;span class="attribute-name"&gt;Do&lt;/span&gt; &lt;span class="attribute-name"&gt;Something&lt;/span&gt;&lt;span class="error"&gt;&amp;quot;&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt; &lt;span class="tag"&gt;/&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;I love this for a few different reasons.&lt;/p&gt;
+
+&lt;p&gt;First, to me, the capital letter makes components &lt;em&gt;really&lt;/em&gt; stand out in the
+template, and we can improve syntax highlighting in editor plugins to make it
+stand out even more. It also makes it clear when you&amp;#39;re invoking a Web Component
+or not, whereas the original Glimmer.js syntax was ambiguous.&lt;/p&gt;
+
+&lt;p&gt;Second, I hate the friction of having to invent a two-word name. The app I work
+on has at least three different conventions people use to prefix or suffix
+components. It feels bad and makes templates look more noisy than they should.
+When we switched from dasherized to capitals, it felt viscerally like an
+improvement.&lt;/p&gt;
+
+&lt;p&gt;Third, for better or worse, many people consider React to be an &amp;quot;industry
+standard&amp;quot; and aligning component naming makes Glimmer templates feel that much
+more familiar. (Although do note that we are just adopting the naming
+convention, not JSX itself!)&lt;/p&gt;
+
+&lt;p&gt;This change also helps us solve the problem of &amp;quot;fragment&amp;quot; or &amp;quot;tagless&amp;quot;
+components, i.e., templates that don&amp;#39;t have a single root element.&lt;/p&gt;
+
+&lt;p&gt;While we&amp;#39;ve supported this in Ember for a long time, we were nervous about the
+potential for confusion if you typed something like &lt;code&gt;&amp;lt;my-button /&amp;gt;&lt;/code&gt; in a
+template, which looks like a Web Component, and it didn&amp;#39;t always correlate to a single
+element in the DOM.&lt;/p&gt;
+
+&lt;p&gt;Today in Glimmer.js, it is a compile-time error if your component template
+doesn&amp;#39;t have a single root element. With &lt;code&gt;&amp;lt;Capital&amp;gt;&lt;/code&gt; components, we will remove
+this restriction and allow you to have whatever you want in your template.&lt;/p&gt;
+
+&lt;p&gt;One side-effect of this is that we will replace &lt;code&gt;this.element&lt;/code&gt; (which today is a
+reference to the component&amp;#39;s root element) with &lt;code&gt;this.bounds.firstNode&lt;/code&gt; and
+&lt;code&gt;this.bounds.lastNode&lt;/code&gt;, allowing you to traverse the range of DOM nodes
+belonging to your component.&lt;/p&gt;
+
+&lt;p&gt;There are still some open questions about what, if any, sugar to provide for the
+single-element case.&lt;/p&gt;
+
+&lt;p&gt;For example, we could make &lt;code&gt;this.element&lt;/code&gt; available in just those cases,
+although we&amp;#39;re concerned that someone coming along and adding an extra element
+to a template could subtly break any code relying on &lt;code&gt;this.element&lt;/code&gt;. Another
+proposal was to set &lt;code&gt;this.element&lt;/code&gt; to the element with &lt;code&gt;...attributes&lt;/code&gt; on it
+(see below). We&amp;#39;re looking forward to more design and discussion about how to
+make this ergonomic without being error-prone.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_component-attributes'&gt;Component Attributes&lt;/h3&gt;
+&lt;p&gt;Without getting into a full explanation of the difference between properties and
+attributes in the DOM, suffice it to say that most web developers have a muddy mental
+model at best. (And rightfully so—it took me forever to understand the difference.)&lt;/p&gt;
+
+&lt;p&gt;While you can get pretty far pretending properties and attributes are
+interchangeable, eventually you are going to run into cases where you really
+have to set a property or you really have to set an attribute.&lt;/p&gt;
+
+&lt;p&gt;Server-side rendering (SSR) complicates the issue because, of course, HTML can
+&lt;em&gt;only&lt;/em&gt; serialize attributes, not properties.&lt;/p&gt;
+
+&lt;p&gt;One drawback of both Ember and React&amp;#39;s components is that they don&amp;#39;t do a great
+job of making it easy for consumers of components to set attributes.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s take React as an example (although, again, it applies just as much to
+Ember). I want to write a reusable &lt;code&gt;HiResImage&lt;/code&gt; component that anyone can
+install from npm and use in their apps. It wraps an &lt;code&gt;&amp;lt;img&amp;gt;&lt;/code&gt; element and renders
+a low-resolution image by default, swapping in a high-resolution image when
+clicked.&lt;/p&gt;
+&lt;div class="highlight  "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;td colspan="2"&gt;HiResImage.jsx&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;import { Component } from 'react';
+
+export default class HiResImage extends Component {
+  render(props, state) {
+    let showHiRes = () =&amp;gt; { this.setState({ hiRes: true }); }
+    let { src, hiResSrc } = props;
+    let { hiRes } = state;
+
+    return &amp;lt;img src={hiRes ? hiResSrc : src} onClick={showHiRes}&amp;gt;;
+  }
+}
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Now we can use the component like this:&lt;/p&gt;
+&lt;div class="highlight  "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;td colspan="2"&gt;HiResImage.jsx&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&amp;lt;HiResImage src=&amp;quot;corgi.jpg&amp;quot; hiResSrc=&amp;quot;corgi@2x.jpg&amp;quot; /&amp;gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;But what happens if I want to set the width of the underlying &lt;code&gt;img&lt;/code&gt; element via
+its &lt;code&gt;width&lt;/code&gt; attribute?&lt;/p&gt;
+&lt;div class="highlight  "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;td colspan="2"&gt;HiResImage.jsx&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&amp;lt;HiResImage width=&amp;quot;100%&amp;quot; src=&amp;quot;corgi.jpg&amp;quot; hiResSrc=&amp;quot;corgi@2x.jpg&amp;quot; /&amp;gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;This won&amp;#39;t work because the only attributes or properties that get set are the
+ones we&amp;#39;ve manually listed in our &lt;code&gt;render()&lt;/code&gt; method! The &lt;code&gt;width&lt;/code&gt; attribute here
+will just get ignored.&lt;/p&gt;
+
+&lt;p&gt;We have a few options, but none of them are that great.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;We could enumerate all of the possible valid &lt;code&gt;img&lt;/code&gt; attributes that might get
+passed in, but that is error-prone (new attributes get added all the time) and
+takes a lot of code.&lt;/li&gt;
+&lt;li&gt;We could use the spread operator (&lt;code&gt;...props&lt;/code&gt;), but that will set &lt;em&gt;everything&lt;/em&gt;
+passed in as an attribute, even &amp;quot;known&amp;quot; props that aren&amp;#39;t attributes, like
+&lt;code&gt;hiResSrc&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;If we&amp;#39;re using Babel, we can use rest syntax in object destructuring to
+separate &amp;quot;known&amp;quot; and &amp;quot;unknown&amp;quot; props: &lt;code&gt;let { src, hiResSrc, ...attrs } =
+props&lt;/code&gt;. But this requires non-trivial runtime work, and means any props passed
+in by accident will now be treated as an attribute.&lt;/li&gt;
+&lt;li&gt;In Preact, the problem is even trickier because it will always set the &lt;code&gt;width&lt;/code&gt;
+property no matter what, never the attribute. And setting the &lt;code&gt;width&lt;/code&gt;
+&lt;em&gt;property&lt;/em&gt; to &lt;code&gt;&amp;quot;100%&amp;quot;&lt;/code&gt; results in an image zero pixels wide.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;With Glimmer.js, you explicitly disambiguate between properties and attributes via
+the presence of the &lt;code&gt;@&lt;/code&gt; sigil. In symmetry with HTML, attributes do not have &lt;code&gt;@&lt;/code&gt;,
+while component arguments (&lt;code&gt;props&lt;/code&gt; in React parlance) do:&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;td colspan="2"&gt;template.hbs&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;HiResImage&lt;/span&gt; &lt;span class="error"&gt;@&lt;/span&gt;&lt;span class="attribute-name"&gt;src&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;corgi.jpg&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="error"&gt;@&lt;/span&gt;&lt;span class="attribute-name"&gt;hiResSrc&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;corgi@2x.jpg&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;width&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;100%&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="tag"&gt;/&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;In this example, &lt;code&gt;src&lt;/code&gt; and &lt;code&gt;hiResSrc&lt;/code&gt; are JavaScript values passed as arguments
+to the component object, and &lt;code&gt;width&lt;/code&gt; is serialized to a string and set as an
+attribute.&lt;/p&gt;
+
+&lt;p&gt;&amp;quot;But wait,&amp;quot; you ask, &amp;quot;if components aren&amp;#39;t required to have a single root
+element anymore, where do attributes go?&amp;quot;&lt;/p&gt;
+
+&lt;p&gt;With recent changes in Glimmer VM, we can now support an &lt;code&gt;...attributes&lt;/code&gt; syntax
+that we&amp;#39;ve colloquially started calling &amp;quot;splattributes&amp;quot; (because they &amp;quot;splat&amp;quot;
+attributes from the outside onto an element).&lt;/p&gt;
+
+&lt;p&gt;In our case, the Glimmer.js version of the &lt;code&gt;HiResImage&lt;/code&gt; component might look like this:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;td colspan="2"&gt;component.js&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;import&lt;/span&gt; Component, { tracked } from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;@glimmer/component&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; &lt;span class="reserved"&gt;class&lt;/span&gt; HiResImage &lt;span class="reserved"&gt;extends&lt;/span&gt; Component {
+  &lt;span class="error"&gt;@&lt;/span&gt;tracked hiRes = &lt;span class="predefined-constant"&gt;false&lt;/span&gt;;
+
+  showHiRes() {
+    &lt;span class="local-variable"&gt;this&lt;/span&gt;.hiRes = &lt;span class="predefined-constant"&gt;true&lt;/span&gt;;
+  }
+}
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;td colspan="2"&gt;template.hbs&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{#&lt;/span&gt;&lt;span class="attribute-name"&gt;if&lt;/span&gt; &lt;span class="attribute-name"&gt;hiRes&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+  &lt;span class="tag"&gt;&amp;lt;img&lt;/span&gt; &lt;span class="attribute-name"&gt;src&lt;/span&gt;=&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="error"&gt;@&lt;/span&gt;&lt;span class="attribute-name"&gt;hiResSrc&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-value"&gt;...attributes&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;else&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+  &lt;span class="tag"&gt;&amp;lt;img&lt;/span&gt; &lt;span class="attribute-name"&gt;src&lt;/span&gt;=&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="error"&gt;@&lt;/span&gt;&lt;span class="attribute-name"&gt;src&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt; &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;on&lt;/span&gt; &lt;span class="attribute-name"&gt;click&lt;/span&gt;=&lt;span class="error"&gt;(&lt;/span&gt;&lt;span class="attribute-value"&gt;action&lt;/span&gt; &lt;span class="attribute-name"&gt;showHiRes&lt;/span&gt;&lt;span class="error"&gt;)&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-value"&gt;...attributes&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{/&lt;/span&gt;&lt;span class="attribute-name"&gt;if&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Here, any attributes passed in on the invoking side will be &amp;quot;splatted&amp;quot; onto the
+appropriate element.&lt;/p&gt;
+
+&lt;p&gt;So what happens if you try to pass attributes to a component that doesn&amp;#39;t have
+&lt;code&gt;...attributes&lt;/code&gt;? At runtime, you&amp;#39;ll get a hard error telling you that the
+component should add &lt;code&gt;...attributes&lt;/code&gt; to one or more elements. We can probably
+produce compile-time errors in the majority of less dynamic cases, too.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_portals'&gt;Portals&lt;/h3&gt;
+&lt;p&gt;Typically, the component hierarchy maps directly to the DOM hierarchy, meaning
+all of a component&amp;#39;s elements are rendered inside a DOM element that belongs to
+the parent component.&lt;/p&gt;
+
+&lt;p&gt;Occasionally, though, it can be helpful to break out of the current DOM tree and
+render a component&amp;#39;s content somewhere else. While there are many different use
+cases, the most common one I&amp;#39;ve seen is for rendering modal dialogs.&lt;/p&gt;
+
+&lt;p&gt;This is easy to do now with the built-in &lt;code&gt;{{in-element}}&lt;/code&gt; helper. This helper
+will render the block you pass to it inside a foreign element. (In React-land,
+this functionality is usually referred to as a portal, and as of React 16 is
+included by default in &lt;code&gt;react-dom&lt;/code&gt;.)&lt;/p&gt;
+
+&lt;p&gt;For example, if I had a &lt;code&gt;Modal&lt;/code&gt; component and I wanted to always render its
+content into a specially-styled element at the root of the body (with &lt;code&gt;position:
+fixed&lt;/code&gt;, say), I might write it like this:&lt;/p&gt;
+&lt;div class="highlight javascript "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;td colspan="2"&gt;component.js&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;import&lt;/span&gt; Component from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;@glimmer/component&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; &lt;span class="reserved"&gt;class&lt;/span&gt; Modal &lt;span class="reserved"&gt;extends&lt;/span&gt; Component {
+  modalElement = document.getElemenyById(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;modal&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;);
+}
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;td colspan="2"&gt;template.hbs&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{#&lt;/span&gt;&lt;span class="attribute-name"&gt;in-element&lt;/span&gt; &lt;span class="attribute-name"&gt;modalElement&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+  &lt;span class="tag"&gt;&amp;lt;h1&amp;gt;&lt;/span&gt;Modal&lt;span class="tag"&gt;&amp;lt;/h1&amp;gt;&lt;/span&gt;
+  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;yield&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{/&lt;/span&gt;&lt;span class="attribute-name"&gt;in-element&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Now in my app, I can invoke my &lt;code&gt;Modal&lt;/code&gt; component as deep into the hierarchy as I
+want, and the content will be rendered into the root modal element:&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;td colspan="2"&gt;template.hbs&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{#&lt;/span&gt;&lt;span class="attribute-name"&gt;if&lt;/span&gt; &lt;span class="attribute-name"&gt;hasErrors&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+  &lt;span class="tag"&gt;&amp;lt;Modal&amp;gt;&lt;/span&gt;
+    &lt;span class="tag"&gt;&amp;lt;p&amp;gt;&lt;/span&gt;You dun goofed:&lt;span class="tag"&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
+    &lt;span class="tag"&gt;&amp;lt;ul&amp;gt;&lt;/span&gt;
+      &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{#&lt;/span&gt;&lt;span class="attribute-name"&gt;each&lt;/span&gt; &lt;span class="attribute-name"&gt;errors&lt;/span&gt; &lt;span class="attribute-name"&gt;as&lt;/span&gt; &lt;span class="error"&gt;|&lt;/span&gt;&lt;span class="attribute-name"&gt;error&lt;/span&gt;&lt;span class="error"&gt;|&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+        &lt;span class="tag"&gt;&amp;lt;li&amp;gt;&lt;/span&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;error&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
+      &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{/&lt;/span&gt;&lt;span class="attribute-name"&gt;each&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+    &lt;span class="tag"&gt;&amp;lt;/ul&amp;gt;&lt;/span&gt;
+  &lt;span class="tag"&gt;&amp;lt;/Modal&amp;gt;&lt;/span&gt;
+&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{/&lt;/span&gt;&lt;span class="attribute-name"&gt;if&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;h3 class='anchorable-toc' id='toc_binary-templates'&gt;Binary Templates&lt;/h3&gt;
+&lt;p&gt;It&amp;#39;s crucial that web apps render instantly, or else users go elsewhere. When it
+comes to improving web performance, one of the most frequent recommendations
+you&amp;#39;ll hear is to minimize the amount of total JavaScript in your app.&lt;/p&gt;
+
+&lt;p&gt;There are two reasons for this: not only does more JavaScript take longer to
+download, just &lt;em&gt;parsing&lt;/em&gt; the JavaScript can become a noticeable bottleneck on
+underpowered devices.&lt;/p&gt;
+
+&lt;p&gt;Complicating the advice to &amp;quot;use less JavaScript&amp;quot; is the fact that most modern
+JavaScript libraries, including Angular, React, Vue and Svelte, compile
+component templates (or JSX) to JavaScript, which gets embedded in application
+code. Without aggressive hand optimization, more templates means more
+JavaScript.&lt;/p&gt;
+
+&lt;p&gt;Ember used to do the same thing, compiling Handlebars templates into JavaScript
+code that would first create and then update a component&amp;#39;s DOM tree.&lt;/p&gt;
+
+&lt;p&gt;With Glimmer, however, we took a different approach. Instead of generating
+JavaScript, today we compile templates into a JSON data structure of &amp;quot;opcodes,&amp;quot;
+or rendering instructions. A small runtime evaluates these opcodes, translating
+them into DOM creation, DOM updates, invocation of component hooks, etc.&lt;/p&gt;
+
+&lt;p&gt;Not only is &lt;a href="https://jsperf.com/json-parse-vs-eval-corrected/1"&gt;a JSON parser much faster than a full-blown JavaScript
+parser&lt;/a&gt;, aggressively sharing
+code in the Glimmer VM generates less on-device memory pressure and allows
+JavaScript engines like V8 to more quickly generate JIT-optimized code.&lt;/p&gt;
+
+&lt;p&gt;Best of all, our compact JSON format is significantly smaller than the
+equivalent compiled JavaScript. We received many reports of apps dropping 30-50%
+in total (post-gzip!) size after upgrading to Ember 2.10, the first version to
+use this JSON-based approach.&lt;/p&gt;
+
+&lt;p&gt;As exciting as this was, we knew that JSON was not the final word in compactly
+and efficiently representing compiled templates.&lt;/p&gt;
+
+&lt;p&gt;At runtime, the Glimmer VM today gathers the JSON for each template and compiles
+them into a final, internal representation that is just a large array of 32-bit
+integers. After looking at traces of real-world Glimmer.js apps, we knew we
+could improve boot times by precomputing this final compilation step at build
+time.&lt;/p&gt;
+
+&lt;p&gt;Helpfully, browsers have become increasingly fluent at dealing with binary data,
+largely driven by demanding multimedia use cases like audio, video, and 3D
+graphics. And while JSON is fast to parse, as the old saw goes, no parse is faster
+than &lt;em&gt;no&lt;/em&gt; parse. What if we could serialize compiled templates into a binary format
+that the VM could start executing &lt;em&gt;without a parse step&lt;/em&gt;?&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;m no M. Night Shyamalan, so you&amp;#39;ve probably already guessed the ending here:
+that&amp;#39;s exactly what we&amp;#39;ve done. Recent versions of Glimmer VM include the
+&lt;code&gt;@glimmer/bundle-compiler&lt;/code&gt; package, our name for the compiler that produces a
+binary &amp;quot;bundle&amp;quot; of all of your compiled templates.&lt;/p&gt;
+
+&lt;p&gt;We are planning to land support for binary templates as an opt-in in Glimmer.js
+soon. (The feature is already landed in the low-level Glimmer VM but is not yet
+exposed in a convenient way.)&lt;/p&gt;
+
+&lt;p&gt;One thing to note about the bundle compiler is that it requires knowing your
+entire program statically at build time. The browser tends to be a pretty
+dynamic environment, however, so Glimmer VM still supports &amp;quot;lazy compilation&amp;quot;
+(i.e. compiling to JSON) as a first-class mode.&lt;/p&gt;
+
+&lt;p&gt;In the Ember ecosystem, apps and addons do very dynamic things (like register
+components at runtime) which are incompatible with the bundle compiler. We want
+to enable binary templates in Ember, but this is farther out because we will
+need to figure out exactly what the constraints are and provide guidance for
+app and addon authors.&lt;/p&gt;
+
+&lt;p&gt;In exchange for the (admittedly pretty incredible) performance benefits, binary
+templates also introduce extra complexity.&lt;/p&gt;
+
+&lt;p&gt;Binary templates can&amp;#39;t be inlined in HTML or JavaScript, so they must be fetched
+as early as possible in the page lifecycle. No browser I tested yet supports
+&lt;code&gt;&amp;lt;link rel=&amp;quot;preload&amp;quot; as=&amp;quot;fetch&amp;quot;&amp;gt;&lt;/code&gt;, which would allow a streaming HTML parser to
+detect and fetch binary data very early in the page load. No tools or CDNs know
+what the heck a &lt;code&gt;.gbx&lt;/code&gt; file is (the file extension of compiled binaries), and
+require manual configuration. You probably want H2 Push for this, but that&amp;#39;s
+its own can of worms.&lt;/p&gt;
+
+&lt;p&gt;Getting these optimally deployed will probably be painful for a while, but I have
+faith that the Ember community will do what it does best and rally around a set
+of shared, high quality solutions for dealing with this.&lt;/p&gt;
+
+&lt;p&gt;If you&amp;#39;re curious about the details of how binary templates work, don&amp;#39;t miss
+Chad&amp;#39;s &lt;a href="https://www.linkedin.com/pulse/glimmers-optimizing-compiler-chad-hietala/"&gt;recent post about the optimizing
+compiler&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_server-side-rendering'&gt;Server-Side Rendering&lt;/h3&gt;
+&lt;p&gt;Server-side rendering, or SSR, is a technique for rendering your components on
+the server. It allows you to send meaningful HTML to a user&amp;#39;s browser so that
+they see something other than an empty white rectangle before your JavaScript
+finishes loading.&lt;/p&gt;
+
+&lt;p&gt;Ember supports SSR through &lt;a href="https://ember-fastboot.com/"&gt;FastBoot&lt;/a&gt;, and Glimmer
+VM is Ember&amp;#39;s rendering engine, so you can probably guess that Glimmer already
+has support for SSR, too.&lt;/p&gt;
+
+&lt;p&gt;That&amp;#39;s true, but there are two shortcomings we want to address:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Running Glimmer.js apps in SSR mode is not as easy as it should be.&lt;/li&gt;
+&lt;li&gt;Today we take a performance hit because of how we serialize to HTML.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;To address the first problem, we are going to make SSR a first-class API and
+document exactly how you go from writing a Glimmer.js app to connecting it to a
+Node HTTP server.&lt;/p&gt;
+
+&lt;p&gt;Second, after looking at profiles of our app running in SSR mode, we noticed
+that there is some low-hanging fruit to pick in how we generate HTML.&lt;/p&gt;
+
+&lt;p&gt;Glimmer is able to run in Node because, internally, we use an abstraction for building
+and modifying the DOM. Instead of calling &lt;code&gt;document.createElement(tagName)&lt;/code&gt; directly, for
+example, an opcode might instead call &lt;code&gt;this.dom.createElement(tagName)&lt;/code&gt;, going through a DOM
+construction helper.&lt;/p&gt;
+
+&lt;p&gt;In the browser, this just proxies to &lt;code&gt;document.createElement&lt;/code&gt;, but in Node, we
+instead use &lt;a href="https://github.com/ember-fastboot/simple-dom"&gt;simple-dom&lt;/a&gt;, a
+lightweight implementation of a small subset of the DOM API—a &amp;quot;virtual DOM,&amp;quot; if
+you will. Once rendering is complete, we use simple-dom&amp;#39;s built-in serializer to convert
+the DOM tree to HTML and send it over the wire.&lt;/p&gt;
+
+&lt;p&gt;This approach has the huge advantage of keeping the DOM mutable, just like in
+the browser. Particularly with FastBoot, where we wanted existing Ember apps to
+be able to adopt SSR, this was an important compatibility feature.&lt;/p&gt;
+
+&lt;p&gt;The downside to preserving mutability is that it introduces a performance
+double-whammy.&lt;/p&gt;
+
+&lt;p&gt;HTML is immutable, in the sense that once I write &lt;code&gt;&amp;lt;div&amp;gt;&lt;/code&gt;, there&amp;#39;s nothing I can
+write later in the file to go back and add an attribute to that element. If the
+DOM is mutable, then we have to wait for the entire document to settle before we
+can serialize to HTML and start writing to the HTTP socket.&lt;/p&gt;
+
+&lt;p&gt;This delays the time to first byte (TTFB) by at least the time it takes to
+render the entire page, even though many of the components may have finished
+rendering hundreds of milliseconds previously.&lt;/p&gt;
+
+&lt;p&gt;The other performance hit is that we now have two (often large) trees to
+traverse: first we walk the tree of components in the initial render, and then
+we have to walk DOM tree during HTML serialization. This is predominantly a CPU
+cost, but allocating all of these temporary &amp;quot;virtual DOM&amp;quot; nodes doesn&amp;#39;t help
+memory costs, either.&lt;/p&gt;
+
+&lt;p&gt;Chad has been doing some experiments with implementing a version of our DOM
+abstraction that writes HTML directly to a stream. This solves both of the
+above-mentioned performance pitfalls nicely.&lt;/p&gt;
+
+&lt;p&gt;By writing directly to the stream, the host Node environment can start flushing
+bytes to the browser immediately in a background thread. And by writing strings
+directly to the stream buffer, we can avoid allocating intermediate data
+structures entirely.&lt;/p&gt;
+
+&lt;p&gt;For this to work, we have to introduce two requirements:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Components can only render once on the server, so any data fetching needs to
+happen &lt;em&gt;before&lt;/em&gt; the initial render starts.&lt;/li&gt;
+&lt;li&gt;Internally, we need to order opcodes to align with HTML; that is, we need to
+ensure that we always create an element and set its attributes before
+attempting to append any child nodes. (Luckily for us, it happened to work
+this way already.)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;We are hoping to test this approach in a real app in the next few weeks and
+report back on the results. We are tentatively optimistic that this will result
+in significant performance improvements, and suspect it may outperform even the
+best SSR implementations of Virtual DOM-based libraries like React and Preact
+because it requires fewer allocations.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_rehydration'&gt;Rehydration&lt;/h3&gt;
+&lt;p&gt;Rehydration is the ability of a client-side JavaScript app to &amp;quot;reconnect&amp;quot;
+components to the DOM generated by server-side rendered HTML. In many ways, a
+robust rehydration implementation is the holy grail that reunites the
+progressive enhancement and &amp;quot;all JavaScript all the time&amp;quot; camps.&lt;/p&gt;
+
+&lt;p&gt;The server can serve up meaningful HTML, viewable even when JavaScript isn&amp;#39;t
+available, and that HTML gets &amp;quot;progressively enhanced&amp;quot; with interactivity once
+the JavaScript loads and components rehydrate. But because components can &lt;em&gt;also&lt;/em&gt;
+still produce their own DOM, you retain all of the benefits of client-side
+JavaScript, including the ability to work offline.&lt;/p&gt;
+
+&lt;p&gt;Glimmer supports rehydration natively via its &lt;a href="https://github.com/glimmerjs/glimmer-vm/blob/72a1483/packages/@glimmer/runtime/lib/vm/element-builder.ts"&gt;ElementBuilder&lt;/a&gt; abstraction.
+In SSR mode, you can enable the &lt;a href="https://github.com/glimmerjs/glimmer-vm/blob/72a1483/packages/%40glimmer/node/lib/serialize-builder.ts"&gt;SerializeBuilder&lt;/a&gt;, which includes additional
+comment annotations for where dynamic sections start and end.&lt;/p&gt;
+
+&lt;p&gt;For example, given this template:&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;span&lt;/span&gt; &lt;span class="attribute-name"&gt;class&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;user__name&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="error"&gt;@&lt;/span&gt;&lt;span class="attribute-name"&gt;user.name&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/span&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;The serialized output would include comments indicating the dynamic portion:&lt;/p&gt;
+&lt;div class="highlight html "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;span&lt;/span&gt; &lt;span class="attribute-name"&gt;class&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;user__name&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="comment"&gt;&amp;lt;!--%+block:0%--&amp;gt;&lt;/span&gt;Chad Hietala&lt;span class="comment"&gt;&amp;lt;!--%-block:0%--&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/span&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;In the browser, Glimmer is configured to use the
+&lt;a href="https://github.com/glimmerjs/glimmer-vm/blob/72a1483/packages/%40glimmer/runtime/lib/vm/rehydrate-builder.ts#L20"&gt;RehydrateBuilder&lt;/a&gt;. The RehydrateBuilder treats the existing
+DOM as a stack, and as the VM requests new elements get created, it compares the
+top of the &amp;quot;DOM stack&amp;quot; to the requested element. If it matches, the element is
+reused and the DOM is not mutated at all. In the case of a mismatch, the
+current block is cleared and the appropriate element is created and put in
+its place. The comment annotations are also stripped during this process, so you
+see a pristine DOM in your developer tools.&lt;/p&gt;
+
+&lt;p&gt;We have rehydration working in our app, and we consider it to be a first-class
+part of the Glimmer SSR story.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_incremental-rendering'&gt;Incremental Rendering&lt;/h3&gt;
+&lt;p&gt;The thing about low-end mobile devices is that no matter how much you optimize,
+performing the initial render of most modern web applications is going to be
+slow. While it&amp;#39;s important to chase the fastest raw performance possible (and we
+certainly have with Glimmer!), on some devices it&amp;#39;s just unavoidable to have
+initial renders that take 500ms to over a second.&lt;/p&gt;
+
+&lt;p&gt;This produces a terrible user experience because it blocks the main thread. If
+the user happens to be scrolling, their scroll suddenly starts to stutter.
+Videos and animated GIFs freeze, the browser stops updating the layout, and
+everything generally feels &amp;quot;janky.&amp;quot;&lt;/p&gt;
+
+&lt;p&gt;The problem is that, by dominating the main thread for so long, we&amp;#39;re not being
+good citizens of the web. The CPU is a shared resource, and we&amp;#39;re hogging it all
+for ourselves for a huge chunk of time.&lt;/p&gt;
+
+&lt;p&gt;But what if we had a way to render a few components at a time, periodically
+giving control back to the browser so it could handle scrolling, painting, etc.?&lt;/p&gt;
+
+&lt;p&gt;Glimmer&amp;#39;s architecture is actually &lt;em&gt;perfectly&lt;/em&gt; suited for this, because at the
+end of the day it&amp;#39;s just executing a linear sequence of operations. We can
+execute each opcode, one by one, and pause execution if it starts taking too
+long.&lt;/p&gt;
+
+&lt;p&gt;Best of all, because normal rendering and rehydration go through nearly
+identical code paths, this technique applies whether you&amp;#39;re creating fresh DOM
+or just rehydrating DOM created from server-rendered HTML.&lt;/p&gt;
+
+&lt;p&gt;Incremental rehydration feels &lt;em&gt;amazing&lt;/em&gt;, even on low-end devices on slow
+networks. The server sends complete HTML, which the browser can incrementally
+parse and render, even before CSS and JavaScript have started loading. Once the
+JavaScript does finish loading, it can rehydrate arbitrarily complex DOM while
+maintaining 60fps scrolling, never taking more than ~16ms before returning
+execution to the browser.&lt;/p&gt;
+
+&lt;p&gt;We&amp;#39;re using &lt;a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback"&gt;&lt;code&gt;requestIdleCallback&lt;/code&gt;&lt;/a&gt; in our app to drive rehydration, which
+provides a &amp;quot;deadline&amp;quot; describing how much time we have to do work before causing
+user-noticeable jank. We execute opcodes until we hit the deadline, then
+schedule the VM to resume in another idle callback if there are additional
+operations to execute. For browsers without &lt;code&gt;requestIdleCallback&lt;/code&gt;, we can fall
+back to &lt;code&gt;setTimeout&lt;/code&gt; and approximate deadlines.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_wrapping-up'&gt;Wrapping Up&lt;/h2&gt;
+&lt;p&gt;Except where noted, everything I&amp;#39;ve described above is available in raw,
+low-level form in Glimmer VM today. We will be releasing a new version of
+Glimmer.js imminently that includes the updated VM, including the change to
+&lt;code&gt;&amp;lt;Capital /&amp;gt;&lt;/code&gt; components, fragment templates, etc.&lt;/p&gt;
+
+&lt;p&gt;Once that&amp;#39;s done, our next task will be to make enabling binary templates, SSR,
+rehydration, etc. as easy as possible.&lt;/p&gt;
+
+&lt;p&gt;We are also actively working on making Glimmer components available in Ember apps
+via an addon, as well as updating Ember to use the latest version of Glimmer VM.
+Once that lands, it should unlock the ability to use rehydration in FastBoot.&lt;/p&gt;
+
+&lt;p&gt;I hope this overview has got you as excited as I am. Glimmer&amp;#39;s VM architecture
+has been the gift that keeps on giving, and I&amp;#39;ve been surprised by how
+relatively easy implementing the above features has been on top of the core
+architecture.&lt;/p&gt;
+
+&lt;p&gt;Best of all, I don&amp;#39;t think we&amp;#39;ve yet hit the end of the possibilities that
+Glimmer unlocks. In this post, I&amp;#39;ve focused on features that are either done or
+close to being done, and haven&amp;#39;t yet mentioned some of the ideas we&amp;#39;re excited
+to try, like running Glimmer in a Web Worker, porting the core VM to
+WebAssembly, and more. We&amp;#39;ve also been working closely with our browser
+implementer friends to see what lessons can be applied to the web platform so
+everyone benefits from our experimentation.&lt;/p&gt;
+
+&lt;p&gt;Lastly, I&amp;#39;d like to thank LinkedIn and Tilde for funding a great deal of the
+implementation work. Not only is all of this work released under the open source
+MIT license, we do all of our work out in the open on GitHub. I invite you to
+follow along on the &lt;a href="https://github.com/glimmerjs/glimmer-vm"&gt;Glimmer VM&lt;/a&gt; and &lt;a href="https://github.com/glimmerjs/glimmer.js"&gt;Glimmer.js&lt;/a&gt;
+repositories.&lt;/p&gt;
+
+&lt;p&gt;Thank you so much for reading this far, and I can&amp;#39;t wait to get all of this cool
+stuff into your hands. We are looking forward to seeing what the community can
+build with these powerful primitives. We&amp;#39;ll post again once we&amp;#39;ve released the
+next version of Glimmer.js with these features integrated, so stay tuned to the
+blog. And if you&amp;#39;ve got any questions or want to help out, leave a comment below
+or come see us on GitHub!&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>The Road to Ember 3.0</title>
     <link rel="alternate" href="http://emberjs.com/blog/2017/10/03/the-road-to-ember-3-0.html"/>
@@ -1209,595 +2001,6 @@ instructions, please review the &lt;a href="https://github.com/ember-cli/ember-c
 these releases serve as a reminder that the Ember project would not have been
 possible without your continued support. We are extremely grateful to our
 contributors for their efforts.&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>EmberConf 2017: State of the Union</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2017/04/05/emberconf-2017-state-of-the-union.html"/>
-    <id>http://emberjs.com/blog/2017/04/05/emberconf-2017-state-of-the-union.html</id>
-    <published>2017-04-05T00:00:00+00:00</published>
-    <updated>2017-04-05T00:00:00+00:00</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Ember.js (or should we say &lt;a href="http://yehudakatz.com/2011/12/08/announcing-amber-js/"&gt;Amber.js&lt;/a&gt;) turned five years old last December. In some ways, five years is a short amount of time. But when measured in web framework years, it feels like a downright eternity.&lt;/p&gt;
-
-&lt;p&gt;As Yehuda and I were getting ready for our...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Ember.js (or should we say &lt;a href="http://yehudakatz.com/2011/12/08/announcing-amber-js/"&gt;Amber.js&lt;/a&gt;) turned five years old last December. In some ways, five years is a short amount of time. But when measured in web framework years, it feels like a downright eternity.&lt;/p&gt;
-
-&lt;p&gt;As Yehuda and I were getting ready for our keynote presentation at this year&amp;#39;s EmberConf, we tried to remember what developing web apps was really like in 2011. We knew that the web had changed for the better since then, but I think we both had repressed our memories of how truly awful it was.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_the-web-in-2011'&gt;The Web in 2011&lt;/h2&gt;
-&lt;p&gt;The most popular browser in 2011, by a wide margin, was IE8. Today, for most people, IE8 is a distant, half-remembered nightmare.&lt;/p&gt;
-
-&lt;p&gt;Today, we freely use new language features like async functions, destructuring assignment, classes, and arrow functions. We even get to use not-quite-standardized features like decorators ahead of time thanks to transpilers like Babel and TypeScript. In 2011, however, everyone was writing ES3. ES5 was considered too &amp;quot;cutting edge&amp;quot; for most people to adopt.&lt;/p&gt;
-
-&lt;p&gt;DOM and CSS features we&amp;#39;ve come to take for granted weren&amp;#39;t available, like Flexbox and even &lt;code&gt;querySelectorAll&lt;/code&gt;. Things were so primitive that, hard as it is to believe now, &lt;em&gt;no one even questioned whether you might not need jQuery&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src="/images/blog/2017-04-05-emberconf-2017-state-of-the-union/web-in-2011.png" alt="Slide showing the state of the web in 2011. No browsers implement WebSockets, Flexbox doesn&amp;#39;t exist, only 49% of browsers have Web Workers, and IE8 has 27% market share. Chrome (all versions) is a distant second place at 18% market share."&gt;&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_ember-in-2011'&gt;Ember in 2011&lt;/h2&gt;
-&lt;p&gt;Ember was still finding its sea legs, too. There was no Ember App Kit yet, let alone Ember CLI. There was no router. npm 1.0 wasn&amp;#39;t released until halfway through 2011. Ember apps used a global namespace and many people included their Handlebars templates in inline script tags.&lt;/p&gt;
-&lt;div class="highlight html "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-&lt;strong&gt;10&lt;/strong&gt;
-11
-12
-13
-14
-15
-16
-17
-18
-19
-&lt;strong&gt;20&lt;/strong&gt;
-21
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
-  &lt;span class="tag"&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
-    &lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;src&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;/public/ember.js&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-  &lt;span class="tag"&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
-  &lt;span class="tag"&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
-    &lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-handlebars&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
-&lt;span class="inline"&gt;      Hello, &lt;span class="tag"&gt;&amp;lt;strong&amp;gt;&lt;/span&gt;{{firstName}} {{lastName}}&lt;span class="tag"&gt;&amp;lt;/strong&amp;gt;&lt;/span&gt;!&lt;/span&gt;
-    &lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-
-    &lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-handlebars&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;data-template-name&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;say-hello&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
-&lt;span class="inline"&gt;      &lt;span class="tag"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="attribute-name"&gt;class&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;my-cool-control&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;{{name}}&lt;span class="tag"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;&lt;/span&gt;
-    &lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-
-    &lt;span class="tag"&gt;&amp;lt;script&amp;gt;&lt;/span&gt;
-&lt;span class="inline"&gt;      App.ApplicationController = Ember.Controller.extend({
-        &lt;span class="key"&gt;firstName&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;Trek&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;,
-        &lt;span class="key"&gt;lastName&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;Glowacki&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;
-      });&lt;/span&gt;
-    &lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-  &lt;span class="tag"&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
-&lt;span class="tag"&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;As antiquated as this feels today, this was more or less how most JavaScript apps were written.&lt;/p&gt;
-
-&lt;p&gt;Some parts of Ember are truly embarrassing to look back on. Because IE was so dominant, our rendering engine was optimized for its performance quirks. DOM APIs were extremely slow, so our templates were string-based: render everything as a string of HTML, and then insert it with a single &lt;code&gt;innerHTML&lt;/code&gt; operation. (Modern rendering engines like React, Angular, and Glimmer all create their own DOM instead of asking the browser to parse HTML.)&lt;/p&gt;
-
-&lt;p&gt;Unfortunately, letting the browser create our DOM elements for us led to some… interesting approaches to go back and find them later. For one thing, we had to use the awkward &lt;code&gt;{{bindAttr}}&lt;/code&gt; helper just to bind an element&amp;#39;s attributes.&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;logo&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
-  &lt;span class="tag"&gt;&amp;lt;img&lt;/span&gt; &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;bindAttr&lt;/span&gt; &lt;span class="attribute-name"&gt;src&lt;/span&gt;=&lt;span class="attribute-value"&gt;logoUrl&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;alt&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;Logo&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
-&lt;span class="tag"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Even worse was the &lt;a href="http://colynb.com/posts/dom-horror-with-emberjs.html"&gt;Eldritch horror awaiting anyone who looked at the DOM&lt;/a&gt;:&lt;/p&gt;
-&lt;div class="highlight html "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-&lt;strong&gt;10&lt;/strong&gt;
-11
-12
-13
-14
-15
-16
-17
-18
-19
-&lt;strong&gt;20&lt;/strong&gt;
-21
-22
-23
-24
-25
-26
-27
-28
-29
-&lt;strong&gt;30&lt;/strong&gt;
-31
-32
-33
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;ember162&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;class&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;ember-view&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class="tag"&gt;&amp;lt;h2&amp;gt;&lt;/span&gt;Welcome to Ember.js&lt;span class="tag"&gt;&amp;lt;/h2&amp;gt;&lt;/span&gt;
-
-    &lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;metamorph-1-start&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-placeholder&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-    &lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;metamorph-0-start&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-placeholder&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-    &lt;span class="tag"&gt;&amp;lt;ul&amp;gt;&lt;/span&gt;
-        &lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;metamorph-5-start&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-placeholder&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-        &lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;metamorph-2-start&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-placeholder&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-        &lt;span class="tag"&gt;&amp;lt;li&amp;gt;&lt;/span&gt;
-            &lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;metamorph-6-start&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-placeholder&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-            red
-            &lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;metamorph-6-end&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-placeholder&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-        &lt;span class="tag"&gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
-        &lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;metamorph-2-end&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-placeholder&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-        &lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;metamorph-3-start&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-placeholder&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-        &lt;span class="tag"&gt;&amp;lt;li&amp;gt;&lt;/span&gt;
-            &lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;metamorph-7-start&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-placeholder&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-            yellow
-            &lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;metamorph-7-end&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-placeholder&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-        &lt;span class="tag"&gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
-        &lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;metamorph-3-end&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-placeholder&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-        &lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;metamorph-4-start&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-placeholder&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-        &lt;span class="tag"&gt;&amp;lt;li&amp;gt;&lt;/span&gt;
-            &lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;metamorph-8-start&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-placeholder&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-            blue
-            &lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;metamorph-8-end&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-placeholder&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-        &lt;span class="tag"&gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
-        &lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;metamorph-4-end&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-placeholder&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-        &lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;metamorph-5-end&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-placeholder&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-    &lt;span class="tag"&gt;&amp;lt;/ul&amp;gt;&lt;/span&gt;
-    &lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;metamorph-0-end&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-placeholder&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-    &lt;span class="tag"&gt;&amp;lt;script&lt;/span&gt; &lt;span class="attribute-name"&gt;id&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;metamorph-1-end&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;text/x-placeholder&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-&lt;span class="tag"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;All of that just to render what today looks like this:&lt;/p&gt;
-&lt;div class="highlight html "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-8
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;div&amp;gt;&lt;/span&gt;
-    &lt;span class="tag"&gt;&amp;lt;h2&amp;gt;&lt;/span&gt;Welcome to Ember.js&lt;span class="tag"&gt;&amp;lt;/h2&amp;gt;&lt;/span&gt;
-    &lt;span class="tag"&gt;&amp;lt;ul&amp;gt;&lt;/span&gt;
-        &lt;span class="tag"&gt;&amp;lt;li&amp;gt;&lt;/span&gt;red&lt;span class="tag"&gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
-        &lt;span class="tag"&gt;&amp;lt;li&amp;gt;&lt;/span&gt;yellow&lt;span class="tag"&gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
-        &lt;span class="tag"&gt;&amp;lt;li&amp;gt;&lt;/span&gt;blue&lt;span class="tag"&gt;&amp;lt;/li&amp;gt;&lt;/span&gt;
-    &lt;span class="tag"&gt;&amp;lt;/ul&amp;gt;&lt;/span&gt;
-&lt;span class="tag"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;h2 class='anchorable-toc' id='toc_ahead-of-the-curve'&gt;Ahead of the Curve&lt;/h2&gt;
-&lt;p&gt;As bad as some of the early stuff was, we also have to credit Ember with being ahead of the curve. In many ways, Ember has continued to push the state of the art of client-side JavaScript forward.&lt;/p&gt;
-
-&lt;p&gt;Ember was the first to declare that build tools were critical to any frontend stack, making Ember CLI a first class part of the framework. Having opinionated build tools meant that we were able to be the first framework to embrace next-generation features of ES6, like Promises and modules, to name a few.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src="/images/blog/2017-04-05-emberconf-2017-state-of-the-union/ember-cli.png" alt="Screenshot of the Ember CLI website"&gt;&lt;/p&gt;
-
-&lt;p&gt;While other frameworks have only recently landed Ahead of Time (AOT) compiled templates, we&amp;#39;ve had them for years—and have now moved on to an even more efficient compiled bytecode format. Indeed, the fact that we&amp;#39;ve compatibly moved from string-based rendering to DOM-based rendering to our new VM-based architecture with Glimmer has been one of the keys to Ember&amp;#39;s longevity.&lt;/p&gt;
-
-&lt;p&gt;Perhaps the biggest impact Ember has had is not the &lt;em&gt;what&lt;/em&gt; but the &lt;em&gt;how&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;Major changes to the framework go through an RFC process that solicits community feedback early and often. By requiring new features to go through a rigorous design process, even seasoned contributors must articulate rationales and the context driving different tradeoffs. I often hear from developers who don&amp;#39;t even use Ember that they&amp;#39;ve adopted our RFC process for their own teams at work.&lt;/p&gt;
-
-&lt;p&gt;Ember was also the first major framework to adopt Chrome&amp;#39;s six week release cycle. By putting all new work behind feature flags, a big feature taking longer than expected doesn&amp;#39;t block getting other important improvements into your hands. Stable, beta and canary release channels let you decide for yourself the balance between riding the cutting edge or preferring battle-tested stability.&lt;/p&gt;
-
-&lt;p&gt;Ember&amp;#39;s 2.0 release was also novel: it was the first framework to release a major new version without any breaking changes. An Ember app running on 1.13 could upgrade seamlessly to Ember 2.0, so long as it had no deprecation warnings.&lt;/p&gt;
-
-&lt;p&gt;While the transition was bumpier than we would have liked for many people, this experiment showed how valuable focusing on upgrade paths is. Compared to the previous status quo of releasing new major versions that require you to effectively rewrite your app, we believe Ember 2.0 was an important bellwether that showed that JavaScript frameworks can make progress without breaking their ecosystem.&lt;/p&gt;
-
-&lt;p&gt;Of course, I&amp;#39;d be remiss if I didn&amp;#39;t mention the Ember router.&lt;/p&gt;
-
-&lt;p&gt;Routers that map URLs on to application code exist in every server-side framework, such as Rails and Django. Stateful UI architecture has also been around forever. Ember&amp;#39;s architecture borrows a lot from Cocoa, but the MVC idea has been around since at least Smalltalk-76.&lt;/p&gt;
-
-&lt;p&gt;Ember&amp;#39;s contribution was to stumble on to the idea that, in single-page apps, &lt;em&gt;URLs and app architecture are intrinsically linked&lt;/em&gt;. By tying the models and components that appear on screen to the URL, keeping the two in sync becomes the framework&amp;#39;s job.&lt;/p&gt;
-
-&lt;p&gt;Circa 2011 and before, it was common to hear people lament that JavaScript had become the new Flash. Websites that heavily relied on JavaScript &amp;quot;felt broken&amp;quot; in sometimes hard-to-articulate ways. Refreshing the page left you looking at a different thing. Sharing links took people to the wrong place. Bookmarks didn&amp;#39;t work. Command-clicking to open in a new tab didn&amp;#39;t work.&lt;/p&gt;
-
-&lt;p&gt;In 2017, people use JavaScript-driven apps all the time and rarely notice. By making the URL the cornerstone of how you organize your application, for the first time, Ember helped you build JavaScript applications were no longer &lt;em&gt;broken by default&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;Today there are fantastic routers available for React, Angular and other libraries, and all of them can trace a lineage back to Ember&amp;#39;s router. The turning point for the wider acceptance of single-page apps happened when, as a community, we started to embrace the URL. Ember&amp;#39;s router led that charge.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_what-s-next'&gt;What&amp;#39;s Next?&lt;/h2&gt;
-&lt;p&gt;&lt;img src="/images/blog/2017-04-05-emberconf-2017-state-of-the-union/hn-thread.png" alt="Screenshot of a Hacker News thread where people joke about JavaScript frameworks dying after a competitor is released. &amp;quot;Ember? I thought that died after React came out.&amp;quot; &amp;quot;React? I thought that died after Vue.js came out.&amp;quot; &amp;quot;Vue.js? I thought that died when Angular 4 came out.&amp;quot; &amp;quot;Angular 4? I thought that died when Scala.js came out.&amp;quot; &amp;quot;Scala.js? I thought that died when Inferno came out.&amp;quot; &amp;quot;Inferno? I thought that died when Riot came out.&amp;quot; &amp;quot;Riot? I thought that died when Rakun.js came out.&amp;quot; &amp;quot;That&amp;#39;s why I stick to jQuery 1.2 Ain&amp;#39;t neveh goin&amp;#39; nowheh!&amp;quot; The final comment reads: &amp;quot;I can&amp;#39;t wait to retire.&amp;quot;"&gt;&lt;/p&gt;
-
-&lt;p&gt;Five years is a good run for JavaScript frameworks. We&amp;#39;ve done much, much better than average: most frameworks die young.&lt;/p&gt;
-
-&lt;p&gt;But what should our next move be? Many worthy competitors have come along, without all of the backwards compatibility baggage. Almost all of Ember&amp;#39;s standout features, like build tools, AOT template compilation, first-class router, and server-side rendering are available for competing libraries.&lt;/p&gt;
-
-&lt;p&gt;We &lt;em&gt;could&lt;/em&gt; decide to put Ember into maintenance mode, cede the future to the newcomers, and focus on catering to the existing user base for many years to come. But I don&amp;#39;t think that&amp;#39;s what we should do.&lt;/p&gt;
-
-&lt;p&gt;I think it&amp;#39;s possible to stay cutting edge without breaking the apps people have spent years investing in, and I think we have just the formula for doing it.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_what-didn-t-work'&gt;What Didn&amp;#39;t Work?&lt;/h2&gt;
-&lt;p&gt;With the benefit of hindsight, we can examine the improvements we&amp;#39;ve tried to make to Ember in the last year or two, and figure out what worked and what didn&amp;#39;t.&lt;/p&gt;
-
-&lt;p&gt;It&amp;#39;s a little bit embarrassing to have to write this, since it&amp;#39;s something I knew &lt;em&gt;intellectually&lt;/em&gt; beforehand. But, in short, what didn&amp;#39;t work for us was anything requiring big design upfront.&lt;/p&gt;
-
-&lt;p&gt;We wanted to make Ember easier to learn, so we wanted to eliminate controllers from the programming model. To do that, we wanted to introduce the idea of &amp;quot;routable components&amp;quot;—components that are managed by the router.&lt;/p&gt;
-
-&lt;p&gt;But we also wanted to make Ember more approachable by introducing components that used &lt;code&gt;&amp;lt;angle-bracket&amp;gt;&lt;/code&gt; syntax, so they work just like the HTML elements people are already familiar with. And if we were introducing routable components, they should obviously use the new component syntax—we shouldn&amp;#39;t introduce a new API that people immediately felt like they had to rewrite.&lt;/p&gt;
-
-&lt;p&gt;We were also embarrassed that the design of the &amp;quot;pods&amp;quot; filesystem layout was left in a half-completed state, and we considered it to be a dead end for other features we wanted to introduce. But filesystem layout touches nearly everything, so the Module Unification RFC became another design that invisibly delayed other important features.&lt;/p&gt;
-
-&lt;p&gt;All of this work felt high-stakes because it touched such a fundamental part of Ember: the component API. Ember contributors felt like this was their one shot to get in that feature they&amp;#39;d always wanted. And if you had one shot, one opportunity, to seize everything you ever wanted in one moment, would you capture it, or just let it slip?&lt;/p&gt;
-
-&lt;p&gt;Creating this series of dependencies meant that one disagreement on a particular RFC could delay work on another that, from the outside, seemed unrelated. It also became near impossible for any one person to keep the state of all of the proposals in their head, so we did a very bad job of communicating status updates to the community. It&amp;#39;s no surprise that many people perceive Ember as having slowed down over the last year.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_what-did-work'&gt;What Did Work?&lt;/h2&gt;
-&lt;p&gt;Despite these missteps, we actually did ship some pretty cool stuff in 2016 that people were able to use right away.&lt;/p&gt;
-
-&lt;p&gt;FastBoot is an addon that people can drop in to their app to get server-side rendering with minimal setup. Engines allow big teams to split their app into smaller apps that can be worked on (and loaded) independently.&lt;/p&gt;
-
-&lt;p&gt;In both cases, we focused on adding small primitives into the framework that exposed some missing capability.&lt;/p&gt;
-
-&lt;p&gt;For example, for FastBoot, &lt;a href="https://github.com/emberjs/ember.js/pull/12394"&gt;we added the &lt;code&gt;visit()&lt;/code&gt; method to &lt;code&gt;Ember.Application&lt;/code&gt;&lt;/a&gt;. This method takes a URL and allows you to programmatically route an Ember app (instead of having to change the browser&amp;#39;s &lt;code&gt;window.location&lt;/code&gt; directly). FastBoot uses this API to render Ember applications in Node.js.&lt;/p&gt;
-
-&lt;p&gt;While we figure out the best way to deploy production-ready server-side rendered JavaScript apps, we can move that experimentation out of Ember and into the &lt;code&gt;ember-fastboot&lt;/code&gt; addon.&lt;/p&gt;
-
-&lt;p&gt;Engines worked similarly: &lt;a href="https://github.com/emberjs/rfcs/blob/master/text/0010-engines.md"&gt;an RFC proposed a small set of primitives&lt;/a&gt;, and then the addon could build on these to add features we were less certain of.&lt;/p&gt;
-
-&lt;p&gt;And, of course, there&amp;#39;s Glimmer 2.&lt;/p&gt;
-
-&lt;p&gt;Shipping in Ember 2.10, this ground-up rewrite of our rendering engine was a huge success. We dramatically reduced compiled template size, with many apps seeing 30-50% reductions in total payload (after gzip!).&lt;/p&gt;
-
-&lt;p&gt;Initial rendering performance was also improved. For example, the &amp;quot;Render Complex List&amp;quot; scenario in &lt;a href="https://github.com/eviltrout/ember-performance"&gt;ember-performance&lt;/a&gt; ran 2x faster in Ember 2.10 than 2.9.&lt;/p&gt;
-
-&lt;p&gt;Incredibly, these results were achieved as a &lt;em&gt;drop-in upgrade&lt;/em&gt; to Ember.&lt;/p&gt;
-
-&lt;blockquote class="twitter-tweet" data-lang="en"&gt;&lt;p lang="en" dir="ltr"&gt;I can&amp;#39;t think of a release of a library/framework that reduced my app&amp;#39;s size AND significantly improved perf - Ember 2.10 is super rare.&lt;/p&gt;&amp;mdash; Robin Ward (@eviltrout) &lt;a href="https://twitter.com/eviltrout/status/808710602021634048"&gt;December 13, 2016&lt;/a&gt;&lt;/blockquote&gt;
-
-&lt;script async src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
-
-&lt;p&gt;Ground-up rewrites are usually fraught with compatibility peril. In this case, the secret was to invest upfront in infrastructure that allowed us to keep both the old and new rendering engine on &lt;code&gt;master&lt;/code&gt; at the same time.&lt;/p&gt;
-
-&lt;p&gt;Rendering tests were run twice, once on each engine, so we always had a snapshot of how far along we were. And by making compatibility with the existing API the goal from the start, there was no temptation to start from a &amp;quot;pure&amp;quot; re-implementation and figure out compatibility later.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_our-new-modus-operandi-unlocked-experimentation-in-place-upgrades'&gt;Our New Modus Operandi: Unlocked Experimentation, In-Place Upgrades&lt;/h2&gt;
-&lt;p&gt;Going forward, we will prioritize adding missing capabilities and primitives to the core Ember framework. No one should feel like they need core team approval to experiment with new ways of building applications.&lt;/p&gt;
-
-&lt;p&gt;In some places, we&amp;#39;re already good at this. For example, &lt;a href="http://www.ember-redux.com/"&gt;ember-redux&lt;/a&gt; and &lt;a href="https://ember-concurrency.com/#/docs"&gt;ember-concurrency&lt;/a&gt; are two examples that push the state of the art by building on top of Ember&amp;#39;s already well-rationalized object model. Other areas, like our router and components, have been less open for experimentation (at least when using public API).&lt;/p&gt;
-
-&lt;p&gt;If we do decide that an existing feature needs a rethink, we will follow the Glimmer model: keep both the old and new running at once, and hold off merging until tests (and your apps!) work without changes.&lt;/p&gt;
-
-&lt;p&gt;This is another example of something that should have been more obvious to us ahead of time. We&amp;#39;re big fans of the &lt;a href="https://github.com/extensibleweb/manifesto"&gt;Extensible Web Manifesto&lt;/a&gt;, and this bears an uncanny resemblance to that.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_glimmer-s-performance-sweet-spot'&gt;Glimmer&amp;#39;s Performance Sweet Spot&lt;/h2&gt;
-&lt;p&gt;Last year, we talked about Glimmer&amp;#39;s VM architecture and promised many performance benefits to come. We delivered Glimmer in Ember 2.10 and this year we&amp;#39;re continuing to reap the performance rewards of its modular VM architecture.&lt;/p&gt;
-
-&lt;p&gt;Benchmarks are essential to measuring our performance improvements, but benchmarks are also dangerous. Focusing on the wrong benchmark, or just one kind of benchmark, can cause you to miss important context.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href="http://benediktmeurer.de/2017/03/01/v8-behind-the-scenes-february-edition/"&gt;V8&amp;#39;s Benedikt Meurer has a fantastic blog post about their new Ignition + TurboFan architecture&lt;/a&gt;, and how years of benchmark competition had caused them to be &amp;quot;over-focused on the peak performance case&amp;quot; while &amp;quot;baseline performance was a blind spot.&amp;quot;&lt;/p&gt;
-
-&lt;p&gt;JavaScript libraries can fall into the same trap too. Community discussion often ends up focused around one measurement, which libraries then feel obligated to optimize for.&lt;/p&gt;
-
-&lt;p&gt;For example, a few years ago it was updating performance and the infamous &lt;code&gt;dbmon&lt;/code&gt; demo.&lt;/p&gt;
-
-&lt;p&gt;&lt;img alt="Screenshot of the dbmon/dbmonster stress test demo app." src="/images/blog/2017-04-05-emberconf-2017-state-of-the-union/dbmon-screenshot.png" style="background-color: transparent"&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;The dbbane of my existence.&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;Now the focus has turned to initial render times, as people (rightfully) focus on improving the experience of users on lower-end mobile devices and networks. But there is a point at which you hit diminishing returns optimizing for the initial render while sacrificing update performance.&lt;/p&gt;
-
-&lt;p&gt;Fundamentally, this is a tradeoff about bookkeeping. Do more bookkeeping upfront during initial render and subsequent renders can be better optimized. Do less bookkeeping and initial renders will be faster, but updating gets close to being a full re-render. There are other considerations like file size, eager vs. lazy parsing, optimizing for the JIT compiler, etc., but this accounts for most of the algorithmic performance differences.&lt;/p&gt;
-
-&lt;p&gt;Due to the drop-in nature of the Glimmer upgrade, we knew we couldn&amp;#39;t regress on Ember&amp;#39;s world-class update performance, even as we worked to improve initial render performance. This required us to find an architecture that would strike the optimal balance between the two.&lt;/p&gt;
-
-&lt;p&gt;If you&amp;#39;re interested in more of the details, and in particular how the Glimmer VM maintains better performance by default compared to Virtual DOM libraries as your UI scales, I highly recommend &lt;a href="http://yehudakatz.com/2017/04/05/the-glimmer-vm-boots-fast-and-stays-fast/"&gt;Yehuda&amp;#39;s blog post explaining the design decisions that helped us hit our performance targets&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;All of this is to say, Glimmer offers a novel approach to rendering component-based web UIs. It&amp;#39;s great that Ember users get to take advantage of it. But what about everyone else?&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_ember-adoption'&gt;Ember Adoption&lt;/h2&gt;
-&lt;p&gt;One of my favorite pastimes is watching videos of old Steve Jobs presentations. One I like in particular is his 1998 Macworld keynote, when he had only been back at Apple for a year. Apple was on the brink of failure, low on money and with warehouses full of unwanted computers. The press, mainstream and tech journalists alike, all used one word to describe Apple: &lt;em&gt;beleaguered&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;When Steve showed up at Apple, he rapidly turned things around. The confusing product lineup was replaced with a simple-to-understand consumer/pro laptop/desktop matrix. They delivered the original, Bondi blue iMac, showing they still had the ability to deliver innovative new products.&lt;/p&gt;
-
-&lt;p&gt;Despite this, it&amp;#39;s hard to turn around a narrative. The press would give a reason why Apple was doomed to fail, and when Apple would fix that problem, they would come up with a &lt;em&gt;new&lt;/em&gt; reason why Apple was doomed to fail.&lt;/p&gt;
-
-&lt;p&gt;Borrowing from Maslow&amp;#39;s Hierarchy of Needs, Steve introduced the Apple Hierarchy of Skepticism:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src="/images/blog/2017-04-05-emberconf-2017-state-of-the-union/apple-hierarchy-of-skepticism.png" alt="Steve Jobs&amp;#39; Apple Hierarchy of Skepticism slide. Numbered 1 to 5, from bottom to top: Survival, Stable Business, Product Strategy, Applications, Growth. The Survival, Stable Business, and Product Strategy rows are colored orange to indicate that they&amp;#39;ve been overcome. Applications and Growth are colored blue to indicate that they are the next area Apple will focus on to persuade the skeptics."&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;&amp;quot;When I came to Apple a year ago, all I heard was &amp;#39;Apple is dying, Apple can&amp;#39;t survive.&amp;#39; It turns out that every time we convince people we&amp;#39;ve accomplished something at one level, they come up with something new. And I used to think this was a bad thing. I thought, &amp;#39;Oh Jesus, when are they ever gonna believe that we&amp;#39;re gonna be able to turn this thing around?&amp;#39;&lt;/p&gt;
-
-&lt;p&gt;But actually now I think it&amp;#39;s great! Because what it means is we&amp;#39;ve now convinced them that we&amp;#39;ve taken care of last month&amp;#39;s question. And they&amp;#39;re on to the next one! So I thought, let&amp;#39;s get ahead of the game, let&amp;#39;s figure out what all of the questions are gonna be, and map out where we are.&amp;quot;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Without being overly dramatic, I think there are some obvious parallels between the 90&amp;#39;s era Mac and Ember. While we have a fantastic community and high-profile, successful apps, it can feel like the momentum is somewhere else. And I know Ember users who have told me they feel beleaguered by this common reaction: &amp;quot;You use Ember? I thought React was the new thing?&amp;quot; I&amp;#39;ve even gotten it from my Lyft driver.&lt;/p&gt;
-
-&lt;blockquote class="twitter-tweet" data-lang="en"&gt;&lt;p lang="en" dir="ltr"&gt;.&lt;a href="https://twitter.com/tomdale"&gt;@tomdale&lt;/a&gt;: &amp;quot;...if it makes you feel better, my lyft driver just asked &amp;#39;isn&amp;#39;t ember dead and react is the new thing?&amp;#39;&amp;quot;&lt;/p&gt;&amp;mdash; Lady Zahra (@ZeeJab) &lt;a href="https://twitter.com/ZeeJab/status/847489050130788352"&gt;March 30, 2017&lt;/a&gt;&lt;/blockquote&gt;
-
-&lt;script async src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
-
-&lt;p&gt;When I think about the reasons people give for not using Ember, there are some that used to be common that I never hear anymore. Those ugly &lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt; tags in the DOM and lack of documentation were two major knocks against Ember, but we&amp;#39;ve since eliminated the DOM noise and invested heavily in guides and API documentation. We convinced people that these weren&amp;#39;t a barrier anymore! But there are still lots of reasons people don&amp;#39;t want to take another look at Ember.&lt;/p&gt;
-
-&lt;p&gt;Let&amp;#39;s introduce our own Ember Hierarchy of Skepticism:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src="/images/blog/2017-04-05-emberconf-2017-state-of-the-union/ember-hierarchy-of-skepticism.png" alt="Ember&amp;#39;s Hierarchy of Skepticism. From 1 to 5, bottom to top: Metamorph Tags / bindAttr, No Documentation, Custom Object Model, Big File Size, Monolithic. The first two are colored orange to indicate that they are objections that we have overcome."&gt;&lt;/p&gt;
-
-&lt;p&gt;By far, the three most common remaining reasons I hear for not using Ember are:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;It&amp;#39;s monolithic and hard to adopt incrementally.&lt;/li&gt;
-&lt;li&gt;It&amp;#39;s too big out of the box, particularly for mobile apps.&lt;/li&gt;
-&lt;li&gt;The custom object model is scary. I want to write JavaScript, not whatever &lt;em&gt;that&lt;/em&gt; is.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Starting today, we can focus on overcoming these last three barriers to Ember&amp;#39;s growth.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_introducing-glimmer-js'&gt;Introducing Glimmer.js&lt;/h2&gt;
-&lt;p&gt;With &lt;a href="https://glimmerjs.com"&gt;Glimmer.js&lt;/a&gt;, we&amp;#39;ve extracted the rendering engine that powers Ember and made it available to everyone.&lt;/p&gt;
-
-&lt;p&gt;Glimmer is just the component layer, so it&amp;#39;s up to you to decide if you need routing, a data layer, etc. If you want to drop Glimmer components into an existing app, it&amp;#39;s as simple as adding a Web Component.&lt;/p&gt;
-
-&lt;p&gt;For a quick, five minute tour of what building a Glimmer app is like, check out this video from &lt;a href="https://embermap.com/"&gt;Ember Map&lt;/a&gt;:&lt;/p&gt;
-
-&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/i2rwIApjz-4?ecver=1" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
-
-&lt;p&gt;Or visit &lt;a href="https://glimmerjs.com"&gt;glimmerjs.com&lt;/a&gt; to get started and read the documentation.&lt;/p&gt;
-
-&lt;p&gt;While extracting Glimmer to be used standalone from Ember, we also took the opportunity to clean up some of the API that people found most confusing when using Ember components.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_goodbye-tagname-attributebindings-etc'&gt;Goodbye tagName, attributeBindings, etc.&lt;/h3&gt;
-&lt;p&gt;Tired of remembering all of the magic properties needed to configure a component&amp;#39;s root element?&lt;/p&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;import&lt;/span&gt; Ember from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
-
-&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Ember.Component.extend({
-  &lt;span class="key"&gt;tagName&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;input&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;,
-  &lt;span class="key"&gt;attributeBindings&lt;/span&gt;: [&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;disabled&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;type:kind&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;],
-  &lt;span class="key"&gt;disabled&lt;/span&gt;: &lt;span class="predefined-constant"&gt;true&lt;/span&gt;,
-  &lt;span class="key"&gt;kind&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;range&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;
-});
-
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;In Glimmer, the component&amp;#39;s root element is defined in the template, so all of that goes away. (You can think of the component template now being &amp;quot;outer HTML&amp;quot; instead of &amp;quot;inner HTML&amp;quot;.) Here&amp;#39;s the same component in Glimmer, with just a template:&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;input&lt;/span&gt; &lt;span class="attribute-name"&gt;disabled&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;range&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="tag"&gt;/&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;h3 class='anchorable-toc' id='toc_es6-classes'&gt;ES6 Classes&lt;/h3&gt;
-&lt;p&gt;This gets even nicer once you introduce dynamic data from the component into it. Here&amp;#39;s the Ember component:&lt;/p&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-&lt;strong&gt;10&lt;/strong&gt;
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;import&lt;/span&gt; Ember from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
-
-&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Ember.Component.extend({
-  &lt;span class="key"&gt;tagName&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;input&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;,
-  &lt;span class="key"&gt;attributeBindings&lt;/span&gt;: [&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;disabled&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;type:kind&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;],
-  &lt;span class="key"&gt;disabled&lt;/span&gt;: &lt;span class="predefined-constant"&gt;false&lt;/span&gt;,
-  &lt;span class="key"&gt;kind&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;range&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;,
-  &lt;span class="key"&gt;classNameBindings&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;type&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;,
-  &lt;span class="key"&gt;type&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;primary&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Now in a Glimmer component, using ES6 class syntax to provide dynamic data:&lt;/p&gt;
-&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;input&lt;/span&gt; &lt;span class="attribute-name"&gt;disabled&lt;/span&gt; &lt;span class="attribute-name"&gt;type&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;range&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt; &lt;span class="attribute-name"&gt;class&lt;/span&gt;=&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;type&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt; &lt;span class="tag"&gt;/&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;import&lt;/span&gt; Component from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;@glimmer/component&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
-
-&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; &lt;span class="reserved"&gt;class&lt;/span&gt; &lt;span class="reserved"&gt;extends&lt;/span&gt; Component {
-  type = &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;primary&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;
-}
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;h3 class='anchorable-toc' id='toc_typescript'&gt;TypeScript&lt;/h3&gt;
-&lt;p&gt;Because Glimmer is written in TypeScript, it has great autocomplete and type definitions out of the box. And every new Glimmer app is configured to use TypeScript automatically.&lt;/p&gt;
-
-&lt;p&gt;JavaScript is still the primary way to write Glimmer apps. Because it&amp;#39;s extracted from a JavaScript framework, Glimmer&amp;#39;s API has been designed to be used with JavaScript from the start. TypeScript is just an extra tool in your toolbelt—if you want it.&lt;/p&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;import&lt;/span&gt; Component from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;@glimmer/component&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
-&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; &lt;span class="reserved"&gt;class&lt;/span&gt; &lt;span class="reserved"&gt;extends&lt;/span&gt; Component {
-  &lt;span class="key"&gt;firstName&lt;/span&gt;: string;
-  lastName: string;
-}
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;h3 class='anchorable-toc' id='toc_computed-properties'&gt;Computed Properties&lt;/h3&gt;
-&lt;p&gt;Ember users love computed properties, but getting used to their syntax can be a challenge. Because Glimmer uses ES6 classes, you can use standard getters and setters:&lt;/p&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-&lt;strong&gt;10&lt;/strong&gt;
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;import&lt;/span&gt; Component from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;@glimmer/component&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
-
-&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; &lt;span class="reserved"&gt;class&lt;/span&gt; &lt;span class="reserved"&gt;extends&lt;/span&gt; Component {
-  firstName = &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;Katie&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;;
-  lastName = &lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;Gengler&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;;
-
-  get fullName() {
-    &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="error"&gt;`&lt;/span&gt;&lt;span class="predefined"&gt;$&lt;/span&gt;{&lt;span class="local-variable"&gt;this&lt;/span&gt;.firstName} &lt;span class="predefined"&gt;$&lt;/span&gt;{&lt;span class="local-variable"&gt;this&lt;/span&gt;.lastName}&lt;span class="error"&gt;`&lt;/span&gt;;
-  }
-}
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;h3 class='anchorable-toc' id='toc_decorators'&gt;Decorators&lt;/h3&gt;
-&lt;p&gt;Glimmer uses decorators (a Stage 2 TC39 proposal) to augment a class&amp;#39;s properties and methods. For example, to mark a component property as &amp;quot;tracked&amp;quot; (so changes to it are updated in the DOM), use the &lt;code&gt;@tracked&lt;/code&gt; decorator:&lt;/p&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-&lt;strong&gt;10&lt;/strong&gt;
-11
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;import&lt;/span&gt; Component, { tracked } from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;@glimmer/component&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
-
-&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; &lt;span class="reserved"&gt;class&lt;/span&gt; &lt;span class="reserved"&gt;extends&lt;/span&gt; Component {
-  &lt;span class="error"&gt;@&lt;/span&gt;tracked firstName;
-  &lt;span class="error"&gt;@&lt;/span&gt;tracked lastName;
-
-  &lt;span class="error"&gt;@&lt;/span&gt;tracked(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;firstName&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;lastName&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)
-  get fullName() {
-    &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="error"&gt;`&lt;/span&gt;&lt;span class="predefined"&gt;$&lt;/span&gt;{&lt;span class="local-variable"&gt;this&lt;/span&gt;.firstName} &lt;span class="predefined"&gt;$&lt;/span&gt;{&lt;span class="local-variable"&gt;this&lt;/span&gt;.lastName}&lt;span class="error"&gt;`&lt;/span&gt;;
-  }
-}
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;h3 class='anchorable-toc' id='toc_actions'&gt;Actions&lt;/h3&gt;
-&lt;p&gt;Actions in Glimmer are just functions, with optional argument currying. Use the &lt;code&gt;{{action}}&lt;/code&gt; helper to bind the function to the component context:&lt;/p&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;import&lt;/span&gt; Component, { tracked } from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;@glimmer/component&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
-
-&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; &lt;span class="reserved"&gt;class&lt;/span&gt; &lt;span class="reserved"&gt;extends&lt;/span&gt; Component {
-  &lt;span class="error"&gt;@&lt;/span&gt;tracked name: string;
-
-  setName(name: string) {
-    &lt;span class="local-variable"&gt;this&lt;/span&gt;.name = name;
-  }
-}
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;button&lt;/span&gt; &lt;span class="attribute-name"&gt;onclick&lt;/span&gt;=&lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;action&lt;/span&gt; &lt;span class="attribute-name"&gt;setName&lt;/span&gt; &lt;span class="error"&gt;&amp;quot;&lt;/span&gt;&lt;span class="attribute-name"&gt;Zahra&lt;/span&gt;&lt;span class="error"&gt;&amp;quot;&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
-  Change Name
-&lt;span class="tag"&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;h3 class='anchorable-toc' id='toc_no-code-get-code-code-set-code'&gt;No &lt;code&gt;.get()&lt;/code&gt;/&lt;code&gt;.set()&lt;/code&gt;&lt;/h3&gt;
-&lt;p&gt;In the above examples, you probably noticed that we never have to use the &lt;code&gt;.get()&lt;/code&gt; method to retrieve a component property, or &lt;code&gt;.set()&lt;/code&gt; to set one. This requirement frequently trips up new Ember users until they develop the right muscle memory. In Glimmer, we rely on ES5 getters and setters to intercept properties, so you never need to learn &lt;code&gt;.get()&lt;/code&gt; and &lt;code&gt;.set()&lt;/code&gt; at all.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_file-size'&gt;File Size&lt;/h2&gt;
-&lt;p&gt;Web developers are rightfully sensitive to file size. Not only do your app&amp;#39;s dependencies need to be downloaded, JavaScript must be parsed and evaluated. Particularly on lower-end mobile devices, that can add up quickly.&lt;/p&gt;
-
-&lt;p&gt;Ember has historically been larger in file size than its competitors. Our line of reasoning was: for the kinds of apps people build with Ember, that&amp;#39;s all code that you&amp;#39;ll eventually need to pull in anyways.&lt;/p&gt;
-
-&lt;p&gt;Today, a hello world Ember app starts off with about 200KB of JavaScript. In my experience, most production Angular, Ember and React apps hover between 400KB to 700KB of JavaScript, sometimes more. (Sometimes a lot more.)&lt;/p&gt;
-
-&lt;p&gt;While this is true of many apps, it&amp;#39;s not &lt;em&gt;universally&lt;/em&gt; true. Sometimes people have hard file size requirements that disqualify Ember out of the gate. And when people are starting out on a greenfield app, it&amp;#39;s hard for them to buy on faith that they will eventually need everything Ember offers. What if they don&amp;#39;t? It feels safer to start small and bring things in piecemeal.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href="https://medium.com/dailyjs/javascript-framework-battle-hello-world-in-each-cli-"&gt;Shane Osbourne recently compared the file size of a &amp;quot;hello world&amp;quot; app generated by each of the major frameworks&amp;#39; CLI tools.&lt;/a&gt; While Ember is the largest, a Glimmer app is tiny: at 34KB, it&amp;#39;s smaller than React, Angular and Vue. Only Preact comes in smaller.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src="/images/blog/2017-04-05-emberconf-2017-state-of-the-union/hello-world-cli-size.png" alt="Chart showing relative file sizes of the default output from creating a new app with different frameworks&amp;#39; CLI tools. Ember is the largest at 198KB. Preact is the smallest at 8.8KB. Second smallest is Glimmer at 34KB. Vue, React and Angular weigh in at 43.8KB, 46KB and 92KB respectively."&gt;&lt;/p&gt;
-
-&lt;p&gt;Best of all, we haven&amp;#39;t yet begun to focus on bundle optimization. You can expect this size to decrease even more in the future.&lt;/p&gt;
-
-&lt;p&gt;So that&amp;#39;s Glimmer.js. It&amp;#39;s tiny, it&amp;#39;s fast, and it can be adopted incrementally. Best of all, you can start playing with it today.&lt;/p&gt;
-
-&lt;p&gt;But… where does that leave Ember?&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_back-to-ember'&gt;Back to Ember&lt;/h2&gt;
-&lt;p&gt;We believe that the key to balancing stability and progress in Ember is to make it easy to do experimentation outside of the framework. The only way to truly get a sense of something is to be able to use it.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Glimmer components are the future of components in Ember.&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;We want to let you—and everyone—get a chance to use Glimmer components before we make them an official part of Ember. But we&amp;#39;re not leaving Ember users out in the cold until that happens.&lt;/p&gt;
-
-&lt;p&gt;A few weeks before EmberConf, &lt;a href="https://github.com/emberjs/rfcs/pull/213"&gt;Godfrey Chan submitted the &amp;quot;Custom Component API&amp;quot; RFC&lt;/a&gt;. This RFC is the key to bringing Glimmer components to Ember apps. Because the Glimmer VM is really a &amp;quot;library for writing component libraries,&amp;quot; we can let addons specify their own custom component API.&lt;/p&gt;
-
-&lt;p&gt;Notably, this means we&amp;#39;re working on making it possible to use the Glimmer components you&amp;#39;ve seen above in your existing Ember apps, just by installing an addon.&lt;/p&gt;
-
-&lt;p&gt;Best of all, Glimmer apps use the Module Unification filesystem layout. This is the link between the Ember and Glimmer worlds. If you decide you actually &lt;em&gt;do&lt;/em&gt; need all of the functionality Ember offers, you will be able to drag and drop your Glimmer components into an Ember app.&lt;/p&gt;
-
-&lt;p&gt;One last thing. If you take a peek under the hood of a new Glimmer app, you&amp;#39;ll see that it&amp;#39;s made up of a few different npm packages, like &lt;code&gt;@glimmer/application&lt;/code&gt;, &lt;code&gt;@glimmer/di&lt;/code&gt;, etc. We spent time making sure these packages follow modern best practices for distributing JavaScript in 2017.&lt;/p&gt;
-
-&lt;p&gt;Much of the secret sauce of a Glimmer app is in the ahead-of-time compilation we do with Rollup, so I recommend most people use the default Ember CLI flow documented on the website. That said, there&amp;#39;s no stopping an enterprising developer from using these packages in other environments. Let experimentation reign!&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_ember-in-2017'&gt;Ember in 2017&lt;/h2&gt;
-&lt;p&gt;While we&amp;#39;re excited about Glimmer, work on Ember is not slowing down. If anything, the focus on exposing capabilities means that the pace of community experimentation should noticeably tick upwards.&lt;/p&gt;
-
-&lt;p&gt;Module Unification for Ember apps is &lt;a href="https://github.com/ember-cli/ember-resolver/pull/182"&gt;under active development&lt;/a&gt;. We&amp;#39;re applying the lessons we learned and are working to expose the primitives needed to be able to implement the Module Unification filesystem layout in an addon. Development is happening on the master branch of &lt;code&gt;ember-resolver&lt;/code&gt; &lt;a href="https://github.com/ember-cli/ember-resolver#current-feature-flags"&gt;behind a feature flag&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;As we upstream Glimmer.js code into Ember, this gives us a great excuse to &lt;a href="https://github.com/emberjs/ember.js/issues/15058"&gt;clean up older tests&lt;/a&gt; so that we can easily run them against the old and new implementation, as we did with rendering tests and Glimmer VM integration.&lt;/p&gt;
-
-&lt;p&gt;We&amp;#39;ve also begun to &lt;a href="https://github.com/emberjs/ember.js/pull/14805"&gt;implement a routing service&lt;/a&gt; that gives applications and addons imperative control over the router. This is exciting because, previously, routing-related features like the built-in &lt;code&gt;{{link-to}}&lt;/code&gt; helper relied on private API. With the routing service, developers will have the tools to build their own &lt;code&gt;{{link-to}}&lt;/code&gt; helper if they wish.&lt;/p&gt;
-
-&lt;p&gt;Long term, our goal is to break Ember apart into a series of small modules. Each piece of Ember should be an npm package that you can remove if you don&amp;#39;t need it.&lt;/p&gt;
-
-&lt;p&gt;(Unlike most small modules approaches, of course, things will &amp;quot;just work&amp;quot; together if you &lt;em&gt;do&lt;/em&gt; need them. We remain strongly opposed to forcing integration work onto application developers.)&lt;/p&gt;
-
-&lt;p&gt;It should also work in reverse: if you start with Glimmer and realize you actually do need a router, services, a data layer, etc., you should be able to incrementally &lt;code&gt;npm install&lt;/code&gt; your way to Ember.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src="/images/blog/2017-04-05-emberconf-2017-state-of-the-union/spectrum-of-app-complexity.png" alt="Diagram showing a spectrum from less complext to more complex. On the left side is Glimmer logo for less complex applications. On the right side is Ember, for ambitious applications. In the middle is a sequence of npm install commands that show how you can move incrementally up the scale, one package at a time: npm install @ember/router, npm install @ember/service, and npm install @ember data."&gt;&lt;/p&gt;
-
-&lt;p&gt;This is the future we&amp;#39;ve always dreamed of for Ember: a complete, cohesive front-end stack for those who want it, with the ability to quickly pare it down if the need arises.&lt;/p&gt;
-
-&lt;p&gt;We&amp;#39;re not there quite yet, but it&amp;#39;s an exciting goal to build toward and I think we&amp;#39;ve shown tangible progress already with Glimmer. I hope you are as excited about Ember and Glimmer as we are, and we can&amp;#39;t wait to see all of the cool stuff you build with them!&lt;/p&gt;
 </content>
   </entry>
 </feed>
