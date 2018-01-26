@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="theme-color" content="#E04E39">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ember.js - Deprecations for v3.x</title>
+    <meta property="st:title" content="Ember.js: Deprecations for v3.x" />
+    <meta property="og:title" content="Ember.js: Deprecations for v3.x" />
+    <meta property="og:description" content="Ember.js helps developers be more productive out of the box. Designed with developer ergonomics in mind, its friendly APIs help you get your job done—fast." />
+    <meta property="og:image" content="http://emberjs.com/images/tomster-sm.png" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@emberjs" />
+    <meta name="twitter:title" content="Deprecations for v3.x"/>
+    <meta name="google-site-verification" content="N9yOP2jCLcZBMHUet-JRqU2jnLVPeLDaePpkCqXGQXM" />
+    <meta name="twitter:image" content="http://emberjs.com/images/tomster-twitter-card.png" />
+    <link rel="shortcut icon" href="/images/favicon-b8f150dd.png" />
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet" />
+    <!--[if lte IE 7 ]><link href="/stylesheets/fonts/fontello-ie7-e008d616.css" rel="stylesheet" /><![endif]-->
+    <link href="/stylesheets/site-b3a0cac1.css" rel="stylesheet" />
+    <link href="/blog/feed.xml" rel="alternate" type="application/atom+xml" title="Ember.js - Blog" />
+    <link rel="stylesheet" href="https://glimmer-styleguide.global.ssl.fastly.net/glimmer-styleguide/master/app-cf72b59a166beb307683d9d0dae6bb0f.css" />
+    
+  </head>
+
+  <body class="deprecations deprecations_v3 responsive">
+
+    <!--[if lt IE 9]>
+      <script type="text/javascript" src="/javascripts/common-old-ie-24eb8a55.js"></script>
+    <![endif]-->
+    <!--[if gte IE 9]><!-->
+      <script type="text/javascript" src="/javascripts/common-modern-b7908850.js"></script>
+    <!--<![endif]-->
+
+    <main-navbar></main-navbar>
+
+    
+
+    <div id="content-wrapper" class="content-wrapper">
+        <div id="sidebar" class="sidebar" role="complementary">
+              <ol id='toc-list'>
+    </ol>
+
+          <div id="back-to-top"><a id="back-top-top" href="#">&#11014; Back to Top</a></div>
+        </div>
+      <div id="content" class="main has-sidebar" role="main">
+        
+  <h2 class='anchorable-toc' id='toc_deprecations-added-in-ember-3-x'>Deprecations Added in Ember 3.x</h2>
+<p>What follows is a list of deprecations introduced to Ember.js during the 3.x
+cycle.</p>
+
+<p>For more information on deprecations in Ember, see the <a href="/deprecations">main deprecations page</a>.</p>
+<h3 class='anchorable-toc' id='toc_deprecations-added-in-3-1'>Deprecations Added in 3.1</h3><h4 class='anchorable-toc' id='toc_use-notifypropertychange-instead-of-propertywillchange-and-propertydidchange'>Use notifyPropertyChange instead of propertyWillChange and propertyDidChange</h4><h5 class='anchorable-toc' id='toc_until-3-5-0'>until: 3.5.0</h5><h5 class='anchorable-toc' id='toc_id-ember-metal-deprecate-propertywillchange-ember-metal-deprecate-propertydidchange'>id: ember-metal.deprecate-propertyWillChange, ember-metal.deprecate-propertyDidChange</h5>
+<p>The private APIs <code>propertyWillChange</code> and <code>propertyDidChange</code> will be removed after the first
+LTS of the 3.x cycle. You should remove any calls to <code>propertyWillChange</code> and replace any
+calls to <code>propertyDidChange</code> with <code>notifyPropertyChange</code>. This applies to both the Ember global
+version and the EmberObject method version.</p>
+
+<p>For example, the following:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre>Ember.propertyWillChange(object, <span class="string"><span class="delimiter">'</span><span class="content">someProperty</span><span class="delimiter">'</span></span>);
+doStuff(object);
+Ember.propertyDidChange(object, <span class="string"><span class="delimiter">'</span><span class="content">someProperty</span><span class="delimiter">'</span></span>);
+
+object.propertyWillChange(<span class="string"><span class="delimiter">'</span><span class="content">someProperty</span><span class="delimiter">'</span></span>);
+doStuff(object);
+object.propertyDidChange(<span class="string"><span class="delimiter">'</span><span class="content">someProperty</span><span class="delimiter">'</span></span>);
+</pre></td>
+</tr></table>
+</div></div>
+<p>Should be changed to:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre>doStuff(object);
+Ember.notifyPropertyChange(object, <span class="string"><span class="delimiter">'</span><span class="content">someProperty</span><span class="delimiter">'</span></span>);
+
+doStuff(object);
+object.notifyPropertyChange(<span class="string"><span class="delimiter">'</span><span class="content">someProperty</span><span class="delimiter">'</span></span>);
+</pre></td>
+</tr></table>
+</div></div>
+
+      </div>
+    </div>
+
+    <main-footer></main-footer>
+
+        <script type="text/javascript" src="/javascripts/deprecations-1921f6e5.js"></script>
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+      _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+      _gaq.push(['_setAccount', 'UA-27675533-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/custom-elements/1.0.0/custom-elements.min.js"></script>
+    <script src="https://glimmer-styleguide.global.ssl.fastly.net/glimmer-styleguide/master/app-e9fb0ee612345875c7e6f01760c81101.js"></script>
+  </body>
+</html>
