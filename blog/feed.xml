@@ -5,10 +5,400 @@
   <id>http://emberjs.com/blog</id>
   <link href="http://emberjs.com/blog"/>
   <link href="http://emberjs.com/blog/feed.xml" rel="self"/>
-  <updated>2018-02-14T00:00:00+00:00</updated>
+  <updated>2018-02-16T00:00:00+00:00</updated>
   <author>
     <name>Ember</name>
   </author>
+  <entry>
+    <title>Ember 3.1 Beta Released</title>
+    <link rel="alternate" href="http://emberjs.com/blog/2018/02/16/ember-3-1-beta-released.html"/>
+    <id>http://emberjs.com/blog/2018/02/16/ember-3-1-beta-released.html</id>
+    <published>2018-02-16T00:00:00+00:00</published>
+    <updated>2018-02-16T00:00:00+00:00</updated>
+    <author>
+      <name>Ember</name>
+    </author>
+    <summary type="html">&lt;p&gt;Today we're releasing Ember 3.1-beta.1, including releases of Ember.js, Ember
+Data, and Ember CLI.&lt;/p&gt;
+
+&lt;p&gt;Traditionally beta releases share a blog post with the
+corresponding stable release, however to keep our messaging clear during the
+transition we've...&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;Today we&amp;#39;re releasing Ember 3.1-beta.1, including releases of Ember.js, Ember
+Data, and Ember CLI.&lt;/p&gt;
+
+&lt;p&gt;Traditionally beta releases share a blog post with the
+corresponding stable release, however to keep our messaging clear during the
+transition we&amp;#39;ve split them up today. See the &lt;a href="/blog/2018/02/14/ember-3-0-released.html"&gt;Ember 3.0
+Release Post&lt;/a&gt; for more details on Ember 3.0.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_ember-js'&gt;Ember.js&lt;/h2&gt;
+&lt;hr&gt;
+
+&lt;p&gt;Ember.js is the core of the Ember framework. It provides routing, rendering, and
+dependency injection features.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_changes-in-ember-js-3-1-beta-1'&gt;Changes in Ember.js 3.1-beta.1&lt;/h3&gt;
+&lt;p&gt;Ember 3.1-beta is an minor release containing several new features and bug
+fixes. It includes a bump of Glimmer VM, Ember&amp;#39;s rendering implementation,
+to version 0.30.5. Per our release cycle, these features will be released as
+3.1 stable in six weeks.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_es5-getters-for-computed-properties'&gt;ES5 Getters for Computed Properties&lt;/h4&gt;
+&lt;p&gt;Ember&amp;#39;s object system has long used &lt;code&gt;set&lt;/code&gt; and &lt;code&gt;get&lt;/code&gt; to access properties.
+These APIs came from the codebase&amp;#39;s origins in SproutCore, and predated ES5&amp;#39;s
+&lt;code&gt;defineProperty&lt;/code&gt;. In recent years native JavaScript setter and getter
+implementations have become fast and mature.&lt;/p&gt;
+
+&lt;p&gt;Starting in Ember 3.1 (and described in &lt;a href="https://github.com/emberjs/rfcs/blob/master/text/0281-es5-getters.md"&gt;RFC
+281&lt;/a&gt;) you
+are now able to read the value of a computed property using a native ES5 getter.
+For example, this component which uses computed properties:&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+13
+14
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;import&lt;/span&gt; Component from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;@ember/component&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+&lt;span class="reserved"&gt;import&lt;/span&gt; { computed } from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;@ember/object&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Component.extend({
+
+  &lt;span class="key"&gt;name&lt;/span&gt;: computed(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;firstName&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;lastName&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="keyword"&gt;function&lt;/span&gt;() {
+    &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="error"&gt;`&lt;/span&gt;&lt;span class="predefined"&gt;$&lt;/span&gt;{&lt;span class="local-variable"&gt;this&lt;/span&gt;.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;firstName&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)} &lt;span class="predefined"&gt;$&lt;/span&gt;{&lt;span class="local-variable"&gt;this&lt;/span&gt;.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;lastName&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)}&lt;span class="error"&gt;`&lt;/span&gt;;
+  }),
+
+  &lt;span class="key"&gt;message&lt;/span&gt;: computed(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;name&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="keyword"&gt;function&lt;/span&gt;() {
+    &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="error"&gt;`&lt;/span&gt;Hello &lt;span class="predefined"&gt;$&lt;/span&gt;{&lt;span class="local-variable"&gt;this&lt;/span&gt;.get(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;name&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;)}!&lt;span class="error"&gt;`&lt;/span&gt;;
+  });
+
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Can be re-written using ES5 getters:&lt;/p&gt;
+&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;strong&gt;10&lt;/strong&gt;
+11
+12
+13
+14
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;import&lt;/span&gt; Component from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;@ember/component&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+&lt;span class="reserved"&gt;import&lt;/span&gt; { computed } from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;@ember/object&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
+
+&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Component.extend({
+
+  &lt;span class="key"&gt;name&lt;/span&gt;: computed(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;firstName&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;lastName&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="keyword"&gt;function&lt;/span&gt;() {
+    &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="error"&gt;`&lt;/span&gt;&lt;span class="predefined"&gt;$&lt;/span&gt;{&lt;span class="local-variable"&gt;this&lt;/span&gt;.firstName} &lt;span class="predefined"&gt;$&lt;/span&gt;{&lt;span class="local-variable"&gt;this&lt;/span&gt;.lastName}&lt;span class="error"&gt;`&lt;/span&gt;;
+  }),
+
+  &lt;span class="key"&gt;message&lt;/span&gt;: computed(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;name&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;, &lt;span class="keyword"&gt;function&lt;/span&gt;() {
+    &lt;span class="keyword"&gt;return&lt;/span&gt; &lt;span class="error"&gt;`&lt;/span&gt;Hello &lt;span class="predefined"&gt;$&lt;/span&gt;{&lt;span class="local-variable"&gt;this&lt;/span&gt;.name}!&lt;span class="error"&gt;`&lt;/span&gt;;
+  });
+
+});
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Legacy &lt;code&gt;get&lt;/code&gt; features are not deprecated or removed in 3.1. In fact there are
+several cases where you must still use &lt;code&gt;get&lt;/code&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;If you are calling &lt;code&gt;get&lt;/code&gt; with a chained path. For example in &lt;code&gt;this.get(&amp;#39;a.b.c&amp;#39;)&lt;/code&gt;
+if &lt;code&gt;b&lt;/code&gt; is &lt;code&gt;undefined&lt;/code&gt; the return value is &lt;code&gt;undefined&lt;/code&gt;. Converting this
+to &lt;code&gt;this.a.b.c&lt;/code&gt; when &lt;code&gt;b&lt;/code&gt; is &lt;code&gt;undefined&lt;/code&gt; would instead raise an exception.&lt;/li&gt;
+&lt;li&gt;If your object is using &lt;code&gt;unknownProperty&lt;/code&gt; you must continue to use &lt;code&gt;get&lt;/code&gt;.
+Using an ES5 getter on an object with &lt;code&gt;unknownProperty&lt;/code&gt; will cause an
+assertion failure in development.&lt;/li&gt;
+&lt;li&gt;Ember Data returns promise proxy objects when you read an async relationship
+and from other API. Ember proxy objects, including promise proxies, still
+require that you call &lt;code&gt;get&lt;/code&gt; to read values.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;With these caveats in mind, how should you know if you can convert a &lt;code&gt;get&lt;/code&gt;
+call to a native getter? If you have code where &lt;code&gt;get&lt;/code&gt; is called on &lt;code&gt;this&lt;/code&gt; you
+likely can convert it. If you have a &lt;code&gt;get&lt;/code&gt; on another object,
+&lt;code&gt;anything.get(&amp;#39;foo&amp;#39;)&lt;/code&gt;, you should exercise caution when converting to a native
+getter.&lt;/p&gt;
+
+&lt;p&gt;The community-provided
+&lt;a href="https://github.com/rondale-sc/es5-getter-ember-codemod"&gt;es5-getter-ember-codemod&lt;/a&gt;
+is a great way to convert your existing codebase to ES5 getters. It follows
+the conservative guidelines and only converts &lt;code&gt;this.get&lt;/code&gt;. Note that it cannot
+make all possible conversions to the new API, nor can it ensure 100% of the
+conversions it makes are correct. If your app has poor test coverage or you
+lack any confidence in your ability to make regression checks, a manual
+and gradual conversion process may be more appropriate.&lt;/p&gt;
+
+&lt;p&gt;Thanks to &lt;a href="https://twitter.com/pzuraq"&gt;Chris Garrett&lt;/a&gt; for pushing forward
+work on ES5 getters with support from &lt;a href="https://twitter.com/chancancode"&gt;Godfrey
+Chan&lt;/a&gt;,
+&lt;a href="https://twitter.com/rwjblue/"&gt;Robert Jackson&lt;/a&gt;, and &lt;a href="https://twitter.com/krisselden"&gt;Kris
+Selden&lt;/a&gt;). Thanks to &lt;a href="https://twitter.com/rondale_sc/"&gt;Jonathan
+Jackson&lt;/a&gt; for his work on the codemod.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_introducing-optional-features'&gt;Introducing Optional Features&lt;/h4&gt;
+&lt;p&gt;Because major releases of Ember are not supposed to make breaking changes
+without prior deprecation, the project has been extremely conservative about
+changing behaviors that don&amp;#39;t have a clear deprecation path. As a result, we&amp;#39;ve
+had several quirks of the framework linger into the 3.x series.&lt;/p&gt;
+
+&lt;p&gt;To give the project a path forward when a breaking change is mandatory, we&amp;#39;ve
+released the
+&lt;a href="https://github.com/emberjs/ember-optional-features"&gt;&lt;code&gt;@ember/optional-features&lt;/code&gt;&lt;/a&gt;
+addon. Today this addon is opt-in via installation as an NPM dependency. In a
+future release of Ember it will become part of the default application
+blueprint.&lt;/p&gt;
+
+&lt;p&gt;This addon does nothing by default, but provides a command-line interface to
+enable and disable breaking changes in Ember. Two optional features are being
+introduced in Ember 3.1.&lt;/p&gt;
+
+&lt;p&gt;To install ember-optional-features:&lt;/p&gt;
+&lt;div class="highlight bash "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;ember install @ember/optional-features
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Thanks to &lt;a href="https://twitter.com/chancancode"&gt;Godfrey Chan&lt;/a&gt; and &lt;a href="https://twitter.com/rwjblue/"&gt;Robert
+Jackson&lt;/a&gt; for their work on the optional features
+system.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_new-optional-feature-application-template-wrapper'&gt;New Optional Feature: Application Template Wrapper&lt;/h4&gt;
+&lt;p&gt;Ember applications have long created a wrapping &lt;code&gt;div&lt;/code&gt; around their rendered
+content: &lt;code&gt;&amp;lt;div class=&amp;quot;ember-view&amp;quot;&amp;gt;&lt;/code&gt;. With ember-optional-features, this
+functionality can now be disabled:&lt;/p&gt;
+&lt;div class="highlight text "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;ember feature:disable application-template-wrapper
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Disabling this feature will stop Ember from creating a &lt;code&gt;div&lt;/code&gt; around the
+application. This change may require alterations to your application&amp;#39;s CSS, or
+to any other code that depends upon the presence of the &lt;code&gt;div&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Additionally, enabling this feature will prompt you to optionally run a codemod
+to add the application &lt;code&gt;div&lt;/code&gt; to the &lt;code&gt;application.hbs&lt;/code&gt; of your application.&lt;/p&gt;
+
+&lt;p&gt;Although disabling this feature will eventually be the default for Ember,
+leaving the feature enabled is not deprecated in this release. You can read more
+details about this optional feature and the motivations for introducing it in
+&lt;a href="https://github.com/emberjs/rfcs/blob/master/text/0280-remove-application-wrapper.md"&gt;RFC #280&lt;/a&gt;.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_new-optional-feature-template-only-glimmer-components'&gt;New Optional Feature: Template-only Glimmer Components&lt;/h4&gt;
+&lt;p&gt;Ember components implicitly create an element in the DOM where they are
+invoked, and the contents of their templates are then treated as &amp;quot;innerHTML&amp;quot;
+inside that DOM element. For example, this component template:&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;td colspan="2"&gt;app/templates/components/hello-world.hbs&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;Hello World!
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;When invoked as:&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;td colspan="2"&gt;app/templates/index.hbs&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;section&amp;gt;&lt;/span&gt;
+  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;hello-world&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+&lt;span class="tag"&gt;&amp;lt;/section&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Would render with an implicit &lt;code&gt;div&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight html "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;section&amp;gt;&lt;/span&gt;
+  &lt;span class="tag"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="attribute-name"&gt;class&lt;/span&gt;=&lt;span class="string"&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;span class="content"&gt;ember-view&lt;/span&gt;&lt;span class="delimiter"&gt;&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;span class="tag"&gt;&amp;gt;&lt;/span&gt;
+    Hello World!
+  &lt;span class="tag"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;span class="tag"&gt;&amp;lt;/section&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;The treatment of templates as &amp;quot;innerHTML&amp;quot; in Ember makes several parts of the
+framework&amp;#39;s API harder to learn. For example, setting a class on an element in
+a template is straight forward, and any developer comfortable with HTML should
+be comfortable doing so. However adding a class to the implicit component &lt;code&gt;div&lt;/code&gt;
+is more difficult, requiring the developer to create a JavaScript file for the
+component and use the &lt;code&gt;classNames&lt;/code&gt; property.&lt;/p&gt;
+
+&lt;p&gt;To resolve this tension, Glimmer components shift templates to be treated as
+&amp;quot;outerHTML&amp;quot;. There is no implicit &lt;code&gt;div&lt;/code&gt;. All the DOM elements created by the
+renderer are in a template.&lt;/p&gt;
+
+&lt;p&gt;The &amp;quot;Template-only Glimmer Component&amp;quot; feature provides a first practical step
+in this direction. You can enable this feature by running:&lt;/p&gt;
+&lt;div class="highlight bash "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;ember feature:enable template-only-glimmer-components
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Once enabled, any component template file without a corresponding JavaScript
+file will behave like &amp;quot;outerHTML&amp;quot;. For example the component file:&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;td colspan="2"&gt;app/templates/components/hello-world.hbs&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;Hello World!
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Without any corresponding JavaScript file, and invoked as:&lt;/p&gt;
+&lt;div class="highlight handlebars "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;td colspan="2"&gt;app/templates/index.hbs&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;section&amp;gt;&lt;/span&gt;
+  &lt;span class="inline"&gt;&lt;span class="inline-delimiter"&gt;{{&lt;/span&gt;&lt;span class="attribute-name"&gt;hello-world&lt;/span&gt;&lt;span class="inline-delimiter"&gt;}}&lt;/span&gt;&lt;/span&gt;
+&lt;span class="tag"&gt;&amp;lt;/section&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Would render without an implicit div, as follows:&lt;/p&gt;
+&lt;div class="highlight html "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="tag"&gt;&amp;lt;section&amp;gt;&lt;/span&gt;
+  Hello World!
+&lt;span class="tag"&gt;&amp;lt;/section&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Enabling this feature may require changes to your application&amp;#39;s CSS, or to any
+other code dependent upon the presence of &lt;code&gt;div&lt;/code&gt;s for JavaScript-free components.
+In practice, most applications and nearly all addons use the Ember CLI generators
+for new components, which include a JavaScript file. If your application
+has template-only components which rely on a backing &lt;code&gt;EmberComponent&lt;/code&gt; class, for
+example, if they have an injected-by-type service, note that they would also lose access
+to that backing class.&lt;/p&gt;
+
+&lt;p&gt;However, enabling this feature will prompt you to optionally run a codemod
+which creates backing classes for all template-only components, meaning
+both the implicit &lt;code&gt;div&lt;/code&gt; and backing class are retained.&lt;/p&gt;
+
+&lt;p&gt;Although enabling this feature will eventually be the default for Ember, leaving
+the feature disabled is not deprecated in this release. You can read more
+details about this optional feature and the motivations for introducing it in
+&lt;a href="https://github.com/emberjs/rfcs/blob/master/text/0278-template-only-components.md"&gt;RFC #278&lt;/a&gt;.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_positional-params-bug-fix'&gt;Positional Params Bug Fix&lt;/h4&gt;
+&lt;p&gt;Ember introduced contextual components in Ember 2.3. Contextual components
+close over arguments and are intended to do so in a manner consistent with
+closures in JavaScript.&lt;/p&gt;
+
+&lt;p&gt;As the implementation of contextual components has been refined in the Glimmer
+VM, a notable discrepancy has been noticed in how they handle positional
+params. Given the following template:&lt;/p&gt;
+&lt;div class="highlight hbs "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
+  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;
+  &lt;td class="code"&gt;&lt;pre&gt;{{#with (component 'x-foo' 1 2 3) as |comp|}}
+  {{component comp 4 5 6}}
+{{/with}}
+&lt;/pre&gt;&lt;/td&gt;
+&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;The params of &lt;code&gt;4, 5, 6&lt;/code&gt; would &lt;em&gt;override&lt;/em&gt; those of &lt;code&gt;1, 2, 3&lt;/code&gt;. Normal closure
+implementations would instead have appended the arguments to result in a
+positional argument list of &lt;code&gt;1, 2, 3, 4, 5, 6&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;In Ember 3.1 we&amp;#39;ve corrected the implementation to act like a proper closure.
+In researching the impact of this breaking bug fix we found no known public
+addons or applications which would be impacted.&lt;/p&gt;
+
+&lt;p&gt;For more information about this change see
+&lt;a href="https://github.com/emberjs/ember.js/pull/15287"&gt;emberjs/ember.js#15287&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;For more details on the changes in Ember.js 3.1-beta.1, please review the
+&lt;a href="https://github.com/emberjs/ember.js/releases/tag/v3.1.0-beta.1"&gt;Ember.js 3.1.0-beta.1 release page&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_ember-data'&gt;Ember Data&lt;/h2&gt;
+&lt;hr&gt;
+
+&lt;p&gt;Ember Data is the official data persistence library for Ember.js applications.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_changes-in-ember-data-3-1-beta-1'&gt;Changes in Ember Data 3.1-beta.1&lt;/h3&gt;
+&lt;p&gt;Ember Data 3.1-beta.1 contains minor bug fixes and improvements. For more
+details on the changes in Ember Data 3.1-beta.1, please review the &lt;a href="https://github.com/emberjs/data/releases/tag/v3.1.0-beta.1"&gt;Ember Data
+3.1.0-beta.1 release page&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 class='anchorable-toc' id='toc_ember-cli'&gt;Ember CLI&lt;/h2&gt;
+&lt;hr&gt;
+
+&lt;p&gt;Ember CLI is the command line interface for managing and packaging Ember.js
+applications.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_changes-in-ember-cli-3-1-0-beta-1'&gt;Changes in Ember CLI 3.1.0-beta.1&lt;/h3&gt;
+&lt;p&gt;Ember CLI contains minor bug fixes and improvements.&lt;/p&gt;
+
+&lt;p&gt;Additionally, it changes the default application and addon blueprint to
+align &lt;code&gt;ember test&lt;/code&gt; and &lt;code&gt;npm test&lt;/code&gt;, where previously their behaviors diverged.
+&lt;code&gt;ember test&lt;/code&gt; or &lt;code&gt;npm test&lt;/code&gt; will run the codebase test suite, &lt;code&gt;ember test:all&lt;/code&gt;
+or &lt;code&gt;npm test:all&lt;/code&gt; will run the test suite across all variants configured in
+&lt;code&gt;config/ember-try.js&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;For more details on the changes in Ember CLI 3.1.0-beta.1 and detailed upgrade
+instructions, please review the &lt;a href="https://github.com/ember-cli/ember-cli/releases/tag/v3.1.0-beta.1"&gt;Ember CLI 3.1.0-beta.1 release page&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 class='anchorable-toc' id='toc_thank-you'&gt;Thank You!&lt;/h3&gt;
+&lt;p&gt;As a community-driven open-source project with an ambitious scope, each of
+these releases is a reminder that the Ember project would not have been
+possible without your continued support. We are extremely grateful to our
+contributors for their efforts.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>Ember 3.0 Released</title>
     <link rel="alternate" href="http://emberjs.com/blog/2018/02/14/ember-3-0-released.html"/>
@@ -43,15 +433,16 @@ first time today, get started by running:&lt;/p&gt;
 3
 4
 &lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&amp;gt; yarn global add ember-cli # Or npm install -g ember-cli
-&amp;gt; ember new my-project
-&amp;gt; cd my-project
-&amp;gt; ember serve # Then visit http://localhost:4200
+  &lt;td class="code"&gt;&lt;pre&gt;yarn global add ember-cli # Or npm install -g ember-cli
+ember new my-project
+cd my-project
+ember serve # Then visit http://localhost:4200
 &lt;/pre&gt;&lt;/td&gt;
 &lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;Additionally, today the 3.1 beta cycle begins for these same projects. We&amp;#39;ve
-split out the beta release details into a separate forthcoming post to keep this
+split out the beta release details into a separate &lt;a href="/blog/2018/02/16/ember-3-1-beta-released.html"&gt;Ember 3.1-beta blog
+post&lt;/a&gt; to keep this
 one focused on app migration steps and guidance.&lt;/p&gt;
 
 &lt;p&gt;Finally, today we&amp;#39;re also promoting Ember 2.18 to LTS (&lt;a href="/blog/2018/01/01/ember-2-18-released.html"&gt;2.18 release
@@ -1826,246 +2217,6 @@ build with these powerful primitives. We&amp;#39;ll post again once we&amp;#39;v
 next version of Glimmer.js with these features integrated, so stay tuned to the
 blog. And if you&amp;#39;ve got any questions or want to help out, leave a comment below
 or come see us on GitHub!&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>The Road to Ember 3.0</title>
-    <link rel="alternate" href="http://emberjs.com/blog/2017/10/03/the-road-to-ember-3-0.html"/>
-    <id>http://emberjs.com/blog/2017/10/03/the-road-to-ember-3-0.html</id>
-    <published>2017-10-03T00:00:00+00:00</published>
-    <updated>2017-10-03T00:00:00+00:00</updated>
-    <author>
-      <name>Ember</name>
-    </author>
-    <summary type="html">&lt;p&gt;Today the Ember.js Core Team is happy to announce our plans for the release of Ember 3.0. Ember 3.0 will arrive 2.5 years and 18 minor revisions after the release of Ember 2.0. The final release of the 2.x series will be Ember 2.18 on January 1st,...&lt;/p&gt;</summary>
-    <content type="html">&lt;p&gt;Today the Ember.js Core Team is happy to announce our plans for the release of Ember 3.0. Ember 3.0 will arrive 2.5 years and 18 minor revisions after the release of Ember 2.0. The final release of the 2.x series will be Ember 2.18 on January 1st, 2018.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Ember 3.0 removes public API deprecated in Ember 2.x releases.&lt;/strong&gt; 3.0 does not introduce new public APIs or breaking changes.&lt;/p&gt;
-
-&lt;p&gt;Traditionally, major releases of software are centered around marketing pitches and new functionality. In contrast, major releases of Ember are “garbage collection” releases. Ember APIs that were deprecated during 2.x but were still supported are purged from the codebase in 3.0. The APIs remaining in 3.0 reflect what we think of as the idiomatic way to build an Ember app.&lt;/p&gt;
-
-&lt;p&gt;Ember 2.0 was the project’s first attempt at a major release where the transition path for apps and addons was a priority. The community took several important lessons from the 2.0 release cycle, and these have shaped our plans for 3.0. Please take a moment to review our plans below.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_the-ember-3-0-release-schedule'&gt;The Ember 3.0 release schedule&lt;/h2&gt;
-&lt;p&gt;We’re announcing this release several months ahead of its final date so application authors and addons will have time to prepare for the transition. The specific schedule of releases leading to 3.0 will be as follows:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src="/images/blog/2017-10/ember-3-timeline.jpg" alt="Ember 3.0 release schedule"&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;2.16.0 stable released: October 9th 2017&lt;/li&gt;
-&lt;li&gt;2.17.0 stable released, 2.16 promoted LTS: November 20th 2017&lt;/li&gt;
-&lt;li&gt;2.18.0 stable released, 3.0-beta released: January 1st 2018&lt;/li&gt;
-&lt;li&gt;3.0.0 stable released, 2.18 promoted to LTS: February 12th 2018&lt;/li&gt;
-&lt;li&gt;3.4.0 stable released: July 30th 2018&lt;/li&gt;
-&lt;li&gt;3.5.0 stable release, 3.4 promoted to LTS: September 10th 2018&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The above dates are projections based on our 6-week release cycle. This schedule has two notable departures from our standard release policies:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Ember 2.18 will be made an additional LTS to maximize the opportunity for apps to transition to 3.x.&lt;/li&gt;
-&lt;li&gt;Ember 3.4, and not 3.0, will be the first 3.x release promoted to an LTS.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Ember 2.18-LTS, the final release of Ember 2.x, will receive support for critical bugfixes until September 2018 and security fixes until February 2019. This is in alignment with our standard long-term support practices.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_transitioning-to-3-0'&gt;Transitioning to 3.0&lt;/h2&gt;
-&lt;p&gt;We’ve refined the release plan for Ember 3.0 based on the lessons of 2.0. The most important of those lessons is that there should be no last-minute deprecations during transition releases, and no intimate (unintentionally in common use) or private API churn around the transition.&lt;/p&gt;
-
-&lt;p&gt;To turn that lesson into practice, we’ve carefully tracked the addition of 3.0-targeted deprecations for each part of the framework:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The last 3.0-targeted deprecation to Ember was in July 2017, Ember 2.14&lt;/li&gt;
-&lt;li&gt;The last 3.0-targeted deprecation to Ember Data was in April 2017, Ember 2.13&lt;/li&gt;
-&lt;li&gt;The last 3.0-targeted deprecation to Ember CLI was in April 2017, Ember 2.13&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;No additional 3.0-targeted deprecations will be introduced.&lt;/strong&gt; This will prevent a last-minute rush to plan API changes for 3.0, and ensure that application authors behind on deprecation fixes don’t fall further behind than they already are. The single exception here is that we will add a deprecation message in development builds for IE9, IE10, and PhantomJS.&lt;/p&gt;
-
-&lt;p&gt;To further expand the migration window for 2.x applications to adopt 3.x, &lt;strong&gt;we will be releasing an addon that provides support for Ember.js 2.x APIs into the 3.x series.&lt;/strong&gt; We’re committing to support that addon until Ember 3.4 (the first LTS candidate of the Ember 3.x cycle). If you want to contribute to this effort, you can find this package under the name &lt;code&gt;ember-2-legacy&lt;/code&gt;.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_api-removals-in-3-0'&gt;API Removals in 3.0&lt;/h2&gt;
-&lt;p&gt;All APIs to be removed in Ember 3.0 are already deprecated today. By removing support for these features we achieve two goals for our major release. First, we make it simpler for Ember to strip code that supports these features if you don’t use them. Second, we make it possible for Ember to remove the code supporting these features entirely, opening the door to refactoring that improves the clarity and simplicity of our implementations.&lt;/p&gt;
-
-&lt;p&gt;The APIs removed in each of Ember.js, Ember Data, and Ember CLI are:&lt;/p&gt;
-
-&lt;p&gt;&lt;hr&gt;&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_apis-removed-in-ember-js-3-0'&gt;APIs Removed in Ember.js 3.0&lt;/h3&gt;
-&lt;p&gt;Below we’ve listed some of the most significant API removals in Ember.js 3.0. For an exhaustive list of removals, see the &lt;a href="/deprecations/v2.x/"&gt;Ember.js 2.x deprecation guide&lt;/a&gt;.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_legacy-registry-and-container-access'&gt;Legacy registry and container access.&lt;/h4&gt;
-&lt;p&gt;A large undertaking of the 2.x cycle was to improve Ember’s boot process, enabling features like &lt;a href="https://ember-fastboot.com/"&gt;Ember Fastboot&lt;/a&gt; and improving the performance of Ember’s dependency injection system.&lt;/p&gt;
-
-&lt;p&gt;In Ember 2.0 there was still no public API for registering dependencies or interacting with the DI container. Instead, you would often see code that referenced the &lt;code&gt;registry&lt;/code&gt; or &lt;code&gt;container&lt;/code&gt; properties on application objects or other objects instantiated by the framework. In Ember 3.0 these legacy systems will be removed in favor of APIs on the application object, application instance object, and the “owner” API.&lt;/p&gt;
-
-&lt;p&gt;For more details, please see the deprecation guide:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="/deprecations/v2.x/#toc_initializer-arity"&gt;Initializer arity&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="/deprecations/v2.x/#toc_ember-application-registry-ember-applicationinstance-registry"&gt;&lt;code&gt;Ember.Application#registry&lt;/code&gt; / &lt;code&gt;Ember.ApplicationInstance#registry&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="/deprecations/v2.x/#toc_ember-applicationinstance-container"&gt;&lt;code&gt;Ember.ApplicationInstance#container&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="/deprecations/v2.x/#toc_injected-container-access"&gt;Injected &lt;code&gt;container&lt;/code&gt; access&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="/deprecations/v2.x/#toc_migrating-from-_lookupfactory-to-factoryfor"&gt;Migrating from &lt;code&gt;_lookupFactory&lt;/code&gt; to &lt;code&gt;factoryFor&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 class='anchorable-toc' id='toc_legacy-deprecate-api'&gt;Legacy deprecate API&lt;/h4&gt;
-&lt;p&gt;Ember’s deprecation APIs improved in 2.0. The goal was to provided more information to tools like &lt;a href="https://github.com/mixonic/ember-cli-deprecation-workflow"&gt;ember-cli-deprecation-workflow&lt;/a&gt; and the &lt;a href="https://github.com/emberjs/ember-inspector"&gt;Ember inspector&lt;/a&gt;. All calls to a deprecation API must now include an &lt;code&gt;id&lt;/code&gt; and &lt;code&gt;until&lt;/code&gt; parameter. This permits them to be filtered by tooling. In the 3.x series we plan to use this improved data to implement “svelte” builds of Ember, where deprecated but unused code paths in the framework are removed during an application build.&lt;/p&gt;
-
-&lt;p&gt;For more details, see the deprecation guide:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="/deprecations/v2.x/#toc_function-as-test-in-ember-deprecate-ember-warn-ember-assert"&gt;Function as test in &lt;code&gt;Ember.deprecate&lt;/code&gt;, &lt;code&gt;Ember.warn&lt;/code&gt;, &lt;code&gt;Ember.assert&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="/deprecations/v2.x/#toc_ember-debug-function-options"&gt;Ember debug function options&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 class='anchorable-toc' id='toc_legacy-data-binding-api'&gt;Legacy data binding API&lt;/h4&gt;
-&lt;p&gt;For a long time, Ember has provided two systems for applications to perform data-binding in JavaScript. The first uses computed properties and it is still idiomatic today. For example, you’ll often see &lt;code&gt;Ember.computed.alias&lt;/code&gt; in application code. This system remains without any deprecation.&lt;/p&gt;
-
-&lt;p&gt;The second system uses the &lt;code&gt;Ember.Binding&lt;/code&gt; namespace or any property with the postfix of &lt;code&gt;Binding&lt;/code&gt; on an object. For example:&lt;/p&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;export&lt;/span&gt; &lt;span class="keyword"&gt;default&lt;/span&gt; Ember.Component.extend({
-  &lt;span class="key"&gt;wowBinding&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;MyApp.wowObject&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;,
-  &lt;span class="key"&gt;thingContainer&lt;/span&gt;: {},
-  &lt;span class="key"&gt;amazingBinding&lt;/span&gt;: Ember.Binding.oneWay(&lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;thingContainer.firstAmazingThing&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;),
-  &lt;span class="key"&gt;wasThisReallyTheAPIBinding&lt;/span&gt;: &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;thingContainer.yesThisWasTheAPI&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;
-});
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;This second system will be removed in Ember 3.0. For more details, see the deprecation guide:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="/deprecations/v2.x/#toc_ember-binding"&gt;&lt;code&gt;Ember.Binding&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 class='anchorable-toc' id='toc_legacy-render-helper'&gt;Legacy {{render}} helper&lt;/h4&gt;
-&lt;p&gt;Ember’s &lt;code&gt;{{render}}&lt;/code&gt; helper presaged the idea of component-driven rendering architecture as we now know it. Despite this, it was also an API coupled to Ember’s &lt;code&gt;Controller&lt;/code&gt; system, was subject to edge cases where the context of a template was difficult to discern, and additionally was entangled with Ember’s routing system. Through the 2.x cycle we’ve worked to ensure each use-case for &lt;code&gt;{{render}}&lt;/code&gt; has a viable solution in Ember’s component-driven system.&lt;/p&gt;
-
-&lt;p&gt;Fully deprecated since Ember 2.11, in 3.0 the &lt;code&gt;{{render}}&lt;/code&gt; helper will be removed. Please see the deprecation guide for more details:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="/deprecations/v2.x/#toc_render-helper-with-block"&gt;&lt;code&gt;{{#render}}&lt;/code&gt; helper with a block&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="/deprecations/v2.x/#toc_model-param-in-code-render-code-helper"&gt;Model param in &lt;code&gt;{{render}}&lt;/code&gt; helper&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="/deprecations/v2.x/#toc_code-render-code-helper"&gt;&lt;code&gt;{{render}}&lt;/code&gt; helper&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="/deprecations/v2.x/#toc_rendering-into-a-render-helper-that-resolves-to-an-outlet"&gt;Rendering into a &lt;code&gt;{{render}}&lt;/code&gt; helper that resolves to an &lt;code&gt;{{outlet}}&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 class='anchorable-toc' id='toc_legacy-ember-k-utility'&gt;Legacy Ember.K utility&lt;/h4&gt;
-&lt;p&gt;Ember has historically provided a short-to-type noop function for use as a stub on parent classes or in other situations where a noop might be useful. With the advent of ECMAScript 2015 &lt;a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Method_definitions"&gt;method definitions&lt;/a&gt; and &lt;a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions"&gt;arrow functions&lt;/a&gt;, this kind of utility has become more confusing than convenient.&lt;/p&gt;
-
-&lt;p&gt;In Ember 3.0 the &lt;code&gt;Ember.K&lt;/code&gt; function will be removed. For more details, please see the deprecation guide:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="/deprecations/v2.x/#toc_code-ember-k-code"&gt;&lt;code&gt;Ember.K&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 class='anchorable-toc' id='toc_consuming-ember-through-bower'&gt;Consuming Ember through Bower&lt;/h4&gt;
-&lt;p&gt;Ember.js 3.0 and later releases will no longer be published to bower. If you still use bower today, we strongly suggest you begin the migration of your dependencies to npm.&lt;/p&gt;
-
-&lt;p&gt;&lt;hr&gt;&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_apis-removed-in-ember-data-3-0'&gt;APIs Removed in Ember Data 3.0&lt;/h3&gt;
-&lt;p&gt;Below we’ve listed the most notable Ember Data API removals in 3.0. For an exhaustive list see the &lt;a href="/deprecations/ember-data/v2.x/"&gt;Ember&lt;/a&gt; &lt;a href="/deprecations/ember-data/v2.x/"&gt;&lt;/a&gt;&lt;a href="/deprecations/ember-data/v2.x/"&gt;Data 2.x deprecation guide&lt;/a&gt;.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_using-ember-data-via-globals'&gt;Using Ember-Data via globals&lt;/h4&gt;
-&lt;p&gt;Ember Data deprecated access to &lt;code&gt;window.DS&lt;/code&gt; early in 2.x. Instead, accessing the &lt;code&gt;DS&lt;/code&gt; namespace object via ES modules is preferred. In general this makes Ember Data more like other addons in the Ember ecosystem.&lt;/p&gt;
-
-&lt;p&gt;To access Ember Data in applications we suggest importing the &lt;code&gt;DS&lt;/code&gt; namespace. For example:&lt;/p&gt;
-&lt;div class="highlight js "&gt;&lt;div class="ribbon"&gt;&lt;/div&gt;&lt;div class="scroller"&gt;&lt;table class="CodeRay"&gt;&lt;tr&gt;
-  &lt;td class="line-numbers"&gt;&lt;pre&gt;1
-&lt;/pre&gt;&lt;/td&gt;
-  &lt;td class="code"&gt;&lt;pre&gt;&lt;span class="reserved"&gt;import&lt;/span&gt; DS from &lt;span class="string"&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;span class="content"&gt;ember-data&lt;/span&gt;&lt;span class="delimiter"&gt;'&lt;/span&gt;&lt;/span&gt;;
-&lt;/pre&gt;&lt;/td&gt;
-&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Additionally, Ember Data 3.0 and later releases will no longer be published to bower. If you still use bower today, we strongly suggest you begin the migration of your dependencies to npm.&lt;/p&gt;
-
-&lt;p&gt;Please see the deprecation guide for some additional information:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="/deprecations/ember-data/v2.x/#toc_global-version-of-ds"&gt;Global version of&lt;/a&gt; &lt;a href="/deprecations/ember-data/v2.x/#toc_global-version-of-ds"&gt;&lt;code&gt;DS&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 class='anchorable-toc' id='toc_date-parse'&gt;Date.parse&lt;/h4&gt;
-&lt;p&gt;In some legacy browsers, &lt;code&gt;Date.parse&lt;/code&gt; does not support the ISO8601 standard date format. Ember Data provided a polyfill to make &lt;code&gt;Date.parse&lt;/code&gt; consistent across environments.&lt;/p&gt;
-
-&lt;p&gt;During the 2.x cycle, none of these legacy browsers were supported. Despite this, Ember Data continued to replace &lt;code&gt;Date.parse&lt;/code&gt; with its own polyfill. Partway through the 2.x cycle, Ember Data introduced the ability to opt-out of this polyfill and that change was made default for new Ember applications.&lt;/p&gt;
-
-&lt;p&gt;In Ember Data 3.0 the opt-out functionality will become a noop and the native &lt;code&gt;Date.parse&lt;/code&gt; functionality will always be used. Additionally, the deprecated API &lt;code&gt;Ember.Date.parse&lt;/code&gt; will be removed.&lt;/p&gt;
-
-&lt;p&gt;For more details see the deprecation guides:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="/deprecations/ember-data/v2.x/#toc_ember-date-parse"&gt;&lt;code&gt;Ember.Date.parse&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="/deprecations/ember-data/v2.x/#toc_date-prototype-extension"&gt;Date prototype extension&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 class='anchorable-toc' id='toc_relocated-apis'&gt;Relocated APIs&lt;/h4&gt;
-&lt;p&gt;Several APIs have effectively been relocated in Ember Data during the 2.x series. In some cases these changes reflected the promotion of a private API to a public one, in other cases a subtle adjustment to the development model.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;store.hasRecordForId&lt;/code&gt; was introduced to replace &lt;code&gt;store.recordIsLoaded&lt;/code&gt; (&lt;a href="/deprecations/ember-data/v2.x/#toc_recordisloaded"&gt;deprecation guide&lt;/a&gt;).&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;store.adapterFor&lt;/code&gt; was introduced to replace &lt;code&gt;store.lookupAdapter&lt;/code&gt; (&lt;a href="/deprecations/ember-data/v2.x/#toc_lookupadapter"&gt;deprecation guide&lt;/a&gt;).&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;store.serializerFor&lt;/code&gt; was introduced to replace &lt;code&gt;store.lookupSerializer&lt;/code&gt; (&lt;a href="/deprecations/ember-data/v2.x/#toc_lookupserializer"&gt;deprecation guide&lt;/a&gt;).&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;model.serialize&lt;/code&gt; was introduced to replace &lt;code&gt;store.serialize&lt;/code&gt; (&lt;a href="/deprecations/ember-data/v2.x/#toc_store-serialize"&gt;deprecation guide&lt;/a&gt;).&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 class='anchorable-toc' id='toc_unused-initializers'&gt;Unused initializers&lt;/h4&gt;
-&lt;p&gt;Ember Data provided several initializers which have been consolidated into a single &lt;code&gt;ember-data&lt;/code&gt; initializer. In 3.0, support for the legacy initializers (and for ordering other initializers based on their names) will be removed.&lt;/p&gt;
-
-&lt;p&gt;Please see the deprecation guide for more details:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="/deprecations/ember-data/v2.x/#toc_unused-initializers"&gt;Unused Initializers&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;hr&gt;&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_apis-removed-in-ember-cli-3-0'&gt;APIs Removed in Ember CLI 3.0&lt;/h3&gt;
-&lt;p&gt;Here we’ve listed the most notable Ember CLI API removals in 3.0. For an exhaustive list see the &lt;a href="/deprecations/ember-cli/v2.x/"&gt;Ember-CLI 2.x deprecation guide&lt;/a&gt;.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_base-url-configuration'&gt;Base URL configuration&lt;/h4&gt;
-&lt;p&gt;Ember CLI applications used to look for a &lt;code&gt;baseURL&lt;/code&gt; property in an application’s &lt;code&gt;config/environment.js&lt;/code&gt;. This value would be used to populated a &lt;code&gt;&amp;lt;base&amp;gt;&lt;/code&gt; tag in the application’s &lt;code&gt;index.html&lt;/code&gt;. This option provided a way to run an Ember app from a URL subdirectory without rewriting asset URLs.&lt;/p&gt;
-
-&lt;p&gt;Unfortunately the &lt;code&gt;&amp;lt;base&amp;gt;&lt;/code&gt; tag strategy was fatally flawed. Amongst other issues discussed in the &lt;a href="/blog/2016/04/28/baseURL.html"&gt;&lt;code&gt;baseURL&lt;/code&gt;&lt;/a&gt; &lt;a href="/blog/2016/04/28/baseURL.html"&gt;deprecation blog post,&lt;/a&gt; SVG fragments on a page with a &lt;code&gt;&amp;lt;base&amp;gt;&lt;/code&gt; tag have poor support in several browsers. This problem, and others, lead to the &lt;code&gt;baseURL&lt;/code&gt; option being deprecated in favor of more robust support and documentation of the &lt;code&gt;rootURL&lt;/code&gt; option.&lt;/p&gt;
-
-&lt;p&gt;In Ember CLI 3.0, support for base URL configuration will be removed. For more details on how to migrate away from &lt;code&gt;baseURL&lt;/code&gt;, see these resources:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Blog post: &lt;a href="/blog/2016/04/28/baseURL.html"&gt;Upcoming deprecation of baseURL in Ember CLI 2.7&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Deprecation guide: &lt;a href="/deprecations/ember-cli/v2.x/#toc_base-url"&gt;Base URL&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 class='anchorable-toc' id='toc_legacy-brocfile-js'&gt;Legacy Brocfile.js&lt;/h4&gt;
-&lt;p&gt;Ember CLI builds were originally configured in the file &lt;code&gt;Brocfile.js&lt;/code&gt;. Early in the 2.x series use of this file was deprecated in favor of &lt;code&gt;ember-cli-build.js&lt;/code&gt;. This new file allowed Ember CLI to pass default configuration to application builds and decoupled Ember CLI from Broccoli’s own configuration system.&lt;/p&gt;
-
-&lt;p&gt;In Ember 3.0, support for &lt;code&gt;Brocfile.js&lt;/code&gt; will be removed. Please see the deprecation guide for more details:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="/deprecations/ember-cli/v2.x/#toc_migrate-from-brocfile-js-to-ember-cli-build-js"&gt;Migrate from &lt;code&gt;Brocfile.js&lt;/code&gt; to &lt;code&gt;ember-cli-build.js&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;hr&gt;&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_browser-support-in-3-0'&gt;Browser Support in 3.0&lt;/h2&gt;
-&lt;p&gt;Ember 3.0 will drop support for Internet Explorer 9, IE 10, and PhantomJS. If you still require support for these browsers, Ember 2.18-LTS will maintain support for significant bug fixes until September 2018 and security fixes until February 2019. We encourage you to use this window of time to plan a transition for your users if you intend to upgrade to Ember 3.x.&lt;/p&gt;
-
-&lt;p&gt;Microsoft ended support for IE 9 (including security fixes) &lt;a href="http://www.allyncs.com/docs/lifecyclesupport.html"&gt;in April of 2017&lt;/a&gt;. IE 10 has global usage &lt;em&gt;below&lt;/em&gt; that of IE9, partially because all operating systems running IE10 can support an upgrade to IE11 or another browser. Amongst Ember developers in the &lt;a href="/ember-community-survey-2017/#browser-requirements"&gt;2017 Ember Community Survey&lt;/a&gt; only 2.9% expect to work on application supporting IE9 this spring. Providing a great web experience is difficult on these browsers, and supporting them makes it difficult for us to leverage modern JavaScript and web APIs.&lt;/p&gt;
-
-&lt;p&gt;Although there is still limited activity on its GitHub repo, PhantomJS is effectively unmaintained &lt;a href="https://groups.google.com/forum/#!topic/phantomjs/9aI5d-LDuNE"&gt;as of April 2017&lt;/a&gt;. In its place, Ember and other projects have started to use &lt;a href="https://developers.google.com/web/updates/2017/04/headless-chrome"&gt;headless Chrome&lt;/a&gt; for continuous integration and other use cases. If you have not already, we encourage you to migrate your own continuous integration systems to headless Chrome.&lt;/p&gt;
-
-&lt;p&gt;This decision to drop support for IE9, IE10, and PhantomJS is pending completion of a final comment period on &lt;a href="https://github.com/emberjs/rfcs/pull/252"&gt;RFC 252: Browser Support Changes&lt;/a&gt;. For more details, please see that RFC.&lt;/p&gt;
-&lt;h2 class='anchorable-toc' id='toc_onward-to-3-x'&gt;Onward to 3.x&lt;/h2&gt;
-&lt;p&gt;Ember 3.x presents us an opportunity to do more than simply remove code. We’re excited to take the conventions Ember developers are building with and continue to streamline the framework around them.&lt;/p&gt;
-
-&lt;p&gt;Around the release of Ember 2.0 there were several features we ambitiously hoped to land during the 2.x cycle. We&amp;#39;re not planning to rush these features in at the last minute.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Routable components&lt;/strong&gt; were pitched as a way to remove controllers from Ember applications. Controllers are problematic for two reasons: They are singletons instances, which is often unexpected by developers, and they are a unique concept applied to a specific scenario in application architecture, making them difficult for new developers to learn. Despite these issues, removing controllers remains a challenging design problem that hinges on component API design (should we use today’s components or block on Glimmer components?) as well as query params and routing. We’ve removed most or all of the worst footguns around controllers during the 2.x cycle, and encourage you to use them without hesitation until we complete a migration path to something better.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Svelte builds&lt;/strong&gt; are a system we’ve discussed for some time. The general pattern is to ship less code to the browser, especially when that code is related to framework features that an application does not use. Migrating Ember itself to be distributed as an Ember CLI addon was the most complex step in the process of bringing svelte to applications. We’re happy to have that hurdle down and Robert Jackson is looking at our next steps.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Please visit our new &lt;a href="/statusboard"&gt;Ember Status board&lt;/a&gt; to keep up with what we’re working on. Ember&amp;#39;s 3.0 release is focused on removing legacy features, but that doesn&amp;#39;t mean we&amp;#39;re not working hard in other areas of the framework to deliver on improvement. &lt;strong&gt;In fact, work on improvements to Ember has been effectively decoupled from the 3.x release, and we expect to see new features landing throughout the transition period.&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;As a demonstration, here are some examples of new functionality we&amp;#39;ve
-recently added to Ember without adding 3.0-targeted deprecations:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;The JavaScript modules API for Ember.js&lt;/strong&gt;: In Ember.js 2.16 applications can import parts of Ember without going through a single namespace object. This creates opportunities to improve our documentation, editor tooling, and performance. Additionally in Ember 2.16, newly generated applications will use the new module import statements by default. See the &lt;a href="/blog/2017/09/01/ember-2-15-released.html#toc_ember-js-modules-api"&gt;Ember 2.16-beta release post&lt;/a&gt; for more details.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Routing service phase I&lt;/strong&gt;: In Ember.js 2.15 we landed a new service that permits components to interact with the routing system. This service improves the general architecture of Ember apps and creates the opportunity for new kinds of analytics tracking. The first phase of development for the routing service landed in Ember 2.15, with the second phase to follow. See the &lt;a href="/blog/2017/09/01/ember-2-15-released.html#toc_public-router-service-phase-1"&gt;Ember 2.15 release post&lt;/a&gt; for more details.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Newer versions of the Glimmer-VM rendering engine&lt;/strong&gt;: In Ember.js 2.15 the framework upgraded its internal dependency on the Glimmer-VM rendering engine. Included were features like Glimmer&amp;#39;s &amp;quot;stack VM&amp;quot;, improved assertion stripping, and an improved implementation of the &lt;code&gt;(component&lt;/code&gt; helper. The Glimmer-VM team is committed to keeping Ember up to date with recent releases. This incremental approach to delivers improvements and optimizations with low risk of a major regression.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;We look forward to sharing Ember 3.0-beta on January 1st. Thank you!&lt;/p&gt;
 </content>
   </entry>
 </feed>
