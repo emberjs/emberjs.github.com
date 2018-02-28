@@ -144,7 +144,37 @@
 cycle.</p>
 
 <p>For more information on deprecations in Ember, see the <a href="/deprecations">main deprecations page</a>.</p>
-<h3 class='anchorable-toc' id='toc_deprecations-added-in-3-1'>Deprecations Added in 3.1</h3><h4 class='anchorable-toc' id='toc_use-notifypropertychange-instead-of-propertywillchange-and-propertydidchange'>Use notifyPropertyChange instead of propertyWillChange and propertyDidChange</h4><h5 class='anchorable-toc' id='toc_until-3-5-0'>until: 3.5.0</h5><h5 class='anchorable-toc' id='toc_id-ember-metal-deprecate-propertywillchange-ember-metal-deprecate-propertydidchange'>id: ember-metal.deprecate-propertyWillChange, ember-metal.deprecate-propertyDidChange</h5>
+<h3 class='anchorable-toc' id='toc_deprecations-added-in-3-2'>Deprecations Added in 3.2</h3><h4 class='anchorable-toc' id='toc_use-defineproperty-to-define-computed-properties'>Use defineProperty to define computed properties</h4><h5 class='anchorable-toc' id='toc_until-3-5-0'>until: 3.5.0</h5><h5 class='anchorable-toc' id='toc_id-ember-meta-descriptor-on-object'>id: ember-meta.descriptor-on-object</h5>
+<p>Although uncommon, it is possible to assign computed properties directly to
+objects and have them be implicitly computed from eg <code>Ember.get</code>.  As part of
+supporting ES5 getter computed properties, assigning computed properties
+directly is deprecated.  You should replace these assignments with calls to
+<code>defineProperty</code>.</p>
+
+<p>For example, the following:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>let object = {};
+object.key = Ember.computed(() =&gt; <span class="string"><span class="delimiter">'</span><span class="content">value</span><span class="delimiter">'</span></span>);
+Ember.get(object, <span class="string"><span class="delimiter">'</span><span class="content">key</span><span class="delimiter">'</span></span>) === <span class="string"><span class="delimiter">'</span><span class="content">value</span><span class="delimiter">'</span></span>;
+</pre></td>
+</tr></table>
+</div></div>
+<p>Should be changed to:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+</pre></td>
+  <td class="code"><pre>let object = {};
+Ember.defineProperty(object, <span class="string"><span class="delimiter">'</span><span class="content">key</span><span class="delimiter">'</span></span>, Ember.computed(() =&gt; <span class="string"><span class="delimiter">'</span><span class="content">value</span><span class="delimiter">'</span></span>));
+Ember.get(object, <span class="string"><span class="delimiter">'</span><span class="content">key</span><span class="delimiter">'</span></span>) === <span class="string"><span class="delimiter">'</span><span class="content">value</span><span class="delimiter">'</span></span>;
+</pre></td>
+</tr></table>
+</div></div><h3 class='anchorable-toc' id='toc_deprecations-added-in-3-1'>Deprecations Added in 3.1</h3><h4 class='anchorable-toc' id='toc_use-notifypropertychange-instead-of-propertywillchange-and-propertydidchange'>Use notifyPropertyChange instead of propertyWillChange and propertyDidChange</h4><h5 class='anchorable-toc' id='toc_until-3-5-0'>until: 3.5.0</h5><h5 class='anchorable-toc' id='toc_id-ember-metal-deprecate-propertywillchange-ember-metal-deprecate-propertydidchange'>id: ember-metal.deprecate-propertyWillChange, ember-metal.deprecate-propertyDidChange</h5>
 <p>The private APIs <code>propertyWillChange</code> and <code>propertyDidChange</code> will be removed after the first
 LTS of the 3.x cycle. You should remove any calls to <code>propertyWillChange</code> and replace any
 calls to <code>propertyDidChange</code> with <code>notifyPropertyChange</code>. This applies to both the Ember global
