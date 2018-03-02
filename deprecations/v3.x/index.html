@@ -217,6 +217,94 @@ object.notifyPropertyChange(<span class="string"><span class="delimiter">'</span
 </tr></table>
 </div></div><h4 class='anchorable-toc' id='toc_getting-the-each-property'>Getting the @each property</h4><h5 class='anchorable-toc' id='toc_until-3-5-0'>until: 3.5.0</h5><h5 class='anchorable-toc' id='toc_id-ember-metal-getting-each'>id: ember-metal.getting-each</h5>
 <p>Calling <code>array.get(&#39;@each&#39;)</code> is deprecated. <code>@each</code> may only be used as dependency key.</p>
+<h3 class='anchorable-toc' id='toc_deprecations-added-in-3-2'>Deprecations Added in 3.2</h3><h4 class='anchorable-toc' id='toc_use-console-rather-than-ember-logger'>Use console rather than Ember.Logger</h4><h5 class='anchorable-toc' id='toc_until-4-0-0'>until: 4.0.0</h5><h5 class='anchorable-toc' id='toc_id-ember-console-deprecate-logger'>id: ember-console.deprecate-logger</h5>
+<p>The <code>Ember.Logger</code> module will be removed at the start of the 4.x cycle. You should remove any calls to <code>Ember.Logger</code> and use calls to <code>console</code> instead.</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+</pre></td>
+  <td class="code"><pre><span class="comment">// Before</span>
+Ember.Logger.log(<span class="string"><span class="delimiter">'</span><span class="content">significant event occurred</span><span class="delimiter">'</span></span>);
+
+<span class="comment">// After</span>
+console.log(<span class="string"><span class="delimiter">'</span><span class="content">significant event occurred</span><span class="delimiter">'</span></span>);
+</pre></td>
+</tr></table>
+</div></div><h6 class='anchorable-toc' id='toc_calling-code-console-code-methods-unbound'>Calling <code>console</code> methods unbound</h6>
+<p>In Edge and IE11, uses of <code>console</code> beyond calling its methods may require more subtle changes than simply substituting <code>console</code> wherever <code>Logger</code> appears. When the development tools window is open, these browsers will handle the console just as other browsers do. However, when run normally, calls to its methods must be bound to the console object or you will receive an <code>Invalid calling object</code> exception. This is a known inconsistency with these browsers. (Edge issue #14495220.)</p>
+
+<p>You can address the issue by binding the method to the console object:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="comment">// Before - assigning raw method to a variable for later use</span>
+<span class="keyword">var</span> print = Logger.log; <span class="comment">// assigning method to variable</span>
+print(<span class="string"><span class="delimiter">'</span><span class="content">Message</span><span class="delimiter">'</span></span>);
+
+<span class="comment">// After - assigning console-bound method to variable for later use</span>
+<span class="keyword">var</span> print = console.log.bind(console);
+print(<span class="string"><span class="delimiter">'</span><span class="content">Message</span><span class="delimiter">'</span></span>);
+</pre></td>
+</tr></table>
+</div></div>
+<p>In some cases, you can use rest parameter syntax to avoid the issue entirely:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+</pre></td>
+  <td class="code"><pre><span class="comment">// Before</span>
+Logger.info.apply(<span class="predefined-constant">undefined</span>, <span class="local-variable">arguments</span>); <span class="comment">// or</span>
+Logger.info.apply(<span class="predefined-constant">null</span>, <span class="local-variable">arguments</span>); <span class="comment">// or</span>
+Logger.info.apply(<span class="local-variable">this</span>, <span class="local-variable">arguments</span>); <span class="comment">// or</span>
+
+<span class="comment">// After</span>
+console.info(...<span class="local-variable">arguments</span>);
+</pre></td>
+</tr></table>
+</div></div><h6 class='anchorable-toc' id='toc_code-console-debug-code-method-not-available-in-node-8-and-earlier'><code>console.debug</code> method not available in Node 8 and earlier</h6>
+<p>Because Node versions before version 9 don&#39;t support <code>console.debug</code>, you may want to either use <code>console.log</code>  instead or transform the usage as follows:</p>
+<div class="highlight javascript "><div class="ribbon"></div><div class="scroller"><table class="CodeRay"><tr>
+  <td class="line-numbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td>
+  <td class="code"><pre><span class="comment">// Before</span>
+Logger.debug(message);
+
+<span class="comment">// After</span>
+<span class="keyword">if</span> (console.debug) {
+console.debug(message);
+} <span class="keyword">else</span> {
+console.log(message);
+}
+</pre></td>
+</tr></table>
+</div></div><h6 class='anchorable-toc' id='toc_addons-that-support-both-2-x-and-3-x'>Addons that support both 2.x and 3.x</h6>
+<p>If your add-on needs to support both Ember 2.x and Ember 3.x clients, you will
+need to test for the existence of <code>console</code> before calling its methods. If you
+do much logging, you may find it convenient to define your own wrapper. Writing
+the wrapper as a service will provide for dependency injection by tests and
+perhaps even clients.</p>
 
 
       </div>
