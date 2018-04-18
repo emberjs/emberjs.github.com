@@ -44,7 +44,15 @@ continuously test your projects against the latest Ember releases.&lt;/p&gt;
 &lt;p&gt;Ember.js is the core framework for building ambitious web applications.&lt;/p&gt;
 &lt;h3 class='anchorable-toc' id='toc_changes-in-ember-js-3-1'&gt;Changes in Ember.js 3.1&lt;/h3&gt;
 &lt;p&gt;Ember 3.1 is a minor release containing several new features and bug fixes. It includes a bump of Glimmer VM, Ember&amp;#39;s rendering implementation, to version 0.30.5.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_es5-getters-for-computed-properties-1-of-3'&gt;ES5 Getters for Computed Properties (1 of 3)&lt;/h4&gt;
+&lt;h4 class='anchorable-toc' id='toc_named-arguments-1-of-4'&gt;Named Arguments (1 of 4)&lt;/h4&gt;
+&lt;p&gt;Named arguments are here! This allows you to reference component arguments as &lt;code&gt;{{@name}}&lt;/code&gt; when passed in as &lt;code&gt;{{user-profile name=&amp;quot;Zoey&amp;quot;}}&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;From &lt;a href="https://github.com/emberjs/rfcs/blob/master/text/0276-named-args.md"&gt;RFC 276&lt;/a&gt;: Until now, the way to access named arguments passed in from the caller was to reference &lt;code&gt;{{name}}&lt;/code&gt;. The (first) problem with this approach is that the &lt;code&gt;{{name}}&lt;/code&gt; syntax is highly ambigious, as it could be referring to a local variable (block param), a helper or a named argument from the caller (which actually works by accessing auto-reflected &lt;code&gt;{{this.name}}&lt;/code&gt;) or a property on the component class (such as a computed property).&lt;/p&gt;
+
+&lt;p&gt;Since the &lt;code&gt;{{foo}}&lt;/code&gt; syntax still works on &lt;code&gt;Component&lt;/code&gt; (which is the only kind of components available today) via the auto-reflection mechanism, we are not really in a rush to migrate the community (and the guides, etc) to using the new syntax. In the meantime, this could be viewed as a tool to improve clarity in templates. &lt;/p&gt;
+
+&lt;p&gt;While we think writing &lt;code&gt;{{@foo}}&lt;/code&gt; would be a best practice for new code going forward, the community can migrate at its own pace one component at a time.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_es5-getters-for-computed-properties-2-of-4'&gt;ES5 Getters for Computed Properties (2 of 4)&lt;/h4&gt;
 &lt;p&gt;Ember&amp;#39;s object system has long used &lt;code&gt;set&lt;/code&gt; and &lt;code&gt;get&lt;/code&gt; to access properties. These APIs came from the codebase&amp;#39;s origins in SproutCore, and predated ES5&amp;#39;s &lt;code&gt;defineProperty&lt;/code&gt;. In recent years, native JavaScript setter and getter implementations have become fast and mature.&lt;/p&gt;
 
 &lt;p&gt;Starting in Ember 3.1 (and described in &lt;a href="https://github.com/emberjs/rfcs/blob/master/text/0281-es5-getters.md"&gt;RFC281&lt;/a&gt;) you are now able to read the value of a computed property using a native ES5 getter. For example, this component which uses computed properties:&lt;/p&gt;
@@ -130,7 +138,7 @@ to &lt;code&gt;this.a.b.c&lt;/code&gt; when &lt;code&gt;b&lt;/code&gt; is &lt;co
 &lt;p&gt;The community-provided &lt;a href="https://github.com/rondale-sc/es5-getter-ember-codemod"&gt;es5-getter-ember-codemod&lt;/a&gt; is a great way to convert your existing codebase to ES5 getters. It follows the conservative guidelines and only converts &lt;code&gt;this.get&lt;/code&gt;. Note that it cannot make all possible conversions to the new API, nor can it ensure 100% of the conversions it makes are correct. If your app has poor test coverage or you lack any confidence in your ability to make regression checks, a manual and gradual conversion process may be more appropriate.&lt;/p&gt;
 
 &lt;p&gt;Thanks to &lt;a href="https://twitter.com/pzuraq"&gt;Chris Garrett&lt;/a&gt; for pushing forward work on ES5 getters with support from &lt;a href="https://twitter.com/chancancode"&gt;Godfrey Chan&lt;/a&gt;, &lt;a href="https://twitter.com/rwjblue/"&gt;Robert Jackson&lt;/a&gt;, and &lt;a href="https://twitter.com/krisselden"&gt;Kris Selden&lt;/a&gt;). Thanks to &lt;a href="https://twitter.com/rondale_sc/"&gt;Jonathan Jackson&lt;/a&gt; for his work on the codemod.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_introducing-optional-features-2-of-3'&gt;Introducing Optional Features (2 of 3)&lt;/h4&gt;
+&lt;h4 class='anchorable-toc' id='toc_introducing-optional-features-3-of-4'&gt;Introducing Optional Features (3 of 4)&lt;/h4&gt;
 &lt;p&gt;Because major releases of Ember are not supposed to make breaking changes without prior deprecation, the project has been extremely conservative about changing behaviors that don&amp;#39;t have a clear deprecation path. As a result, we&amp;#39;ve had several quirks of the framework linger into the 3.x series.&lt;/p&gt;
 
 &lt;p&gt;To give the project a path forward when a breaking change is mandatory, we&amp;#39;ve released the &lt;a href="https://github.com/emberjs/ember-optional-features"&gt;&lt;code&gt;@ember/optional-features&lt;/code&gt;&lt;/a&gt; addon. Today this addon is opt-in via installation as an NPM dependency. In a future release of Ember it will become part of the default application blueprint.&lt;/p&gt;
@@ -274,7 +282,7 @@ to &lt;code&gt;this.a.b.c&lt;/code&gt; when &lt;code&gt;b&lt;/code&gt; is &lt;co
 &lt;p&gt;However, enabling this feature will prompt you to optionally run a codemod which creates backing classes for all template-only components, meaning both the implicit &lt;code&gt;div&lt;/code&gt; and backing class are retained.&lt;/p&gt;
 
 &lt;p&gt;Although enabling this feature will eventually be the default for Ember, leaving the feature disabled is not deprecated in this release. You can read more details about this optional feature and the motivations for introducing it in &lt;a href="https://github.com/emberjs/rfcs/blob/master/text/0278-template-only-components.md"&gt;RFC #278&lt;/a&gt;.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_positional-params-bug-fix-3-of-3'&gt;Positional Params Bug Fix (3 of 3)&lt;/h4&gt;
+&lt;h4 class='anchorable-toc' id='toc_positional-params-bug-fix-4-of-4'&gt;Positional Params Bug Fix (4 of 4)&lt;/h4&gt;
 &lt;p&gt;Ember introduced contextual components in Ember 2.3. Contextual components close over arguments and are intended to do so in a manner consistent with closures in JavaScript.&lt;/p&gt;
 
 &lt;p&gt;As the implementation of contextual components has been refined in the Glimmer VM, a notable discrepancy has been noticed in how they handle positional params. Given the following template:&lt;/p&gt;
@@ -354,7 +362,7 @@ object.notifyPropertyChange(&lt;span class="string"&gt;&lt;span class="delimiter
 
 &lt;p&gt;For more details on changes in Ember.js 3.1, please review the
 &lt;a href="https://github.com/emberjs/ember.js/releases/tag/v3.1.0"&gt;Ember.js 3.1.0 release page&lt;/a&gt;.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_upcoming-changes-in-ember-js-3-2'&gt;Upcoming Changes in Ember.js 3.2&lt;/h3&gt;&lt;h4 class='anchorable-toc' id='toc_let-template-helper'&gt;let template helper&lt;/h4&gt;
+&lt;h3 class='anchorable-toc' id='toc_upcoming-changes-in-ember-js-3-2'&gt;Upcoming Changes in Ember.js 3.2&lt;/h3&gt;&lt;h4 class='anchorable-toc' id='toc_new-features-1'&gt;New Features (1)&lt;/h4&gt;&lt;h5 class='anchorable-toc' id='toc_let-template-helper'&gt;let template helper&lt;/h5&gt;
 &lt;p&gt;Ember.js 3.2 introduces a new feature, the block &lt;code&gt;let&lt;/code&gt; template helper.
 This helper enables you to introduce bindings in your templates, without having to make them properties of the respective controller or component.&lt;/p&gt;
 
@@ -373,14 +381,14 @@ This helper enables you to introduce bindings in your templates, without having 
 &lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;You can read more about it in &lt;a href="https://github.com/emberjs/rfcs/blob/master/text/0286-block-let-template-helper.md"&gt;RFC #286 - Block &lt;code&gt;let&lt;/code&gt; template helper&lt;/a&gt;.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_deprecations'&gt;Deprecations&lt;/h4&gt;
+&lt;h4 class='anchorable-toc' id='toc_deprecations-3'&gt;Deprecations (3)&lt;/h4&gt;
 &lt;p&gt;&lt;strong&gt;Three&lt;/strong&gt; new deprecations are introduced in Ember.js 3.2:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Use of &lt;code&gt;Ember.Logger&lt;/code&gt; is deprecated. You should replace any calls to &lt;code&gt;Ember.Logger&lt;/code&gt; with calls to &lt;code&gt;console&lt;/code&gt;. Read more about this deprecation on the &lt;a href="https://emberjs.com/deprecations/v3.x#toc_ember-console-deprecate-logger"&gt;deprecation page.&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;The &lt;code&gt;Router#route&lt;/code&gt; private API has been renamed to &lt;code&gt;Router#_route&lt;/code&gt; to avoid collisions with user-defined properties or methods. Read more about this deprecation on the &lt;a href="https://emberjs.com/deprecations/v3.x#toc_ember-routing-route-router"&gt;deprecation page.&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Update: replace directly assigned computed properties. Use &lt;code&gt;defineProperty&lt;/code&gt; to define computed properties. Read more about this deprecation on the &lt;a href="https://emberjs.com/deprecations/v3.x#toc_ember-meta-descriptor-on-object"&gt;deprecation page.&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
+&lt;h5 class='anchorable-toc' id='toc_ember-logger'&gt;Ember.Logger&lt;/h5&gt;
+&lt;p&gt;Use of &lt;code&gt;Ember.Logger&lt;/code&gt; is deprecated. You should replace any calls to &lt;code&gt;Ember.Logger&lt;/code&gt; with calls to &lt;code&gt;console&lt;/code&gt;. Read more about this deprecation on the &lt;a href="https://emberjs.com/deprecations/v3.x#toc_ember-console-deprecate-logger"&gt;deprecation page.&lt;/a&gt;&lt;/p&gt;
+&lt;h5 class='anchorable-toc' id='toc_router-route'&gt;Router#route&lt;/h5&gt;
+&lt;p&gt;The &lt;code&gt;Router#route&lt;/code&gt; private API has been renamed to &lt;code&gt;Router#_route&lt;/code&gt; to avoid collisions with user-defined properties or methods. Read more about this deprecation on the &lt;a href="https://emberjs.com/deprecations/v3.x#toc_ember-routing-route-router"&gt;deprecation page.&lt;/a&gt;&lt;/p&gt;
+&lt;h5 class='anchorable-toc' id='toc_defineproperty'&gt;defineProperty&lt;/h5&gt;
+&lt;p&gt;This next one typically won&amp;#39;t affect most apps, but it might affect some addons. You&amp;#39;ll need to replace directly assigned computed properties, and use &lt;code&gt;defineProperty&lt;/code&gt; to define computed properties instead. Read more about this deprecation on the &lt;a href="https://emberjs.com/deprecations/v3.x#toc_ember-meta-descriptor-on-object"&gt;deprecation page.&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;For more details on the upcoming changes in Ember.js 3.2, please review the
 &lt;a href="https://github.com/emberjs/ember.js/releases/tag/v3.2.0-beta.1"&gt;Ember.js 3.2.0-beta.1 release page&lt;/a&gt;.&lt;/p&gt;
@@ -390,9 +398,9 @@ This helper enables you to introduce bindings in your templates, without having 
 &lt;p&gt;Ember Data is the official data persistence library for Ember.js applications.&lt;/p&gt;
 
 &lt;p&gt;Ember Data 3.1 contains bug fixes and build improvements for Ember Data.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_changes-in-ember-data-3-1'&gt;Changes in Ember Data 3.1&lt;/h3&gt;&lt;h4 class='anchorable-toc' id='toc_new-features'&gt;New Features&lt;/h4&gt;
+&lt;h3 class='anchorable-toc' id='toc_changes-in-ember-data-3-1'&gt;Changes in Ember Data 3.1&lt;/h3&gt;&lt;h4 class='anchorable-toc' id='toc_new-features-1'&gt;New Features (1)&lt;/h4&gt;
 &lt;p&gt;&lt;a href="https://github.com/emberjs/data/pull/5273"&gt;#5273&lt;/a&gt; client-side-delete semantics &lt;code&gt;unloadRecord&lt;/code&gt;&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_deprecations'&gt;Deprecations&lt;/h4&gt;
+&lt;h4 class='anchorable-toc' id='toc_deprecations-2'&gt;Deprecations (2)&lt;/h4&gt;
 &lt;p&gt;&lt;strong&gt;Two&lt;/strong&gt; new deprecations are introduced in Ember Data 3.1.&lt;/p&gt;
 
 &lt;ul&gt;
@@ -534,17 +542,17 @@ attempt to go a different direction with some of the planned changes for 2018. M
 &lt;p&gt;After running the upgrade command, run &lt;code&gt;ember init&lt;/code&gt; inside of the project directory to apply the blueprint changes.&lt;/p&gt;
 
 &lt;p&gt;You can preview those changes for &lt;a href="https://github.com/ember-cli/ember-new-output/compare/v3.0.0...v3.1.0"&gt;applications&lt;/a&gt; and &lt;a href="https://github.com/ember-cli/ember-addon-output/compare/v3.0.0...v3.1.0"&gt;addons&lt;/a&gt;.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_changes-in-ember-cli-3-1'&gt;Changes in Ember CLI 3.1&lt;/h3&gt;&lt;h4 class='anchorable-toc' id='toc_code-ember-test-all-code'&gt;&lt;code&gt;ember test:all&lt;/code&gt;&lt;/h4&gt;
+&lt;h3 class='anchorable-toc' id='toc_changes-in-ember-cli-3-1'&gt;Changes in Ember CLI 3.1&lt;/h3&gt;&lt;h4 class='anchorable-toc' id='toc_new-features-2'&gt;New Features (2)&lt;/h4&gt;&lt;h5 class='anchorable-toc' id='toc_code-ember-test-all-code'&gt;&lt;code&gt;ember test:all&lt;/code&gt;&lt;/h5&gt;
 &lt;p&gt;Previously, &lt;code&gt;npm test&lt;/code&gt; would run all configured scenarios of &lt;code&gt;ember-try&lt;/code&gt;. This was confusing due to &lt;code&gt;npm test&lt;/code&gt; and &lt;code&gt;ember test&lt;/code&gt; having different behaviors, as well as &lt;code&gt;npm test&lt;/code&gt; doing different things depending on whether it was being run by an app or an addon. The fact that the command would also run several hard to cancel processes for the &lt;code&gt;ember-try&lt;/code&gt; scenarios also worsened the developer experience.&lt;/p&gt;
 
 &lt;p&gt;To address this, &lt;code&gt;npm test&lt;/code&gt; was changed to run &lt;code&gt;ember test&lt;/code&gt;, and a new &lt;code&gt;npm test:all&lt;/code&gt; was introduced with the old behavior of running &lt;code&gt;ember-try&lt;/code&gt; scenarios.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_yarn-lock-file-detection'&gt;Yarn lock file detection&lt;/h4&gt;
+&lt;h5 class='anchorable-toc' id='toc_yarn-lock-file-detection'&gt;Yarn lock file detection&lt;/h5&gt;
 &lt;p&gt;Ember CLI will now correctly detect if the project is part of a Yarn workspace root, and adequately use Yarn instead of npm.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_deprecations'&gt;Deprecations&lt;/h4&gt;
+&lt;h4 class='anchorable-toc' id='toc_deprecations-0'&gt;Deprecations (0)&lt;/h4&gt;
 &lt;p&gt;No new deprecations are introduced in Ember CLI 3.1.&lt;/p&gt;
 
 &lt;p&gt;For more details on the changes in Ember CLI 3.1 and detailed upgrade instructions, please review the &lt;a href="https://github.com/ember-cli/ember-cli/releases/tag/v3.1.0"&gt;Ember CLI  3.1.0 release page&lt;/a&gt;.&lt;/p&gt;
-&lt;h3 class='anchorable-toc' id='toc_upcoming-changes-in-ember-cli-3-2'&gt;Upcoming Changes in Ember CLI 3.2&lt;/h3&gt;&lt;h4 class='anchorable-toc' id='toc_new-features'&gt;New Features&lt;/h4&gt;
+&lt;h3 class='anchorable-toc' id='toc_upcoming-changes-in-ember-cli-3-2'&gt;Upcoming Changes in Ember CLI 3.2&lt;/h3&gt;&lt;h4 class='anchorable-toc' id='toc_new-features-3'&gt;New Features (3)&lt;/h4&gt;
 &lt;p&gt;&lt;strong&gt;Qunit Dom&lt;/strong&gt; - In order to make DOM assertions more readable, the &lt;code&gt;qunit-dom&lt;/code&gt; dependency will be added &lt;strong&gt;by default&lt;/strong&gt; to all apps and addons. Opt out by removing it from your package.json file. See &lt;a href="https://github.com/simplabs/qunit-dom-codemod"&gt;https://github.com/simplabs/qunit-dom-codemod&lt;/a&gt; to ease migration &lt;a href="https://github.com/ember-cli/ember-cli/pull/7605"&gt;(#7605)&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;This is, to put it quite simply, totally awesome. It means that this code:&lt;/p&gt;
@@ -567,8 +575,8 @@ attempt to go a different direction with some of the planned changes for 2018. M
 
 &lt;p&gt;&lt;strong&gt;Experiments with more efficient transpilation&lt;/strong&gt; - Until now, addons were responsible for compiling their own JS/HBS/CSS and returning AMD/CSS. Now they return the raw code, and the app uses its own processors (babel, htmlbars) to compile it. This is required to do proper tree-shaking and code-splitting. Delayed transpilation &lt;a href="https://github.com/ember-cli/ember-cli/pull/7501"&gt;(#7501)&lt;/a&gt; and all-at-once addon optimization after compilation &lt;a href="https://github.com/ember-cli/ember-cli/pull/7650"&gt;(#7650)&lt;/a&gt; have been added. Additionally, more comprehensive methods to detect if ember-cli is being run within CI or not have also been added &lt;a href="https://github.com/ember-cli/ember-cli/pull/7637"&gt;(#7637)&lt;/a&gt; - see &lt;a href="https://github.com/watson/ci-info/"&gt;https://github.com/watson/ci-info/&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Module Unification Continues&lt;/strong&gt; - You can now generate an addon using the Module Unification layout &lt;a href="https://github.com/ember-cli/ember-cli/pull/7490"&gt;(#7490)&lt;/a&gt;! Use the command &lt;code&gt;MODULE_UNIFICATION=true ember addon my-addon&lt;/code&gt; to try it out &lt;a href="https://github.com/ember-cli/ember-cli/pull/7658"&gt;(#7658)&lt;/a&gt;. We also improved the logic to support addons that use Module Unification &lt;a href="https://github.com/ember-cli/ember-cli/pull/7660"&gt;(#7660)&lt;/a&gt;, added the blueprint for a dummy app to addons that use Module Unification &lt;a href="https://github.com/ember-cli/ember-cli/pull/7667"&gt;(#7667)&lt;/a&gt;, and updated the version of Ember used in Module Unification &lt;a href="https://github.com/ember-cli/ember-cli/pull/7678"&gt;(#7678)&lt;/a&gt;.&lt;/p&gt;
-&lt;h4 class='anchorable-toc' id='toc_deprecations'&gt;Deprecations&lt;/h4&gt;&lt;h4 class='anchorable-toc' id='toc_ember-cli-babel-5'&gt;ember-cli-babel 5&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;Module Unification (new file layout) Continues&lt;/strong&gt; - You can now generate an addon using the Module Unification layout &lt;a href="https://github.com/ember-cli/ember-cli/pull/7490"&gt;(#7490)&lt;/a&gt;! Use the command &lt;code&gt;MODULE_UNIFICATION=true ember addon my-addon&lt;/code&gt; to try it out &lt;a href="https://github.com/ember-cli/ember-cli/pull/7658"&gt;(#7658)&lt;/a&gt;. We also improved the logic to support addons that use Module Unification &lt;a href="https://github.com/ember-cli/ember-cli/pull/7660"&gt;(#7660)&lt;/a&gt;, added the blueprint for a dummy app to addons that use Module Unification &lt;a href="https://github.com/ember-cli/ember-cli/pull/7667"&gt;(#7667)&lt;/a&gt;, and updated the version of Ember used in Module Unification &lt;a href="https://github.com/ember-cli/ember-cli/pull/7678"&gt;(#7678)&lt;/a&gt;.&lt;/p&gt;
+&lt;h4 class='anchorable-toc' id='toc_deprecations-1'&gt;Deprecations (1)&lt;/h4&gt;&lt;h4 class='anchorable-toc' id='toc_ember-cli-babel-5'&gt;ember-cli-babel 5&lt;/h4&gt;
 &lt;p&gt;This release of Ember CLI &lt;a href="https://github.com/ember-cli/ember-cli/pull/7676"&gt;deprecates &lt;code&gt;ember-cli-babel&lt;/code&gt; 5.x&lt;/a&gt;. Babel 6 support has been out for a long time now and works quite well. Babel 5 support is deprecated and is expected to be dropped soon.&lt;/p&gt;
 
 &lt;p&gt;For more details on the changes in Ember CLI 3.2.0-beta.1 and detailed upgrade
@@ -577,10 +585,7 @@ instructions, please review the &lt;a href="https://github.com/ember-cli/ember-c
 &lt;p&gt;Thank you to &lt;a href="https://github.com/GavinJoyce"&gt;@GavinJoyce&lt;/a&gt;, &lt;a href="https://github.com/Turbo87"&gt;@Turbo87&lt;/a&gt;, &lt;a href="https://github.com/cibernox"&gt;@cibernox&lt;/a&gt;, &lt;a href="https://github.com/iezer"&gt;@iezer&lt;/a&gt;, &lt;a href="https://github.com/kellyselden"&gt;@kellyselden&lt;/a&gt;, &lt;a href="https://github.com/raytiley"&gt;@raytiley&lt;/a&gt;, &lt;a href="https://github.com/t-sauer"&gt;@t-sauer&lt;/a&gt;, and &lt;a href="https://github.com/thetimothyp"&gt;@thetimothyp&lt;/a&gt;
 for your incredible work on ember-cli!&lt;/p&gt;
 &lt;h2 class='anchorable-toc' id='toc_thank-you'&gt;Thank You!&lt;/h2&gt;
-&lt;p&gt;As a community-driven open-source project with an ambitious scope, each of
-these releases serve as a reminder that the Ember project would not have been
-possible without your continued support. We are extremely grateful to our
-contributors for their efforts.&lt;/p&gt;
+&lt;p&gt;As a community-driven open-source project with an ambitious scope, each of these releases serve as a reminder that the Ember project would not have been possible without your  continued support. We are extremely grateful to our contributors for their efforts.&lt;/p&gt;
 </content>
   </entry>
   <entry>
